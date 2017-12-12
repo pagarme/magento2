@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+	<acl>
+		<resources>
+			<resource id="Magento_Backend::admin">
+				<resource id="MundiPagg_MundiPagg::Charges" sortOrder="10" title="Charges">
+					<resource id="MundiPagg_MundiPagg::Charges_save" sortOrder="10" title="Save Charges"/>
+					<resource id="MundiPagg_MundiPagg::Charges_delete" sortOrder="20" title="Delete Charges"/>
+					<resource id="MundiPagg_MundiPagg::Charges_update" sortOrder="30" title="Update Charges"/>
+					<resource id="MundiPagg_MundiPagg::Charges_view" sortOrder="40" title="View Charges"/>
+				</resource>
+				<resource id="MundiPagg_MundiPagg::Cards" sortOrder="10" title="Cards">
+					<resource id="MundiPagg_MundiPagg::Cards_save" sortOrder="10" title="Save Cards"/>
+					<resource id="MundiPagg_MundiPagg::Cards_delete" sortOrder="20" title="Delete Cards"/>
+					<resource id="MundiPagg_MundiPagg::Cards_update" sortOrder="30" title="Update Cards"/>
+					<resource id="MundiPagg_MundiPagg::Cards_view" sortOrder="40" title="View Cards"/>
+				</resource>
+			</resource>
+		</resources>
+	</acl>
+</config>

@@ -1,0 +1,39 @@
+<?php
+/**
+ * Phtml List Cards
+ *
+ * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
+ * @copyright   2017 MundiPagg (http://www.mundipagg.com)
+ * @license     http://www.mundipagg.com Copyright
+ *
+ * @link        http://www.mundipagg.com
+ */
+?>
+
+<div>
+	<table class="table">
+
+		<thead>
+		  <tr>
+		    <th><?php echo __('Id') ?></th>
+		    <th><?php echo __('Last Four Numbers') ?></th>
+		    <th><?php echo __('Created At') ?></th>
+		    <th><?php echo __('Remove') ?></th>
+		  </tr>
+		</thead>
+
+		<tbody>
+			<?php foreach ($block->getCardsList() as $item): ?>
+				<?php $url = $this->getBaseUrl() . 'mundipagg/customer/remove/id/'. $item->getId() ?>
+				<tr>
+					<td><?php echo $item->getId() ?></td>
+					<td><?php echo __('****.****.****.') ?><?php echo $item->getLastFourNumbers() ?></td>
+					<td><?php echo $item->getCreatedAt() ?></td>
+					<td><button onclick="location.href = '<?php echo $url ?>';" id="remove"><?php echo __('Remove') ?></button></td>
+				</tr>
+			
+			<?php endforeach; ?>
+		</tbody>
+	</table>
+</div>
+

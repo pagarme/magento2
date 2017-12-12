@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
+ * @copyright   2017 MundiPagg (http://www.mundipagg.com)
+ * @license     http://www.mundipagg.com  Copyright
+ *
+ * @link        http://www.mundipagg.com
+ */
+-->
+<ruleset name="MundiPagg_Coding_Standarts">
+    <description>MundiPagg coding standards</description>
+    <arg value="p"/>
+    <arg name="colors"/>
+    <rule ref="./vendor/magento-ecg/coding-standard/EcgM2/ruleset.xml"/>
+	
+	<exclude-pattern>*/Test/*</exclude-pattern>
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+</ruleset>

@@ -1,0 +1,23 @@
+<?php
+/**
+ * Class billet
+ *
+ * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
+ * @copyright   2017 MundiPagg (http://www.mundipagg.com)
+ * @license     http://www.mundipagg.com Copyright
+ *
+ * @link        http://www.mundipagg.com
+ */
+
+?>
+<?php if ($this->getCcType()): ?>
+    <span><?php echo __($this->getTitle()); ?></span>
+    <br/>
+    <br/>
+    <span><b><?php echo __('Brand'); ?>: </b><?php echo $this->getCcType(); ?></span>
+    <br/>
+    <span><b><?php echo __('Number'); ?>: </b><?php echo $this->getCardNumber(); ?></span>
+    <br/>
+    <span><b><?php echo __('Installments'); ?>: </b><?php echo $this->getInstallments(); ?></span>
+
+<?php endif ?>

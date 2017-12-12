@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2017 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <group id="mundipagg_mundipagg_transaction_creditcard_installments" translate="label comment" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="21">
+		<depends>
+			<field id="installments_type">0</field>
+		</depends>
+		<label>Installments Mastercard</label>
+	    <field id="installments_number_mastercard" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
+	        <label>Number Mastercard</label>
+	        <comment />
+	        <config_path>payment/mundipagg_creditcard/installments_number_mastercard</config_path>
+	    </field>
+	    <field id="installment_min_amount_mastercard" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
+	        <label>Min Amount Mastercard</label>
+	        <comment />
+	        <config_path>payment/mundipagg_creditcard/installment_min_amount_mastercard</config_path>
+	    </field>
+	    <field id="installments_interest_by_issuer_mastercard" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="select">
+	        <label>Interest by issuer Mastercard</label>
+	        <comment />
+	        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+	        <config_path>payment/mundipagg_creditcard/installments_interest_by_issuer_mastercard</config_path>
+	    </field>
+	    <field id="installments_interest_rate_initial_mastercard" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
+	        <label>Interest Rate Initial (%) Mastercard</label>
+	        <comment />
+	        <config_path>payment/mundipagg_creditcard/installments_interest_rate_initial_mastercard</config_path>
+            <depends>
+                <field id="installments_interest_by_issuer_mastercard">1</field>
+            </depends>
+	    </field>
+	    <field id="installments_interest_rate_incremental_mastercard" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
+	        <label>Interest Rate Incremental (%) Mastercard</label>
+	        <comment />
+	        <config_path>payment/mundipagg_creditcard/installments_interest_rate_incremental_mastercard</config_path>
+            <depends>
+                <field id="installments_interest_by_issuer_mastercard">1</field>
+            </depends>
+	    </field>
+	    <field id="installments_max_without_interest_mastercard" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
+	        <label>Max Without Interest Mastercard</label>
+	        <comment />
+	        <config_path>payment/mundipagg_creditcard/installments_max_without_interest_mastercard</config_path>
+            <depends>
+                <field id="installments_interest_by_issuer_mastercard">1</field>
+            </depends>
+	    </field>
+	</group>
+</include>

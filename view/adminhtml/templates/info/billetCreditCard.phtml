@@ -1,0 +1,36 @@
+<?php
+/**
+ * Class billetCreditCard
+ *
+ * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
+ * @copyright   2017 MundiPagg (http://www.mundipagg.com)
+ * @license     http://www.mundipagg.com Copyright
+ *
+ * @link        http://www.mundipagg.com
+ */
+
+?>
+<?php if ($this->getCcType()): ?>
+    <span><b><?php echo __('Credit Card'); ?></b></span>
+    <br/>
+    <br/>
+    <span><b><?php echo __('Amount') ?>: </b><?php echo 'R$ ' . number_format($this->getCcAmount(),2,',', '.'); ?></span>
+    <br/>
+    <span><b><?php echo __('Brand'); ?>: </b><?php echo $this->getCcType(); ?></span>
+    <br/>
+    <span><b><?php echo __('Number'); ?>: </b><?php echo $this->getCardNumber(); ?></span>
+    <br/>
+    <span><b><?php echo __('Installments'); ?>: </b><?php echo $this->getInstallments(); ?></span>
+
+<?php endif ?>
+
+<?php if ($this->getBilletUrl() && $this->getInfo()->getOrder()->getState() == 'pending_payment'): ?>
+    <hr />
+    <span><b><?php echo __('Billet') ?></b></span>
+    <br/>
+    <br/>
+    <span><b><?php echo __('Amount') ?>: </b><?php echo 'R$ ' . number_format($this->getBilletAmount(),2,',', '.'); ?></span>
+    <br/>
+    <br/>
+    <a class="action- scalable action-secondary" href="<?php echo $this->getBilletUrl() ?>" target="_blank"><?php echo __('Print Billet') ?></a>
+<?php endif ?>

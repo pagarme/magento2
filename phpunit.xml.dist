@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
+ * @copyright   2017 MundiPagg (http://www.mundipagg.com)
+ * @license     http://www.mundipagg.com  Copyright
+ *
+ * @link        http://www.mundipagg.com
+ */
+-->
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/4.1/phpunit.xsd"
+         colors="true"
+         bootstrap="./Test/Unit/bootstrap.php"
+        >
+    <testsuite name="MundiPagg">
+        <directory suffix="Test.php">Test/Unit</directory>
+    </testsuite>
+
+    <filter>
+        <blacklist>
+            <directory>Test</directory>
+            <directory>vendor</directory>
+        </blacklist>
+    </filter>
+
+</phpunit>
