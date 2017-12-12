@@ -11,6 +11,8 @@ Coming soon :construction:
 
 This module is now available through *Packagist*! You don't need to specify the repository anymore.
 
+[https://packagist.org/packages/mundipagg/mundipagg-magento2-module](https://packagist.org/packages/mundipagg/mundipagg-magento2-module)
+
 Add the following lines into your composer.json 
 ```
 {
