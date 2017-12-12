@@ -24,7 +24,7 @@ Add the following lines into your composer.json
 
 or simply digit 
 ```
-composer require mundipagg/module-mundipagg
+composer require mundipagg/mundipagg-magento2-module
 ```
  
 Then type the following commands from your Magento root:
