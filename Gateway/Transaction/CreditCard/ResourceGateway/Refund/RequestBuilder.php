@@ -19,7 +19,6 @@ use MundiPagg\MundiPagg\Api\CreditCardRequestDataProviderInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Payment\Gateway\Request\BuilderInterface;
 use MundiAPILib\Models\CreateOrderRequest as Request;
-use Gateway\One\DataContract\Request\CreateSaleRequestData\CreditCardTransaction;
 use MundiPagg\MundiPagg\Api\CreditCardRequestDataProviderInterfaceFactory;
 use MundiPagg\MundiPagg\Api\CartItemRequestDataProviderInterfaceFactory;
 use Magento\Checkout\Model\Cart;
@@ -53,7 +52,6 @@ class RequestBuilder implements BuilderInterface
      */
     public function __construct(
         Request $request,
-        CreditCardTransaction $creditCardTransaction,
         CreditCardRequestDataProviderInterfaceFactory $requestDataProviderFactory,
         CartItemRequestDataProviderInterfaceFactory $cartItemRequestDataProviderFactory,
         Cart $cart,
@@ -63,7 +61,6 @@ class RequestBuilder implements BuilderInterface
     )
     {
         $this->setRequest($request);
-        $this->setCreditCardTransaction($creditCardTransaction);
         $this->setRequestDataProviderFactory($requestDataProviderFactory);
         $this->setCartItemRequestProviderFactory($cartItemRequestDataProviderFactory);
         $this->setCart($cart);

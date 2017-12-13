@@ -21,7 +21,7 @@
 		<section id="payment" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="1000" translate="label">
             <group id="mundipagg_mundipagg" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label">
                 <label>
-                    <![CDATA[MundiPagg MundiPagg&nbsp;&nbsp;<i>Payment Solutions.</i>]]>
+                    <![CDATA[MundiPagg&nbsp;&nbsp;<i>Payment Solutions.</i>]]>
                 </label>
                 <frontend_model>MundiPagg\MundiPagg\Block\Adminhtml\System\Config\Fieldset\Group</frontend_model>
                 <include path="MundiPagg_MundiPagg::system/global.xml"/>
