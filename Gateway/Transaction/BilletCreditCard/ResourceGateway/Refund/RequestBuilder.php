@@ -141,7 +141,7 @@ class RequestBuilder implements BuilderInterface
      * @param BilletCreditCardTransaction $creditCardTransaction
      * @return RequestBuilder
      */
-    protected function setBilletCreditCardTransaction(BilletCreditCardTransaction $creditCardTransaction)
+    protected function setBilletCreditCardTransaction($creditCardTransaction)
     {
         $this->creditCardTransaction = $creditCardTransaction;
         return $this;
