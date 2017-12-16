@@ -381,7 +381,7 @@ class RequestBuilder implements BuilderInterface
             'name' => !empty($requestDataProvider->getName()) ? $requestDataProvider->getName() :  $quote->getBillingAddress()->getFirstName() . ' ' . $quote->getBillingAddress()->getLastName(),
             'email' => !empty($requestDataProvider->getEmail()) ? $requestDataProvider->getEmail() : $quote->getBillingAddress()->getEmail(),
             'document' => $quote->getCustomerTaxvat(),
-            'type' => 'individuals',
+            'type' => 'individual',
             'address' => [
                 'street' => $quote->getShippingAddress()->getStreetLine(1),
                 'number' => $quote->getShippingAddress()->getStreetLine(2),

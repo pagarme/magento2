@@ -51,7 +51,6 @@ class RequestBuilder implements BuilderInterface
      */
     public function __construct(
         Request $request,
-        BilletCreditCardTransaction $creditCardTransaction,
         BilletCreditCardRequestDataProviderInterfaceFactory $requestDataProviderFactory,
         CartItemRequestDataProviderInterfaceFactory $cartItemRequestDataProviderFactory,
         Cart $cart,
