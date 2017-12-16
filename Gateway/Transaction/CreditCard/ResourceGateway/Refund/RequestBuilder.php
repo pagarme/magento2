@@ -9,7 +9,7 @@
  * @link        http://www.mundipagg.com
  */
 
-namespace MundiPagg\MundiPagg\Gateway\Transaction\CreditCard\Resource\Refund;
+namespace MundiPagg\MundiPagg\Gateway\Transaction\CreditCard\ResourceGateway\Refund;
 
 use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Payment\Model\InfoInterface;

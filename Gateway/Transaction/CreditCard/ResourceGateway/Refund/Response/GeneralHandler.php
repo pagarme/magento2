@@ -44,7 +44,7 @@ class GeneralHandler extends AbstractHandler implements HandlerInterface
             $charge->setPaidAmount($response->amount);
             $charge->setUpdatedAt(date("Y-m-d H:i:s"));
             $charge->save();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return $e->getMessage();
         }
         

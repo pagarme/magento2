@@ -11,7 +11,6 @@
 
 namespace MundiPagg\MundiPagg\Block\Payment;
 
-
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
 use Magento\Checkout\Model\Session as CheckoutSession;
