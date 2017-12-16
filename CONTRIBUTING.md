@@ -43,4 +43,3 @@ Template [PULLREQUEST-TEMPLATE](PULLREQUEST-TEMPLATE.md)
     * :mute: `:mute:` when reducing logging
     * :facepunch: `:facepunch:` when resolve conflict
     * :wrench: `:wrench:` when modify Web.config
-

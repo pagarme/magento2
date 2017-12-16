@@ -17,7 +17,7 @@ Add the following lines into your composer.json
 ```
 {
 	"require": {
-		"mundipagg/mundipagg-magento2-module":"~1.0.15"
+		"mundipagg/mundipagg-magento2-module":"~1.0.16"
 	}
 }
 ```

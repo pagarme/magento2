@@ -334,7 +334,7 @@ class RequestBuilder implements BuilderInterface
     /**
      * @return int
      */
-    protected function getInvoiceTotalInCents(): int
+    protected function getInvoiceTotalInCents()
     {
         $invoiceDetails = $this->getPaymentData()->getOrder()->getInvoiceCollection();
 
