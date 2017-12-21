@@ -44,10 +44,12 @@ final class ConfigProvider implements ConfigProviderInterface
 
     public function getConfig()
     {
+        $selectedCard = '';
+        $is_saved_card = 0;
+        $cards = [];
+        
         if ($this->getCustomerSession()->isLoggedIn()) {
-            $is_saved_card = 0;
-            $selectedCard = '';
-            $cards = [];
+            
             $idCustomer = $this->getCustomerSession()->getCustomer()->getId();
 
             $model = $this->getCardsFactory();
@@ -62,9 +64,6 @@ final class ConfigProvider implements ConfigProviderInterface
                 $selectedCard = $card->getId();
             }
 
-        }else{
-            $is_saved_card = 0;
-            $cards = [];
         }
         
         return [
