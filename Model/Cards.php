@@ -148,4 +148,23 @@ class Cards extends AbstractModel implements CardsInterface
     {
         return $this->setData(self::UPDATED_AT, $updatedAt);
     }
+
+    /**
+     * Get brand
+     * @return string|null
+     */
+    public function getBrand()
+    {
+        return $this->getData(self::BRAND);
+    }
+
+    /**
+     * Set brand
+     * @param string $brand
+     * @return \MundiPagg\MundiPagg\Api\Data\CardsInterface
+     */
+    public function setBrand($brand)
+    {
+        return $this->setData(self::BRAND, $brand);
+    }
 }

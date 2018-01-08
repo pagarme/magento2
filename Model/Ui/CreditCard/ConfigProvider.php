@@ -60,6 +60,7 @@ final class ConfigProvider implements ConfigProviderInterface
                 $cards[] = [
                     'id' => $card->getId(),
                     'last_four_numbers' => $card->getLastFourNumbers(),
+                    'brand' => $card->getBrand()
                 ];
                 $selectedCard = $card->getId();
             }

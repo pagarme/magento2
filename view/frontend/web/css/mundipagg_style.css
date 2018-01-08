@@ -1,0 +1,19 @@
+.payment-full{
+     width: 100%;
+     display: flex;
+     justify-content: space-between;
+ }
+.form-creditcard-one, .form-creditcard-two {
+    padding-right: 30px;
+    box-sizing: border-box;
+}
+
+.checkout-payment-method .payment-method-content {
+    padding: 0;
+}
+.checkout-payment-method .checkout-billing-address {
+    margin: 20px 0;
+}
+.actions-toolbar {
+    margin-bottom: 10px;
+}

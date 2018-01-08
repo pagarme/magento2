@@ -23,6 +23,10 @@ class UpgradeSchema implements UpgradeSchemaInterface
         if (version_compare($context->getVersion(), "1.0.2", "<")) {
             $setup = $this->updateVersionOneZeroTwo($setup);
         }
+
+        if (version_compare($context->getVersion(), "1.0.14", "<")) {
+            $setup = $this->updateVersionOneZeroTwelve($setup);
+        }
         
         $setup->endSetup();
     }
@@ -99,6 +103,30 @@ class UpgradeSchema implements UpgradeSchemaInterface
             $installer->getConnection()->createTable($table);
         }
  
+        $installer->endSetup();
+
+        return $setup;
+    }
+
+    protected function updateVersionOneZeroTwelve($setup)
+    {
+        $installer = $setup;
+        $installer->startSetup();
+
+        $connection = $installer->getConnection();
+
+        $connection->addColumn(
+            $installer->getTable('mundipagg_mundipagg_cards'),
+            'brand',
+            [
+                'type' => Table::TYPE_TEXT,
+                'length' => 255,
+                'nullable' => false,
+                'default' => '',
+                'comment' => 'Card Brand'
+            ]
+        );
+
         $installer->endSetup();
 
         return $setup;

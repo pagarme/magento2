@@ -130,7 +130,7 @@ define(
             },
 
             isSaveCardActive: function() {
-                return (window.isCustomerLoggedIn && window.checkoutConfig.payment.mundipagg_creditcard.is_saved_card);
+                return (window.isCustomerLoggedIn);
             },
 
             getSaveCardHelpHtml: function () {

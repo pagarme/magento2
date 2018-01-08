@@ -45,6 +45,16 @@ class BilletCreditCard extends Cc
         return '**** **** **** ' . $this->getInfo()->getCcLast4();
     }
 
+    public function getCardLast4()
+    {
+        return '**** **** **** ' . $this->getInfo()->getAdditionalInformation('cc_last_4');
+    }
+
+    public function getCcBrand()
+    {
+        return $this->getInfo()->getAdditionalInformation('cc_type');
+    }
+
     public function getTitle()
     {
         return $this->getInfo()->getAdditionalInformation('method_title');
@@ -63,6 +73,11 @@ class BilletCreditCard extends Cc
     public function getCcAmount()
     {
         return $this->getInfo()->getAdditionalInformation('cc_cc_amount');
+    }
+
+    public function getCcAmountWithTax()
+    {
+        return $this->getInfo()->getAdditionalInformation('cc_cc_amount') + $this->getInfo()->getAdditionalInformation('cc_cc_tax_amount') / 100;
     }
 
     public function getBilletAmount()

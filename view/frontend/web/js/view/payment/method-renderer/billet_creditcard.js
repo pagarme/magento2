@@ -9,7 +9,7 @@
 /*global define*/
 define(
     [
-        'MundiPagg_MundiPagg/js/view/payment/cc-form',
+        'MundiPagg_MundiPagg/js/view/payment/bcc-form',
         'ko',
         'MundiPagg_MundiPagg/js/action/installments',
         'MundiPagg_MundiPagg/js/action/installmentsByBrand',
@@ -38,7 +38,9 @@ define(
             defaults: {
                 template: 'MundiPagg_MundiPagg/payment/billet-creditcard',
                 creditCardType: '',
+                creditCardSavedNumber: '',
                 creditCardCcAmount: '',
+                creditCardCcTaxAmount: '',
                 creditCardBilletAmount: '',
                 creditCardInstallments: '',
                 creditCardOwner: '',
@@ -103,7 +105,6 @@ define(
                             this.creditCardBilletAmount(value);
                             this.creditCardCcAmount((totalQuote - parseFloat(value)).toFixed(2));
                             this.validateTotalQuote();
-                            this.getInstallmentsByApi();
                         }
 
                     },
@@ -124,12 +125,23 @@ define(
                             this.creditCardCcAmount(value);
                             this.creditCardBilletAmount((totalQuote - parseFloat(value)).toFixed(2));
                             this.validateTotalQuote();
-                            this.getInstallmentsByApi();
+
                         }
 
                     },
                     owner: self
                 });
+
+                this.bindInstallmentsByBlur = function (){
+
+                    var cards = window.checkoutConfig.payment.mundipagg_billet_creditcard.cards;
+                    cards.find(function(value, index) {
+                        if(value.id == self.creditSavedCard()){
+                            self.selectedCardType(value.brand);
+                        }
+                    });
+                    this.getInstallmentsByApi();
+                };
 
                 this.getInstallmentsByApi = function () {
                     if (!isNaN(this.creditCardCcAmount()) && this.creditCardCcAmount() != '') {
@@ -183,13 +195,27 @@ define(
 
                 });
 
+                this.creditSavedCard.subscribe(function(value){
+                    if (typeof value != 'undefined') {
+                        var cards = window.checkoutConfig.payment.mundipagg_billet_creditcard.cards;
+                        for (var i = 0, len = cards.length; i < len; i++) {
+                            if(cards[i].id == value){
+                                self.creditCardSavedNumber(window.checkoutConfig.payment.mundipagg_billet_creditcard.cards[i].last_four_numbers);
+                                self.selectedCardType(window.checkoutConfig.payment.mundipagg_billet_creditcard.cards[i].brand);
+                            }
+                        }
+                    }
+                });
+
             },
 
             initObservable: function () {
                 this._super()
                     .observe([
                         'creditCardType',
+                        'creditCardSavedNumber',
                         'creditCardCcAmount',
+                        'creditCardCcTaxAmount',
                         'creditCardBilletAmount',
                         'creditCardOwner',
                         'creditCardExpYear',
@@ -269,6 +295,7 @@ define(
                     'additional_data': {
                         'cc_cid': this.creditCardVerificationNumber(),
                         'cc_type': this.creditCardType(),
+                        'cc_last_4': this.creditCardSavedNumber() ? this.creditCardSavedNumber() : this.creditCardNumber(),
                         'cc_exp_year': this.creditCardExpYear(),
                         'cc_exp_month': this.creditCardExpMonth(),
                         'cc_number': this.creditCardNumber(),
@@ -276,6 +303,7 @@ define(
                         'cc_savecard': this.creditCardsavecard() ? 1 : 0,
                         'cc_installments': this.creditCardInstallments(),
                         'cc_cc_amount': this.creditCardCcAmount(),
+                        'cc_cc_tax_amount': this.creditCardCcTaxAmount(),
                         'cc_saved_card': this.creditSavedCard(),
                         'cc_billet_amount': this.creditCardBilletAmount(),
                     }
@@ -304,6 +332,7 @@ define(
                 total.total_segments[subTotalIndex].value = +total.total_segments[subTotalIndex].value - this.oldInstallmentTax;
                 total.total_segments[subTotalIndex].value = +total.total_segments[subTotalIndex].value + parseFloat(newTax);
                 total.tax_amount = parseFloat(newTax);
+                this.creditCardCcTaxAmount(newTax * 100);
                 total.base_tax_amount = parseFloat(newTax);
                 this.oldInstallmentTax = newTax;
                 quote.setTotals(total);

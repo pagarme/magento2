@@ -345,6 +345,8 @@ class RequestBuilder implements BuilderInterface
 
         $payment = $quote->getPayment();
 
+
+
         $order = $this->getOrderRequest();
 
         $capture = $this->getConfigCreditCard()->getPaymentAction() == '‌authorize_capture' ? true : false;
@@ -358,7 +360,7 @@ class RequestBuilder implements BuilderInterface
                 [
                     'payment_method' => 'credit_card',
                     'credit_card' => [
-                        'amount' => $quote->getGrandTotal() * 100,
+                        'amount' => $requestDataProvider->getAmountInCents(),
                         'recurrence' => false,
                         'installments' => $requestDataProvider->getInstallmentCount(),
                         'statement_descriptor' => 'Mundipagg Online',
@@ -384,8 +386,8 @@ class RequestBuilder implements BuilderInterface
             $order->payments = [
                 [
                     'payment_method' => 'credit_card',
+                    'amount' => $requestDataProvider->getAmountInCents(),
                     'credit_card' => [
-                        'amount' => $quote->getGrandTotal() * 100,
                         'recurrence' => false,
                         'installments' => $requestDataProvider->getInstallmentCount(),
                         'statement_descriptor' => 'Mundipagg Online',
@@ -474,8 +476,7 @@ class RequestBuilder implements BuilderInterface
             {
                 $customer = $response->customer;
 
-                $this->setCardToken($requestDataProvider, $customer, $quote);
-                
+                $this->setCardToken($payment, $customer, $quote);
             }
 
         } catch (\MundiAPILib\Exceptions\ErrorException $error) {
@@ -496,15 +497,15 @@ class RequestBuilder implements BuilderInterface
         return new \MundiAPILib\Models\CreateCardRequest();
     }
 
-    protected function setCardToken($requestDataProvider, $customer, $quote)
+    protected function setCardToken($payment, $customer, $quote)
     {
         $request = $this->getCardRequest();
 
-        $request->number = $requestDataProvider->getCreditCardNumber();
-        $request->holderName = $requestDataProvider->getHolderName();
-        $request->expMonth = $requestDataProvider->getExpMonth();
-        $request->expYear = $requestDataProvider->getExpYear();
-        $request->cvv = $requestDataProvider->getSecurityCode();
+        $request->number = $payment->getCreditCardNumber();
+        $request->holderName = $payment->getHolderName();
+        $request->expMonth = $payment->getExpMonth();
+        $request->expYear = $payment->getExpYear();
+        $request->cvv = $payment->getSecurityCode();
         $request->billingAddress = [
             'street' => $quote->getBillingAddress()->getStreetLine(1),
             'number' => $quote->getBillingAddress()->getStreetLine(2) . ' ' . $quote->getBillingAddress()->getStreetLine(3),
@@ -524,20 +525,21 @@ class RequestBuilder implements BuilderInterface
         ];
 
         $result = $this->createCard($customer, $request);
-        $this->setCard($quote, $customer, $requestDataProvider, $result);
+        $this->setCard($quote, $customer, $payment, $result);
         
 
         return $this;
     }
 
-    protected function setCard($quote, $customer, $requestDataProvider, $result)
+    protected function setCard($quote, $customer, $payment, $result)
     {
         try {
             $cards = $this->getCardsFactory();
             $cards->setCustomerId($quote->getCustomerId());
             $cards->setCardToken($result->id);
             $cards->setCardId($customer->id);
-            $cards->setLastFourNumbers(substr($requestDataProvider->getCreditCardNumber(), -4));
+            $cards->setLastFourNumbers(substr($payment->getCreditCardNumber(), -4));
+            $cards->setBrand($payment->getCcType());
             $cards->setCreatedAt(date("Y-m-d H:i:s"));
             $cards->setUpdatedAt(date("Y-m-d H:i:s"));
             $cards->save();

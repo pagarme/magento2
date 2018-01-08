@@ -17,6 +17,14 @@
         </arguments>
     </virtualType>
 
+    <virtualType name="MundiPaggTwoCreditCardUiConfigProvider" type="Magento\Payment\Model\CcGenericConfigProvider">
+        <arguments>
+            <argument name="methodCodes" xsi:type="array">
+                <item name="mundipagg_two_creditcard" xsi:type="const">MundiPagg\MundiPagg\Model\Ui\TwoCreditCard\ConfigProvider::CODE</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
     <virtualType name="MundiPaggBilletCreditCardUiConfigProvider" type="Magento\Payment\Model\CcGenericConfigProvider">
         <arguments>
             <argument name="methodCodes" xsi:type="array">
@@ -36,10 +44,16 @@
             <argument name="configProviders" xsi:type="array">
                 <item name="mundipagg_creditcard_config_provider" xsi:type="object">MundiPaggCreditCardUiConfigProvider</item>
                 <item name="mundipagg_creditcard_config_provider_unique" xsi:type="object">MundiPagg\MundiPagg\Model\Ui\CreditCard\ConfigProvider</item>
+
                 <item name="mundipagg_billet_creditcard_config_provider" xsi:type="object">MundiPaggBilletCreditCardUiConfigProvider</item>
                 <item name="mundipagg_billet_creditcard_config_provider_unique" xsi:type="object">MundiPagg\MundiPagg\Model\Ui\BilletCreditCard\ConfigProvider</item>
+
+                <item name="mundipagg_two_creditcard_config_provider" xsi:type="object">MundiPaggTwoCreditCardUiConfigProvider</item>
+                <item name="mundipagg_two_creditcard_config_provider_unique" xsi:type="object">MundiPagg\MundiPagg\Model\Ui\TwoCreditCard\ConfigProvider</item>
+
                 <item name="generic_config_provider" xsi:type="object">Magento\Payment\Model\CcGenericConfigProvider</item>
                 <item name="installments_creditcard" xsi:type="object">MundiPaggCreditCardInstallmentsUiConfigProvider</item>
+
                 <item name="mundipagg_billet_config_provider" xsi:type="object">MundiPagg\MundiPagg\Model\Ui\Billet\ConfigProvider</item>
             </argument>
         </arguments>

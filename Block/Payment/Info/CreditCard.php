@@ -32,6 +32,16 @@ class CreditCard extends Cc
         return '**** **** **** ' . $this->getInfo()->getCcLast4();
     }
 
+    public function getCardLast4()
+    {
+        return '**** **** **** ' . $this->getInfo()->getAdditionalInformation('cc_last_4');
+    }
+
+    public function getCcBrand()
+    {
+        return $this->getInfo()->getAdditionalInformation('cc_type');
+    }
+
     public function getTitle()
     {
         return $this->getInfo()->getAdditionalInformation('method_title');

@@ -30,6 +30,10 @@ define(
             {
                 type: 'mundipagg_billet',
                 component: 'MundiPagg_MundiPagg/js/view/payment/method-renderer/billet'
+            },
+            {
+                type: 'mundipagg_two_creditcard',
+                component: 'MundiPagg_MundiPagg/js/view/payment/method-renderer/two_creditcard'
             }
         );
         return Component.extend({});

@@ -19,17 +19,15 @@ define(
         'Magento_Checkout/js/model/totals',
         'Magento_Checkout/js/model/full-screen-loader'
     ],
-    function (
-        Component,
-        ko,
-        installments,
-        installmentsByBrand,
-        $,
-        quote,
-        priceUtils,
-        totals,
-        fullScreenLoader
-    ) {
+    function (Component,
+              ko,
+              installments,
+              installmentsByBrand,
+              $,
+              quote,
+              priceUtils,
+              totals,
+              fullScreenLoader) {
         'use strict';
 
         return Component.extend({
@@ -58,32 +56,52 @@ define(
 
                 this.getCcInstallments();
 
-                var self =  this;
-                this.selectedCardType.subscribe(function(newValue){
+                var self = this;
 
-                    if(newValue){
+                this.getInstallmentsByBrand = function (brand) {
 
-                        fullScreenLoader.startLoader();
+                    $.when(
+                        installmentsByBrand(brand)
+                    ).done(function (data) {
+                        self.allInstallments.removeAll();
 
-                        $.when(
-                            installmentsByBrand(newValue)
-                        ).done(function (data) {
-                            self.allInstallments.removeAll();
-
-                            _.map(data, function (value, key) {
-                                self.allInstallments.push({
-                                    'value': value.id,
-                                    'interest': value.interest,
-                                    'installments': value.label
-                                });
+                        _.map(data, function (value, key) {
+                            self.allInstallments.push({
+                                'value': value.id,
+                                'interest': value.interest,
+                                'installments': value.label
                             });
-
-                        }).always(function () {
-                            fullScreenLoader.stopLoader();
                         });
 
-                    }
+                    }).always(function () {
+                        fullScreenLoader.stopLoader();
+                    });
 
+                }
+
+                if (this.creditSavedCard()) {
+
+                    var brand = this.creditSavedCard();
+                    self.getInstallmentsByBrand(brand);
+
+                }
+
+                this.creditCardType.subscribe(function (brand) {
+
+                    self.getInstallmentsByBrand(brand);
+
+                });
+
+                this.creditSavedCard.subscribe(function(value){
+                    if (typeof value != 'undefined') {
+                        var cards = window.checkoutConfig.payment.mundipagg_creditcard.cards;
+                        for (var i = 0, len = cards.length; i < len; i++) {
+                            if(cards[i].id == value){
+                                self.creditCardSavedNumber(window.checkoutConfig.payment.mundipagg_creditcard.cards[i].last_four_numbers);
+                                self.creditCardType(window.checkoutConfig.payment.mundipagg_creditcard.cards[i].brand);
+                            }
+                        }
+                    }
                 });
 
             },
@@ -92,6 +110,7 @@ define(
                 this._super()
                     .observe([
                         'creditCardType',
+                        'creditCardSavedNumber',
                         'creditCardOwner',
                         'creditCardExpYear',
                         'creditCardExpMonth',
@@ -121,7 +140,7 @@ define(
                 return window.checkoutConfig.payment.ccform.installments.active[this.getCode()];
             },
 
-            getCcInstallments: function() {
+            getCcInstallments: function () {
                 var self = this;
 
                 fullScreenLoader.startLoader();
@@ -154,7 +173,7 @@ define(
 
             },
 
-            getCcInstallmentsValues: function() {
+            getCcInstallmentsValues: function () {
                 return _.map(this.getCcInstallments(), function (value, key) {
                     return {
                         'value': key,
@@ -169,6 +188,7 @@ define(
                     'additional_data': {
                         'cc_cid': this.creditCardVerificationNumber(),
                         'cc_type': this.creditCardType(),
+                        'cc_last_4': this.creditCardSavedNumber() ? this.creditCardSavedNumber() : this.creditCardNumber(),
                         'cc_exp_year': this.creditCardExpYear(),
                         'cc_exp_month': this.creditCardExpMonth(),
                         'cc_number': this.creditCardNumber(),
@@ -180,23 +200,23 @@ define(
                 };
             },
 
-            onInstallmentItemChange: function() {
+            onInstallmentItemChange: function () {
                 this.updateTotalWithTax(jQuery('#mundipagg_creditcard_installments option:selected').attr('interest'));
             },
 
-            updateTotalWithTax: function(newTax) {
+            updateTotalWithTax: function (newTax) {
                 if (typeof this.oldInstallmentTax == 'undefined') {
                     this.oldInstallmentTax = 0;
                 }
                 console.log(newTax);
                 var total = quote.getTotals()();
                 var subTotalIndex = null;
-                for(var i = 0, len = total.total_segments.length; i < len; i++) {
-                    if(total.total_segments[i].code == "grand_total") {
+                for (var i = 0, len = total.total_segments.length; i < len; i++) {
+                    if (total.total_segments[i].code == "grand_total") {
                         subTotalIndex = i;
                         continue;
                     }
-                    if(total.total_segments[i].code != "tax") continue;
+                    if (total.total_segments[i].code != "tax") continue;
                     total.total_segments[i].value = newTax;
                 }
 
@@ -208,21 +228,21 @@ define(
                 quote.setTotals(total);
             },
 
-            onSavedCardChange: function() {
+            onSavedCardChange: function () {
                 if (jQuery('#mundipagg_creditcard_card').val()) {
-                    jQuery('#mundipagg_creditcard_cc_icons').css('display','none');
-                    jQuery('#mundipagg_creditcard_cc_savecard').css('display','none');
-                    jQuery('#mundipagg_creditcard_cc_number_div').css('display','none');
-                    jQuery('#mundipagg_creditcard_cc_owner_div').css('display','none');
-                    jQuery('#mundipagg_creditcard_cc_type_exp_div').css('display','none');
-                    jQuery('#mundipagg_creditcard_cc_type_cvv_div').css('display','none');
-                }else{
-                    jQuery('#mundipagg_creditcard_cc_icons').css('display','block');
-                    jQuery('#mundipagg_creditcard_cc_savecard').css('display','block');
-                    jQuery('#mundipagg_creditcard_cc_number_div').css('display','block');
-                    jQuery('#mundipagg_creditcard_cc_owner_div').css('display','block');
-                    jQuery('#mundipagg_creditcard_cc_type_exp_div').css('display','block');
-                    jQuery('#mundipagg_creditcard_cc_type_cvv_div').css('display','block');
+                    jQuery('#mundipagg_creditcard_cc_icons').css('display', 'none');
+                    jQuery('#mundipagg_creditcard_cc_savecard').css('display', 'none');
+                    jQuery('#mundipagg_creditcard_cc_number_div').css('display', 'none');
+                    jQuery('#mundipagg_creditcard_cc_owner_div').css('display', 'none');
+                    jQuery('#mundipagg_creditcard_cc_type_exp_div').css('display', 'none');
+                    jQuery('#mundipagg_creditcard_cc_type_cvv_div').css('display', 'none');
+                } else {
+                    jQuery('#mundipagg_creditcard_cc_icons').css('display', 'block');
+                    jQuery('#mundipagg_creditcard_cc_savecard').css('display', 'block');
+                    jQuery('#mundipagg_creditcard_cc_number_div').css('display', 'block');
+                    jQuery('#mundipagg_creditcard_cc_owner_div').css('display', 'block');
+                    jQuery('#mundipagg_creditcard_cc_type_exp_div').css('display', 'block');
+                    jQuery('#mundipagg_creditcard_cc_type_cvv_div').css('display', 'block');
                 }
             },
         })

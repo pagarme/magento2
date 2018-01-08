@@ -350,15 +350,18 @@ class RequestBuilder implements BuilderInterface
 
         $capture = $this->getConfigBilletCreditCard()->getPaymentAction() == '‌authorize_capture' ? true : false;
 
+        $billetAmount = $quote->getPayment()->getCcBilletAmount() * 100;
+
         if ($payment->getAdditionalInformation('cc_saved_card')) {
-            
+
             $model = $this->getCardsFactory();
             $cardCollection = $model->getCollection()->addFieldToFilter('id',array('eq' => $payment->getAdditionalInformation('cc_saved_card')))->getFirstItem();
+
 
             $order->payments = [
                 [
                     'payment_method' => 'credit_card',
-                    'amount' => $quote->getPayment()->getCcCcAmount()  * 100,
+                    'amount' => $requestDataProvider->getAmountInCents() - $billetAmount,
                     'credit_card' => [
                         'recurrence' => false,
                         'installments' => $requestDataProvider->getInstallmentCount(),
@@ -381,7 +384,7 @@ class RequestBuilder implements BuilderInterface
                 [
                     'payment_method' => 'boleto',
                     'capture' => $capture,
-                    'amount' => $quote->getPayment()->getCcBilletAmount() * 100,
+                    'amount' => $billetAmount,
                     'boleto' => [
                         'bank' => '033',
                         'instructions' => 'Pagar até o vencimento',
@@ -395,7 +398,7 @@ class RequestBuilder implements BuilderInterface
             $order->payments = [
                 [
                     'payment_method' => 'credit_card',
-                    'amount' => $quote->getPayment()->getCcCcAmount()  * 100,
+                    'amount' => $requestDataProvider->getAmountInCents() - $billetAmount,
                     'credit_card' => [
                         'recurrence' => false,
                         'installments' => $requestDataProvider->getInstallmentCount(),
@@ -418,7 +421,7 @@ class RequestBuilder implements BuilderInterface
                 [
                     'payment_method' => 'boleto',
                     'capture' => $capture,
-                    'amount' => $quote->getPayment()->getCcBilletAmount() * 100,
+                    'amount' => $billetAmount,
                     'boleto' => [
                         'bank' => '033',
                         'instructions' => 'Pagar até o vencimento',

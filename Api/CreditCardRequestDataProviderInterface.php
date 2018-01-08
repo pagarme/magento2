@@ -24,7 +24,7 @@ interface CreditCardRequestDataProviderInterface extends BaseRequestDataProvider
      * @return int
      */
     public function getSaveCard();
-    
+
     /**
      * @return string
      */

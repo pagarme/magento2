@@ -12,6 +12,7 @@ interface CardsInterface
     const LAST_FOUR_NUMBERS = 'last_four_numbers';
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
+    const BRAND = 'brand';
 
     /**
      * Get id
@@ -103,4 +104,17 @@ interface CardsInterface
      * @return \MundiPagg\MundiPagg\Api\Data\CardsInterface
      */
     public function setUpdatedAt($updatedAt);
+
+    /**
+     * Get grand
+     * @return string|null
+     */
+    public function getBrand();
+
+    /**
+     * Set brand
+     * @param string $brand
+     * @return \MundiPagg\MundiPagg\Api\Data\CardsInterface
+     */
+    public function setBrand($brand);
 }

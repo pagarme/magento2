@@ -21,7 +21,7 @@
         </label>
         <div class="control">
             <input type="text" onKeyPress="if(this.value.length==20) return false;" min="0" name="payment[cc_billet_amount]" class="input-text money" value=""
-                   data-bind="attr: {
+                   data-bind="event: { blur: bindInstallmentsByBlur }, attr: {
                                     autocomplete: off,
                                     id: getCode() + '_cc_billet_amount',
                                     title: $t('Billet Credit Card Cc Amount'),
@@ -45,8 +45,8 @@
             <span><!-- ko i18n: 'Credit Card Amount'--><!-- /ko --></span>
         </label>
         <div class="control">
-            <input type="text" onKeyPress="if(this.value.length==20) return false;" min="0" name="payment[cc_cc_amount]" class="input-text money" value=""
-                   data-bind="attr: {
+            <input type="text" onKeyPress="if(this.value.length==20) return false;" min="0" name="payment[cc_cc_amount]" class="input-text money" value="" style="width: 335px;"
+                   data-bind="event: { blur: bindInstallmentsByBlur }, attr: {
                                     autocomplete: off,
                                     id: getCode() + '_cc_cc_amount',
                                     title: $t('Billet Credit Card Cc Amount'),

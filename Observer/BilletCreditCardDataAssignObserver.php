@@ -35,11 +35,22 @@ class BilletCreditCardDataAssignObserver extends AbstractDataAssignObserver
 
         if ($additionalData->getCcSavedCard()) {
             $info->setAdditionalInformation('cc_saved_card', $additionalData->getCcSavedCard());
+            $info->setAdditionalInformation('cc_cc_amount', $additionalData->getCcCcAmount());
+            $info->setAdditionalInformation('cc_cc_tax_amount', $additionalData->getCcCcTaxAmount());
+            $info->setAdditionalInformation('cc_type', $additionalData->getCcType());
+            $info->setAdditionalInformation('cc_last_4', $additionalData->getCcLast4());
+
             $info->addData([
                 'cc_cc_amount' => $additionalData->getCcCcAmount(),
                 'cc_billet_amount' => $additionalData->getCcBilletAmount()
             ]);
         }else{
+
+            $info->setAdditionalInformation('cc_cc_amount', $additionalData->getCcCcAmount());
+            $info->setAdditionalInformation('cc_cc_tax_amount', $additionalData->getCcCcTaxAmount());
+            $info->setAdditionalInformation('cc_type', $additionalData->getCcType());
+            $info->setAdditionalInformation('cc_last_4', substr($additionalData->getCcLast4(),-4));
+
             $info->addData([
                 'cc_type' => $additionalData->getCcType(),
                 'cc_owner' => $additionalData->getCcOwner(),
