@@ -24,7 +24,7 @@ class ConfigByBrand extends AbstractConfig implements ConfigByBrandInterface
     public function __construct(
         ScopeConfigInterface $storeConfig,
         Session $session,
-        $paymentMethodCode
+        $paymentMethodCode = null
     )
     {
         parent::__construct($storeConfig);

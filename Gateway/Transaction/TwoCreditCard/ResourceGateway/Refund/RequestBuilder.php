@@ -19,7 +19,6 @@ use MundiPagg\MundiPagg\Api\CreditCardRequestDataProviderInterface;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Payment\Gateway\Request\BuilderInterface;
 use MundiAPILib\Models\CreateOrderRequest as Request;
-use Gateway\One\DataContract\Request\CreateSaleRequestData\CreditCardTransaction;
 use MundiPagg\MundiPagg\Api\CreditCardRequestDataProviderInterfaceFactory;
 use MundiPagg\MundiPagg\Api\CartItemRequestDataProviderInterfaceFactory;
 use Magento\Checkout\Model\Cart;
