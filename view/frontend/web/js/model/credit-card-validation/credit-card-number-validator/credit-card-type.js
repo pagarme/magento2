@@ -133,44 +133,18 @@ define(
                     return $.extend(true, {}, types);
                 }
 
-                if (cardNumber.length == 6) {
+                if (cardNumber.length == 6 || cardNumber.length > 6) {
+
+                    if (cardNumber.length != 6) {
+                        cardNumber = cardNumber.substring(0,6);
+                    }
 
                     $.ajax({
                         type: "GET",
                         dataType: "json",
                         url: 'https://api.mundipagg.com/bin/v1/' + cardNumber,
                         async: false,
-                        cache: false,
-                        success: function (data) {
-                            var codeWithArray = {
-                                name: 'CVV',
-                                size: data.cvv
-                            }
-
-                            value = {
-                                title: data.brandName,
-                                type: data.brandName,
-                                pattern: '',
-                                gaps: data.gaps,
-                                lengths: data.lenghts,
-                                code: codeWithArray
-                            };
-
-                            result.push($.extend(true, {}, value));
-
-                            return result;
-                        }
-                    });
-                }
-
-                if (cardNumber.length > 6) {
-                    
-                    $.ajax({
-                        type: "GET",
-                        dataType: "json",
-                        url: 'https://api.mundipagg.com/bin/v1/' + cardNumber.substring(0,6),
-                        async: false,
-                        cache: false,
+                        cache: true,
                         success: function (data) {
                             var codeWithArray = {
                                 name: 'CVV',

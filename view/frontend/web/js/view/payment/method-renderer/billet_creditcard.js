@@ -37,31 +37,32 @@ define(
         return Component.extend({
             defaults: {
                 template: 'MundiPagg_MundiPagg/payment/billet-creditcard',
-                creditCardType: '',
-                creditCardSavedNumber: '',
-                creditCardCcAmount: '',
-                creditCardCcTaxAmount: '',
-                creditCardBilletAmount: '',
-                creditCardInstallments: '',
-                creditCardOwner: '',
-                creditCardExpYear: '',
-                creditCardExpMonth: '',
-                creditCardsavecard: 0,
-                creditCardNumber: '',
-                creditCardSsStartMonth: '',
-                creditCardSsStartYear: '',
-                creditCardSsIssue: '',
-                creditCardVerificationNumber: '',
-                creditSavedCard: window.checkoutConfig.payment.mundipagg_billet_creditcard.selected_card,
-                selectedCardType: null,
-                allInstallments: ko.observableArray([]),
-                teste: ''
+                creditCardTypeBcc: '',
+                creditCardSavedNumberBcc: '',
+                creditCardCcAmountBcc: '',
+                creditCardCcTaxAmountBcc: '',
+                creditCardBilletAmountBcc: '',
+                creditCardInstallmentsBcc: '',
+                creditCardOwnerBcc: '',
+                creditCardExpYearBcc: '',
+                creditCardExpMonthBcc: '',
+                creditCardsavecardBcc: 0,
+                creditCardNumberBcc: '',
+                creditCardSsStartMonthBcc: '',
+                creditCardSsStartYearBcc: '',
+                creditCardSsIssueBcc: '',
+                creditCardVerificationNumberBcc: '',
+                creditSavedCardBcc: window.checkoutConfig.payment.mundipagg_billet_creditcard.selected_card,
+                selectedCardTypeBcc: null,
+                allInstallments: ko.observableArray([])
             },
 
             totals: quote.getTotals(),
 
             initialize: function () {
                 this._super();
+
+                this.getCcInstallments();
 
                 var self = this;
 
@@ -84,16 +85,16 @@ define(
 
                 this.validateTotalQuote = function () {
 
-                    if (Math.abs(parseFloat(self.creditCardBilletAmount())) + Math.abs(parseFloat(self.creditCardCcAmount())) > totalQuote) {
-                        self.bindCreditCardBilletAmount(null);
-                        self.bindCreditCardCcAmount(null);
+                    if (Math.abs(parseFloat(self.creditCardBilletAmountBcc())) + Math.abs(parseFloat(self.creditCardCcAmountBcc())) > totalQuote) {
+                        self.bindCreditCardBilletAmountBcc(null);
+                        self.bindCreditCardCcAmountBcc(null);
                     }
 
                 }
 
                 this.bindCreditCardBilletAmount = ko.computed({
                     read: function () {
-                        var value = this.creditCardBilletAmount();
+                        var value = this.creditCardBilletAmountBcc();
                         value = parseFloat(value.replace(/[^\d]/g, ""));
                         return this.formatPrice(value);
                     },
@@ -102,8 +103,8 @@ define(
                             value = this.formatPrice(value);
                             value = value.replace(/[^,\d]/g, "");
                             value = value.replace(",", ".");
-                            this.creditCardBilletAmount(value);
-                            this.creditCardCcAmount((totalQuote - parseFloat(value)).toFixed(2));
+                            this.creditCardBilletAmountBcc(value);
+                            this.creditCardCcAmountBcc((totalQuote - parseFloat(value)).toFixed(2));
                             this.validateTotalQuote();
                         }
 
@@ -111,9 +112,9 @@ define(
                     owner: self
                 });
 
-                this.bindCreditCardCcAmount = ko.computed({
+                this.bindCreditCardCcAmountBcc = ko.computed({
                     read: function () {
-                        var value = this.creditCardCcAmount();
+                        var value = this.creditCardCcAmountBcc();
                         value = parseFloat(value.replace(/[^\d]/g, ""));
                         return this.formatPrice(value);
                     },
@@ -122,8 +123,8 @@ define(
                             value = this.formatPrice(value);
                             value = value.replace(/[^,\d]/g, "");
                             value = value.replace(",", ".");
-                            this.creditCardCcAmount(value);
-                            this.creditCardBilletAmount((totalQuote - parseFloat(value)).toFixed(2));
+                            this.creditCardCcAmountBcc(value);
+                            this.creditCardBilletAmountBcc((totalQuote - parseFloat(value)).toFixed(2));
                             this.validateTotalQuote();
 
                         }
@@ -132,22 +133,22 @@ define(
                     owner: self
                 });
 
-                this.bindInstallmentsByBlur = function (){
+                this.bindInstallmentsByBlurBcc = function (){
 
                     var cards = window.checkoutConfig.payment.mundipagg_billet_creditcard.cards;
                     cards.find(function(value, index) {
-                        if(value.id == self.creditSavedCard()){
-                            self.selectedCardType(value.brand);
+                        if(value.id == self.creditSavedCardBcc()){
+                            self.selectedCardTypeBcc(value.brand);
                         }
                     });
                     this.getInstallmentsByApi();
                 };
 
                 this.getInstallmentsByApi = function () {
-                    if (!isNaN(this.creditCardCcAmount()) && this.creditCardCcAmount() != '') {
+                    if (!isNaN(this.creditCardCcAmountBcc()) && this.creditCardCcAmountBcc() != '') {
 
                         $.when(
-                            installmentsByBrandAndAmount(self.selectedCardType(), this.creditCardCcAmount())
+                            installmentsByBrandAndAmount(self.selectedCardTypeBcc(), this.creditCardCcAmountBcc())
                         ).done(function (data) {
                             self.allInstallments.removeAll();
 
@@ -167,13 +168,13 @@ define(
 
                 };
 
-                this.selectedCardType.subscribe(function (newValue) {
+                this.selectedCardTypeBcc.subscribe(function (newValue) {
 
                     if (newValue) {
 
                         fullScreenLoader.startLoader();
 
-                        var creditCardAmount = self.creditCardCcAmount() ? self.creditCardCcAmount() : 0;
+                        var creditCardAmount = self.creditCardCcAmountBcc() ? self.creditCardCcAmountBcc() : 0;
                         $.when(
                             installmentsByBrandAndAmount(newValue, creditCardAmount)
                         ).done(function (data) {
@@ -195,13 +196,13 @@ define(
 
                 });
 
-                this.creditSavedCard.subscribe(function(value){
+                this.creditSavedCardBcc.subscribe(function(value){
                     if (typeof value != 'undefined') {
                         var cards = window.checkoutConfig.payment.mundipagg_billet_creditcard.cards;
                         for (var i = 0, len = cards.length; i < len; i++) {
                             if(cards[i].id == value){
-                                self.creditCardSavedNumber(window.checkoutConfig.payment.mundipagg_billet_creditcard.cards[i].last_four_numbers);
-                                self.selectedCardType(window.checkoutConfig.payment.mundipagg_billet_creditcard.cards[i].brand);
+                                self.creditCardSavedNumberBcc(window.checkoutConfig.payment.mundipagg_billet_creditcard.cards[i].last_four_numbers);
+                                self.selectedCardTypeBcc(window.checkoutConfig.payment.mundipagg_billet_creditcard.cards[i].brand);
                             }
                         }
                     }
@@ -212,24 +213,23 @@ define(
             initObservable: function () {
                 this._super()
                     .observe([
-                        'creditCardType',
-                        'creditCardSavedNumber',
-                        'creditCardCcAmount',
-                        'creditCardCcTaxAmount',
-                        'creditCardBilletAmount',
-                        'creditCardOwner',
-                        'creditCardExpYear',
-                        'creditCardExpMonth',
-                        'creditCardNumber',
-                        'creditCardVerificationNumber',
-                        'creditCardSsStartMonth',
-                        'creditCardSsStartYear',
-                        'creditCardsavecard',
-                        'creditCardSsIssue',
-                        'creditSavedCard',
-                        'selectedCardType',
-                        'creditCardInstallments',
-                        'teste'
+                        'creditCardTypeBcc',
+                        'creditCardSavedNumberBcc',
+                        'creditCardCcAmountBcc',
+                        'creditCardCcTaxAmountBcc',
+                        'creditCardBilletAmountBcc',
+                        'creditCardOwnerBcc',
+                        'creditCardExpYearBcc',
+                        'creditCardExpMonthBcc',
+                        'creditCardNumberBcc',
+                        'creditCardVerificationNumberBcc',
+                        'creditCardSsStartMonthBcc',
+                        'creditCardSsStartYearBcc',
+                        'creditCardsavecardBcc',
+                        'creditCardSsIssueBcc',
+                        'creditSavedCardBcc',
+                        'selectedCardTypeBcc',
+                        'creditCardInstallmentsBcc'
                     ]);
 
                 return this;
@@ -293,19 +293,19 @@ define(
                 return {
                     'method': this.item.method,
                     'additional_data': {
-                        'cc_cid': this.creditCardVerificationNumber(),
-                        'cc_type': this.creditCardType(),
-                        'cc_last_4': this.creditCardSavedNumber() ? this.creditCardSavedNumber() : this.creditCardNumber(),
-                        'cc_exp_year': this.creditCardExpYear(),
-                        'cc_exp_month': this.creditCardExpMonth(),
-                        'cc_number': this.creditCardNumber(),
-                        'cc_owner': this.creditCardOwner(),
-                        'cc_savecard': this.creditCardsavecard() ? 1 : 0,
-                        'cc_installments': this.creditCardInstallments(),
-                        'cc_cc_amount': this.creditCardCcAmount(),
-                        'cc_cc_tax_amount': this.creditCardCcTaxAmount(),
-                        'cc_saved_card': this.creditSavedCard(),
-                        'cc_billet_amount': this.creditCardBilletAmount(),
+                        'cc_cid': this.creditCardVerificationNumberBcc(),
+                        'cc_type': this.creditCardTypeBcc(),
+                        'cc_last_4': this.creditCardSavedNumberBcc() ? this.creditCardSavedNumberBcc() : this.creditCardNumberBcc(),
+                        'cc_exp_year': this.creditCardExpYearBcc(),
+                        'cc_exp_month': this.creditCardExpMonthBcc(),
+                        'cc_number': this.creditCardNumberBcc(),
+                        'cc_owner': this.creditCardOwnerBcc(),
+                        'cc_savecard': this.creditCardsavecardBcc() ? 1 : 0,
+                        'cc_installments': this.creditCardInstallmentsBcc(),
+                        'cc_cc_amount': this.creditCardCcAmountBcc(),
+                        'cc_cc_tax_amount': this.creditCardCcTaxAmountBcc(),
+                        'cc_saved_card': this.creditSavedCardBcc(),
+                        'cc_billet_amount': this.creditCardBilletAmountBcc(),
                     }
                 };
             },
@@ -332,7 +332,7 @@ define(
                 total.total_segments[subTotalIndex].value = +total.total_segments[subTotalIndex].value - this.oldInstallmentTax;
                 total.total_segments[subTotalIndex].value = +total.total_segments[subTotalIndex].value + parseFloat(newTax);
                 total.tax_amount = parseFloat(newTax);
-                this.creditCardCcTaxAmount(newTax * 100);
+                this.creditCardCcTaxAmountBcc(newTax * 100);
                 total.base_tax_amount = parseFloat(newTax);
                 this.oldInstallmentTax = newTax;
                 quote.setTotals(total);

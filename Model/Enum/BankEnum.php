@@ -10,4 +10,6 @@ abstract class BankEnum
     const BRADESCO = "237";
     const ITAU = "341";
     const HSBC = "399";
+    const CAIXA = "104";
+    const STONE = "033";
 }

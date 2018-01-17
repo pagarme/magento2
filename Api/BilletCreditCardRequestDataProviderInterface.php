@@ -18,6 +18,11 @@ interface BilletCreditCardRequestDataProviderInterface extends BaseRequestDataPr
     /**
      * @return int
      */
+    public function getBankType();
+
+    /**
+     * @return int
+     */
     public function getInstallmentCount();
 
     /**
@@ -64,4 +69,5 @@ interface BilletCreditCardRequestDataProviderInterface extends BaseRequestDataPr
      * @return string
      */
     public function getIsOneDollarAuthEnabled();
+
 }

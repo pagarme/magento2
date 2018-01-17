@@ -476,7 +476,7 @@ class RequestBuilder implements BuilderInterface
             {
                 $customer = $response->customer;
 
-                $this->setCardToken($payment, $customer, $quote);
+                $this->setCardToken($requestDataProvider, $customer, $quote);
             }
 
         } catch (\MundiAPILib\Exceptions\ErrorException $error) {
@@ -503,6 +503,7 @@ class RequestBuilder implements BuilderInterface
 
         $request->number = $payment->getCreditCardNumber();
         $request->holderName = $payment->getHolderName();
+        $request->holderDocument = $quote->getCustomerTaxvat();
         $request->expMonth = $payment->getExpMonth();
         $request->expYear = $payment->getExpYear();
         $request->cvv = $payment->getSecurityCode();
@@ -539,7 +540,7 @@ class RequestBuilder implements BuilderInterface
             $cards->setCardToken($result->id);
             $cards->setCardId($customer->id);
             $cards->setLastFourNumbers(substr($payment->getCreditCardNumber(), -4));
-            $cards->setBrand($payment->getCcType());
+            $cards->setBrand($payment->getCreditCardBrand());
             $cards->setCreatedAt(date("Y-m-d H:i:s"));
             $cards->setUpdatedAt(date("Y-m-d H:i:s"));
             $cards->save();

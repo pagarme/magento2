@@ -9,11 +9,9 @@
 -->
 
 <fieldset data-bind="attr: {class: 'fieldset payment items ccard ' + getCode(), id: 'payment_form_' + getCode()}">
-    <!-- ko if: (isShowLegend())-->
-        <legend class="legend">
-            <span><!-- ko i18n: 'Billet Information'--><!-- /ko --></span>
-        </legend><br />
-    <!-- /ko -->
+    <legend class="legend">
+        <span><!-- ko i18n: 'Billet Information'--><!-- /ko --></span>
+    </legend><br />
     
     <div class="field number required">
         <label data-bind="attr: {for: getCode() + '_cc_billet_amount'}" class="label">
@@ -21,7 +19,7 @@
         </label>
         <div class="control">
             <input type="text" onKeyPress="if(this.value.length==20) return false;" min="0" name="payment[cc_billet_amount]" class="input-text money" value=""
-                   data-bind="event: { blur: bindInstallmentsByBlur }, attr: {
+                   data-bind="event: { blur: bindInstallmentsByBlurBcc }, attr: {
                                     autocomplete: off,
                                     id: getCode() + '_cc_billet_amount',
                                     title: $t('Billet Credit Card Cc Amount'),
@@ -33,12 +31,9 @@
         </div>
     </div>
 
-
-    <!-- ko if: (isShowLegend())-->
-        <legend class="legend">
-            <span><!-- ko i18n: 'Credit Card Information'--><!-- /ko --></span>
-        </legend><br />
-    <!-- /ko -->
+    <legend class="legend">
+        <span><!-- ko i18n: 'Credit Card Information'--><!-- /ko --></span>
+    </legend><br />
 
     <div class="field number required">
         <label data-bind="attr: {for: getCode() + '_cc_cc_amount'}" class="label">
@@ -46,14 +41,14 @@
         </label>
         <div class="control">
             <input type="text" onKeyPress="if(this.value.length==20) return false;" min="0" name="payment[cc_cc_amount]" class="input-text money" value="" style="width: 335px;"
-                   data-bind="event: { blur: bindInstallmentsByBlur }, attr: {
+                   data-bind="event: { blur: bindInstallmentsByBlurBcc }, attr: {
                                     autocomplete: off,
                                     id: getCode() + '_cc_cc_amount',
                                     title: $t('Billet Credit Card Cc Amount'),
                                     'data-container': getCode() + '-bcc-cc-amount',
                                     'data-validate': JSON.stringify({'required-number':true, 'validate-card-type':getCcAvailableTypesValues(), 'validate-card-number':'#' + getCode() + '_cc_type', 'validate-bcc-type':'#' + getCode() + '_cc_type'})},
                               enable: isActive($parents),
-                              value: bindCreditCardCcAmount,
+                              value: bindCreditCardCcAmountBcc,
                             valueUpdate: 'keyup'"/>
         </div>
     </div>
@@ -76,7 +71,7 @@
                 optionsValue: 'value',
                 optionsText: 'text',
                 optionsCaption: $t('New Card'),
-                value: creditSavedCard,
+                value: creditSavedCardBcc,
                 event: {change: onSavedCardChange};">
             </select>
         </div>
@@ -105,13 +100,13 @@
                    class="input-text"
                    value=""
                    data-bind="attr: {id: getCode() + '_cc_type', 'data-container': getCode() + '-cc-type'},
-                   value: creditCardType
+                   value: creditCardTypeBcc
                    ">
         </div>
     </div>
     <!-- ko if: (isSaveCardActive())-->
     <div class="field choice" data-bind="attr: {id: getCode() + '_cc_savecard', style: isSaveCardStyle()}">
-        <input type="checkbox" class="checkbox" id="creditcard-save" data-bind="checked: creditCardsavecard" />
+        <input type="checkbox" class="checkbox" id="creditcard-save" data-bind="checked: creditCardsavecardBcc" />
         <label class="label" data-bind="attr: {'for': getCode() + '_cc_savecard'}">
             <span><!-- ko i18n: 'Add To MundiPagg One Click'--><!-- /ko --></span>
         </label>
@@ -142,7 +137,7 @@
                                     'data-container': getCode() + '-cc-number',
                                     'data-validate': JSON.stringify({'required-number':true, 'validate-card-type':getCcAvailableTypesValues(), 'validate-card-number':'#' + getCode() + '_cc_type', 'validate-cc-type':'#' + getCode() + '_cc_type'})},
                               enable: isActive($parents),
-                              value: creditCardNumber,
+                              value: creditCardNumberBcc,
                               valueUpdate: 'keyup' "/>
         </div>
     </div>
@@ -163,7 +158,7 @@
                         'data-container': getCode() + '-cc-owner',
                         'data-validate': JSON.stringify({'required':true})},
                         enable: isActive($parents),
-                        value: creditCardOwner" />
+                        value: creditCardOwnerBcc" />
         </div>
     </div>
 
@@ -183,7 +178,7 @@
                                             optionsValue: 'value',
                                             optionsText: 'month',
                                             optionsCaption: $t('Month'),
-                                            value: creditCardExpMonth">
+                                            value: creditCardExpMonthBcc">
                         </select>
                     </div>
                 </div>
@@ -197,7 +192,7 @@
                                            optionsValue: 'value',
                                            optionsText: 'year',
                                            optionsCaption: $t('Year'),
-                                           value: creditCardExpYear">
+                                           value: creditCardExpYearBcc">
                         </select>
                     </div>
                 </div>
@@ -222,7 +217,7 @@
                         'data-container': getCode() + '-cc-cvv',
                         'data-validate': JSON.stringify({'required-number':true, 'validate-card-cvv':'#' + getCode() + '_cc_type'})},
                         enable: isActive($parents),
-                        value: creditCardVerificationNumber" />
+                        value: creditCardVerificationNumberBcc" />
             <div class="field-tooltip toggle">
                 <span class="field-tooltip-action action-cvv"
                       tabindex="0"
@@ -257,7 +252,7 @@
                                             optionsText: 'installments',
                                             optionsCaption: $t('Installments'),
                                             optionsAfterRender: setInterest,
-                                            value: creditCardInstallments,
+                                            value: creditCardInstallmentsBcc,
                                             event: {change: onInstallmentItemChange};">
                         </select>
                     </div>

@@ -44,9 +44,9 @@ final class ConfigProvider implements ConfigProviderInterface
 
     public function getConfig()
     {
-		$selectedCard = '';
         if ($this->getCustomerSession()->isLoggedIn()) {
             $is_saved_card = 0;
+            $selectedCard = '';
             $cards = [];
             $idCustomer = $this->getCustomerSession()->getCustomer()->getId();
 

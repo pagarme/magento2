@@ -41,6 +41,14 @@ class RequestDataProvider
     /**
      * {@inheritdoc}
      */
+    public function getBankType()
+    {
+        return $this->getConfig()->getTypeBank();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getInstallmentCount()
     {
         return $this->getPaymentData()->getAdditionalInformation('cc_installments');

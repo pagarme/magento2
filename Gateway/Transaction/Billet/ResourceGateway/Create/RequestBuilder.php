@@ -24,6 +24,7 @@ use MundiPagg\MundiPagg\Api\CartItemRequestDataProviderInterfaceFactory;
 use Magento\Checkout\Model\Cart;
 use MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\Config;
 use MundiPagg\MundiPagg\Helper\ModuleHelper;
+use MundiPagg\MundiPagg\Model\Source\Bank;
 
 class RequestBuilder implements BuilderInterface
 {
@@ -39,23 +40,24 @@ class RequestBuilder implements BuilderInterface
     protected $cart;
     protected $config;
     protected $moduleHelper;
+    protected $bank;
 
     /**
      * RequestBuilder constructor.
-     * @param Request $request
-     * @param BoletoTransaction $transaction
      * @param BilletRequestDataProviderInterfaceFactory $requestDataProviderFactory
      * @param CartItemRequestDataProviderInterfaceFactory $cartItemRequestDataProviderFactory
      * @param Cart $cart
      * @param Config $config
      * @param ModuleHelper $moduleHelper
+     * @param Bank $bank
      */
     public function __construct(
         BilletRequestDataProviderInterfaceFactory $requestDataProviderFactory,
         CartItemRequestDataProviderInterfaceFactory $cartItemRequestDataProviderFactory,
         Cart $cart,
         Config $config,
-        ModuleHelper $moduleHelper
+        ModuleHelper $moduleHelper,
+        Bank $bank
     )
     {
         $this->setRequestDataProviderFactory($requestDataProviderFactory);
@@ -63,6 +65,7 @@ class RequestBuilder implements BuilderInterface
         $this->setCart($cart);
         $this->setConfig($config);
         $this->setModuleHelper($moduleHelper);
+        $this->setBank($bank);
     }
 
     protected $paymentData;
@@ -126,6 +129,105 @@ class RequestBuilder implements BuilderInterface
         return $this->getCartItemRequestProviderFactory()->create([
             'item' => $item
         ]);
+    }
+
+
+    /**
+     * @param $requestDataProvider
+     * @return mixed
+     */
+    protected function createNewRequest($requestDataProvider)
+    {
+
+        $quote = $this->getCart()->getQuote();
+        $order = $this->getOrderRequest();
+
+        $order->payments = [
+            [
+                'amount' => $quote->getGrandTotal() * 100,
+                'payment_method' => 'boleto',
+                'capture' => true,
+                'boleto' => [
+                    'bank' => $this->getBank()->getBankNumber($requestDataProvider->getBankType()),
+                    'instructions' => $requestDataProvider->getInstructions(),
+                    'due_at' => $this->calcBoletoDays($requestDataProvider->getDaysToAddInBoletoExpirationDate())
+                ]
+            ]
+        ];
+
+        $order->items = [];
+
+        foreach ($requestDataProvider->getCartItems() as $key => $item) {
+
+            $cartItemDataProvider = $this->createCartItemRequestDataProvider($item);
+
+            $itemValues = [
+                'amount' => $cartItemDataProvider->getUnitCostInCents(),
+                'description' => $cartItemDataProvider->getName(),
+                'quantity' => $cartItemDataProvider->getQuantity()
+            ];
+            array_push($order->items, $itemValues);
+
+        }
+
+        $order->customer = [
+            'name' => !empty($requestDataProvider->getName()) ? $requestDataProvider->getName() :  $quote->getBillingAddress()->getFirstName() . ' ' . $quote->getBillingAddress()->getLastName(),
+            'email' => !empty($requestDataProvider->getEmail()) ? $requestDataProvider->getEmail() : $quote->getBillingAddress()->getEmail(),
+            'document' => $quote->getCustomerTaxvat(),
+            'type' => 'individual',
+            'address' => [
+                'street' => $quote->getShippingAddress()->getStreetLine(1),
+                'number' => $quote->getShippingAddress()->getStreetLine(2),
+                'zip_code' => trim(str_replace('-','',$quote->getShippingAddress()->getPostCode())),
+                'neighborhood' => $quote->getShippingAddress()->getStreetLine(4),
+                'city' => $quote->getShippingAddress()->getCity(),
+                'state' => $quote->getShippingAddress()->getRegionCode(),
+                'country' => $quote->getShippingAddress()->getCountryId()
+            ]
+        ];
+
+        $order->ip = $requestDataProvider->getIpAddress();
+
+        $order->shipping = [
+            'amount' => $quote->getShippingAddress()->getShippingAmount() * 100,
+            'description' => '.',
+            'address' => [
+                'street' => $quote->getShippingAddress()->getStreetLine(1),
+                'number' => $quote->getShippingAddress()->getStreetLine(2) . ' ' . $quote->getShippingAddress()->getStreetLine(3),
+                'zip_code' => trim(str_replace('-','',$quote->getShippingAddress()->getPostCode())),
+                'neighborhood' => $quote->getShippingAddress()->getStreetLine(4),
+                'city' => $quote->getShippingAddress()->getCity(),
+                'state' => $quote->getShippingAddress()->getRegionCode(),
+                'country' => $quote->getShippingAddress()->getCountryId()
+            ]
+        ];
+
+        $order->session_id = $requestDataProvider->getSessionId();
+
+        $order->metadata = [
+            'module_name' => self::MODULE_NAME,
+            'module_version' => $this->getModuleHelper()->getVersion(self::MODULE_NAME),
+        ];
+
+        try {
+
+            $response = $this->getApi()->getOrders()->createOrder($order);
+
+        } catch (\MundiAPILib\Exceptions\ErrorException $error) {
+
+            throw new \InvalidArgumentException($error);
+
+            return $error;
+
+        } catch (\Exception $ex) {
+
+            throw new \InvalidArgumentException($ex->getMessage());
+
+            return $ex;
+        }
+
+        return $response;
+
     }
 
     /**
@@ -304,137 +406,21 @@ class RequestBuilder implements BuilderInterface
         return $this;
     }
 
-
-    public function getBankNumber($title){
-
-        switch ($title){
-            case 'Itau':
-                return '341';
-                break;
-
-            case 'Bradesco':
-                return '237';
-                break;
-
-            case 'Santander':
-                return '033';
-                break;
-
-            case 'CitiBank':
-                return '745';
-                break;
-
-            case 'BancoDoBrasil':
-                return '001';
-                break;
-
-            case 'Caixa':
-                return '104';
-                break;
-
-            default:
-                return false;
-
-        }
-
+    /**
+     * @return Bank
+     */
+    protected function getBank()
+    {
+        return $this->bank;
     }
 
     /**
-     * @param $requestDataProvider
-     * @return mixed
+     * @param Bank $bank
      */
-    protected function createNewRequest($requestDataProvider)
+    protected function setBank($bank)
     {
-
-        $quote = $this->getCart()->getQuote();
-        $order = $this->getOrderRequest();
-
-        $order->payments = [
-            [
-                'amount' => $quote->getGrandTotal() * 100,
-                'payment_method' => 'boleto',
-                'capture' => true,
-                'boleto' => [
-                    'bank' => $this->getBankNumber($requestDataProvider->getBankType()),
-                    'instructions' => $requestDataProvider->getInstructions(),
-                    'due_at' => $this->calcBoletoDays($requestDataProvider->getDaysToAddInBoletoExpirationDate())
-                ]
-            ]
-        ];
-
-        $order->items = [];
-
-            foreach ($requestDataProvider->getCartItems() as $key => $item) {
-
-            $cartItemDataProvider = $this->createCartItemRequestDataProvider($item);
-
-            $itemValues = [
-                'amount' => $cartItemDataProvider->getUnitCostInCents(),
-                'description' => $cartItemDataProvider->getName(),
-                'quantity' => $cartItemDataProvider->getQuantity()
-            ];
-            array_push($order->items, $itemValues);
-
-        }
-
-        $order->customer = [
-            'name' => !empty($requestDataProvider->getName()) ? $requestDataProvider->getName() :  $quote->getBillingAddress()->getFirstName() . ' ' . $quote->getBillingAddress()->getLastName(),
-            'email' => !empty($requestDataProvider->getEmail()) ? $requestDataProvider->getEmail() : $quote->getBillingAddress()->getEmail(),
-            'document' => $quote->getCustomerTaxvat(),
-            'type' => 'individual',
-            'address' => [
-                'street' => $quote->getShippingAddress()->getStreetLine(1),
-                'number' => $quote->getShippingAddress()->getStreetLine(2),
-                'zip_code' => trim(str_replace('-','',$quote->getShippingAddress()->getPostCode())),
-                'neighborhood' => $quote->getShippingAddress()->getStreetLine(4),
-                'city' => $quote->getShippingAddress()->getCity(),
-                'state' => $quote->getShippingAddress()->getRegionCode(),
-                'country' => $quote->getShippingAddress()->getCountryId()
-            ]
-        ];
-
-        $order->ip = $requestDataProvider->getIpAddress();
-
-        $order->shipping = [
-            'amount' => $quote->getShippingAddress()->getShippingAmount() * 100,
-            'description' => '.',
-            'address' => [
-                'street' => $quote->getShippingAddress()->getStreetLine(1),
-                'number' => $quote->getShippingAddress()->getStreetLine(2) . ' ' . $quote->getShippingAddress()->getStreetLine(3),
-                'zip_code' => trim(str_replace('-','',$quote->getShippingAddress()->getPostCode())),
-                'neighborhood' => $quote->getShippingAddress()->getStreetLine(4),
-                'city' => $quote->getShippingAddress()->getCity(),
-                'state' => $quote->getShippingAddress()->getRegionCode(),
-                'country' => $quote->getShippingAddress()->getCountryId()
-            ]
-        ];
-
-        $order->session_id = $requestDataProvider->getSessionId();
-
-        $order->metadata = [
-            'module_name' => self::MODULE_NAME,
-            'module_version' => $this->getModuleHelper()->getVersion(self::MODULE_NAME),
-        ];
-
-        try {
-
-            $response = $this->getApi()->getOrders()->createOrder($order);
-
-        } catch (\MundiAPILib\Exceptions\ErrorException $error) {
-
-            throw new \InvalidArgumentException($error);
-
-            return $error;
-
-        } catch (\Exception $ex) {
-
-            throw new \InvalidArgumentException($ex->getMessage());
-
-            return $ex;
-        }
-
-        return $response;
-
+        $this->bank = $bank;
     }
+
 
 }

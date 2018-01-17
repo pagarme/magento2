@@ -29,8 +29,6 @@ use MundiPagg\MundiPagg\Model\ChargesFactory;
 class RequestBuilder implements BuilderInterface
 {
     protected $request;
-    /** @var  CreditCardTransaction */
-    protected $creditCardTransaction;
     protected $requestDataProviderFactory;
     protected $cartItemRequestDataProviderFactory;
     protected $orderAdapter;
@@ -46,13 +44,11 @@ class RequestBuilder implements BuilderInterface
 
     /**
      * @param Request $request
-     * @param CreditCardTransaction $creditCardTransaction
      * @param CreditCardRequestDataProviderInterfaceFactory $requestDataProviderFactory
      * @param CartItemRequestDataProviderInterfaceFactory $cartItemRequestDataProviderFactory
      */
     public function __construct(
         Request $request,
-        CreditCardTransaction $creditCardTransaction,
         CreditCardRequestDataProviderInterfaceFactory $requestDataProviderFactory,
         CartItemRequestDataProviderInterfaceFactory $cartItemRequestDataProviderFactory,
         Cart $cart,
@@ -62,7 +58,6 @@ class RequestBuilder implements BuilderInterface
     )
     {
         $this->setRequest($request);
-        $this->setCreditCardTransaction($creditCardTransaction);
         $this->setRequestDataProviderFactory($requestDataProviderFactory);
         $this->setCartItemRequestProviderFactory($cartItemRequestDataProviderFactory);
         $this->setCart($cart);
@@ -129,24 +124,6 @@ class RequestBuilder implements BuilderInterface
         return $this->getCartItemRequestProviderFactory()->create([
             'item' => $item
         ]);
-    }
-
-    /**
-     * @return CreditCardTransaction
-     */
-    protected function getCreditCardTransaction()
-    {
-        return $this->creditCardTransaction;
-    }
-
-    /**
-     * @param CreditCardTransaction $creditCardTransaction
-     * @return RequestBuilder
-     */
-    protected function setCreditCardTransaction(CreditCardTransaction $creditCardTransaction)
-    {
-        $this->creditCardTransaction = $creditCardTransaction;
-        return $this;
     }
 
     /**

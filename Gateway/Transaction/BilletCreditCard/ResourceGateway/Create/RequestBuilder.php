@@ -26,6 +26,9 @@ use MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\Config;
 use MundiPagg\MundiPagg\Gateway\Transaction\BilletCreditCard\Config\Config as ConfigBilletCreditCard;
 use MundiPagg\MundiPagg\Helper\ModuleHelper;
 use MundiPagg\MundiPagg\Model\CardsFactory;
+use MundiPagg\MundiPagg\Model\Source\Bank;
+use MundiPagg\MundiPagg\Gateway\Transaction\Billet\ResourceGateway\Create\RequestDataProvider as BilletDataProvider;
+use MundiPagg\MundiPagg\Gateway\Transaction\Billet\Config\Config as ConfigBillet;
 
 class RequestBuilder implements BuilderInterface
 {
@@ -42,6 +45,8 @@ class RequestBuilder implements BuilderInterface
     protected $configBilletCreditCard;
     protected $moduleHelper;
     protected $cardsFactory;
+    protected $bank;
+    protected $configBillet;
 
     /**
      * RequestBuilder constructor.
@@ -52,6 +57,9 @@ class RequestBuilder implements BuilderInterface
      * @param Config $config
      * @param ConfigBilletCreditCard $configBilletCreditCard
      * @param ModuleHelper $moduleHelper
+     * @param CardsFactory $cardsFactory
+     * @param Bank $bank
+     * @param ConfigBillet $configBillet
      */
     public function __construct(
         Request $request,
@@ -61,7 +69,9 @@ class RequestBuilder implements BuilderInterface
         Config $config,
         ConfigBilletCreditCard $configBilletCreditCard,
         ModuleHelper $moduleHelper,
-        CardsFactory $cardsFactory
+        CardsFactory $cardsFactory,
+        Bank $bank,
+        ConfigBillet $configBillet
     )
     {
         $this->setRequest($request);
@@ -72,6 +82,8 @@ class RequestBuilder implements BuilderInterface
         $this->setConfigBilletCreditCard($configBilletCreditCard);
         $this->setModuleHelper($moduleHelper);
         $this->setCardsFactory($cardsFactory);
+        $this->setBank($bank);
+        $this->setConfigBillet($configBillet);
     }
 
     /**
@@ -239,7 +251,7 @@ class RequestBuilder implements BuilderInterface
     public function setConfig($config)
     {
         $this->config = $config;
-        
+
         return $this;
     }
 
@@ -348,6 +360,9 @@ class RequestBuilder implements BuilderInterface
 
         $order = $this->getOrderRequest();
 
+        $billetConfig = $this->getConfigBillet();
+        $bankType = $billetConfig->getTypeBank();
+
         $capture = $this->getConfigBilletCreditCard()->getPaymentAction() == '‌authorize_capture' ? true : false;
 
         $billetAmount = $quote->getPayment()->getCcBilletAmount() * 100;
@@ -386,7 +401,7 @@ class RequestBuilder implements BuilderInterface
                     'capture' => $capture,
                     'amount' => $billetAmount,
                     'boleto' => [
-                        'bank' => '033',
+                        'bank' => $this->getBank()->getBankNumber($bankType),
                         'instructions' => 'Pagar até o vencimento',
                         'due_at' => date('Y-m-d\TH:i:s\Z')
                     ]
@@ -423,7 +438,7 @@ class RequestBuilder implements BuilderInterface
                     'capture' => $capture,
                     'amount' => $billetAmount,
                     'boleto' => [
-                        'bank' => '033',
+                        'bank' => $this->getBank()->getBankNumber($bankType),
                         'instructions' => 'Pagar até o vencimento',
                         'due_at' => date('Y-m-d\TH:i:s\Z')
                     ]
@@ -563,6 +578,7 @@ class RequestBuilder implements BuilderInterface
             $cards->setCardToken($result->id);
             $cards->setCardId($customer->id);
             $cards->setLastFourNumbers(substr($requestDataProvider->getBilletCreditCardNumber(), -4));
+            $cards->setBrand($requestDataProvider->getCreditCardBrand());
             $cards->setCreatedAt(date("Y-m-d H:i:s"));
             $cards->setUpdatedAt(date("Y-m-d H:i:s"));
             $cards->save();
@@ -606,4 +622,39 @@ class RequestBuilder implements BuilderInterface
 
         return $this;
     }
+
+    /**
+     * @return Bank
+     */
+    public function getBank()
+    {
+        return $this->bank;
+    }
+
+    /**
+     * @param Bank $bank
+     */
+    public function setBank($bank)
+    {
+        $this->bank = $bank;
+    }
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getConfigBillet()
+    {
+        return $this->configBillet;
+    }
+
+    /**
+     * @param mixed $configBillet
+     */
+    public function setConfigBillet($configBillet)
+    {
+        $this->configBillet = $configBillet;
+    }
+
 }

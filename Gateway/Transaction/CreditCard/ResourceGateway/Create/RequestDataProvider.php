@@ -71,7 +71,7 @@ class RequestDataProvider
      */
     public function getCreditCardBrand()
     {
-        return $this->getBrandAdapter($this->getPaymentData()->getCcType());
+        return $this->getPaymentData()->getCcType();
     }
 
     /**
