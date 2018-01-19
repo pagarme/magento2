@@ -2,11 +2,11 @@
 /**
  * Class ConfigProvider
  *
- * @author      Webjump Core Team <dev@webjump.com>
- * @copyright   2016 Webjump (http://www.webjump.com.br)
- * @license     http://www.webjump.com.br Copyright
+ * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
+ * @copyright   2017 MundiPagg (http://www.mundipagg.com)
+ * @license     http://www.mundipagg.com Copyright
  *
- * @link        http://www.webjump.com.br
+ * @link        http://www.mundipagg.com
  */
 
 namespace MundiPagg\MundiPagg\Model\Ui\TwoCreditCard;
@@ -44,9 +44,10 @@ final class ConfigProvider implements ConfigProviderInterface
 
     public function getConfig()
     {
+        $selectedCard = '';
         if ($this->getCustomerSession()->isLoggedIn()) {
             $is_saved_card = 0;
-            $selectedCard = '';
+            
             $cards = [];
             $idCustomer = $this->getCustomerSession()->getCustomer()->getId();
 

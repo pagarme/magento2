@@ -36,7 +36,7 @@
                 <active>1</active>
                 <model>MundiPaggCreditCardsRemoteMethodAdapter</model>
                 <order_status>pending_payment</order_status>
-                <payment_action>authorize</payment_action>
+                <payment_action>authorize_capture</payment_action>
                 <title>MundiPagg Credit Card</title>
                 <can_authorize>1</can_authorize>
                 <can_capture_partial>1</can_capture_partial>
