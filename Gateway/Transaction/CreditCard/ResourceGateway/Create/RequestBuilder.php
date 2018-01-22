@@ -345,7 +345,7 @@ class RequestBuilder implements BuilderInterface
 
         $payment = $quote->getPayment();
 
-
+        $statement = $this->getConfigCreditCard()->getSoftDescription();
 
         $order = $this->getOrderRequest();
 
@@ -363,7 +363,7 @@ class RequestBuilder implements BuilderInterface
                         'amount' => $requestDataProvider->getAmountInCents(),
                         'recurrence' => false,
                         'installments' => $requestDataProvider->getInstallmentCount(),
-                        'statement_descriptor' => 'Mundipagg Online',
+                        'statement_descriptor' => $statement,
                         'capture' => $capture,
                         'card_id' => $cardCollection->getCardToken(),
                         'card' => [
@@ -390,7 +390,7 @@ class RequestBuilder implements BuilderInterface
                     'credit_card' => [
                         'recurrence' => false,
                         'installments' => $requestDataProvider->getInstallmentCount(),
-                        'statement_descriptor' => 'Mundipagg Online',
+                        'statement_descriptor' => $statement,
                         'capture' => $capture,
                         'card_token' => $tokenCard,
                         'card' => [
@@ -425,10 +425,12 @@ class RequestBuilder implements BuilderInterface
 
         }
 
+        $document = $quote->getCustomerTaxvat() ? $quote->getCustomerTaxvat() : $quote->getShippingAddress()->getVatId() ;
+
         $order->customer = [
             'name' => !empty($requestDataProvider->getName()) ? $requestDataProvider->getName() :  $quote->getBillingAddress()->getFirstName() . ' ' . $quote->getBillingAddress()->getLastName(),
             'email' => !empty($requestDataProvider->getEmail()) ? $requestDataProvider->getEmail() : $quote->getBillingAddress()->getEmail(),
-            'document' => $quote->getCustomerTaxvat(),
+            'document' => $document,
             'type' => 'individual',
             'address' => [
                 'street' => $quote->getShippingAddress()->getStreetLine(1),

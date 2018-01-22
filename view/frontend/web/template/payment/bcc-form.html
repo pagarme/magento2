@@ -26,7 +26,7 @@
                                     'data-container': getCode() + '-bcc-billet-amount',
                                     'data-validate': JSON.stringify({'required-number':true, 'validate-card-type':getCcAvailableTypesValues(), 'validate-card-number':'#' + getCode() + '_cc_billet_type', 'validate-bcc-billet-type':'#' + getCode() + '_cc_billet_type'})},
                               enable: isActive($parents),
-                              value: bindCreditCardBilletAmount,
+                              value: bindCreditCardBilletAmountBcc,
                             valueUpdate: 'keyup'"/>
         </div>
     </div>
@@ -40,7 +40,7 @@
             <span><!-- ko i18n: 'Credit Card Amount'--><!-- /ko --></span>
         </label>
         <div class="control">
-            <input type="text" onKeyPress="if(this.value.length==20) return false;" min="0" name="payment[cc_cc_amount]" class="input-text money" value="" style="width: 335px;"
+            <input type="text" onKeyPress="if(this.value.length==window.checkoutConfig.payment.mundipagg_creditcard.size_credit_card) return false;" min="0" name="payment[cc_cc_amount]" class="input-text money" value="" style="width: 335px;"
                    data-bind="event: { blur: bindInstallmentsByBlurBcc }, attr: {
                                     autocomplete: off,
                                     id: getCode() + '_cc_cc_amount',
@@ -82,8 +82,8 @@
                 <!-- ko foreach: {data: getCcAvailableTypesValues(), as: 'item'} -->
                     <!--ko if: $parent.getIcons(item.value) -->
                         <li class="item" data-bind="css: {
-                                                    _active: $parent.selectedCardType() == item.value,
-                                                    _inactive: $parent.selectedCardType() != null && $parent.selectedCardType() != item.value
+                                                    _active: $parent.selectedCardTypeBcc() == item.value,
+                                                    _inactive: $parent.selectedCardTypeBcc() != null && $parent.selectedCardTypeBcc() != item.value
                                                     } ">
                             <img data-bind="attr: {
                                 'src': $parent.getIcons(item.value).url,
@@ -106,7 +106,7 @@
     </div>
     <!-- ko if: (isSaveCardActive())-->
     <div class="field choice" data-bind="attr: {id: getCode() + '_cc_savecard', style: isSaveCardStyle()}">
-        <input type="checkbox" class="checkbox" id="creditcard-save" data-bind="checked: creditCardsavecardBcc" />
+        <input type="checkbox" class="checkbox" id="creditcard-save-bcc" data-bind="checked: creditCardsavecardBcc" />
         <label class="label" data-bind="attr: {'for': getCode() + '_cc_savecard'}">
             <span><!-- ko i18n: 'Add To MundiPagg One Click'--><!-- /ko --></span>
         </label>

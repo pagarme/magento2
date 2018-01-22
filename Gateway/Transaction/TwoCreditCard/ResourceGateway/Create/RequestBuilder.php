@@ -392,6 +392,8 @@ class RequestBuilder implements BuilderInterface
 
         $order = $this->getOrderRequest();
 
+        $statement = $this->getConfigCreditCard()->getSoftDescription();
+
         $capture = $this->getConfigCreditCard()->getPaymentAction() == '‌authorize_capture' ? true : false;
 
         $model = $this->getCardsFactory();
@@ -403,7 +405,7 @@ class RequestBuilder implements BuilderInterface
                 'credit_card' => [
                     'recurrence' => false,
                     'capture' => $capture,
-                    'statement_descriptor' => 'Magento 2 Integration',
+                    'statement_descriptor' => $statement,
                     'installments' => $payment->getAdditionalInformation('cc_installments_first'),
                     'card' => [
                         'billing_address' => [
@@ -424,7 +426,7 @@ class RequestBuilder implements BuilderInterface
                 'credit_card' => [
                     'recurrence' => false,
                     'capture' => $capture,
-                    'statement_descriptor' => 'Magento 2 Integration',
+                    'statement_descriptor' => $statement,
                     'installments' => $payment->getAdditionalInformation('cc_installments_second'),
                     'card' => [
                         'billing_address' => [
@@ -474,10 +476,12 @@ class RequestBuilder implements BuilderInterface
 
         }
 
+        $document = $quote->getCustomerTaxvat() ? $quote->getCustomerTaxvat() : $quote->getShippingAddress()->getVatId() ;
+
         $order->customer = [
             'name' => !empty($requestDataProvider->getName()) ? $requestDataProvider->getName() : $quote->getBillingAddress()->getFirstName() . ' ' . $quote->getBillingAddress()->getLastName(),
             'email' => !empty($requestDataProvider->getEmail()) ? $requestDataProvider->getEmail() : $quote->getBillingAddress()->getEmail(),
-            'document' => $quote->getCustomerTaxvat(),
+            'document' => $document,
             'type' => 'individual',
             'address' => [
                 'street' => $quote->getShippingAddress()->getStreetLine(1),

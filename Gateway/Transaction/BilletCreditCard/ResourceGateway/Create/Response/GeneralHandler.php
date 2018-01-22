@@ -41,7 +41,7 @@ class GeneralHandler extends AbstractHandler implements HandlerInterface
         $boletoUrl = '';
         foreach ($response->charges as $charge){
             if($charge->paymentMethod ==  'boleto'){
-                $boletoUrl = 'https://sandbox.mundipaggone.com/Boleto/ViewBoleto.aspx?' . $charge->lastTransaction->gatewayId;
+                $boletoUrl = $charge->lastTransaction->pdf;
             }
         }
 

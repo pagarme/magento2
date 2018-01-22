@@ -91,7 +91,7 @@
             <span><!-- ko i18n: 'Credit Card Number'--><!-- /ko --></span>
         </label>
         <div class="control">
-            <input type="number" onKeyPress="if(this.value.length==20) return false;" min="0" name="payment[cc_number]" class="input-text" value=""
+            <input type="number" onKeyPress="if(this.value.length==window.checkoutConfig.payment.mundipagg_creditcard.size_credit_card) return false;" min="0" name="payment[cc_number]" class="input-text" value=""
                    data-bind="attr: {
                                     autocomplete: off,
                                     id: getCode() + '_cc_number',

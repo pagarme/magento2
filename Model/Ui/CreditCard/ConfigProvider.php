@@ -73,7 +73,10 @@ final class ConfigProvider implements ConfigProviderInterface
                     'active' => $this->getCreditCardConfig()->getActive(),
                     'is_saved_card' => $is_saved_card,
                     'cards' => $cards,
-                    'selected_card' => $selectedCard
+                    'selected_card' => $selectedCard,
+                    'size_credit_card' => '18',
+                    'number_credit_card' => 'null',
+                    'data_credit_card' => ''
                 ]
             ]
         ];

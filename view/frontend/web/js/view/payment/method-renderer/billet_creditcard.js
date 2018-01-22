@@ -19,19 +19,25 @@ define(
         'Magento_Checkout/js/model/quote',
         'Magento_Catalog/js/price-utils',
         'Magento_Checkout/js/model/totals',
+        'Magento_Checkout/js/checkout-data',
+        'Magento_Checkout/js/action/select-payment-method',
         'Magento_Checkout/js/model/full-screen-loader'
     ],
-    function (Component,
-              ko,
-              installments,
-              installmentsByBrand,
-              installmentsByBrandAndAmount,
-              $,
-              jquerymask,
-              quote,
-              priceUtils,
-              totals,
-              fullScreenLoader) {
+    function (
+        Component,
+        ko,
+        installments,
+        installmentsByBrand,
+        installmentsByBrandAndAmount,
+        $,
+        jquerymask,
+        quote,
+        priceUtils,
+        totals,
+        checkoutData, 
+        selectPaymentMethodAction, 
+        fullScreenLoader
+    ) {
         'use strict';
 
         return Component.extend({
@@ -92,7 +98,7 @@ define(
 
                 }
 
-                this.bindCreditCardBilletAmount = ko.computed({
+                this.bindCreditCardBilletAmountBcc = ko.computed({
                     read: function () {
                         var value = this.creditCardBilletAmountBcc();
                         value = parseFloat(value.replace(/[^\d]/g, ""));
@@ -208,6 +214,48 @@ define(
                     }
                 });
 
+            },
+
+            /**
+             * Select current payment token
+             */
+            selectPaymentMethod: function () {
+                this.oldInstallmentTax = 0;
+                var newTax = 0;
+
+                var total = quote.getTotals()();
+                var subTotalIndex = null;
+                for (var i = 0, len = total.total_segments.length; i < len; i++) {
+                    if (total.total_segments[i].code == "grand_total") {
+                        subTotalIndex = i;
+                        continue;
+                    }
+                    if (total.total_segments[i].code != "tax") continue;
+                    total.total_segments[i].value = newTax;
+                }
+
+                total.total_segments[subTotalIndex].value = +total.total_segments[subTotalIndex].value - this.oldInstallmentTax;
+                total.total_segments[subTotalIndex].value = +total.total_segments[subTotalIndex].value + parseFloat(newTax);
+                total.tax_amount = parseFloat(newTax);
+                total.base_tax_amount = parseFloat(newTax);
+                this.oldInstallmentTax = newTax;
+                quote.setTotals(total);
+
+                selectPaymentMethodAction(this.getData());
+                checkoutData.setSelectedPaymentMethod(this.item.method);
+
+                return true;
+            },
+
+            /**
+             * Get payment method data
+             */
+            getData: function () {
+                return {
+                    'method': this.item.method,
+                    'po_number': null,
+                    'additional_data': null
+                };
             },
 
             initObservable: function () {

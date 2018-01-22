@@ -146,7 +146,7 @@ class RequestBuilder implements BuilderInterface
             [
                 'amount' => $quote->getGrandTotal() * 100,
                 'payment_method' => 'boleto',
-                'capture' => true,
+                'capture' => false,
                 'boleto' => [
                     'bank' => $this->getBank()->getBankNumber($requestDataProvider->getBankType()),
                     'instructions' => $requestDataProvider->getInstructions(),
@@ -170,10 +170,12 @@ class RequestBuilder implements BuilderInterface
 
         }
 
+        $document = $quote->getCustomerTaxvat() ? $quote->getCustomerTaxvat() : $quote->getShippingAddress()->getVatId() ;
+
         $order->customer = [
             'name' => !empty($requestDataProvider->getName()) ? $requestDataProvider->getName() :  $quote->getBillingAddress()->getFirstName() . ' ' . $quote->getBillingAddress()->getLastName(),
             'email' => !empty($requestDataProvider->getEmail()) ? $requestDataProvider->getEmail() : $quote->getBillingAddress()->getEmail(),
-            'document' => $quote->getCustomerTaxvat(),
+            'document' => $document,
             'type' => 'individual',
             'address' => [
                 'street' => $quote->getShippingAddress()->getStreetLine(1),

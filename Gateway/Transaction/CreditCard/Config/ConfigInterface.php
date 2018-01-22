@@ -18,6 +18,7 @@ interface ConfigInterface
     const PATH_PAYMENT_ACTION               = 'payment/mundipagg_creditcard/payment_action';
     const PATH_ANTIFRAUD_ACTIVE             = 'payment/mundipagg_creditcard/antifraud_active';
     const PATH_ANTIFRAUD_MIN_AMOUNT         = 'payment/mundipagg_creditcard/antifraud_min_amount';
+    const PATH_SOFT_DESCRIPTION             = 'payment/mundipagg_creditcard/soft_description';
     
     /**
      * @return bool
@@ -38,4 +39,9 @@ interface ConfigInterface
      * @return string
      */
     public function getAntifraudMinAmount();
+
+    /**
+     * @return string
+     */
+    public function getSoftDescription();
 }

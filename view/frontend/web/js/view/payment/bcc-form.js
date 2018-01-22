@@ -17,33 +17,33 @@ define(
 
         return Component.extend({
             defaults: {
-                creditCardType: '',
-                creditCardExpYear: '',
-                creditCardExpMonth: '',
-                creditCardsavecard: 0,
-                creditCardNumber: '',
-                creditCardSsStartMonth: '',
-                creditCardSsStartYear: '',
-                creditCardSsIssue: '',
-                creditSavedCard: window.checkoutConfig.payment.mundipagg_billet_creditcard.selected_card,
-                creditCardVerificationNumber: '',
-                selectedCardType: null
+                creditCardTypeBcc: '',
+                creditCardExpYearBcc: '',
+                creditCardExpMonthBcc: '',
+                creditCardsavecardBcc: 0,
+                creditCardNumberBcc: '',
+                creditCardSsStartMonthBcc: '',
+                creditCardSsStartYearBcc: '',
+                creditCardSsIssueBcc: '',
+                creditSavedCardBcc: window.checkoutConfig.payment.mundipagg_billet_creditcard.selected_card,
+                creditCardVerificationNumberBcc: '',
+                selectedCardTypeBcc: null
             },
 
             initObservable: function () {
                 this._super()
                     .observe([
-                        'creditCardType',
-                        'creditCardExpYear',
-                        'creditCardExpMonth',
-                        'creditCardNumber',
-                        'creditCardVerificationNumber',
-                        'creditCardSsStartMonth',
-                        'creditCardSsStartYear',
-                        'creditCardSsIssue',
-                        'creditSavedCard',
-                        'creditCardsavecard',
-                        'selectedCardType'
+                        'creditCardTypeBcc',
+                        'creditCardExpYearBcc',
+                        'creditCardExpMonthBcc',
+                        'creditCardNumberBcc',
+                        'creditCardVerificationNumberBcc',
+                        'creditCardSsStartMonthBcc',
+                        'creditCardSsStartYearBcc',
+                        'creditCardsavecardBcc',
+                        'creditCardSsIssueBcc',
+                        'creditSavedCardBcc',
+                        'selectedCardTypeBcc'
                     ]);
 
                 return this;
@@ -58,10 +58,10 @@ define(
                 this._super();
 
                 //Set credit card number to credit card data object
-                this.creditCardNumber.subscribe(function (value) {
+                this.creditCardNumberBcc.subscribe(function (value) {
                     var result;
 
-                    self.selectedCardType(null);
+                    self.selectedCardTypeBcc(null);
 
                     if (value === '' || value === null) {
                         return false;
@@ -73,28 +73,28 @@ define(
                     }
 
                     if (result.card !== null) {
-                        self.selectedCardType(result.card.type);
+                        self.selectedCardTypeBcc(result.card.type);
                         creditCardData.creditCard = result.card;
                     }
 
                     if (result.isValid) {
                         creditCardData.creditCardNumber = value;
-                        self.creditCardType(result.card.type);
+                        self.selectedCardTypeBcc(result.card.type);
                     }
                 });
 
                 //Set expiration year to credit card data object
-                this.creditCardExpYear.subscribe(function (value) {
+                this.creditCardExpYearBcc.subscribe(function (value) {
                     creditCardData.expirationYear = value;
                 });
 
                 //Set expiration month to credit card data object
-                this.creditCardExpMonth.subscribe(function (value) {
+                this.creditCardExpMonthBcc.subscribe(function (value) {
                     creditCardData.expirationMonth = value;
                 });
 
                 //Set cvv code to credit card data object
-                this.creditCardVerificationNumber.subscribe(function (value) {
+                this.creditCardVerificationNumberBcc.subscribe(function (value) {
                     creditCardData.cvvCode = value;
                 });
             },
@@ -115,16 +115,16 @@ define(
                 return {
                     'method': this.item.method,
                     'additional_data': {
-                        'cc_cid': this.creditCardVerificationNumber(),
-                        'cc_ss_start_month': this.creditCardSsStartMonth(),
-                        'cc_ss_start_year': this.creditCardSsStartYear(),
-                        'cc_ss_issue': this.creditCardSsIssue(),
-                        'cc_type': this.creditCardType(),
-                        'cc_savecard': this.creditCardsavecard() ? 1 : 0,
-                        'cc_exp_year': this.creditCardExpYear(),
-                        'cc_exp_month': this.creditCardExpMonth(),
-                        'cc_saved_card': this.creditSavedCard(),
-                        'cc_number': this.creditCardNumber()
+                        'cc_cid': this.creditCardVerificationNumberBcc(),
+                        'cc_ss_start_month': this.creditCardSsStartMonthBcc(),
+                        'cc_ss_start_year': this.creditCardSsStartYearBcc(),
+                        'cc_ss_issue': this.creditCardSsIssueBcc(),
+                        'cc_type': this.creditCardTypeBcc(),
+                        'cc_savecard': this.creditCardsavecardBcc() ? 1 : 0,
+                        'cc_exp_year': this.creditCardExpYearBcc(),
+                        'cc_exp_month': this.creditCardExpMonthBcc(),
+                        'cc_saved_card': this.creditSavedCardBcc(),
+                        'cc_number': this.creditCardNumberBcc()
                     }
                 };
             },

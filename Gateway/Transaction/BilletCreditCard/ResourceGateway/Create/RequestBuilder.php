@@ -24,6 +24,7 @@ use MundiPagg\MundiPagg\Api\CartItemRequestDataProviderInterfaceFactory;
 use Magento\Checkout\Model\Cart;
 use MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\Config;
 use MundiPagg\MundiPagg\Gateway\Transaction\BilletCreditCard\Config\Config as ConfigBilletCreditCard;
+use MundiPagg\MundiPagg\Gateway\Transaction\CreditCard\Config\Config as ConfigCreditCard;
 use MundiPagg\MundiPagg\Helper\ModuleHelper;
 use MundiPagg\MundiPagg\Model\CardsFactory;
 use MundiPagg\MundiPagg\Model\Source\Bank;
@@ -47,6 +48,7 @@ class RequestBuilder implements BuilderInterface
     protected $cardsFactory;
     protected $bank;
     protected $configBillet;
+    protected $configCreditCard;
 
     /**
      * RequestBuilder constructor.
@@ -71,7 +73,8 @@ class RequestBuilder implements BuilderInterface
         ModuleHelper $moduleHelper,
         CardsFactory $cardsFactory,
         Bank $bank,
-        ConfigBillet $configBillet
+        ConfigBillet $configBillet,
+        ConfigCreditCard $configCreditCard
     )
     {
         $this->setRequest($request);
@@ -84,6 +87,7 @@ class RequestBuilder implements BuilderInterface
         $this->setCardsFactory($cardsFactory);
         $this->setBank($bank);
         $this->setConfigBillet($configBillet);
+        $this->setConfigCreditCard($configCreditCard);
     }
 
     /**
@@ -106,6 +110,24 @@ class RequestBuilder implements BuilderInterface
 
         return $this->createNewRequest($requestDataProvider);
 
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConfigCreditCard()
+    {
+        return $this->configCreditCard;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function setConfigCreditCard($configCreditCard)
+    {
+        $this->configCreditCard = $configCreditCard;
+
+        return $this;
     }
 
     /**
@@ -363,6 +385,8 @@ class RequestBuilder implements BuilderInterface
         $billetConfig = $this->getConfigBillet();
         $bankType = $billetConfig->getTypeBank();
 
+        $statement = $this->getConfigCreditCard()->getSoftDescription();
+
         $capture = $this->getConfigBilletCreditCard()->getPaymentAction() == '‌authorize_capture' ? true : false;
 
         $billetAmount = $quote->getPayment()->getCcBilletAmount() * 100;
@@ -380,7 +404,7 @@ class RequestBuilder implements BuilderInterface
                     'credit_card' => [
                         'recurrence' => false,
                         'installments' => $requestDataProvider->getInstallmentCount(),
-                        'statement_descriptor' => 'Mundipagg Online',
+                        'statement_descriptor' => $statement,
                         'capture' => $capture,
                         'card_id' => $cardCollection->getCardToken(),
                         'card' => [
@@ -417,7 +441,7 @@ class RequestBuilder implements BuilderInterface
                     'credit_card' => [
                         'recurrence' => false,
                         'installments' => $requestDataProvider->getInstallmentCount(),
-                        'statement_descriptor' => 'Mundipagg Online',
+                        'statement_descriptor' => $statement,
                         'capture' => $capture,
                         'card_token' => $tokenCard,
                         'card' => [
@@ -461,12 +485,12 @@ class RequestBuilder implements BuilderInterface
             array_push($order->items, $itemValues);
 
         }
-
+        $document = $quote->getCustomerTaxvat() ? $quote->getCustomerTaxvat() : $quote->getShippingAddress()->getVatId() ;
 
         $order->customer = [
             'name' => !empty($requestDataProvider->getName()) ? $requestDataProvider->getName() :  $quote->getBillingAddress()->getFirstName() . ' ' . $quote->getBillingAddress()->getLastName(),
             'email' => !empty($requestDataProvider->getEmail()) ? $requestDataProvider->getEmail() : $quote->getBillingAddress()->getEmail(),
-            'document' => $quote->getCustomerTaxvat(),
+            'document' => $document,
             'type' => 'individual',
             'address' => [
                 'street' => $quote->getShippingAddress()->getStreetLine(1),
