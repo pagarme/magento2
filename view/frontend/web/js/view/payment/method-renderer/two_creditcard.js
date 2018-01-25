@@ -354,6 +354,8 @@ define(
 
                 selectPaymentMethodAction(this.getData());
                 checkoutData.setSelectedPaymentMethod(this.item.method);
+                $("#mundipagg_two_creditcard_installments_second").val('');
+                $("#mundipagg_two_creditcard_installments_first").val('');
 
                 return true;
             },

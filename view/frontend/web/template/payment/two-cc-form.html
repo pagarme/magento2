@@ -12,7 +12,7 @@
 <div class="payment-full">
     <div class="form-creditcard-one">
         <fieldset
-                data-bind="attr: {class: 'fieldset payment items ccard ' + getCode(), id: 'payment_form_' + getCode()}">
+                data-bind="attr: {class: 'fieldset payment items ccard ' + getCode(), id: 'payment_form_' + getCode() + '_first'}">
             <!-- ko if: (isShowLegend())-->
             <legend class="legend">
                 <span><!-- ko i18n: 'Credit Card Information'--><!-- /ko --></span>
@@ -343,7 +343,7 @@
             </div>
             <!-- //ko if: (isSaveCardActive())-->
             <div class="field choice" data-bind="attr: {id: getCode() + '_cc_savecard_second', style: isSaveCardStyle()}">
-                <input type="checkbox" class="checkbox" id="creditcard-save" data-bind="checked: creditCardsavecardSecond"/>
+                <input type="checkbox" class="checkbox" id="creditcard-save-second" data-bind="checked: creditCardsavecardSecond"/>
                 <label class="label" data-bind="attr: {'for': getCode() + '_cc_savecard_second'}">
                     <span><!-- ko i18n: 'Add To MundiPagg One Click'--><!-- /ko --></span>
                 </label>

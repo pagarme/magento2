@@ -243,6 +243,7 @@ define(
 
                 selectPaymentMethodAction(this.getData());
                 checkoutData.setSelectedPaymentMethod(this.item.method);
+                $("#mundipagg_billet_creditcard_installments").val('');
 
                 return true;
             },

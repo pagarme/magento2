@@ -47,4 +47,12 @@ class Config extends AbstractConfig implements ConfigInterface
     {
         return $this->getConfig(static::PATH_ANTIFRAUD_MIN_AMOUNT);
     }
+
+    /**
+     * @return string
+     */
+    public function getSoftDescription()
+    {
+        return $this->getConfig(static::PATH_SOFT_DESCRIPTION);
+    }
 }

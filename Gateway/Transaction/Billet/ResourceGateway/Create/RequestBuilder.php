@@ -30,6 +30,7 @@ class RequestBuilder implements BuilderInterface
 {
 
     const MODULE_NAME = 'MundiPagg_MundiPagg';
+    const NAME_METADATA = 'Magento 2';
 
     protected $request;
     /** @var  BoletoTransaction */
@@ -141,7 +142,8 @@ class RequestBuilder implements BuilderInterface
 
         $quote = $this->getCart()->getQuote();
         $order = $this->getOrderRequest();
-
+        $quote->reserveOrderId()->save();
+        $order->code = $quote->getReservedOrderId();
         $order->payments = [
             [
                 'amount' => $quote->getGrandTotal() * 100,
@@ -180,6 +182,7 @@ class RequestBuilder implements BuilderInterface
             'address' => [
                 'street' => $quote->getShippingAddress()->getStreetLine(1),
                 'number' => $quote->getShippingAddress()->getStreetLine(2),
+                'complement' => $quote->getShippingAddress()->getStreetLine(3),
                 'zip_code' => trim(str_replace('-','',$quote->getShippingAddress()->getPostCode())),
                 'neighborhood' => $quote->getShippingAddress()->getStreetLine(4),
                 'city' => $quote->getShippingAddress()->getCity(),
@@ -195,7 +198,8 @@ class RequestBuilder implements BuilderInterface
             'description' => '.',
             'address' => [
                 'street' => $quote->getShippingAddress()->getStreetLine(1),
-                'number' => $quote->getShippingAddress()->getStreetLine(2) . ' ' . $quote->getShippingAddress()->getStreetLine(3),
+                'number' => $quote->getShippingAddress()->getStreetLine(2),
+                'complement' => $quote->getShippingAddress()->getStreetLine(3),
                 'zip_code' => trim(str_replace('-','',$quote->getShippingAddress()->getPostCode())),
                 'neighborhood' => $quote->getShippingAddress()->getStreetLine(4),
                 'city' => $quote->getShippingAddress()->getCity(),
@@ -207,7 +211,7 @@ class RequestBuilder implements BuilderInterface
         $order->session_id = $requestDataProvider->getSessionId();
 
         $order->metadata = [
-            'module_name' => self::MODULE_NAME,
+            'module_name' => self::NAME_METADATA,
             'module_version' => $this->getModuleHelper()->getVersion(self::MODULE_NAME),
         ];
 

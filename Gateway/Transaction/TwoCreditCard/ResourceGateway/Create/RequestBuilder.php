@@ -31,6 +31,7 @@ class RequestBuilder implements BuilderInterface
 {
 
     const MODULE_NAME = 'MundiPagg_MundiPagg';
+    const NAME_METADATA = 'Magento 2';
 
     protected $request;
     protected $requestDataProviderFactory;
@@ -316,7 +317,7 @@ class RequestBuilder implements BuilderInterface
         ];
 
         $request->metadata = [
-            'module_name' => self::MODULE_NAME,
+            'module_name' => self::NAME_METADATA,
             'module_version' => $this->getModuleHelper()->getVersion(self::MODULE_NAME),
         ];
 
@@ -361,7 +362,7 @@ class RequestBuilder implements BuilderInterface
         }
 
         $request->metadata = [
-            'module_name' => self::MODULE_NAME,
+            'module_name' => self::NAME_METADATA,
             'module_version' => $this->getModuleHelper()->getVersion(self::MODULE_NAME),
         ];
 
@@ -394,8 +395,12 @@ class RequestBuilder implements BuilderInterface
 
         $statement = $this->getConfigCreditCard()->getSoftDescription();
 
-        $capture = $this->getConfigCreditCard()->getPaymentAction() == '‌authorize_capture' ? true : false;
-
+        if($this->getConfigCreditCard()->getPaymentAction() == 'authorize_capture'){
+            $capture = true;
+        }else{
+            $capture = false;
+        }
+        
         $model = $this->getCardsFactory();
 
         $order->payments = [
@@ -410,7 +415,8 @@ class RequestBuilder implements BuilderInterface
                     'card' => [
                         'billing_address' => [
                             'street' => $quote->getBillingAddress()->getStreetLine(1),
-                            'number' => $quote->getBillingAddress()->getStreetLine(2) . ' ' . $quote->getBillingAddress()->getStreetLine(3),
+                            'number' => $quote->getBillingAddress()->getStreetLine(2),
+                            'complement' => $quote->getShippingAddress()->getStreetLine(3),
                             'zip_code' => trim(str_replace('-', '', $quote->getBillingAddress()->getPostCode())),
                             'neighborhood' => $quote->getBillingAddress()->getStreetLine(4),
                             'city' => $quote->getBillingAddress()->getCity(),
@@ -431,7 +437,8 @@ class RequestBuilder implements BuilderInterface
                     'card' => [
                         'billing_address' => [
                             'street' => $quote->getBillingAddress()->getStreetLine(1),
-                            'number' => $quote->getBillingAddress()->getStreetLine(2) . ' ' . $quote->getBillingAddress()->getStreetLine(3),
+                            'number' => $quote->getBillingAddress()->getStreetLine(2),
+                            'complement' => $quote->getShippingAddress()->getStreetLine(3),
                             'zip_code' => trim(str_replace('-', '', $quote->getBillingAddress()->getPostCode())),
                             'neighborhood' => $quote->getBillingAddress()->getStreetLine(4),
                             'city' => $quote->getBillingAddress()->getCity(),
@@ -486,6 +493,7 @@ class RequestBuilder implements BuilderInterface
             'address' => [
                 'street' => $quote->getShippingAddress()->getStreetLine(1),
                 'number' => $quote->getShippingAddress()->getStreetLine(2),
+                'complement' => $quote->getShippingAddress()->getStreetLine(3),
                 'zip_code' => trim(str_replace('-', '', $quote->getShippingAddress()->getPostCode())),
                 'neighborhood' => $quote->getShippingAddress()->getStreetLine(4),
                 'city' => $quote->getShippingAddress()->getCity(),
@@ -502,6 +510,7 @@ class RequestBuilder implements BuilderInterface
             'address' => [
                 'street' => $quote->getShippingAddress()->getStreetLine(1),
                 'number' => $quote->getShippingAddress()->getStreetLine(2),
+                'complement' => $quote->getShippingAddress()->getStreetLine(3),
                 'zip_code' => trim(str_replace('-', '', $quote->getShippingAddress()->getPostCode())),
                 'neighborhood' => $quote->getShippingAddress()->getStreetLine(4),
                 'city' => $quote->getShippingAddress()->getCity(),
@@ -513,24 +522,26 @@ class RequestBuilder implements BuilderInterface
         $order->session_id = $requestDataProvider->getSessionId();
 
         $order->metadata = [
-            'module_name' => self::MODULE_NAME,
+            'module_name' => self::NAME_METADATA,
             'module_version' => $this->getModuleHelper()->getVersion(self::MODULE_NAME),
         ];
+        $quote->reserveOrderId()->save();
+        $order->code = $quote->getReservedOrderId();
 
         if ($this->getConfigCreditCard()->getAntifraudActive() && $quote->getGrandTotal() > $this->getConfigCreditCard()->getAntifraudMinAmount()) {
-            $order->antifraud_enabled = true;
+            $order->antifraudEnabled = true;
         }
 
         try {
 
             $response = $this->getApi()->getOrders()->createOrder($order);
 
-            if ($payment->getAdditionalInformation('cc_savecard_first') == '1') {
+            if ($payment->getAdditionalInformation('cc_savecard_first') == '1' && empty($payment->getAdditionalInformation('cc_saved_card_first'))) {
                 $customer = $response->customer;
                 $this->setCardToken($payment, $customer, $quote, 'FirstCard');
             }
 
-            if ($payment->getAdditionalInformation('cc_savecard_second') == '1') {
+            if ($payment->getAdditionalInformation('cc_savecard_second') == '1' && empty($payment->getAdditionalInformation('cc_saved_card_second'))) {
                 $customer = $response->customer;
                 $this->setCardToken($payment, $customer, $quote, 'SecondCard');
             }
@@ -575,7 +586,8 @@ class RequestBuilder implements BuilderInterface
 
         $request->billingAddress = [
             'street' => $quote->getBillingAddress()->getStreetLine(1),
-            'number' => $quote->getBillingAddress()->getStreetLine(2) . ' ' . $quote->getBillingAddress()->getStreetLine(3),
+            'number' => $quote->getBillingAddress()->getStreetLine(2),
+            'complement' => $quote->getShippingAddress()->getStreetLine(3),
             'zip_code' => trim(str_replace('-', '', $quote->getBillingAddress()->getPostCode())),
             'neighborhood' => $quote->getBillingAddress()->getStreetLine(4),
             'city' => $quote->getBillingAddress()->getCity(),
@@ -587,7 +599,7 @@ class RequestBuilder implements BuilderInterface
         ];
 
         $request->metadata = [
-            'module_name' => self::MODULE_NAME,
+            'module_name' => self::NAME_METADATA,
             'module_version' => $this->getModuleHelper()->getVersion(self::MODULE_NAME),
         ];
 

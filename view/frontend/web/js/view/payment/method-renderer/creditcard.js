@@ -139,6 +139,7 @@ define(
 
                 selectPaymentMethodAction(this.getData());
                 checkoutData.setSelectedPaymentMethod(this.item.method);
+                $("#mundipagg_creditcard_installments").val('');
 
                 return true;
             },
@@ -256,7 +257,7 @@ define(
                 if (typeof this.oldInstallmentTax == 'undefined') {
                     this.oldInstallmentTax = 0;
                 }
-                console.log(newTax);
+                // console.log(newTax);
                 var total = quote.getTotals()();
                 var subTotalIndex = null;
                 for (var i = 0, len = total.total_segments.length; i < len; i++) {
