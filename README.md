@@ -1,3 +1,7 @@
+[![Maintainability](https://api.codeclimate.com/v1/badges/e279af4b87b47e56723a/maintainability)](https://codeclimate.com/github/mundipagg/magento2/maintainability)
+[![Latest Stable Version](https://poser.pugx.org/mundipagg/mundipagg-magento2-module/v/stable)](https://packagist.org/packages/mundipagg/mundipagg-magento2-module)
+[![Total Downloads](https://poser.pugx.org/mundipagg/mundipagg-magento2-module/downloads)](https://packagist.org/packages/mundipagg/mundipagg-magento2-module)
+
 # Magento2/Mundipagg Integration module
 This is the official Magento2 module for Mundipagg integration
 
