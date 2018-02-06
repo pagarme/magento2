@@ -80,7 +80,7 @@ define(
                         });
 
                     }).always(function () {
-                        fullScreenLoader.stopLoader();
+                        //fullScreenLoader.stopLoader();
                     });
 
                 }

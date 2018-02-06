@@ -32,7 +32,9 @@ class RequestBuilder implements BuilderInterface
 
     const MODULE_NAME = 'MundiPagg_MundiPagg';
     const NAME_METADATA = 'Magento 2';
-
+    const SHIPPING = 1;
+    const BILLING = 0;
+    
     protected $request;
     protected $requestDataProviderFactory;
     protected $cartItemRequestDataProviderFactory;
@@ -414,14 +416,14 @@ class RequestBuilder implements BuilderInterface
                     'installments' => $payment->getAdditionalInformation('cc_installments_first'),
                     'card' => [
                         'billing_address' => [
-                            'street' => $quote->getBillingAddress()->getStreetLine(1),
-                            'number' => $quote->getBillingAddress()->getStreetLine(2),
-                            'complement' => $quote->getShippingAddress()->getStreetLine(3),
-                            'zip_code' => trim(str_replace('-', '', $quote->getBillingAddress()->getPostCode())),
-                            'neighborhood' => $quote->getBillingAddress()->getStreetLine(4),
-                            'city' => $quote->getBillingAddress()->getCity(),
-                            'state' => $quote->getBillingAddress()->getRegionCode(),
-                            'country' => $quote->getBillingAddress()->getCountryId()
+                            'street' => $requestDataProvider->getCustomerAddressStreet(self::BILLING),
+                                'number' => $requestDataProvider->getCustomerAddressNumber(self::BILLING),
+                                'complement' => $requestDataProvider->getCustomerAddressComplement(self::BILLING),
+                                'zip_code' => trim(str_replace('-','',$quote->getBillingAddress()->getPostCode())),
+                                'neighborhood' => $requestDataProvider->getCustomerAddressDistrict(self::BILLING),
+                                'city' => $quote->getBillingAddress()->getCity(),
+                                'state' => $quote->getBillingAddress()->getRegionCode(),
+                                'country' => $quote->getBillingAddress()->getCountryId()
                         ]
                     ]
                 ]
@@ -436,14 +438,14 @@ class RequestBuilder implements BuilderInterface
                     'installments' => $payment->getAdditionalInformation('cc_installments_second'),
                     'card' => [
                         'billing_address' => [
-                            'street' => $quote->getBillingAddress()->getStreetLine(1),
-                            'number' => $quote->getBillingAddress()->getStreetLine(2),
-                            'complement' => $quote->getShippingAddress()->getStreetLine(3),
-                            'zip_code' => trim(str_replace('-', '', $quote->getBillingAddress()->getPostCode())),
-                            'neighborhood' => $quote->getBillingAddress()->getStreetLine(4),
-                            'city' => $quote->getBillingAddress()->getCity(),
-                            'state' => $quote->getBillingAddress()->getRegionCode(),
-                            'country' => $quote->getBillingAddress()->getCountryId()
+                            'street' => $requestDataProvider->getCustomerAddressStreet(self::BILLING),
+                                'number' => $requestDataProvider->getCustomerAddressNumber(self::BILLING),
+                                'complement' => $requestDataProvider->getCustomerAddressComplement(self::BILLING),
+                                'zip_code' => trim(str_replace('-','',$quote->getBillingAddress()->getPostCode())),
+                                'neighborhood' => $requestDataProvider->getCustomerAddressDistrict(self::BILLING),
+                                'city' => $quote->getBillingAddress()->getCity(),
+                                'state' => $quote->getBillingAddress()->getRegionCode(),
+                                'country' => $quote->getBillingAddress()->getCountryId()
                         ]
                     ]
 
@@ -491,11 +493,11 @@ class RequestBuilder implements BuilderInterface
             'document' => $document,
             'type' => 'individual',
             'address' => [
-                'street' => $quote->getShippingAddress()->getStreetLine(1),
-                'number' => $quote->getShippingAddress()->getStreetLine(2),
-                'complement' => $quote->getShippingAddress()->getStreetLine(3),
-                'zip_code' => trim(str_replace('-', '', $quote->getShippingAddress()->getPostCode())),
-                'neighborhood' => $quote->getShippingAddress()->getStreetLine(4),
+                'street' => $requestDataProvider->getCustomerAddressStreet(self::SHIPPING),
+                'number' => $requestDataProvider->getCustomerAddressNumber(self::SHIPPING),
+                'complement' => $requestDataProvider->getCustomerAddressComplement(self::SHIPPING),
+                'zip_code' => trim(str_replace('-','',$quote->getShippingAddress()->getPostCode())),
+                'neighborhood' => $requestDataProvider->getCustomerAddressDistrict(self::SHIPPING),
                 'city' => $quote->getShippingAddress()->getCity(),
                 'state' => $quote->getShippingAddress()->getRegionCode(),
                 'country' => $quote->getShippingAddress()->getCountryId()
@@ -508,11 +510,11 @@ class RequestBuilder implements BuilderInterface
             'amount' => $quote->getShippingAddress()->getShippingAmount() * 100,
             'description' => $cartItemDataProvider->getName(),
             'address' => [
-                'street' => $quote->getShippingAddress()->getStreetLine(1),
-                'number' => $quote->getShippingAddress()->getStreetLine(2),
-                'complement' => $quote->getShippingAddress()->getStreetLine(3),
-                'zip_code' => trim(str_replace('-', '', $quote->getShippingAddress()->getPostCode())),
-                'neighborhood' => $quote->getShippingAddress()->getStreetLine(4),
+                'street' => $requestDataProvider->getCustomerAddressStreet(self::SHIPPING),
+                'number' => $requestDataProvider->getCustomerAddressNumber(self::SHIPPING),
+                'complement' => $requestDataProvider->getCustomerAddressComplement(self::SHIPPING),
+                'zip_code' => trim(str_replace('-','',$quote->getShippingAddress()->getPostCode())),
+                'neighborhood' => $requestDataProvider->getCustomerAddressDistrict(self::SHIPPING),
                 'city' => $quote->getShippingAddress()->getCity(),
                 'state' => $quote->getShippingAddress()->getRegionCode(),
                 'country' => $quote->getShippingAddress()->getCountryId()
@@ -538,12 +540,12 @@ class RequestBuilder implements BuilderInterface
 
             if ($payment->getAdditionalInformation('cc_savecard_first') == '1' && empty($payment->getAdditionalInformation('cc_saved_card_first'))) {
                 $customer = $response->customer;
-                $this->setCardToken($payment, $customer, $quote, 'FirstCard');
+                $this->setCardToken($payment, $customer, $quote, 'FirstCard', $requestDataProvider);
             }
 
             if ($payment->getAdditionalInformation('cc_savecard_second') == '1' && empty($payment->getAdditionalInformation('cc_saved_card_second'))) {
                 $customer = $response->customer;
-                $this->setCardToken($payment, $customer, $quote, 'SecondCard');
+                $this->setCardToken($payment, $customer, $quote, 'SecondCard', $requestDataProvider);
             }
 
         } catch (\MundiAPILib\Exceptions\ErrorException $error) {
@@ -564,7 +566,7 @@ class RequestBuilder implements BuilderInterface
         return new \MundiAPILib\Models\CreateCardRequest();
     }
 
-    protected function setCardToken($payment, $customer, $quote, $card)
+    protected function setCardToken($payment, $customer, $quote, $card, $requestDataProvider)
     {
         $request = $this->getCardRequest();
 
@@ -585,11 +587,11 @@ class RequestBuilder implements BuilderInterface
         }
 
         $request->billingAddress = [
-            'street' => $quote->getBillingAddress()->getStreetLine(1),
-            'number' => $quote->getBillingAddress()->getStreetLine(2),
-            'complement' => $quote->getShippingAddress()->getStreetLine(3),
-            'zip_code' => trim(str_replace('-', '', $quote->getBillingAddress()->getPostCode())),
-            'neighborhood' => $quote->getBillingAddress()->getStreetLine(4),
+            'street' => $requestDataProvider->getCustomerAddressStreet(self::BILLING),
+            'number' => $requestDataProvider->getCustomerAddressNumber(self::BILLING),
+            'complement' => $requestDataProvider->getCustomerAddressComplement(self::BILLING),
+            'zip_code' => trim(str_replace('-','',$quote->getBillingAddress()->getPostCode())),
+            'neighborhood' => $requestDataProvider->getCustomerAddressDistrict(self::BILLING),
             'city' => $quote->getBillingAddress()->getCity(),
             'state' => $quote->getBillingAddress()->getRegionCode(),
             'country' => $quote->getBillingAddress()->getCountryId()

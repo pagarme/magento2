@@ -94,6 +94,7 @@ define(
                     if (Math.abs(parseFloat(self.creditCardBilletAmountBcc())) + Math.abs(parseFloat(self.creditCardCcAmountBcc())) > totalQuote) {
                         self.bindCreditCardBilletAmountBcc(null);
                         self.bindCreditCardCcAmountBcc(null);
+                        jQuery('#mundipagg_billet_creditcard_cc_installments').css('display','none');
                     }
 
                 }
@@ -111,6 +112,7 @@ define(
                             value = value.replace(",", ".");
                             this.creditCardBilletAmountBcc(value);
                             this.creditCardCcAmountBcc((totalQuote - parseFloat(value)).toFixed(2));
+                            jQuery('#mundipagg_billet_creditcard_cc_installments').css('display','block');
                             this.validateTotalQuote();
                         }
 
@@ -131,8 +133,8 @@ define(
                             value = value.replace(",", ".");
                             this.creditCardCcAmountBcc(value);
                             this.creditCardBilletAmountBcc((totalQuote - parseFloat(value)).toFixed(2));
+                            jQuery('#mundipagg_billet_creditcard_cc_installments').css('display','block');
                             this.validateTotalQuote();
-
                         }
 
                     },
@@ -178,7 +180,7 @@ define(
 
                     if (newValue) {
 
-                        fullScreenLoader.startLoader();
+                        //fullScreenLoader.startLoader();
 
                         var creditCardAmount = self.creditCardCcAmountBcc() ? self.creditCardCcAmountBcc() : 0;
                         $.when(
@@ -195,7 +197,7 @@ define(
                             });
 
                         }).always(function () {
-                            fullScreenLoader.stopLoader();
+                            //fullScreenLoader.stopLoader();
                         });
 
                     }
@@ -299,7 +301,7 @@ define(
             getCcInstallments: function () {
                 var self = this;
 
-                fullScreenLoader.startLoader();
+                //fullScreenLoader.startLoader();
                 $.when(
                     installments()
                 ).done(function (transport) {
@@ -314,7 +316,7 @@ define(
                     });
 
                 }).always(function () {
-                    fullScreenLoader.stopLoader();
+                    //fullScreenLoader.stopLoader();
                 });
             },
 

@@ -94,7 +94,6 @@
                        ">
                 </div>
             </div>
-            <!-- //ko if: (isSaveCardActive())-->
             <div class="field choice" data-bind="attr: {id: getCode() + '_cc_savecard_first', style: isSaveCardStyle()}">
                 <input type="checkbox" class="checkbox" id="creditcard-save-first" data-bind="checked: creditCardsavecardFirst"/>
                 <label class="label" data-bind="attr: {'for': getCode() + '_cc_savecard_first'}">
@@ -112,7 +111,6 @@
                          data-bind="html: getSaveCardHelpHtml()"></div>
                 </div>
             </div>
-            <!-- ///ko -->
             <div class="field number required"
                  data-bind="attr: {id: getCode() + '_cc_number_div_first' ,style: isSaveCardStyle()}">
                 <label data-bind="attr: {for: getCode() + '_cc_number_first'}" class="label">
@@ -227,7 +225,7 @@
             <!-- /ko -->
 
             <!-- ko if: (isInstallmentsActive())-->
-            <div class="field installments required" data-bind="attr: {id: getCode() + '_cc_installments_first'}">
+            <div class="field installments required" data-bind="attr: {id: getCode() + '_cc_installments_first', style: isSaveCardStyle() }">
                 <label data-bind="attr: {for: getCode() + '_installments_first'}" class="label">
                     <span><!-- ko i18n: 'Installments'--><!-- /ko --></span>
                 </label>
@@ -474,7 +472,7 @@
             <!-- /ko -->
 
             <!-- ko if: (isInstallmentsActive())-->
-            <div class="field installments required" data-bind="attr: {id: getCode() + '_cc_installments_second'}">
+            <div class="field installments required" data-bind="attr: {id: getCode() + '_cc_installments_second', style: installmentsStyle()}">
                 <label data-bind="attr: {for: getCode() + '_installments_second'}" class="label">
                     <span><!-- ko i18n: 'Installments'--><!-- /ko --></span>
                 </label>

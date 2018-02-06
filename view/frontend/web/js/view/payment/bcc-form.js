@@ -149,6 +149,10 @@ define(
                 return 'display: block;';
             },
 
+            installmentsStyle: function() {
+                return 'display: none;';
+            },
+
             getCardsCustomer:function () {
                 return _.map(window.checkoutConfig.payment.mundipagg_billet_creditcard.cards, function (value, key) {
                     return {

@@ -18,6 +18,10 @@ interface ConfigInterface
     const PATH_TEXT             = 'payment/mundipagg_billet/text';
     const PATH_TYPE_BANK        = 'payment/mundipagg_billet/types';
     const PATH_EXPIRATION_DAYS  = 'payment/mundipagg_billet/expiration_days';
+    const PATH_CUSTOMER_STREET              = 'payment/mundipagg_customer_address/street_attribute';
+    const PATH_CUSTOMER_NUMBER              = 'payment/mundipagg_customer_address/number_attribute';
+    const PATH_CUSTOMER_COMPLEMENT          = 'payment/mundipagg_customer_address/complement_attribute';
+    const PATH_CUSTOMER_DISTRICT            = 'payment/mundipagg_customer_address/district_attribute';
 
     /**
      * @return string
@@ -38,4 +42,24 @@ interface ConfigInterface
      * @return string
      */
     public function getExpirationDays();
+    
+    /**
+     * @return string
+     */
+    public function getCustomerStreetAttribute();
+
+    /**
+     * @return string
+     */
+    public function getCustomerAddressNumber();
+
+    /**
+     * @return string
+     */
+    public function getCustomerAddressComplement();
+
+    /**
+     * @return string
+     */
+    public function getCustomerAddressDistrict();
 }

@@ -1,8 +1,3 @@
-[![Maintainability](https://api.codeclimate.com/v1/badges/e279af4b87b47e56723a/maintainability)](https://codeclimate.com/github/mundipagg/magento2/maintainability)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/01e0bea5ea934f81a3fd2744145880a8)](https://www.codacy.com/app/mundipagg/magento2?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=mundipagg/magento2&amp;utm_campaign=Badge_Grade)
-[![Latest Stable Version](https://poser.pugx.org/mundipagg/mundipagg-magento2-module/v/stable)](https://packagist.org/packages/mundipagg/mundipagg-magento2-module)
-[![Total Downloads](https://poser.pugx.org/mundipagg/mundipagg-magento2-module/downloads)](https://packagist.org/packages/mundipagg/mundipagg-magento2-module)
-
 # Magento2/Mundipagg Integration module
 This is the official Magento2 module for Mundipagg integration
 
@@ -22,7 +17,7 @@ Add the following lines into your composer.json
 ```
 {
 	"require": {
-		"mundipagg/mundipagg-magento2-module":"^1.2.9"
+		"mundipagg/mundipagg-magento2-module":"^1.2.11"
 	}
 }
 ```

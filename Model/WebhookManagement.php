@@ -405,8 +405,8 @@ class WebhookManagement implements WebhookManagementInterface
         return $this;
     }
 
-    public function logger($data){
-
+    public function logger($data)
+    {
         $writer = new \Zend\Log\Writer\Stream(BP . '/var/log/mundipagg-mundipagg-transaction-' . date('Y-m-d') . '.log');
         $logger = new \Zend\Log\Logger();
         $logger->addWriter($writer);
@@ -414,6 +414,7 @@ class WebhookManagement implements WebhookManagementInterface
         $logger->info(json_encode($data));
         $logger->info('Debug Final Webhook');
 
+        return $this;
     }
 
 }

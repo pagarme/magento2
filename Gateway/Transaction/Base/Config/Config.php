@@ -58,7 +58,35 @@ class Config extends AbstractConfig implements ConfigInterface
         return $this->getConfig(static::PATH_PRODUCTION_URL);
     }
 
-    public function getPaymentAction(){
+    /**
+     * @return string
+     */
+    public function getCustomerStreetAttribute()
+    {
+        return $this->getConfig(static::PATH_CUSTOMER_STREET);
+    }
 
+    /**
+     * @return string
+     */
+    public function getCustomerAddressNumber()
+    {
+        return $this->getConfig(static::PATH_CUSTOMER_NUMBER);
+    }
+    
+    /**
+     * @return string
+     */
+    public function getCustomerAddressComplement()
+    {
+        return $this->getConfig(static::PATH_CUSTOMER_COMPLEMENT);
+    }
+
+    /**
+     * @return string
+     */
+    public function getCustomerAddressDistrict()
+    {
+        return $this->getConfig(static::PATH_CUSTOMER_DISTRICT);
     }
 }

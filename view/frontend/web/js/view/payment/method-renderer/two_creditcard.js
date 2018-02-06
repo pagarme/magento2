@@ -93,7 +93,7 @@ define(
                     self.creditCardTypeFirst(newValue);
 
                     var amountFirst = self.firstCreditCardAmount() != '' ? self.firstCreditCardAmount() : 0;
-                    fullScreenLoader.startLoader();
+                    //fullScreenLoader.startLoader();
 
                     $.when(
                         installmentsByBrandAndAmount(newValue, amountFirst)
@@ -110,7 +110,7 @@ define(
                         });
 
                     }).always(function () {
-                        fullScreenLoader.stopLoader();
+                        //fullScreenLoader.stopLoader();
                     });
 
 
@@ -121,7 +121,7 @@ define(
                     self.creditCardTypeSecond(newValue);
 
                     var amountSecond = self.secondCreditCardAmount() != '' ? self.secondCreditCardAmount() : 0;
-                    fullScreenLoader.startLoader();
+                    //fullScreenLoader.startLoader();
 
                     $.when(
                         installmentsByBrandAndAmount(newValue, amountSecond)
@@ -138,7 +138,7 @@ define(
                         });
 
                     }).always(function () {
-                        fullScreenLoader.stopLoader();
+                        //fullScreenLoader.stopLoader();
                     });
 
                 }
@@ -203,6 +203,8 @@ define(
                     if (Math.abs(parseFloat(self.firstCreditCardAmount())) + Math.abs(parseFloat(self.secondCreditCardAmount())) > totalQuote) {
                         self.bindFirstCreditCardAmount(null);
                         self.bindSecondCreditCardAmount(null);
+                        jQuery('#mundipagg_two_creditcard_cc_installments_second').css('display','none');
+                        jQuery('#mundipagg_two_creditcard_cc_installments_first').css('display','none');
                     }
 
                 }
@@ -220,6 +222,8 @@ define(
                             value = value.replace(",", ".");
                             this.firstCreditCardAmount(value);
                             this.secondCreditCardAmount((totalQuote - parseFloat(value)).toFixed(2));
+                            jQuery('#mundipagg_two_creditcard_cc_installments_second').css('display','block');
+                            jQuery('#mundipagg_two_creditcard_cc_installments_first').css('display','block');
                             this.validateTotalQuote();
                         }
 
@@ -240,9 +244,10 @@ define(
                             value = value.replace(",", ".");
                             this.secondCreditCardAmount(value);
                             this.firstCreditCardAmount((totalQuote - parseFloat(value)).toFixed(2));
+                            jQuery('#mundipagg_two_creditcard_cc_installments_second').css('display','block');
+                            jQuery('#mundipagg_two_creditcard_cc_installments_first').css('display','block');
                             this.validateTotalQuote();
                         }
-
                     },
                     owner: self
                 });
@@ -425,7 +430,7 @@ define(
             getCcInstallmentsFirst: function() {
                 var self = this;
 
-                fullScreenLoader.startLoader();
+                //fullScreenLoader.startLoader();
                 $.when(
                     installments()
                 ).done(function (transport) {
@@ -441,14 +446,14 @@ define(
                     // self.creditCardInstallmentsFirst(transport.length);
 
                 }).always(function () {
-                    fullScreenLoader.stopLoader();
+                    //fullScreenLoader.stopLoader();
                 });
             },
 
             getCcInstallmentsSecond: function() {
                 var self = this;
 
-                fullScreenLoader.startLoader();
+                //fullScreenLoader.startLoader();
                 $.when(
                     installments()
                 ).done(function (transport) {
@@ -464,7 +469,7 @@ define(
                     self.creditCardInstallmentsSecond(transport.length);
 
                 }).always(function () {
-                    fullScreenLoader.stopLoader();
+                    //fullScreenLoader.stopLoader();
                 });
             },
 

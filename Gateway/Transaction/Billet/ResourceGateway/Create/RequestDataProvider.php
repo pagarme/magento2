@@ -79,4 +79,52 @@ class RequestDataProvider
         $this->config = $config;
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getCustomerAddressStreet($shipping)
+    {
+        if ($shipping) {
+            return $this->getShippingAddressAttribute($this->getConfig()->getCustomerStreetAttribute());
+        }
+
+        return $this->getBillingAddressAttribute($this->getConfig()->getCustomerStreetAttribute());
+    }
+
+    /**
+     * @return string
+     */
+    public function getCustomerAddressNumber($shipping)
+    {
+        if ($shipping) {
+            return $this->getShippingAddressAttribute($this->getConfig()->getCustomerAddressNumber());
+        }
+        
+        return $this->getBillingAddressAttribute($this->getConfig()->getCustomerAddressNumber());
+    }
+
+    /**
+     * @return string
+     */
+    public function getCustomerAddressComplement($shipping)
+    {
+        if ($shipping) {
+            return $this->getShippingAddressAttribute($this->getConfig()->getCustomerAddressComplement());
+        }
+        
+        return $this->getBillingAddressAttribute($this->getConfig()->getCustomerAddressComplement());
+    }
+
+    /**
+     * @return string
+     */
+    public function getCustomerAddressDistrict($shipping)
+    {
+        if ($shipping) {
+            return $this->getShippingAddressAttribute($this->getConfig()->getCustomerAddressDistrict());
+        }
+        
+        return $this->getBillingAddressAttribute($this->getConfig()->getCustomerAddressDistrict());
+    }
 }

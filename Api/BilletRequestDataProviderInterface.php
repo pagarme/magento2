@@ -28,4 +28,24 @@ interface BilletRequestDataProviderInterface extends BaseRequestDataProviderInte
      * @return string
      */
     public function getDaysToAddInBoletoExpirationDate();
+
+    /**
+     * @return string
+     */
+    public function getCustomerAddressStreet($shipping);
+
+    /**
+     * @return string
+     */
+    public function getCustomerAddressNumber($shipping);
+
+    /**
+     * @return string
+     */
+    public function getCustomerAddressComplement($shipping);
+
+    /**
+     * @return string
+     */
+    public function getCustomerAddressDistrict($shipping);
 }
