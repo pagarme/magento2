@@ -1,0 +1,421 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
+ * @copyright   2017 MundiPagg (http://www.mundipagg.com)
+ * @license     http://www.mundipagg.com Copyright
+ *
+ * @link        http://www.mundipagg.com
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="MundiPagg\MundiPagg\Api\InstallmentsManagementInterface" type="MundiPagg\MundiPagg\Model\InstallmentsManagement" />
+    <preference for="MundiPagg\MundiPagg\Api\Data\InstallmentInterface" type="MundiPagg\MundiPagg\Model\Installment" />
+    <preference for="MundiPagg\MundiPagg\Api\CreditCardRequestDataProviderInterface" type="MundiPagg\MundiPagg\Gateway\Transaction\CreditCard\ResourceGateway\Create\RequestDataProvider" />
+    <preference for="MundiPagg\MundiPagg\Api\TwoCreditCardRequestDataProviderInterface" type="MundiPagg\MundiPagg\Gateway\Transaction\TwoCreditCard\ResourceGateway\Create\RequestDataProvider" />
+    <preference for="MundiPagg\MundiPagg\Api\BilletRequestDataProviderInterface" type="MundiPagg\MundiPagg\Gateway\Transaction\Billet\ResourceGateway\Create\RequestDataProvider" />
+    <preference for="MundiPagg\MundiPagg\Api\CartItemRequestDataProviderInterface" type="MundiPagg\MundiPagg\Gateway\Transaction\Base\ResourceGateway\CartItemRequestDataProvider" />
+    <preference for="MundiPagg\MundiPagg\Model\Installments\Config\ConfigInterface" type="MundiPagg\MundiPagg\Model\Installments\Config\Config" />
+    <preference for="MundiPagg\MundiPagg\Model\Installments\Config\ConfigByBrandInterface" type="MundiPagg\MundiPagg\Model\Installments\Config\ConfigByBrand" />
+    <preference for="MundiPagg\MundiPagg\Gateway\Transaction\CreditCard\Config\ConfigInterface" type="MundiPagg\MundiPagg\Gateway\Transaction\CreditCard\Config\Config" />
+    <preference for="MundiPagg\MundiPagg\Gateway\Transaction\TwoCreditCard\Config\ConfigInterface" type="MundiPagg\MundiPagg\Gateway\Transaction\TwoCreditCard\Config\Config" />
+    <preference for="MundiPagg\MundiPagg\Gateway\Transaction\Billet\Config\ConfigInterface" type="MundiPagg\MundiPagg\Gateway\Transaction\Billet\Config\Config" />
+    <preference for="MundiPagg\MundiPagg\Gateway\Transaction\BilletCreditCard\Config\ConfigInterface" type="MundiPagg\MundiPagg\Gateway\Transaction\BilletCreditCard\Config\Config" />
+    <preference for="MundiPagg\MundiPagg\Api\BilletCreditCardRequestDataProviderInterface" type="MundiPagg\MundiPagg\Gateway\Transaction\BilletCreditCard\ResourceGateway\Create\RequestDataProvider" />
+    <preference for="MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\ConfigInterface" type="MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\Config" />
+    <preference for="MundiPagg\MundiPagg\Helper\CustomerAddressInterface" type="MundiPagg\MundiPagg\Helper\CustomerAddress" />
+    <preference for="MundiPagg\MundiPagg\Api\WebhookManagementInterface" type="MundiPagg\MundiPagg\Model\WebhookManagement"/>
+    <preference for="MundiPagg\MundiPagg\Api\InstallmentsByBrandManagementInterface" type="MundiPagg\MundiPagg\Model\InstallmentsByBrandManagement"/>
+    <preference for="MundiPagg\MundiPagg\Api\InstallmentsByBrandAndAmountManagementInterface" type="MundiPagg\MundiPagg\Model\InstallmentsByBrandAndAmountManagement"/>
+
+    <type name="MundiPagg\MundiPagg\Model\InstallmentsByBrandManagement">
+        <arguments>
+            <argument name="builder" xsi:type="object">MundiPagg\MundiPagg\Model\Installments\BuilderByBrand</argument>
+        </arguments>
+    </type>
+
+    <type name="MundiPagg\MundiPagg\Model\InstallmentsByBrandAndAmountManagement">
+        <arguments>
+            <argument name="builder" xsi:type="object">MundiPagg\MundiPagg\Model\Installments\BuilderByBrandAndAmount</argument>
+        </arguments>
+    </type>
+
+    <!-- Charges Mundipagg -->
+    <preference for="MundiPagg\MundiPagg\Api\ChargesRepositoryInterface" type="MundiPagg\MundiPagg\Model\ChargesRepository"/>
+    <preference for="MundiPagg\MundiPagg\Api\Data\ChargesInterface" type="MundiPagg\MundiPagg\Model\Charges"/>
+    <preference for="MundiPagg\MundiPagg\Api\Data\ChargesSearchResultsInterface" type="Magento\Framework\Api\SearchResults"/>
+    <virtualType name="MundiPagg\MundiPagg\Model\ResourceModel\Charges\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">mundipagg_mundipagg_charges</argument>
+            <argument name="resourceModel" xsi:type="string">MundiPagg\MundiPagg\Model\ResourceModel\Charges\Collection</argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="mundipagg_mundipagg_charges_grid_data_source" xsi:type="string">MundiPagg\MundiPagg\Model\ResourceModel\Charges\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- Final Charges Mundipagg -->
+
+    <!-- Cards Mundipagg -->
+    <preference for="MundiPagg\MundiPagg\Api\CardsRepositoryInterface" type="MundiPagg\MundiPagg\Model\CardsRepository"/>
+    <preference for="MundiPagg\MundiPagg\Api\Data\CardsInterface" type="MundiPagg\MundiPagg\Model\Cards"/>
+    <preference for="MundiPagg\MundiPagg\Api\Data\CardsSearchResultsInterface" type="Magento\Framework\Api\SearchResults"/>
+    <virtualType name="MundiPagg\MundiPagg\Model\ResourceModel\Cards\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">mundipagg_mundipagg_cards</argument>
+            <argument name="resourceModel" xsi:type="string">MundiPagg\MundiPagg\Model\ResourceModel\Cards\Collection</argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="mundipagg_mundipagg_cards_grid_data_source" xsi:type="string">MundiPagg\MundiPagg\Model\ResourceModel\Cards\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- Final Cards Mundipagg -->
+
+    <type name="MundiPagg\MundiPagg\Model\InstallmentsManagement">
+        <arguments>
+            <argument name="builder" xsi:type="object">MundiPagg\MundiPagg\Model\Installments\Builder</argument>
+        </arguments>
+    </type>
+
+    <type name="MundiPagg\MundiPagg\Model\InstallmentsManagementByBrand">
+        <arguments>
+            <argument name="builder" xsi:type="object">MundiPagg\MundiPagg\Model\Installments\BuilderByBrand</argument>
+        </arguments>
+    </type>
+
+    <type name="MundiPagg\MundiPagg\Model\Installments\Builder">
+        <arguments>
+            <argument name="config" xsi:type="object">MundiPaggCreditCardInstallment</argument>
+        </arguments>
+    </type>
+
+    <type name="MundiPagg\MundiPagg\Model\Installments\BuilderByBrand">
+        <arguments>
+            <argument name="config" xsi:type="object">MundiPaggCreditCardInstallmentByBrand</argument>
+        </arguments>
+    </type>
+
+    <type name="MundiPagg\MundiPagg\Model\Installments\BuilderByBrandAndAmount">
+        <arguments>
+            <argument name="config" xsi:type="object">MundiPaggCreditCardInstallmentByBrandAndAmount</argument>
+        </arguments>
+    </type>
+
+    <!-- Billet -->
+    <virtualType name="MundiPaggBilletRemoteMethodAdapter" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">MundiPagg\MundiPagg\Model\Ui\Billet\ConfigProvider::CODE</argument>
+            <argument name="valueHandlerPool" xsi:type="object">MundiPaggBilletValueHandlerPool</argument>
+            <argument name="commandPool" xsi:type="object">MundiPaggBilletCommandPool</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">MundiPagg\MundiPagg\Block\Payment\Info\Billet</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggBilletValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">MundiPaggBilletConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggBilletConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">MundiPaggBilletConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggBilletConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">MundiPagg\MundiPagg\Model\Ui\Billet\ConfigProvider::CODE</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggBilletCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="initialize" xsi:type="string">MundiPagg\MundiPagg\Gateway\Transaction\Base\Command\InitializeCommand</item>
+                <item name="authorize" xsi:type="string">MundiPaggBilletAuthorizeCommand</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggBilletAuthorizeCommand" type="MundiPagg\MundiPagg\Gateway\Transaction\Billet\Command\AuthorizeCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">MundiPagg\MundiPagg\Gateway\Transaction\Billet\ResourceGateway\Create\RequestBuilder</argument>
+            <argument name="responseHandler" xsi:type="object">MundiPaggBilletAuthorizeCommandResponseHandlerPool</argument>
+            <argument name="validator" xsi:type="object">MundiPagg\MundiPagg\Gateway\Transaction\Billet\ResourceGateway\Create\Response\Validator</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggBilletAuthorizeCommandResponseHandlerPool" type="Magento\Payment\Gateway\Response\HandlerChain">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="general" xsi:type="string">MundiPagg\MundiPagg\Gateway\Transaction\Billet\ResourceGateway\Create\Response\GeneralHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Two CreditCards -->
+
+    <virtualType name="MundiPaggTwoCreditCardRemoteMethodAdapter" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">MundiPagg\MundiPagg\Model\Ui\TwoCreditCard\ConfigProvider::CODE</argument>
+            <argument name="valueHandlerPool" xsi:type="object">MundiPaggTwoCreditCardValueHandlerPool</argument>
+            <argument name="commandPool" xsi:type="object">MundiPaggTwoCreditCardCommandPool</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">MundiPagg\MundiPagg\Block\Payment\Info\TwoCreditCard</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggTwoCreditCardValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">MundiPaggTwoCreditCardConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggTwoCreditCardConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">MundiPaggTwoCreditCardConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggTwoCreditCardConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">MundiPagg\MundiPagg\Model\Ui\TwoCreditCard\ConfigProvider::CODE</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggTwoCreditCardCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="initialize" xsi:type="string">MundiPagg\MundiPagg\Gateway\Transaction\Base\Command\InitializeCommand</item>
+                <item name="authorize" xsi:type="string">MundiPaggTwoCreditCardAuthorizeCommand</item>
+                <item name="capture" xsi:type="string">MundiPaggCreditCardCaptureCommand</item>
+                <item name="refund" xsi:type="string">MundiPaggCreditCardRefundCommand</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggTwoCreditCardAuthorizeCommand" type="MundiPagg\MundiPagg\Gateway\Transaction\TwoCreditCard\Command\AuthorizeCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">MundiPagg\MundiPagg\Gateway\Transaction\TwoCreditCard\ResourceGateway\Create\RequestBuilder</argument>
+            <argument name="responseHandler" xsi:type="object">MundiPaggTwoCreditCardAuthorizeCommandResponseHandlerPool</argument>
+            <argument name="validator" xsi:type="object">MundiPagg\MundiPagg\Gateway\Transaction\TwoCreditCard\ResourceGateway\Create\Response\Validator</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggTwoCreditCardAuthorizeCommandResponseHandlerPool" type="Magento\Payment\Gateway\Response\HandlerChain">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="general" xsi:type="string">MundiPagg\MundiPagg\Gateway\Transaction\TwoCreditCard\ResourceGateway\Create\Response\GeneralHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggTwoCreditCardInstallment" type="MundiPagg\MundiPagg\Model\Installments\Config\Config">
+        <arguments>
+            <argument name="paymentMethodCode" xsi:type="const">MundiPagg\MundiPagg\Model\Ui\TwoCreditCard\ConfigProvider::CODE</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggTwoCreditCardInstallmentByBrand" type="MundiPagg\MundiPagg\Model\Installments\Config\ConfigByBrand">
+        <arguments>
+            <argument name="paymentMethodCode" xsi:type="const">MundiPagg\MundiPagg\Model\Ui\TwoCreditCard\ConfigProvider::CODE</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggTwoCreditCardInstallmentByBrandAndAmount" type="MundiPagg\MundiPagg\Model\Installments\Config\ConfigByBrand">
+        <arguments>
+            <argument name="paymentMethodCode" xsi:type="const">MundiPagg\MundiPagg\Model\Ui\TwoCreditCard\ConfigProvider::CODE</argument>
+        </arguments>
+    </virtualType>
+
+
+    <!-- CreditCard -->
+
+    <virtualType name="MundiPaggCreditCardsRemoteMethodAdapter" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">MundiPagg\MundiPagg\Model\Ui\CreditCard\ConfigProvider::CODE</argument>
+            <argument name="valueHandlerPool" xsi:type="object">MundiPaggCreditCardValueHandlerPool</argument>
+            <argument name="commandPool" xsi:type="object">MundiPaggCreditCardCommandPool</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">MundiPagg\MundiPagg\Block\Payment\Info\CreditCard</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggCreditCardValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">MundiPaggCreditCardConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggCreditCardConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">MundiPaggCreditCardConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggCreditCardConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">MundiPagg\MundiPagg\Model\Ui\CreditCard\ConfigProvider::CODE</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggCreditCardCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="initialize" xsi:type="string">MundiPagg\MundiPagg\Gateway\Transaction\Base\Command\InitializeCommand</item>
+                <item name="authorize" xsi:type="string">MundiPaggCreditCardAuthorizeCommand</item>
+                <item name="capture" xsi:type="string">MundiPaggCreditCardCaptureCommand</item>
+                <item name="refund" xsi:type="string">MundiPaggCreditCardRefundCommand</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggCreditCardAuthorizeCommand" type="MundiPagg\MundiPagg\Gateway\Transaction\CreditCard\Command\AuthorizeCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">MundiPagg\MundiPagg\Gateway\Transaction\CreditCard\ResourceGateway\Create\RequestBuilder</argument>
+            <argument name="responseHandler" xsi:type="object">MundiPaggCreditCardAuthorizeCommandResponseHandlerPool</argument>
+            <argument name="validator" xsi:type="object">MundiPagg\MundiPagg\Gateway\Transaction\CreditCard\ResourceGateway\Create\Response\Validator</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggCreditCardAuthorizeCommandResponseHandlerPool" type="Magento\Payment\Gateway\Response\HandlerChain">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="general" xsi:type="string">MundiPagg\MundiPagg\Gateway\Transaction\CreditCard\ResourceGateway\Create\Response\GeneralHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggCreditCardInstallment" type="MundiPagg\MundiPagg\Model\Installments\Config\Config">
+        <arguments>
+            <argument name="paymentMethodCode" xsi:type="const">MundiPagg\MundiPagg\Model\Ui\CreditCard\ConfigProvider::CODE</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggCreditCardInstallmentByBrand" type="MundiPagg\MundiPagg\Model\Installments\Config\ConfigByBrand">
+        <arguments>
+            <argument name="paymentMethodCode" xsi:type="const">MundiPagg\MundiPagg\Model\Ui\CreditCard\ConfigProvider::CODE</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggCreditCardInstallmentByBrandAndAmount" type="MundiPagg\MundiPagg\Model\Installments\Config\ConfigByBrand">
+        <arguments>
+            <argument name="paymentMethodCode" xsi:type="const">MundiPagg\MundiPagg\Model\Ui\CreditCard\ConfigProvider::CODE</argument>
+        </arguments>
+    </virtualType>
+
+
+    <!-- Billet and CreditCard -->
+
+    <virtualType name="MundiPaggBilletCreditCardsRemoteMethodAdapter" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">MundiPagg\MundiPagg\Model\Ui\BilletCreditCard\ConfigProvider::CODE</argument>
+            <argument name="valueHandlerPool" xsi:type="object">MundiPaggBilletCreditCardValueHandlerPool</argument>
+            <argument name="commandPool" xsi:type="object">MundiPaggBilletCreditCardCommandPool</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">MundiPagg\MundiPagg\Block\Payment\Info\BilletCreditCard</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggBilletCreditCardValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">MundiPaggBilletCreditCardConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggBilletCreditCardConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">MundiPaggBilletCreditCardConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggBilletCreditCardConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">MundiPagg\MundiPagg\Model\Ui\BilletCreditCard\ConfigProvider::CODE</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggBilletCreditCardCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="initialize" xsi:type="string">MundiPagg\MundiPagg\Gateway\Transaction\Base\Command\InitializeCommand</item>
+                <item name="authorize" xsi:type="string">MundiPaggBilletCreditCardAuthorizeCommand</item>
+                <item name="capture" xsi:type="string">MundiPaggCreditCardCaptureCommand</item>
+                <item name="refund" xsi:type="string">MundiPaggCreditCardRefundCommand</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggBilletCreditCardAuthorizeCommand" type="MundiPagg\MundiPagg\Gateway\Transaction\BilletCreditCard\Command\AuthorizeCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">MundiPagg\MundiPagg\Gateway\Transaction\BilletCreditCard\ResourceGateway\Create\RequestBuilder</argument>
+            <argument name="responseHandler" xsi:type="object">MundiPaggBilletCreditCardAuthorizeCommandResponseHandlerPool</argument>
+            <argument name="validator" xsi:type="object">MundiPagg\MundiPagg\Gateway\Transaction\BilletCreditCard\ResourceGateway\Create\Response\Validator</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggBilletCreditCardAuthorizeCommandResponseHandlerPool" type="Magento\Payment\Gateway\Response\HandlerChain">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="general" xsi:type="string">MundiPagg\MundiPagg\Gateway\Transaction\BilletCreditCard\ResourceGateway\Create\Response\GeneralHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+
+    <!-- Capture -->
+    <virtualType name="MundiPaggCreditCardCaptureCommand" type="MundiPagg\MundiPagg\Gateway\Transaction\CreditCard\Command\CaptureCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">MundiPagg\MundiPagg\Gateway\Transaction\CreditCard\ResourceGateway\Capture\RequestBuilder</argument>
+            <argument name="responseHandler" xsi:type="object">MundiPaggCreditCardCaptureCommandResponseHandlerPool</argument>
+            <argument name="validator" xsi:type="object">MundiPagg\MundiPagg\Gateway\Transaction\CreditCard\ResourceGateway\Capture\Response\Validator</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggCreditCardCaptureCommandResponseHandlerPool" type="Magento\Payment\Gateway\Response\HandlerChain">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="general" xsi:type="string">MundiPagg\MundiPagg\Gateway\Transaction\CreditCard\ResourceGateway\Capture\Response\GeneralHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Refound -->
+
+    <virtualType name="MundiPaggCreditCardRefundCommand" type="MundiPagg\MundiPagg\Gateway\Transaction\CreditCard\Command\RefundCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">MundiPagg\MundiPagg\Gateway\Transaction\CreditCard\ResourceGateway\Refund\RequestBuilder</argument>
+            <argument name="responseHandler" xsi:type="object">MundiPaggCreditCardRefundCommandResponseHandlerPool</argument>
+            <argument name="validator" xsi:type="object">MundiPagg\MundiPagg\Gateway\Transaction\CreditCard\ResourceGateway\Refund\Response\Validator</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggCreditCardRefundCommandResponseHandlerPool" type="Magento\Payment\Gateway\Response\HandlerChain">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="general" xsi:type="string">MundiPagg\MundiPagg\Gateway\Transaction\CreditCard\ResourceGateway\Refund\Response\GeneralHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+
+</config>

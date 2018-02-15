@@ -1,0 +1,33 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+	<system>
+		<tab id="mundipagg" sortOrder="999" translate="label">
+			<label>MundiPagg</label>
+		</tab>
+		<!-- <include path="MundiPagg_MundiPagg::system/antifraud.xml"/> -->
+		<section id="mundipagg" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label">
+			<label>MundiPagg</label>
+			<tab>mundipagg</tab>
+			<resource>MundiPagg_MundiPagg::config_mundipagg_mundipagg</resource>
+			<group id="general" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label">
+				<label>General</label>
+				<field id="is_active" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="select">
+		            <label>Is Active</label>
+		            <comment />
+		            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+		        </field>
+			</group>
+		</section>
+		<section id="payment" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="1000" translate="label">
+            <group id="mundipagg_mundipagg" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label">
+                <label>
+                    <![CDATA[MundiPagg&nbsp;&nbsp;<i>Payment Solutions.</i>]]>
+                </label>
+                <frontend_model>MundiPagg\MundiPagg\Block\Adminhtml\System\Config\Fieldset\Group</frontend_model>
+                <include path="MundiPagg_MundiPagg::system/global.xml"/>
+                <include path="MundiPagg_MundiPagg::system/customer.xml"/>
+                <include path="MundiPagg_MundiPagg::system/transaction.xml"/>
+            </group>
+        </section>
+	</system>
+</config>

@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+<!--
+/**
+ * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
+ * @copyright   2017 MundiPagg (http://www.mundipagg.com)
+ * @license     http://www.mundipagg.com  Copyright
+ *
+ * @link        http://www.mundipagg.com
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="content">
+            <block  class="MundiPagg\MundiPagg\Block\Payment\Billet"
+                    name="checkout.mundipagg.billet.link"
+                    template="payment/billet.phtml"
+                    before="order.success.additional.info"
+                    cacheable="false" />
+        </referenceContainer>
+    </body>
+</page>

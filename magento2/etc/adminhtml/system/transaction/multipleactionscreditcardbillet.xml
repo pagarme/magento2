@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2017 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <group id="mundipagg_mundipagg_transaction_multipleactionscreditcardbillet" translate="label comment" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="20">
+        <label>Multiple Actions Credit Card and Billet</label>
+        <field id="active" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label" type="select">
+            <label>Enabled</label>
+            <comment />
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>payment/mundipagg_billet_creditcard/active</config_path>
+        </field>
+        <field id="title" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
+            <label>Title</label>
+            <config_path>payment/mundipagg_billet_creditcard/title</config_path>
+        </field>
+        <field id="order_status" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+            <label>New Order Status</label>
+            <source_model>Magento\Sales\Model\Config\Source\Order\Status\Processing</source_model>
+            <config_path>payment/mundipagg_billet_creditcard/order_status</config_path>
+        </field>
+        <field id="reject_order_status" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+            <label>Reject Order Status</label>
+            <source_model>MundiPagg\MundiPagg\Model\Source\Status\Review</source_model>
+            <config_path>payment/mundipagg_billet_creditcard/reject_order_status</config_path>
+        </field>
+
+        <field id="review_order_status" translate="label" type="select" sortOrder="61" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+            <label>Review Order Status</label>
+            <source_model>MundiPagg\MundiPagg\Model\Source\Status\Review</source_model>
+            <config_path>payment/mundipagg_billet_creditcard/review_order_status</config_path>
+        </field>
+
+        <field id="sort_order" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="70" translate="label" type="text">
+            <label>Sort Order</label>
+            <comment />
+            <config_path>payment/mundipagg_billet_creditcard/sort_order</config_path>
+        </field>
+    </group>
+</include>

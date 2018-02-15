@@ -1,0 +1,26 @@
+<?php if ($this->getCcTypeFirst() && $this->getCcTypeSecond()): ?>
+    <span><?php echo __($this->getTitle()); ?></span>
+    <br/>
+    <br/>
+    <span style="font-size: initial;"><b>First Card</b></span>
+    <br/>
+    <span><b><?php echo __('Brand'); ?>: </b><?php echo $this->getCcTypeFirst(); ?></span>
+    <br/>
+    <span><b><?php echo __('Number'); ?>: </b><?php echo $this->getFirstCardLast4(); ?></span>
+    <br/>
+    <span><b><?php echo __('Installments'); ?>: </b><?php echo $this->getInstallmentsFirstCard(); ?></span>
+    <br/>
+    <span><b><?php echo __('Amount'); ?>: </b><?php echo number_format($this->getFirstCardAmount(),2,',','.'); ?></span>
+    <br/>
+    <br/>
+    <span style="font-size: initial;"><b>Second Card</b></span>
+    <br/>
+    <span><b><?php echo __('Brand'); ?>: </b><?php echo $this->getCcTypeSecond(); ?></span>
+    <br/>
+    <span><b><?php echo __('Number'); ?>: </b><?php echo $this->getSecondCardLast4(); ?></span>
+    <br/>
+    <span><b><?php echo __('Installments'); ?>: </b><?php echo $this->getInstallmentsSecondCard(); ?></span>
+    <br/>
+    <span><b><?php echo __('Amount'); ?>: </b><?php echo number_format($this->getSecondCardAmount(),2,',','.'); ?></span>
+
+<?php endif ?>
