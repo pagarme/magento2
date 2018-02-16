@@ -41,6 +41,7 @@ abstract class GenericInstallmentsConfigProvider implements ConfigProviderInterf
                 'ccform' => [
                     'installments' => [
                         'active' => [$this::CODE => $this->_getConfig()->isActive()],
+                        'value' => 0,
                     ],
                     'icons' => [
                         'Visa' => [

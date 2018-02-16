@@ -8,6 +8,8 @@
  *
  * @link        http://www.mundipagg.com
  */
+
+$i = 0;
 ?>
 
 <div>
@@ -17,6 +19,7 @@
 		  <tr>
 		    <th><?php echo __('Id') ?></th>
 		    <th><?php echo __('Last Four Numbers') ?></th>
+		    <th><?php echo __('Brand') ?></th>
 		    <th><?php echo __('Created At') ?></th>
 		    <th><?php echo __('Remove') ?></th>
 		  </tr>
@@ -24,10 +27,12 @@
 
 		<tbody>
 			<?php foreach ($block->getCardsList() as $item): ?>
+				<?php $i++; ?>
 				<?php $url = $this->getBaseUrl() . 'mundipagg/customer/remove/id/'. $item->getId() ?>
 				<tr>
-					<td><?php echo $item->getId() ?></td>
+					<td><?php echo $i ?></td>
 					<td><?php echo __('****.****.****.') ?><?php echo $item->getLastFourNumbers() ?></td>
+					<td><?php echo $item->getBrand() ?></td>
 					<td><?php echo $item->getCreatedAt() ?></td>
 					<td><button onclick="location.href = '<?php echo $url ?>';" id="remove"><?php echo __('Remove') ?></button></td>
 				</tr>

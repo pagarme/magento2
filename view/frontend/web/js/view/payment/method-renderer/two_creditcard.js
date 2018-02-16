@@ -336,7 +336,7 @@ define(
              * Select current payment token
              */
             selectPaymentMethod: function () {
-                this.oldInstallmentTax = 0;
+                this.oldInstallmentTax = window.checkoutConfig.payment.ccform.installments.value;
                 var newTax = 0;
 
                 var total = quote.getTotals()();
@@ -355,6 +355,7 @@ define(
                 total.tax_amount = parseFloat(newTax);
                 total.base_tax_amount = parseFloat(newTax);
                 this.oldInstallmentTax = newTax;
+                window.checkoutConfig.payment.ccform.installments.value = newTax;
                 quote.setTotals(total);
 
                 selectPaymentMethodAction(this.getData());
@@ -374,6 +375,14 @@ define(
                     'po_number': null,
                     'additional_data': null
                 };
+            },
+
+            isSaveCardStyle: function() {
+                if (window.checkoutConfig.payment.mundipagg_two_creditcard.selected_card) {
+                    return 'display: none;';
+                }
+
+                return 'display: block;';
             },
 
             initObservable: function () {
@@ -567,6 +576,8 @@ define(
                 total.base_tax_amount = parseFloat(sumTax);
                 this.oldFirstInstallmentTax = newTaxFirst;
                 this.oldSecondInstallmentTax = newTaxSecond;
+
+                window.checkoutConfig.payment.ccform.installments.value = sumTax;
                 quote.setTotals(total);
             },
 

@@ -212,7 +212,7 @@ define(
             },
 
             getSaveCardHelpHtml: function () {
-                return '<span>' + $t('Add To MundiPagg One Click') + '</span>';
+                return '<span>' + $t('Save cards for future purchases') + '</span>';
             },
 
             isSaveCardHave: function() {

@@ -33,7 +33,7 @@ define(
              * Select current payment token
              */
             selectPaymentMethod: function () {
-                this.oldInstallmentTax = 0;
+                this.oldInstallmentTax = window.checkoutConfig.payment.ccform.installments.value;
                 var newTax = 0;
 
                 var total = quote.getTotals()();
@@ -52,6 +52,7 @@ define(
                 total.tax_amount = parseFloat(newTax);
                 total.base_tax_amount = parseFloat(newTax);
                 this.oldInstallmentTax = newTax;
+                window.checkoutConfig.payment.ccform.installments.value = newTax;
                 quote.setTotals(total);
 
                 selectPaymentMethodAction(this.getData());

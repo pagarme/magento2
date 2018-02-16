@@ -79,7 +79,7 @@ class RequestDataProvider
      */
     public function getBilletCreditCardBrand()
     {
-        return $this->getBrandAdapter($this->getPaymentData()->getCcType());
+        return $this->getPaymentData()->getCcType();
     }
 
     /**

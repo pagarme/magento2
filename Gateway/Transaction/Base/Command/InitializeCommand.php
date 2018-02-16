@@ -36,7 +36,7 @@ class InitializeCommand implements CommandInterface
             throw new \LogicException('Order Payment should be provided');
         }
 
-        $payment->getOrder()->setCanSendNewEmailFlag(false);
+        $payment->getOrder()->setCanSendNewEmailFlag(true);
         $baseTotalDue = $payment->getOrder()->getBaseTotalDue();
         $totalDue = $payment->getOrder()->getTotalDue();
         $payment->authorize(true, $baseTotalDue);

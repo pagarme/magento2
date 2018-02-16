@@ -59,8 +59,6 @@ class GeneralHandler extends AbstractHandler implements HandlerInterface
         	} catch (\Exception $e) {
         		return $e->getMessage();
         	}
-            
-            
         }
 
         return $this;

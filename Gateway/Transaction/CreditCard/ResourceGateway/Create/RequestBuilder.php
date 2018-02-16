@@ -524,11 +524,11 @@ class RequestBuilder implements BuilderInterface
         $request->expYear = $payment->getExpYear();
         $request->cvv = $payment->getSecurityCode();
         $request->billingAddress = [
-            'street' => $requestDataProvider->getCustomerAddressStreet(self::BILLING),
-            'number' => $requestDataProvider->getCustomerAddressNumber(self::BILLING),
-            'complement' => $requestDataProvider->getCustomerAddressComplement(self::BILLING),
+            'street' => $payment->getCustomerAddressStreet(self::BILLING),
+            'number' => $payment->getCustomerAddressNumber(self::BILLING),
+            'complement' => $payment->getCustomerAddressComplement(self::BILLING),
             'zip_code' => trim(str_replace('-','',$quote->getBillingAddress()->getPostCode())),
-            'neighborhood' => $requestDataProvider->getCustomerAddressDistrict(self::BILLING),
+            'neighborhood' => $payment->getCustomerAddressDistrict(self::BILLING),
             'city' => $quote->getBillingAddress()->getCity(),
             'state' => $quote->getBillingAddress()->getRegionCode(),
             'country' => $quote->getBillingAddress()->getCountryId()

@@ -97,7 +97,7 @@
             <div class="field choice" data-bind="attr: {id: getCode() + '_cc_savecard_first', style: isSaveCardStyle()}">
                 <input type="checkbox" class="checkbox" id="creditcard-save-first" data-bind="checked: creditCardsavecardFirst"/>
                 <label class="label" data-bind="attr: {'for': getCode() + '_cc_savecard_first'}">
-                    <span><!-- ko i18n: 'Add To MundiPagg One Click'--><!-- /ko --></span>
+                    <span><!-- ko i18n: 'Save cards for future purchases'--><!-- /ko --></span>
                 </label>
                 <div class="field-tooltip toggle">
                 <span class="field-tooltip-action action-cvv"
@@ -225,7 +225,7 @@
             <!-- /ko -->
 
             <!-- ko if: (isInstallmentsActive())-->
-            <div class="field installments required" data-bind="attr: {id: getCode() + '_cc_installments_first', style: isSaveCardStyle() }">
+            <div class="field installments required" data-bind="attr: {id: getCode() + '_cc_installments_first', style: installmentsStyle() }">
                 <label data-bind="attr: {for: getCode() + '_installments_first'}" class="label">
                     <span><!-- ko i18n: 'Installments'--><!-- /ko --></span>
                 </label>
@@ -343,7 +343,7 @@
             <div class="field choice" data-bind="attr: {id: getCode() + '_cc_savecard_second', style: isSaveCardStyle()}">
                 <input type="checkbox" class="checkbox" id="creditcard-save-second" data-bind="checked: creditCardsavecardSecond"/>
                 <label class="label" data-bind="attr: {'for': getCode() + '_cc_savecard_second'}">
-                    <span><!-- ko i18n: 'Add To MundiPagg One Click'--><!-- /ko --></span>
+                    <span><!-- ko i18n: 'Save cards for future purchases'--><!-- /ko --></span>
                 </label>
                 <div class="field-tooltip toggle">
             <span class="field-tooltip-action action-cvv"

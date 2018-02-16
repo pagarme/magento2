@@ -79,7 +79,7 @@ define(
 
                     if (result.isValid) {
                         creditCardData.creditCardNumber = value;
-                        self.selectedCardTypeBcc(result.card.type);
+                        self.creditCardTypeBcc(result.card.type);
                     }
                 });
 
@@ -134,7 +134,7 @@ define(
             },
 
             getSaveCardHelpHtml: function () {
-                return '<span>' + $t('Add To MundiPagg One Click') + '</span>';
+                return '<span>' + $t('Save cards for future purchases') + '</span>';
             },
 
             isSaveCardHave: function() {
