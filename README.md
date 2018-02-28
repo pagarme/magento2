@@ -1,8 +1,7 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/2213fc1ce8f14e7bb0861f232a310233)](https://www.codacy.com/app/mundipagg/magento2?utm_source=github.com&utm_medium=referral&utm_content=mundipagg/magento2&utm_campaign=badger)
-[![Latest Stable Version](https://img.shields.io/packagist/v/mundipagg/mundipagg-magento2-module.svg)](https://packagist.org/packages/mundipagg/mundipagg-magento2-module)
-[![Total Downloads](https://img.shields.io/packagist/dt/mundipagg/mundipagg-magento2-module.svg)](https://packagist.org/packages/mundipagg/mundipagg-magento2-module)
-[![PHP Version](https://img.shields.io/packagist/php-v/mundipagg/mundipagg-magento2-module.svg)](https://packagist.org/packages/mundipagg/mundipagg-magento2-module)
-<!-- [![Maintainability](https://api.codeclimate.com/v1/badges/e279af4b87b47e56723a/maintainability)](https://codeclimate.com/github/mundipagg/magento2/maintainability) -->
+[![Maintainability](https://api.codeclimate.com/v1/badges/e279af4b87b47e56723a/maintainability)](https://codeclimate.com/github/mundipagg/magento2/maintainability)
+[![Latest Stable Version](https://poser.pugx.org/mundipagg/mundipagg-magento2-module/v/stable)](https://packagist.org/packages/mundipagg/mundipagg-magento2-module)
+[![Total Downloads](https://poser.pugx.org/mundipagg/mundipagg-magento2-module/downloads)](https://packagist.org/packages/mundipagg/mundipagg-magento2-module)
 
 # Magento2/Mundipagg Integration module
 This is the official Magento2 module for Mundipagg integration

@@ -25,6 +25,7 @@ use Magento\Checkout\Model\Cart;
 use MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\Config;
 use MundiPagg\MundiPagg\Helper\ModuleHelper;
 use MundiPagg\MundiPagg\Model\Source\Bank;
+use MundiPagg\MundiPagg\Helper\Logger;
 
 class RequestBuilder implements BuilderInterface
 {
@@ -44,6 +45,12 @@ class RequestBuilder implements BuilderInterface
     protected $config;
     protected $moduleHelper;
     protected $bank;
+    protected $paymentData;
+
+    /**
+     * @var \MundiPagg\MundiPagg\Helper\Logger
+     */
+    protected $logger;
 
     /**
      * RequestBuilder constructor.
@@ -60,7 +67,8 @@ class RequestBuilder implements BuilderInterface
         Cart $cart,
         Config $config,
         ModuleHelper $moduleHelper,
-        Bank $bank
+        Bank $bank,
+        Logger $logger
     )
     {
         $this->setRequestDataProviderFactory($requestDataProviderFactory);
@@ -69,9 +77,8 @@ class RequestBuilder implements BuilderInterface
         $this->setConfig($config);
         $this->setModuleHelper($moduleHelper);
         $this->setBank($bank);
+        $this->setLogger($logger);
     }
-
-    protected $paymentData;
 
     /**
      * {@inheritdoc}
@@ -218,17 +225,16 @@ class RequestBuilder implements BuilderInterface
         ];
 
         try {
-
+            $this->getLogger()->logger($order->jsonSerialize());
             $response = $this->getApi()->getOrders()->createOrder($order);
-
         } catch (\MundiAPILib\Exceptions\ErrorException $error) {
-
+            $this->getLogger()->logger($error);
             throw new \InvalidArgumentException($error);
 
             return $error;
 
         } catch (\Exception $ex) {
-
+            $this->getLogger()->logger($ex);
             throw new \InvalidArgumentException($ex->getMessage());
 
             return $ex;
@@ -431,4 +437,44 @@ class RequestBuilder implements BuilderInterface
     }
 
 
+
+    /**
+     * @return mixed
+     */
+    public function getCartItemRequestDataProviderFactory()
+    {
+        return $this->cartItemRequestDataProviderFactory;
+    }
+
+    /**
+     * @param mixed $cartItemRequestDataProviderFactory
+     *
+     * @return self
+     */
+    public function setCartItemRequestDataProviderFactory($cartItemRequestDataProviderFactory)
+    {
+        $this->cartItemRequestDataProviderFactory = $cartItemRequestDataProviderFactory;
+
+        return $this;
+    }
+
+    /**
+     * @return \MundiPagg\MundiPagg\Helper\Logger
+     */
+    public function getLogger()
+    {
+        return $this->logger;
+    }
+
+    /**
+     * @param \MundiPagg\MundiPagg\Helper\Logger $logger
+     *
+     * @return self
+     */
+    public function setLogger(\MundiPagg\MundiPagg\Helper\Logger $logger)
+    {
+        $this->logger = $logger;
+
+        return $this;
+    }
 }

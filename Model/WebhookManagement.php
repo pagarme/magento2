@@ -12,7 +12,7 @@ use Magento\Framework\DB\Transaction;
 use Magento\Sales\Model\Order\CreditmemoFactory;
 use Magento\Sales\Model\Service\CreditmemoService;
 use Magento\Sales\Model\Service\OrderService;
-
+use MundiPagg\MundiPagg\Helper\Logger;
 
 class WebhookManagement implements WebhookManagementInterface
 {
@@ -61,6 +61,11 @@ class WebhookManagement implements WebhookManagementInterface
      */
     protected $orderService;
 
+    /**
+     * @var \MundiPagg\MundiPagg\Helper\Logger
+     */
+    protected $logger;
+
     public function __construct(
         Order $orderFactory,
         ChargesFactory $chargesFactory,
@@ -70,7 +75,8 @@ class WebhookManagement implements WebhookManagementInterface
         InvoiceSender $invoiceSender,
         CreditmemoFactory $creditmemoFactory,
         CreditmemoService $creditmemoService,
-        OrderService $orderService
+        OrderService $orderService,
+        Logger $logger
     ) {
         $this->setOrderFactory($orderFactory);
         $this->setChargesFactory($chargesFactory);
@@ -81,6 +87,7 @@ class WebhookManagement implements WebhookManagementInterface
         $this->setCreditmemoFactory($creditmemoFactory);
         $this->setCreditmemoService($creditmemoService);
         $this->setOrderService($orderService);
+        $this->setLogger($logger);
     }
 
     /**
@@ -91,7 +98,7 @@ class WebhookManagement implements WebhookManagementInterface
     public function save($data)
     {
 
-        $this->logger($data);
+        $this->getLogger()->logger($data);
 
         $statusOrder = $data['status'];
         $charges = $data['charges'];
@@ -213,8 +220,10 @@ class WebhookManagement implements WebhookManagementInterface
         }
 
         try {
+            $this->getLogger()->logger($chargeCollection);
             $chargeCollection->save();
         } catch (\Exception $e) {
+            $this->getLogger()->logger($e);
             return $e->getMessage();
         }
 
@@ -405,16 +414,23 @@ class WebhookManagement implements WebhookManagementInterface
         return $this;
     }
 
-    public function logger($data)
+    /**
+     * @return \MundiPagg\MundiPagg\Helper\Logger
+     */
+    public function getLogger()
     {
-        $writer = new \Zend\Log\Writer\Stream(BP . '/var/log/mundipagg-mundipagg-transaction-' . date('Y-m-d') . '.log');
-        $logger = new \Zend\Log\Logger();
-        $logger->addWriter($writer);
-        $logger->info('Debug Initial Webhook');
-        $logger->info(json_encode($data));
-        $logger->info('Debug Final Webhook');
+        return $this->logger;
+    }
+
+    /**
+     * @param \MundiPagg\MundiPagg\Helper\Logger $logger
+     *
+     * @return self
+     */
+    public function setLogger(\MundiPagg\MundiPagg\Helper\Logger $logger)
+    {
+        $this->logger = $logger;
 
         return $this;
     }
-
 }

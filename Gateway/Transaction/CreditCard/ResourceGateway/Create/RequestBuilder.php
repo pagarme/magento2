@@ -26,6 +26,7 @@ use MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\Config;
 use MundiPagg\MundiPagg\Gateway\Transaction\CreditCard\Config\Config as ConfigCreditCard;
 use MundiPagg\MundiPagg\Helper\ModuleHelper;
 use MundiPagg\MundiPagg\Model\CardsFactory;
+use MundiPagg\MundiPagg\Helper\Logger;
 
 class RequestBuilder implements BuilderInterface
 {
@@ -45,6 +46,7 @@ class RequestBuilder implements BuilderInterface
     protected $configCreditCard;
     protected $moduleHelper;
     protected $cardsFactory;
+    protected $logger;
 
     /**
      * RequestBuilder constructor.
@@ -64,7 +66,8 @@ class RequestBuilder implements BuilderInterface
         Config $config,
         ConfigCreditCard $configCreditCard,
         ModuleHelper $moduleHelper,
-        CardsFactory $cardsFactory
+        CardsFactory $cardsFactory,
+        Logger $logger
     )
     {
         $this->setRequest($request);
@@ -75,6 +78,7 @@ class RequestBuilder implements BuilderInterface
         $this->setConfigCreditCard($configCreditCard);
         $this->setModuleHelper($moduleHelper);
         $this->setCardsFactory($cardsFactory);
+        $this->setLogger($logger);
     }
 
     /**
@@ -485,7 +489,7 @@ class RequestBuilder implements BuilderInterface
         }
 
         try {
-
+            $this->getLogger()->logger($order->jsonSerialize());
             $response = $this->getApi()->getOrders()->createOrder($order);
 
             if($requestDataProvider->getSaveCard() == '1')
@@ -496,8 +500,10 @@ class RequestBuilder implements BuilderInterface
             }
 
         } catch (\MundiAPILib\Exceptions\ErrorException $error) {
+            $this->getLogger()->logger($error);
             throw new \InvalidArgumentException($error);
         } catch (\Exception $ex) {
+            $this->getLogger()->logger($ex);
             throw new \InvalidArgumentException($ex->getMessage());
         }
 
@@ -597,6 +603,47 @@ class RequestBuilder implements BuilderInterface
     public function setCardsFactory($cardsFactory)
     {
         $this->cardsFactory = $cardsFactory;
+
+        return $this;
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getCartItemRequestDataProviderFactory()
+    {
+        return $this->cartItemRequestDataProviderFactory;
+    }
+
+    /**
+     * @param mixed $cartItemRequestDataProviderFactory
+     *
+     * @return self
+     */
+    public function setCartItemRequestDataProviderFactory($cartItemRequestDataProviderFactory)
+    {
+        $this->cartItemRequestDataProviderFactory = $cartItemRequestDataProviderFactory;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLogger()
+    {
+        return $this->logger;
+    }
+
+    /**
+     * @param mixed $logger
+     *
+     * @return self
+     */
+    public function setLogger($logger)
+    {
+        $this->logger = $logger;
 
         return $this;
     }

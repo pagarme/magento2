@@ -12,4 +12,10 @@
     <event name="payment_method_assign_data_mundipagg_two_creditcard">
         <observer name="mundipagg_payment_method_assign_data_mundipagg_two_creditcard" instance="MundiPagg\MundiPagg\Observer\TwoCreditCardDataAssignObserver" />
     </event>
+    <event name="sales_order_place_after">
+       <observer name="mundipagg_payment_method_mundipagg_credit_card_after_place_order" instance="MundiPagg\MundiPagg\Observer\SalesOrderPlaceAfter" />
+    </event>
+    <event name="admin_system_config_changed_section_payment">
+        <observer name="Mundipagg_DataValidateAdmin" instance="MundiPagg\MundiPagg\Observer\DataValidateAdmin" />
+    </event>
 </config>

@@ -15,6 +15,8 @@ namespace MundiPagg\MundiPagg\Gateway\Transaction\CreditCard\ResourceGateway\Cre
 use Magento\Payment\Gateway\Response\HandlerInterface;
 use MundiPagg\MundiPagg\Gateway\Transaction\Base\ResourceGateway\Response\AbstractHandler;
 use MundiPagg\MundiPagg\Model\ChargesFactory;
+use MundiPagg\MundiPagg\Gateway\Transaction\CreditCard\Config\Config as ConfigCreditCard;
+use MundiPagg\MundiPagg\Helper\Logger;
 
 class GeneralHandler extends AbstractHandler implements HandlerInterface
 {
@@ -23,13 +25,24 @@ class GeneralHandler extends AbstractHandler implements HandlerInterface
      */
 	protected $modelCharges;
 
-	/**
-     * @return void
+    /**
+     * \MundiPagg\MundiPagg\Gateway\Transaction\CreditCard\Config\Config
      */
+    protected $configCreditCard;
+
+    /**
+     * @var \MundiPagg\MundiPagg\Helper\Logger
+     */
+    protected $logger;
+
     public function __construct(
-    	ChargesFactory $modelCharges
+        ConfigCreditCard $configCreditCard,
+    	ChargesFactory $modelCharges,
+        Logger $logger
     ) {
         $this->modelCharges = $modelCharges;
+        $this->configCreditCard = $configCreditCard;
+        $this->logger = $logger;
     }
 
     /**
@@ -37,8 +50,17 @@ class GeneralHandler extends AbstractHandler implements HandlerInterface
      */
     protected function _handle($payment, $response)
     {
+        $this->logger->logger(json_encode($response));
         $payment->setTransactionId($response->id);
-        $payment->setIsTransactionClosed(false);
+
+        if($this->configCreditCard->getPaymentAction() == 'authorize_capture')
+        {
+            $payment->setIsTransactionClosed(true);
+            $payment->accept()
+                ->setParentTransactionId($response->id);
+        }else{
+            $payment->setIsTransactionClosed(false);
+        }
 
         foreach($response->charges as $charge)
         {
@@ -59,8 +81,6 @@ class GeneralHandler extends AbstractHandler implements HandlerInterface
         	} catch (\Exception $e) {
         		return $e->getMessage();
         	}
-            
-            
         }
 
         return $this;

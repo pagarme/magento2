@@ -16,34 +16,26 @@ use Magento\Payment\Gateway\Request\BuilderInterface as RequestBuilder;
 use Magento\Payment\Gateway\Response\HandlerInterface as ResponseHandler;
 use Magento\Payment\Gateway\Validator\ValidatorInterface;
 use Magento\Payment\Gateway\Command\CommandException;
-use MundiAPILib\MundiAPIClient;
 use MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\ConfigInterface;
-use Psr\Log\LoggerInterface;
 
 abstract class AbstractApiCommand implements CommandInterface
 {
-    protected $mundiAPIClient;
     protected $requestBuilder;
     protected $responseHandler;
     protected $validator;
     protected $config;
-    protected $logger;
 
     public function __construct(
-        MundiAPIClient $mundiAPIClient,
         RequestBuilder $requestBuilder,
         ResponseHandler $responseHandler,
         ConfigInterface $config,
-        ValidatorInterface $validator = null,
-        LoggerInterface $logger
+        ValidatorInterface $validator = null
     )
     {
-        $this->setMundiAPIClient($mundiAPIClient);
         $this->setRequestBuilder($requestBuilder);
         $this->setResponseHandler($responseHandler);
         $this->setConfig($config);
         $this->setValidator($validator);
-        $this->logger = $logger;
     }
 
     abstract protected function sendRequest($request);
@@ -54,7 +46,6 @@ abstract class AbstractApiCommand implements CommandInterface
     public function execute(array $commandSubject)
     {
         $request = $this->getRequestBuilder()->build($commandSubject);
-        $mundiAPIClient = $this->getMundiAPIClient();
 
         $response = $this->sendRequest($request);
 
@@ -74,26 +65,6 @@ abstract class AbstractApiCommand implements CommandInterface
         $this->getResponseHandler()->handle($commandSubject, ['response' => $response]);
         return $this;
     }
-
-    /**
-     * @return MundiAPIClient
-     */
-    protected function getMundiAPIClient()
-    {
-        return $this->apiClient;
-    }
-
-    /**
-     * @param MundiAPIClient $mundiAPIClient
-     * @return AbstractApiCommand
-     */
-    protected function setMundiAPIClient(MundiAPIClient $mundiAPIClient)
-    {
-        $this->apiClient = $mundiAPIClient;
-        return $this;
-    }
-
-
 
     /**
      * @return ResponseHandler

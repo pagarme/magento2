@@ -30,6 +30,7 @@ use MundiPagg\MundiPagg\Model\CardsFactory;
 use MundiPagg\MundiPagg\Model\Source\Bank;
 use MundiPagg\MundiPagg\Gateway\Transaction\Billet\ResourceGateway\Create\RequestDataProvider as BilletDataProvider;
 use MundiPagg\MundiPagg\Gateway\Transaction\Billet\Config\Config as ConfigBillet;
+use MundiPagg\MundiPagg\Helper\Logger;
 
 class RequestBuilder implements BuilderInterface
 {
@@ -52,6 +53,11 @@ class RequestBuilder implements BuilderInterface
     protected $bank;
     protected $configBillet;
     protected $configCreditCard;
+
+    /**
+     * @var \MundiPagg\MundiPagg\Helper\Logger
+     */
+    protected $logger;
 
     /**
      * RequestBuilder constructor.
@@ -77,7 +83,8 @@ class RequestBuilder implements BuilderInterface
         CardsFactory $cardsFactory,
         Bank $bank,
         ConfigBillet $configBillet,
-        ConfigCreditCard $configCreditCard
+        ConfigCreditCard $configCreditCard,
+        Logger $logger
     )
     {
         $this->setRequest($request);
@@ -91,6 +98,7 @@ class RequestBuilder implements BuilderInterface
         $this->setBank($bank);
         $this->setConfigBillet($configBillet);
         $this->setConfigCreditCard($configCreditCard);
+        $this->setLogger($logger);
     }
 
     /**
@@ -544,7 +552,7 @@ class RequestBuilder implements BuilderInterface
         }
 
         try {
-
+            $this->logger->logger($order->jsonSerialize());
             $response = $this->getApi()->getOrders()->createOrder($order);
 
             if($requestDataProvider->getSaveCard() == '1')
@@ -556,8 +564,10 @@ class RequestBuilder implements BuilderInterface
             }
 
         } catch (\MundiAPILib\Exceptions\ErrorException $error) {
+            $this->logger->logger($error);
             throw new \InvalidArgumentException($error);
         } catch (\Exception $ex) {
+            $this->logger->logger($ex);
             throw new \InvalidArgumentException($ex->getMessage());
         }
 
@@ -695,4 +705,44 @@ class RequestBuilder implements BuilderInterface
         $this->configBillet = $configBillet;
     }
 
+
+    /**
+     * @return mixed
+     */
+    public function getCartItemRequestDataProviderFactory()
+    {
+        return $this->cartItemRequestDataProviderFactory;
+    }
+
+    /**
+     * @param mixed $cartItemRequestDataProviderFactory
+     *
+     * @return self
+     */
+    public function setCartItemRequestDataProviderFactory($cartItemRequestDataProviderFactory)
+    {
+        $this->cartItemRequestDataProviderFactory = $cartItemRequestDataProviderFactory;
+
+        return $this;
+    }
+
+    /**
+     * @return \MundiPagg\MundiPagg\Helper\Logger
+     */
+    public function getLogger()
+    {
+        return $this->logger;
+    }
+
+    /**
+     * @param \MundiPagg\MundiPagg\Helper\Logger $logger
+     *
+     * @return self
+     */
+    public function setLogger(\MundiPagg\MundiPagg\Helper\Logger $logger)
+    {
+        $this->logger = $logger;
+
+        return $this;
+    }
 }

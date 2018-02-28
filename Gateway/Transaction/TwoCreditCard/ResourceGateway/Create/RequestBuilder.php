@@ -26,6 +26,7 @@ use MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\Config;
 use MundiPagg\MundiPagg\Gateway\Transaction\TwoCreditCard\Config\Config as ConfigCreditCard;
 use MundiPagg\MundiPagg\Helper\ModuleHelper;
 use MundiPagg\MundiPagg\Model\CardsFactory;
+use MundiPagg\MundiPagg\Helper\Logger;
 
 class RequestBuilder implements BuilderInterface
 {
@@ -47,6 +48,11 @@ class RequestBuilder implements BuilderInterface
     protected $cardsFactory;
 
     /**
+     * @var \MundiPagg\MundiPagg\Helper\Logger
+     */
+    protected $logger;
+
+    /**
      * RequestBuilder constructor.
      * @param Request $request
      * @param CreditCardRequestDataProviderInterfaceFactory $requestDataProviderFactory
@@ -64,7 +70,8 @@ class RequestBuilder implements BuilderInterface
         Config $config,
         ConfigCreditCard $configCreditCard,
         ModuleHelper $moduleHelper,
-        CardsFactory $cardsFactory
+        CardsFactory $cardsFactory,
+        Logger $logger
     )
     {
         $this->setRequest($request);
@@ -75,6 +82,7 @@ class RequestBuilder implements BuilderInterface
         $this->setConfigCreditCard($configCreditCard);
         $this->setModuleHelper($moduleHelper);
         $this->setCardsFactory($cardsFactory);
+        $this->logger = $logger;
     }
 
     /**
@@ -535,7 +543,7 @@ class RequestBuilder implements BuilderInterface
         }
 
         try {
-
+            $this->logger->logger($order->jsonSerialize());
             $response = $this->getApi()->getOrders()->createOrder($order);
 
             if ($payment->getAdditionalInformation('cc_savecard_first') == '1' && empty($payment->getAdditionalInformation('cc_saved_card_first'))) {
@@ -549,8 +557,10 @@ class RequestBuilder implements BuilderInterface
             }
 
         } catch (\MundiAPILib\Exceptions\ErrorException $error) {
+            $this->logger->logger($error);
             throw new \InvalidArgumentException($error);
         } catch (\Exception $ex) {
+            $this->logger->logger($ex);
             throw new \InvalidArgumentException($ex->getMessage());
         }
 

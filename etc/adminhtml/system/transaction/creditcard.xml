@@ -21,6 +21,7 @@
         <field id="soft_description" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
             <label>Soft Description MundiPagg</label>
             <config_path>payment/mundipagg_creditcard/soft_description</config_path>
+            <comment>Max size 22.</comment>
         </field>
         <!-- <field id="customer_identity_attribute_code" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="30" translate="label" type="text">
             <label>Customer Identity (CPF/CNPJ) Attribute</label>
