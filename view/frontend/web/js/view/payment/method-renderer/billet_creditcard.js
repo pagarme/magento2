@@ -21,6 +21,7 @@ define(
         'Magento_Checkout/js/model/totals',
         'Magento_Checkout/js/checkout-data',
         'Magento_Checkout/js/action/select-payment-method',
+        'MundiPagg_MundiPagg/js/action/creditcard/token',
         'Magento_Checkout/js/model/full-screen-loader'
     ],
     function (
@@ -36,6 +37,7 @@ define(
         totals,
         checkoutData, 
         selectPaymentMethodAction, 
+        token,
         fullScreenLoader
     ) {
         'use strict';
@@ -58,6 +60,8 @@ define(
                 creditCardSsStartYearBcc: '',
                 creditCardSsIssueBcc: '',
                 creditCardVerificationNumberBcc: '',
+                tokenCreditCard: '',
+                quoteBilling: quote.billingAddress(),
                 creditSavedCardBcc: window.checkoutConfig.payment.mundipagg_billet_creditcard.selected_card,
                 selectedCardTypeBcc: null,
                 allInstallments: ko.observableArray([])
@@ -341,13 +345,62 @@ define(
                 });
             },
 
+            /**
+             * Place order.
+             */
+            beforeplaceOrder: function (data, event) {
+                if (window.checkoutConfig.customerData.hasOwnProperty('email') && data.getData().additional_data.cc_saved_card) {
+                    this.useCardIdPlaceOrder(data, event);
+                }else{
+                    this.createAndSendTokenCreditCard(data, event);
+                }
+            },
+
+            useCardIdPlaceOrder: function (data, event) {
+                    this.placeOrder(data, event);
+            },
+
+            createAndSendTokenCreditCard: function (data, event) {
+                var self = this;
+                var address = this.quoteBilling;
+
+                var dataJson = {
+                        "type": "card",
+                        "card": {
+                            "type": "credit",
+                            "number": this.creditCardNumberBcc(),
+                            "holder_name": this.creditCardOwnerBcc(),
+                            "exp_month": this.creditCardExpMonthBcc(),
+                            "exp_year": this.creditCardExpYearBcc(),
+                            "cvv": this.creditCardVerificationNumberBcc(),
+                            "billing_address": {
+                                "street": address.street[0],
+                                "number": address.street[1],
+                                "zip_code": address.postcode,
+                                "complement": address.street[2],
+                                "neighborhood": address.street[3],
+                                "city": address.region,
+                                "state": address.regionCode,
+                                "country": address.countryId
+                            }
+                        }
+                    };
+
+                $.when(
+                    token(dataJson)
+                ).done(function(transport) {
+                    self.tokenCreditCard = transport.id;
+                    self.placeOrder(data, event);
+                });
+            },
+
             getData: function () {
                 return {
                     'method': this.item.method,
                     'additional_data': {
                         'cc_cid': this.creditCardVerificationNumberBcc(),
                         'cc_type': this.creditCardTypeBcc(),
-                        'cc_last_4': this.creditCardSavedNumberBcc() ? this.creditCardSavedNumberBcc() : this.creditCardNumberBcc(),
+                        'cc_last_4': this.creditCardSavedNumberBcc() ? this.creditCardSavedNumberBcc().substr(-4, 4) : this.creditCardNumberBcc().substr(-4, 4),
                         'cc_exp_year': this.creditCardExpYearBcc(),
                         'cc_exp_month': this.creditCardExpMonthBcc(),
                         'cc_number': this.creditCardNumberBcc(),
@@ -358,6 +411,7 @@ define(
                         'cc_cc_tax_amount': this.creditCardCcTaxAmountBcc(),
                         'cc_saved_card': this.creditSavedCardBcc(),
                         'cc_billet_amount': this.creditCardBilletAmountBcc(),
+                        'cc_token_credit_card': this.tokenCreditCard,
                     }
                 };
             },

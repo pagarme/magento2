@@ -19,19 +19,19 @@ use Magento\Store\Model\StoreManagerInterface;
 class CardsRepository implements CardsRepositoryInterface
 {
 
-    protected $resource;
+    private $resource;
 
-    protected $cardsFactory;
+    private $cardsFactory;
 
-    protected $cardsCollectionFactory;
+    private $cardsCollectionFactory;
 
-    protected $searchResultsFactory;
+    private $searchResultsFactory;
 
-    protected $dataObjectHelper;
+    private $dataObjectHelper;
 
-    protected $dataObjectProcessor;
+    private $dataObjectProcessor;
 
-    protected $dataCardsFactory;
+    private $dataCardsFactory;
 
     private $storeManager;
 

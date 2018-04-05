@@ -152,7 +152,7 @@ class RequestBuilder implements BuilderInterface
         $quote = $this->getCart()->getQuote();
         $order = $this->getOrderRequest();
         $quote->reserveOrderId()->save();
-        $order->code = $quote->getReservedOrderId();
+        $order->code = $this->paymentData->getOrder()->getIncrementId();
         $order->payments = [
             [
                 'amount' => $quote->getGrandTotal() * 100,

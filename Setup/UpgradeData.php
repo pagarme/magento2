@@ -7,9 +7,18 @@ use Magento\Framework\Setup\UpgradeDataInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\DB\Ddl\Table;
+use Magento\Customer\Setup\CustomerSetupFactory;
 
 class UpgradeData implements UpgradeDataInterface
 {
+    private $customerSetupFactory;
+
+    public function __construct(
+        CustomerSetupFactory $customerSetupFactory
+    )
+    {
+        $this->customerSetupFactory = $customerSetupFactory;
+    }
 
     /**
      * @param ModuleDataSetupInterface $setup
@@ -30,7 +39,44 @@ class UpgradeData implements UpgradeDataInterface
             $setup = $this->updateVersionZeroOneTwo($setup);
         }
 
+        if (version_compare($context->getVersion(), "1.2.15", "<")) {
+            $setup = $this->updateVersionOneTwoFourteen($setup);
+        }
+
         $setup->endSetup();
+    }
+
+    protected function updateVersionOneTwoFourteen($setup)
+    {
+        $setup->startSetup();
+
+        $customerSetup = $this->customerSetupFactory->create(['setup' => $setup]);
+        $attributeCode = 'customer_id_mundipagg';
+        $customerSetup->removeAttribute(\Magento\Customer\Model\Customer::ENTITY, $attributeCode);
+        $customerSetup->addAttribute(
+            'customer',
+            $attributeCode, 
+            [
+                'label' => 'Customer Id Mundipagg',
+                'type' => 'varchar',
+                'input' => 'text',
+                'required' => false,
+                'visible' => true,
+                'system'=> false,
+                'position' => 200,
+                'sort_order' => 200,
+                'user_defined' => false,
+                'default' => '0',
+            ]
+        );
+
+        $eavConfig = $customerSetup->getEavConfig()->getAttribute('customer', $attributeCode);
+        $eavConfig->setData('used_in_forms',['adminhtml_customer']);
+        $eavConfig->save();
+
+        $setup->endSetup();
+
+        return $setup;
     }
 
     protected function updateVersionZeroOneTwo($setup)

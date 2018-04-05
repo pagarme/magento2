@@ -21,6 +21,7 @@ define(
         'Magento_Checkout/js/model/totals',
         'Magento_Checkout/js/checkout-data',
         'Magento_Checkout/js/action/select-payment-method',
+        'MundiPagg_MundiPagg/js/action/creditcard/token',
         'Magento_Checkout/js/model/full-screen-loader'
     ],
     function (
@@ -35,6 +36,7 @@ define(
         totals,
         checkoutData, 
         selectPaymentMethodAction, 
+        token,
         fullScreenLoader
     ) {
         'use strict';
@@ -56,6 +58,7 @@ define(
                 creditCardSsStartYearFirst: '',
                 creditCardSsIssueFirst: '',
                 creditCardVerificationNumbTerFirst: '',
+                tokenCreditCardFirst: '',
                 creditSavedCardFirst: window.checkoutConfig.payment.mundipagg_two_creditcard.selected_card,
                 selectedCardTypeFirst: null,
                 allInstallmentsFirst: ko.observableArray([]),
@@ -73,6 +76,8 @@ define(
                 creditCardSsStartYearSecond: '',
                 creditCardSsIssueSecond: '',
                 creditCardVerificationNumberSecond: '',
+                tokenCreditCardSecond: '',
+                quoteBilling: quote.billingAddress(),
                 creditSavedCardSecond: window.checkoutConfig.payment.mundipagg_two_creditcard.selected_card,
                 selectedCardTypeSecond: null,
                 allInstallmentsSecond: ko.observableArray([])
@@ -508,7 +513,7 @@ define(
                     'additional_data': {
                         'cc_first_card_amount': this.firstCreditCardAmount(),
                         'cc_first_card_tax_amount': this.firstCreditCardTaxAmount(),
-                        'cc_last_4_first': this.creditCardSavedNumberFirst(),
+                        'cc_last_4_first': this.creditCardSavedNumberFirst().substr(-4, 4),
                         'cc_cid_first': this.creditCardVerificationNumberFirst(),
                         'cc_type_first': this.creditCardTypeFirst(),
                         'cc_exp_year_first': this.creditCardExpYearFirst(),
@@ -520,7 +525,7 @@ define(
                         'cc_installments_first': this.creditCardInstallmentsFirst(),
                         'cc_second_card_amount': this.secondCreditCardAmount(),
                         'cc_second_card_tax_amount': this.secondCreditCardTaxAmount(),
-                        'cc_last_4_second': this.creditCardSavedNumberSecond(),
+                        'cc_last_4_second': this.creditCardSavedNumberSecond().substr(-4, 4),
                         'cc_cid_second': this.creditCardVerificationNumberSecond(),
                         'cc_type_second': this.creditCardTypeSecond(),
                         'cc_exp_year_second': this.creditCardExpYearSecond(),
@@ -529,9 +534,173 @@ define(
                         'cc_owner_second': this.creditCardOwnerSecond(),
                         'cc_savecard_second': this.creditCardsavecardSecond() ? 1 : 0,
                         'cc_saved_card_second': this.creditSavedCardSecond(),
-                        'cc_installments_second': this.creditCardInstallmentsSecond()
+                        'cc_installments_second': this.creditCardInstallmentsSecond(),
+                        'cc_token_credit_card_first': this.tokenCreditCardFirst,
+                        'cc_token_credit_card_second': this.tokenCreditCardSecond,
                     }
                 };
+            },
+
+            /**
+             * Place order.
+             */
+            beforeplaceOrder: function (data, event) {
+                debugger;
+
+                if (window.checkoutConfig.customerData.hasOwnProperty('email') && data.getData().additional_data.cc_saved_card_second && data.getData().additional_data.cc_saved_card_first) {
+                    this.useCardIdPlaceOrder(data, event);
+                }else{
+                    if (data.getData().additional_data.cc_saved_card_second) {
+                        this.createAndSendTokenCreditCardFirst(data, event);
+                    }else{
+                        if (data.getData().additional_data.cc_saved_card_first) {
+                            this.createAndSendTokenCreditCardSecond(data, event);
+                        }else{
+                            this.createAndSendTokenCreditCard(data, event);
+                        }
+                    }
+                    
+                }
+            },
+
+            useCardIdPlaceOrder: function (data, event) {
+                    this.placeOrder(data, event);
+            },
+
+            createAndSendTokenCreditCardFirst: function (data, event) {
+                var self = this;
+                var address = this.quoteBilling;
+
+                var dataJson = {
+                        "type": "card",
+                        "card": {
+                            "type": "credit",
+                            "number": this.creditCardNumberFirst(),
+                            "holder_name": this.creditCardOwnerFirst(),
+                            "exp_month": this.creditCardExpMonthFirst(),
+                            "exp_year": this.creditCardExpYearFirst(),
+                            "cvv": this.creditCardVerificationNumberFirst(),
+                            "billing_address": {
+                                "street": address.street[0],
+                                "number": address.street[1],
+                                "zip_code": address.postcode,
+                                "complement": address.street[2],
+                                "neighborhood": address.street[3],
+                                "city": address.region,
+                                "state": address.regionCode,
+                                "country": address.countryId
+                            }
+                        }
+                    };
+
+                $.when(
+                    token(dataJson)
+                ).done(function(transport) {
+                    self.tokenCreditCardFirst = transport.id;
+                    self.placeOrder(data, event);
+                });
+            },
+
+            createAndSendTokenCreditCardSecond: function (data, event) {
+                var self = this;
+                var address = this.quoteBilling;
+
+                var dataJson = {
+                        "type": "card",
+                        "card": {
+                            "type": "credit",
+                            "number": this.creditCardNumberSecond(),
+                            "holder_name": this.creditCardOwnerSecond(),
+                            "exp_month": this.creditCardExpMonthSecond(),
+                            "exp_year": this.creditCardExpYearSecond(),
+                            "cvv": this.creditCardVerificationNumberSecond(),
+                            "billing_address": {
+                                "street": address.street[0],
+                                "number": address.street[1],
+                                "zip_code": address.postcode,
+                                "complement": address.street[2],
+                                "neighborhood": address.street[3],
+                                "city": address.region,
+                                "state": address.regionCode,
+                                "country": address.countryId
+                            }
+                        }
+                    };
+
+                $.when(
+                    token(dataJson)
+                ).done(function(transport) {
+                    self.tokenCreditCardSecond = transport.id;
+                    self.placeOrder(data, event);
+                });
+            },
+
+            createAndSendTokenCreditCard: function (data, event) {
+                var self = this;
+                var address = this.quoteBilling;
+
+                var dataJson = {
+                        "type": "card",
+                        "card": {
+                            "type": "credit",
+                            "number": this.creditCardNumberFirst(),
+                            "holder_name": this.creditCardOwnerFirst(),
+                            "exp_month": this.creditCardExpMonthFirst(),
+                            "exp_year": this.creditCardExpYearFirst(),
+                            "cvv": this.creditCardVerificationNumberFirst(),
+                            "billing_address": {
+                                "street": address.street[0],
+                                "number": address.street[1],
+                                "zip_code": address.postcode,
+                                "complement": address.street[2],
+                                "neighborhood": address.street[3],
+                                "city": address.region,
+                                "state": address.regionCode,
+                                "country": address.countryId
+                            }
+                        }
+                    };
+
+                $.when(
+                    token(dataJson)
+                ).done(function(transport) {
+                    self.tokenCreditCardFirst = transport.id;
+                    self.createAndSendTokenCreditCardSecond(data, event);
+                });
+            },
+
+            createAndSendTokenCreditCardSecond: function (data, event) {
+                var self = this;
+                var address = this.quoteBilling;
+
+                var dataJson = {
+                        "type": "card",
+                        "card": {
+                            "type": "credit",
+                            "number": this.creditCardNumberSecond(),
+                            "holder_name": this.creditCardOwnerSecond(),
+                            "exp_month": this.creditCardExpMonthSecond(),
+                            "exp_year": this.creditCardExpYearSecond(),
+                            "cvv": this.creditCardVerificationNumberSecond(),
+                            "billing_address": {
+                                "street": address.street[0],
+                                "number": address.street[1],
+                                "zip_code": address.postcode,
+                                "complement": address.street[2],
+                                "neighborhood": address.street[3],
+                                "city": address.region,
+                                "state": address.regionCode,
+                                "country": address.countryId
+                            }
+                        }
+                    };
+
+                $.when(
+                    token(dataJson)
+                ).done(function(transport) {
+                    self.tokenCreditCardSecond = transport.id;
+                    self.placeOrder(data, event);
+                });
             },
 
             onInstallmentItemChange: function() {

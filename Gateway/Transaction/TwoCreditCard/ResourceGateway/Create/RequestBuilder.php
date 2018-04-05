@@ -25,7 +25,7 @@ use Magento\Checkout\Model\Cart;
 use MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\Config;
 use MundiPagg\MundiPagg\Gateway\Transaction\TwoCreditCard\Config\Config as ConfigCreditCard;
 use MundiPagg\MundiPagg\Helper\ModuleHelper;
-use MundiPagg\MundiPagg\Model\CardsFactory;
+use MundiPagg\MundiPagg\Helper\Cards\CreateCard;
 use MundiPagg\MundiPagg\Helper\Logger;
 
 class RequestBuilder implements BuilderInterface
@@ -45,7 +45,7 @@ class RequestBuilder implements BuilderInterface
     protected $config;
     protected $configCreditCard;
     protected $moduleHelper;
-    protected $cardsFactory;
+    protected $createCrad;
 
     /**
      * @var \MundiPagg\MundiPagg\Helper\Logger
@@ -69,8 +69,8 @@ class RequestBuilder implements BuilderInterface
         Cart $cart,
         Config $config,
         ConfigCreditCard $configCreditCard,
+        CreateCard $createCrad,
         ModuleHelper $moduleHelper,
-        CardsFactory $cardsFactory,
         Logger $logger
     )
     {
@@ -80,8 +80,8 @@ class RequestBuilder implements BuilderInterface
         $this->setCart($cart);
         $this->setConfig($config);
         $this->setConfigCreditCard($configCreditCard);
+        $this->setCreateCardHelper($createCrad);
         $this->setModuleHelper($moduleHelper);
-        $this->setCardsFactory($cardsFactory);
         $this->logger = $logger;
     }
 
@@ -306,91 +306,6 @@ class RequestBuilder implements BuilderInterface
     }
 
     /**
-     * @return \MundiAPILib\Models\CreateTokenRequest
-     */
-    public function getTokenRequest()
-    {
-        return new \MundiAPILib\Models\CreateTokenRequest();
-    }
-
-    protected function createTokenCard($requestDataProvider)
-    {
-        $request = $this->getTokenRequest();
-
-        $request->card = [
-            "type" => "credit",
-            "number" => $requestDataProvider->getCreditCardNumber(),
-            "holder_name" => $requestDataProvider->getHolderName(),
-            "exp_month" => $requestDataProvider->getExpMonth(),
-            "exp_year" => $requestDataProvider->getExpYear(),
-            "cvv" => $requestDataProvider->getSecurityCode()
-        ];
-
-        $request->metadata = [
-            'module_name' => self::NAME_METADATA,
-            'module_version' => $this->getModuleHelper()->getVersion(self::MODULE_NAME),
-        ];
-
-        try {
-
-            $token = $this->getApi()->getTokens()->createToken($this->getConfig()->getPublicKey(), $request);
-
-        } catch (\MundiAPILib\Exceptions\ErrorException $error) {
-            throw new \InvalidArgumentException($error);
-        } catch (\Exception $ex) {
-            throw new \InvalidArgumentException($ex->getMessage());
-        }
-
-
-        return $token->id;
-    }
-
-    protected function createTokenMultipleCards($payment, $type)
-    {
-        $request = $this->getTokenRequest();
-
-        if ($type == 'First') {
-            $request->card = [
-                'type' => 'credit',
-                'number' => $payment->getCcNumberFirst(),
-                'holder_name' => $payment->getCcOwnerFirst(),
-                'exp_month' => $payment->getCcExpMonthFirst(),
-                'exp_year' => $payment->getCcExpYearFirst(),
-                'cvv' => $payment->getCcCidFirst()
-            ];
-        }
-
-        if ($type == 'Second') {
-            $request->card = [
-                'type' => 'credit',
-                'number' => $payment->getCcNumberSecond(),
-                'holder_name' => $payment->getCcOwnerSecond(),
-                'exp_month' => $payment->getCcExpMonthSecond(),
-                'exp_year' => $payment->getCcExpYearSecond(),
-                'cvv' => $payment->getCcCidSecond()
-            ];
-        }
-
-        $request->metadata = [
-            'module_name' => self::NAME_METADATA,
-            'module_version' => $this->getModuleHelper()->getVersion(self::MODULE_NAME),
-        ];
-
-        try {
-
-            $token = $this->getApi()->getTokens()->createToken($this->getConfig()->getPublicKey(), $request);
-
-        } catch (\MundiAPILib\Exceptions\ErrorException $error) {
-            throw new \InvalidArgumentException($error);
-        } catch (\Exception $ex) {
-            throw new \InvalidArgumentException($ex->getMessage());
-        }
-
-
-        return $token->id;
-    }
-
-    /**
      * @param $requestDataProvider
      * @return mixed
      */
@@ -411,7 +326,7 @@ class RequestBuilder implements BuilderInterface
             $capture = false;
         }
         
-        $model = $this->getCardsFactory();
+        $model = $this->getCreateCardHelper();
 
         $order->payments = [
             [
@@ -462,19 +377,17 @@ class RequestBuilder implements BuilderInterface
         ];
 
         if (!empty($payment->getAdditionalInformation('cc_saved_card_first'))) {
-            $cardCollection = $model->getCollection()->addFieldToFilter('id', array('eq' => $payment->getAdditionalInformation('cc_saved_card_first')))->getFirstItem();
+            $cardCollection = $model->getById($payment->getAdditionalInformation('cc_saved_card_first'));
             $order->payments[0]['credit_card']['card_id'] = $cardCollection->getCardToken();
         } else {
-            $tokenFirstCard = $this->createTokenMultipleCards($payment, 'First');
-            $order->payments[0]['credit_card']['card_token'] = $tokenFirstCard;
+            $order->payments[0]['credit_card']['card_token'] = $requestDataProvider->getTokenCreditCardFirst();
         }
 
         if (!empty($payment->getAdditionalInformation('cc_saved_card_second'))) {
-            $cardCollection = $model->getCollection()->addFieldToFilter('id', array('eq' => $payment->getAdditionalInformation('cc_saved_card_second')))->getFirstItem();
+            $cardCollection = $model->getById($payment->getAdditionalInformation('cc_saved_card_second'));
             $order->payments[1]['credit_card']['card_id'] = $cardCollection->getCardToken();
         } else {
-            $tokenSecondCard = $this->createTokenMultipleCards($payment, 'Second');
-            $order->payments[1]['credit_card']['card_token'] = $tokenSecondCard;
+            $order->payments[1]['credit_card']['card_token'] = $requestDataProvider->getTokenCreditCardSecond();
         }
 
         $order->items = [];
@@ -536,7 +449,7 @@ class RequestBuilder implements BuilderInterface
             'module_version' => $this->getModuleHelper()->getVersion(self::MODULE_NAME),
         ];
         $quote->reserveOrderId()->save();
-        $order->code = $quote->getReservedOrderId();
+        $order->code = $this->paymentData->getOrder()->getIncrementId();
 
         if ($this->getConfigCreditCard()->getAntifraudActive() && $quote->getGrandTotal() > $this->getConfigCreditCard()->getAntifraudMinAmount()) {
             $order->antifraudEnabled = true;
@@ -548,12 +461,12 @@ class RequestBuilder implements BuilderInterface
 
             if ($payment->getAdditionalInformation('cc_savecard_first') == '1' && empty($payment->getAdditionalInformation('cc_saved_card_first'))) {
                 $customer = $response->customer;
-                $this->setCardToken($payment, $customer, $quote, 'FirstCard', $requestDataProvider);
+                $this->getCreateCardHelper()->createCard($response->charges[0]->lastTransaction->card, $customer, $quote);
             }
 
             if ($payment->getAdditionalInformation('cc_savecard_second') == '1' && empty($payment->getAdditionalInformation('cc_saved_card_second'))) {
                 $customer = $response->customer;
-                $this->setCardToken($payment, $customer, $quote, 'SecondCard', $requestDataProvider);
+                $this->getCreateCardHelper()->createCard($response->charges[1]->lastTransaction->card, $customer, $quote);
             }
 
         } catch (\MundiAPILib\Exceptions\ErrorException $error) {
@@ -569,114 +482,21 @@ class RequestBuilder implements BuilderInterface
     }
 
     /**
-     * @return \MundiAPILib\Models\CreateTokenRequest
-     */
-    public function getCardRequest()
-    {
-        return new \MundiAPILib\Models\CreateCardRequest();
-    }
-
-    protected function setCardToken($payment, $customer, $quote, $card, $requestDataProvider)
-    {
-        $request = $this->getCardRequest();
-
-        if (!empty($card) && $card == 'FirstCard') {
-            $request->number = $payment->getCcNumberFirst();
-            $request->holderName = $payment->getCcOwnerFirst();
-            $request->expMonth = $payment->getCcExpMonthFirst();
-            $request->expYear = $payment->getCcExpYearFirst();
-            $request->cvv = $payment->getCcCidFirst();
-        }
-
-        if (!empty($card) && $card == 'SecondCard') {
-            $request->number = $payment->getCcNumberSecond();
-            $request->holderName = $payment->getCcOwnerSecond();
-            $request->expMonth = $payment->getCcExpMonthSecond();
-            $request->expYear = $payment->getCcExpYearSecond();
-            $request->cvv = $payment->getCcCidSecond();
-        }
-
-        $request->billingAddress = [
-            'street' => $requestDataProvider->getCustomerAddressStreet(self::BILLING),
-            'number' => $requestDataProvider->getCustomerAddressNumber(self::BILLING),
-            'complement' => $requestDataProvider->getCustomerAddressComplement(self::BILLING),
-            'zip_code' => trim(str_replace('-','',$quote->getBillingAddress()->getPostCode())),
-            'neighborhood' => $requestDataProvider->getCustomerAddressDistrict(self::BILLING),
-            'city' => $quote->getBillingAddress()->getCity(),
-            'state' => $quote->getBillingAddress()->getRegionCode(),
-            'country' => $quote->getBillingAddress()->getCountryId()
-        ];
-        $request->options = [
-            'verify_card' => true
-        ];
-
-        $request->metadata = [
-            'module_name' => self::NAME_METADATA,
-            'module_version' => $this->getModuleHelper()->getVersion(self::MODULE_NAME),
-        ];
-
-        $result = $this->createCard($customer, $request);
-
-        $this->setCard($quote, $customer, $payment, $result, $card);
-
-
-        return $this;
-    }
-
-    protected function setCard($quote, $customer, $payment, $result, $card)
-    {
-        try {
-            $cards = $this->getCardsFactory();
-            $cards->setCustomerId($quote->getCustomerId());
-            $cards->setCardToken($result->id);
-            $cards->setCardId($customer->id);
-            if($card == 'FirstCard'){
-                $cards->setLastFourNumbers(substr($payment->getCcNumberFirst(), -4));
-                $cards->setBrand($payment->getCcTypeFirst());
-            }
-            if($card == 'SecondCard'){
-                $cards->setLastFourNumbers(substr($payment->getCcNumberSecond(), -4));
-                $cards->setBrand($payment->getCcTypeSecond());
-            }
-            $cards->setCreatedAt(date("Y-m-d H:i:s"));
-            $cards->setUpdatedAt(date("Y-m-d H:i:s"));
-            $cards->save();
-        } catch (\Exception $ex) {
-            throw new \InvalidArgumentException($ex->getMessage());
-        }
-
-        return $this;
-    }
-
-    protected function createCard($customer, $request)
-    {
-        try {
-            $result = $this->getApi()->getCustomers()->createCard($customer->id, $request);
-        } catch (\MundiAPILib\Exceptions\ErrorException $error) {
-            throw new \InvalidArgumentException($error);
-        } catch (\Exception $ex) {
-            throw new \InvalidArgumentException($ex->getMessage());
-        }
-
-        return $result;
-    }
-
-    /**
      * @return mixed
      */
-    public function getCardsFactory()
+    public function getCreateCardHelper()
     {
-        return $this->cardsFactory->create();
+        return $this->createCrad;
     }
 
     /**
-     * @param mixed $cardsFactory
+     * @param mixed $createCrad
      *
      * @return self
      */
-    public function setCardsFactory($cardsFactory)
+    public function setCreateCardHelper($createCrad)
     {
-        $this->cardsFactory = $cardsFactory;
+        $this->createCrad = $createCrad;
 
         return $this;
     }

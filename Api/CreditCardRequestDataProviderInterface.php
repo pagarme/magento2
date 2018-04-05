@@ -21,6 +21,21 @@ interface CreditCardRequestDataProviderInterface extends BaseRequestDataProvider
     public function getInstallmentCount();
 
     /**
+     * @return string
+     */
+    public function getCcTokenCreditCard();
+
+    /**
+     * @return string
+     */
+    public function getTokenCreditCardFirst();
+
+    /**
+     * @return string
+     */
+    public function getTokenCreditCardSecond();
+
+    /**
      * @return int
      */
     public function getSaveCard();

@@ -19,7 +19,10 @@ define(
         'Magento_Checkout/js/model/totals',
         'Magento_Checkout/js/checkout-data',
         'Magento_Checkout/js/action/select-payment-method',
-        'Magento_Checkout/js/model/full-screen-loader'
+        'Magento_Checkout/js/model/full-screen-loader',
+        'Magento_Checkout/js/model/payment/additional-validators',
+        'MundiPagg_MundiPagg/js/action/creditcard/token',
+        'Magento_Checkout/js/action/redirect-on-success'
     ],
     function (
         Component,
@@ -32,7 +35,10 @@ define(
         totals,
         checkoutData, 
         selectPaymentMethodAction, 
-        fullScreenLoader
+        fullScreenLoader,
+        additionalValidators,
+        token,
+        redirectOnSuccessAction
     ) {
         'use strict';
 
@@ -50,8 +56,10 @@ define(
                 creditCardSsStartYear: '',
                 creditCardSsIssue: '',
                 creditCardVerificationNumber: '',
+                tokenCreditCard: '',
                 creditSavedCard: window.checkoutConfig.payment.mundipagg_creditcard.selected_card,
                 selectedCardType: null,
+                quoteBilling: quote.billingAddress(),
                 allInstallments: ko.observableArray([])
             },
 
@@ -110,6 +118,68 @@ define(
                     }
                 });
 
+            },
+
+            /**
+             * Place order.
+             */
+            beforeplaceOrder: function (data, event) {
+                if (window.checkoutConfig.customerData.hasOwnProperty('email') && data.getData().additional_data.cc_saved_card) {
+                    this.useCardIdPlaceOrder(data, event);
+                }else{
+                    this.createAndSendTokenCreditCard(data, event);
+                }
+            },
+
+            useCardIdPlaceOrder: function (data, event) {
+                    this.placeOrder(data, event);
+            },
+
+            createAndSendTokenCreditCard: function (data, event) {
+                var self = this;
+                var address = this.quoteBilling;
+
+                var dataJson = {
+                        "type": "card",
+                        "card": {
+                            "type": "credit",
+                            "number": this.creditCardNumber(),
+                            "holder_name": this.creditCardOwner(),
+                            "exp_month": this.creditCardExpMonth(),
+                            "exp_year": this.creditCardExpYear(),
+                            "cvv": this.creditCardVerificationNumber(),
+                            "billing_address": {
+                                "street": address.street[0],
+                                "number": address.street[1],
+                                "zip_code": address.postcode,
+                                "complement": address.street[2],
+                                "neighborhood": address.street[3],
+                                "city": address.region,
+                                "state": address.regionCode,
+                                "country": address.countryId
+                            }
+                        }
+                    };
+
+                $.when(
+                    token(dataJson)
+                ).done(function(transport) {
+                    self.tokenCreditCard = transport.id;
+                    self.placeOrder(data, event);
+                });
+            },
+
+            getGender: function (gender) {
+                
+                if(gender == 1){
+                    return 'male';
+                }
+
+                if (gender == 2) {
+                    return 'female'
+                }
+
+                return '';
             },
 
             /**
@@ -236,16 +306,17 @@ define(
                 return {
                     'method': this.item.method,
                     'additional_data': {
-                        'cc_cid': this.creditCardVerificationNumber(),
+                        // 'cc_cid': this.creditCardVerificationNumber(),
                         'cc_type': this.creditCardType(),
-                        'cc_last_4': this.creditCardSavedNumber() ? this.creditCardSavedNumber() : this.creditCardNumber(),
+                        'cc_last_4': this.creditCardSavedNumber() ? this.creditCardSavedNumber().substr(-4, 4) : this.creditCardNumber().substr(-4, 4),
                         'cc_exp_year': this.creditCardExpYear(),
                         'cc_exp_month': this.creditCardExpMonth(),
-                        'cc_number': this.creditCardNumber(),
+                        // 'cc_number': this.creditCardNumber(),
                         'cc_owner': this.creditCardOwner(),
                         'cc_savecard': this.creditCardsavecard() ? 1 : 0,
                         'cc_saved_card': this.creditSavedCard(),
                         'cc_installments': this.creditCardInstallments(),
+                        'cc_token_credit_card': this.tokenCreditCard,
                     }
                 };
             },

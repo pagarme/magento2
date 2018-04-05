@@ -16,9 +16,22 @@ use Magento\Framework\DataObject;
 use Magento\Payment\Observer\AbstractDataAssignObserver;
 use Magento\Framework\Event\Observer;
 use Magento\Quote\Api\Data\PaymentInterface;
+use MundiPagg\MundiPagg\Helper\ModuleHelper;
 
 class TwoCreditCardDataAssignObserver extends AbstractDataAssignObserver
 {
+    private $moduleHelperCreditCard;
+
+    /**
+     * @param InstallmentsByBrandManagementInterface $installmentsInterface
+     */
+    public function __construct(
+        ModuleHelper $moduleHelperCreditCard
+    )
+    {
+        $this->moduleHelperCreditCard = $moduleHelperCreditCard;
+    }
+
     public function execute(Observer $observer)
     {
         $method = $this->readMethodArgument($observer);
@@ -35,11 +48,12 @@ class TwoCreditCardDataAssignObserver extends AbstractDataAssignObserver
         $info->setAdditionalInformation('cc_saved_card_second', '0');
 
         if ($additionalData->getCcSavedCardFirst()) {
+            $card = $this->moduleHelperCreditCard->getById($additionalData->getCcSavedCardFirst());
             $info->setAdditionalInformation('cc_saved_card_first', $additionalData->getCcSavedCardFirst());
             $info->setAdditionalInformation('cc_first_card_amount', $additionalData->getCcFirstCardAmount());
             $info->setAdditionalInformation('cc_first_card_tax_amount', $additionalData->getCcFirstCardTaxAmount());
-            $info->setAdditionalInformation('cc_type_first', $additionalData->getCcTypeFirst());
-            $info->setAdditionalInformation('cc_last_4_first', $additionalData->getCcLast4First());
+            $info->setAdditionalInformation('cc_type_first', $card->getBrand());
+            $info->setAdditionalInformation('cc_last_4_first', $card->getLastFourNumbers());
             $info->addData([
                 'cc_first_card_amount' => $additionalData->getCcFirstCardAmount(),
                 'cc_type_first' => $additionalData->getCcTypeFirst()
@@ -49,29 +63,31 @@ class TwoCreditCardDataAssignObserver extends AbstractDataAssignObserver
             $info->setAdditionalInformation('cc_first_card_amount', $additionalData->getCcFirstCardAmount());
             $info->setAdditionalInformation('cc_first_card_tax_amount', $additionalData->getCcFirstCardTaxAmount());
             $info->setAdditionalInformation('cc_type_first', $additionalData->getCcTypeFirst());
-            $info->setAdditionalInformation('cc_last_4_first', substr($additionalData->getCcNumberFirst(), -4));
+            $info->setAdditionalInformation('cc_last_4_first', $additionalData->getCcLast4First());
+            $info->setAdditionalInformation('cc_token_credit_card_first', $additionalData->getCcTokenCreditCardFirst());
 
             $info->addData([
                 'cc_first_card_amount' => $additionalData->getCcFirstCardAmount(),
                 'cc_type_first' => $additionalData->getCcTypeFirst(),
                 'cc_owner_first' => $additionalData->getCcOwnerFirst(),
-                'cc_number_first' => $additionalData->getCcNumberFirst(),
-                'cc_last_4_first' => substr($additionalData->getCcNumberFirst(), -4),
-                'cc_cid_first' => $additionalData->getCcCidFirst(),
-                'cc_exp_month_first' => $additionalData->getCcExpMonthFirst(),
-                'cc_exp_year_first' => $additionalData->getCcExpYearFirst(),
+                // 'cc_number_first' => $additionalData->getCcNumberFirst(),
+                'cc_last_4_first' => $additionalData->getCcLast4First(),
+                // 'cc_cid_first' => $additionalData->getCcCidFirst(),
+                // 'cc_exp_month_first' => $additionalData->getCcExpMonthFirst(),
+                // 'cc_exp_year_first' => $additionalData->getCcExpYearFirst(),
+                'cc_token_credit_card_first' => $additionalData->getCcTokenCreditCardFirst(),
             ]);
 
             $info->setAdditionalInformation('cc_savecard_first', $additionalData->getCcSavecardFirst());
         }
 
         if ($additionalData->getCcSavedCardSecond()) {
-
+            $card = $this->moduleHelperCreditCard->getById($additionalData->getCcSavedCardSecond());
             $info->setAdditionalInformation('cc_saved_card_second', $additionalData->getCcSavedCardSecond());
             $info->setAdditionalInformation('cc_second_card_amount', $additionalData->getCcSecondCardAmount());
             $info->setAdditionalInformation('cc_second_card_tax_amount', $additionalData->getCcSecondCardTaxAmount());
-            $info->setAdditionalInformation('cc_type_second', $additionalData->getCcTypeSecond());
-            $info->setAdditionalInformation('cc_last_4_second', $additionalData->getCcLast4Second());
+            $info->setAdditionalInformation('cc_type_second', $card->getBrand());
+            $info->setAdditionalInformation('cc_last_4_second', $card->getLastFourNumbers());
             $info->addData([
                 'cc_second_card_amount' => $additionalData->getCcSecondCardAmount(),
                 'cc_type_second' => $additionalData->getCcTypeSecond()
@@ -81,17 +97,19 @@ class TwoCreditCardDataAssignObserver extends AbstractDataAssignObserver
             $info->setAdditionalInformation('cc_second_card_amount', $additionalData->getCcSecondCardAmount());
             $info->setAdditionalInformation('cc_second_card_tax_amount', $additionalData->getCcSecondCardTaxAmount());
             $info->setAdditionalInformation('cc_type_second', $additionalData->getCcTypeSecond());
-            $info->setAdditionalInformation('cc_last_4_second', substr($additionalData->getCcNumberSecond(), -4));
+            $info->setAdditionalInformation('cc_last_4_second', $additionalData->getCcLast4Second());
+            $info->setAdditionalInformation('cc_token_credit_card_second', $additionalData->getCcTokenCreditCardSecond());
 
             $info->addData([
                 'cc_second_card_amount' => $additionalData->getCcSecondCardAmount(),
                 'cc_type_second' => $additionalData->getCcTypeSecond(),
                 'cc_owner_second' => $additionalData->getCcOwnerSecond(),
-                'cc_number_second' => $additionalData->getCcNumberSecond(),
-                'cc_last_4_second' => substr($additionalData->getCcNumberSecond(), -4),
-                'cc_cid_second' => $additionalData->getCcCidSecond(),
-                'cc_exp_month_second' => $additionalData->getCcExpMonthSecond(),
-                'cc_exp_year_second' => $additionalData->getCcExpYearSecond(),
+                // 'cc_number_second' => $additionalData->getCcNumberSecond(),
+                'cc_last_4_second' => $additionalData->getCcLast4Second(),
+                // 'cc_cid_second' => $additionalData->getCcCidSecond(),
+                // 'cc_exp_month_second' => $additionalData->getCcExpMonthSecond(),
+                // 'cc_exp_year_second' => $additionalData->getCcExpYearSecond(),
+                'cc_token_credit_card_second' => $additionalData->getCcTokenCreditCardSecond(),
             ]);
 
             $info->setAdditionalInformation('cc_savecard_second', $additionalData->getCcSavecardSecond());

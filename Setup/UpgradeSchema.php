@@ -1,6 +1,4 @@
 <?php
-
-
 namespace MundiPagg\MundiPagg\Setup;
 
 use Magento\Framework\Setup\UpgradeSchemaInterface;
@@ -27,7 +25,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
         if (version_compare($context->getVersion(), "1.0.14", "<")) {
             $setup = $this->updateVersionOneZeroTwelve($setup);
         }
-        
+
         $setup->endSetup();
     }
 

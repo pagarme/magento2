@@ -27,6 +27,7 @@
     <preference for="MundiPagg\MundiPagg\Api\WebhookManagementInterface" type="MundiPagg\MundiPagg\Model\WebhookManagement"/>
     <preference for="MundiPagg\MundiPagg\Api\InstallmentsByBrandManagementInterface" type="MundiPagg\MundiPagg\Model\InstallmentsByBrandManagement"/>
     <preference for="MundiPagg\MundiPagg\Api\InstallmentsByBrandAndAmountManagementInterface" type="MundiPagg\MundiPagg\Model\InstallmentsByBrandAndAmountManagement"/>
+    <preference for="MundiPagg\MundiPagg\Api\CustomerCreateManagementInterface" type="MundiPagg\MundiPagg\Model\CustomerCreateManagement" />
 
     <type name="MundiPagg\MundiPagg\Model\InstallmentsByBrandManagement">
         <arguments>

@@ -21,6 +21,16 @@ interface TwoCreditCardRequestDataProviderInterface extends BaseRequestDataProvi
     public function getInstallmentCount();
 
     /**
+     * @return string
+     */
+    public function getTokenCreditCardFirst();
+
+    /**
+     * @return string
+     */
+    public function getTokenCreditCardSecond();
+
+    /**
      * @return int
      */
     public function getSaveCard();

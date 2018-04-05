@@ -57,6 +57,14 @@ class RequestDataProvider
     /**
      * {@inheritdoc}
      */
+    public function getCcTokenCreditCard()
+    {
+        return $this->getPaymentData()->getAdditionalInformation('cc_token_credit_card');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getSaveCard()
     {
         return $this->getPaymentData()->getAdditionalInformation('cc_savecard');

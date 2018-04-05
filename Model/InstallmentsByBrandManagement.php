@@ -47,7 +47,7 @@ class InstallmentsByBrandManagement implements InstallmentsByBrandManagementInte
         $this->session->setCardBrand($cardBrand);
         $this->getBuilder()->create();
 
-            $result = [];
+        $result = [];
 
         /** @var Installment $item */
         foreach ($this->getBuilder()->getData() as $item) {

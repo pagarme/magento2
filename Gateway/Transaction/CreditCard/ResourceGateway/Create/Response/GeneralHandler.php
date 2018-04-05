@@ -64,6 +64,8 @@ class GeneralHandler extends AbstractHandler implements HandlerInterface
 
         foreach($response->charges as $charge)
         {
+            // $payment->setAdditionalInformation('brand', $charge->lastTransaction->card->brand);
+            // $payment->setAdditionalInformation('cc_last_4', $charge->lastTransaction->card->lastFourDigits);
         	try {
         		$model = $this->modelCharges->create();
 	            $model->setChargeId($charge->id);

@@ -26,6 +26,11 @@ interface BilletCreditCardRequestDataProviderInterface extends BaseRequestDataPr
     public function getInstallmentCount();
 
     /**
+     * @return string
+     */
+    public function getCcTokenCreditCard();
+
+    /**
      * @return int
      */
     public function getSaveCard();
