@@ -53,12 +53,16 @@ define(
              * Init component
              */
             initialize: function () {
+
+                window.checkoutConfig.payment.mundipagg_creditcard.brandIsValid = false;
+
                 var self = this;
 
                 this._super();
 
                 //Set credit card number to credit card data object
                 this.creditCardNumber.subscribe(function (value) {
+                    window.checkoutConfig.payment.mundipagg_creditcard.brandIsValid = false;
                     var result;
 
                     self.selectedCardType(null);
@@ -75,6 +79,13 @@ define(
                     if (result.card !== null) {
                         self.selectedCardType(result.card.type);
                         creditCardData.creditCard = result.card;
+                    }
+
+                    var cardsAvailables = window.checkoutConfig.payment.ccform.availableTypes.mundipagg_creditcard;
+
+                    if(cardsAvailables[result.card.type]){
+                        window.checkoutConfig.payment.mundipagg_creditcard.brandIsValid = true;
+                        return false;
                     }
 
                     if (result.isValid) {

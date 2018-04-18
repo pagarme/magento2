@@ -22,7 +22,8 @@ define(
         'Magento_Checkout/js/checkout-data',
         'Magento_Checkout/js/action/select-payment-method',
         'MundiPagg_MundiPagg/js/action/creditcard/token',
-        'Magento_Checkout/js/model/full-screen-loader'
+        'Magento_Checkout/js/model/full-screen-loader',
+        'mage/translate'
     ],
     function (
         Component,
@@ -38,7 +39,8 @@ define(
         checkoutData, 
         selectPaymentMethodAction, 
         token,
-        fullScreenLoader
+        fullScreenLoader,
+        $t
     ) {
         'use strict';
 
@@ -361,6 +363,17 @@ define(
             },
 
             createAndSendTokenCreditCard: function (data, event) {
+
+                var brandIsValid = window.checkoutConfig.payment.mundipagg_billet_creditcard.brandIsValid;
+
+                if(!brandIsValid){
+                    this.messageContainer.addErrorMessage({
+                        message: $t('Brand not exists.')
+                    });
+                    $("html, body").animate({scrollTop: 0}, 600);
+                    return false;
+                }
+
                 var self = this;
                 var address = this.quoteBilling;
 
@@ -391,6 +404,12 @@ define(
                 ).done(function(transport) {
                     self.tokenCreditCard = transport.id;
                     self.placeOrder(data, event);
+                }).fail(function ($xhr) {
+                    fullScreenLoader.stopLoader();
+                    self.messageContainer.addErrorMessage({
+                        message: $t('An error occurred on the server. Please try to place the order again.')
+                    });
+                    $("html, body").animate({scrollTop: 0}, 600);
                 });
             },
 

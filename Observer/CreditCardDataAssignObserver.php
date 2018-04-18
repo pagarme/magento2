@@ -16,20 +16,21 @@ use Magento\Framework\DataObject;
 use Magento\Payment\Observer\AbstractDataAssignObserver;
 use Magento\Framework\Event\Observer;
 use Magento\Quote\Api\Data\PaymentInterface;
-use MundiPagg\MundiPagg\Helper\ModuleHelper;
+use MundiPagg\MundiPagg\Model\CardsRepository;
 
 class CreditCardDataAssignObserver extends AbstractDataAssignObserver
 {
-    private $moduleHelperCreditCard;
+    private $cardsRepository;
 
     /**
-     * @param InstallmentsByBrandManagementInterface $installmentsInterface
+     * CreditCardDataAssignObserver constructor.
+     * @param CardsRepository $cardsRepository
      */
     public function __construct(
-        ModuleHelper $moduleHelperCreditCard
+        CardsRepository $cardsRepository
     )
     {
-        $this->moduleHelperCreditCard = $moduleHelperCreditCard;
+        $this->cardsRepository = $cardsRepository;
     }
 
     public function execute(Observer $observer)
@@ -47,7 +48,7 @@ class CreditCardDataAssignObserver extends AbstractDataAssignObserver
         $info->setAdditionalInformation('cc_saved_card', '0');
 
         if ($additionalData->getCcSavedCard()) {
-            $card = $this->moduleHelperCreditCard->getById($additionalData->getCcSavedCard());
+            $card = $this->cardsRepository->getById($additionalData->getCcSavedCard());
             $info->setAdditionalInformation('cc_saved_card', $additionalData->getCcSavedCard());
             $info->setAdditionalInformation('cc_type', $card->getBrand());
             $info->setAdditionalInformation('cc_last_4', $card->getLastFourNumbers());

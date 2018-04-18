@@ -164,6 +164,13 @@ define(
 
                             window.checkoutConfig.payment.mundipagg_creditcard.size_credit_card = data.lenghts[data.lenghts.length - 1];
 
+
+//                             var cardsAvailables = window.checkoutConfig.payment.ccform.availableTypes.mundipagg_creditcard;
+//
+//                             if(!cardsAvailables[data.brandName]){
+// alert('Não existe essa bandeira');
+//                             }
+
                             value = {
                                 title: data.brandName,
                                 type: data.brandName,
@@ -172,6 +179,9 @@ define(
                                 lengths: data.lenghts,
                                 code: codeWithArray
                             };
+
+
+
 
                             window.checkoutConfig.payment.mundipagg_creditcard.data_credit_card = value;
 

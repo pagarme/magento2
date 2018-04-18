@@ -22,7 +22,8 @@ define(
         'Magento_Checkout/js/checkout-data',
         'Magento_Checkout/js/action/select-payment-method',
         'MundiPagg_MundiPagg/js/action/creditcard/token',
-        'Magento_Checkout/js/model/full-screen-loader'
+        'Magento_Checkout/js/model/full-screen-loader',
+        'mage/translate'
     ],
     function (
         Component,
@@ -37,7 +38,8 @@ define(
         checkoutData, 
         selectPaymentMethodAction, 
         token,
-        fullScreenLoader
+        fullScreenLoader,
+        $t
     ) {
         'use strict';
 
@@ -545,7 +547,6 @@ define(
              * Place order.
              */
             beforeplaceOrder: function (data, event) {
-                debugger;
 
                 if (window.checkoutConfig.customerData.hasOwnProperty('email') && data.getData().additional_data.cc_saved_card_second && data.getData().additional_data.cc_saved_card_first) {
                     this.useCardIdPlaceOrder(data, event);
@@ -570,6 +571,17 @@ define(
             createAndSendTokenCreditCardFirst: function (data, event) {
                 var self = this;
                 var address = this.quoteBilling;
+
+                var firstBrandIsValid = window.checkoutConfig.payment.mundipagg_two_creditcard.brandFirstCardIsValid;
+                var secondBrandIsValid = window.checkoutConfig.payment.mundipagg_two_creditcard.brandSecondCardIsValid;
+
+                if(!firstBrandIsValid || !secondBrandIsValid){
+                    $("html, body").animate({ scrollTop: 0 }, 600);
+                    this.messageContainer.addErrorMessage({
+                        message: $t('Brand not exists.')
+                    });
+                    return false;
+                }
 
                 var dataJson = {
                         "type": "card",
@@ -598,46 +610,30 @@ define(
                 ).done(function(transport) {
                     self.tokenCreditCardFirst = transport.id;
                     self.placeOrder(data, event);
-                });
+                }).fail(function ($xhr) {
+                    fullScreenLoader.stopLoader();
+                    self.messageContainer.addErrorMessage({
+                        message: $t('An error occurred on the server. Please try to place the order again.')
+                    });
+                   $("html, body").animate({scrollTop: 0}, 600);
+               });
             },
 
-            createAndSendTokenCreditCardSecond: function (data, event) {
-                var self = this;
-                var address = this.quoteBilling;
-
-                var dataJson = {
-                        "type": "card",
-                        "card": {
-                            "type": "credit",
-                            "number": this.creditCardNumberSecond(),
-                            "holder_name": this.creditCardOwnerSecond(),
-                            "exp_month": this.creditCardExpMonthSecond(),
-                            "exp_year": this.creditCardExpYearSecond(),
-                            "cvv": this.creditCardVerificationNumberSecond(),
-                            "billing_address": {
-                                "street": address.street[0],
-                                "number": address.street[1],
-                                "zip_code": address.postcode,
-                                "complement": address.street[2],
-                                "neighborhood": address.street[3],
-                                "city": address.region,
-                                "state": address.regionCode,
-                                "country": address.countryId
-                            }
-                        }
-                    };
-
-                $.when(
-                    token(dataJson)
-                ).done(function(transport) {
-                    self.tokenCreditCardSecond = transport.id;
-                    self.placeOrder(data, event);
-                });
-            },
 
             createAndSendTokenCreditCard: function (data, event) {
                 var self = this;
                 var address = this.quoteBilling;
+
+                var firstBrandIsValid = window.checkoutConfig.payment.mundipagg_two_creditcard.brandFirstCardIsValid;
+                var secondBrandIsValid = window.checkoutConfig.payment.mundipagg_two_creditcard.brandSecondCardIsValid;
+
+                if(!firstBrandIsValid || !secondBrandIsValid){
+                    $("html, body").animate({ scrollTop: 0 }, 600);
+                    this.messageContainer.addErrorMessage({
+                        message: $t('Brand not exists.')
+                    });
+                    return false;
+                }
 
                 var dataJson = {
                         "type": "card",
@@ -666,41 +662,66 @@ define(
                 ).done(function(transport) {
                     self.tokenCreditCardFirst = transport.id;
                     self.createAndSendTokenCreditCardSecond(data, event);
+                }).fail(function ($xhr) {
+                        fullScreenLoader.stopLoader();
+                        self.messageContainer.addErrorMessage({
+                            message: $t('An error occurred on the server. Please try to place the order again.')
+                        });
+                        $("html, body").animate({scrollTop: 0}, 600);
                 });
             },
 
             createAndSendTokenCreditCardSecond: function (data, event) {
+
+                var firstBrandIsValid = window.checkoutConfig.payment.mundipagg_two_creditcard.brandFirstCardIsValid;
+                var secondBrandIsValid = window.checkoutConfig.payment.mundipagg_two_creditcard.brandSecondCardIsValid;
+
+                if(!firstBrandIsValid || !secondBrandIsValid){
+                    $("html, body").animate({ scrollTop: 0 }, 600);
+                    this.messageContainer.addErrorMessage({
+                        message: $t('Brand not exists.')
+                    });
+                    return false;
+                }
+
                 var self = this;
                 var address = this.quoteBilling;
 
                 var dataJson = {
-                        "type": "card",
-                        "card": {
-                            "type": "credit",
-                            "number": this.creditCardNumberSecond(),
-                            "holder_name": this.creditCardOwnerSecond(),
-                            "exp_month": this.creditCardExpMonthSecond(),
-                            "exp_year": this.creditCardExpYearSecond(),
-                            "cvv": this.creditCardVerificationNumberSecond(),
-                            "billing_address": {
-                                "street": address.street[0],
-                                "number": address.street[1],
-                                "zip_code": address.postcode,
-                                "complement": address.street[2],
-                                "neighborhood": address.street[3],
-                                "city": address.region,
-                                "state": address.regionCode,
-                                "country": address.countryId
-                            }
+                    "type": "card",
+                    "card": {
+                        "type": "credit",
+                        "number": this.creditCardNumberSecond(),
+                        "holder_name": this.creditCardOwnerSecond(),
+                        "exp_month": this.creditCardExpMonthSecond(),
+                        "exp_year": this.creditCardExpYearSecond(),
+                        "cvv": this.creditCardVerificationNumberSecond(),
+                        "billing_address": {
+                            "street": address.street[0],
+                            "number": address.street[1],
+                            "zip_code": address.postcode,
+                            "complement": address.street[2],
+                            "neighborhood": address.street[3],
+                            "city": address.region,
+                            "state": address.regionCode,
+                            "country": address.countryId
                         }
-                    };
+                    }
+                };
 
                 $.when(
                     token(dataJson)
                 ).done(function(transport) {
                     self.tokenCreditCardSecond = transport.id;
                     self.placeOrder(data, event);
+                }).fail(function ($xhr) {
+                    fullScreenLoader.stopLoader();
+                    self.messageContainer.addErrorMessage({
+                        message: $t('An error occurred on the server. Please try to place the order again.')
+                    });
+                    $("html, body").animate({scrollTop: 0}, 600);
                 });
+
             },
 
             onInstallmentItemChange: function() {

@@ -24,7 +24,7 @@ define(
 
         return function (data, customer_id) {
             var serviceUrl = 'https://api.mundipagg.com/core/v1/customers/' + customer_id + '/cards';
-            debugger;
+
             return $.ajax({
                 method: "POST",
                 beforeSend: function(request) {

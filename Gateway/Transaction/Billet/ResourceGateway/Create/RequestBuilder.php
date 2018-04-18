@@ -182,11 +182,12 @@ class RequestBuilder implements BuilderInterface
         }
 
         $document = $quote->getCustomerTaxvat() ? $quote->getCustomerTaxvat() : $quote->getShippingAddress()->getVatId() ;
-
+        $this->getModuleHelper()->setTaxVat($document,true);
+        
         $order->customer = [
             'name' => !empty($requestDataProvider->getName()) ? $requestDataProvider->getName() :  $quote->getBillingAddress()->getFirstName() . ' ' . $quote->getBillingAddress()->getLastName(),
             'email' => !empty($requestDataProvider->getEmail()) ? $requestDataProvider->getEmail() : $quote->getBillingAddress()->getEmail(),
-            'document' => $document,
+            'document' => $this->getModuleHelper()->getTaxVat(),
             'type' => 'individual',
             'address' => [
                 'street' => $requestDataProvider->getCustomerAddressStreet(self::BILLING),

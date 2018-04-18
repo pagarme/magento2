@@ -75,12 +75,19 @@ define(
              * Init component
              */
             initialize: function () {
+
+                window.checkoutConfig.payment.mundipagg_two_creditcard.brandFirstCardIsValid = false;
+                window.checkoutConfig.payment.mundipagg_two_creditcard.brandSecondCardIsValid = false;
+
                 var self = this;
 
                 this._super();
 
                 // FIRST CREDIT CARD - Set credit card number to credit card data object
                 this.creditCardNumberFirst.subscribe(function (value) {
+
+                    window.checkoutConfig.payment.mundipagg_two_creditcard.brandFirstCardIsValid = false;
+
                     var result;
 
                     self.selectedCardTypeFirst(null);
@@ -99,6 +106,13 @@ define(
                         creditCardData.creditCardFirst = result.card;
                     }
 
+                    var cardsAvailables = window.checkoutConfig.payment.ccform.availableTypes.mundipagg_creditcard;
+
+                    if(cardsAvailables[result.card.type]){
+                        window.checkoutConfig.payment.mundipagg_two_creditcard.brandFirstCardIsValid = true;
+                        return false;
+                    }
+
                     if (result.isValid) {
                         creditCardData.creditCardNumberFirst = value;
                         self.creditCardTypeFirst(result.card.type);
@@ -107,6 +121,9 @@ define(
 
                 // SECOND CREDIT CARD - Set credit card number to credit card data object
                 this.creditCardNumberSecond.subscribe(function (value) {
+
+                    window.checkoutConfig.payment.mundipagg_two_creditcard.brandSecondCardIsValid = false;
+
                     var result;
 
                     self.selectedCardTypeSecond(null);
@@ -123,6 +140,13 @@ define(
                     if (result.card !== null) {
                         self.selectedCardTypeSecond(result.card.type);
                         creditCardData.creditCardSecond = result.card;
+                    }
+
+                    var cardsAvailables = window.checkoutConfig.payment.ccform.availableTypes.mundipagg_creditcard;
+
+                    if(cardsAvailables[result.card.type]){
+                        window.checkoutConfig.payment.mundipagg_two_creditcard.brandSecondCardIsValid = true;
+                        return false;
                     }
 
                     if (result.isValid) {
