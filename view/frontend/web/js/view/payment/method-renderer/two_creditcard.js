@@ -82,7 +82,11 @@ define(
                 quoteBilling: quote.billingAddress(),
                 creditSavedCardSecond: window.checkoutConfig.payment.mundipagg_two_creditcard.selected_card,
                 selectedCardTypeSecond: null,
-                allInstallmentsSecond: ko.observableArray([])
+                allInstallmentsSecond: ko.observableArray([]),
+                creditCardBuyerNameFirst: '',
+                creditCardBuyerEmailFirst: '',
+                creditCardBuyerNameSecond: '',
+                creditCardBuyerEmailSecond: ''
             },
 
             totals: quote.getTotals(),
@@ -426,7 +430,11 @@ define(
                         'creditCardSsIssueSecond',
                         'creditSavedCardSecond',
                         'selectedCardTypeSecond',
-                        'creditCardInstallmentsSecond'
+                        'creditCardInstallmentsSecond',
+                        'creditCardBuyerNameFirst',
+                        'creditCardBuyerEmailFirst',
+                        'creditCardBuyerNameSecond',
+                        'creditCardBuyerEmailSecond'
                     ]);
 
                 return this;
@@ -539,6 +547,10 @@ define(
                         'cc_installments_second': this.creditCardInstallmentsSecond(),
                         'cc_token_credit_card_first': this.tokenCreditCardFirst,
                         'cc_token_credit_card_second': this.tokenCreditCardSecond,
+                        'cc_buyer_name_first': this.creditCardBuyerNameFirst(),
+                        'cc_buyer_email_first': this.creditCardBuyerEmailFirst(),
+                        'cc_buyer_name_second': this.creditCardBuyerNameSecond(),
+                        'cc_buyer_email_second': this.creditCardBuyerEmailSecond()
                     }
                 };
             },
@@ -779,6 +791,9 @@ define(
                     jQuery('#mundipagg_two_creditcard_cc_owner_div_' + idValue).css('display','none');
                     jQuery('#mundipagg_two_creditcard_cc_type_exp_div_' + idValue).css('display','none');
                     jQuery('#mundipagg_two_creditcard_cc_type_cvv_div_' + idValue).css('display','none');
+                    jQuery('#mundipagg_two_creditcard_cc_buyer_checkbox_' + idValue).css('display','none');
+                    jQuery('#mundipagg_two_creditcard_cc_buyer_name_' + idValue).css('display','none');
+                    jQuery('#mundipagg_two_creditcard_cc_buyer_email_' + idValue).css('display','none');
                 }else{
                     jQuery('#mundipagg_two_creditcard_cc_icons_' + idValue).css('display','block');
                     jQuery('#mundipagg_two_creditcard_cc_savecard_' + idValue).css('display','block');
@@ -786,7 +801,25 @@ define(
                     jQuery('#mundipagg_two_creditcard_cc_owner_div_' + idValue).css('display','block');
                     jQuery('#mundipagg_two_creditcard_cc_type_exp_div_' + idValue).css('display','block');
                     jQuery('#mundipagg_two_creditcard_cc_type_cvv_div_' + idValue).css('display','block');
+                    jQuery('#mundipagg_two_creditcard_cc_buyer_checkbox_' + idValue).css('display','block');
                 }
+            },
+            firstBuyerChecked: function(){
+                if(this.creditCardsavecardFirst()){
+                    return 'display: block;';
+                }else{
+                    return 'display: none;';
+                }
+            },
+            secondBuyerChecked: function(){
+                if(this.creditCardsavecardSecond()){
+                    return 'display: block;';
+                }else{
+                    return 'display: none;';
+                }
+            },
+            getCreditCardBuyerHelpHtml: function () {
+                return '<span>' + $t('Add a different buyer to Credit Card') + '</span>';
             },
         })
     }

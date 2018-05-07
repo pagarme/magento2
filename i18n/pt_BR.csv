@@ -277,3 +277,7 @@
 "Brand","Tipo"
 "Error to save MundiPagg Soft Description Credit Card, size too big max 22 character.","Erro para salvar MundiPagg Soft Descrição Cartão de crédito, tamanho muito grande máximo 22 caracteres."
 "Max size 22.","Tamanho máximo 22."
+"Please check your address. First field of Street Address (Street) is required.","Por favor, verifique seu endereço. O primeiro campo do Street Address (Street) é obrigatório."
+"Please check your address. Second field of Street Address (Number) is required.","Por favor, verifique seu endereço. O segundo campo do Street Address (Number) é obrigatório."
+"Please check your address. Fourth field of Street Address (Neighborhood) is required.","Por favor, verifique seu endereço. O quarto campo do Street Address (Bairro) é obrigatório."
+"Brand not exists.","Bandeira não existe."

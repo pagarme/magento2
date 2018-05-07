@@ -27,6 +27,7 @@ use MundiPagg\MundiPagg\Gateway\Transaction\CreditCard\Config\Config as ConfigCr
 use MundiPagg\MundiPagg\Helper\ModuleHelper;
 use MundiPagg\MundiPagg\Helper\Cards\CreateCard;
 use MundiPagg\MundiPagg\Helper\Logger;
+use MundiPagg\MundiPagg\Helper\CustomerCustomAttributesHelper;
 
 class RequestBuilder implements BuilderInterface
 {
@@ -47,6 +48,7 @@ class RequestBuilder implements BuilderInterface
     protected $moduleHelper;
     protected $createCrad;
     protected $logger;
+    protected $customerCustomAttributesHelper;
 
     /**
      * RequestBuilder constructor.
@@ -57,6 +59,9 @@ class RequestBuilder implements BuilderInterface
      * @param Config $config
      * @param ConfigCreditCard $configCreditCard
      * @param ModuleHelper $moduleHelper
+     * @param CreateCard $createCrad
+     * @param Logger $logger
+     * @param CustomerCustomAttributesHelper $customerCustomAttributesHelper
      */
     public function __construct(
         Request $request,
@@ -67,7 +72,8 @@ class RequestBuilder implements BuilderInterface
         ConfigCreditCard $configCreditCard,
         ModuleHelper $moduleHelper,
         CreateCard $createCrad,
-        Logger $logger
+        Logger $logger,
+        CustomerCustomAttributesHelper $customerCustomAttributesHelper
     )
     {
         $this->setRequest($request);
@@ -79,6 +85,7 @@ class RequestBuilder implements BuilderInterface
         $this->setModuleHelper($moduleHelper);
         $this->setCreateCardHelper($createCrad);
         $this->setLogger($logger);
+        $this->customerCustomAttributesHelper = $customerCustomAttributesHelper;
     }
 
     /**
@@ -459,6 +466,9 @@ class RequestBuilder implements BuilderInterface
 
                 $this->getCreateCardHelper()->createCard($response->charges[0]->lastTransaction->card, $customer, $quote);
             }
+
+            $this->customerCustomAttributesHelper->setCustomerCustomAttribute($quote->getCustomer(),$response);
+
 
         } catch (\MundiAPILib\Exceptions\ErrorException $error) {
             $this->getLogger()->logger($error);

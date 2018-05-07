@@ -16,20 +16,21 @@ use Magento\Framework\DataObject;
 use Magento\Payment\Observer\AbstractDataAssignObserver;
 use Magento\Framework\Event\Observer;
 use Magento\Quote\Api\Data\PaymentInterface;
-use MundiPagg\MundiPagg\Helper\ModuleHelper;
+use MundiPagg\MundiPagg\Model\CardsRepository;
 
 class BilletCreditCardDataAssignObserver extends AbstractDataAssignObserver
 {
-    private $moduleHelperCreditCard;
+    private $cardsRepository;
 
     /**
-     * @param InstallmentsByBrandManagementInterface $installmentsInterface
+     * BilletCreditCardDataAssignObserver constructor.
+     * @param CardsRepository $cardsRepository
      */
     public function __construct(
-        ModuleHelper $moduleHelperCreditCard
+        CardsRepository $cardsRepository
     )
     {
-        $this->moduleHelperCreditCard = $moduleHelperCreditCard;
+        $this->cardsRepository = $cardsRepository;
     }
 
     public function execute(Observer $observer)
@@ -47,7 +48,7 @@ class BilletCreditCardDataAssignObserver extends AbstractDataAssignObserver
         $info->setAdditionalInformation('cc_saved_card', '0');
 
         if ($additionalData->getCcSavedCard()) {
-            $card = $this->moduleHelperCreditCard->getById($additionalData->getCcSavedCard());
+            $card = $this->cardsRepository->getById($additionalData->getCcSavedCard());
             $info->setAdditionalInformation('cc_saved_card', $additionalData->getCcSavedCard());
             $info->setAdditionalInformation('cc_cc_amount', $additionalData->getCcCcAmount());
             $info->setAdditionalInformation('cc_cc_tax_amount', $additionalData->getCcCcTaxAmount());
@@ -79,6 +80,11 @@ class BilletCreditCardDataAssignObserver extends AbstractDataAssignObserver
             
             $info->setAdditionalInformation('cc_savecard', $additionalData->getCcSavecard());
         }
+
+        $info->setAdditionalInformation('billet_buyer_name', $additionalData->getBilletBuyerName());
+        $info->setAdditionalInformation('billet_buyer_email', $additionalData->getBilletBuyerEmail());
+        $info->setAdditionalInformation('cc_buyer_name', $additionalData->getCcBuyerName());
+        $info->setAdditionalInformation('cc_buyer_email', $additionalData->getCcBuyerEmail());
 
         $info->setAdditionalInformation('cc_installments', 1);
         $info->setAdditionalInformation('cc_cc_amount', $additionalData->getCcCcAmount());

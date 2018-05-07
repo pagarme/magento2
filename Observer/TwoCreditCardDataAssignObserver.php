@@ -116,6 +116,11 @@ class TwoCreditCardDataAssignObserver extends AbstractDataAssignObserver
             $info->setAdditionalInformation('cc_savecard_second', $additionalData->getCcSavecardSecond());
         }
 
+        $info->setAdditionalInformation('cc_buyer_name_first', $additionalData->getCcBuyerNameFirst());
+        $info->setAdditionalInformation('cc_buyer_email_first', $additionalData->getCcBuyerEmailFirst());
+        $info->setAdditionalInformation('cc_buyer_name_second', $additionalData->getCcBuyerNameSecond());
+        $info->setAdditionalInformation('cc_buyer_email_second', $additionalData->getCcBuyerEmailSecond());
+
         $info->setAdditionalInformation('cc_installments_first', 1);
         $info->setAdditionalInformation('cc_installments_second', 1);
 

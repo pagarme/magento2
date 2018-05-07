@@ -73,6 +73,38 @@ class RequestDataProvider
     /**
      * {@inheritdoc}
      */
+    public function getBilletBuyerName()
+    {
+        return $this->getPaymentData()->getAdditionalInformation('billet_buyer_name');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBilletBuyerEmail()
+    {
+        return $this->getPaymentData()->getAdditionalInformation('billet_buyer_email');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCcBuyerName()
+    {
+        return $this->getPaymentData()->getAdditionalInformation('cc_buyer_name');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCcBuyerEmail()
+    {
+        return $this->getPaymentData()->getAdditionalInformation('cc_buyer_email');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getBilletCreditCardOperation()
     {
         if ($this->getConfig()->getPaymentAction()) {

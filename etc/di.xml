@@ -418,5 +418,9 @@
         </arguments>
     </virtualType>
 
+    <type name="Magento\Customer\Controller\Adminhtml\Index\InlineEdit">
+        <plugin name="afterSaveCustomerAdminInLine" type="MundiPagg\MundiPagg\Plugin\Admin\CustomerPlugin" sortOrder="1" />
+    </type>
+
 
 </config>

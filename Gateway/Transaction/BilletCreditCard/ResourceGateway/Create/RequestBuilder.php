@@ -31,6 +31,8 @@ use MundiPagg\MundiPagg\Model\Source\Bank;
 use MundiPagg\MundiPagg\Gateway\Transaction\Billet\ResourceGateway\Create\RequestDataProvider as BilletDataProvider;
 use MundiPagg\MundiPagg\Gateway\Transaction\Billet\Config\Config as ConfigBillet;
 use MundiPagg\MundiPagg\Helper\Logger;
+use MundiPagg\MundiPagg\Model\Payment;
+use MundiPagg\MundiPagg\Helper\CustomerCustomAttributesHelper;
 
 class RequestBuilder implements BuilderInterface
 {
@@ -53,6 +55,8 @@ class RequestBuilder implements BuilderInterface
     protected $bank;
     protected $configBillet;
     protected $configCreditCard;
+    protected $payment;
+    protected $customerCustomAttributesHelper;
 
     /**
      * @var \MundiPagg\MundiPagg\Helper\Logger
@@ -68,9 +72,13 @@ class RequestBuilder implements BuilderInterface
      * @param Config $config
      * @param ConfigBilletCreditCard $configBilletCreditCard
      * @param ModuleHelper $moduleHelper
-     * @param CardsFactory $createCrad
+     * @param CreateCard $createCrad
      * @param Bank $bank
      * @param ConfigBillet $configBillet
+     * @param ConfigCreditCard $configCreditCard
+     * @param Logger $logger
+     * @param Payment $payment
+     * @param CustomerCustomAttributesHelper $customerCustomAttributesHelper
      */
     public function __construct(
         Request $request,
@@ -84,7 +92,9 @@ class RequestBuilder implements BuilderInterface
         Bank $bank,
         ConfigBillet $configBillet,
         ConfigCreditCard $configCreditCard,
-        Logger $logger
+        Logger $logger,
+        Payment $payment,
+        CustomerCustomAttributesHelper $customerCustomAttributesHelper
     )
     {
         $this->setRequest($request);
@@ -99,6 +109,8 @@ class RequestBuilder implements BuilderInterface
         $this->setConfigBillet($configBillet);
         $this->setConfigCreditCard($configCreditCard);
         $this->setLogger($logger);
+        $this->payment = $payment;
+        $this->customerCustomAttributesHelper = $customerCustomAttributesHelper;
     }
 
     /**
@@ -106,6 +118,8 @@ class RequestBuilder implements BuilderInterface
      */
     public function build(array $buildSubject)
     {
+
+
         if (!isset($buildSubject['payment']) || !$buildSubject['payment'] instanceof PaymentDataObjectInterface) {
             throw new \InvalidArgumentException('Payment data object should be provided');
         }
@@ -407,6 +421,9 @@ class RequestBuilder implements BuilderInterface
                     ]
                 ]
             ];
+
+            $this->payment->addCustomerOnPaymentMethodWithSavedCard($order, $card, 1);
+
         }else{
             $tokenCard = $requestDataProvider->getCcTokenCreditCard();
 
@@ -445,7 +462,12 @@ class RequestBuilder implements BuilderInterface
                     ]
                 ]
             ];
+
+            $this->payment->addCustomersOnMultiPager($order,$requestDataProvider->getCcBuyerName(),$requestDataProvider->getCcBuyerEmail(),1);
+
         }
+
+
         $quote->reserveOrderId()->save();
         $order->code = $this->paymentData->getOrder()->getIncrementId();
 
@@ -520,11 +542,10 @@ class RequestBuilder implements BuilderInterface
 
             if($requestDataProvider->getSaveCard() == '1')
             {
-                $customer = $response->customer;
-
-                $this->getCreateCardHelper()->createCard($response->charges[0]->lastTransaction->card, $customer, $quote);
-                
+                $this->getCreateCardHelper()->createCard($response->charges[0]->lastTransaction->card, $response->charges[0]->customer, $quote);
             }
+
+            $this->customerCustomAttributesHelper->setCustomerCustomAttribute($quote->getCustomer(),$response);
 
         } catch (\MundiAPILib\Exceptions\ErrorException $error) {
             $this->logger->logger($error);

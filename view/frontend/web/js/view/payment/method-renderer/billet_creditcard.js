@@ -66,7 +66,13 @@ define(
                 quoteBilling: quote.billingAddress(),
                 creditSavedCardBcc: window.checkoutConfig.payment.mundipagg_billet_creditcard.selected_card,
                 selectedCardTypeBcc: null,
-                allInstallments: ko.observableArray([])
+                allInstallments: ko.observableArray([]),
+                billetBuyerCheckbox: '',
+                billetBuyerEmail: '',
+                billetBuyerName: '',
+                creditCardBuyerCheckbox: '',
+                creditCardBuyerEmail: '',
+                creditCardBuyerName: ''
             },
 
             totals: quote.getTotals(),
@@ -287,7 +293,13 @@ define(
                         'creditCardSsIssueBcc',
                         'creditSavedCardBcc',
                         'selectedCardTypeBcc',
-                        'creditCardInstallmentsBcc'
+                        'creditCardInstallmentsBcc',
+                        'billetBuyerCheckbox',
+                        'billetBuyerEmail',
+                        'billetBuyerName',
+                        'creditCardBuyerCheckbox',
+                        'creditCardBuyerEmail',
+                        'creditCardBuyerName'
                     ]);
 
                 return this;
@@ -431,6 +443,10 @@ define(
                         'cc_saved_card': this.creditSavedCardBcc(),
                         'cc_billet_amount': this.creditCardBilletAmountBcc(),
                         'cc_token_credit_card': this.tokenCreditCard,
+                        'billet_buyer_name': this.billetBuyerName(),
+                        'billet_buyer_email': this.billetBuyerEmail(),
+                        'cc_buyer_name': this.creditCardBuyerName(),
+                        'cc_buyer_email': this.creditCardBuyerEmail()
                     }
                 };
             },
@@ -472,6 +488,9 @@ define(
                     jQuery('#mundipagg_billet_creditcard_cc_owner_div').css('display','none');
                     jQuery('#mundipagg_billet_creditcard_cc_type_exp_div').css('display','none');
                     jQuery('#mundipagg_billet_creditcard_cc_type_cvv_div').css('display','none');
+                    jQuery('#mundipagg_billet_creditcard_buyer_checkbox').css('display','none');
+                    jQuery('#mundipagg_billet_creditcard_buyer_name').css('display','none');
+                    jQuery('#mundipagg_billet_creditcard_buyer_email').css('display','none');
                 }else{
                     jQuery('#mundipagg_billet_creditcard_cc_icons').css('display','block');
                     jQuery('#mundipagg_billet_creditcard_cc_savecard').css('display','block');
@@ -479,8 +498,30 @@ define(
                     jQuery('#mundipagg_billet_creditcard_cc_owner_div').css('display','block');
                     jQuery('#mundipagg_billet_creditcard_cc_type_exp_div').css('display','block');
                     jQuery('#mundipagg_billet_creditcard_cc_type_cvv_div').css('display','block');
+                    jQuery('#mundipagg_billet_creditcard_buyer_checkbox').css('display','block');
                 }
             },
+            billetBuyerIsChecked: function(){
+                if(this.billetBuyerCheckbox()){
+                    return 'display: block;';
+                }else{
+                    return 'display: none;';
+                }
+            },
+            creditCardBuyerIsChecked: function(){
+                if(this.creditCardBuyerCheckbox()){
+                    return 'display: block;';
+                }else{
+                    return 'display: none;';
+                }
+            },
+            getCreditCardBuyerHelpHtml: function () {
+                return '<span>' + $t('Add a different buyer to Credit Card') + '</span>';
+            },
+
+            getBilletBuyerHelpHtml: function () {
+                return '<span>' + $t('Add a different buyer to Billet') + '</span>';
+            }
         })
     }
 );

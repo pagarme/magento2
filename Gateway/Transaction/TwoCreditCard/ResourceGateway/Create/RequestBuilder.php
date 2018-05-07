@@ -27,6 +27,8 @@ use MundiPagg\MundiPagg\Gateway\Transaction\TwoCreditCard\Config\Config as Confi
 use MundiPagg\MundiPagg\Helper\ModuleHelper;
 use MundiPagg\MundiPagg\Helper\Cards\CreateCard;
 use MundiPagg\MundiPagg\Helper\Logger;
+use MundiPagg\MundiPagg\Model\Payment;
+use MundiPagg\MundiPagg\Helper\CustomerCustomAttributesHelper;
 
 class RequestBuilder implements BuilderInterface
 {
@@ -35,7 +37,7 @@ class RequestBuilder implements BuilderInterface
     const NAME_METADATA = 'Magento 2';
     const SHIPPING = 1;
     const BILLING = 0;
-    
+
     protected $request;
     protected $requestDataProviderFactory;
     protected $cartItemRequestDataProviderFactory;
@@ -46,6 +48,8 @@ class RequestBuilder implements BuilderInterface
     protected $configCreditCard;
     protected $moduleHelper;
     protected $createCrad;
+    protected $payment;
+    protected $customerCustomAttributesHelper;
 
     /**
      * @var \MundiPagg\MundiPagg\Helper\Logger
@@ -60,7 +64,11 @@ class RequestBuilder implements BuilderInterface
      * @param Cart $cart
      * @param Config $config
      * @param ConfigCreditCard $configCreditCard
+     * @param CreateCard $createCrad
      * @param ModuleHelper $moduleHelper
+     * @param Logger $logger
+     * @param Payment $payment
+     * @param CustomerCustomAttributesHelper $customerCustomAttributesHelper
      */
     public function __construct(
         Request $request,
@@ -71,7 +79,9 @@ class RequestBuilder implements BuilderInterface
         ConfigCreditCard $configCreditCard,
         CreateCard $createCrad,
         ModuleHelper $moduleHelper,
-        Logger $logger
+        Logger $logger,
+        Payment $payment,
+        CustomerCustomAttributesHelper $customerCustomAttributesHelper
     )
     {
         $this->setRequest($request);
@@ -83,6 +93,8 @@ class RequestBuilder implements BuilderInterface
         $this->setCreateCardHelper($createCrad);
         $this->setModuleHelper($moduleHelper);
         $this->logger = $logger;
+        $this->payment = $payment;
+        $this->customerCustomAttributesHelper = $customerCustomAttributesHelper;
     }
 
     /**
@@ -325,7 +337,7 @@ class RequestBuilder implements BuilderInterface
         }else{
             $capture = false;
         }
-        
+
         $model = $this->getCreateCardHelper();
 
         $order->payments = [
@@ -379,15 +391,19 @@ class RequestBuilder implements BuilderInterface
         if (!empty($payment->getAdditionalInformation('cc_saved_card_first'))) {
             $cardCollection = $model->getById($payment->getAdditionalInformation('cc_saved_card_first'));
             $order->payments[0]['credit_card']['card_id'] = $cardCollection->getCardToken();
+            $this->payment->addCustomerOnPaymentMethodWithSavedCard($order, $cardCollection, 1);
         } else {
             $order->payments[0]['credit_card']['card_token'] = $requestDataProvider->getTokenCreditCardFirst();
+            $this->payment->addCustomersOnMultiPager($order,$requestDataProvider->getCcBuyerNameFirst(),$requestDataProvider->getCcBuyerEmailFirst(), 1);
         }
 
         if (!empty($payment->getAdditionalInformation('cc_saved_card_second'))) {
             $cardCollection = $model->getById($payment->getAdditionalInformation('cc_saved_card_second'));
             $order->payments[1]['credit_card']['card_id'] = $cardCollection->getCardToken();
+            $this->payment->addCustomerOnPaymentMethodWithSavedCard($order, $cardCollection, 2);
         } else {
             $order->payments[1]['credit_card']['card_token'] = $requestDataProvider->getTokenCreditCardSecond();
+            $this->payment->addCustomersOnMultiPager($order,$requestDataProvider->getCcBuyerNameSecond(),$requestDataProvider->getCcBuyerEmailSecond(),2);
         }
 
         $order->items = [];
@@ -455,20 +471,19 @@ class RequestBuilder implements BuilderInterface
         if ($this->getConfigCreditCard()->getAntifraudActive() && $quote->getGrandTotal() > $this->getConfigCreditCard()->getAntifraudMinAmount()) {
             $order->antifraudEnabled = true;
         }
-
         try {
             $this->logger->logger($order->jsonSerialize());
             $response = $this->getApi()->getOrders()->createOrder($order);
 
             if ($payment->getAdditionalInformation('cc_savecard_first') == '1' && empty($payment->getAdditionalInformation('cc_saved_card_first'))) {
-                $customer = $response->customer;
-                $this->getCreateCardHelper()->createCard($response->charges[0]->lastTransaction->card, $customer, $quote);
+                $this->getCreateCardHelper()->createCard($response->charges[0]->lastTransaction->card, $response->charges[0]->customer, $quote);
             }
 
             if ($payment->getAdditionalInformation('cc_savecard_second') == '1' && empty($payment->getAdditionalInformation('cc_saved_card_second'))) {
-                $customer = $response->customer;
-                $this->getCreateCardHelper()->createCard($response->charges[1]->lastTransaction->card, $customer, $quote);
+                $this->getCreateCardHelper()->createCard($response->charges[1]->lastTransaction->card, $response->charges[1]->customer, $quote);
             }
+
+            $this->customerCustomAttributesHelper->setCustomerCustomAttribute($quote->getCustomer(),$response);
 
         } catch (\MundiAPILib\Exceptions\ErrorException $error) {
             $this->logger->logger($error);

@@ -38,7 +38,9 @@ define(
                 creditCardSsIssueSecond: '',
                 creditSavedCardSecond: window.checkoutConfig.payment.mundipagg_two_creditcard.selected_card,
                 creditCardVerificationNumberSecond: '',
-                selectedCardTypeSecond: null
+                selectedCardTypeSecond: null,
+                haveCard: null,
+                haveCardTwo: null
             },
 
             initObservable: function () {
@@ -65,7 +67,9 @@ define(
                         'creditCardSsIssueSecond',
                         'creditSavedCardSecond',
                         'creditCardsavecardSecond',
-                        'selectedCardTypeSecond'
+                        'selectedCardTypeSecond',
+                        'haveCard',
+                        'haveCardTwo'
                     ]);
 
                 return this;
@@ -240,7 +244,9 @@ define(
             },
 
             isSaveCardHave: function() {
-                return window.checkoutConfig.payment.mundipagg_two_creditcard.is_saved_card;
+                this.haveCard = window.checkoutConfig.payment.mundipagg_two_creditcard.is_saved_card;
+                this.haveCardTwo = window.checkoutConfig.payment.mundipagg_two_creditcard.is_saved_card;
+                return this;
             },
 
             isSaveCardStyle: function() {
@@ -444,6 +450,20 @@ define(
                         'name': 'Credit Card Number', value: this.formatDisplayCcNumber(this.creditCardNumber())
                     }
                 ];
+            },
+            firstBuyerChecked: function(){
+                if(this.creditCardsavecardFirst()){
+                    return 'display: block;';
+                }else{
+                    return 'display: none;';
+                }
+            },
+            secondBuyerChecked: function(){
+                if(this.creditCardsavecardSecond()){
+                    return 'display: block;';
+                }else{
+                    return 'display: none;';
+                }
             }
         });
     }

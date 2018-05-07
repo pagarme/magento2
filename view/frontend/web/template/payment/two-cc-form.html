@@ -19,6 +19,63 @@
             </legend>
             <br/>
             <!-- /ko -->
+            <div class="field choice" data-bind="attr: {id: getCode() + '_cc_buyer_checkbox_first'}, visible: !isSaveCardHave.haveCard">
+                <input type="checkbox" class="checkbox" id="creditcard-buyer-first" data-bind="checked: creditCardsavecardFirst"/>
+                <label class="label" data-bind="attr: {'for': getCode() + '_cc_buyer_first'}">
+                    <span><!-- ko i18n: 'Add a different buyer'--><!-- /ko --></span>
+                </label>
+                <div class="field-tooltip toggle">
+                <span class="field-tooltip-action action-cvv"
+                      tabindex="0"
+                      data-toggle="dropdown"
+                      data-bind="attr: {title: $t('What is this?')}, mageInit: {'dropdown':{'activeClass': '_active'}}">
+                    <span><!-- ko i18n: 'Add a different buyer'--><!-- /ko --></span>
+                </span>
+                    <div class="field-tooltip-content"
+                         data-target="dropdown"
+                         data-bind="html: getCreditCardBuyerHelpHtml()"></div>
+                </div>
+            </div>
+
+            <div class="field owner required"
+                 data-bind="attr: {id: getCode() + '_cc_buyer_name_first', style: firstBuyerChecked()}">
+                <label data-bind="attr: {for: getCode() + '_cc_buyer_name_first'}" class="label">
+                    <span><!-- ko i18n: 'Buyer name'--><!-- /ko --></span>
+                </label>
+                <div class="control">
+                    <input type="text"
+                           autocomplete="off"
+                           style="width: 225px;"
+                           class="input-text"
+                           name="payment[cc_buyer_name_first]"
+                           data-bind="attr: {id: getCode() + '_cc_buyer_name_first',
+                            title: $t('Name on Card'),
+                            'data-container': getCode() + '-cc-buyer-name-first',
+                            'data-validate': JSON.stringify({'required':true})},
+                            enable: isActive($parents),
+                            value: creditCardBuyerNameFirst"/>
+                </div>
+            </div>
+
+            <div class="field owner required"
+                 data-bind="attr: {id: getCode() + '_cc_buyer_email_first', style: firstBuyerChecked()}">
+                <label data-bind="attr: {for: getCode() + '_cc_buyer_email_first'}" class="label">
+                    <span><!-- ko i18n: 'Buyer e-mail'--><!-- /ko --></span>
+                </label>
+                <div class="control">
+                    <input type="text"
+                           autocomplete="off"
+                           style="width: 225px;"
+                           class="input-text"
+                           name="payment[cc_buyer_email_first]"
+                           data-bind="attr: {id: getCode() + '_cc_buyer_email_first',
+                            title: $t('Name on Card'),
+                            'data-container': getCode() + '-cc-buyer-email-first',
+                            'data-validate': JSON.stringify({'required':true})},
+                            enable: isActive($parents),
+                            value: creditCardBuyerEmailFirst"/>
+                </div>
+            </div>
 
             <div class="field number required">
                 <label data-bind="attr: {for: getCode() + '_cc_billet_amount'}" class="label">
@@ -38,7 +95,7 @@
                 </div>
             </div>
 
-            <!-- ko if: (isSaveCardHave())-->
+            <!-- ko if: (isSaveCardHave.haveCard)-->
             <div class="field saved-card">
                 <label data-bind="attr: {for: getCode() + '_saved_card_first'}" class="label">
                     <span><!-- ko i18n: 'Credit Card'--><!-- /ko --></span>
@@ -265,6 +322,64 @@
             <br/>
             <!-- /ko -->
 
+            <div class="field choice" data-bind="attr: {id: getCode() + '_cc_buyer_checkbox_second'}, visible: !isSaveCardHave.haveCardTwo">
+                <input type="checkbox" class="checkbox" id="creditcard-buyer-second" data-bind="checked: creditCardsavecardSecond"/>
+                <label class="label" data-bind="attr: {'for': getCode() + '_cc_buyer_second'}">
+                    <span><!-- ko i18n: 'Add a different buyer'--><!-- /ko --></span>
+                </label>
+                <div class="field-tooltip toggle">
+                <span class="field-tooltip-action action-cvv"
+                      tabindex="0"
+                      data-toggle="dropdown"
+                      data-bind="attr: {title: $t('What is this?')}, mageInit: {'dropdown':{'activeClass': '_active'}}">
+                    <span><!-- ko i18n: 'Add a different buyer'--><!-- /ko --></span>
+                </span>
+                    <div class="field-tooltip-content"
+                         data-target="dropdown"
+                         data-bind="html: getCreditCardBuyerHelpHtml()"></div>
+                </div>
+            </div>
+
+            <div class="field owner required"
+                 data-bind="attr: {id: getCode() + '_cc_buyer_name_second', style: secondBuyerChecked()}">
+                <label data-bind="attr: {for: getCode() + '_cc_buyer_name_second'}" class="label">
+                    <span><!-- ko i18n: 'Buyer name'--><!-- /ko --></span>
+                </label>
+                <div class="control">
+                    <input type="text"
+                           autocomplete="off"
+                           style="width: 225px;"
+                           class="input-text"
+                           name="payment[cc_buyer_name_second]"
+                           data-bind="attr: {id: getCode() + '_cc_buyer_name_second',
+                            title: $t('Name on Card'),
+                            'data-container': getCode() + '-cc-buyer-name-second',
+                            'data-validate': JSON.stringify({'required':true})},
+                            enable: isActive($parents),
+                            value: creditCardBuyerNameSecond"/>
+                </div>
+            </div>
+
+            <div class="field owner required"
+                 data-bind="attr: {id: getCode() + '_cc_buyer_email_second', style: secondBuyerChecked()}">
+                <label data-bind="attr: {for: getCode() + '_cc_buyer_email_second'}" class="label">
+                    <span><!-- ko i18n: 'Buyer e-mail'--><!-- /ko --></span>
+                </label>
+                <div class="control">
+                    <input type="text"
+                           autocomplete="off"
+                           style="width: 225px;"
+                           class="input-text"
+                           name="payment[cc_buyer_email_second]"
+                           data-bind="attr: {id: getCode() + '_cc_buyer_email_second',
+                            title: $t('Name on Card'),
+                            'data-container': getCode() + '-cc-buyer-email-second',
+                            'data-validate': JSON.stringify({'required':true})},
+                            enable: isActive($parents),
+                            value: creditCardBuyerEmailSecond"/>
+                </div>
+            </div>
+
             <div class="field number required">
                 <label data-bind="attr: {for: getCode() + '_cc_billet_amount'}" class="label">
                     <span><!-- ko i18n: 'Second Card Amount'--><!-- /ko --></span>
@@ -283,7 +398,7 @@
                 </div>
             </div>
 
-            <!-- ko if: (isSaveCardHave())-->
+            <!-- ko if: (isSaveCardHave.haveCardTwo)-->
             <div class="field saved-card">
                 <label data-bind="attr: {for: getCode() + '_saved_card_second'}" class="label">
                     <span><!-- ko i18n: 'Credit Card'--><!-- /ko --></span>

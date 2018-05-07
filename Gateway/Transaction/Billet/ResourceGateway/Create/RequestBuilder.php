@@ -26,6 +26,7 @@ use MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\Config;
 use MundiPagg\MundiPagg\Helper\ModuleHelper;
 use MundiPagg\MundiPagg\Model\Source\Bank;
 use MundiPagg\MundiPagg\Helper\Logger;
+use MundiPagg\MundiPagg\Helper\CustomerCustomAttributesHelper;
 
 class RequestBuilder implements BuilderInterface
 {
@@ -46,6 +47,7 @@ class RequestBuilder implements BuilderInterface
     protected $moduleHelper;
     protected $bank;
     protected $paymentData;
+    protected $customerCustomAttributesHelper;
 
     /**
      * @var \MundiPagg\MundiPagg\Helper\Logger
@@ -60,6 +62,8 @@ class RequestBuilder implements BuilderInterface
      * @param Config $config
      * @param ModuleHelper $moduleHelper
      * @param Bank $bank
+     * @param Logger $logger
+     * @param CustomerCustomAttributesHelper $customerCustomAttributesHelper
      */
     public function __construct(
         BilletRequestDataProviderInterfaceFactory $requestDataProviderFactory,
@@ -68,7 +72,8 @@ class RequestBuilder implements BuilderInterface
         Config $config,
         ModuleHelper $moduleHelper,
         Bank $bank,
-        Logger $logger
+        Logger $logger,
+        CustomerCustomAttributesHelper $customerCustomAttributesHelper
     )
     {
         $this->setRequestDataProviderFactory($requestDataProviderFactory);
@@ -78,6 +83,7 @@ class RequestBuilder implements BuilderInterface
         $this->setModuleHelper($moduleHelper);
         $this->setBank($bank);
         $this->setLogger($logger);
+        $this->customerCustomAttributesHelper = $customerCustomAttributesHelper;
     }
 
     /**
@@ -228,6 +234,9 @@ class RequestBuilder implements BuilderInterface
         try {
             $this->getLogger()->logger($order->jsonSerialize());
             $response = $this->getApi()->getOrders()->createOrder($order);
+
+            $this->customerCustomAttributesHelper->setCustomerCustomAttribute($quote->getCustomer(),$response);
+
         } catch (\MundiAPILib\Exceptions\ErrorException $error) {
             $this->getLogger()->logger($error);
             throw new \InvalidArgumentException($error);

@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/Magento2Mundi.iml" filepath="$PROJECT_DIR$/.idea/Magento2Mundi.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/MundiPagg.iml" filepath="$PROJECT_DIR$/.idea/MundiPagg.iml" />
     </modules>
   </component>
 </project>
