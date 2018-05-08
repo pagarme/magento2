@@ -37,10 +37,10 @@ class CustomerCustomAttributesHelper
         $this->customerModel = $customerModel;
     }
 
-    public function setCustomerCustomAttribute($magentoCustomer, $mundipaggResponse)
+    public function setCustomerCustomAttribute($magentoCustomer, $mundipaggResponse, $customerIsGuest)
     {
 
-        if(isset($mundipaggResponse->customer) && !empty($mundipaggResponse->customer)){
+        if(isset($mundipaggResponse->customer) && !empty($mundipaggResponse->customer && !$customerIsGuest)){
 
             $this->customerModel->setWebsiteId($this->storeManager->getStore()->getWebsiteId());
             $customer = $this->customerModel->loadByEmail($magentoCustomer->getEmail());

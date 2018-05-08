@@ -226,10 +226,12 @@ class RequestDataProvider
     public function getCustomerAddressComplement($shipping)
     {
         if ($shipping) {
-            return $this->getShippingAddressAttribute($this->getConfig()->getCustomerAddressComplement());
+            $response = !$this->getShippingAddressAttribute($this->getConfig()->getCustomerAddressDistrict()) ? '' : $this->getShippingAddressAttribute($this->getConfig()->getCustomerAddressComplement());
+        }else{
+            $response = !$this->getBillingAddressAttribute($this->getConfig()->getCustomerAddressDistrict()) ? '' : $this->getShippingAddressAttribute($this->getConfig()->getCustomerAddressComplement());
         }
-        
-        return $this->getBillingAddressAttribute($this->getConfig()->getCustomerAddressComplement());
+
+        return $response;
     }
 
     /**
@@ -238,9 +240,14 @@ class RequestDataProvider
     public function getCustomerAddressDistrict($shipping)
     {
         if ($shipping) {
-            return $this->getShippingAddressAttribute($this->getConfig()->getCustomerAddressDistrict());
+            $streetLine = !$this->getShippingAddressAttribute($this->getConfig()->getCustomerAddressDistrict()) ? 'street_3' : $this->getConfig()->getCustomerAddressDistrict();
+            $response = $this->getShippingAddressAttribute($streetLine);
+        }else{
+            $streetLine = !$this->getBillingAddressAttribute($this->getConfig()->getCustomerAddressDistrict()) ? 'street_3' : $this->getConfig()->getCustomerAddressDistrict();
+            $response = $this->getBillingAddressAttribute($streetLine);
         }
-        
-        return $this->getBillingAddressAttribute($this->getConfig()->getCustomerAddressDistrict());
+
+        return $response;
     }
+
 }

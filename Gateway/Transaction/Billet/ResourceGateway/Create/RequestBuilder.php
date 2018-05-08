@@ -235,7 +235,7 @@ class RequestBuilder implements BuilderInterface
             $this->getLogger()->logger($order->jsonSerialize());
             $response = $this->getApi()->getOrders()->createOrder($order);
 
-            $this->customerCustomAttributesHelper->setCustomerCustomAttribute($quote->getCustomer(),$response);
+            $this->customerCustomAttributesHelper->setCustomerCustomAttribute($quote->getCustomer(),$response, $quote->getCustomerIsGuest());
 
         } catch (\MundiAPILib\Exceptions\ErrorException $error) {
             $this->getLogger()->logger($error);

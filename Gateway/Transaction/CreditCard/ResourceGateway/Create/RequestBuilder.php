@@ -467,7 +467,7 @@ class RequestBuilder implements BuilderInterface
                 $this->getCreateCardHelper()->createCard($response->charges[0]->lastTransaction->card, $customer, $quote);
             }
 
-            $this->customerCustomAttributesHelper->setCustomerCustomAttribute($quote->getCustomer(),$response);
+            $this->customerCustomAttributesHelper->setCustomerCustomAttribute($quote->getCustomer(),$response, $quote->getCustomerIsGuest());
 
 
         } catch (\MundiAPILib\Exceptions\ErrorException $error) {
