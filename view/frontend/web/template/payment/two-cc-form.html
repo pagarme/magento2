@@ -19,6 +19,8 @@
             </legend>
             <br/>
             <!-- /ko -->
+
+            <!-- ko if: (isMultiBuyerActive())-->
             <div class="field choice" data-bind="attr: {id: getCode() + '_cc_buyer_checkbox_first'}, visible: !isSaveCardHave.haveCard">
                 <input type="checkbox" class="checkbox" id="creditcard-buyer-first" data-bind="checked: creditCardsavecardFirst"/>
                 <label class="label" data-bind="attr: {'for': getCode() + '_cc_buyer_first'}">
@@ -76,7 +78,7 @@
                             value: creditCardBuyerEmailFirst"/>
                 </div>
             </div>
-
+            <!-- /ko -->
             <div class="field number required">
                 <label data-bind="attr: {for: getCode() + '_cc_billet_amount'}" class="label">
                     <span><!-- ko i18n: 'First Card Amount'--><!-- /ko --></span>
@@ -95,7 +97,7 @@
                 </div>
             </div>
 
-            <!-- ko if: (isSaveCardHave.haveCard)-->
+            <!-- ko if: (isSaveCardHave)-->
             <div class="field saved-card">
                 <label data-bind="attr: {for: getCode() + '_saved_card_first'}" class="label">
                     <span><!-- ko i18n: 'Credit Card'--><!-- /ko --></span>
@@ -321,7 +323,7 @@
             </legend>
             <br/>
             <!-- /ko -->
-
+            <!-- ko if: (isMultiBuyerActive())-->
             <div class="field choice" data-bind="attr: {id: getCode() + '_cc_buyer_checkbox_second'}, visible: !isSaveCardHave.haveCardTwo">
                 <input type="checkbox" class="checkbox" id="creditcard-buyer-second" data-bind="checked: creditCardsavecardSecond"/>
                 <label class="label" data-bind="attr: {'for': getCode() + '_cc_buyer_second'}">
@@ -379,7 +381,7 @@
                             value: creditCardBuyerEmailSecond"/>
                 </div>
             </div>
-
+            <!-- /ko -->
             <div class="field number required">
                 <label data-bind="attr: {for: getCode() + '_cc_billet_amount'}" class="label">
                     <span><!-- ko i18n: 'Second Card Amount'--><!-- /ko --></span>
@@ -398,7 +400,7 @@
                 </div>
             </div>
 
-            <!-- ko if: (isSaveCardHave.haveCardTwo)-->
+            <!-- ko if: (isSaveCardHave)-->
             <div class="field saved-card">
                 <label data-bind="attr: {for: getCode() + '_saved_card_second'}" class="label">
                     <span><!-- ko i18n: 'Credit Card'--><!-- /ko --></span>

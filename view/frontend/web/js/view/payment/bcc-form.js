@@ -28,7 +28,7 @@ define(
                 creditSavedCardBcc: window.checkoutConfig.payment.mundipagg_billet_creditcard.selected_card,
                 creditCardVerificationNumberBcc: '',
                 selectedCardTypeBcc: null,
-                haveCard: null
+                haveBccCard: null
             },
 
             initObservable: function () {
@@ -45,7 +45,7 @@ define(
                         'creditCardSsIssueBcc',
                         'creditSavedCardBcc',
                         'selectedCardTypeBcc',
-                        'haveCard'
+                        'haveBccCard'
                     ]);
 
                 return this;
@@ -153,8 +153,8 @@ define(
             },
 
             isSaveCardHave: function() {
-                this.haveCard = window.checkoutConfig.payment.mundipagg_billet_creditcard.is_saved_card;
-                return this.haveCard;
+                this.haveBccCard = window.checkoutConfig.payment.mundipagg_billet_creditcard.is_saved_card;
+                return this;
             },
 
             isSaveCardStyle: function() {

@@ -448,6 +448,10 @@ define(
                 return window.checkoutConfig.payment.mundipagg_two_creditcard.active;
             },
 
+            isMultiBuyerActive: function () {
+                return window.checkoutConfig.multi_buyer;
+            },
+
             isInstallmentsActive: function () {
                 return window.checkoutConfig.payment.ccform.installments.active['mundipagg_creditcard'];
             },

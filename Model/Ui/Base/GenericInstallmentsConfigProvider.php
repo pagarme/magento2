@@ -146,7 +146,8 @@ abstract class GenericInstallmentsConfigProvider implements ConfigProviderInterf
                         ],
                     ],
                 ]
-            ]
+            ],
+            'multi_buyer' => $this->_getConfig()->getMultiBuyerActive()
         ];
         return $config;
     }

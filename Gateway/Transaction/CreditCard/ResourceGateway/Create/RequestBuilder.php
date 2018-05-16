@@ -408,7 +408,7 @@ class RequestBuilder implements BuilderInterface
 
         }
 
-        $document = $quote->getCustomerTaxvat() ? $quote->getCustomerTaxvat() : $quote->getShippingAddress()->getVatId() ;
+        $document = $quote->getCustomerTaxvat() ? $quote->getCustomerTaxvat() : '';
         $this->getModuleHelper()->setTaxVat($document,true);
 
         $order->customer = [

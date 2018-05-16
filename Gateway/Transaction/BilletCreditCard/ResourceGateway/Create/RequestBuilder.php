@@ -486,7 +486,7 @@ class RequestBuilder implements BuilderInterface
             array_push($order->items, $itemValues);
 
         }
-        $document = $quote->getCustomerTaxvat() ? $quote->getCustomerTaxvat() : $quote->getShippingAddress()->getVatId();
+        $document = $quote->getCustomerTaxvat() ? $quote->getCustomerTaxvat() : '';
         $this->getModuleHelper()->setTaxVat($document,true);
 
         $order->customer = [

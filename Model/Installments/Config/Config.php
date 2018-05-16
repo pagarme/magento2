@@ -117,4 +117,12 @@ class Config extends AbstractConfig implements ConfigInterface
         $this->paymentMethodCode = $paymentMethodCode;
         return $this;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getMultiBuyerActive()
+    {
+        return (bool) $this->getConfig(static::PATH_MULTI_BUYER_ACTIVE);
+    }
 }

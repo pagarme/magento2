@@ -313,6 +313,10 @@ define(
                 return window.checkoutConfig.payment.mundipagg_billet_creditcard.active;
             },
 
+            isMultiBuyerActive: function () {
+                return window.checkoutConfig.multi_buyer;
+            },
+
             isInstallmentsActive: function () {
                 return window.checkoutConfig.payment.ccform.installments.active['mundipagg_creditcard'];
             },
@@ -481,6 +485,7 @@ define(
             },
 
             onSavedCardChange: function() {
+
                 if (jQuery('#mundipagg_billet_creditcard_card').val()) {
                     jQuery('#mundipagg_billet_creditcard_cc_icons').css('display','none');
                     jQuery('#mundipagg_billet_creditcard_cc_savecard').css('display','none');

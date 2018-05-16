@@ -2,9 +2,24 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a38cbaed-4ed6-47b5-9398-2d029e84314f" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/MundiPagg.iml" afterPath="$PROJECT_DIR$/.idea/MundiPagg.iml" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change beforePath="$PROJECT_DIR$/Gateway/Transaction/Billet/ResourceGateway/Create/RequestBuilder.php" afterPath="$PROJECT_DIR$/Gateway/Transaction/Billet/ResourceGateway/Create/RequestBuilder.php" />
+      <change beforePath="$PROJECT_DIR$/Gateway/Transaction/BilletCreditCard/ResourceGateway/Create/RequestBuilder.php" afterPath="$PROJECT_DIR$/Gateway/Transaction/BilletCreditCard/ResourceGateway/Create/RequestBuilder.php" />
+      <change beforePath="$PROJECT_DIR$/Gateway/Transaction/CreditCard/ResourceGateway/Create/RequestBuilder.php" afterPath="$PROJECT_DIR$/Gateway/Transaction/CreditCard/ResourceGateway/Create/RequestBuilder.php" />
+      <change beforePath="$PROJECT_DIR$/Gateway/Transaction/TwoCreditCard/ResourceGateway/Create/RequestBuilder.php" afterPath="$PROJECT_DIR$/Gateway/Transaction/TwoCreditCard/ResourceGateway/Create/RequestBuilder.php" />
+      <change beforePath="$PROJECT_DIR$/Helper/CustomerUpdateMundipaggHelper.php" afterPath="$PROJECT_DIR$/Helper/CustomerUpdateMundipaggHelper.php" />
+      <change beforePath="$PROJECT_DIR$/Model/Installments/Config/Config.php" afterPath="$PROJECT_DIR$/Model/Installments/Config/Config.php" />
+      <change beforePath="$PROJECT_DIR$/Model/Installments/Config/ConfigInterface.php" afterPath="$PROJECT_DIR$/Model/Installments/Config/ConfigInterface.php" />
+      <change beforePath="$PROJECT_DIR$/Model/Ui/Base/GenericInstallmentsConfigProvider.php" afterPath="$PROJECT_DIR$/Model/Ui/Base/GenericInstallmentsConfigProvider.php" />
       <change beforePath="$PROJECT_DIR$/composer.json" afterPath="$PROJECT_DIR$/composer.json" />
+      <change beforePath="$PROJECT_DIR$/etc/adminhtml/system/transaction.xml" afterPath="$PROJECT_DIR$/etc/adminhtml/system/transaction.xml" />
       <change beforePath="$PROJECT_DIR$/etc/module.xml" afterPath="$PROJECT_DIR$/etc/module.xml" />
+      <change beforePath="$PROJECT_DIR$/i18n/pt_BR.csv" afterPath="$PROJECT_DIR$/i18n/pt_BR.csv" />
+      <change beforePath="$PROJECT_DIR$/view/frontend/web/js/view/payment/bcc-form.js" afterPath="$PROJECT_DIR$/view/frontend/web/js/view/payment/bcc-form.js" />
+      <change beforePath="$PROJECT_DIR$/view/frontend/web/js/view/payment/method-renderer/billet_creditcard.js" afterPath="$PROJECT_DIR$/view/frontend/web/js/view/payment/method-renderer/billet_creditcard.js" />
+      <change beforePath="$PROJECT_DIR$/view/frontend/web/js/view/payment/method-renderer/two_creditcard.js" afterPath="$PROJECT_DIR$/view/frontend/web/js/view/payment/method-renderer/two_creditcard.js" />
+      <change beforePath="$PROJECT_DIR$/view/frontend/web/template/payment/bcc-form.html" afterPath="$PROJECT_DIR$/view/frontend/web/template/payment/bcc-form.html" />
+      <change beforePath="$PROJECT_DIR$/view/frontend/web/template/payment/two-cc-form.html" afterPath="$PROJECT_DIR$/view/frontend/web/template/payment/two-cc-form.html" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -13,62 +28,11 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ComposerSettings" synchronizationState="SYNCHRONIZE">
+  <component name="ComposerSettings" doNotAsk="true" synchronizationState="SYNCHRONIZE">
     <pharConfigPath>$PROJECT_DIR$/composer.json</pharConfigPath>
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="RequestBuilder.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Gateway/Transaction/TwoCreditCard/ResourceGateway/Capture/RequestBuilder.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1188">
-              <caret line="88" column="48" lean-forward="false" selection-start-line="88" selection-start-column="22" selection-end-line="88" selection-end-column="48" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="RequestBuilder.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Gateway/Transaction/TwoCreditCard/ResourceGateway/Create/RequestBuilder.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="6066">
-              <caret line="362" column="21" lean-forward="false" selection-start-line="362" selection-start-column="21" selection-end-line="362" selection-end-column="21" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="RequestDataProvider.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Gateway/Transaction/TwoCreditCard/ResourceGateway/Create/RequestDataProvider.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="522">
-              <caret line="43" column="20" lean-forward="false" selection-start-line="43" selection-start-column="20" selection-end-line="43" selection-end-column="20" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="CreditCardOrderPlaceBeforeObserver.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Observer/CreditCardOrderPlaceBeforeObserver.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="216">
-              <caret line="25" column="40" lean-forward="false" selection-start-line="25" selection-start-column="40" selection-end-line="25" selection-end-column="40" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="RequestBuilder.php" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Gateway/Transaction/TwoCreditCard/ResourceGateway/Refund/RequestBuilder.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="522">
-              <caret line="58" column="0" lean-forward="false" selection-start-line="58" selection-start-column="0" selection-end-line="59" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -79,8 +43,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>initializ</find>
-      <find>creditCardNumberFirst</find>
       <find>installmen</find>
       <find>installmentsByBrand</find>
       <find>brand</find>
@@ -109,6 +71,8 @@
       <find>Gateway\One</find>
       <find>creditCard</find>
       <find>version</find>
+      <find>&gt;log</find>
+      <find>1.2.</find>
     </findStrings>
     <dirStrings>
       <dir>$PROJECT_DIR$/view/frontend/web/js/view</dir>
@@ -152,6 +116,7 @@
   <component name="PhpServers">
     <servers>
       <server host="modulo-mundipagg.dev" id="2ca5f891-99dc-486f-829d-a2c9158b76c7" name="modulo-mundipagg.dev" />
+      <server host="m1m1.localhost" id="077f29d7-4401-47bf-ba61-ecf3781e2150" name="m1m1.localhost" />
     </servers>
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
@@ -223,19 +188,20 @@
       <updated>1513340740432</updated>
       <workItem from="1513340741669" duration="91000" />
       <workItem from="1513619778148" duration="40563000" />
-      <workItem from="1525976117828" duration="109000" />
+      <workItem from="1525976117828" duration="1988000" />
+      <workItem from="1526507063223" duration="83000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="41048000" />
+    <option name="totallyTimeSpent" value="43010000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="-2" width="1920" height="1041" extended-state="7" />
+    <frame x="0" y="25" width="1920" height="1041" extended-state="7" />
     <layout>
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2054429" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20757738" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -297,13 +263,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/view/frontend/web/template/payment/bcc-form.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="346">
-          <caret line="28" column="58" lean-forward="false" selection-start-line="28" selection-start-column="58" selection-end-line="28" selection-end-column="58" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/view/frontend/web/js/view/payment/method-renderer/billet_creditcard.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="238">
@@ -591,8 +550,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Gateway/Transaction/TwoCreditCard/ResourceGateway/Refund/RequestBuilder.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="522">
-          <caret line="58" column="0" lean-forward="false" selection-start-line="58" selection-start-column="0" selection-end-line="59" selection-end-column="0" />
+        <state relative-caret-position="540">
+          <caret line="52" column="83" lean-forward="false" selection-start-line="52" selection-start-column="83" selection-end-line="52" selection-end-column="83" />
           <folding />
         </state>
       </provider>
@@ -646,5 +605,21 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../../../../pub/index.php" />
+    <entry file="file:///var/www/m1m1.localhost/public_html/index.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="31" column="48" lean-forward="false" selection-start-line="31" selection-start-column="48" selection-end-line="31" selection-end-column="48" />
+          <folding>
+            <marker date="1517517257000" expanded="true" signature="1017:1063" ph="..." />
+            <marker date="1517517257000" expanded="true" signature="1064:1487" ph="..." />
+            <marker date="1517517257000" expanded="false" signature="1078:1126" ph="..." />
+            <marker date="1517517257000" expanded="true" signature="1127:1306" ph="..." />
+            <marker date="1517517257000" expanded="false" signature="1140:1239" ph="..." />
+            <marker date="1517517257000" expanded="true" signature="1240:1300" ph="..." />
+            <marker date="1517517257000" expanded="true" signature="1309:1481" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
   </component>
 </project>

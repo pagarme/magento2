@@ -45,9 +45,9 @@ class CustomerUpdateMundipaggHelper
 
         $oldCustomer = $this->customerRepositoryInterface->getById($customer->getId());
 
-        $customerIdMundipagg = $oldCustomer->getCustomAttribute('customer_id_mundipagg')->getValue();
+        if($oldCustomer->getCustomAttribute('customer_id_mundipagg') && ($oldCustomer->getEmail() != $customer->getEmail())){
 
-        if($customerIdMundipagg && ($oldCustomer->getEmail() != $customer->getEmail())){
+            $customerIdMundipagg = $oldCustomer->getCustomAttribute('customer_id_mundipagg')->getValue();
 
             $this->updateCustomerRequest->email = $customer->getEmail();
             $this->updateCustomerRequest->name = $oldCustomer->getFirstName() . ' ' . $oldCustomer->getLastName();

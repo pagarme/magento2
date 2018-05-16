@@ -22,6 +22,7 @@ interface ConfigInterface
     const PATH_INSTALLMENTS_INTEREST_RATE_INCREMENTAL       = 'payment/%s/installments_interest_rate_incremental';
     const PATH_INSTALLMENTS_INTEREST_BY_ISSUER              = 'payment/%s/installments_interest_by_issuer';
     const PATH_INSTALLMENTS_MAX_WITHOUT_INTEREST            = 'payment/%s/installments_max_without_interest';
+    const PATH_MULTI_BUYER_ACTIVE                           = 'payment/mundipagg_multibuyer/active';
 
     public function isActive();
 
@@ -38,4 +39,6 @@ interface ConfigInterface
     public function isInterestByIssuer();
 
     public function getInstallmentsMaxWithoutInterest();
+
+    public function getMultiBuyerActive();
 }

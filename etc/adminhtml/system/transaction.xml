@@ -13,6 +13,7 @@
         <include path="MundiPagg_MundiPagg::system/transaction/billet.xml"/>
         <include path="MundiPagg_MundiPagg::system/transaction/multipleactionstwocreditcard.xml"/>
         <include path="MundiPagg_MundiPagg::system/transaction/multipleactionscreditcardbillet.xml"/>
+        <include path="MundiPagg_MundiPagg::system/transaction/multibuyer.xml"/>
         <!--<include path="MundiPagg_MundiPagg::system/transaction/recurrence.xml"/>-->
     </group>
 </include>

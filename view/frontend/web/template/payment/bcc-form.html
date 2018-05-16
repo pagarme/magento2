@@ -14,7 +14,7 @@
     </legend><br />
 
 
-    <div class="field choice" data-bind="attr: {id: getCode() + '_billet_buyer'}">
+    <div class="field choice" data-bind="attr: {id: getCode() + '_billet_buyer'}, visible: isMultiBuyerActive()">
         <input type="checkbox" class="checkbox" id="billet-buyer" data-bind="checked: billetBuyerCheckbox"/>
         <label class="label" data-bind="attr: {'for': getCode() + '_billet_buyer'}">
             <span><!-- ko i18n: 'Add a different buyer'--><!-- /ko --></span>
@@ -92,8 +92,8 @@
     <legend class="legend">
         <span><!-- ko i18n: 'Credit Card Information'--><!-- /ko --></span>
     </legend><br />
-
-    <div class="field choice" data-bind="attr: {id: getCode() + '_buyer_checkbox'}, visible: !haveCard">
+    <!-- ko if: (isMultiBuyerActive())-->
+    <div class="field choice" data-bind="attr: {id: getCode() + '_buyer_checkbox'}, visible: isSaveCardHave.haveBccCard">
         <input type="checkbox" class="checkbox" id="creditcard-buyer" data-bind="checked: creditCardBuyerCheckbox"/>
         <label class="label" data-bind="attr: {'for': getCode() + '_creditcard_buyer'}">
             <span><!-- ko i18n: 'Add a different buyer'--><!-- /ko --></span>
@@ -150,7 +150,7 @@
                             value: creditCardBuyerEmail"/>
         </div>
     </div>
-
+    <!-- /ko -->
     <div class="field number required">
         <label data-bind="attr: {for: getCode() + '_cc_cc_amount'}" class="label">
             <span><!-- ko i18n: 'Credit Card Amount'--><!-- /ko --></span>
