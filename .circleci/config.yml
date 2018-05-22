@@ -1,0 +1,96 @@
+version: 2
+jobs:
+  build:
+    working_directory: /app
+    docker:
+      - image: php:7.1-apache
+        environment:
+          APP_ENV: test
+    steps:
+       - checkout
+       - run:
+          name: Install system packages
+          command: apt-get update && apt-get -y install zip git zlib1g-dev wget
+       - run:
+          name: Install PHP extensions
+          command: |
+            docker-php-ext-install pdo
+            docker-php-ext-install zip
+       - run:
+          name: Display PHP information
+          command: |
+            php -v
+       - run:
+          name: Check PHP sintax
+          command: find . -name \*.php -exec php -l "{}" \;
+       - persist_to_workspace:
+          root: /
+          paths:
+            - app
+
+  publish:
+    working_directory: /
+    docker:
+      - image: docker:17.05.0-ce-git
+    steps:
+      - setup_remote_docker
+      - attach_workspace:
+          at: /
+      - run:
+          name: Copy CI files to root
+          command: |
+             cd /app
+             cp .circleci/data/Dockerfile .
+             cp .circleci/data/wait-for-mysql.sh .
+      - run:
+          name: Build image base for modifications
+          command: |
+             cd /app
+             docker build -t ${DOCKER_ACCOUNT}/${PROJECT_NAME}:latest .
+             docker run --name newimage -d -p3306:3306 -p80:80 ${DOCKER_ACCOUNT}/${PROJECT_NAME}:latest
+             docker exec -it newimage ls
+
+      - run:
+          name: Activate and setup Plugin
+          command: |
+            docker exec -it newimage sh -c "cd /var/www/html && composer require mundipagg/mundipagg-magento2-module -vvv"
+            docker exec -it newimage sh -c "cd /var/www/html && composer update -vvv"
+            docker exec -it newimage sh -c "cd /var/www/html && php bin/magento setup:upgrade"
+            docker exec -it newimage sh -c "cd /var/www/html && php bin/magento setup:di:compile"
+      - run:
+          name: Clear useless files
+          command: |
+            pwd
+      - deploy:
+          name: Commit and push Docker image
+          command: |
+             sleep 5 && docker stop newimage
+             docker login ${DOCKER_ACCOUNT} -u ${DOCKER_USER} -p ${DOCKER_PASS}
+             docker commit newimage ${DOCKER_ACCOUNT}/${PROJECT_NAME}:latest
+             docker tag ${DOCKER_ACCOUNT}/${PROJECT_NAME} "${DOCKER_ACCOUNT}/${PROJECT_NAME}:latest"
+             docker tag ${DOCKER_ACCOUNT}/${PROJECT_NAME} "${DOCKER_ACCOUNT}/${PROJECT_NAME}:${CIRCLE_BRANCH}"
+             docker tag ${DOCKER_ACCOUNT}/${PROJECT_NAME} "${DOCKER_ACCOUNT}/${PROJECT_NAME}:${CIRCLE_SHA1:0:8}"
+             docker push "${DOCKER_ACCOUNT}/${PROJECT_NAME}"
+  deploy_staging:
+     machine: true
+     steps:
+       - run:
+           name: Send deployment webhook to Rancher
+           command: |
+             BODY='{"push_data":{"tag":"'"${CIRCLE_BRANCH}"'"},"repository":{"repo_name":"'"${DOCKER_ACCOUNT}/${PROJECT_NAME}"'"}}'
+             curl -X POST ${RANCHER_STG_DEPLOY_URL} -H 'Content-Type: application/json' -d "${BODY}"
+
+workflows:
+  version: 2
+  build_publish_deploy:
+    jobs:
+      - build
+      - publish:
+          requires:
+            - build
+      - deploy_staging:
+          requires:
+            - publish
+          filters:
+            branches:
+              only: master
