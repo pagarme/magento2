@@ -11,9 +11,8 @@
 <fieldset data-bind="attr: {class: 'fieldset payment items ccard ' + getCode(), id: 'payment_form_' + getCode()}">
     <legend class="legend">
         <span><!-- ko i18n: 'Billet Information'--><!-- /ko --></span>
-    </legend><br />
-
-
+    </legend>
+    <br/>
     <div class="field choice" data-bind="attr: {id: getCode() + '_billet_buyer'}, visible: isMultiBuyerActive()">
         <input type="checkbox" class="checkbox" id="billet-buyer" data-bind="checked: billetBuyerCheckbox"/>
         <label class="label" data-bind="attr: {'for': getCode() + '_billet_buyer'}">
@@ -31,10 +30,9 @@
                  data-bind="html: getBilletBuyerHelpHtml()"></div>
         </div>
     </div>
-
     <div class="field owner required"
-         data-bind="attr: {id: getCode() + '_billet_buyer', style: billetBuyerIsChecked()}">
-        <label data-bind="attr: {for: getCode() + '_billet_buyer'}" class="label">
+         data-bind="attr: {id: getCode() + '_billet_buyer_name', style: billetBuyerIsChecked()}">
+        <label data-bind="attr: {for: getCode() + '_billet_buyer_name'}" class="label">
             <span><!-- ko i18n: 'Buyer name'--><!-- /ko --></span>
         </label>
         <div class="control">
@@ -43,15 +41,14 @@
                    style="width: 225px;"
                    class="input-text"
                    name="payment[billet_buyer_name]"
-                   data-bind="attr: {id: getCode() + '_billet_buyer',
+                   data-bind="attr: {id: getCode() + '_billet_buyer_name',
                             title: $t('Name on Card'),
-                            'data-container': getCode() + 'billet-buyer',
+                            'data-container': getCode() + 'billet-buyer-name',
                             'data-validate': JSON.stringify({'required':true})},
                             enable: isActive($parents),
                             value: billetBuyerName"/>
         </div>
     </div>
-
     <div class="field owner required"
          data-bind="attr: {id: getCode() + '_billet_buyer_email', style: billetBuyerIsChecked()}">
         <label data-bind="attr: {for: getCode() + '_billet_buyer_email'}" class="label">
@@ -71,12 +68,168 @@
                             value: billetBuyerEmail"/>
         </div>
     </div>
+    <div class="field owner"
+         data-bind="attr: {id: getCode() + '_billet_buyer_document', style: billetBuyerIsChecked()}">
+        <label data-bind="attr: {for: getCode() + '_billet_buyer_document'}" class="label">
+            <span><!-- ko i18n: 'Cpf/Cnpj'--><!-- /ko --></span>
+        </label>
+        <div class="control">
+            <input type="text"
+                   autocomplete="off"
+                   style="width: 225px;"
+                   class="input-text"
+                   name="payment[billet_buyer_document]"
+                   data-bind="attr: {id: getCode() + '_billet_buyer_document',
+                            title: $t('Document'),
+                            'data-container': getCode() + 'billet-buyer-document',
+                            'data-validate': JSON.stringify({'required':true})},
+                            enable: isActive($parents),
+                            value: billetBuyerDocument"/>
+        </div>
+    </div>
+    <div class="field owner"
+         data-bind="attr: {id: getCode() + '_billet_buyer_street_title', style: billetBuyerIsChecked()}">
+        <label data-bind="attr: {for: getCode() + '_billet_buyer_street_title'}" class="label">
+            <span><!-- ko i18n: 'Street'--><!-- /ko --></span>
+        </label>
+        <div class="control">
+            <input type="text"
+                   autocomplete="off"
+                   style="width: 225px;"
+                   class="input-text"
+                   name="payment[billet_buyer_street_title]"
+                   data-bind="attr: {id: getCode() + '_billet_buyer_street_title',
+                            title: $t('Street'),
+                            'data-container': getCode() + 'billet-buyer-street_title',
+                            'data-validate': JSON.stringify({'required':true})},
+                            enable: isActive($parents),
+                            value: billetBuyerStreetTitle"/>
+        </div>
+    </div>
+    <div class="field owner"
+         data-bind="attr: {id: getCode() + '_billet_buyer_street_number', style: billetBuyerIsChecked()}">
+        <label data-bind="attr: {for: getCode() + '_billet_buyer_street_number'}" class="label">
+            <span><!-- ko i18n: 'Number'--><!-- /ko --></span>
+        </label>
+        <div class="control">
+            <input type="text"
+                   autocomplete="off"
+                   style="width: 225px;"
+                   class="input-text"
+                   name="payment[billet_buyer_street_number]"
+                   data-bind="attr: {id: getCode() + '_billet_buyer_street_number',
+                            title: $t('Number'),
+                            'data-container': getCode() + 'billet-buyer-street-number',
+                            'data-validate': JSON.stringify({'required':true})},
+                            enable: isActive($parents),
+                            value: billetBuyerStreetNumber"/>
+        </div>
+    </div>
+    <div class="field owner"
+         data-bind="attr: {id: getCode() + '_billet_buyer_street_complement', style: billetBuyerIsChecked()}">
+        <label data-bind="attr: {for: getCode() + '_billet_buyer_street_complement'}" class="label">
+            <span><!-- ko i18n: 'Complement'--><!-- /ko --></span>
+        </label>
+        <div class="control">
+            <input type="text"
+                   autocomplete="off"
+                   style="width: 225px;"
+                   class="input-text"
+                   name="payment[billet_buyer_street_complement]"
+                   data-bind="attr: {id: getCode() + '_billet_buyer_street_complement',
+                            title: $t('Complement'),
+                            'data-container': getCode() + 'billet-buyer-street-complement',
+                            'data-validate': JSON.stringify({'required':true})},
+                            enable: isActive($parents),
+                            value: billetBuyerStreetComplement"/>
+        </div>
+    </div>
+    <div class="field owner"
+         data-bind="attr: {id: getCode() + '_billet_buyer_street_neighborhood', style: billetBuyerIsChecked()}">
+        <label data-bind="attr: {for: getCode() + '_billet_buyer_street_neighborhood'}" class="label">
+            <span><!-- ko i18n: 'Neighborhood'--><!-- /ko --></span>
+        </label>
+        <div class="control">
+            <input type="text"
+                   autocomplete="off"
+                   style="width: 225px;"
+                   class="input-text"
+                   name="payment[billet_buyer_street_neighborhood]"
+                   data-bind="attr: {id: getCode() + '_billet_buyer_street_neighborhood',
+                            title: $t('Neighborhood'),
+                            'data-container': getCode() + 'billet-buyer-street-neighborhood',
+                            'data-validate': JSON.stringify({'required':true})},
+                            enable: isActive($parents),
+                            value: billetBuyerNeighborhood"/>
+        </div>
+    </div>
+    <div class="field owner"
+         data-bind="attr: {id: getCode() + '_billet_buyer_street_city', style: billetBuyerIsChecked()}">
+        <label data-bind="attr: {for: getCode() + '_billet_buyer_street_city'}" class="label">
+            <span><!-- ko i18n: 'City'--><!-- /ko --></span>
+        </label>
+        <div class="control">
+            <input type="text"
+                   autocomplete="off"
+                   style="width: 225px;"
+                   class="input-text"
+                   name="payment[billet_buyer_street_city]"
+                   data-bind="attr: {id: getCode() + '_billet_buyer_street_city',
+                            title: $t('City'),
+                            'data-container': getCode() + 'billet-buyer-street-city',
+                            'data-validate': JSON.stringify({'required':true})},
+                            enable: isActive($parents),
+                            value: billetBuyerCity"/>
+        </div>
+    </div>
+    <div class="field owner"
+         data-bind="attr: {id: getCode() + '_billet_buyer_street_state', style: billetBuyerIsChecked()}">
+        <label data-bind="attr: {for: getCode() + '_billet_buyer_street_state'}" class="label">
+            <span><!-- ko i18n: 'State/Province'--><!-- /ko --></span>
+        </label>
+        <div class="control">
+            <select name="payment[_billet_buyer_street_state]"
+                    class="select select-month"
+                    style="width: 225px;"
+                    data-bind="attr: {id: getCode() + '_billet_buyer_street_state',
+                     'data-container': getCode() + '-billet-buyer-street-state',
+                     'data-validate': JSON.stringify({required:true,
+                     'validate-cc-exp':'#' + getCode() + '_billet_buyer_street_state'})},
+                                            enable: isActive($parents),
+                                            options: stateOptions,
+                                            optionsText: 'name',
+                                            optionsValue: 'value',
+                                            optionsCaption: $t('Please select a region, state or province.'),
+                                            value: billetBuyerState">
+            </select>
+        </div>
+    </div>
+    <div class="field owner"
+         data-bind="attr: {id: getCode() + '_billet_buyer_street_zipcode', style: billetBuyerIsChecked()}">
+        <label data-bind="attr: {for: getCode() + '_billet_buyer_street_zipcode'}" class="label">
+            <span><!-- ko i18n: 'Zip/Postal Code'--><!-- /ko --></span>
+        </label>
+        <div class="control">
+            <input type="text"
+                   autocomplete="off"
+                   style="width: 225px;"
+                   class="input-text"
+                   name="payment[billet_buyer_street_zipcode]"
+                   data-bind="attr: {id: getCode() + '_billet_buyer_street_zipcode',
+                            title: $t('Zip/Postal Code'),
+                            'data-container': getCode() + 'billet-buyer-street-zipcode',
+                            'data-validate': JSON.stringify({'required':true})},
+                            enable: isActive($parents),
+                            value: billetBuyerZipCode"/>
+        </div>
+    </div>
     <div class="field number required">
         <label data-bind="attr: {for: getCode() + '_cc_billet_amount'}" class="label">
             <span><!-- ko i18n: 'Billet Amount'--><!-- /ko --></span>
         </label>
         <div class="control">
-            <input type="text" onKeyPress="if(this.value.length==20) return false;" min="0" name="payment[cc_billet_amount]" class="input-text money" value=""
+            <input type="text" onKeyPress="if(this.value.length==20) return false;" min="0"
+                   name="payment[cc_billet_amount]" class="input-text money" value=""
                    data-bind="event: { blur: bindInstallmentsByBlurBcc }, attr: {
                                     autocomplete: off,
                                     id: getCode() + '_cc_billet_amount',
@@ -88,13 +241,14 @@
                             valueUpdate: 'keyup'"/>
         </div>
     </div>
-
     <legend class="legend">
         <span><!-- ko i18n: 'Credit Card Information'--><!-- /ko --></span>
-    </legend><br />
+    </legend>
+    <br/>
     <!-- ko if: (isMultiBuyerActive())-->
-    <div class="field choice" data-bind="attr: {id: getCode() + '_buyer_checkbox'}, visible: isSaveCardHave.haveBccCard">
-        <input type="checkbox" class="checkbox" id="creditcard-buyer" data-bind="checked: creditCardBuyerCheckbox"/>
+    <div class="field choice multibuyerDiv"
+         data-bind="attr: {id: getCode() + '_buyer_checkbox'}, visible: isSaveCardHave.haveBccCard">
+        <input type="checkbox" class="checkbox" id="creditcard-buyer-checkbox-input" data-bind="checked: creditCardBuyerCheckbox"/>
         <label class="label" data-bind="attr: {'for': getCode() + '_creditcard_buyer'}">
             <span><!-- ko i18n: 'Add a different buyer'--><!-- /ko --></span>
         </label>
@@ -111,7 +265,7 @@
         </div>
     </div>
 
-    <div class="field owner required"
+    <div class="field owner required multibuyerDiv"
          data-bind="attr: {id: getCode() + '_buyer_name', style: creditCardBuyerIsChecked()}">
         <label data-bind="attr: {for: getCode() + '_creditcard_buyer'}" class="label">
             <span><!-- ko i18n: 'Buyer name'--><!-- /ko --></span>
@@ -130,8 +284,7 @@
                             value: creditCardBuyerName"/>
         </div>
     </div>
-
-    <div class="field owner required"
+    <div class="field owner multibuyerDiv"
          data-bind="attr: {id: getCode() + '_buyer_email', style: creditCardBuyerIsChecked()}">
         <label data-bind="attr: {for: getCode() + '_creditcard_buyer_email'}" class="label">
             <span><!-- ko i18n: 'Buyer e-mail'--><!-- /ko --></span>
@@ -150,13 +303,170 @@
                             value: creditCardBuyerEmail"/>
         </div>
     </div>
+    <div class="field owner multibuyerDiv"
+         data-bind="attr: {id: getCode() + '_cc_buyer_document', style: creditCardBuyerIsChecked()}">
+        <label data-bind="attr: {for: getCode() + '_cc_buyer_document'}" class="label">
+            <span><!-- ko i18n: 'Cpf/Cnpj'--><!-- /ko --></span>
+        </label>
+        <div class="control">
+            <input type="text"
+                   autocomplete="off"
+                   style="width: 225px;"
+                   class="input-text"
+                   name="payment[cc_buyer_document]"
+                   data-bind="attr: {id: getCode() + '_cc_buyer_document',
+                            title: $t('Document'),
+                            'data-container': getCode() + 'cc-buyer-document',
+                            'data-validate': JSON.stringify({'required':true})},
+                            enable: isActive($parents),
+                            value: creditCardBuyerDocument"/>
+        </div>
+    </div>
+    <div class="field owner multibuyerDiv"
+         data-bind="attr: {id: getCode() + '_cc_buyer_street_title', style: creditCardBuyerIsChecked()}">
+        <label data-bind="attr: {for: getCode() + '_cc_buyer_street_title'}" class="label">
+            <span><!-- ko i18n: 'Street'--><!-- /ko --></span>
+        </label>
+        <div class="control">
+            <input type="text"
+                   autocomplete="off"
+                   style="width: 225px;"
+                   class="input-text"
+                   name="payment[cc_buyer_street_title]"
+                   data-bind="attr: {id: getCode() + '_cc_buyer_street_title',
+                            title: $t('Street'),
+                            'data-container': getCode() + 'cc-buyer-street_title',
+                            'data-validate': JSON.stringify({'required':true})},
+                            enable: isActive($parents),
+                            value: creditCardBuyerStreetTitle"/>
+        </div>
+    </div>
+    <div class="field owner multibuyerDiv"
+         data-bind="attr: {id: getCode() + '_cc_buyer_street_number', style: creditCardBuyerIsChecked()}">
+        <label data-bind="attr: {for: getCode() + '_cc_buyer_street_number'}" class="label">
+            <span><!-- ko i18n: 'Number'--><!-- /ko --></span>
+        </label>
+        <div class="control">
+            <input type="text"
+                   autocomplete="off"
+                   style="width: 225px;"
+                   class="input-text"
+                   name="payment[cc_buyer_street_number]"
+                   data-bind="attr: {id: getCode() + '_cc_buyer_street_number',
+                            title: $t('Number'),
+                            'data-container': getCode() + 'cc-buyer-street-number',
+                            'data-validate': JSON.stringify({'required':true})},
+                            enable: isActive($parents),
+                            value: creditCardBuyerStreetNumber"/>
+        </div>
+    </div>
+    <div class="field owner multibuyerDiv"
+         data-bind="attr: {id: getCode() + '_cc_buyer_street_complement', style: creditCardBuyerIsChecked()}">
+        <label data-bind="attr: {for: getCode() + '_cc_buyer_street_complement'}" class="label">
+            <span><!-- ko i18n: 'Complement'--><!-- /ko --></span>
+        </label>
+        <div class="control">
+            <input type="text"
+                   autocomplete="off"
+                   style="width: 225px;"
+                   class="input-text"
+                   name="payment[cc_buyer_street_complement]"
+                   data-bind="attr: {id: getCode() + '_cc_buyer_street_complement',
+                            title: $t('Complement'),
+                            'data-container': getCode() + 'cc-buyer-street-complement',
+                            'data-validate': JSON.stringify({'required':true})},
+                            enable: isActive($parents),
+                            value: creditCardBuyerStreetComplement"/>
+        </div>
+    </div>
+    <div class="field owner multibuyerDiv"
+         data-bind="attr: {id: getCode() + '_cc_buyer_street_neighborhood', style: creditCardBuyerIsChecked()}">
+        <label data-bind="attr: {for: getCode() + '_cc_buyer_street_neighborhood'}" class="label">
+            <span><!-- ko i18n: 'Neighborhood'--><!-- /ko --></span>
+        </label>
+        <div class="control">
+            <input type="text"
+                   autocomplete="off"
+                   style="width: 225px;"
+                   class="input-text"
+                   name="payment[cc_buyer_street_neighborhood]"
+                   data-bind="attr: {id: getCode() + '_cc_buyer_street_neighborhood',
+                            title: $t('Neighborhood'),
+                            'data-container': getCode() + 'cc-buyer-street-neighborhood',
+                            'data-validate': JSON.stringify({'required':true})},
+                            enable: isActive($parents),
+                            value: creditCardBuyerNeighborhood"/>
+        </div>
+    </div>
+    <div class="field owner multibuyerDiv"
+         data-bind="attr: {id: getCode() + '_cc_buyer_street_city', style: creditCardBuyerIsChecked()}">
+        <label data-bind="attr: {for: getCode() + '_cc_buyer_street_city'}" class="label">
+            <span><!-- ko i18n: 'City'--><!-- /ko --></span>
+        </label>
+        <div class="control">
+            <input type="text"
+                   autocomplete="off"
+                   style="width: 225px;"
+                   class="input-text"
+                   name="payment[cc_buyer_street_city]"
+                   data-bind="attr: {id: getCode() + '_cc_buyer_street_city',
+                            title: $t('City'),
+                            'data-container': getCode() + 'cc-buyer-street-city',
+                            'data-validate': JSON.stringify({'required':true})},
+                            enable: isActive($parents),
+                            value: creditCardBuyerCity"/>
+        </div>
+    </div>
+    <div class="field owner multibuyerDiv"
+         data-bind="attr: {id: getCode() + '_cc_buyer_street_state', style: creditCardBuyerIsChecked()}">
+        <label data-bind="attr: {for: getCode() + '_cc_buyer_street_state'}" class="label">
+            <span><!-- ko i18n: 'State/Province'--><!-- /ko --></span>
+        </label>
+        <div class="control">
+            <select name="payment[_cc_buyer_street_state]"
+                    class="select select-month"
+                    style="width: 225px;"
+                    data-bind="attr: {id: getCode() + '_cc_buyer_street_state',
+                     'data-container': getCode() + '-cc-buyer-street-state',
+                     'data-validate': JSON.stringify({required:true,
+                     'validate-cc-exp':'#' + getCode() + '_cc_buyer_street_state'})},
+                                            enable: isActive($parents),
+                                            options: stateOptions,
+                                            optionsText: 'name',
+                                            optionsValue: 'value',
+                                            optionsCaption: $t('Please select a region, state or province.'),
+                                            value: creditCardBuyerState">
+            </select>
+        </div>
+    </div>
+    <div class="field owner multibuyerDiv"
+         data-bind="attr: {id: getCode() + '_cc_buyer_street_zipcode', style: creditCardBuyerIsChecked()}">
+        <label data-bind="attr: {for: getCode() + '_cc_buyer_street_zipcode'}" class="label">
+            <span><!-- ko i18n: 'Zip/Postal Code'--><!-- /ko --></span>
+        </label>
+        <div class="control">
+            <input type="text"
+                   autocomplete="off"
+                   style="width: 225px;"
+                   class="input-text"
+                   name="payment[cc_buyer_street_zipcode]"
+                   data-bind="attr: {id: getCode() + '_cc_buyer_street_zipcode',
+                            title: $t('Zip/Postal Code'),
+                            'data-container': getCode() + 'cc-buyer-street-zipcode',
+                            'data-validate': JSON.stringify({'required':true})},
+                            enable: isActive($parents),
+                            value: creditCardBuyerZipCode"/>
+        </div>
+    </div>
     <!-- /ko -->
     <div class="field number required">
         <label data-bind="attr: {for: getCode() + '_cc_cc_amount'}" class="label">
             <span><!-- ko i18n: 'Credit Card Amount'--><!-- /ko --></span>
         </label>
         <div class="control">
-            <input type="text" onKeyPress="if(this.value.length==window.checkoutConfig.payment.mundipagg_creditcard.size_credit_card) return false;" min="0" name="payment[cc_cc_amount]" class="input-text money" value="" style="width: 335px;"
+            <input type="text"
+                   onKeyPress="if(this.value.length==window.checkoutConfig.payment.mundipagg_creditcard.size_credit_card) return false;"
+                   min="0" name="payment[cc_cc_amount]" class="input-text money" value="" style="width: 335px;"
                    data-bind="event: { blur: bindInstallmentsByBlurBcc }, attr: {
                                     autocomplete: off,
                                     id: getCode() + '_cc_cc_amount',
@@ -169,8 +479,8 @@
         </div>
     </div>
     <!-- ko if: (isSaveCardHave())-->
-        <div class="field saved-card">
-            <select  name="payment[saved-card]"
+    <div class="field saved-card">
+        <select name="payment[saved-card]"
                 class="select select-card"
                 data-bind="attr: {
                     id: getCode() + '_card',
@@ -189,26 +499,26 @@
                 optionsCaption: $t('New Card'),
                 value: creditSavedCardBcc,
                 event: {change: onSavedCardChange};">
-            </select>
-        </div>
+        </select>
+    </div>
     <!-- /ko -->
-    <div class="field type" data-bind="attr: {id: getCode() + '_cc_icons' ,style: isSaveCardStyle()}">
+    <div class="field type cardInfo" data-bind="attr: {id: getCode() + '_cc_icons' ,style: isSaveCardStyle()}">
         <div class="control">
             <ul class="credit-card-types">
                 <!-- ko foreach: {data: getCcAvailableTypesValues(), as: 'item'} -->
-                    <!--ko if: $parent.getIcons(item.value) -->
-                        <li class="item" data-bind="css: {
+                <!--ko if: $parent.getIcons(item.value) -->
+                <li class="item" data-bind="css: {
                                                     _active: $parent.selectedCardTypeBcc() == item.value,
                                                     _inactive: $parent.selectedCardTypeBcc() != null && $parent.selectedCardTypeBcc() != item.value
                                                     } ">
-                            <img data-bind="attr: {
+                    <img data-bind="attr: {
                                 'src': $parent.getIcons(item.value).url,
                                 'alt': item.type,
                                 'width': $parent.getIcons(item.value).width,
                                 'height': $parent.getIcons(item.value).height
                                 }">
-                        </li>
-                    <!--/ko-->
+                </li>
+                <!--/ko-->
                 <!--/ko-->
             </ul>
             <input type="hidden"
@@ -220,8 +530,8 @@
                    ">
         </div>
     </div>
-    <div class="field choice" data-bind="attr: {id: getCode() + '_cc_savecard', style: isSaveCardStyle()}">
-        <input type="checkbox" class="checkbox" id="creditcard-save-bcc" data-bind="checked: creditCardsavecardBcc" />
+    <div class="field choice cardInfo" data-bind="attr: {id: getCode() + '_cc_savecard', style: isSaveCardStyle()}">
+        <input type="checkbox" class="checkbox" id="creditcard-save-bcc" data-bind="checked: creditCardsavecardBcc"/>
         <label class="label" data-bind="attr: {'for': getCode() + '_cc_savecard'}">
             <span><!-- ko i18n: 'Save cards for future purchases'--><!-- /ko --></span>
         </label>
@@ -237,13 +547,14 @@
                  data-bind="html: getSaveCardHelpHtml()"></div>
         </div>
     </div>
-
-    <div class="field number required" data-bind="attr: {id: getCode() + '_cc_number_div' ,style: isSaveCardStyle()}">
+    <div class="field number required cardInfo" data-bind="attr: {id: getCode() + '_cc_number_div' ,style: isSaveCardStyle()}">
         <label data-bind="attr: {for: getCode() + '_cc_number'}" class="label">
             <span><!-- ko i18n: 'Credit Card Number'--><!-- /ko --></span>
         </label>
         <div class="control">
-            <input type="number" onKeyPress="if(this.value.length==window.checkoutConfig.payment.mundipagg_creditcard.size_credit_card) return false;" min="0" name="payment[cc_number]" class="input-text" value=""
+            <input type="number"
+                   onKeyPress="if(this.value.length==window.checkoutConfig.payment.mundipagg_creditcard.size_credit_card) return false;"
+                   min="0" name="payment[cc_number]" class="input-text" value=""
                    data-bind="attr: {
                                     autocomplete: off,
                                     id: getCode() + '_cc_number',
@@ -257,7 +568,7 @@
     </div>
 
 
-    <div class="field owner required" data-bind="attr: {id: getCode() + '_cc_owner_div', style: isSaveCardStyle()}">
+    <div class="field owner required cardInfo" data-bind="attr: {id: getCode() + '_cc_owner_div', style: isSaveCardStyle()}">
         <label data-bind="attr: {for: getCode() + '_cc_owner'}" class="label">
             <span><!-- ko i18n: 'Name on Card'--><!-- /ko --></span>
         </label>
@@ -272,11 +583,10 @@
                         'data-container': getCode() + '-cc-owner',
                         'data-validate': JSON.stringify({'required':true})},
                         enable: isActive($parents),
-                        value: creditCardOwnerBcc" />
+                        value: creditCardOwnerBcc"/>
         </div>
     </div>
-
-    <div class="field date required" data-bind="attr: {id: getCode() + '_cc_type_exp_div', style: isSaveCardStyle()}">
+    <div class="field date required cardInfo" data-bind="attr: {id: getCode() + '_cc_type_exp_div', style: isSaveCardStyle()}">
         <label data-bind="attr: {for: getCode() + '_expiration'}" class="label">
             <span><!-- ko i18n: 'Expiration Date'--><!-- /ko --></span>
         </label>
@@ -284,9 +594,9 @@
             <div class="fields group group-2">
                 <div class="field no-label month">
                     <div class="control">
-                        <select  name="payment[cc_exp_month]"
-                                 class="select select-month"
-                                 data-bind="attr: {id: getCode() + '_expiration', 'data-container': getCode() + '-cc-month', 'data-validate': JSON.stringify({required:true, 'validate-cc-exp':'#' + getCode() + '_expiration_yr'})},
+                        <select name="payment[cc_exp_month]"
+                                class="select select-month"
+                                data-bind="attr: {id: getCode() + '_expiration', 'data-container': getCode() + '-cc-month', 'data-validate': JSON.stringify({required:true, 'validate-cc-exp':'#' + getCode() + '_expiration_yr'})},
                                             enable: isActive($parents),
                                             options: getCcMonthsValues(),
                                             optionsValue: 'value',
@@ -296,7 +606,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="field no-label year">
+                <div class="field no-label year cardInfo">
                     <div class="control">
                         <select name="payment[cc_exp_year]"
                                 class="select select-year"
@@ -314,7 +624,7 @@
         </div>
     </div>
     <!-- ko if: (hasVerification())-->
-    <div class="field cvv required" data-bind="attr: {id: getCode() + '_cc_type_cvv_div', style: isSaveCardStyle()}">
+    <div class="field cvv required cardInfo" data-bind="attr: {id: getCode() + '_cc_type_cvv_div', style: isSaveCardStyle()}">
         <label data-bind="attr: {for: getCode() + '_cc_cid'}" class="label">
             <span><!-- ko i18n: 'Card Verification Number'--><!-- /ko --></span>
         </label>
@@ -331,7 +641,7 @@
                         'data-container': getCode() + '-cc-cvv',
                         'data-validate': JSON.stringify({'required-number':true, 'validate-card-cvv':'#' + getCode() + '_cc_type'})},
                         enable: isActive($parents),
-                        value: creditCardVerificationNumberBcc" />
+                        value: creditCardVerificationNumberBcc"/>
             <div class="field-tooltip toggle">
                 <span class="field-tooltip-action action-cvv"
                       tabindex="0"
@@ -346,9 +656,9 @@
         </div>
     </div>
     <!-- /ko -->
-
     <!-- ko if: (isInstallmentsActive())-->
-    <div class="field installments required" data-bind="attr: {id: getCode() + '_cc_installments', style: installmentsStyle()}">
+    <div class="field installments required"
+         data-bind="attr: {id: getCode() + '_cc_installments', style: installmentsStyle()}">
         <label data-bind="attr: {for: getCode() + '_installments'}" class="label">
             <span><!-- ko i18n: 'Installments'--><!-- /ko --></span>
         </label>
@@ -356,10 +666,10 @@
             <div class="fields">
                 <div class="field no-label installments">
                     <div class="control">
-                        <select  name="payment[cc_installments]"
-                                 style="width: 335px;"
-                                 class="select select-installments"
-                                 data-bind="attr: {id: getCode() + '_installments', 'data-container': getCode() + '-cc-installments', 'data-validate': JSON.stringify({required:true})},
+                        <select name="payment[cc_installments]"
+                                style="width: 335px;"
+                                class="select select-installments"
+                                data-bind="attr: {id: getCode() + '_installments', 'data-container': getCode() + '-cc-installments', 'data-validate': JSON.stringify({required:true})},
                                             enable: isActive($parents),
                                             options: allInstallments,
                                             optionsValue: 'value',
@@ -375,5 +685,4 @@
         </div>
     </div>
     <!-- /ko -->
-
 </fieldset>

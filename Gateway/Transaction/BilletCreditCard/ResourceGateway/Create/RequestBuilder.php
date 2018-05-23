@@ -424,6 +424,8 @@ class RequestBuilder implements BuilderInterface
 
             $this->payment->addCustomerOnPaymentMethodWithSavedCard($order, $card, 1);
 
+            $this->setMultiBuyerToPaymentBilletAndCreditCard($payment, $order);
+
         }else{
             $tokenCard = $requestDataProvider->getCcTokenCreditCard();
 
@@ -463,10 +465,9 @@ class RequestBuilder implements BuilderInterface
                 ]
             ];
 
-            $this->payment->addCustomersOnMultiPager($order,$requestDataProvider->getCcBuyerName(),$requestDataProvider->getCcBuyerEmail(),1);
+            $this->setMultiBuyerToPaymentBilletAndCreditCard($payment, $order);
 
         }
-
 
         $quote->reserveOrderId()->save();
         $order->code = $this->paymentData->getOrder()->getIncrementId();
@@ -653,4 +654,58 @@ class RequestBuilder implements BuilderInterface
 
         return $this;
     }
+
+    /**
+     * @param $payment
+     * @param $order
+     */
+    protected function setMultiBuyerToPaymentBilletAndCreditCard($payment, $order)
+    {
+
+        if($payment->getAdditionalInformation('cc_buyer_checkbox')){
+
+            $dataCustomerCreditCard = array(
+                'name' => $payment->getAdditionalInformation('cc_buyer_name'),
+                'email' => $payment->getAdditionalInformation('cc_buyer_email'),
+                'document' => $payment->getAdditionalInformation('cc_buyer_document') ?? null
+            );
+
+            $dataAddressCreditCard = array(
+                'street' => $payment->getAdditionalInformation('cc_buyer_street_title'),
+                'number' => $payment->getAdditionalInformation('cc_buyer_street_number'),
+                'complement' => $payment->getAdditionalInformation('cc_buyer_street_complement'),
+                'zip_code' => $payment->getAdditionalInformation('cc_buyer_zipcode'),
+                'neighborhood' => $payment->getAdditionalInformation('cc_buyer_neighborhood'),
+                'city' => $payment->getAdditionalInformation('cc_buyer_city'),
+                'state' => $payment->getAdditionalInformation('cc_buyer_state')
+            );
+
+            $this->payment->addCustomersOnMultiPager($order, $dataCustomerCreditCard, $dataAddressCreditCard, 1);
+
+        }
+
+        if($payment->getAdditionalInformation('billet_buyer_checkbox')) {
+
+            $dataCustomerBillet = array(
+                'name' => $payment->getAdditionalInformation('billet_buyer_name'),
+                'email' => $payment->getAdditionalInformation('billet_buyer_email'),
+                'document' => $payment->getAdditionalInformation('billet_buyer_document') ?? null
+            );
+
+            $dataAddressBillet = array(
+                'street' => $payment->getAdditionalInformation('billet_buyer_street_title'),
+                'number' => $payment->getAdditionalInformation('billet_buyer_street_number'),
+                'complement' => $payment->getAdditionalInformation('billet_buyer_street_complement'),
+                'zip_code' => $payment->getAdditionalInformation('billet_buyer_zipcode'),
+                'neighborhood' => $payment->getAdditionalInformation('billet_buyer_neighborhood'),
+                'city' => $payment->getAdditionalInformation('billet_buyer_city'),
+                'state' => $payment->getAdditionalInformation('billet_buyer_state')
+            );
+
+            $this->payment->addCustomersOnMultiPager($order, $dataCustomerBillet, $dataAddressBillet, 2);
+
+        }
+
+    }
+
 }

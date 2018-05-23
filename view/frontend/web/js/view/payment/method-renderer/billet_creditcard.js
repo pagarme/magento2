@@ -11,6 +11,7 @@ define(
     [
         'MundiPagg_MundiPagg/js/view/payment/bcc-form',
         'ko',
+        'MundiPagg_MundiPagg/js/helper/address-helper',
         'MundiPagg_MundiPagg/js/action/installments',
         'MundiPagg_MundiPagg/js/action/installmentsByBrand',
         'MundiPagg_MundiPagg/js/action/installmentsByBrandAndAmount',
@@ -28,6 +29,7 @@ define(
     function (
         Component,
         ko,
+        addressHelper,
         installments,
         installmentsByBrand,
         installmentsByBrandAndAmount,
@@ -70,9 +72,27 @@ define(
                 billetBuyerCheckbox: '',
                 billetBuyerEmail: '',
                 billetBuyerName: '',
+                billetBuyerDocument: '',
+                billetBuyerStreetTitle: '',
+                billetBuyerStreetNumber: '',
+                billetBuyerStreetComplement: '',
+                billetBuyerZipCode: '',
+                billetBuyerNeighborhood: '',
+                billetBuyerCity: '',
+                billetBuyerState: '',
+                billetBuyerCountry: '',
                 creditCardBuyerCheckbox: '',
                 creditCardBuyerEmail: '',
-                creditCardBuyerName: ''
+                creditCardBuyerName: '',
+                creditCardBuyerDocument: '',
+                creditCardBuyerStreetTitle: '',
+                creditCardBuyerStreetNumber: '',
+                creditCardBuyerStreetComplement: '',
+                creditCardBuyerZipCode: '',
+                creditCardBuyerNeighborhood: '',
+                creditCardBuyerCity: '',
+                creditCardBuyerState: '',
+                stateOptions: addressHelper.getStateOptions()
             },
 
             totals: quote.getTotals(),
@@ -294,12 +314,28 @@ define(
                         'creditSavedCardBcc',
                         'selectedCardTypeBcc',
                         'creditCardInstallmentsBcc',
+                        'creditCardBuyerCheckbox',
+                        'creditCardBuyerEmail',
+                        'creditCardBuyerName',
+                        'creditCardBuyerDocument',
+                        'creditCardBuyerStreetTitle',
+                        'creditCardBuyerStreetNumber',
+                        'creditCardBuyerStreetComplement',
+                        'creditCardBuyerZipCode',
+                        'creditCardBuyerNeighborhood',
+                        'creditCardBuyerCity',
+                        'creditCardBuyerState',
                         'billetBuyerCheckbox',
                         'billetBuyerEmail',
                         'billetBuyerName',
-                        'creditCardBuyerCheckbox',
-                        'creditCardBuyerEmail',
-                        'creditCardBuyerName'
+                        'billetBuyerDocument',
+                        'billetBuyerStreetTitle',
+                        'billetBuyerStreetNumber',
+                        'billetBuyerStreetComplement',
+                        'billetBuyerZipCode',
+                        'billetBuyerNeighborhood',
+                        'billetBuyerCity',
+                        'billetBuyerState'
                     ]);
 
                 return this;
@@ -447,10 +483,28 @@ define(
                         'cc_saved_card': this.creditSavedCardBcc(),
                         'cc_billet_amount': this.creditCardBilletAmountBcc(),
                         'cc_token_credit_card': this.tokenCreditCard,
+                        'billet_buyer_checkbox': this.billetBuyerCheckbox(),
                         'billet_buyer_name': this.billetBuyerName(),
                         'billet_buyer_email': this.billetBuyerEmail(),
+                        'billet_buyer_document': this.billetBuyerDocument(),
+                        'billet_buyer_street_title': this.billetBuyerStreetTitle(),
+                        'billet_buyer_street_number': this.billetBuyerStreetNumber(),
+                        'billet_buyer_street_complement': this.billetBuyerStreetComplement(),
+                        'billet_buyer_zipcode': this.billetBuyerZipCode(),
+                        'billet_buyer_neighborhood': this.billetBuyerNeighborhood(),
+                        'billet_buyer_city': this.billetBuyerCity(),
+                        'billet_buyer_state': this.billetBuyerState(),
+                        'cc_buyer_checkbox': this.creditCardBuyerCheckbox(),
                         'cc_buyer_name': this.creditCardBuyerName(),
-                        'cc_buyer_email': this.creditCardBuyerEmail()
+                        'cc_buyer_email': this.creditCardBuyerEmail(),
+                        'cc_buyer_document': this.creditCardBuyerDocument(),
+                        'cc_buyer_street_title': this.creditCardBuyerStreetTitle(),
+                        'cc_buyer_street_number': this.creditCardBuyerStreetNumber(),
+                        'cc_buyer_street_complement': this.creditCardBuyerStreetComplement(),
+                        'cc_buyer_zipcode': this.creditCardBuyerZipCode(),
+                        'cc_buyer_neighborhood': this.creditCardBuyerNeighborhood(),
+                        'cc_buyer_city': this.creditCardBuyerCity(),
+                        'cc_buyer_state': this.creditCardBuyerState(),
                     }
                 };
             },
@@ -487,23 +541,15 @@ define(
             onSavedCardChange: function() {
 
                 if (jQuery('#mundipagg_billet_creditcard_card').val()) {
-                    jQuery('#mundipagg_billet_creditcard_cc_icons').css('display','none');
-                    jQuery('#mundipagg_billet_creditcard_cc_savecard').css('display','none');
-                    jQuery('#mundipagg_billet_creditcard_cc_number_div').css('display','none');
-                    jQuery('#mundipagg_billet_creditcard_cc_owner_div').css('display','none');
-                    jQuery('#mundipagg_billet_creditcard_cc_type_exp_div').css('display','none');
-                    jQuery('#mundipagg_billet_creditcard_cc_type_cvv_div').css('display','none');
-                    jQuery('#mundipagg_billet_creditcard_buyer_checkbox').css('display','none');
-                    jQuery('#mundipagg_billet_creditcard_buyer_name').css('display','none');
-                    jQuery('#mundipagg_billet_creditcard_buyer_email').css('display','none');
+                    jQuery('.cardInfo').css('display','none');
+                    jQuery('.multibuyerDiv').css('display','none');
+                    jQuery('#creditcard-buyer-checkbox-input').prop('checked',false);
+                    this.creditCardBuyerCheckbox(false);
+
                 }else{
-                    jQuery('#mundipagg_billet_creditcard_cc_icons').css('display','block');
-                    jQuery('#mundipagg_billet_creditcard_cc_savecard').css('display','block');
-                    jQuery('#mundipagg_billet_creditcard_cc_number_div').css('display','block');
-                    jQuery('#mundipagg_billet_creditcard_cc_owner_div').css('display','block');
-                    jQuery('#mundipagg_billet_creditcard_cc_type_exp_div').css('display','block');
-                    jQuery('#mundipagg_billet_creditcard_cc_type_cvv_div').css('display','block');
+                    jQuery('.cardInfo').css('display','block');
                     jQuery('#mundipagg_billet_creditcard_buyer_checkbox').css('display','block');
+
                 }
             },
             billetBuyerIsChecked: function(){
@@ -527,6 +573,7 @@ define(
             getBilletBuyerHelpHtml: function () {
                 return '<span>' + $t('Add a different buyer to Billet') + '</span>';
             }
+
         })
     }
 );

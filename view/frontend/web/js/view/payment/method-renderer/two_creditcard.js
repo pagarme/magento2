@@ -12,6 +12,7 @@ define(
     [
         'MundiPagg_MundiPagg/js/view/payment/two-cc-form',
         'ko',
+        'MundiPagg_MundiPagg/js/helper/address-helper',
         'MundiPagg_MundiPagg/js/action/installments',
         'MundiPagg_MundiPagg/js/action/installmentsByBrand',
         'MundiPagg_MundiPagg/js/action/installmentsByBrandAndAmount',
@@ -28,6 +29,7 @@ define(
     function (
         Component,
         ko,
+        addressHelper,
         installments,
         installmentsByBrand,
         installmentsByBrandAndAmount,
@@ -83,10 +85,29 @@ define(
                 creditSavedCardSecond: window.checkoutConfig.payment.mundipagg_two_creditcard.selected_card,
                 selectedCardTypeSecond: null,
                 allInstallmentsSecond: ko.observableArray([]),
+                creditCardBuyerCheckboxFirst: '',
                 creditCardBuyerNameFirst: '',
                 creditCardBuyerEmailFirst: '',
+                creditCardBuyerDocumentFirst: '',
+                creditCardBuyerStreetTitleFirst: '',
+                creditCardBuyerStreetNumberFirst: '',
+                creditCardBuyerStreetComplementFirst: '',
+                creditCardBuyerNeighborhoodFirst: '',
+                creditCardBuyerCityFirst: '',
+                creditCardBuyerStateFirst: '',
+                creditCardBuyerZipCodeFirst: '',
+                creditCardBuyerCheckboxSecond: '',
                 creditCardBuyerNameSecond: '',
-                creditCardBuyerEmailSecond: ''
+                creditCardBuyerEmailSecond: '',
+                creditCardBuyerDocumentSecond: '',
+                creditCardBuyerStreetTitleSecond: '',
+                creditCardBuyerStreetNumberSecond: '',
+                creditCardBuyerStreetComplementSecond: '',
+                creditCardBuyerNeighborhoodSecond: '',
+                creditCardBuyerCitySecond: '',
+                creditCardBuyerStateSecond: '',
+                creditCardBuyerZipCodeSecond: '',
+                stateOptions: addressHelper.getStateOptions()
             },
 
             totals: quote.getTotals(),
@@ -431,10 +452,28 @@ define(
                         'creditSavedCardSecond',
                         'selectedCardTypeSecond',
                         'creditCardInstallmentsSecond',
+                        'creditCardBuyerCheckboxFirst',
                         'creditCardBuyerNameFirst',
                         'creditCardBuyerEmailFirst',
+                        'creditCardBuyerDocumentFirst',
+                        'creditCardBuyerStreetTitleFirst',
+                        'creditCardBuyerStreetNumberFirst',
+                        'creditCardBuyerStreetComplementFirst',
+                        'creditCardBuyerNeighborhoodFirst',
+                        'creditCardBuyerCityFirst',
+                        'creditCardBuyerStateFirst',
+                        'creditCardBuyerZipCodeFirst',
+                        'creditCardBuyerCheckboxSecond',
                         'creditCardBuyerNameSecond',
-                        'creditCardBuyerEmailSecond'
+                        'creditCardBuyerEmailSecond',
+                        'creditCardBuyerDocumentSecond',
+                        'creditCardBuyerStreetTitleSecond',
+                        'creditCardBuyerStreetNumberSecond',
+                        'creditCardBuyerStreetComplementSecond',
+                        'creditCardBuyerNeighborhoodSecond',
+                        'creditCardBuyerCitySecond',
+                        'creditCardBuyerStateSecond',
+                        'creditCardBuyerZipCodeSecond'
                     ]);
 
                 return this;
@@ -551,10 +590,28 @@ define(
                         'cc_installments_second': this.creditCardInstallmentsSecond(),
                         'cc_token_credit_card_first': this.tokenCreditCardFirst,
                         'cc_token_credit_card_second': this.tokenCreditCardSecond,
+                        'cc_buyer_checkbox_first': this.creditCardBuyerCheckboxFirst(),
                         'cc_buyer_name_first': this.creditCardBuyerNameFirst(),
                         'cc_buyer_email_first': this.creditCardBuyerEmailFirst(),
+                        'cc_buyer_document_first': this.creditCardBuyerDocumentFirst(),
+                        'cc_buyer_street_title_first': this.creditCardBuyerStreetTitleFirst(),
+                        'cc_buyer_street_number_first': this.creditCardBuyerStreetNumberFirst(),
+                        'cc_buyer_street_complement_first': this.creditCardBuyerStreetComplementFirst(),
+                        'cc_buyer_neighborhood_first': this.creditCardBuyerNeighborhoodFirst(),
+                        'cc_buyer_city_first': this.creditCardBuyerCityFirst(),
+                        'cc_buyer_state_first': this.creditCardBuyerStateFirst(),
+                        'cc_buyer_zipcode_first': this.creditCardBuyerZipCodeFirst(),
+                        'cc_buyer_checkbox_second': this.creditCardBuyerCheckboxSecond(),
                         'cc_buyer_name_second': this.creditCardBuyerNameSecond(),
-                        'cc_buyer_email_second': this.creditCardBuyerEmailSecond()
+                        'cc_buyer_email_second': this.creditCardBuyerEmailSecond(),
+                        'cc_buyer_document_second': this.creditCardBuyerDocumentSecond(),
+                        'cc_buyer_street_title_second': this.creditCardBuyerStreetTitleSecond(),
+                        'cc_buyer_street_number_second': this.creditCardBuyerStreetNumberSecond(),
+                        'cc_buyer_street_complement_second': this.creditCardBuyerStreetComplementSecond(),
+                        'cc_buyer_neighborhood_second': this.creditCardBuyerNeighborhoodSecond(),
+                        'cc_buyer_city_second': this.creditCardBuyerCitySecond(),
+                        'cc_buyer_state_second': this.creditCardBuyerStateSecond(),
+                        'cc_buyer_zipcode_second': this.creditCardBuyerZipCodeSecond()
                     }
                 };
             },
@@ -798,6 +855,23 @@ define(
                     jQuery('#mundipagg_two_creditcard_cc_buyer_checkbox_' + idValue).css('display','none');
                     jQuery('#mundipagg_two_creditcard_cc_buyer_name_' + idValue).css('display','none');
                     jQuery('#mundipagg_two_creditcard_cc_buyer_email_' + idValue).css('display','none');
+                    jQuery('#mundipagg_two_creditcard_cc_buyer_document_' + idValue).css('display','none');
+                    jQuery('#mundipagg_two_creditcard_cc_buyer_street_title_' + idValue).css('display','none');
+                    jQuery('#mundipagg_two_creditcard_cc_buyer_street_number_' + idValue).css('display','none');
+                    jQuery('#mundipagg_two_creditcard_cc_buyer_street_complement_' + idValue).css('display','none');
+                    jQuery('#mundipagg_two_creditcard_cc_buyer_street_neighborhood_' + idValue).css('display','none');
+                    jQuery('#mundipagg_two_creditcard_cc_buyer_street_city_' + idValue).css('display','none');
+                    jQuery('#mundipagg_two_creditcard_cc_buyer_street_state_' + idValue).css('display','none');
+                    jQuery('#mundipagg_two_creditcard_cc_buyer_street_zipcode_' + idValue).css('display','none');
+
+                    if(idValue == 'first'){
+                        this.creditCardBuyerCheckboxFirst(false);
+                    }
+
+                    if(idValue == 'second'){
+                        this.creditCardBuyerCheckboxSecond(false);
+                    }
+
                 }else{
                     jQuery('#mundipagg_two_creditcard_cc_icons_' + idValue).css('display','block');
                     jQuery('#mundipagg_two_creditcard_cc_savecard_' + idValue).css('display','block');
@@ -809,14 +883,14 @@ define(
                 }
             },
             firstBuyerChecked: function(){
-                if(this.creditCardsavecardFirst()){
+                if(this.creditCardBuyerCheckboxFirst()){
                     return 'display: block;';
                 }else{
                     return 'display: none;';
                 }
             },
             secondBuyerChecked: function(){
-                if(this.creditCardsavecardSecond()){
+                if(this.creditCardBuyerCheckboxSecond()){
                     return 'display: block;';
                 }else{
                     return 'display: none;';

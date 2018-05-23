@@ -388,22 +388,45 @@ class RequestBuilder implements BuilderInterface
             ]
         ];
 
+        // Data of Multi Pager
+
+        $dataCustomer = array(
+            'name'      => 'Eric teste',
+            'email'     => 'teste@teste.com',
+            'phone'     => '11981519313',
+            'document'  => null
+        );
+
+        $dataAddress = array(
+            'street'       => 'rua teste',
+            'number'       => '113',
+            'zip_code'     => '20921004',
+            'neighborhood' => 'teste',
+            'city'         => 'Rio de Janeiro',
+            'state'        => 'RJ',
+            'complement'   => 'teste'
+        );
+
+        $this->setMultiBuyerToPaymentTwoCreditCard($payment, $order, 'first');
+
         if (!empty($payment->getAdditionalInformation('cc_saved_card_first'))) {
             $cardCollection = $model->getById($payment->getAdditionalInformation('cc_saved_card_first'));
             $order->payments[0]['credit_card']['card_id'] = $cardCollection->getCardToken();
             $this->payment->addCustomerOnPaymentMethodWithSavedCard($order, $cardCollection, 1);
+            $this->setMultiBuyerToPaymentTwoCreditCard($payment, $order, 'first');
         } else {
             $order->payments[0]['credit_card']['card_token'] = $requestDataProvider->getTokenCreditCardFirst();
-            $this->payment->addCustomersOnMultiPager($order,$requestDataProvider->getCcBuyerNameFirst(),$requestDataProvider->getCcBuyerEmailFirst(), 1);
+            $this->setMultiBuyerToPaymentTwoCreditCard($payment, $order, 'first');
         }
 
         if (!empty($payment->getAdditionalInformation('cc_saved_card_second'))) {
             $cardCollection = $model->getById($payment->getAdditionalInformation('cc_saved_card_second'));
             $order->payments[1]['credit_card']['card_id'] = $cardCollection->getCardToken();
             $this->payment->addCustomerOnPaymentMethodWithSavedCard($order, $cardCollection, 2);
+            $this->setMultiBuyerToPaymentTwoCreditCard($payment, $order, 'second');
         } else {
             $order->payments[1]['credit_card']['card_token'] = $requestDataProvider->getTokenCreditCardSecond();
-            $this->payment->addCustomersOnMultiPager($order,$requestDataProvider->getCcBuyerNameSecond(),$requestDataProvider->getCcBuyerEmailSecond(),2);
+            $this->setMultiBuyerToPaymentTwoCreditCard($payment, $order, 'second');
         }
 
         $order->items = [];
@@ -516,4 +539,57 @@ class RequestBuilder implements BuilderInterface
 
         return $this;
     }
+
+    /**
+     * @param $payment
+     * @param $order
+     */
+    protected function setMultiBuyerToPaymentTwoCreditCard($payment, $order, $card)
+    {
+
+        if($payment->getAdditionalInformation('cc_buyer_checkbox_first')){
+
+            $dataCustomerCreditCardFirst = array(
+                'name' => $payment->getAdditionalInformation('cc_buyer_name_first'),
+                'email' => $payment->getAdditionalInformation('cc_buyer_email_first'),
+                'document' => $payment->getAdditionalInformation('cc_buyer_document_first') ?? null
+            );
+
+            $dataAddressCreditCardFirst = array(
+                'street' => $payment->getAdditionalInformation('cc_buyer_street_title_first'),
+                'number' => $payment->getAdditionalInformation('cc_buyer_street_number_first'),
+                'complement' => $payment->getAdditionalInformation('cc_buyer_street_complement_first'),
+                'zip_code' => $payment->getAdditionalInformation('cc_buyer_zipcode_first'),
+                'neighborhood' => $payment->getAdditionalInformation('cc_buyer_neighborhood_first'),
+                'city' => $payment->getAdditionalInformation('cc_buyer_city_first'),
+                'state' => $payment->getAdditionalInformation('cc_buyer_state_first')
+            );
+
+            $this->payment->addCustomersOnMultiPager($order, $dataCustomerCreditCardFirst, $dataAddressCreditCardFirst, 1);
+        }
+
+        if($payment->getAdditionalInformation('cc_buyer_checkbox_second')){
+
+            $dataCustomerCreditCardSecond = array(
+                'name' => $payment->getAdditionalInformation('cc_buyer_name_second'),
+                'email' => $payment->getAdditionalInformation('cc_buyer_email_second'),
+                'document' => $payment->getAdditionalInformation('cc_buyer_document_second') ?? null
+            );
+
+            $dataAddressCreditCardSecond = array(
+                'street' => $payment->getAdditionalInformation('cc_buyer_street_title_second'),
+                'number' => $payment->getAdditionalInformation('cc_buyer_street_number_second'),
+                'complement' => $payment->getAdditionalInformation('cc_buyer_street_complement_second'),
+                'zip_code' => $payment->getAdditionalInformation('cc_buyer_zipcode_second'),
+                'neighborhood' => $payment->getAdditionalInformation('cc_buyer_neighborhood_second'),
+                'city' => $payment->getAdditionalInformation('cc_buyer_city_second'),
+                'state' => $payment->getAdditionalInformation('cc_buyer_state_second')
+            );
+
+            $this->payment->addCustomersOnMultiPager($order, $dataCustomerCreditCardSecond, $dataAddressCreditCardSecond, 2);
+        }
+
+
+    }
+
 }
