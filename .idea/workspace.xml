@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a38cbaed-4ed6-47b5-9398-2d029e84314f" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.circleci/config.yml" afterPath="$PROJECT_DIR$/.circleci/config.yml" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -31,12 +30,30 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="config.yml" pinned="false" current-in-tab="true">
+      <file leaf-file-name="config.yml" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/.circleci/config.yml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="540">
-              <caret line="68" column="72" lean-forward="false" selection-start-line="68" selection-start-column="72" selection-end-line="68" selection-end-column="72" />
+            <state relative-caret-position="252">
+              <caret line="52" column="12" lean-forward="false" selection-start-line="52" selection-start-column="12" selection-end-line="52" selection-end-column="12" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="index.php" pinned="false" current-in-tab="true">
+        <entry file="file:///var/www/magento.localhost/public_html/index.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="180">
+              <caret line="33" column="9" lean-forward="true" selection-start-line="33" selection-start-column="9" selection-end-line="33" selection-end-column="9" />
+              <folding>
+                <marker date="1517517257000" expanded="true" signature="1017:1063" ph="..." />
+                <marker date="1517517257000" expanded="true" signature="1064:1487" ph="..." />
+                <marker date="1517517257000" expanded="false" signature="1078:1126" ph="..." />
+                <marker date="1517517257000" expanded="true" signature="1127:1306" ph="..." />
+                <marker date="1517517257000" expanded="false" signature="1140:1239" ph="..." />
+                <marker date="1517517257000" expanded="true" signature="1240:1300" ph="..." />
+                <marker date="1517517257000" expanded="true" signature="1309:1481" ph="..." />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -148,15 +165,15 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="PhpDebugGeneral" listening_started="true" />
   <component name="PhpServers">
     <servers>
       <server host="modulo-mundipagg.dev" id="2ca5f891-99dc-486f-829d-a2c9158b76c7" name="modulo-mundipagg.dev" />
       <server host="m1m1.localhost" id="077f29d7-4401-47bf-ba61-ecf3781e2150" name="m1m1.localhost" />
+      <server host="magento.localhost" id="8fa7290a-754a-4225-8f60-1d577f7a2922" name="magento.localhost" />
     </servers>
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="y" value="-2" />
     <option name="width" value="1920" />
     <option name="height" value="1041" />
@@ -238,16 +255,15 @@
       <workItem from="1525976117828" duration="1988000" />
       <workItem from="1526507063223" duration="7500000" />
       <workItem from="1527016133719" duration="1304000" />
-      <workItem from="1527023002250" duration="4201000" />
+      <workItem from="1527023002250" duration="6336000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="55932000" />
+    <option name="totallyTimeSpent" value="58067000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="-2" width="1920" height="1041" extended-state="7" />
-    <editor active="true" />
+    <frame x="0" y="-2" width="1920" height="1041" extended-state="6" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21184632" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -313,13 +329,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/composer.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/composer.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="306">
@@ -654,9 +663,25 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/.circleci/config.yml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="540">
-          <caret line="68" column="72" lean-forward="false" selection-start-line="68" selection-start-column="72" selection-end-line="68" selection-end-column="72" />
+        <state relative-caret-position="252">
+          <caret line="52" column="12" lean-forward="false" selection-start-line="52" selection-start-column="12" selection-end-line="52" selection-end-column="12" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///var/www/magento.localhost/public_html/index.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="33" column="9" lean-forward="true" selection-start-line="33" selection-start-column="9" selection-end-line="33" selection-end-column="9" />
+          <folding>
+            <marker date="1517517257000" expanded="true" signature="1017:1063" ph="..." />
+            <marker date="1517517257000" expanded="true" signature="1064:1487" ph="..." />
+            <marker date="1517517257000" expanded="false" signature="1078:1126" ph="..." />
+            <marker date="1517517257000" expanded="true" signature="1127:1306" ph="..." />
+            <marker date="1517517257000" expanded="false" signature="1140:1239" ph="..." />
+            <marker date="1517517257000" expanded="true" signature="1240:1300" ph="..." />
+            <marker date="1517517257000" expanded="true" signature="1309:1481" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
