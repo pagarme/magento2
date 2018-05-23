@@ -2,19 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a38cbaed-4ed6-47b5-9398-2d029e84314f" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/view/frontend/web/js/helper/address-helper.js" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/Gateway/Transaction/BilletCreditCard/ResourceGateway/Create/RequestBuilder.php" afterPath="$PROJECT_DIR$/Gateway/Transaction/BilletCreditCard/ResourceGateway/Create/RequestBuilder.php" />
-      <change beforePath="$PROJECT_DIR$/Gateway/Transaction/TwoCreditCard/ResourceGateway/Create/RequestBuilder.php" afterPath="$PROJECT_DIR$/Gateway/Transaction/TwoCreditCard/ResourceGateway/Create/RequestBuilder.php" />
-      <change beforePath="$PROJECT_DIR$/Model/Payment.php" afterPath="$PROJECT_DIR$/Model/Payment.php" />
-      <change beforePath="$PROJECT_DIR$/Observer/BilletCreditCardDataAssignObserver.php" afterPath="$PROJECT_DIR$/Observer/BilletCreditCardDataAssignObserver.php" />
-      <change beforePath="$PROJECT_DIR$/Observer/TwoCreditCardDataAssignObserver.php" afterPath="$PROJECT_DIR$/Observer/TwoCreditCardDataAssignObserver.php" />
-      <change beforePath="$PROJECT_DIR$/composer.json" afterPath="$PROJECT_DIR$/composer.json" />
-      <change beforePath="$PROJECT_DIR$/etc/module.xml" afterPath="$PROJECT_DIR$/etc/module.xml" />
-      <change beforePath="$PROJECT_DIR$/view/frontend/web/js/view/payment/method-renderer/billet_creditcard.js" afterPath="$PROJECT_DIR$/view/frontend/web/js/view/payment/method-renderer/billet_creditcard.js" />
-      <change beforePath="$PROJECT_DIR$/view/frontend/web/js/view/payment/method-renderer/two_creditcard.js" afterPath="$PROJECT_DIR$/view/frontend/web/js/view/payment/method-renderer/two_creditcard.js" />
-      <change beforePath="$PROJECT_DIR$/view/frontend/web/template/payment/bcc-form.html" afterPath="$PROJECT_DIR$/view/frontend/web/template/payment/bcc-form.html" />
-      <change beforePath="$PROJECT_DIR$/view/frontend/web/template/payment/two-cc-form.html" afterPath="$PROJECT_DIR$/view/frontend/web/template/payment/two-cc-form.html" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -268,12 +256,12 @@
       <workItem from="1526507063223" duration="7500000" />
       <workItem from="1527016133719" duration="1304000" />
       <workItem from="1527023002250" duration="6336000" />
-      <workItem from="1527102668855" duration="79000" />
+      <workItem from="1527102668855" duration="295000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="58146000" />
+    <option name="totallyTimeSpent" value="58362000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="-2" width="1920" height="1041" extended-state="7" />
