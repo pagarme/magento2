@@ -116,10 +116,9 @@ class TwoCreditCardDataAssignObserver extends AbstractDataAssignObserver
             $info->setAdditionalInformation('cc_savecard_second', $additionalData->getCcSavecardSecond());
         }
 
-        $info->setAdditionalInformation('cc_buyer_name_first', $additionalData->getCcBuyerNameFirst());
-        $info->setAdditionalInformation('cc_buyer_email_first', $additionalData->getCcBuyerEmailFirst());
-        $info->setAdditionalInformation('cc_buyer_name_second', $additionalData->getCcBuyerNameSecond());
-        $info->setAdditionalInformation('cc_buyer_email_second', $additionalData->getCcBuyerEmailSecond());
+
+
+        $this->setMultiBuyer($info, $additionalData);
 
         $info->setAdditionalInformation('cc_installments_first', 1);
         $info->setAdditionalInformation('cc_installments_second', 1);
@@ -134,4 +133,36 @@ class TwoCreditCardDataAssignObserver extends AbstractDataAssignObserver
 
         return $this;
     }
+
+    /**
+     * @param $info
+     * @param $additionalData
+     */
+    protected function setMultiBuyer($info, $additionalData)
+    {
+        $info->setAdditionalInformation('cc_buyer_checkbox_first', $additionalData->getCcBuyerCheckboxFirst());
+        $info->setAdditionalInformation('cc_buyer_name_first', $additionalData->getCcBuyerNameFirst());
+        $info->setAdditionalInformation('cc_buyer_email_first', $additionalData->getCcBuyerEmailFirst());
+        $info->setAdditionalInformation('cc_buyer_document_first', $additionalData->getCcBuyerDocumentFirst());
+        $info->setAdditionalInformation('cc_buyer_street_title_first', $additionalData->getCcBuyerStreetTitleFirst());
+        $info->setAdditionalInformation('cc_buyer_street_number_first', $additionalData->getCcBuyerStreetNumberFirst());
+        $info->setAdditionalInformation('cc_buyer_street_complement_first', $additionalData->getCcBuyerStreetComplementFirst());
+        $info->setAdditionalInformation('cc_buyer_zipcode_first', $additionalData->getCcBuyerZipcodeFirst());
+        $info->setAdditionalInformation('cc_buyer_neighborhood_first', $additionalData->getCcBuyerNeighborhoodFirst());
+        $info->setAdditionalInformation('cc_buyer_city_first', $additionalData->getCcBuyerCityFirst());
+        $info->setAdditionalInformation('cc_buyer_state_first', $additionalData->getCcBuyerStateFirst());
+
+        $info->setAdditionalInformation('cc_buyer_checkbox_second', $additionalData->getCcBuyerCheckboxSecond());
+        $info->setAdditionalInformation('cc_buyer_name_second', $additionalData->getCcBuyerNameSecond());
+        $info->setAdditionalInformation('cc_buyer_email_second', $additionalData->getCcBuyerEmailSecond());
+        $info->setAdditionalInformation('cc_buyer_document_second', $additionalData->getCcBuyerDocumentSecond());
+        $info->setAdditionalInformation('cc_buyer_street_title_second', $additionalData->getCcBuyerStreetTitleSecond());
+        $info->setAdditionalInformation('cc_buyer_street_number_second', $additionalData->getCcBuyerStreetNumberSecond());
+        $info->setAdditionalInformation('cc_buyer_street_complement_second', $additionalData->getCcBuyerStreetComplementSecond());
+        $info->setAdditionalInformation('cc_buyer_zipcode_second', $additionalData->getCcBuyerZipcodeSecond());
+        $info->setAdditionalInformation('cc_buyer_neighborhood_second', $additionalData->getCcBuyerNeighborhoodSecond());
+        $info->setAdditionalInformation('cc_buyer_city_second', $additionalData->getCcBuyerCitySecond());
+        $info->setAdditionalInformation('cc_buyer_state_second', $additionalData->getCcBuyerStateSecond());
+    }
+
 }

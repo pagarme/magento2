@@ -7,7 +7,6 @@ class Payment
 {
     protected $customer;
 
-
     /**
      * return the object with a new customer with new card
      *
@@ -17,27 +16,88 @@ class Payment
      * @param int $line line the payment if cards ou two cards need the value line 1 or 2 cards
      * @return object array
      */
-    public function addCustomersOnMultiPager($object, $name, $email, $line = NULL)
+    public function addCustomersOnMultiPager($object, $customer, $address = NULL, $line = NULL, $active = NULL)
     {
-        if (!empty($name) && !empty($email)) {
+        if (!empty($customer['name']) && !empty($customer['email'])) {
+
 
             if (is_null($line)) {
+
+                $addressMuntiPager = $this->addCustomersAddress($address);
+
+
                 $object->payments[0]['customer'] = array(
-                    'name' => $name,
-                    'email' => $email
+                    'name' => $customer['name'],
+                    'email' => $customer['email'],
+                    'phone' => $customer['phone'],
+                    'document' => !empty($customer['document']) ? $customer['document'] : null,
+                    'type' => 'individual',
+                    'address' => $addressMuntiPager
                 );
+
             } else {
+
                 if (($line > 0) || $line < 3) {
+
+                    $addressMuntiPager = $this->addCustomersAddress($address);
+
                     $object->payments[$line - 1]['customer'] = array(
-                        'name' => $name,
-                        'email' => $email
+                        'name' => $customer['name'],
+                        'email' => $customer['email'],
+                        'document' => !empty($customer['document']) ? $customer['document'] : null,
+                        'type' => 'individual',
+                        'address' => $addressMuntiPager
                     );
                 } else {
                     throw new Exception('Line to add customer not informed. Ex: (1 or 2)');
                 }
             }
+        }else{
+            throw new \Magento\Framework\Exception\CouldNotSaveException(__('Name and Email required'));
         }
         return $object;
+    }
+
+    /**
+     * return the object with address
+     *
+     * @param object $address is required
+     * @param $country Country with you have
+     * @return object array
+     */
+
+    public function addCustomersAddress($address, $country = NULL)
+    {
+
+        if (empty($address['zip_code'])) {
+            $address['zip_code'] = null;
+        }
+
+        if (is_null($country)) {
+            $address['country'] = 'BR';
+        }
+
+        $address = array(
+            'street' => $address['street'],
+            'number' => $address['number'],
+            'zip_code' => $address['zip_code'],
+            'neighborhood' => $address['neighborhood'],
+            'city' => $address['city'],
+            'state' => $address['state'],
+            'country' => $address['country'],
+            'complement' => $address['complement']
+        );
+
+        foreach($address as $key => $value){
+
+            if((empty($value) || $value == '') && $key != 'complement'){
+                return null;
+            }
+
+        }
+
+        return $address;
+
     }
 
     /**
@@ -51,7 +111,7 @@ class Payment
     public function addCustomerOnPaymentMethodWithSavedCard($order, $card, $line)
     {
 
-        if($order && $card){
+        if ($order && $card) {
 
             if (($line > 0) || $line < 3) {
                 $order->payments[$line - 1]['customer_id'] = $card->getCardId();
