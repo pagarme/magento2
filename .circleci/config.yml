@@ -65,7 +65,7 @@ jobs:
           name: Activate and setup Plugin
           command: |
             docker exec -it newimage mysql magento2 -e \
-               "INSERT INTO `core_config_data` \
+               "INSERT INTO `core_config_data` VALUES \
                  (null, 'default', 0, 'mundipagg_mundipagg/global/test_mode', '1'),
                  (null, 'default', 0, 'mundipagg_mundipagg/global/secret_key_test', '${API_TEST_SECRET_KEY}'), \
                  (null, 'default', 0, 'mundipagg_mundipagg/global/public_key_test', '${API_TEST_PUBLIC_KEY}'), \
