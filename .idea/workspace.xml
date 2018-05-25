@@ -30,12 +30,21 @@
     <select />
   </component>
   <component name="FileEditorManager">
+<<<<<<< HEAD
     <leaf>
       <file leaf-file-name="config.yml" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/.circleci/config.yml">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="775">
               <caret line="103" column="82" lean-forward="false" selection-start-line="103" selection-start-column="82" selection-end-line="103" selection-end-column="82" />
+=======
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="config.yml" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.circleci/config.yml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="239">
+              <caret line="54" column="20" lean-forward="true" selection-start-line="54" selection-start-column="20" selection-end-line="54" selection-end-column="20" />
+>>>>>>> f1db5fd0f09e888ec580b6c779302e30822ec616
               <folding />
             </state>
           </provider>
@@ -171,12 +180,6 @@
               <item name="Magento2Mundi" type="2a2b976b:PhpTreeStructureProvider$1" />
               <item name=".circleci" type="2a2b976b:PhpTreeStructureProvider$1" />
             </path>
-            <path>
-              <item name="Magento2Mundi" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Magento2Mundi" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name=".circleci" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="data" type="2a2b976b:PhpTreeStructureProvider$1" />
-            </path>
           </expand>
           <select />
         </subPane>
@@ -221,15 +224,23 @@
       <workItem from="1526507063223" duration="7500000" />
       <workItem from="1527016133719" duration="1304000" />
       <workItem from="1527023002250" duration="6336000" />
+<<<<<<< HEAD
       <workItem from="1527102668855" duration="1370000" />
       <workItem from="1527110325995" duration="3985000" />
       <workItem from="1527263221802" duration="11000" />
       <workItem from="1527272362712" duration="1282000" />
+=======
+      <workItem from="1527102668855" duration="1340000" />
+>>>>>>> f1db5fd0f09e888ec580b6c779302e30822ec616
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
+<<<<<<< HEAD
     <option name="totallyTimeSpent" value="64715000" />
+=======
+    <option name="totallyTimeSpent" value="59407000" />
+>>>>>>> f1db5fd0f09e888ec580b6c779302e30822ec616
   </component>
   <component name="ToolWindowManager">
     <frame x="1920" y="25" width="1920" height="1055" extended-state="7" />
@@ -623,6 +634,7 @@
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/.circleci/data/wait-for-mysql.sh">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="54">
@@ -632,9 +644,20 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/.circleci/config.yml">
+=======
+    <entry file="file:///var/www/magento.localhost/public_html/index.php">
+>>>>>>> f1db5fd0f09e888ec580b6c779302e30822ec616
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="775">
           <caret line="103" column="82" lean-forward="false" selection-start-line="103" selection-start-column="82" selection-end-line="103" selection-end-column="82" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.circleci/config.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="239">
+          <caret line="54" column="20" lean-forward="true" selection-start-line="54" selection-start-column="20" selection-end-line="54" selection-end-column="20" />
           <folding />
         </state>
       </provider>
