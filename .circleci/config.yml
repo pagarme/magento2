@@ -57,50 +57,48 @@ jobs:
             docker exec -it newimage sh -c "cd /var/www/html && composer update -vvv"
             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento setup:upgrade"
             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento setup:di:compile"
+
+            docker exec -it newimage mysql magento2 -e \
+                           "INSERT INTO magento2.core_config_data VALUES (null, 'default', 0, 'mundipagg_mundipagg/global/test_mode', '1'), \
+                             (null, 'default', 0, 'mundipagg_mundipagg/global/secret_key_test', '${API_TEST_SECRET_KEY}'), \
+                             (null, 'default', 0, 'mundipagg_mundipagg/global/public_key_test', '${API_TEST_PUBLIC_KEY}'), \
+                             (null, 'default', 0, 'payment/mundipagg_customer_address/street_attribute', 'street_1'), \
+                             (null, 'default', 0, 'payment/mundipagg_customer_address/number_attribute', 'street_2'), \
+                             (null, 'default', 0, 'payment/mundipagg_customer_address/complement_attribute', 'street_3'), \
+                             (null, 'default', 0, 'payment/mundipagg_customer_address/district_attribute', 'street_4'), \
+                             (null, 'default', 0, 'payment/mundipagg_creditcard/active', '1'), \
+                             (null, 'default', 0, 'payment/mundipagg_creditcard/title', 'MundiPagg Cartão'), \
+                             (null, 'default', 0, 'payment/mundipagg_creditcard/soft_description', 'Loja Magento 2 stg'), \
+                             (null, 'default', 0, 'payment/mundipagg_creditcard/payment_action', 'authorize_capture'), \
+                             (null, 'default', 0, 'payment/mundipagg_creditcard/sort_order', '1'), \
+                             (null, 'default', 0, 'payment/mundipagg_creditcard/cctypes', 'Visa,Mastercard,Amex,Hipercard,Diners,Elo,Discover,Aura'), \
+                             (null, 'default', 0, 'payment/mundipagg_creditcard/installments_active', '1'), \
+                             (null, 'default', 0, 'payment/mundipagg_creditcard/installments_type', '1'), \
+                             (null, 'default', 0, 'payment/mundipagg_creditcard/installments_number', '12'), \
+                             (null, 'default', 0, 'payment/mundipagg_creditcard/installment_min_amount', '10.00'), \
+                             (null, 'default', 0, 'payment/mundipagg_creditcard/installments_interest_by_issuer', '1'), \
+                             (null, 'default', 0, 'payment/mundipagg_creditcard/installments_interest_rate_initial', '10'), \
+                             (null, 'default', 0, 'payment/mundipagg_creditcard/installments_interest_rate_incremental', '1'), \
+                             (null, 'default', 0, 'payment/mundipagg_creditcard/installments_max_without_interest', '6'), \
+                             (null, 'default', 0, 'payment/mundipagg_creditcard/antifraud_active', '0'), \
+                             (null, 'default', 0, 'payment/mundipagg_billet/active', '1'), \
+                             (null, 'default', 0, 'payment/mundipagg_billet/title', 'MundiPagg Boleto'), \
+                             (null, 'default', 0, 'payment/mundipagg_billet/text', 'Você poderar imprimir seu boleto após finalizar a compra'), \
+                             (null, 'default', 0, 'payment/mundipagg_billet/types', 'Itau'), \
+                             (null, 'default', 0, 'payment/mundipagg_billet/instructions', 'Pagar até o vencimento'), \
+                             (null, 'default', 0, 'payment/mundipagg_billet/expiration_days', '5'), \
+                             (null, 'default', 0, 'payment/mundipagg_billet/sort_order', '1'), \
+                             (null, 'default', 0, 'payment/mundipagg_two_creditcard/active', '1'), \
+                             (null, 'default', 0, 'payment/mundipagg_two_creditcard/title', 'MundiPagg 2 cartões'), \
+                             (null, 'default', 0, 'payment/mundipagg_two_creditcard/sort_order', '1'), \
+                             (null, 'default', 0, 'payment/mundipagg_billet_creditcard/active', '1'), \
+                             (null, 'default', 0, 'payment/mundipagg_billet_creditcard/title', 'MundiPagg Boleto e Cartão'), \
+                             (null, 'default', 0, 'payment/mundipagg_billet_creditcard/sort_order', '1'), \
+                             (null, 'default', 0, 'payment/mundipagg_multibuyer/active', '1');"
       - run:
           name: Clear useless files
           command: |
             pwd
-      - run:
-          name: Activate and setup Plugin
-          command: |
-            docker exec -it newimage mysql magento2 -e \
-               "INSERT INTO `core_config_data` VALUES (null, 'default', 0, 'mundipagg_mundipagg/global/test_mode', '1'), \
-                 (null, 'default', 0, 'mundipagg_mundipagg/global/secret_key_test', '${API_TEST_SECRET_KEY}'), \
-                 (null, 'default', 0, 'mundipagg_mundipagg/global/public_key_test', '${API_TEST_PUBLIC_KEY}'), \
-                 (null, 'default', 0, 'payment/mundipagg_customer_address/street_attribute', 'street_1'), \
-                 (null, 'default', 0, 'payment/mundipagg_customer_address/number_attribute', 'street_2'), \
-                 (null, 'default', 0, 'payment/mundipagg_customer_address/complement_attribute', 'street_3'), \
-                 (null, 'default', 0, 'payment/mundipagg_customer_address/district_attribute', 'street_4'), \
-                 (null, 'default', 0, 'payment/mundipagg_creditcard/active', '1'), \
-                 (null, 'default', 0, 'payment/mundipagg_creditcard/title', 'MundiPagg Cartão'), \
-                 (null, 'default', 0, 'payment/mundipagg_creditcard/soft_description', 'Loja Magento 2 stg'), \
-                 (null, 'default', 0, 'payment/mundipagg_creditcard/payment_action', 'authorize_capture'), \
-                 (null, 'default', 0, 'payment/mundipagg_creditcard/sort_order', '1'), \
-                 (null, 'default', 0, 'payment/mundipagg_creditcard/cctypes', 'Visa,Mastercard,Amex,Hipercard,Diners,Elo,Discover,Aura'), \
-                 (null, 'default', 0, 'payment/mundipagg_creditcard/installments_active', '1'), \
-                 (null, 'default', 0, 'payment/mundipagg_creditcard/installments_type', '1'), \
-                 (null, 'default', 0, 'payment/mundipagg_creditcard/installments_number', '12'), \
-                 (null, 'default', 0, 'payment/mundipagg_creditcard/installment_min_amount', '10.00'), \
-                 (null, 'default', 0, 'payment/mundipagg_creditcard/installments_interest_by_issuer', '1'), \
-                 (null, 'default', 0, 'payment/mundipagg_creditcard/installments_interest_rate_initial', '10'), \
-                 (null, 'default', 0, 'payment/mundipagg_creditcard/installments_interest_rate_incremental', '1'), \
-                 (null, 'default', 0, 'payment/mundipagg_creditcard/installments_max_without_interest', '6'), \
-                 (null, 'default', 0, 'payment/mundipagg_creditcard/antifraud_active', '0'), \
-                 (null, 'default', 0, 'payment/mundipagg_billet/active', '1'), \
-                 (null, 'default', 0, 'payment/mundipagg_billet/title', 'MundiPagg Boleto'), \
-                 (null, 'default', 0, 'payment/mundipagg_billet/text', 'Você poderar imprimir seu boleto após finalizar a compra'), \
-                 (null, 'default', 0, 'payment/mundipagg_billet/types', 'Itau'), \
-                 (null, 'default', 0, 'payment/mundipagg_billet/instructions', 'Pagar até o vencimento'), \
-                 (null, 'default', 0, 'payment/mundipagg_billet/expiration_days', '5'), \
-                 (null, 'default', 0, 'payment/mundipagg_billet/sort_order', '1'), \
-                 (null, 'default', 0, 'payment/mundipagg_two_creditcard/active', '1'), \
-                 (null, 'default', 0, 'payment/mundipagg_two_creditcard/title', 'MundiPagg 2 cartões'), \
-                 (null, 'default', 0, 'payment/mundipagg_two_creditcard/sort_order', '1'), \
-                 (null, 'default', 0, 'payment/mundipagg_billet_creditcard/active', '1'), \
-                 (null, 'default', 0, 'payment/mundipagg_billet_creditcard/title', 'MundiPagg Boleto e Cartão'), \
-                 (null, 'default', 0, 'payment/mundipagg_billet_creditcard/sort_order', '1'), \
-                 (null, 'default', 0, 'payment/mundipagg_multibuyer/active', '1');"
       - deploy:
           name: Commit and push Docker image
           command: |
