@@ -57,6 +57,9 @@ jobs:
             docker exec -it newimage sh -c "cd /var/www/html && composer update -vvv"
             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento setup:upgrade"
             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento setup:di:compile"
+            docker exec -it newimage mysql magento2 -e
+              update magento2.core_config_data set value = '1'\
+              where path like 'customer/create_account/vat_frontend_visibility';
             docker exec -it newimage mysql magento2 -e \
                "INSERT INTO magento2.core_config_data VALUES (null, 'default', 0, 'mundipagg_mundipagg/global/test_mode', '1'), \
                  (null, 'default', 0, 'mundipagg_mundipagg/global/secret_key_test', '${API_TEST_SECRET_KEY}'), \
