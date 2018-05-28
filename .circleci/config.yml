@@ -106,6 +106,7 @@ jobs:
                  (null, 'default', 0, 'payment/mundipagg_billet_creditcard/title', 'MundiPagg Boleto e Cartão'), \
                  (null, 'default', 0, 'payment/mundipagg_billet_creditcard/sort_order', '1'), \
                  (null, 'default', 0, 'payment/mundipagg_multibuyer/active', '1');"
+             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento cache:flush"
              docker exec -it newimage sh -c "cd /var/www/html && php bin/magento setup:di:compile"
       - run:
           name: Clear useless files
