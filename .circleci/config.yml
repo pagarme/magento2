@@ -60,14 +60,14 @@ jobs:
             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento setup:upgrade"
             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento setup:di:compile"
             docker exec -it newimage php index.php
+
             docker exec -it newimage mysql magento2 -e \
             "update core_config_data set value = '${STG_URL}' where path = 'web/unsecure/base_url';"
-            docker exec -it newimage mysql magento2 -e \
-                        "insert into core_config_data (scope, scope_id, path, value) \
-                        values ('default', 0, 'web/secure/base_url', '${STG_URL}');"
+
             docker exec -it newimage mysql magento2 -e \
               "update magento2.core_config_data set value = '1' \
               where path like 'customer/create_account/vat_frontend_visibility';"
+
             docker exec -it newimage mysql magento2 -e \
             "INSERT INTO magento2.core_config_data VALUES (null, 'default', 0, 'customer/address/taxvat_show', null), \
             docker exec -it newimage mysql magento2 -e \
