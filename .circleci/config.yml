@@ -60,6 +60,9 @@ jobs:
             docker exec -it newimage php index.php
             docker exec -it newimage mysql magento2 -e \
             "update core_config_data set value = '${STG_URL}' where path = 'web/unsecure/base_url';"
+            docker exec -it newimage mysql magento2 -e \
+                        "insert into core_config_data (scope, scope_id, path, value) \
+                        values ('default', 0, 'web/secure/base_url', '${STG_URL}');"
       - run:
           name: Clear useless files
           command: |
