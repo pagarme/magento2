@@ -66,6 +66,10 @@ jobs:
             docker exec -it newimage mysql magento2 -e \
                         "insert into core_config_data (scope, scope_id, path, value) \
                         values ('default', 0, 'web/secure/base_url', '${STG_URL}');"
+            docker exec -it newimage mysql magento2 -e \
+              "update magento2.core_config_data set value = '1' \
+              where path like 'customer/create_account/vat_frontend_visibility';"
+
       - run:
           name: Clear useless files
           command: |
