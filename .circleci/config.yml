@@ -107,8 +107,10 @@ jobs:
                  (null, 'default', 0, 'payment/mundipagg_billet_creditcard/title', 'MundiPagg Boleto e Cartao'), \
                  (null, 'default', 0, 'payment/mundipagg_billet_creditcard/sort_order', '1'), \
                  (null, 'default', 0, 'payment/mundipagg_multibuyer/active', '1');"
+
             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento cache:flush"
             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento setup:di:compile"
+
             docker login ${DOCKER_ACCOUNT} -u ${DOCKER_USER} -p ${DOCKER_PASS}
             docker commit newimage ${DOCKER_ACCOUNT}/${PROJECT_NAME}:latest
       - run:
