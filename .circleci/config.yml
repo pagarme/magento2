@@ -49,7 +49,6 @@ jobs:
              docker build -t ${DOCKER_ACCOUNT}/${PROJECT_NAME}:latest .
              docker run --name newimage -d -p3306:3306 -p80:80 ${DOCKER_ACCOUNT}/${PROJECT_NAME}:latest
              docker exec -it newimage ls
-
       - run:
           name: Activate and setup Plugin
           command: |
