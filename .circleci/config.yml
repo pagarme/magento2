@@ -78,7 +78,7 @@ jobs:
             docker exec -it newimage mysql magento2 -e \
             "INSERT INTO magento2.core_config_data VALUES (null, 'default', 0, 'customer/address/taxvat_show', NULL)"
 
-            docker exec -it newimage /bin/sh -c "mysql magento < /app/.modman/magento/magento_module_install.sql"
+            docker exec -it newimage /bin/sh -c "mysql magento < /app/.modman/magento/magento2_module_install.sql"
 
             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento cache:flush"
             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento setup:di:compile"
