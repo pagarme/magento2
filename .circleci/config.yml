@@ -114,6 +114,7 @@ jobs:
             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento setup:di:compile"
             docker login ${DOCKER_ACCOUNT} -u ${DOCKER_USER} -p ${DOCKER_PASS}
             docker commit newimage ${DOCKER_ACCOUNT}/${PROJECT_NAME}:latest
+            
       - run:
           name: Clear useless files
           command: |
