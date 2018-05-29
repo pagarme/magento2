@@ -47,6 +47,7 @@ jobs:
           name: Build image base for modifications
           command: |
              cd /app
+             ls
              docker build -t ${DOCKER_ACCOUNT}/${PROJECT_NAME}:latest .
              docker run --name newimage -d -p3306:3306 -p80:80 ${DOCKER_ACCOUNT}/${PROJECT_NAME}:latest
              docker exec -it newimage ls
@@ -55,6 +56,8 @@ jobs:
       - run:
           name: Activate and setup Plugin
           command: |
+            docker exec -it newimage sh -c "ls"
+            docker exec -it newimage sh -c "ls /app"
             docker exec -it newimage sh -c "cd /var/www/html && composer require mundipagg/mundipagg-magento2-module -vvv"
             docker exec -it newimage sh -c "cd /var/www/html && composer update -vvv"
             docker exec -it newimage sh -c "cd /var/www/ && find html/ -type d -exec chmod 775 {} \;"
