@@ -51,6 +51,7 @@ jobs:
              docker build -t ${DOCKER_ACCOUNT}/${PROJECT_NAME}:latest .
              docker run --name newimage -d -p3306:3306 -p80:80 ${DOCKER_ACCOUNT}/${PROJECT_NAME}:latest
              docker exec -it newimage ls
+             docker exec -it newimage sh -c "mkdir /app/tmp"
              docker cp /app/wait-for-mysql.sh newimage:app/tmp/
              docker cp /app/magento2_module_install.sql newimage:app/tmp/
       - run:
