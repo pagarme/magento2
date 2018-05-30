@@ -74,16 +74,16 @@ jobs:
                         values ('default', 0, 'web/secure/base_url', '${STG_URL}');"
 
             docker exec -it newimage mysql magento2 -e \
-            "INSERT INTO magento2.core_config_data VALUES (null, 'default', 0, 'customer/address/taxvat_show', 1)"
+            "INSERT INTO magento2.core_config_data VALUES (null, 'default', 0, 'customer/address/taxvat_show', 1);"
 
             docker exec -it newimage mysql magento2 -e \
               "update magento2.core_config_data set value = '1' \
               where path like 'customer/create_account/vat_frontend_visibility';"
 
-
             docker exec -it newimage mysql magento2 -e \
-            "('default', 0, 'mundipagg_mundipagg/global/secret_key_test', '${API_TEST_SECRET_KEY}'), \
-             ('default', 0, 'mundipagg_mundipagg/global/public_key_test', '${API_TEST_PUBLIC_KEY}'),"
+              "INSERT INTO magento2.core_config_data VALUES \
+              ('default', 0, 'mundipagg_mundipagg/global/secret_key_test', '${API_TEST_SECRET_KEY}'), \
+              ('default', 0, 'mundipagg_mundipagg/global/public_key_test', '${API_TEST_PUBLIC_KEY}');"
 
             docker exec -it newimage /bin/sh -c "mysql magento2 < /app/tmp/magento2_module_install.sql"
 
