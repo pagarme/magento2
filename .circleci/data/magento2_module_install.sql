@@ -1,7 +1,5 @@
 INSERT INTO magento2.core_config_data (scope, scope_id, path, value)
 VALUES ('default', 0, 'mundipagg_mundipagg/global/test_mode', '1'),
-('default', 0, 'mundipagg_mundipagg/global/secret_key_test', '${API_TEST_SECRET_KEY}'),
-('default', 0, 'mundipagg_mundipagg/global/public_key_test', '${API_TEST_PUBLIC_KEY}'),
 ('default', 0, 'payment/mundipagg_customer_address/street_attribute', 'street_1'),
 ('default', 0, 'payment/mundipagg_customer_address/number_attribute', 'street_2'),
 ('default', 0, 'payment/mundipagg_customer_address/complement_attribute', 'street_3'),
