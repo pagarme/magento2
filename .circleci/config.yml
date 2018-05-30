@@ -81,7 +81,7 @@ jobs:
               where path like 'customer/create_account/vat_frontend_visibility';"
 
             docker exec -it newimage mysql magento2 -e \
-              "INSERT INTO magento2.core_config_data VALUES \
+              "INSERT INTO magento2.core_config_data (scope, scope_id, path, value) VALUES \
               ('default', 0, 'mundipagg_mundipagg/global/secret_key_test', '${API_TEST_SECRET_KEY}'), \
               ('default', 0, 'mundipagg_mundipagg/global/public_key_test', '${API_TEST_PUBLIC_KEY}');"
 
