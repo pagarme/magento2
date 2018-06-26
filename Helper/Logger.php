@@ -21,6 +21,6 @@ class Logger
         $writer = new \Zend\Log\Writer\Stream(BP . '/var/log/mundipagg-' . date('Y-m-d') . '.log');
         $logger = new \Zend\Log\Logger();
         $logger->addWriter($writer);
-        $logger->info($data);
+        $logger->info(json_encode($data, JSON_PRETTY_PRINT));
     }
 }

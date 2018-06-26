@@ -11,11 +11,12 @@
 
 namespace MundiPagg\MundiPagg\Gateway\Transaction\TwoCreditCard\ResourceGateway\Create\Response;
 
-
+use Magento\Framework\DataObject;
 use Magento\Payment\Gateway\Response\HandlerInterface;
 use MundiPagg\MundiPagg\Gateway\Transaction\Base\ResourceGateway\Response\AbstractHandler;
 use MundiPagg\MundiPagg\Model\ChargesFactory;
 use MundiPagg\MundiPagg\Helper\Logger;
+use MundiPagg\MundiPagg\Gateway\Transaction\CreditCard\Config\Config as ConfigCreditCard;
 
 class GeneralHandler extends AbstractHandler implements HandlerInterface
 {
@@ -29,13 +30,20 @@ class GeneralHandler extends AbstractHandler implements HandlerInterface
      */
     protected $logger;
 
+    /**
+     * \MundiPagg\MundiPagg\Gateway\Transaction\CreditCard\Config\Config
+     */
+    protected $configCreditCard;
+
 	/**
      * @return void
      */
     public function __construct(
+        ConfigCreditCard $configCreditCard,
     	ChargesFactory $modelCharges,
         Logger $logger
     ) {
+        $this->configCreditCard = $configCreditCard;
         $this->modelCharges = $modelCharges;
         $this->logger = $logger;
     }
@@ -45,9 +53,17 @@ class GeneralHandler extends AbstractHandler implements HandlerInterface
      */
     protected function _handle($payment, $response)
     {
-        $this->logger->logger(json_encode($response));
+        $this->logger->logger($response);
         $payment->setTransactionId($response->id);
+
+        $this->setPaymentStateTwoCreditCards($payment, $response);
+
         $payment->setIsTransactionClosed(false);
+        if($this->configCreditCard->getPaymentAction() == 'authorize_capture')  {
+            $payment->setIsTransactionClosed(true);
+            $payment->accept()
+                ->setParentTransactionId($response->id);
+        }
 
         foreach($response->charges as $charge)
         {
@@ -71,5 +87,32 @@ class GeneralHandler extends AbstractHandler implements HandlerInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @param $payment
+     * @param $response
+     */
+    protected function setPaymentStateTwoCreditCards($payment, $response)
+    {
+        $capture = $this->configCreditCard->getPaymentAction() == 'authorize_capture' ? true : false;
+
+        $stateMagento = new DataObject();
+
+        $apiResponseStatus = $response->status;
+
+        if (!$capture && $apiResponseStatus == 'pending') {
+            $stateMagento->setState('pending_payment')->setStatus('pending_payment');
+        }
+
+        if ($capture && $apiResponseStatus == 'pending') {
+            $stateMagento->setState('processing')->setStatus('processing');
+        }
+
+        if ($apiResponseStatus == 'failed') {
+            $stateMagento->setState('canceled')->setStatus('canceled');
+        }
+
+        $payment->setData('custom_status', $stateMagento);
     }
 }

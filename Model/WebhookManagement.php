@@ -136,6 +136,14 @@ class WebhookManagement implements WebhookManagementInterface
             ];
         }
 
+        if ($order->canCancel() && $charge['status'] == 'canceled') {
+            $cancel = $this->cancelOrder($order);
+            $result[] = [
+                "order" => "canCancel",
+                "cancel" => $cancel,
+            ];
+        }
+
         if ($order->canCreditmemo() && $charge['status'] == 'refunded') {
             $creditmemo = $this->createCreditMemo($order);
             $result[] = [

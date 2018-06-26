@@ -45,7 +45,7 @@ class GeneralHandler extends AbstractHandler implements HandlerInterface
      */
     protected function _handle($payment, $response)
     {
-        $this->logger->logger(json_encode($response));
+        $this->logger->logger($response);
         $boletoUrl = '';
         foreach ($response->charges as $charge){
             if($charge->paymentMethod ==  'boleto'){

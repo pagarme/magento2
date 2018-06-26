@@ -181,7 +181,8 @@ class RequestBuilder implements BuilderInterface
             $itemValues = [
                 'amount' => $cartItemDataProvider->getUnitCostInCents(),
                 'description' => $cartItemDataProvider->getName(),
-                'quantity' => $cartItemDataProvider->getQuantity()
+                'quantity' => $cartItemDataProvider->getQuantity(),
+                'code' => $item->getSku()
             ];
             array_push($order->items, $itemValues);
 

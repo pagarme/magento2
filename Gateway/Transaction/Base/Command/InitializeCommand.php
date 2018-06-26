@@ -18,6 +18,7 @@ use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Payment\Gateway\CommandInterface;
 use Magento\Sales\Model\Order\Payment;
 use MundiPagg\MundiPagg\Model\Ui\CreditCard\ConfigProvider;
+use MundiPagg\MundiPagg\Model\Ui\TwoCreditCard\ConfigProvider as TwoCreditCardConfigProvider;
 
 class InitializeCommand implements CommandInterface
 {
@@ -42,22 +43,17 @@ class InitializeCommand implements CommandInterface
         $payment->authorize(true, $baseTotalDue);
         $payment->setAmountAuthorized($totalDue);
         $payment->setBaseAmountAuthorized($payment->getOrder()->getBaseTotalDue());
+        $customStatus = $payment->getData('custom_status');
+
         $stateObject->setData(OrderInterface::STATE, Order::STATE_PENDING_PAYMENT);
 
-        if ($payment->getMethod() === ConfigProvider::CODE) {
-            $stateObject->setData(OrderInterface::STATE, Order::STATE_PROCESSING);
+        if ($payment->getMethod() === ConfigProvider::CODE || $payment->getMethod() === TwoCreditCardConfigProvider::CODE) {
+            $stateObject->setData(OrderInterface::STATE, $customStatus->getData('state'));
+            $stateObject->setData(OrderInterface::STATUS, $customStatus->getData('status'));
         }
 
-        $stateObject->setData(OrderInterface::STATUS, $payment->getMethodInstance()->getConfigData('order_status'));
-
-        if ($payment->getIsFraudDetected()) {
-            $stateObject->setData(OrderInterface::STATE, Order::STATE_PAYMENT_REVIEW);
-            $stateObject->setData(OrderInterface::STATUS, $payment->getMethodInstance()->getConfigData('reject_order_status'));
-        }
-
-        if ($payment->getIsTransactionPending()) {
-            $stateObject->setData(OrderInterface::STATE, Order::STATE_PAYMENT_REVIEW);
-            $stateObject->setData(OrderInterface::STATUS, $payment->getMethodInstance()->getConfigData('review_order_status'));
+        if ($payment->getMethod() != ConfigProvider::CODE) {
+            $stateObject->setData(OrderInterface::STATUS, $payment->getMethodInstance()->getConfigData('order_status'));
         }
 
         $stateObject->setData('is_notified', false);

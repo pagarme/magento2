@@ -45,7 +45,7 @@ class GeneralHandler extends AbstractHandler implements HandlerInterface
      */
     protected function _handle($payment, $response)
     {
-        $this->logger->logger(json_encode($response));
+        $this->logger->logger($response);
 
         $model = $this->modelCharges->create();
         $charge = $model->getCollection()->addFieldToFilter('charge_id',array('eq' => $response->id))->getFirstItem();

@@ -66,7 +66,7 @@ class Remove extends Action
             $result = $this->cardsRepository->getById($idCard);
 
             $response = $this->getApi()->getCustomers()->deleteCard($result->getCardId(),$result->getCardToken());
-            $this->logger->logger(json_encode($response));
+            $this->logger->logger($response);
 
             $result = $this->cardsRepository->deleteById($idCard);
             $this->messageManager->addSuccess(__('You deleted card id: %1', $idCard));

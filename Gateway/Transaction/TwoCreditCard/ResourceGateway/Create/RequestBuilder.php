@@ -23,7 +23,7 @@ use MundiPagg\MundiPagg\Api\CreditCardRequestDataProviderInterfaceFactory;
 use MundiPagg\MundiPagg\Api\CartItemRequestDataProviderInterfaceFactory;
 use Magento\Checkout\Model\Cart;
 use MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\Config;
-use MundiPagg\MundiPagg\Gateway\Transaction\TwoCreditCard\Config\Config as ConfigCreditCard;
+use MundiPagg\MundiPagg\Gateway\Transaction\CreditCard\Config\Config as ConfigCreditCard;
 use MundiPagg\MundiPagg\Helper\ModuleHelper;
 use MundiPagg\MundiPagg\Helper\Cards\CreateCard;
 use MundiPagg\MundiPagg\Helper\Logger;
@@ -438,7 +438,8 @@ class RequestBuilder implements BuilderInterface
             $itemValues = [
                 'amount' => $cartItemDataProvider->getUnitCostInCents(),
                 'description' => $cartItemDataProvider->getName(),
-                'quantity' => $cartItemDataProvider->getQuantity()
+                'quantity' => $cartItemDataProvider->getQuantity(),
+                'code' => $item->getSku()
             ];
 
             array_push($order->items, $itemValues);
