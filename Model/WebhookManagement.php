@@ -101,7 +101,13 @@ class WebhookManagement implements WebhookManagementInterface
         $this->getLogger()->logger($data);
 
         $statusOrder = $data['status'];
-        $charges = $data['charges'];
+
+        $isCharge = 'ch_';
+        if(substr($data['id'], 0, 3) == $isCharge){
+            $charges[] = $data;
+        }else{
+            $charges = $data['charges'];
+        }
 
         foreach ($charges as $charge) {
             $result[] = $this->saveCharge($charge);
