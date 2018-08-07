@@ -402,7 +402,7 @@ class RequestBuilder implements BuilderInterface
                 'amount' => $cartItemDataProvider->getUnitCostInCents(),
                 'description' => $cartItemDataProvider->getName(),
                 'quantity' => $cartItemDataProvider->getQuantity(),
-                'code' => $item->getSku()
+                'code' => substr($item->getSku(), 0, 50)
             ];
 
             array_push($order->items, $itemValues);
@@ -460,6 +460,10 @@ class RequestBuilder implements BuilderInterface
         try {
             $this->getLogger()->logger($order->jsonSerialize());
             $response = $this->getApi()->getOrders()->createOrder($order);
+
+            if($response->charges[0]->status == 'failed'){
+                throw new \InvalidArgumentException('Response failed');
+            }
 
             if($requestDataProvider->getSaveCard() == '1')
             {

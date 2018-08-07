@@ -439,7 +439,7 @@ class RequestBuilder implements BuilderInterface
                 'amount' => $cartItemDataProvider->getUnitCostInCents(),
                 'description' => $cartItemDataProvider->getName(),
                 'quantity' => $cartItemDataProvider->getQuantity(),
-                'code' => $item->getSku()
+                'code' => substr($item->getSku(), 0, 50)
             ];
 
             array_push($order->items, $itemValues);

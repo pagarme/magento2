@@ -15,6 +15,9 @@ class MundiPaggConfigProvider
      */
     const XML_PATH_SOFTDESCRIPTION = 'payment/mundipagg_creditcard/soft_description';
 
+    const XML_PATH_ATIVE           = 'mundipagg_mundipagg/global/ative';
+
+
     /**
      * Contains scope config of Magento
      *
@@ -65,6 +68,15 @@ class MundiPaggConfigProvider
         }
 
         return true;
+    }
+    /**
+     * Returns the soft_description configuration
+     *
+     * @return string
+     */
+    public function getModuleStatus()
+    {
+        return $this->scopeConfig->getValue(self::XML_PATH_ATIVE, ScopeInterface::SCOPE_STORE);
     }
 
 }
