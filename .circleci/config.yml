@@ -117,8 +117,12 @@ workflows:
     jobs:
       - build
       - publish:
+          context: DockerRegistry
           requires:
             - build
+          filters:
+            branches:
+              only: master
       - deploy_staging:
           requires:
             - publish
