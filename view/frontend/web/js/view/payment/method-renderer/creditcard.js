@@ -130,6 +130,48 @@ define(
                     return false;
                 }
 
+
+                if(this.creditCardOwner() === ""){
+                    this.messageContainer.addErrorMessage({
+                        message: $t('Name not informed.')
+                    });
+                    $("html, body").animate({ scrollTop: 0 }, 600);
+                    return false;
+                }
+
+                if(this.creditCardOwner() === ""){
+                    this.messageContainer.addErrorMessage({
+                        message: $t('Name not informed.')
+                    });
+                    $("html, body").animate({ scrollTop: 0 }, 600);
+                    return false;
+                }
+
+                if(this.creditCardExpMonth() === undefined){
+                    this.messageContainer.addErrorMessage({
+                        message: $t('Month not informed.')
+                    });
+                    $("html, body").animate({ scrollTop: 0 }, 600);
+                    return false;
+                }
+
+                if(this.creditCardExpYear() === undefined){
+                    this.messageContainer.addErrorMessage({
+                        message: $t('Year not informed.')
+                    });
+                    $("html, body").animate({ scrollTop: 0 }, 600);
+                    return false;
+                }
+
+                if(this.creditCardVerificationNumber() === ""){
+                    this.messageContainer.addErrorMessage({
+                        message: $t('Verifier code not informed.')
+                    });
+                    $("html, body").animate({ scrollTop: 0 }, 600);
+                    return false;
+                }
+
+
                 var self = this;
                 var address = this.quoteBilling;
                 var dataJson = {

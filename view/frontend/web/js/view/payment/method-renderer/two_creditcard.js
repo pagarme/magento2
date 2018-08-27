@@ -81,7 +81,6 @@ define(
                 creditCardSsIssueSecond: '',
                 creditCardVerificationNumberSecond: '',
                 tokenCreditCardSecond: '',
-                quoteBilling: quote.billingAddress(),
                 creditSavedCardSecond: window.checkoutConfig.payment.mundipagg_two_creditcard.selected_card,
                 selectedCardTypeSecond: null,
                 allInstallmentsSecond: ko.observableArray([]),
@@ -107,6 +106,7 @@ define(
                 creditCardBuyerCitySecond: '',
                 creditCardBuyerStateSecond: '',
                 creditCardBuyerZipCodeSecond: '',
+                quoteBilling: quote.billingAddress(),
                 stateOptions: addressHelper.getStateOptions()
             },
 
@@ -638,7 +638,24 @@ define(
             },
 
             useCardIdPlaceOrder: function (data, event) {
-                    this.placeOrder(data, event);
+
+                if(this.firstCreditCardAmount() === ""){
+                    this.messageContainer.addErrorMessage({
+                        message: $t('Total of the first card not informed.')
+                    });
+                    $("html, body").animate({ scrollTop: 0 }, 600);
+                    return false;
+                }
+
+                if(this.secondCreditCardAmount() === ""){
+                    this.messageContainer.addErrorMessage({
+                        message: $t('Total of the second card not informed.')
+                    });
+                    $("html, body").animate({ scrollTop: 0 }, 600);
+                    return false;
+                }
+
+                this.placeOrder(data, event);
             },
 
             createAndSendTokenCreditCardFirst: function (data, event) {
@@ -646,13 +663,44 @@ define(
                 var address = this.quoteBilling;
 
                 var firstBrandIsValid = window.checkoutConfig.payment.mundipagg_two_creditcard.brandFirstCardIsValid;
-                var secondBrandIsValid = window.checkoutConfig.payment.mundipagg_two_creditcard.brandSecondCardIsValid;
 
-                if(!firstBrandIsValid || !secondBrandIsValid){
+                if(!firstBrandIsValid){
                     $("html, body").animate({ scrollTop: 0 }, 600);
                     this.messageContainer.addErrorMessage({
-                        message: $t('Brand not exists.')
+                        message: $t('Brand first credit card not exists.')
                     });
+                    return false;
+                }
+
+                if(this.creditCardOwnerFirst() === ""){
+                    this.messageContainer.addErrorMessage({
+                        message: $t('Name first credit card  not informed.')
+                    });
+                    $("html, body").animate({ scrollTop: 0 }, 600);
+                    return false;
+                }
+
+                if(this.creditCardExpMonthFirst() === undefined){
+                    this.messageContainer.addErrorMessage({
+                        message: $t('Month first credit card  not informed.')
+                    });
+                    $("html, body").animate({ scrollTop: 0 }, 600);
+                    return false;
+                }
+
+                if(this.creditCardExpYearFirst() === undefined){
+                    this.messageContainer.addErrorMessage({
+                        message: $t('Year first credit card  not informed.')
+                    });
+                    $("html, body").animate({ scrollTop: 0 }, 600);
+                    return false;
+                }
+
+                if(this.creditCardVerificationNumberFirst() === ""){
+                    this.messageContainer.addErrorMessage({
+                        message: $t('Verifier first credit card code not informed.')
+                    });
+                    $("html, body").animate({ scrollTop: 0 }, 600);
                     return false;
                 }
 
@@ -703,8 +751,41 @@ define(
                 if(!firstBrandIsValid || !secondBrandIsValid){
                     $("html, body").animate({ scrollTop: 0 }, 600);
                     this.messageContainer.addErrorMessage({
-                        message: $t('Brand not exists.')
+                        message: $t('Brand second credit card not exists.')
                     });
+                    return false;
+                }
+
+
+                if(this.creditCardOwnerSecond() === ""){
+                    this.messageContainer.addErrorMessage({
+                        message: $t('Name second credit card  not informed.')
+                    });
+                    $("html, body").animate({ scrollTop: 0 }, 600);
+                    return false;
+                }
+
+                if(this.creditCardExpMonthSecond() === undefined){
+                    this.messageContainer.addErrorMessage({
+                        message: $t('Month second credit card  not informed.')
+                    });
+                    $("html, body").animate({ scrollTop: 0 }, 600);
+                    return false;
+                }
+
+                if(this.creditCardExpYearSecond() === undefined){
+                    this.messageContainer.addErrorMessage({
+                        message: $t('Year second credit card  not informed.')
+                    });
+                    $("html, body").animate({ scrollTop: 0 }, 600);
+                    return false;
+                }
+
+                if(this.creditCardVerificationNumberSecond() === ""){
+                    this.messageContainer.addErrorMessage({
+                        message: $t('Verifier second credit card code not informed.')
+                    });
+                    $("html, body").animate({ scrollTop: 0 }, 600);
                     return false;
                 }
 
@@ -752,8 +833,41 @@ define(
                 if(!firstBrandIsValid || !secondBrandIsValid){
                     $("html, body").animate({ scrollTop: 0 }, 600);
                     this.messageContainer.addErrorMessage({
-                        message: $t('Brand not exists.')
+                        message: $t('Brand second credit card not exists.')
                     });
+                    return false;
+                }
+
+
+                if(this.creditCardOwnerSecond() === ""){
+                    this.messageContainer.addErrorMessage({
+                        message: $t('Name second credit card  not informed.')
+                    });
+                    $("html, body").animate({ scrollTop: 0 }, 600);
+                    return false;
+                }
+
+                if(this.creditCardExpMonthSecond() === undefined){
+                    this.messageContainer.addErrorMessage({
+                        message: $t('Month second credit card  not informed.')
+                    });
+                    $("html, body").animate({ scrollTop: 0 }, 600);
+                    return false;
+                }
+
+                if(this.creditCardExpYearSecond() === undefined){
+                    this.messageContainer.addErrorMessage({
+                        message: $t('Year second credit card  not informed.')
+                    });
+                    $("html, body").animate({ scrollTop: 0 }, 600);
+                    return false;
+                }
+
+                if(this.creditCardVerificationNumberSecond() === ""){
+                    this.messageContainer.addErrorMessage({
+                        message: $t('Verifier second credit card code not informed.')
+                    });
+                    $("html, body").animate({ scrollTop: 0 }, 600);
                     return false;
                 }
 

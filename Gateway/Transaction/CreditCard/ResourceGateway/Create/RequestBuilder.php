@@ -28,6 +28,8 @@ use MundiPagg\MundiPagg\Helper\ModuleHelper;
 use MundiPagg\MundiPagg\Helper\Cards\CreateCard;
 use MundiPagg\MundiPagg\Helper\Logger;
 use MundiPagg\MundiPagg\Helper\CustomerCustomAttributesHelper;
+use Magento\Customer\Model\Session;
+
 
 class RequestBuilder implements BuilderInterface
 {
@@ -49,6 +51,7 @@ class RequestBuilder implements BuilderInterface
     protected $createCrad;
     protected $logger;
     protected $customerCustomAttributesHelper;
+    protected $customerSession;
 
     /**
      * RequestBuilder constructor.
@@ -73,7 +76,8 @@ class RequestBuilder implements BuilderInterface
         ModuleHelper $moduleHelper,
         CreateCard $createCrad,
         Logger $logger,
-        CustomerCustomAttributesHelper $customerCustomAttributesHelper
+        CustomerCustomAttributesHelper $customerCustomAttributesHelper,
+        Session $customerSession
     )
     {
         $this->setRequest($request);
@@ -86,6 +90,7 @@ class RequestBuilder implements BuilderInterface
         $this->setCreateCardHelper($createCrad);
         $this->setLogger($logger);
         $this->customerCustomAttributesHelper = $customerCustomAttributesHelper;
+        $this->customerSession = $customerSession;
     }
 
     /**
@@ -319,6 +324,7 @@ class RequestBuilder implements BuilderInterface
 
         $payment = $quote->getPayment();
 
+
         $statement = $this->getConfigCreditCard()->getSoftDescription();
 
         $order = $this->getOrderRequest();
@@ -392,23 +398,6 @@ class RequestBuilder implements BuilderInterface
         $quote->reserveOrderId()->save();
         $order->code = $this->paymentData->getOrder()->getIncrementId();
 
-        $order->items = [];
-
-        foreach ($requestDataProvider->getCartItems() as $key => $item) {
-
-            $cartItemDataProvider = $this->createCartItemRequestDataProvider($item);
-
-            $itemValues = [
-                'amount' => $cartItemDataProvider->getUnitCostInCents(),
-                'description' => $cartItemDataProvider->getName(),
-                'quantity' => $cartItemDataProvider->getQuantity(),
-                'code' => substr($item->getSku(), 0, 50)
-            ];
-
-            array_push($order->items, $itemValues);
-
-        }
-
         $document = $quote->getCustomerTaxvat() ? $quote->getCustomerTaxvat() : '';
         $this->getModuleHelper()->setTaxVat($document,true);
 
@@ -433,7 +422,6 @@ class RequestBuilder implements BuilderInterface
 
         $order->shipping = [
             'amount' => $quote->getShippingAddress()->getShippingAmount() * 100,
-            'description' => $cartItemDataProvider->getName(),
             'address' => [
                 'street' => $requestDataProvider->getCustomerAddressStreet(self::SHIPPING),
                 'number' => $requestDataProvider->getCustomerAddressNumber(self::SHIPPING),
@@ -452,6 +440,35 @@ class RequestBuilder implements BuilderInterface
             'module_name' => self::NAME_METADATA,
             'module_version' => $this->getModuleHelper()->getVersion(self::MODULE_NAME),
         ];
+
+        $order->items = [];
+        $hasOnlyVirtual = true;
+        $productInfo = $this->cart->getQuote()->getItemsCollection();
+        foreach ($productInfo as $item) {
+            if($item->getPrice() != 0) {
+                $itemValues = [
+                    'amount' => $item->getPrice() * 100,
+                    'description' => $item->getName(),
+                    'quantity' => $item->getTotalQty(),
+                    'code' => substr($item->getSku(), 0, 50)
+                ];
+
+                array_push($order->items, $itemValues);
+                $hasOnlyVirtual = $item->getIsVirtual() && $hasOnlyVirtual === true ?: false;
+            }
+        }
+
+        if($hasOnlyVirtual){
+
+            $address = $order->payments[0]['credit_card']['card']['billing_address'];
+            $order->shipping['address'] = $address;
+            $order->customer['address'] = $address;
+            $order->shipping['description'] = __('Product_Virtual');
+
+        }else{
+            $order->shipping['description'] = '.';
+        }
+
 
         if ($this->getConfigCreditCard()->getAntifraudActive() && $quote->getGrandTotal() > $this->getConfigCreditCard()->getAntifraudMinAmount()) {
             $order->antifraudEnabled = true;
@@ -547,4 +564,5 @@ class RequestBuilder implements BuilderInterface
 
         return $this;
     }
+
 }

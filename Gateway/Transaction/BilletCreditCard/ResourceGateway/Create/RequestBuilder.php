@@ -33,6 +33,7 @@ use MundiPagg\MundiPagg\Gateway\Transaction\Billet\Config\Config as ConfigBillet
 use MundiPagg\MundiPagg\Helper\Logger;
 use MundiPagg\MundiPagg\Model\Payment;
 use MundiPagg\MundiPagg\Helper\CustomerCustomAttributesHelper;
+use Magento\Customer\Model\Session;
 
 class RequestBuilder implements BuilderInterface
 {
@@ -57,6 +58,7 @@ class RequestBuilder implements BuilderInterface
     protected $configCreditCard;
     protected $payment;
     protected $customerCustomAttributesHelper;
+    protected $customerSession;
 
     /**
      * @var \MundiPagg\MundiPagg\Helper\Logger
@@ -94,7 +96,8 @@ class RequestBuilder implements BuilderInterface
         ConfigCreditCard $configCreditCard,
         Logger $logger,
         Payment $payment,
-        CustomerCustomAttributesHelper $customerCustomAttributesHelper
+        CustomerCustomAttributesHelper $customerCustomAttributesHelper,
+        Session $customerSession
     )
     {
         $this->setRequest($request);
@@ -111,6 +114,7 @@ class RequestBuilder implements BuilderInterface
         $this->setLogger($logger);
         $this->payment = $payment;
         $this->customerCustomAttributesHelper = $customerCustomAttributesHelper;
+        $this->customerSession = $customerSession;
     }
 
     /**
@@ -472,22 +476,6 @@ class RequestBuilder implements BuilderInterface
         $quote->reserveOrderId()->save();
         $order->code = $this->paymentData->getOrder()->getIncrementId();
 
-        $order->items = [];
-
-        foreach ($requestDataProvider->getCartItems() as $key => $item) {
-
-            $cartItemDataProvider = $this->createCartItemRequestDataProvider($item);
-
-            $itemValues = [
-                'amount' => $cartItemDataProvider->getUnitCostInCents(),
-                'description' => $cartItemDataProvider->getName(),
-                'quantity' => $cartItemDataProvider->getQuantity(),
-                'code' => substr($item->getSku(), 0, 50)
-            ];
-
-            array_push($order->items, $itemValues);
-
-        }
         $document = $quote->getCustomerTaxvat() ? $quote->getCustomerTaxvat() : '';
         $this->getModuleHelper()->setTaxVat($document,true);
 
@@ -512,7 +500,6 @@ class RequestBuilder implements BuilderInterface
 
         $order->shipping = [
             'amount' => $quote->getShippingAddress()->getShippingAmount() * 100,
-            'description' => $cartItemDataProvider->getName(),
             'address' => [
                 'street' => $requestDataProvider->getCustomerAddressStreet(self::SHIPPING),
                 'number' => $requestDataProvider->getCustomerAddressNumber(self::SHIPPING),
@@ -531,6 +518,35 @@ class RequestBuilder implements BuilderInterface
             'module_name' => self::NAME_METADATA,
             'module_version' => $this->getModuleHelper()->getVersion(self::MODULE_NAME),
         ];
+
+        $order->items = [];
+        $hasOnlyVirtual = true;
+        $productInfo = $this->cart->getQuote()->getItemsCollection();
+
+        foreach ($productInfo as $item) {
+
+            if($item->getPrice() != 0) {
+
+                $itemValues = [
+                    'amount' => $item->getPrice() * 100,
+                    'description' => $item->getName(),
+                    'quantity' => $item->getTotalQty(),
+                    'code' => substr($item->getSku(), 0, 50)
+                ];
+
+                array_push($order->items, $itemValues);
+                $hasOnlyVirtual = $item->getIsVirtual() && $hasOnlyVirtual === true ?: false;
+            }
+        }
+
+        if($hasOnlyVirtual){
+
+            $order->shipping['address'] = $order->customer['address'];
+            $order->shipping['description'] = __('Product_Virtual');
+
+        }else{
+            $order->shipping['description'] = '.';
+        }
 
         $order->antifraudEnabled = false;
 

@@ -76,21 +76,20 @@ define(
                         return false;
                     }
 
-                    if (result.card !== null) {
+                    if (result.card.title !== null) {
                         self.selectedCardType(result.card.type);
                         creditCardData.creditCard = result.card;
+                    }
+
+                    if (result.isValid) {
+                        creditCardData.creditCardNumber = value;
+                        self.creditCardType(result.card.type);
                     }
 
                     var cardsAvailables = window.checkoutConfig.payment.ccform.availableTypes.mundipagg_creditcard;
 
                     if(cardsAvailables[result.card.type]){
                         window.checkoutConfig.payment.mundipagg_creditcard.brandIsValid = true;
-                        return false;
-                    }
-
-                    if (result.isValid) {
-                        creditCardData.creditCardNumber = value;
-                        self.creditCardType(result.card.type);
                     }
                 });
 

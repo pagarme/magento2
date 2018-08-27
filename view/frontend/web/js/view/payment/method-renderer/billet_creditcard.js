@@ -38,8 +38,8 @@ define(
         quote,
         priceUtils,
         totals,
-        checkoutData, 
-        selectPaymentMethodAction, 
+        checkoutData,
+        selectPaymentMethodAction,
         token,
         fullScreenLoader,
         $t
@@ -65,7 +65,7 @@ define(
                 creditCardSsIssueBcc: '',
                 creditCardVerificationNumberBcc: '',
                 tokenCreditCard: '',
-                quoteBilling: quote.billingAddress(),
+
                 creditSavedCardBcc: window.checkoutConfig.payment.mundipagg_billet_creditcard.selected_card,
                 selectedCardTypeBcc: null,
                 allInstallments: ko.observableArray([]),
@@ -92,6 +92,7 @@ define(
                 creditCardBuyerNeighborhood: '',
                 creditCardBuyerCity: '',
                 creditCardBuyerState: '',
+                quoteBilling: quote.billingAddress(),
                 stateOptions: addressHelper.getStateOptions()
             },
 
@@ -403,6 +404,23 @@ define(
              * Place order.
              */
             beforeplaceOrder: function (data, event) {
+
+                if(this.creditCardCcAmountBcc() === ""){
+                    this.messageContainer.addErrorMessage({
+                        message: $t('Credit Card amount not informed.')
+                    });
+                    $("html, body").animate({ scrollTop: 0 }, 600);
+                    return false;
+                }
+
+                if(this.creditCardBilletAmountBcc() === ""){
+                    this.messageContainer.addErrorMessage({
+                        message: $t('Billet amount not informed.')
+                    });
+                    $("html, body").animate({ scrollTop: 0 }, 600);
+                    return false;
+                }
+
                 if (window.checkoutConfig.customerData.hasOwnProperty('email') && data.getData().additional_data.cc_saved_card) {
                     this.useCardIdPlaceOrder(data, event);
                 }else{
@@ -411,7 +429,7 @@ define(
             },
 
             useCardIdPlaceOrder: function (data, event) {
-                    this.placeOrder(data, event);
+                this.placeOrder(data, event);
             },
 
             createAndSendTokenCreditCard: function (data, event) {
@@ -426,30 +444,63 @@ define(
                     return false;
                 }
 
+                if(this.creditCardOwnerBcc() === ""){
+                    this.messageContainer.addErrorMessage({
+                        message: $t('Name not informed.')
+                    });
+                    $("html, body").animate({ scrollTop: 0 }, 600);
+                    return false;
+                }
+
+                if(this.creditCardExpMonthBcc() === undefined){
+                    this.messageContainer.addErrorMessage({
+                        message: $t('Month not informed.')
+                    });
+                    $("html, body").animate({ scrollTop: 0 }, 600);
+                    return false;
+                }
+
+                if(this.creditCardExpYearBcc() === undefined){
+                    this.messageContainer.addErrorMessage({
+                        message: $t('Year not informed.')
+                    });
+                    $("html, body").animate({ scrollTop: 0 }, 600);
+                    return false;
+                }
+
+                if(this.creditCardVerificationNumberBcc() === ""){
+                    this.messageContainer.addErrorMessage({
+                        message: $t('Verifier code not informed.')
+                    });
+                    $("html, body").animate({ scrollTop: 0 }, 600);
+                    return false;
+                }
+
+
                 var self = this;
                 var address = this.quoteBilling;
 
                 var dataJson = {
-                        "type": "card",
-                        "card": {
-                            "type": "credit",
-                            "number": this.creditCardNumberBcc(),
-                            "holder_name": this.creditCardOwnerBcc(),
-                            "exp_month": this.creditCardExpMonthBcc(),
-                            "exp_year": this.creditCardExpYearBcc(),
-                            "cvv": this.creditCardVerificationNumberBcc(),
-                            "billing_address": {
-                                "street": address.street[0],
-                                "number": address.street[1],
-                                "zip_code": address.postcode,
-                                "complement": address.street[2],
-                                "neighborhood": address.street[3],
-                                "city": address.region,
-                                "state": address.regionCode,
-                                "country": address.countryId
-                            }
+                    "type": "card",
+                    "card": {
+                        "type": "credit",
+                        "number": this.creditCardNumberBcc(),
+                        "holder_name": this.creditCardOwnerBcc(),
+                        "exp_month": this.creditCardExpMonthBcc(),
+                        "exp_year": this.creditCardExpYearBcc(),
+                        "cvv": this.creditCardVerificationNumberBcc(),
+                        "billing_address": {
+                            "street": address.street[0],
+                            "number": address.street[1],
+                            "zip_code": address.postcode,
+                            "complement": address.street[2],
+                            "neighborhood": address.street[3],
+                            "city": address.region,
+                            "state": address.regionCode,
+                            "country": address.countryId
                         }
-                    };
+                    }
+                };
 
                 $.when(
                     token(dataJson)

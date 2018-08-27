@@ -29,6 +29,7 @@ use MundiPagg\MundiPagg\Helper\Cards\CreateCard;
 use MundiPagg\MundiPagg\Helper\Logger;
 use MundiPagg\MundiPagg\Model\Payment;
 use MundiPagg\MundiPagg\Helper\CustomerCustomAttributesHelper;
+use Magento\Customer\Model\Session;
 
 class RequestBuilder implements BuilderInterface
 {
@@ -50,6 +51,7 @@ class RequestBuilder implements BuilderInterface
     protected $createCrad;
     protected $payment;
     protected $customerCustomAttributesHelper;
+    protected $customerSession;
 
     /**
      * @var \MundiPagg\MundiPagg\Helper\Logger
@@ -81,7 +83,8 @@ class RequestBuilder implements BuilderInterface
         ModuleHelper $moduleHelper,
         Logger $logger,
         Payment $payment,
-        CustomerCustomAttributesHelper $customerCustomAttributesHelper
+        CustomerCustomAttributesHelper $customerCustomAttributesHelper,
+        Session $customerSession
     )
     {
         $this->setRequest($request);
@@ -95,6 +98,7 @@ class RequestBuilder implements BuilderInterface
         $this->logger = $logger;
         $this->payment = $payment;
         $this->customerCustomAttributesHelper = $customerCustomAttributesHelper;
+        $this->customerSession = $customerSession;
     }
 
     /**
@@ -388,25 +392,6 @@ class RequestBuilder implements BuilderInterface
             ]
         ];
 
-        // Data of Multi Pager
-
-        $dataCustomer = array(
-            'name'      => 'Eric teste',
-            'email'     => 'teste@teste.com',
-            'phone'     => '11981519313',
-            'document'  => null
-        );
-
-        $dataAddress = array(
-            'street'       => 'rua teste',
-            'number'       => '113',
-            'zip_code'     => '20921004',
-            'neighborhood' => 'teste',
-            'city'         => 'Rio de Janeiro',
-            'state'        => 'RJ',
-            'complement'   => 'teste'
-        );
-
         $this->setMultiBuyerToPaymentTwoCreditCard($payment, $order, 'first');
 
         if (!empty($payment->getAdditionalInformation('cc_saved_card_first'))) {
@@ -427,23 +412,6 @@ class RequestBuilder implements BuilderInterface
         } else {
             $order->payments[1]['credit_card']['card_token'] = $requestDataProvider->getTokenCreditCardSecond();
             $this->setMultiBuyerToPaymentTwoCreditCard($payment, $order, 'second');
-        }
-
-        $order->items = [];
-
-        foreach ($requestDataProvider->getCartItems() as $key => $item) {
-
-            $cartItemDataProvider = $this->createCartItemRequestDataProvider($item);
-
-            $itemValues = [
-                'amount' => $cartItemDataProvider->getUnitCostInCents(),
-                'description' => $cartItemDataProvider->getName(),
-                'quantity' => $cartItemDataProvider->getQuantity(),
-                'code' => substr($item->getSku(), 0, 50)
-            ];
-
-            array_push($order->items, $itemValues);
-
         }
 
         $document = $quote->getCustomerTaxvat() ? $quote->getCustomerTaxvat() : '';
@@ -470,7 +438,6 @@ class RequestBuilder implements BuilderInterface
 
         $order->shipping = [
             'amount' => $quote->getShippingAddress()->getShippingAmount() * 100,
-            'description' => $cartItemDataProvider->getName(),
             'address' => [
                 'street' => $requestDataProvider->getCustomerAddressStreet(self::SHIPPING),
                 'number' => $requestDataProvider->getCustomerAddressNumber(self::SHIPPING),
@@ -489,6 +456,38 @@ class RequestBuilder implements BuilderInterface
             'module_name' => self::NAME_METADATA,
             'module_version' => $this->getModuleHelper()->getVersion(self::MODULE_NAME),
         ];
+
+        $order->items = [];
+        $hasOnlyVirtual = true;
+        $productInfo = $this->cart->getQuote()->getItemsCollection();
+
+        foreach ($productInfo as $item) {
+
+            if($item->getPrice() != 0) {
+
+                $itemValues = [
+                    'amount' => $item->getPrice() * 100,
+                    'description' => $item->getName(),
+                    'quantity' => $item->getTotalQty(),
+                    'code' => substr($item->getSku(), 0, 50)
+                ];
+
+                array_push($order->items, $itemValues);
+                $hasOnlyVirtual = $item->getIsVirtual() && $hasOnlyVirtual === true ?: false;
+            }
+        }
+
+        if($hasOnlyVirtual){
+
+            $address = $order->payments[1]['credit_card']['card']['billing_address'];
+            $order->shipping['address'] = $address;
+            $order->customer['address'] = $address;
+            $order->shipping['description'] = __('Product_Virtual');
+
+        }else{
+            $order->shipping['description'] = '.';
+        }
+
         $quote->reserveOrderId()->save();
         $order->code = $this->paymentData->getOrder()->getIncrementId();
 
@@ -589,8 +588,5 @@ class RequestBuilder implements BuilderInterface
 
             $this->payment->addCustomersOnMultiPager($order, $dataCustomerCreditCardSecond, $dataAddressCreditCardSecond, 2);
         }
-
-
     }
-
 }
