@@ -28,6 +28,9 @@ use MundiPagg\MundiPagg\Model\Source\Bank;
 use MundiPagg\MundiPagg\Helper\Logger;
 use MundiPagg\MundiPagg\Helper\CustomerCustomAttributesHelper;
 use Magento\Customer\Model\Session;
+use MundiPagg\MundiPagg\Model\Payment;
+use Magento\Customer\Api\AddressRepositoryInterface;
+
 
 class RequestBuilder implements BuilderInterface
 {
@@ -48,13 +51,12 @@ class RequestBuilder implements BuilderInterface
     protected $moduleHelper;
     protected $bank;
     protected $paymentData;
+    protected $logger;
     protected $customerCustomAttributesHelper;
     protected $customerSession;
+    protected $payment;
+    protected $addressRepositoryInterface;
 
-    /**
-     * @var \MundiPagg\MundiPagg\Helper\Logger
-     */
-    protected $logger;
 
     /**
      * RequestBuilder constructor.
@@ -66,6 +68,8 @@ class RequestBuilder implements BuilderInterface
      * @param Bank $bank
      * @param Logger $logger
      * @param CustomerCustomAttributesHelper $customerCustomAttributesHelper
+     * @param Payment $payment
+     * @param CustomerCustomAttributesHelper $customerCustomAttributesHelper*
      */
     public function __construct(
         BilletRequestDataProviderInterfaceFactory $requestDataProviderFactory,
@@ -76,7 +80,9 @@ class RequestBuilder implements BuilderInterface
         Bank $bank,
         Logger $logger,
         CustomerCustomAttributesHelper $customerCustomAttributesHelper,
-        Session $customerSession
+        Session $customerSession,
+        Payment $payment,
+        AddressRepositoryInterface $addressRepositoryInterface
     )
     {
         $this->setRequestDataProviderFactory($requestDataProviderFactory);
@@ -88,6 +94,8 @@ class RequestBuilder implements BuilderInterface
         $this->setLogger($logger);
         $this->customerCustomAttributesHelper = $customerCustomAttributesHelper;
         $this->customerSession = $customerSession;
+        $this->payment = $payment;
+        $this->addressRepositoryInterface = $addressRepositoryInterface;
     }
 
     /**
@@ -176,8 +184,6 @@ class RequestBuilder implements BuilderInterface
             ]
         ];
 
-
-
         $document = $quote->getCustomerTaxvat() ? $quote->getCustomerTaxvat() : '';
         $this->getModuleHelper()->setTaxVat($document,true);
         
@@ -197,6 +203,8 @@ class RequestBuilder implements BuilderInterface
                 'country' => $quote->getBillingAddress()->getCountryId()
             ]
         ];
+
+        $this->payment->addPhonesToCustomer($order,$quote->getBillingAddress()->getTelephone(),$quote->getBillingAddress()->getFax());
 
         $order->ip = $requestDataProvider->getIpAddress();
 
@@ -249,6 +257,7 @@ class RequestBuilder implements BuilderInterface
 
         try {
             $this->getLogger()->logger($order->jsonSerialize());
+
             $response = $this->getApi()->getOrders()->createOrder($order);
 
             $this->customerCustomAttributesHelper->setCustomerCustomAttribute($quote->getCustomer(),$response, $quote->getCustomerIsGuest());

@@ -27,9 +27,10 @@ use MundiPagg\MundiPagg\Gateway\Transaction\CreditCard\Config\Config as ConfigCr
 use MundiPagg\MundiPagg\Helper\ModuleHelper;
 use MundiPagg\MundiPagg\Helper\Cards\CreateCard;
 use MundiPagg\MundiPagg\Helper\Logger;
-use MundiPagg\MundiPagg\Model\Payment;
 use MundiPagg\MundiPagg\Helper\CustomerCustomAttributesHelper;
 use Magento\Customer\Model\Session;
+use MundiPagg\MundiPagg\Model\Payment;
+use Magento\Customer\Api\AddressRepositoryInterface;
 
 class RequestBuilder implements BuilderInterface
 {
@@ -58,6 +59,8 @@ class RequestBuilder implements BuilderInterface
      */
     protected $logger;
 
+
+    protected $addressRepositoryInterface;
     /**
      * RequestBuilder constructor.
      * @param Request $request
@@ -84,7 +87,8 @@ class RequestBuilder implements BuilderInterface
         Logger $logger,
         Payment $payment,
         CustomerCustomAttributesHelper $customerCustomAttributesHelper,
-        Session $customerSession
+        Session $customerSession,
+        AddressRepositoryInterface $addressRepositoryInterface
     )
     {
         $this->setRequest($request);
@@ -99,6 +103,7 @@ class RequestBuilder implements BuilderInterface
         $this->payment = $payment;
         $this->customerCustomAttributesHelper = $customerCustomAttributesHelper;
         $this->customerSession = $customerSession;
+        $this->addressRepositoryInterface = $addressRepositoryInterface;
     }
 
     /**
@@ -392,6 +397,7 @@ class RequestBuilder implements BuilderInterface
             ]
         ];
 
+
         $this->setMultiBuyerToPaymentTwoCreditCard($payment, $order, 'first');
 
         if (!empty($payment->getAdditionalInformation('cc_saved_card_first'))) {
@@ -433,6 +439,8 @@ class RequestBuilder implements BuilderInterface
                 'country' => $quote->getShippingAddress()->getCountryId()
             ]
         ];
+
+        $this->payment->addPhonesToCustomer($order,$quote->getBillingAddress()->getTelephone(),$quote->getBillingAddress()->getFax());
 
         $order->ip = $requestDataProvider->getIpAddress();
 
@@ -494,9 +502,33 @@ class RequestBuilder implements BuilderInterface
         if ($this->getConfigCreditCard()->getAntifraudActive() && $quote->getGrandTotal() > $this->getConfigCreditCard()->getAntifraudMinAmount()) {
             $order->antifraudEnabled = true;
         }
+
         try {
+
             $this->logger->logger($order->jsonSerialize());
             $response = $this->getApi()->getOrders()->createOrder($order);
+
+            if(($response->charges[0]->status == 'failed')) {
+
+                if (!empty($response->charges[0]->lastTransaction->acquirerMessage)) {
+
+                    $messageError = __('Your transaction was processed with failure') . __(' first card');
+                    throw new \InvalidArgumentException($messageError);
+
+
+                }
+            }
+
+            if(($response->charges[1]->status == 'failed')){
+                if(!empty($response->charges[1]->lastTransaction->acquirerMessage)){
+
+                    $messageError = __('Your transaction was processed with failure').__(' secound card');
+                    throw new \InvalidArgumentException($messageError);
+
+                }
+
+            }
+
 
             if ($payment->getAdditionalInformation('cc_savecard_first') == '1' && empty($payment->getAdditionalInformation('cc_saved_card_first'))) {
                 $this->getCreateCardHelper()->createCard($response->charges[0]->lastTransaction->card, $response->charges[0]->customer, $quote);
@@ -512,8 +544,17 @@ class RequestBuilder implements BuilderInterface
             $this->logger->logger($error);
             throw new \InvalidArgumentException($error);
         } catch (\Exception $ex) {
+
             $this->logger->logger($ex);
-            throw new \InvalidArgumentException($ex->getMessage());
+            $acquirerMessage = $ex->getMessage();
+
+            if(empty($acquirerMessage)){
+                throw new \InvalidArgumentException($ex->getMessage());
+            }
+
+            throw new \Magento\Framework\Exception\LocalizedException(
+                __($acquirerMessage)
+            );
         }
 
         return $response;

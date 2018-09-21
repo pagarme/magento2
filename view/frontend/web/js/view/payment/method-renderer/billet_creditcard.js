@@ -405,7 +405,7 @@ define(
              */
             beforeplaceOrder: function (data, event) {
 
-                if(this.creditCardCcAmountBcc() === ""){
+                if((this.creditCardCcAmountBcc() === "") || (this.creditCardCcAmountBcc() == "0.00")){
                     this.messageContainer.addErrorMessage({
                         message: $t('Credit Card amount not informed.')
                     });
@@ -413,7 +413,7 @@ define(
                     return false;
                 }
 
-                if(this.creditCardBilletAmountBcc() === ""){
+                if((this.creditCardBilletAmountBcc() === "") || this.creditCardBilletAmountBcc() == "0.00"){
                     this.messageContainer.addErrorMessage({
                         message: $t('Billet amount not informed.')
                     });
@@ -561,7 +561,9 @@ define(
             },
 
             onInstallmentItemChange: function () {
-                this.updateTotalWithTax(jQuery('#mundipagg_billet_creditcard_installments option:selected').attr('interest'));
+                if(jQuery('#mundipagg_billet_creditcard_installments option:selected').val() != '') {
+                    this.updateTotalWithTax(jQuery('#mundipagg_billet_creditcard_installments option:selected').attr('interest'));
+                }
             },
 
             updateTotalWithTax: function (newTax) {

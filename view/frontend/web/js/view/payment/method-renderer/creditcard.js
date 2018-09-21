@@ -198,11 +198,19 @@ define(
                 $.when(token(dataJson)).done(function (transport) {
                     self.tokenCreditCard = transport.id;
                     self.placeOrder(data, event);
-                }).fail(function ($xhr) {
+                //}).fail(function ($xhr) {
+                }).fail(function (jqXHR, textStatus, error) {
+
+                    console.log("jqXHR: " + jqXHR);
+                    console.log("textStatus: " + textStatus);
+                    console.log("error: " + error);
+
+
                     fullScreenLoader.stopLoader();
-                    self.messageContainer.addErrorMessage({
-                        message: $t('An error occurred on the server. Please try to place the order again.')
-                    });
+
+                   // self.messageContainer.addErrorMessage({
+                    //    message: $t('An error occurred on the server. Please try to place the order again.')
+                   // });
                     $("html, body").animate({scrollTop: 0}, 600);
                 });
             },
@@ -337,7 +345,9 @@ define(
                 };
             },
             onInstallmentItemChange: function () {
-                this.updateTotalWithTax(jQuery('#mundipagg_creditcard_installments option:selected').attr('interest'));
+                if(jQuery('#mundipagg_creditcard_installments option:selected').val() != '') {
+                    this.updateTotalWithTax(jQuery('#mundipagg_creditcard_installments option:selected').attr('interest'));
+                }
             },
             updateTotalWithTax: function (newTax) {
                 if (typeof this.oldInstallmentTax == 'undefined') {

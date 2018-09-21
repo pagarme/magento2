@@ -71,11 +71,7 @@ class TwoCreditCardDataAssignObserver extends AbstractDataAssignObserver
                 'cc_first_card_amount' => $additionalData->getCcFirstCardAmount(),
                 'cc_type_first' => $additionalData->getCcTypeFirst(),
                 'cc_owner_first' => $additionalData->getCcOwnerFirst(),
-                // 'cc_number_first' => $additionalData->getCcNumberFirst(),
                 'cc_last_4_first' => $additionalData->getCcLast4First(),
-                // 'cc_cid_first' => $additionalData->getCcCidFirst(),
-                // 'cc_exp_month_first' => $additionalData->getCcExpMonthFirst(),
-                // 'cc_exp_year_first' => $additionalData->getCcExpYearFirst(),
                 'cc_token_credit_card_first' => $additionalData->getCcTokenCreditCardFirst(),
             ]);
 
@@ -105,11 +101,7 @@ class TwoCreditCardDataAssignObserver extends AbstractDataAssignObserver
                 'cc_second_card_amount' => $additionalData->getCcSecondCardAmount(),
                 'cc_type_second' => $additionalData->getCcTypeSecond(),
                 'cc_owner_second' => $additionalData->getCcOwnerSecond(),
-                // 'cc_number_second' => $additionalData->getCcNumberSecond(),
                 'cc_last_4_second' => $additionalData->getCcLast4Second(),
-                // 'cc_cid_second' => $additionalData->getCcCidSecond(),
-                // 'cc_exp_month_second' => $additionalData->getCcExpMonthSecond(),
-                // 'cc_exp_year_second' => $additionalData->getCcExpYearSecond(),
                 'cc_token_credit_card_second' => $additionalData->getCcTokenCreditCardSecond(),
             ]);
 

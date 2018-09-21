@@ -561,12 +561,26 @@ define(
             },
 
             getData: function () {
+                var cc_last4_first = '';
+                var cc_last4_second = '';
+                if(this.creditCardSavedNumberFirst().substr(-4, 4) == ''){
+                    cc_last4_first = this.creditCardNumberFirst().substr(-4,4);
+                }else{
+                    cc_last4_first = this.creditCardSavedNumberFirst().substr(-4, 4);
+                }
+
+                if(this.creditCardSavedNumberSecond().substr(-4, 4) == ''){
+                    cc_last4_second = this.creditCardNumberSecond().substr(-4,4);
+                }else{
+                    cc_last4_second = this.creditCardSavedNumberSecond().substr(-4, 4);
+                }
+
                 return {
                     'method': this.item.method,
                     'additional_data': {
                         'cc_first_card_amount': this.firstCreditCardAmount(),
                         'cc_first_card_tax_amount': this.firstCreditCardTaxAmount(),
-                        'cc_last_4_first': this.creditCardSavedNumberFirst().substr(-4, 4),
+                        'cc_last_4_first': cc_last4_first,
                         'cc_cid_first': this.creditCardVerificationNumberFirst(),
                         'cc_type_first': this.creditCardTypeFirst(),
                         'cc_exp_year_first': this.creditCardExpYearFirst(),
@@ -578,7 +592,7 @@ define(
                         'cc_installments_first': this.creditCardInstallmentsFirst(),
                         'cc_second_card_amount': this.secondCreditCardAmount(),
                         'cc_second_card_tax_amount': this.secondCreditCardTaxAmount(),
-                        'cc_last_4_second': this.creditCardSavedNumberSecond().substr(-4, 4),
+                        'cc_last_4_second': cc_last4_second,
                         'cc_cid_second': this.creditCardVerificationNumberSecond(),
                         'cc_type_second': this.creditCardTypeSecond(),
                         'cc_exp_year_second': this.creditCardExpYearSecond(),
@@ -639,7 +653,7 @@ define(
 
             useCardIdPlaceOrder: function (data, event) {
 
-                if(this.firstCreditCardAmount() === ""){
+                if((this.firstCreditCardAmount() === "") || (this.firstCreditCardAmount() == "0.00")){
                     this.messageContainer.addErrorMessage({
                         message: $t('Total of the first card not informed.')
                     });
@@ -647,7 +661,7 @@ define(
                     return false;
                 }
 
-                if(this.secondCreditCardAmount() === ""){
+                if((this.secondCreditCardAmount() === "") || (this.secondCreditCardAmount() == "0.00")){
                     this.messageContainer.addErrorMessage({
                         message: $t('Total of the second card not informed.')
                     });
@@ -912,7 +926,9 @@ define(
             },
 
             onInstallmentItemChange: function() {
-                this.updateTotalWithTax(jQuery('#mundipagg_two_creditcard_installments_first option:selected').attr('interest'), jQuery('#mundipagg_two_creditcard_installments_second option:selected').attr('interest'));
+                if((jQuery('#mundipagg_two_creditcard_installments_first option:selected').val() != '') && jQuery('#mundipagg_two_creditcard_installments_second option:selected').val() != '') {
+                    this.updateTotalWithTax(jQuery('#mundipagg_two_creditcard_installments_first option:selected').attr('interest'), jQuery('#mundipagg_two_creditcard_installments_second option:selected').attr('interest'));
+                }
             },
 
             updateTotalWithTax: function(newTaxFirst, newTaxSecond) {

@@ -25,9 +25,14 @@ define(
 
             return $.ajax({
                 method: "POST",
+                beforeSend: function(request) {
+                    request.setRequestHeader("Content-type", 'application/json');
+                },
                 url: serviceUrl,
                 cache: false,
-                data: dataJson
+                crossDomain: true,
+                data: JSON.stringify(dataJson),
+                dataType: 'json'
             });
         };
     }

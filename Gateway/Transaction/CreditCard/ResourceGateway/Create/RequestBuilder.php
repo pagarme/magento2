@@ -29,6 +29,8 @@ use MundiPagg\MundiPagg\Helper\Cards\CreateCard;
 use MundiPagg\MundiPagg\Helper\Logger;
 use MundiPagg\MundiPagg\Helper\CustomerCustomAttributesHelper;
 use Magento\Customer\Model\Session;
+use MundiPagg\MundiPagg\Model\Payment;
+use Magento\Customer\Api\AddressRepositoryInterface;
 
 
 class RequestBuilder implements BuilderInterface
@@ -52,6 +54,9 @@ class RequestBuilder implements BuilderInterface
     protected $logger;
     protected $customerCustomAttributesHelper;
     protected $customerSession;
+    protected $payment;
+    protected $addressRepositoryInterface;
+
 
     /**
      * RequestBuilder constructor.
@@ -77,7 +82,9 @@ class RequestBuilder implements BuilderInterface
         CreateCard $createCrad,
         Logger $logger,
         CustomerCustomAttributesHelper $customerCustomAttributesHelper,
-        Session $customerSession
+        Session $customerSession,
+        Payment $payment,
+        AddressRepositoryInterface $addressRepositoryInterface
     )
     {
         $this->setRequest($request);
@@ -91,6 +98,8 @@ class RequestBuilder implements BuilderInterface
         $this->setLogger($logger);
         $this->customerCustomAttributesHelper = $customerCustomAttributesHelper;
         $this->customerSession = $customerSession;
+        $this->payment = $payment;
+        $this->addressRepositoryInterface = $addressRepositoryInterface;
     }
 
     /**
@@ -257,7 +266,7 @@ class RequestBuilder implements BuilderInterface
     public function setConfig($config)
     {
         $this->config = $config;
-        
+
         return $this;
     }
 
@@ -334,9 +343,9 @@ class RequestBuilder implements BuilderInterface
         }else{
             $capture = false;
         }
-        
+
         if ($payment->getAdditionalInformation('cc_saved_card')) {
-            
+
             $model = $this->getCreateCardHelper();
             $card = $model->getById($payment->getAdditionalInformation('cc_saved_card'));
 
@@ -394,7 +403,7 @@ class RequestBuilder implements BuilderInterface
                 ]
             ];
         }
-        	
+
         $quote->reserveOrderId()->save();
         $order->code = $this->paymentData->getOrder()->getIncrementId();
 
@@ -418,6 +427,7 @@ class RequestBuilder implements BuilderInterface
             ]
         ];
 
+        $this->payment->addPhonesToCustomer($order,$quote->getBillingAddress()->getTelephone(),$quote->getBillingAddress()->getFax());
         $order->ip = $requestDataProvider->getIpAddress();
 
         $order->shipping = [
@@ -475,11 +485,15 @@ class RequestBuilder implements BuilderInterface
         }
 
         try {
+
             $this->getLogger()->logger($order->jsonSerialize());
             $response = $this->getApi()->getOrders()->createOrder($order);
 
             if($response->charges[0]->status == 'failed'){
-                throw new \InvalidArgumentException('Response failed');
+
+                $messageError =  __('Your transaction was processed with failure');
+                throw new \InvalidArgumentException($messageError);
+
             }
 
             if($requestDataProvider->getSaveCard() == '1')
@@ -497,7 +511,15 @@ class RequestBuilder implements BuilderInterface
             throw new \InvalidArgumentException($error);
         } catch (\Exception $ex) {
             $this->getLogger()->logger($ex);
-            throw new \InvalidArgumentException($ex->getMessage());
+            $acquirerMessage = $ex->getMessage();
+
+            if(empty($acquirerMessage)){
+                throw new \InvalidArgumentException($ex->getMessage());
+            }
+
+            throw new \Magento\Framework\Exception\LocalizedException(
+                __($acquirerMessage)
+            );
         }
 
         return $response;
