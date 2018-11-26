@@ -37,7 +37,8 @@ final class ConfigProvider implements ConfigProviderInterface
         return [
             'payment' => [
                 self::CODE =>[
-                    'text' => $this->getBilletConfig()->getText()
+                    'text' => $this->getBilletConfig()->getText(),
+                    'title' => $this->getBilletConfig()->getTitle(),
                 ]
             ]
         ];

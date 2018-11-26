@@ -135,7 +135,7 @@ define(
                 this.bindCreditCardBilletAmountBcc = ko.computed({
                     read: function () {
                         var value = this.creditCardBilletAmountBcc();
-                        value = parseFloat(value.replace(/[^\d]/g, ""));
+                        value = value.replace(/[^\d]/g, "");
                         return this.formatPrice(value);
                     },
                     write: function (value) {
@@ -144,7 +144,7 @@ define(
                             value = value.replace(/[^,\d]/g, "");
                             value = value.replace(",", ".");
                             this.creditCardBilletAmountBcc(value);
-                            this.creditCardCcAmountBcc((totalQuote - parseFloat(value)).toFixed(2));
+                            this.creditCardCcAmountBcc((totalQuote - value).toFixed(2));
                             jQuery('#mundipagg_billet_creditcard_cc_installments').css('display','block');
                             this.validateTotalQuote();
                         }
@@ -156,7 +156,7 @@ define(
                 this.bindCreditCardCcAmountBcc = ko.computed({
                     read: function () {
                         var value = this.creditCardCcAmountBcc();
-                        value = parseFloat(value.replace(/[^\d]/g, ""));
+                        value = value.replace(/[^\d]/g, "");
                         return this.formatPrice(value);
                     },
                     write: function (value) {
@@ -165,7 +165,7 @@ define(
                             value = value.replace(/[^,\d]/g, "");
                             value = value.replace(",", ".");
                             this.creditCardCcAmountBcc(value);
-                            this.creditCardBilletAmountBcc((totalQuote - parseFloat(value)).toFixed(2));
+                            this.creditCardBilletAmountBcc((totalQuote - value).toFixed(2));
                             jQuery('#mundipagg_billet_creditcard_cc_installments').css('display','block');
                             this.validateTotalQuote();
                         }
@@ -350,6 +350,10 @@ define(
                 return window.checkoutConfig.payment.mundipagg_billet_creditcard.active;
             },
 
+            getTitle: function () {
+                return window.checkoutConfig.payment.mundipagg_billet_creditcard.title;
+            },
+
             isMultiBuyerActive: function () {
                 return window.checkoutConfig.multi_buyer;
             },
@@ -421,6 +425,16 @@ define(
                     return false;
                 }
 
+                if(this.isInstallmentsActive() == true){
+                    if (this.creditCardInstallmentsBcc() === undefined) {
+                        this.messageContainer.addErrorMessage({
+                            message: $t('Installments not informed.')
+                        });
+                        $("html, body").animate({scrollTop: 0}, 600);
+                        return false;
+                    }
+                }
+
                 if (window.checkoutConfig.customerData.hasOwnProperty('email') && data.getData().additional_data.cc_saved_card) {
                     this.useCardIdPlaceOrder(data, event);
                 }else{
@@ -476,6 +490,15 @@ define(
                     return false;
                 }
 
+                if(this.isInstallmentsActive() == true){
+                    if (this.creditCardInstallmentsBcc() === undefined) {
+                        this.messageContainer.addErrorMessage({
+                            message: $t('Installments not informed.')
+                        });
+                        $("html, body").animate({scrollTop: 0}, 600);
+                        return false;
+                    }
+                }
 
                 var self = this;
                 var address = this.quoteBilling;

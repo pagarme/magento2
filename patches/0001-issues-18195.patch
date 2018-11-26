@@ -1,0 +1,16 @@
+diff --git a/vendor/magento/module-checkout/view/frontend/web/js/model/new-customer-address.js b/vendor/magento/module-checkout/view/frontend/web/js/model/new-customer-address.js
+index a880bd4..9afd6c4 100644
+--- a/vendor/magento/module-checkout/view/frontend/web/js/model/new-customer-address.js
++++ b/vendor/magento/module-checkout/view/frontend/web/js/model/new-customer-address.js
+@@ -38,7 +38,7 @@ define([
+             regionCode: addressData.region ? addressData.region['region_code'] : null,
+             region: addressData.region ? addressData.region.region : null,
+             customerId: addressData['customer_id'] || addressData.customerId,
+-            street: addressData.street ? _.compact(addressData.street) : addressData.street,
++            street: addressData.street,
+             company: addressData.company,
+             telephone: addressData.telephone,
+             fax: addressData.fax,
+-- 
+2.7.4
+

@@ -56,6 +56,9 @@ class GeneralHandler extends AbstractHandler implements HandlerInterface
         $payment->setAdditionalInformation('billet_url', $boletoUrl);
 
         $payment->setTransactionId($response->id);
+        $charges =  $response->charges[0];
+        $payment->setTransactionAdditionalInfo('bcc_acquirer_tid',$charges->lastTransaction->acquirerTid);
+        $payment->setTransactionAdditionalInfo('bcc_acquirer_nsu',$charges->lastTransaction->acquirerNsu);
         $payment->setIsTransactionClosed(false);
 
         foreach($response->charges as $charge)

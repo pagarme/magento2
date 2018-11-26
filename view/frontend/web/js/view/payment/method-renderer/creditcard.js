@@ -109,6 +109,17 @@ define(
              */
             beforeplaceOrder: function (data, event) {
                 if (window.checkoutConfig.customerData.hasOwnProperty('email') && data.getData().additional_data.cc_saved_card) {
+
+                    if(this.isInstallmentsActive() == true) {
+                        if (this.creditCardInstallments() === undefined) {
+                            this.messageContainer.addErrorMessage({
+                                message: $t('Installments not informed.')
+                            });
+                            $("html, body").animate({scrollTop: 0}, 600);
+                            return false;
+                        }
+                    }
+
                     this.useCardIdPlaceOrder(data, event);
                 } else {
                     this.createAndSendTokenCreditCard(data, event);
@@ -171,6 +182,15 @@ define(
                     return false;
                 }
 
+                if(this.isInstallmentsActive() == true) {
+                    if (this.creditCardInstallments() === undefined) {
+                        this.messageContainer.addErrorMessage({
+                            message: $t('Installments not informed.')
+                        });
+                        $("html, body").animate({scrollTop: 0}, 600);
+                        return false;
+                    }
+                }
 
                 var self = this;
                 var address = this.quoteBilling;
@@ -287,6 +307,9 @@ define(
             },
             isActive: function () {
                 return window.checkoutConfig.payment.mundipagg_creditcard.active;
+            },
+            getTitle: function () {
+                return window.checkoutConfig.payment.mundipagg_creditcard.title;
             },
             isInstallmentsActive: function () {
                 return window.checkoutConfig.payment.ccform.installments.active[this.getCode()];

@@ -15,7 +15,7 @@
                class="radio"
                data-bind="attr: {'id': getCode()}, value: getCode(), checked: isChecked, click: selectPaymentMethod, visible: isRadioButtonVisible()"/>
         <label data-bind="attr: {'for': getCode()}" class="label">
-            <span><!-- ko i18n: 'MundiPagg Billet' --><!-- /ko --></span>
+            <span data-bind="text: getTitle()"></span>
         </label>
     </div>
     <div class="payment-method-content">

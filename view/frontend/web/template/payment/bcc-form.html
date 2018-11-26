@@ -228,7 +228,7 @@
             <span><!-- ko i18n: 'Billet Amount'--><!-- /ko --></span>
         </label>
         <div class="control">
-            <input type="text" onKeyPress="if(this.value.length==20) return false;" min="0"
+            <input type="tel" onKeyPress="if(this.value.length==20) return false;" min="0"
                    name="payment[cc_billet_amount]" class="input-text money" value=""
                    data-bind="event: { blur: bindInstallmentsByBlurBcc }, attr: {
                                     autocomplete: off,
@@ -464,7 +464,7 @@
             <span><!-- ko i18n: 'Credit Card Amount'--><!-- /ko --></span>
         </label>
         <div class="control">
-            <input type="text"
+            <input type="tel"
                    onKeyPress="if(this.value.length==window.checkoutConfig.payment.mundipagg_creditcard.size_credit_card) return false;"
                    min="0" name="payment[cc_cc_amount]" class="input-text money" value="" style="width: 335px;"
                    data-bind="event: { blur: bindInstallmentsByBlurBcc }, attr: {

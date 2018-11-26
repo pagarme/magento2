@@ -244,7 +244,7 @@ define(
                 this.bindFirstCreditCardAmount = ko.computed({
                     read: function () {
                         var value = this.firstCreditCardAmount();
-                        value = parseFloat(value.replace(/[^\d]/g, ""));
+                        value = value.replace(/[^\d]/g, "");
                         return this.formatPrice(value);
                     },
                     write: function (value) {
@@ -253,7 +253,7 @@ define(
                             value = value.replace(/[^,\d]/g, "");
                             value = value.replace(",", ".");
                             this.firstCreditCardAmount(value);
-                            this.secondCreditCardAmount((totalQuote - parseFloat(value)).toFixed(2));
+                            this.secondCreditCardAmount((totalQuote - value).toFixed(2));
                             jQuery('#mundipagg_two_creditcard_cc_installments_second').css('display','block');
                             jQuery('#mundipagg_two_creditcard_cc_installments_first').css('display','block');
                             this.validateTotalQuote();
@@ -266,7 +266,7 @@ define(
                 this.bindSecondCreditCardAmount = ko.computed({
                     read: function () {
                         var value = this.secondCreditCardAmount();
-                        value = parseFloat(value.replace(/[^\d]/g, ""));
+                        value = value.replace(/[^\d]/g, "");
                         return this.formatPrice(value);
                     },
                     write: function (value) {
@@ -275,7 +275,7 @@ define(
                             value = value.replace(/[^,\d]/g, "");
                             value = value.replace(",", ".");
                             this.secondCreditCardAmount(value);
-                            this.firstCreditCardAmount((totalQuote - parseFloat(value)).toFixed(2));
+                            this.firstCreditCardAmount((totalQuote - value).toFixed(2));
                             jQuery('#mundipagg_two_creditcard_cc_installments_second').css('display','block');
                             jQuery('#mundipagg_two_creditcard_cc_installments_first').css('display','block');
                             this.validateTotalQuote();
@@ -636,6 +636,27 @@ define(
             beforeplaceOrder: function (data, event) {
 
                 if (window.checkoutConfig.customerData.hasOwnProperty('email') && data.getData().additional_data.cc_saved_card_second && data.getData().additional_data.cc_saved_card_first) {
+
+                    if(this.isInstallmentsActive() == true) {
+                        if (this.creditCardInstallmentsFirst() === undefined) {
+                            this.messageContainer.addErrorMessage({
+                                message: $t('Installments first card not informed.')
+                            });
+                            $("html, body").animate({scrollTop: 0}, 600);
+                            return false;
+                        }
+
+                        if (this.creditCardInstallmentsSecond() === undefined) {
+                            this.messageContainer.addErrorMessage({
+                                message: $t('Installments second card not informed.')
+                            });
+                            $("html, body").animate({scrollTop: 0}, 600);
+                            return false;
+                        }
+                    }
+
+
+
                     this.useCardIdPlaceOrder(data, event);
                 }else{
                     if (data.getData().additional_data.cc_saved_card_second) {
@@ -716,6 +737,16 @@ define(
                     });
                     $("html, body").animate({ scrollTop: 0 }, 600);
                     return false;
+                }
+
+                if(this.isInstallmentsActive() == true) {
+                    if (this.creditCardInstallmentsFirst() === undefined) {
+                        this.messageContainer.addErrorMessage({
+                            message: $t('Installments first card not informed.')
+                        });
+                        $("html, body").animate({scrollTop: 0}, 600);
+                        return false;
+                    }
                 }
 
                 var dataJson = {
@@ -803,6 +834,16 @@ define(
                     return false;
                 }
 
+                if(this.isInstallmentsActive() == true) {
+                    if (this.creditCardInstallmentsSecond() === undefined) {
+                        this.messageContainer.addErrorMessage({
+                            message: $t('Installments second card not informed.')
+                        });
+                        $("html, body").animate({scrollTop: 0}, 600);
+                        return false;
+                    }
+                }
+
                 var dataJson = {
                         "type": "card",
                         "card": {
@@ -841,17 +882,15 @@ define(
 
             createAndSendTokenCreditCardSecond: function (data, event) {
 
-                var firstBrandIsValid = window.checkoutConfig.payment.mundipagg_two_creditcard.brandFirstCardIsValid;
                 var secondBrandIsValid = window.checkoutConfig.payment.mundipagg_two_creditcard.brandSecondCardIsValid;
 
-                if(!firstBrandIsValid || !secondBrandIsValid){
+                if(!secondBrandIsValid){
                     $("html, body").animate({ scrollTop: 0 }, 600);
                     this.messageContainer.addErrorMessage({
                         message: $t('Brand second credit card not exists.')
                     });
                     return false;
                 }
-
 
                 if(this.creditCardOwnerSecond() === ""){
                     this.messageContainer.addErrorMessage({
@@ -876,6 +915,7 @@ define(
                     $("html, body").animate({ scrollTop: 0 }, 600);
                     return false;
                 }
+
 
                 if(this.creditCardVerificationNumberSecond() === ""){
                     this.messageContainer.addErrorMessage({
@@ -1029,6 +1069,9 @@ define(
             getCreditCardBuyerHelpHtml: function () {
                 return '<span>' + $t('Add a different buyer to Credit Card') + '</span>';
             },
+            getTitle: function () {
+                return window.checkoutConfig.payment.mundipagg_two_creditcard.title;
+            }
         })
     }
 );

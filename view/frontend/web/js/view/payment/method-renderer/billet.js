@@ -71,6 +71,9 @@ define(
                     'additional_data': null
                 };
             },
+            getTitle: function () {
+                return window.checkoutConfig.payment.mundipagg_billet.title;
+            },
         });
     }
 );

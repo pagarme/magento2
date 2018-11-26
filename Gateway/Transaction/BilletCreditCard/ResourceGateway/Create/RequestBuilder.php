@@ -546,10 +546,10 @@ class RequestBuilder implements BuilderInterface
         }
 
         if($hasOnlyVirtual){
-
-            $order->shipping['address'] = $order->customer['address'];
+            $address = $order->payments[0]['credit_card']['card']['billing_address'];
+            $order->shipping['address'] = $address;
+            $order->customer['address'] = $address;
             $order->shipping['description'] = __('Product_Virtual');
-
         }else{
             $order->shipping['description'] = '.';
         }
@@ -565,17 +565,15 @@ class RequestBuilder implements BuilderInterface
             $response = $this->getApi()->getOrders()->createOrder($order);
 
             if($response->charges[0]->status == 'failed'){
-
+                $responseCancel = $this->getApi()->getCharges()->cancelCharge($response->charges[1]->id);
                 $messageError =  __('Your transaction was processed with failure');
                 throw new \InvalidArgumentException($messageError);
-
             }
 
             if($response->charges[1]->status == 'failed'){
-
+                $responseCancel = $this->getApi()->getCharges()->cancelCharge($response->charges[0]->id);
                 $messageError =  __('Your transaction was processed with failure');
                 throw new \InvalidArgumentException($messageError);
-
             }
 
 

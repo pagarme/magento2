@@ -25,6 +25,20 @@ class Config extends AbstractConfig implements ConfigInterface
     }
 
     /**
+     * @return string
+     */
+    public function getTitle()
+    {
+        $title = $this->getConfig(static::PATH_TITLE);
+
+        if(empty($title)){
+            return __('MundiPagg Credit Card');
+        }
+
+        return $title;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getPaymentAction()

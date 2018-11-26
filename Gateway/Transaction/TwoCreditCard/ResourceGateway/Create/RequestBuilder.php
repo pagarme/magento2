@@ -511,7 +511,7 @@ class RequestBuilder implements BuilderInterface
             if(($response->charges[0]->status == 'failed')) {
 
                 if (!empty($response->charges[0]->lastTransaction->acquirerMessage)) {
-
+                    $responseCancel = $this->getApi()->getCharges()->cancelCharge($response->charges[1]->id);
                     $messageError = __('Your transaction was processed with failure') . __(' first card');
                     throw new \InvalidArgumentException($messageError);
 
@@ -521,14 +521,13 @@ class RequestBuilder implements BuilderInterface
 
             if(($response->charges[1]->status == 'failed')){
                 if(!empty($response->charges[1]->lastTransaction->acquirerMessage)){
-
+                    $responseCancel = $this->getApi()->getCharges()->cancelCharge($response->charges[0]->id);
                     $messageError = __('Your transaction was processed with failure').__(' secound card');
                     throw new \InvalidArgumentException($messageError);
 
                 }
 
             }
-
 
             if ($payment->getAdditionalInformation('cc_savecard_first') == '1' && empty($payment->getAdditionalInformation('cc_saved_card_first'))) {
                 $this->getCreateCardHelper()->createCard($response->charges[0]->lastTransaction->card, $response->charges[0]->customer, $quote);

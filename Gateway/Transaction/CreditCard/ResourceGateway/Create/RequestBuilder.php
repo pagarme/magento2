@@ -491,6 +491,7 @@ class RequestBuilder implements BuilderInterface
 
             if($response->charges[0]->status == 'failed'){
 
+
                 $messageError =  __('Your transaction was processed with failure');
                 throw new \InvalidArgumentException($messageError);
 

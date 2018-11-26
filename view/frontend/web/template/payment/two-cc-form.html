@@ -236,7 +236,7 @@
                     <span><!-- ko i18n: 'First Card Amount'--><!-- /ko --></span>
                 </label>
                 <div class="control">
-                    <input type="text" onKeyPress="if(this.value.length==window.checkoutConfig.payment.mundipagg_creditcard.size_credit_card) return false;" min="0" name="payment[first-card-amount]" class="input-text money" value=""
+                    <input type="tel" onKeyPress="if(this.value.length==window.checkoutConfig.payment.mundipagg_creditcard.size_credit_card) return false;" min="0" name="payment[first-card-amount]" class="input-text money" value=""
                            data-bind="event: { blur: bindInstallmentsByBlurFirst }, attr: {
                                     autocomplete: off,
                                     id: getCode() + '_first_card_amount',
@@ -692,7 +692,7 @@
                     <span><!-- ko i18n: 'Second Card Amount'--><!-- /ko --></span>
                 </label>
                 <div class="control">
-                    <input type="text" onKeyPress="if(this.value.length==window.checkoutConfig.payment.mundipagg_creditcard.size_credit_card) return false;" min="0" name="payment[second-card-amount]" class="input-text money" value=""
+                    <input type="tel" onKeyPress="if(this.value.length==window.checkoutConfig.payment.mundipagg_creditcard.size_credit_card) return false;" min="0" name="payment[second-card-amount]" class="input-text money" value=""
                                data-bind="event: { blur: bindInstallmentsByBlurSecond }, attr: {
                                     autocomplete: off,
                                     id: getCode() + '_second_card_amount',

@@ -23,6 +23,7 @@ interface ConfigInterface
     const PATH_CUSTOMER_NUMBER              = 'payment/mundipagg_customer_address/number_attribute';
     const PATH_CUSTOMER_COMPLEMENT          = 'payment/mundipagg_customer_address/complement_attribute';
     const PATH_CUSTOMER_DISTRICT            = 'payment/mundipagg_customer_address/district_attribute';
+    const PATH_TITLE                        = 'payment/mundipagg_creditcard/title';
 
     /**
      * @return bool
@@ -68,4 +69,10 @@ interface ConfigInterface
      * @return string
      */
     public function getCustomerAddressDistrict();
+
+    /**
+     * @return string
+     */
+    public function getTitle();
+
 }

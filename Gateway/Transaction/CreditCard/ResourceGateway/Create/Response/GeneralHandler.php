@@ -56,8 +56,11 @@ class GeneralHandler extends AbstractHandler implements HandlerInterface
     {
         $this->logger->logger(json_encode($response));
         $payment->setTransactionId($response->id);
-
         $this->setPaymentStateCreditCard($payment, $response);
+
+        $charges =  $response->charges[0];
+        $payment->setTransactionAdditionalInfo('cc_acquirer_tid',$charges->lastTransaction->acquirerTid);
+        $payment->setTransactionAdditionalInfo('cc_acquirer_nsu',$charges->lastTransaction->acquirerNsu);
 
         $payment->setIsTransactionClosed(false);
         if($this->configCreditCard->getPaymentAction() == 'authorize_capture')  {

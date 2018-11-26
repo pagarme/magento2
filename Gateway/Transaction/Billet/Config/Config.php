@@ -79,4 +79,18 @@ class Config extends AbstractConfig implements ConfigInterface
     {
         return $this->getConfig(static::PATH_CUSTOMER_DISTRICT);
     }
+
+    /**
+     * @return string
+     */
+    public function getTitle()
+    {
+        $title = $this->getConfig(static::PATH_TITLE);
+
+        if(empty($title)){
+            return __('MundiPagg Billet');
+        }
+
+        return $title;
+    }
 }

@@ -74,6 +74,7 @@ final class ConfigProvider implements ConfigProviderInterface
             'payment' => [
                 self::CODE =>[
                     'active' => $this->getBilletCreditCardConfig()->getActive(),
+                    'title' => $this->getBilletCreditCardConfig()->getTitle(),
                     'is_saved_card' => $is_saved_card,
                     'cards' => $cards,
                     'selected_card' => $selectedCard
