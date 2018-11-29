@@ -61,11 +61,15 @@ class GeneralHandler extends AbstractHandler implements HandlerInterface
         $charges1 =  $response->charges[0];
         $charges2 =  $response->charges[1];
 
-        $payment->setTransactionAdditionalInfo('two_cc_first_acquirer_tid',$charges1->lastTransaction->acquirerTid);
-        $payment->setTransactionAdditionalInfo('two_cc_first_acquirer_nsu',$charges1->lastTransaction->acquirerNsu);
+        $payment->setTransactionAdditionalInfo('two_cc_first_acquirer_name', $charges1->lastTransaction->acquirerName);
+        $payment->setTransactionAdditionalInfo('two_cc_first_acquirer_tid', $charges1->lastTransaction->acquirerTid);
+        $payment->setTransactionAdditionalInfo('two_cc_first_acquirer_nsu', $charges1->lastTransaction->acquirerNsu);
 
-        $payment->setTransactionAdditionalInfo('two_cc_second_acquirer_tid',$charges2->lastTransaction->acquirerTid);
-        $payment->setTransactionAdditionalInfo('two_cc_second_acquirer_nsu',$charges2->lastTransaction->acquirerNsu);
+        $payment->setTransactionAdditionalInfo('two_cc_second_acquirer_name', $charges2->lastTransaction->acquirerName);
+        $payment->setTransactionAdditionalInfo('two_cc_second_acquirer_tid', $charges2->lastTransaction->acquirerTid);
+        $payment->setTransactionAdditionalInfo('two_cc_second_acquirer_nsu', $charges2->lastTransaction->acquirerNsu);
+
+        $payment->setTransactionAdditionalInfo('mundipagg_payment_module_api_response', json_encode($response));
 
         $payment->setIsTransactionClosed(false);
         if($this->configCreditCard->getPaymentAction() == 'authorize_capture')  {
