@@ -57,8 +57,11 @@ class GeneralHandler extends AbstractHandler implements HandlerInterface
 
         $payment->setTransactionId($response->id);
         $charges =  $response->charges[0];
+        $payment->setTransactionAdditionalInfo('bc_acquirer_name', $charges->lastTransaction->acquirerName);
         $payment->setTransactionAdditionalInfo('bcc_acquirer_tid',$charges->lastTransaction->acquirerTid);
         $payment->setTransactionAdditionalInfo('bcc_acquirer_nsu',$charges->lastTransaction->acquirerNsu);
+        $payment->setTransactionAdditionalInfo('mundipagg_payment_module_api_response', json_encode($response));
+
         $payment->setIsTransactionClosed(false);
 
         foreach($response->charges as $charge)

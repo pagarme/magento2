@@ -54,13 +54,15 @@ class GeneralHandler extends AbstractHandler implements HandlerInterface
      */
     protected function _handle($payment, $response)
     {
-        $this->logger->logger(json_encode($response));
+        $this->logger->logger("RESPONSE: \n\n" . json_encode($response, JSON_PRETTY_PRINT));
         $payment->setTransactionId($response->id);
         $this->setPaymentStateCreditCard($payment, $response);
 
         $charges =  $response->charges[0];
-        $payment->setTransactionAdditionalInfo('cc_acquirer_tid',$charges->lastTransaction->acquirerTid);
-        $payment->setTransactionAdditionalInfo('cc_acquirer_nsu',$charges->lastTransaction->acquirerNsu);
+        $payment->setTransactionAdditionalInfo('cc_acquirer_name', $charges->lastTransaction->acquirerName);
+        $payment->setTransactionAdditionalInfo('cc_acquirer_tid', $charges->lastTransaction->acquirerTid);
+        $payment->setTransactionAdditionalInfo('cc_acquirer_nsu', $charges->lastTransaction->acquirerNsu);
+        $payment->setTransactionAdditionalInfo('mundipagg_payment_module_api_response', json_encode($response));
 
         $payment->setIsTransactionClosed(false);
         if($this->configCreditCard->getPaymentAction() == 'authorize_capture')  {
