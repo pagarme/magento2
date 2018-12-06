@@ -234,12 +234,11 @@ define(
                     console.log("textStatus: " + textStatus);
                     console.log("error: " + error);
 
-
                     fullScreenLoader.stopLoader();
 
-                   // self.messageContainer.addErrorMessage({
-                    //    message: $t('An error occurred on the server. Please try to place the order again.')
-                   // });
+                    self.messageContainer.addErrorMessage({
+                        message: $t('Cartão inválido. Por favor, verifique os dados digitados e tente novamente')
+                    });
                     $("html, body").animate({scrollTop: 0}, 600);
                 });
             },

@@ -27,15 +27,15 @@ class CustomerAddressSaveBefore implements ObserverInterface
      */
     public function addressValidation($customerAddress)
     {
-        if(empty($customerAddress->getStreetLine(0))){
+        if(empty($customerAddress->getStreetLine(1))){
             throw new InputException(__("Please check your address. First field of Street Address (Street) is required."));
         }
 
-        if(empty($customerAddress->getStreetLine(1))){
+        if(empty($customerAddress->getStreetLine(2))){
             throw new InputException(__("Please check your address. Second field of Street Address (Number) is required."));
         }
 
-        if(empty($customerAddress->getStreetLine(2))){
+        if(empty($customerAddress->getStreetLine(3))){
             throw new InputException(__("Please check your address. Fourth field of Street Address (Neighborhood) is required."));
         }
     }

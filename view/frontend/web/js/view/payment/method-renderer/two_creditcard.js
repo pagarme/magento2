@@ -786,7 +786,6 @@ define(
                             }
                         }
                     };
-
                 $.when(
                     token(dataJson)
                 ).done(function(transport) {
@@ -795,7 +794,7 @@ define(
                 }).fail(function ($xhr) {
                     fullScreenLoader.stopLoader();
                     self.messageContainer.addErrorMessage({
-                        message: $t('An error occurred on the server. Please try to place the order again.')
+                        message: $t('Cartão inválido. Por favor, verifique os dados digitados e tente novamente')
                     });
                    $("html, body").animate({scrollTop: 0}, 600);
                });
@@ -860,10 +859,6 @@ define(
                     }
                 }
 
-                alert(3);
-
-                debugger;
-
                 if(typeof address.street == "undefined" || address.street.lenght < 3){
                     this.messageContainer.addErrorMessage({
                         message: $t('Endereço inválido. Verifique se todos os campos obrigatórios foram preenchidos corretamente')
@@ -902,7 +897,7 @@ define(
                 }).fail(function ($xhr) {
                         fullScreenLoader.stopLoader();
                         self.messageContainer.addErrorMessage({
-                            message: $t('An error occurred on the server. Please try to place the order again.')
+                            message: $t('Cartão inválido. Por favor, verifique os dados digitados e tente novamente')
                         });
                         $("html, body").animate({scrollTop: 0}, 600);
                 });
@@ -985,7 +980,6 @@ define(
                         }
                     }
                 };
-
                 $.when(
                     token(dataJson)
                 ).done(function(transport) {
@@ -994,7 +988,7 @@ define(
                 }).fail(function ($xhr) {
                     fullScreenLoader.stopLoader();
                     self.messageContainer.addErrorMessage({
-                        message: $t('An error occurred on the server. Please try to place the order again.')
+                        message: $t('Cartão inválido. Por favor, verifique os dados digitados e tente novamente')
                     });
                     $("html, body").animate({scrollTop: 0}, 600);
                 });
