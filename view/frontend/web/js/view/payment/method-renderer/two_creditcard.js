@@ -757,6 +757,14 @@ define(
                     return false;
                 }
 
+                if(typeof address.street == "undefined" || address.street.lenght < 3){
+                    this.messageContainer.addErrorMessage({
+                        message: $t('Endereço inválido. Verifique se todos os campos obrigatórios foram preenchidos corretamente')
+                    });
+                    $("html, body").animate({ scrollTop: 0 }, 600);
+                    return false;
+                }
+
                 var dataJson = {
                         "type": "card",
                         "card": {
@@ -852,6 +860,18 @@ define(
                     }
                 }
 
+                alert(3);
+
+                debugger;
+
+                if(typeof address.street == "undefined" || address.street.lenght < 3){
+                    this.messageContainer.addErrorMessage({
+                        message: $t('Endereço inválido. Verifique se todos os campos obrigatórios foram preenchidos corretamente')
+                    });
+                    $("html, body").animate({ scrollTop: 0 }, 600);
+                    return false;
+                }
+
                 var dataJson = {
                         "type": "card",
                         "card": {
@@ -935,6 +955,14 @@ define(
 
                 var self = this;
                 var address = this.quoteBilling;
+
+                if(typeof address.street == "undefined" || address.street.lenght < 3){
+                    this.messageContainer.addErrorMessage({
+                        message: $t('Endereço inválido. Verifique se todos os campos obrigatórios foram preenchidos corretamente')
+                    });
+                    $("html, body").animate({ scrollTop: 0 }, 600);
+                    return false;
+                }
 
                 var dataJson = {
                     "type": "card",
