@@ -17,19 +17,19 @@
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>payment/mundipagg_customer_address/number_attribute</config_path>
         </field>
-
-        <field id="complement_attribute" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="30" translate="label" type="text">
-            <label>Complement Attribute</label>
+        <field id="district_attribute" showInDefault="1" showInStore="1"
+               showInWebsite="1" sortOrder="30" translate="label" type="text">
+            <label>District Attribute</label>
             <comment><![CDATA[<b> for example: </b> street_3]]></comment>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-            <config_path>payment/mundipagg_customer_address/complement_attribute</config_path>
+            <config_path>payment/mundipagg_customer_address/district_attribute</config_path>
         </field>
-
-        <field id="district_attribute" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="40" translate="label" type="text">
-            <label>District Attribute</label>
+        <field id="complement_attribute" showInDefault="1" showInStore="1"
+               showInWebsite="1" sortOrder="40" translate="label" type="text">
+            <label>Complement Attribute</label>
             <comment><![CDATA[<b> for example: </b> street_4]]></comment>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-            <config_path>payment/mundipagg_customer_address/district_attribute</config_path>
+            <config_path>payment/mundipagg_customer_address/complement_attribute</config_path>
         </field>
     </group>
 </include>
