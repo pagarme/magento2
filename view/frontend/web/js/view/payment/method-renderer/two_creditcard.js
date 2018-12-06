@@ -749,6 +749,14 @@ define(
                     }
                 }
 
+                if(typeof address.street == "undefined"){
+                    this.messageContainer.addErrorMessage({
+                        message: $t('Endereço inválido')
+                    });
+                    $("html, body").animate({ scrollTop: 0 }, 600);
+                    return false;
+                }
+
                 var dataJson = {
                         "type": "card",
                         "card": {
