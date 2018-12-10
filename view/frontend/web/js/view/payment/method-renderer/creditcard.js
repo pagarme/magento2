@@ -194,6 +194,15 @@ define(
 
                 var self = this;
                 var address = this.quoteBilling;
+
+                if(typeof address.street == "undefined"){
+                    this.messageContainer.addErrorMessage({
+                        message: $t('Endereço inválido')
+                    });
+                    $("html, body").animate({ scrollTop: 0 }, 600);
+                    return false;
+                }
+
                 var dataJson = {
                     "type": "card",
                     "card": {
@@ -207,8 +216,8 @@ define(
                             "street": address.street[0],
                             "number": address.street[1],
                             "zip_code": address.postcode,
-                            "complement": address.street[2],
-                            "neighborhood": address.street[3],
+                            "neighborhood": address.street[2],
+                            "complement": address.street[3],
                             "city": address.region,
                             "state": address.regionCode,
                             "country": address.countryId
@@ -225,12 +234,11 @@ define(
                     console.log("textStatus: " + textStatus);
                     console.log("error: " + error);
 
-
                     fullScreenLoader.stopLoader();
 
-                   // self.messageContainer.addErrorMessage({
-                    //    message: $t('An error occurred on the server. Please try to place the order again.')
-                   // });
+                    self.messageContainer.addErrorMessage({
+                        message: $t('Cartão inválido. Por favor, verifique os dados digitados e tente novamente')
+                    });
                     $("html, body").animate({scrollTop: 0}, 600);
                 });
             },

@@ -35,7 +35,7 @@ class CustomerAddressSaveBefore implements ObserverInterface
             throw new InputException(__("Please check your address. Second field of Street Address (Number) is required."));
         }
 
-        if(empty($customerAddress->getStreetLine(4))){
+        if(empty($customerAddress->getStreetLine(3))){
             throw new InputException(__("Please check your address. Fourth field of Street Address (Neighborhood) is required."));
         }
     }
