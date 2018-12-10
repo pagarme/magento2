@@ -236,8 +236,12 @@
                     <span><!-- ko i18n: 'First Card Amount'--><!-- /ko --></span>
                 </label>
                 <div class="control">
-                    <input type="tel" onKeyPress="if(this.value.length==window.checkoutConfig.payment.mundipagg_creditcard.size_credit_card) return false;" min="0" name="payment[first-card-amount]" class="input-text money" value=""
-                           data-bind="event: { blur: bindInstallmentsByBlurFirst }, attr: {
+                    <input
+                        type="tel"
+                        onKeyPress="if(this.value.length==window.checkoutConfig.payment.mundipagg_creditcard.size_credit_card) return false;"
+                        min="0"
+                        name="payment[first-card-amount]" class="input-text money" value=""
+                        data-bind="event: { blur: bindInstallmentsByBlurFirst }, attr: {
                                     autocomplete: off,
                                     id: getCode() + '_first_card_amount',
                                     title: $t('Billet Credit Card Cc Amount'),
@@ -445,6 +449,8 @@
                                 <select name="payment[cc_installments_first]"
                                         style="width: 335px;"
                                         class="select select-installments"
+                                        amount=""
+                                        brand=""
                                         data-bind="attr: {id: getCode() + '_installments_first', 'data-container': getCode() + '-cc-installments-first', 'data-validate': JSON.stringify({required:true})},
                                                 enable: isActive($parents),
                                                 options: allInstallmentsFirst,
@@ -692,8 +698,12 @@
                     <span><!-- ko i18n: 'Second Card Amount'--><!-- /ko --></span>
                 </label>
                 <div class="control">
-                    <input type="tel" onKeyPress="if(this.value.length==window.checkoutConfig.payment.mundipagg_creditcard.size_credit_card) return false;" min="0" name="payment[second-card-amount]" class="input-text money" value=""
-                               data-bind="event: { blur: bindInstallmentsByBlurSecond }, attr: {
+                    <input type="tel"
+                           onKeyPress="if(this.value.length==window.checkoutConfig.payment.mundipagg_creditcard.size_credit_card) return false;"
+                           min="0"
+                           name="payment[second-card-amount]"
+                           class="input-text money" value=""
+                           data-bind="event: { blur: bindInstallmentsByBlurSecond }, attr: {
                                     autocomplete: off,
                                     id: getCode() + '_second_card_amount',
                                     title: $t('Billet Credit Card Cc Amount'),
@@ -904,6 +914,8 @@
                                 <select name="payment[cc_installments_second]"
                                         style="width: 335px;"
                                         class="select select-installments"
+                                        amount=""
+                                        brand=""
                                         data-bind="attr: {id: getCode() + '_installments_second', 'data-container': getCode() + '-cc-installments', 'data-validate': JSON.stringify({required:true})},
                                             enable: isActive($parents),
                                             options: allInstallmentsSecond,

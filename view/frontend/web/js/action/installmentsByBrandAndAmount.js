@@ -21,7 +21,6 @@ define(
         return function (brand, amount) {
             var serviceUrl;
             serviceUrl = urlBuilder.createUrl('/mundipagg/installments/brandbyamount/' + brand + '/' + amount, {});
-
             return storage.get(
                 serviceUrl, false
             )
