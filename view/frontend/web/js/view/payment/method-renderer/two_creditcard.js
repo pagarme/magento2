@@ -126,26 +126,34 @@ define(
 
                     var amountFirst = self.firstCreditCardAmount() != '' ? self.firstCreditCardAmount() : 0;
                     //fullScreenLoader.startLoader();
+                    var currentAmount = jQuery("select[name='payment[cc_installments_first]']").attr('amount');
+                    var currentBrand = jQuery("select[name='payment[cc_installments_first]']").attr('brand');
 
-                    $.when(
-                        installmentsByBrandAndAmount(newValue, amountFirst)
-                    ).done(function (data) {
-                        self.allInstallmentsFirst.removeAll();
+                    if(
+                        amountFirst != parseFloat(currentAmount) ||
+                        (currentBrand != "" && newValue != currentBrand)
+                    ) {
+                        $.when(
+                            installmentsByBrandAndAmount(newValue, amountFirst)
+                        ).done(function (data) {
+                            self.allInstallmentsFirst.removeAll();
 
-                        _.map(data, function (value, key) {
-                            self.allInstallmentsFirst.push({
-                                'value': value.id,
-                                'interest': value.interest,
-                                'installments': value.label
+                            _.map(data, function (value, key) {
+                                    self.allInstallmentsFirst.push({
+                                        'value': value.id,
+                                        'interest': value.interest,
+                                        'installments': value.label
+                                    });
+                                // self.creditCardInstallmentsFirst(data.length);
                             });
-                            // self.creditCardInstallmentsFirst(data.length);
+
+                            jQuery("select[name='payment[cc_installments_first]']").attr('amount', amountFirst)
+                            jQuery("select[name='payment[cc_installments_first]']").attr('brand', newValue)
+
+                        }).always(function () {
+                            //fullScreenLoader.stopLoader();
                         });
-
-                    }).always(function () {
-                        //fullScreenLoader.stopLoader();
-                    });
-
-
+                    }
                 }
 
                 this.updateInstallmentsSecondCard = function(newValue){
@@ -155,23 +163,34 @@ define(
                     var amountSecond = self.secondCreditCardAmount() != '' ? self.secondCreditCardAmount() : 0;
                     //fullScreenLoader.startLoader();
 
-                    $.when(
-                        installmentsByBrandAndAmount(newValue, amountSecond)
-                    ).done(function (data) {
-                        self.allInstallmentsSecond.removeAll();
+                    var currentAmount = jQuery("select[name='payment[cc_installments_second]']").attr('amount');
+                    var currentBrand = jQuery("select[name='payment[cc_installments_second]']").attr('brand');
 
-                        _.map(data, function (value, key) {
-                            self.allInstallmentsSecond.push({
-                                'value': value.id,
-                                'interest': value.interest,
-                                'installments': value.label
+                    if(
+                        amountSecond != parseFloat(currentAmount) ||
+                        (currentBrand != "" && newValue != currentBrand)
+                    ){
+                        $.when(
+                            installmentsByBrandAndAmount(newValue, amountSecond)
+                        ).done(function (data) {
+                            self.allInstallmentsSecond.removeAll();
+
+                            _.map(data, function (value, key) {
+                                self.allInstallmentsSecond.push({
+                                    'value': value.id,
+                                    'interest': value.interest,
+                                    'installments': value.label
+                                });
+                                // self.creditCardInstallmentsSecond(data.length);
                             });
-                            // self.creditCardInstallmentsSecond(data.length);
-                        });
 
-                    }).always(function () {
-                        //fullScreenLoader.stopLoader();
-                    });
+                            jQuery("select[name='payment[cc_installments_second]']").attr('amount', amountSecond);
+                            jQuery("select[name='payment[cc_installments_second]']").attr('brand', newValue);
+
+                        }).always(function () {
+                            //fullScreenLoader.stopLoader();
+                        });
+                    }
 
                 }
 
@@ -285,6 +304,7 @@ define(
                 });
 
                 this.bindInstallmentsByBlurFirst = function (){
+
                     var cards = window.checkoutConfig.payment.mundipagg_two_creditcard.cards;
                     cards.find(function(value, index) {
                         if(value.id == self.creditSavedCardFirst()){
@@ -317,46 +337,62 @@ define(
                         self.creditCardTypeFirst(brandFirst);
                         firstCreditCardAmount = firstCreditCardAmount != '' ? firstCreditCardAmount : 0;
 
-                        $.when(
+                        var currentAmount =  jQuery("select[name='payment[cc_installments_first]']").attr('amount');
+                        var currentBrand =  jQuery("select[name='payment[cc_installments_first]']").attr('brand');
 
-                            installmentsByBrandAndAmount(brandFirst, firstCreditCardAmount)
-                        ).done(function (data) {
-                            self.allInstallmentsFirst.removeAll();
-
-                            _.map(data, function (value, key) {
-                                self.allInstallmentsFirst.push({
-                                    'value': value.id,
-                                    'interest': value.interest,
-                                    'installments': value.label
+                        if(
+                            firstCreditCardAmount != parseFloat(currentAmount) ||
+                            (currentBrand != "" && brandFirst != currentBrand)
+                        ){
+                            $.when(
+                                installmentsByBrandAndAmount(brandFirst, firstCreditCardAmount)
+                            ).done(function (data) {
+                                self.allInstallmentsFirst.removeAll();
+                                _.map(data, function (value, key) {
+                                    self.allInstallmentsFirst.push({
+                                        'value': value.id,
+                                        'interest': value.interest,
+                                        'installments': value.label
+                                    });
                                 });
-                            });
-                            // self.creditCardInstallmentsFirst(data.length);
+                                jQuery("select[name='payment[cc_installments_first]']").attr('amount', firstCreditCardAmount);
+                                jQuery("select[name='payment[cc_installments_first]']").attr('amount', brandFirst);
 
-                        }).always(function () {
-                            // fullScreenLoader.stopLoader();
-                        });
+                            }).always(function () {
+                                // fullScreenLoader.stopLoader();
+                            });
+                        }
 
                         self.creditCardTypeSecond(brandSecond);
                         secondCreditCardAmount = secondCreditCardAmount != '' ? secondCreditCardAmount : 0;
 
-                        $.when(
+                        var currentAmount = jQuery("select[name='payment[cc_installments_second]']").attr('amount');
+                        var currentBrand = jQuery("select[name='payment[cc_installments_second]']").attr('brand');
 
-                            installmentsByBrandAndAmount(brandSecond, secondCreditCardAmount)
-                        ).done(function (data) {
-                            self.allInstallmentsSecond.removeAll();
-
-                            _.map(data, function (value, key) {
-                                self.allInstallmentsSecond.push({
-                                    'value': value.id,
-                                    'interest': value.interest,
-                                    'installments': value.label
+                        if(
+                            secondCreditCardAmount != parseFloat(currentAmount) ||
+                            (currentBrand != "" && brandSecond != currentBrand)
+                        ){
+                            $.when(
+                                installmentsByBrandAndAmount(brandSecond, secondCreditCardAmount)
+                            ).done(function (data) {
+                                self.allInstallmentsSecond.removeAll();
+                                _.map(data, function (value, key) {
+                                    self.allInstallmentsSecond.push({
+                                        'value': value.id,
+                                        'interest': value.interest,
+                                        'installments': value.label
+                                    });
+                                    // self.creditCardInstallmentsSecond(data.length);
                                 });
-                                // self.creditCardInstallmentsSecond(data.length);
-                            });
 
-                        }).always(function () {
-                            // fullScreenLoader.stopLoader();
-                        });
+                                jQuery("select[name='payment[cc_installments_second]']").attr('amount', secondCreditCardAmount);
+                                jQuery("select[name='payment[cc_installments_second]']").attr('brand', brandSecond);
+
+                            }).always(function () {
+                                // fullScreenLoader.stopLoader();
+                            });
+                        }
 
                     }
 
@@ -502,7 +538,6 @@ define(
                     installments()
                 ).done(function (transport) {
                     self.allInstallmentsFirst.removeAll();
-
                     _.map(transport, function (value, key) {
                         self.allInstallmentsFirst.push({
                             'value': value.id,
@@ -525,7 +560,6 @@ define(
                     installments()
                 ).done(function (transport) {
                     self.allInstallmentsSecond.removeAll();
-
                     _.map(transport, function (value, key) {
                         self.allInstallmentsSecond.push({
                             'value': value.id,
