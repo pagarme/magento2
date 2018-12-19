@@ -17,13 +17,20 @@ class UpgradeSchema implements UpgradeSchemaInterface
         ModuleContextInterface $context
     ) {
         $setup->startSetup();
+        $version = $context->getVersion();
 
-        if (version_compare($context->getVersion(), "1.0.2", "<")) {
+        if (version_compare($version, "1.0.2", "<")) {
             $setup = $this->updateVersionOneZeroTwo($setup);
         }
 
-        if (version_compare($context->getVersion(), "1.0.14", "<")) {
+        if (version_compare($version, "1.0.14", "<")) {
             $setup = $this->updateVersionOneZeroTwelve($setup);
+        }
+
+//Mundipagg Module Core tables
+        $installSchema = new InstallSchema();
+        if (version_compare($version, "1.0.31", "<")) {
+            $setup = $installSchema->installWebhook($setup);
         }
 
         $setup->endSetup();

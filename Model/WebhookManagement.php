@@ -2,16 +2,17 @@
 
 namespace MundiPagg\MundiPagg\Model;
 
-use MundiPagg\MundiPagg\Api\WebhookManagementInterface;
-use Magento\Sales\Model\Order;
-use MundiPagg\MundiPagg\Model\ChargesFactory;
-use Magento\Sales\Api\OrderRepositoryInterface; 
-use Magento\Sales\Model\Service\InvoiceService;
-use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
 use Magento\Framework\DB\Transaction;
+use Magento\Sales\Api\OrderRepositoryInterface;
+use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\CreditmemoFactory;
+use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
 use Magento\Sales\Model\Service\CreditmemoService;
+use Magento\Sales\Model\Service\InvoiceService;
 use Magento\Sales\Model\Service\OrderService;
+use Mundipagg\Core\Webhook\Services\WebhookReceiver;
+use Mundipagg\Core\Webhook\Services\WebhookReceiverService;
+use MundiPagg\MundiPagg\Api\WebhookManagementInterface;
 use MundiPagg\MundiPagg\Helper\Logger;
 
 class WebhookManagement implements WebhookManagementInterface
@@ -90,22 +91,36 @@ class WebhookManagement implements WebhookManagementInterface
         $this->setLogger($logger);
     }
 
+
     /**
      * @api
+     * @param mixed $id
+     * @param mixed $type
      * @param mixed $data
-     * @return boolean
+     * @return array|bool
      */
-    public function save($data)
+    public function save($id, $type, $data)
     {
 
         $this->getLogger()->logger($data);
 
+
+        //log webhook received.
+
+        $postData = new \stdClass();
+        $postData->id = $id;
+        $postData->type = $type;
+        $postData->data = $data;
+
+        $webhookReceiverService = new WebhookReceiverService();
+        $webhookReceiverService->handle($postData);
+
         $statusOrder = $data['status'];
 
         $isCharge = 'ch_';
-        if(substr($data['id'], 0, 3) == $isCharge){
+        if (substr($data['id'], 0, 3) == $isCharge) {
             $charges[] = $data;
-        }else{
+        } else {
             $charges = $data['charges'];
         }
 
@@ -126,7 +141,7 @@ class WebhookManagement implements WebhookManagementInterface
         $orderId = $this->getOrderFactory()->loadByIncrementId($chageMagento->getOrderId());
         $order = $this->getOrderRepository()->get($orderId->getId());
 
-        if($order->canInvoice() && $charge['status'] == 'paid') {
+        if ($order->canInvoice() && $charge['status'] == 'paid') {
             $invoice = $this->createInvoice($order);
             $result[] = [
                 "order" => "canInvoice",
@@ -166,7 +181,7 @@ class WebhookManagement implements WebhookManagementInterface
         $chargeId = $charge['id'];
 
         $model = $this->getChargesFactory();
-        $chargeCollection = $model->getCollection()->addFieldToFilter('charge_id',array('eq' => $chargeId))->getFirstItem();
+        $chargeCollection = $model->getCollection()->addFieldToFilter('charge_id', ['eq' => $chargeId])->getFirstItem();
 
         return $chargeCollection;
     }
@@ -224,7 +239,7 @@ class WebhookManagement implements WebhookManagementInterface
         if ($statusCharge == 'paid') {
             $chargeCollection->setStatus($statusCharge)->setPaidAmount($amount)->setUpdatedAt(date("Y-m-d H:i:s"));
         }
-        
+
         if ($statusCharge == 'refunded') {
             $chargeCollection->setStatus($statusCharge)->setRefundedAmount($amount)->setUpdatedAt(date("Y-m-d H:i:s"));
         }
