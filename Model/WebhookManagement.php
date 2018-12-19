@@ -10,9 +10,9 @@ use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
 use Magento\Sales\Model\Service\CreditmemoService;
 use Magento\Sales\Model\Service\InvoiceService;
 use Magento\Sales\Model\Service\OrderService;
-use Mundipagg\Core\Webhook\Services\WebhookReceiver;
 use Mundipagg\Core\Webhook\Services\WebhookReceiverService;
 use MundiPagg\MundiPagg\Api\WebhookManagementInterface;
+use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 use MundiPagg\MundiPagg\Helper\Logger;
 
 class WebhookManagement implements WebhookManagementInterface
@@ -101,10 +101,9 @@ class WebhookManagement implements WebhookManagementInterface
      */
     public function save($id, $type, $data)
     {
+        Magento2CoreSetup::bootstrap();
 
         $this->getLogger()->logger($data);
-
-
         //log webhook received.
 
         $postData = new \stdClass();
