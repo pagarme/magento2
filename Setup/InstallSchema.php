@@ -36,11 +36,22 @@ class InstallSchema implements InstallSchemaInterface
                 ->newTable($tableName)
                 ->addColumn(
                     'id',
+                    Table::TYPE_INTEGER,
+                    null,
+                    [
+                        'identity' => true,
+                        'unsigned' => true,
+                        'nullable' => false,
+                        'primary' => true
+                    ],
+                    'ID'
+                )
+                ->addColumn(
+                    'mundipagg_id',
                     Table::TYPE_TEXT,
                     21,
                     [
-                        'nullable' => false,
-                        'primary' => true
+                        'nullable' => false
                     ],
                     'format: hook_xxxxxxxxxxxxxxxx'
                 )
