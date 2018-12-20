@@ -12,6 +12,8 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         self::$config = [
             AbstractModuleCoreSetup::CONCRETE_DATABASE_DECORATOR_CLASS =>
                 Magento2DatabaseDecorator::class,
+            AbstractModuleCoreSetup::CONCRETE_PLATFORM_ORDER_DECORATOR_CLASS =>
+                Magento2PlatformOrderDecorator::class
         ];
     }
 

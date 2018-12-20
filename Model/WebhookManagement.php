@@ -10,6 +10,7 @@ use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
 use Magento\Sales\Model\Service\CreditmemoService;
 use Magento\Sales\Model\Service\InvoiceService;
 use Magento\Sales\Model\Service\OrderService;
+use Mundipagg\Core\Kernel\Exceptions\AbstractMundipaggCoreException;
 use Mundipagg\Core\Webhook\Services\WebhookReceiverService;
 use MundiPagg\MundiPagg\Api\WebhookManagementInterface;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
@@ -101,19 +102,29 @@ class WebhookManagement implements WebhookManagementInterface
      */
     public function save($id, $type, $data)
     {
-        Magento2CoreSetup::bootstrap();
+        try {
+            Magento2CoreSetup::bootstrap();
 
-        $this->getLogger()->logger($data);
-        //log webhook received.
+            $this->getLogger()->logger($data);
+            //log webhook received.
 
-        $postData = new \stdClass();
-        $postData->id = $id;
-        $postData->type = $type;
-        $postData->data = $data;
+            $postData = new \stdClass();
+            $postData->id = $id;
+            $postData->type = $type;
+            $postData->data = $data;
 
-        $webhookReceiverService = new WebhookReceiverService();
-        $webhookReceiverService->handle($postData);
+            $webhookReceiverService = new WebhookReceiverService();
+            $webhookReceiverService->handle($postData);
+        }catch(AbstractMundipaggCoreException $e){
+            return
+                [
+                    "message" => $e->getMessage(),
+                    "error" => $e->getCode()
+                ];
+        }
 
+
+        //@fixme deprecated code.
         $statusOrder = $data['status'];
 
         $isCharge = 'ch_';
@@ -124,7 +135,7 @@ class WebhookManagement implements WebhookManagementInterface
         }
 
         foreach ($charges as $charge) {
-            $result[] = $this->saveCharge($charge);
+            //$result[] = $this->saveCharge($charge);
             $result[] = $this->saveOrder($charge);
         }
 
