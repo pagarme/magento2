@@ -70,4 +70,9 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
     {
         // TODO: Implement setOrderStates() method.
     }
+
+    public function getIncrementId()
+    {
+        return $this->getPlatformOrder()->getIncrementId();
+    }
 }

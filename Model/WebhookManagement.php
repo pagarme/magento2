@@ -3,6 +3,8 @@
 namespace MundiPagg\MundiPagg\Model;
 
 use Magento\Framework\DB\Transaction;
+use Magento\Framework\Phrase;
+use Magento\Framework\Webapi\Exception as M2WebApiException;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\CreditmemoFactory;
@@ -103,6 +105,7 @@ class WebhookManagement implements WebhookManagementInterface
     public function save($id, $type, $data)
     {
         try {
+
             Magento2CoreSetup::bootstrap();
 
             $this->getLogger()->logger($data);
@@ -114,15 +117,14 @@ class WebhookManagement implements WebhookManagementInterface
             $postData->data = $data;
 
             $webhookReceiverService = new WebhookReceiverService();
-            $webhookReceiverService->handle($postData);
+            return $webhookReceiverService->handle($postData);
         }catch(AbstractMundipaggCoreException $e){
-            return
-                [
-                    "message" => $e->getMessage(),
-                    "error" => $e->getCode()
-                ];
+            throw new M2WebApiException(
+                new Phrase($e->getMessage()),
+                0,
+                $e->getCode()
+            );
         }
-
 
         //@fixme deprecated code.
         $statusOrder = $data['status'];
