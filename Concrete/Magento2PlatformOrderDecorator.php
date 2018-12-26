@@ -65,14 +65,43 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         return $this->platformOrder->canInvoice();
     }
 
-
-    protected function setOrderStates()
-    {
-        // TODO: Implement setOrderStates() method.
-    }
-
     public function getIncrementId()
     {
         return $this->getPlatformOrder()->getIncrementId();
+    }
+
+    public function getGrandTotal()
+    {
+        return $this->getPlatformOrder()->getGrandTotal();
+    }
+
+    public function getTotalPaid()
+    {
+        return $this->getPlatformOrder()->getTotalPaid();
+    }
+
+    public function getTotalDue()
+    {
+        return $this->getPlatformOrder()->getTotalDue();
+    }
+
+    public function setTotalPaid($amount)
+    {
+        $this->getPlatformOrder()->setTotalPaid($amount);
+    }
+
+    public function setBaseTotalPaid($amount)
+    {
+        $this->getPlatformOrder()->setBaseTotalPaid($amount);
+    }
+
+    public function setTotalDue($amount)
+    {
+        $this->getPlatformOrder()->setTotalDue($amount);
+    }
+
+    public function setBaseTotalDue($amount)
+    {
+        $this->getPlatformOrder()->setBaseTotalDue($amount);
     }
 }
