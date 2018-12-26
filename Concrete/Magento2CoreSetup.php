@@ -7,6 +7,18 @@ use Mundipagg\Core\Kernel\Abstractions\AbstractModuleCoreSetup;
 
 final class Magento2CoreSetup extends AbstractModuleCoreSetup
 {
+    static protected function setModuleVersion()
+    {
+        //@todo get the correct number;
+        self::$moduleVersion = '2.14.233';
+    }
+
+    static protected function setLogPath()
+    {
+        //@todo get this from config.
+        self::$logPath = 'var/log';
+    }
+
     static protected function setConfig()
     {
         self::$config = [

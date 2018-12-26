@@ -105,7 +105,6 @@ class WebhookManagement implements WebhookManagementInterface
     public function save($id, $type, $data)
     {
         try {
-
             Magento2CoreSetup::bootstrap();
 
             $this->getLogger()->logger($data);
@@ -137,8 +136,8 @@ class WebhookManagement implements WebhookManagementInterface
         }
 
         foreach ($charges as $charge) {
-            //$result[] = $this->saveCharge($charge);
-            $result[] = $this->saveOrder($charge);
+            $result[] = $this->saveCharge($charge);
+            //$result[] = $this->saveOrder($charge);
         }
 
         $result[] = ["success" => 200];
@@ -214,6 +213,7 @@ class WebhookManagement implements WebhookManagementInterface
         return $creditmemoServiceRefund->getData();
     }
 
+    /** @deprecated  */
     protected function createInvoice($order)
     {
         $invoice = $this->getInvoiceService()->prepareInvoice($order);
