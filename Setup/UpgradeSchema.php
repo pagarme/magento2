@@ -31,6 +31,10 @@ class UpgradeSchema implements UpgradeSchemaInterface
         $installSchema = new InstallSchema();
         if (version_compare($version, "1.0.31", "<")) {
             $setup = $installSchema->installWebhook($setup);
+            $setup = $installSchema->installOrder($setup);
+            $setup = $installSchema->installCharge($setup);
+            $setup = $installSchema->installTransaction($setup);
+
         }
 
         $setup->endSetup();

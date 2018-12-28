@@ -125,7 +125,7 @@ class WebhookManagement implements WebhookManagementInterface
             );
         }
 
-        //@fixme deprecated code.
+        //@deprecated code.
         $statusOrder = $data['status'];
 
         $isCharge = 'ch_';
@@ -145,6 +145,9 @@ class WebhookManagement implements WebhookManagementInterface
         return $result;
     }
 
+    /**
+     * @deprecated
+     */
     protected function saveOrder($charge)
     {
         $result[] = ["order" => "here"];

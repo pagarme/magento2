@@ -13,7 +13,16 @@ final class Magento2DatabaseDecorator extends AbstractDatabaseDecorator
                 $this->db->getTableName('mundipagg_module_core_configuration'),
 
             AbstractDatabaseDecorator::TABLE_WEBHOOK =>
-                $this->db->getTableName('mundipagg_module_core_webhook')
+                $this->db->getTableName('mundipagg_module_core_webhook'),
+
+            AbstractDatabaseDecorator::TABLE_ORDER =>
+                $this->db->getTableName('mundipagg_module_core_order'),
+
+            AbstractDatabaseDecorator::TABLE_CHARGE =>
+                $this->db->getTableName('mundipagg_module_core_charge'),
+
+            AbstractDatabaseDecorator::TABLE_TRANSACTION =>
+                $this->db->getTableName('mundipagg_module_core_transaction'),
         ];
     }
 

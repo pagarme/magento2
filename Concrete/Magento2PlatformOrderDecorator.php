@@ -114,4 +114,19 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
     {
         $this->getPlatformOrder()->setBaseTotalCanceled($amount);
     }
+
+    public function setTotalRefunded($amount)
+    {
+        $this->getPlatformOrder()->setTotalRefunded($amount);
+    }
+
+    public function setBaseTotalRefunded($amount)
+    {
+        $this->getPlatformOrder()->setBaseTotalRefunded($amount);
+    }
+
+    public function getCode()
+    {
+        $this->getPlatformOrder()->getIncrementId();
+    }
 }
