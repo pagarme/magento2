@@ -107,10 +107,9 @@ class InstallSchema implements InstallSchemaInterface
                 )
                 ->addColumn(
                     'code',
-                    Table::TYPE_INTEGER,
-                    null,
+                    Table::TYPE_TEXT,
+                    100,
                     [
-                        'unsigned' => true,
                         'nullable' => false,
                     ],
                     'Code'
@@ -173,10 +172,9 @@ class InstallSchema implements InstallSchemaInterface
                 )
                 ->addColumn(
                     'code',
-                    Table::TYPE_INTEGER,
-                    null,
+                    Table::TYPE_TEXT,
+                    100,
                     [
-                        'unsigned' => true,
                         'nullable' => false,
                     ],
                     'Code'
