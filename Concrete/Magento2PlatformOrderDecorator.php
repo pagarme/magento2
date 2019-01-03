@@ -38,10 +38,35 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
        $this->platformOrder->setState($stringState);
     }
 
+
+    /**
+     * @return OrderState;
+     */
+    public function getState()
+    {
+        $baseState = explode('_', $this->getPlatformOrder()->getState());
+        $state = '';
+        foreach ($baseState as $st) {
+            $state .= ucfirst($st);
+        }
+        $state = lcfirst($state);
+
+        if ($state === Order::STATE_NEW) {
+            $state = 'stateNew';
+        }
+
+        return OrderState::$state();
+    }
+
     public function setStatus(OrderStatus $status)
     {
         $stringStatus = $status->getStatus();
         $this->platformOrder->setStatus($stringStatus);
+    }
+
+    public function getStatus()
+    {
+        return $this->getPlatformOrder()->getStatus();
     }
 
     public function loadByIncrementId($incrementId)
@@ -127,6 +152,21 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 
     public function getCode()
     {
-        $this->getPlatformOrder()->getIncrementId();
+        return $this->getPlatformOrder()->getIncrementId();
+    }
+
+    public function canUnhold()
+    {
+        return $this->getPlatformOrder()->canUnhold();
+    }
+
+    public function isPaymentReview()
+    {
+        return $this->getPlatformOrder()->isPaymentReview();
+    }
+
+    public function isCanceled()
+    {
+        return $this->getPlatformOrder()->isCanceled();
     }
 }

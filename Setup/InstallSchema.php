@@ -307,6 +307,16 @@ class InstallSchema implements InstallSchemaInterface
                     ],
                     'Status'
                 )
+                ->addColumn(
+                    'created_at',
+                    Table::TYPE_DATETIME,
+                    null,
+                    [
+
+                        'nullable' => false,
+                    ],
+                    'Created At'
+                )
                 ->setComment('Transaction Table')
                 ->setOption('charset', 'utf8')
             ;
