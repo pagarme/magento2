@@ -136,8 +136,8 @@ class WebhookManagement implements WebhookManagementInterface
         }
 
         foreach ($charges as $charge) {
-            $result[] = $this->saveCharge($charge);
-            //$result[] = $this->saveOrder($charge);
+            //$result[] = $this->saveCharge($charge);
+            $result[] = $this->saveOrder($charge);
         }
 
         $result[] = ["success" => 200];

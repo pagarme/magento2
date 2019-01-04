@@ -3,12 +3,11 @@
 namespace MundiPagg\MundiPagg\Concrete;
 
 use Magento\Framework\App\ObjectManager;
-use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Invoice;
 use Mundipagg\Core\Kernel\Abstractions\AbstractInvoiceDecorator;
-use Mundipagg\Core\Kernel\Abstractions\AbstractPlatformOrderDecorator;
 use Mundipagg\Core\Kernel\Interfaces\PlatformOrderInterface;
-use Mundipagg\Core\Kernel\ValueObjects\OrderState;
-use Mundipagg\Core\Kernel\ValueObjects\OrderStatus;
+use Mundipagg\Core\Kernel\ValueObjects\InvoiceState;
+
 
 class Magento2PlatformInvoiceDecorator extends AbstractInvoiceDecorator
 {
@@ -49,4 +48,24 @@ class Magento2PlatformInvoiceDecorator extends AbstractInvoiceDecorator
         $transactionSave->save();
     }
 
+    public function setState(InvoiceState $state)
+    {
+        $mageState = Invoice::STATE_PAID;
+
+        if ($state->equals(InvoiceState::canceled())) {
+            $mageState = Invoice::STATE_CANCELED;
+        }
+
+        $this->platformInvoice->setState($mageState);
+    }
+
+    public function canRefund()
+    {
+        return $this->platformInvoice->canRefund();
+    }
+
+    public function isCanceled()
+    {
+        return $this->platformInvoice->isCanceled();
+    }
 }

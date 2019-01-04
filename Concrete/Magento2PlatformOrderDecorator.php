@@ -5,6 +5,7 @@ namespace MundiPagg\MundiPagg\Concrete;
 use Magento\Framework\App\ObjectManager;
 use Magento\Sales\Model\Order;
 use Mundipagg\Core\Kernel\Abstractions\AbstractPlatformOrderDecorator;
+use Mundipagg\Core\Kernel\Interfaces\PlatformInvoiceInterface;
 use Mundipagg\Core\Kernel\ValueObjects\OrderState;
 use Mundipagg\Core\Kernel\ValueObjects\OrderStatus;
 
@@ -140,6 +141,11 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $this->getPlatformOrder()->setBaseTotalCanceled($amount);
     }
 
+    public function getTotalRefunded()
+    {
+        return $this->getPlatformOrder()->getTotalRefunded();
+    }
+
     public function setTotalRefunded($amount)
     {
         $this->getPlatformOrder()->setTotalRefunded($amount);
@@ -168,5 +174,20 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
     public function isCanceled()
     {
         return $this->getPlatformOrder()->isCanceled();
+    }
+
+    /**
+     * @return PlatformInvoiceInterface[]
+     */
+    public function getInvoiceCollection()
+    {
+        $baseInvoiceCollection = $this->platformOrder->getInvoiceCollection();
+
+        $invoiceCollection = [];
+        foreach ($baseInvoiceCollection as $invoice) {
+            $invoiceCollection[] = new Magento2PlatformInvoiceDecorator($invoice);
+        }
+
+        return $invoiceCollection;
     }
 }
