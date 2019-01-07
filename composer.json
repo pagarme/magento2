@@ -5,9 +5,8 @@
     "type": "magento2-module",
     "description": "Magento 2 Module Mundipagg",
     "require": {
-        "php": "~5.6.0|~7.0.0|~7.1.0",
-        "mundipagg/mundiapi": "^3.0",
-        "mundipagg/ecommerce-module-core": "dev-master"
+        "php": ">=5.6.0",
+        "mundipagg/mundiapi": "^3.0"
     },
     "require-dev": {
         "phpunit/phpunit": "4.1.0",
@@ -45,11 +44,5 @@
     },
     "config":{
         "secure-http":false
-    },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/mundipagg/ecommerce-module-core.git"
-        }
-    ]
+    }
 }
