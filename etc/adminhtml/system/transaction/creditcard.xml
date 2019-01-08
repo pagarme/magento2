@@ -56,6 +56,16 @@
             <comment />
             <config_path>payment/mundipagg_creditcard/sort_order</config_path>
         </field>
+
+        <field id="enable_saved_cards" showInDefault="1" showInStore="1"
+               showInWebsite="1"
+               sortOrder="71" translate="label" type="select">
+            <label>Enable Saved Credit-Cards</label>
+            <comment />
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>payment/mundipagg_creditcard/enable_saved_cards</config_path>
+        </field>
+
 	    <include path="MundiPagg_MundiPagg::system/transaction/creditcard/types.xml"/>
 	    <include path="MundiPagg_MundiPagg::system/transaction/creditcard/installments.xml"/>
 	    <include path="MundiPagg_MundiPagg::system/transaction/creditcard/antifraud.xml"/>
