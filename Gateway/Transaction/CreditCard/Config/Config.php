@@ -25,6 +25,14 @@ class Config extends AbstractConfig implements ConfigInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getEnabledSavedCards()
+    {
+        return (bool) $this->getConfig(static::PATH_ENABLED_SAVED_CARDS);
+    }
+
+    /**
      * @return string
      */
     public function getTitle()

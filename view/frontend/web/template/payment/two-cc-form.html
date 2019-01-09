@@ -253,7 +253,7 @@
                 </div>
             </div>
 
-            <!-- ko if: (isSaveCardHave)-->
+            <!-- ko if: (isEnabledSavedCards())-->
             <div class="field saved-card">
                 <label data-bind="attr: {for: getCode() + '_saved_card_first'}" class="label">
                     <span><!-- ko i18n: 'Credit Card'--><!-- /ko --></span>
@@ -309,6 +309,7 @@
                        ">
                 </div>
             </div>
+            <!-- ko if: (isEnabledSavedCards())-->
             <div class="field choice" data-bind="attr: {id: getCode() + '_cc_savecard_first', style: isSaveCardStyle()}">
                 <input type="checkbox" class="checkbox" id="creditcard-save-first" data-bind="checked: creditCardsavecardFirst"/>
                 <label class="label" data-bind="attr: {'for': getCode() + '_cc_savecard_first'}">
@@ -326,6 +327,7 @@
                          data-bind="html: getSaveCardHelpHtml()"></div>
                 </div>
             </div>
+            <!-- /ko -->
             <div class="field number required"
                  data-bind="attr: {id: getCode() + '_cc_number_div_first' ,style: isSaveCardStyle()}">
                 <label data-bind="attr: {for: getCode() + '_cc_number_first'}" class="label">
@@ -715,7 +717,7 @@
                 </div>
             </div>
 
-            <!-- ko if: (isSaveCardHave)-->
+            <!-- ko if: (isEnabledSavedCards())-->
             <div class="field saved-card">
                 <label data-bind="attr: {for: getCode() + '_saved_card_second'}" class="label">
                     <span><!-- ko i18n: 'Credit Card'--><!-- /ko --></span>
@@ -771,7 +773,7 @@
                    ">
                 </div>
             </div>
-            <!-- //ko if: (isSaveCardActive())-->
+            <!-- ko if: (isEnabledSavedCards())-->
             <div class="field choice" data-bind="attr: {id: getCode() + '_cc_savecard_second', style: isSaveCardStyle()}">
                 <input type="checkbox" class="checkbox" id="creditcard-save-second" data-bind="checked: creditCardsavecardSecond"/>
                 <label class="label" data-bind="attr: {'for': getCode() + '_cc_savecard_second'}">
@@ -789,7 +791,7 @@
                          data-bind="html: getSaveCardHelpHtml()"></div>
                 </div>
             </div>
-            <!-- ///ko -->
+            <!-- /ko -->
             <div class="field number required"
                  data-bind="attr: {id: getCode() + '_cc_number_div_second' ,style: isSaveCardStyle()}">
                 <label data-bind="attr: {for: getCode() + '_cc_number_second'}" class="label">

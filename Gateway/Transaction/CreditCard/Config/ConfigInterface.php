@@ -15,6 +15,7 @@ namespace MundiPagg\MundiPagg\Gateway\Transaction\CreditCard\Config;
 interface ConfigInterface
 {
     const PATH_ACTIVE                       = 'payment/mundipagg_creditcard/active';
+    const PATH_ENABLED_SAVED_CARDS          = 'payment/mundipagg_creditcard/enabled_saved_cards';
     const PATH_PAYMENT_ACTION               = 'payment/mundipagg_creditcard/payment_action';
     const PATH_ANTIFRAUD_ACTIVE             = 'payment/mundipagg_creditcard/antifraud_active';
     const PATH_ANTIFRAUD_MIN_AMOUNT         = 'payment/mundipagg_creditcard/antifraud_min_amount';
@@ -29,6 +30,11 @@ interface ConfigInterface
      * @return bool
      */
     public function getActive();
+
+    /**
+     * @return bool
+     */
+    public function getEnabledSavedCards();
 
     /**
      * @return string
