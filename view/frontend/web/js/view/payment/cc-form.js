@@ -139,6 +139,10 @@ define(
                 };
             },
 
+            isEnabledSavedCards: function() {
+                return (window.checkoutConfig.payment.mundipagg_creditcard.enabled_saved_cards);
+            },
+
             isSaveCardActive: function() {
                 return (window.isCustomerLoggedIn);
             },
