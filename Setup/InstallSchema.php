@@ -286,6 +286,16 @@ class InstallSchema implements InstallSchemaInterface
                     'amount'
                 )
                 ->addColumn(
+                    'paid_amount',
+                    Table::TYPE_INTEGER,
+                    null,
+                    [
+                        'unsigned' => true,
+                        'nullable' => false,
+                    ],
+                    'paid amount'
+                )
+                ->addColumn(
                     'type',
                     Table::TYPE_TEXT,
                     30,
