@@ -29,7 +29,9 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
             AbstractModuleCoreSetup::CONCRETE_PLATFORM_INVOICE_DECORATOR_CLASS =>
                 Magento2PlatformInvoiceDecorator::class,
             AbstractModuleCoreSetup::CONCRETE_PLATFORM_CREDITMEMO_DECORATOR_CLASS =>
-                Magento2PlatformCreditmemoDecorator::class
+                Magento2PlatformCreditmemoDecorator::class,
+            AbstractModuleCoreSetup::CONCRETE_DATA_SERVICE =>
+                Magento2DataService::class
         ];
     }
 

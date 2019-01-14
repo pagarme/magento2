@@ -296,6 +296,56 @@ class InstallSchema implements InstallSchemaInterface
                     'paid amount'
                 )
                 ->addColumn(
+                    'acquirer_tid',
+                    Table::TYPE_INTEGER,
+                    null,
+                    [
+                        'unsigned' => true,
+                        'nullable' => false,
+                    ],
+                    'acquirer tid'
+                )
+                ->addColumn(
+                    'acquirer_nsu',
+                    Table::TYPE_INTEGER,
+                    null,
+                    [
+                        'unsigned' => true,
+                        'nullable' => false,
+                    ],
+                    'acquirer nsu'
+                )
+                ->addColumn(
+                    'acquirer_auth_code',
+                    Table::TYPE_INTEGER,
+                    null,
+                    [
+                        'unsigned' => true,
+                        'nullable' => false,
+                    ],
+                    'acquirer auth code'
+                )
+                ->addColumn(
+                    'acquirer_name',
+                    Table::TYPE_TEXT,
+                    300,
+                    [
+                        'unsigned' => true,
+                        'nullable' => false,
+                    ],
+                    'Type'
+                )
+                ->addColumn(
+                    'acquirer_message',
+                    Table::TYPE_TEXT,
+                    300,
+                    [
+                        'unsigned' => true,
+                        'nullable' => false,
+                    ],
+                    'Type'
+                )
+                ->addColumn(
                     'type',
                     Table::TYPE_TEXT,
                     30,
