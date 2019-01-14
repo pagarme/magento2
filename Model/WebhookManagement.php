@@ -117,7 +117,7 @@ class WebhookManagement implements WebhookManagementInterface
 
             $webhookReceiverService = new WebhookReceiverService();
             return $webhookReceiverService->handle($postData);
-        }catch(AbstractMundipaggCoreException $e){
+        } catch(AbstractMundipaggCoreException $e) {
             throw new M2WebApiException(
                 new Phrase($e->getMessage()),
                 0,
