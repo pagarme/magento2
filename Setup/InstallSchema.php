@@ -21,6 +21,7 @@ class InstallSchema implements InstallSchemaInterface
         $installer = $setup;
         $installer->startSetup();
 
+        $this->installConfig($setup);
         $this->installWebhook($setup);
         $this->installOrder($setup);
         $this->installCharge($setup);
@@ -29,6 +30,42 @@ class InstallSchema implements InstallSchemaInterface
         $setup->endSetup();
     }
 
+    public function installConfig(
+        SchemaSetupInterface $installer
+    ) {
+        $tableName = $installer->getTable('mundipagg_module_core_configuration');
+        if (!$installer->getConnection()->isTableExists($tableName)) {
+            $configTable = $installer->getConnection()
+                ->newTable($tableName)
+                ->addColumn(
+                    'id',
+                    Table::TYPE_INTEGER,
+                    null,
+                    [
+                        'identity' => true,
+                        'unsigned' => true,
+                        'nullable' => false,
+                        'primary' => true
+                    ],
+                    'ID'
+                )
+                ->addColumn(
+                    'data',
+                    Table::TYPE_TEXT,
+                    null,
+                    [
+                        'nullable' => false
+                    ],
+                    'data'
+                )
+                ->setComment('Configuration Table')
+                ->setOption('charset', 'utf8')
+            ;
+
+            $installer->getConnection()->createTable($configTable);
+        }
+        return $installer;
+    }
 
     public function installWebhook(
         SchemaSetupInterface $installer
