@@ -4,6 +4,9 @@ namespace MundiPagg\MundiPagg\Concrete;
 
 use Magento\Framework\App\ObjectManager;
 use Mundipagg\Core\Kernel\Abstractions\AbstractModuleCoreSetup;
+use Mundipagg\Core\Kernel\Aggregates\Configuration;
+use Mundipagg\Core\Kernel\Factories\ConfigurationFactory;
+use MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\Config;
 
 final class Magento2CoreSetup extends AbstractModuleCoreSetup
 {
@@ -66,5 +69,34 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         $store = $objectManager->get('Magento\Store\Api\Data\StoreInterface');
 
         return $store->getLocaleCode();
+    }
+
+    protected static function loadModuleConfiguration()
+    {
+        $objectManager = ObjectManager::getInstance();
+        /** @var  Config $platformBaseConfig
+         */
+        $platformBaseConfig = $objectManager->get(Config::class);
+
+        $configData = new \stdClass;
+        $configData->cardConfigs = [];
+        $configData->boletoEnabled = false;
+        $configData->creditCardEnabled = false;
+        $configData->boletoCreditCardEnabled = false;
+        $configData->twoCreditCardsEnabled = false;
+        $configData->hubInstallId = null;
+
+        $configData->testMode = $platformBaseConfig->getTestMode();
+        $configData->keys = [
+            Configuration::KEY_PUBLIC => $platformBaseConfig->getPublicKey(),
+            Configuration::KEY_SECRET => $platformBaseConfig->getSecretKey(),
+        ];
+
+        $configurationFactory = new ConfigurationFactory();
+        $config = $configurationFactory->createFromJsonData(
+            json_encode($configData)
+        );
+
+        self::$moduleConfig = $config;
     }
 }
