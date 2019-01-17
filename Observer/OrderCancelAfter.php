@@ -26,6 +26,15 @@ class OrderCancelAfter implements ObserverInterface
             Magento2CoreSetup::bootstrap();
 
             $platformOrder = $observer->getOrder();
+
+            if ($platformOrder === null) {
+                $platformOrder = $observer->getPayment();
+                if ($platformOrder === null) {
+                    return;
+                }
+                $platformOrder = $platformOrder->getOrder();
+            }
+
             $transaction = $this->getTransaction($platformOrder);
             $orderService = new OrderService();
             if ($transaction !== false) {
