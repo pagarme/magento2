@@ -21,46 +21,22 @@ class OrderCancelAfter implements ObserverInterface
      */
     public function execute(EventObserver $observer)
     {
-
         try {
             Magento2CoreSetup::bootstrap();
 
-            $platformOrder = $observer->getOrder();
-
+            $platformOrder = $this->getPlatformOrderFromObserver($observer);
             if ($platformOrder === null) {
-                $platformOrder = $observer->getPayment();
-                if ($platformOrder === null) {
-                    return;
-                }
-                $platformOrder = $platformOrder->getOrder();
+                return;
             }
 
             $transaction = $this->getTransaction($platformOrder);
-            $orderService = new OrderService();
             if ($transaction !== false) {
-                $orderCreationResponse =
-                    $transaction->getAdditionalInformation(
-                        'mundipagg_payment_module_api_response'
-                    );
-
-                if ($orderCreationResponse !== null) {
-                    $orderCreationResponse = json_decode(
-                        $orderCreationResponse,
-                        true
-                    );
-                    
-                    $orderFactory = new OrderFactory();
-                    $order = $orderFactory->createFromPostData($orderCreationResponse);
-
-                    $orderService->cancelAtMundipagg($order);
-                    return;
-                }
+                $this->cancelOrderByTransactionInfo($transaction);
+                return;
             }
 
             $incrementId = $platformOrder->getIncrementId();
-            $platformOrder = new Magento2PlatformOrderDecorator();
-            $platformOrder->loadByIncrementId($incrementId);
-            $orderService->cancelAtMundipaggByPlatformOrder($platformOrder);
+            $this->cancelOrderByIncrementId($incrementId);
         } catch(AbstractMundipaggCoreException $e) {
             throw new M2WebApiException(
                 new Phrase($e->getMessage()),
@@ -70,13 +46,64 @@ class OrderCancelAfter implements ObserverInterface
         }
     }
 
+    private function cancelOrderByTransactionInfo($transaction)
+    {
+        $orderService = new OrderService();
+
+        $orderCreationResponse =
+            $transaction->getAdditionalInformation(
+                'mundipagg_payment_module_api_response'
+            );
+
+        if ($orderCreationResponse !== null) {
+            $orderCreationResponse = json_decode(
+                $orderCreationResponse,
+                true
+            );
+
+            $orderFactory = new OrderFactory();
+            $order = $orderFactory->createFromPostData($orderCreationResponse);
+
+            $orderService->cancelAtMundipagg($order);
+            return;
+        }
+    }
+
+    private function cancelOrderByIncrementId($incrementId)
+    {
+        $orderService = new OrderService();
+
+        $platformOrder = new Magento2PlatformOrderDecorator();
+        $platformOrder->loadByIncrementId($incrementId);
+        $orderService->cancelAtMundipaggByPlatformOrder($platformOrder);
+    }
+
+    private function getPlatformOrderFromObserver(EventObserver $observer)
+    {
+        $platformOrder = $observer->getOrder();
+
+        if ($platformOrder !== null)
+        {
+            return $platformOrder;
+        }
+
+        $payment = $observer->getPayment();
+        if ($payment !== null) {
+            return $payment->getOrder();
+        }
+
+        return null;
+    }
+
     private function getTransaction($order)
     {
-        $objectManager = ObjectManager::getInstance();
-        $transactionRepository = $objectManager->get('Magento\Sales\Model\Order\Payment\Transaction\Repository');
         $lastTransId = $order->getPayment()->getLastTransId();
         $paymentId = $order->getPayment()->getEntityId();
         $orderId = $order->getPayment()->getParentId();
+
+        $objectManager = ObjectManager::getInstance();
+        $transactionRepository = $objectManager->get('Magento\Sales\Model\Order\Payment\Transaction\Repository');
+
         return $transactionRepository->getByTransactionId(
             $lastTransId,
             $paymentId,
