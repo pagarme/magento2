@@ -16,7 +16,9 @@ use Mundipagg\Core\Kernel\Services\InstallmentService;
 use MundiPagg\MundiPagg\Api\InstallmentsManagementInterface;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 
-class InstallmentsManagement implements InstallmentsManagementInterface
+class InstallmentsManagement
+    extends AbstractInstallmentManagement
+    implements InstallmentsManagementInterface
 {
     protected $builder;
 
@@ -28,6 +30,7 @@ class InstallmentsManagement implements InstallmentsManagementInterface
     )
     {
         $this->setBuilder($builder);
+        parent::__construct();
     }
 
     /**
@@ -35,28 +38,11 @@ class InstallmentsManagement implements InstallmentsManagementInterface
      */
     public function getInstallments()
     {
-        Magento2CoreSetup::bootstrap();
-
-        $installmentService = new InstallmentService();
-
-        $installments = $installmentService->getInstallmentsFor(
+        return $this->getCoreInstallments(
             null,
             null,
             $this->builder->getSession()->getQuote()->getGrandTotal() * 100
         );
-
-        $result = [];
-        foreach ($installments as $installment)
-        {
-            $result[] = [
-                'id' => $installment->getTimes(),
-                'interest' =>
-                    ($installment->getTotal() - $installment->getBaseTotal()) / 100,
-                'label' => $installmentService->getLabelFor($installment)
-            ];
-        }
-
-        return $result;
 
         //@fixme deprecated code
 

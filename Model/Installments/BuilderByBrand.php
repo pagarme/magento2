@@ -241,7 +241,7 @@ class BuilderByBrand extends AbstractSimpleObjectBuilder
     /**
      * @return Session
      */
-    protected function getSession()
+    public function getSession()
     {
         return $this->session;
     }
