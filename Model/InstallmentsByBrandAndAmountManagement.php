@@ -12,11 +12,14 @@
 namespace MundiPagg\MundiPagg\Model;
 
 use Magento\Framework\Api\SimpleBuilderInterface;
+use Mundipagg\Core\Kernel\ValueObjects\CardBrand;
 use MundiPagg\MundiPagg\Api\InstallmentsByBrandAndAmountManagementInterface;
 use Magento\Checkout\Model\Session;
 use MundiPagg\MundiPagg\Model\Installments\Config\ConfigByBrand as Config;
 
-class InstallmentsByBrandAndAmountManagement implements InstallmentsByBrandAndAmountManagementInterface
+class InstallmentsByBrandAndAmountManagement
+    extends AbstractInstallmentManagement
+    implements InstallmentsByBrandAndAmountManagementInterface
 {
     protected $builder;
     protected $session;
@@ -34,6 +37,8 @@ class InstallmentsByBrandAndAmountManagement implements InstallmentsByBrandAndAm
         $this->setBuilder($builder);
         $this->setSession($session);
         $this->setConfig($config);
+
+        parent::__construct();
     }
 
     /**
@@ -43,6 +48,21 @@ class InstallmentsByBrandAndAmountManagement implements InstallmentsByBrandAndAm
      */
     public function getInstallmentsByBrandAndAmount($brand = null, $amount = null)
     {
+        $baseBrand = $brand !== null ? $brand : 'nobrand';
+        $baseBrand = strtolower($baseBrand);
+
+        $baseAmount = $this->builder->getSession()->getQuote()->getGrandTotal();
+        if ($amount !== null) {
+            $baseAmount = $amount;
+        }
+
+        return $this->getCoreInstallments(
+            null,
+            CardBrand::$baseBrand(),
+            $baseAmount
+        );
+
+        //@fixme deprecated code.
 
         $cardBrand = $brand != 'null' ? $this->formatCardBrand($brand) : null;
         $this->session->setCardBrand($cardBrand);

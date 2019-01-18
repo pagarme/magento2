@@ -15,7 +15,7 @@ use Magento\Framework\Api\SimpleBuilderInterface;
 use Mundipagg\Core\Kernel\ValueObjects\CardBrand;
 use MundiPagg\MundiPagg\Api\InstallmentsByBrandManagementInterface;
 use Magento\Checkout\Model\Session;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+
 use MundiPagg\MundiPagg\Model\Installments\Config\ConfigByBrand as Config;
 
 class InstallmentsByBrandManagement
@@ -53,7 +53,7 @@ class InstallmentsByBrandManagement
         return $this->getCoreInstallments(
             null,
             CardBrand::$baseBrand(),
-            $this->builder->getSession()->getQuote()->getGrandTotal() * 100
+            $this->builder->getSession()->getQuote()->getGrandTotal()
         );
 
         //@fixme deprecated code

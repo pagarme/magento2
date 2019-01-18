@@ -19,14 +19,12 @@ abstract class AbstractInstallmentManagement
         CardBrand $brand = null,
         $value = null
     ){
-
-
         $installmentService = new InstallmentService();
 
         $installments = $installmentService->getInstallmentsFor(
             $order,
             $brand,
-            $value
+            $value * 100
         );
 
         $result = [];

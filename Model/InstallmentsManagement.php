@@ -12,9 +12,7 @@
 namespace MundiPagg\MundiPagg\Model;
 
 use Magento\Framework\Api\SimpleBuilderInterface;
-use Mundipagg\Core\Kernel\Services\InstallmentService;
 use MundiPagg\MundiPagg\Api\InstallmentsManagementInterface;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 
 class InstallmentsManagement
     extends AbstractInstallmentManagement
@@ -41,7 +39,7 @@ class InstallmentsManagement
         return $this->getCoreInstallments(
             null,
             null,
-            $this->builder->getSession()->getQuote()->getGrandTotal() * 100
+            $this->builder->getSession()->getQuote()->getGrandTotal()
         );
 
         //@fixme deprecated code
