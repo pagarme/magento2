@@ -10,13 +10,18 @@ use Mundipagg\Core\Kernel\Factories\ConfigurationFactory;
 use Mundipagg\Core\Kernel\ValueObjects\CardBrand;
 use Mundipagg\Core\Kernel\ValueObjects\Configuration\CardConfig;
 use MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\Config;
+use MundiPagg\MundiPagg\Helper\ModuleHelper;
 
 final class Magento2CoreSetup extends AbstractModuleCoreSetup
 {
+    const MODULE_NAME = 'MundiPagg_MundiPagg';
+
     static protected function setModuleVersion()
     {
-        //@todo get the correct number;
-        self::$moduleVersion = '2.14.233';
+        $objectManager = ObjectManager::getInstance();
+        $moduleHelper = $objectManager->get(ModuleHelper::class);
+
+        self::$moduleVersion = $moduleHelper->getVersion(self::MODULE_NAME);
     }
 
     static protected function setLogPath()
