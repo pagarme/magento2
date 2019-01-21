@@ -14,7 +14,9 @@ namespace MundiPagg\MundiPagg\Model;
 use Magento\Framework\Api\SimpleBuilderInterface;
 use MundiPagg\MundiPagg\Api\InstallmentsManagementInterface;
 
-class InstallmentsManagement implements InstallmentsManagementInterface
+class InstallmentsManagement
+    extends AbstractInstallmentManagement
+    implements InstallmentsManagementInterface
 {
     protected $builder;
 
@@ -26,6 +28,7 @@ class InstallmentsManagement implements InstallmentsManagementInterface
     )
     {
         $this->setBuilder($builder);
+        parent::__construct();
     }
 
     /**
@@ -33,6 +36,14 @@ class InstallmentsManagement implements InstallmentsManagementInterface
      */
     public function getInstallments()
     {
+        return $this->getCoreInstallments(
+            null,
+            null,
+            $this->builder->getSession()->getQuote()->getGrandTotal()
+        );
+
+        //@fixme deprecated code
+
         $this->getBuilder()->create();
 
         $result = [];

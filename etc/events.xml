@@ -27,4 +27,14 @@
     <event name="payment_method_is_active">
         <observer name="custom_payment" instance="MundiPagg\MundiPagg\Observer\PaymentMethodAvailable" />
     </event>
+
+    <event name="order_cancel_after">
+        <observer name="cancel_order_at_mundipagg"
+                  instance="MundiPagg\MundiPagg\Observer\OrderCancelAfter" />
+    </event>
+
+    <event name="sales_order_payment_refund">
+        <observer name="cancel_order_at_mundipagg_via_payment_refund"
+                  instance="MundiPagg\MundiPagg\Observer\OrderCancelAfter" />
+    </event>
 </config>

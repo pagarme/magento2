@@ -26,7 +26,13 @@ class Magento2DataService extends AbstractDataService
 
             $orderCreationResponse =
                 $transaction->getAdditionalInformation('mundipagg_payment_module_api_response');
+
+            if ($orderCreationResponse === null) {
+                return;
+            }
+
             $orderCreationResponse = json_decode($orderCreationResponse);
+
             $responseCharges = $orderCreationResponse->charges;
             $currentCharges = $order->getCharges();
 
