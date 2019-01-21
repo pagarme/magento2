@@ -148,4 +148,12 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         }
         return $cardConfigs;
     }
+
+    protected static function _formatToCurrency($price)
+    {
+        $objectManager = ObjectManager::getInstance();
+        $priceHelper = $objectManager->create('Magento\Framework\Pricing\Helper\Data');
+
+        return $priceHelper->currency($price, true, false);
+    }
 }
