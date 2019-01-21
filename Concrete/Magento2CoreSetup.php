@@ -2,18 +2,26 @@
 
 namespace MundiPagg\MundiPagg\Concrete;
 
+use Magento\Framework\App\Config as Magento2StoreConfig;
 use Magento\Framework\App\ObjectManager;
 use Mundipagg\Core\Kernel\Abstractions\AbstractModuleCoreSetup;
 use Mundipagg\Core\Kernel\Aggregates\Configuration;
 use Mundipagg\Core\Kernel\Factories\ConfigurationFactory;
+use Mundipagg\Core\Kernel\ValueObjects\CardBrand;
+use Mundipagg\Core\Kernel\ValueObjects\Configuration\CardConfig;
 use MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\Config;
+use MundiPagg\MundiPagg\Helper\ModuleHelper;
 
 final class Magento2CoreSetup extends AbstractModuleCoreSetup
 {
+    const MODULE_NAME = 'MundiPagg_MundiPagg';
+
     static protected function setModuleVersion()
     {
-        //@todo get the correct number;
-        self::$moduleVersion = '2.14.233';
+        $objectManager = ObjectManager::getInstance();
+        $moduleHelper = $objectManager->get(ModuleHelper::class);
+
+        self::$moduleVersion = $moduleHelper->getVersion(self::MODULE_NAME);
     }
 
     static protected function setLogPath()
@@ -77,9 +85,10 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         /** @var  Config $platformBaseConfig
          */
         $platformBaseConfig = $objectManager->get(Config::class);
+        /** @var Magento2StoreConfig $storeConfig */
+        $storeConfig = $objectManager->get(Magento2StoreConfig::class);
 
         $configData = new \stdClass;
-        $configData->cardConfigs = [];
         $configData->boletoEnabled = false;
         $configData->creditCardEnabled = false;
         $configData->boletoCreditCardEnabled = false;
@@ -92,11 +101,64 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
             Configuration::KEY_SECRET => $platformBaseConfig->getSecretKey(),
         ];
 
+
+        $configData->cardConfigs = self::getCardConfigs($storeConfig);
+
         $configurationFactory = new ConfigurationFactory();
         $config = $configurationFactory->createFromJsonData(
             json_encode($configData)
         );
 
         self::$moduleConfig = $config;
+    }
+
+    static private function getCardConfigs($storeConfig)
+    {
+        $brands = array_merge([''],explode(
+            ',',
+            $storeConfig->getValue('payment/mundipagg_creditcard/cctypes')
+        ));
+
+        $cardConfigs = [];
+        foreach ($brands as $brand)
+        {
+            $brand = "_" . strtolower($brand);
+            $brandMethod = str_replace('_','', $brand);
+            if ($brandMethod == '')
+            {
+                $brand = '';
+                $brandMethod = 'nobrand';
+            }
+
+            $interestByBrand =  $storeConfig->getValue('payment/mundipagg_creditcard/installments_interest_by_issuer' . $brand);
+            if ($interestByBrand != 1) {
+                $brand = '';
+            }
+
+            $max =  $storeConfig->getValue('payment/mundipagg_creditcard/installments_number' . $brand);
+            $minValue =  $storeConfig->getValue('payment/mundipagg_creditcard/installment_min_amount' . $brand);
+            $initial =  $storeConfig->getValue('payment/mundipagg_creditcard/installments_interest_rate_initial' . $brand);
+            $incremental =  $storeConfig->getValue('payment/mundipagg_creditcard/installments_interest_rate_incremental'. $brand);
+            $maxWithout =  $storeConfig->getValue('payment/mundipagg_creditcard/installments_max_without_interest' . $brand);
+
+            $cardConfigs[] = new CardConfig(
+                true,
+                CardBrand::$brandMethod(),
+                $max,
+                $maxWithout,
+                $initial,
+                $incremental,
+                ($minValue !== null ? $minValue : 0) * 100
+            );
+        }
+        return $cardConfigs;
+    }
+
+    protected static function _formatToCurrency($price)
+    {
+        $objectManager = ObjectManager::getInstance();
+        $priceHelper = $objectManager->create('Magento\Framework\Pricing\Helper\Data');
+
+        return $priceHelper->currency($price, true, false);
     }
 }

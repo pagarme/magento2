@@ -39,6 +39,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
 
         if (version_compare($version, "1.4.0", "<")) {
             $setup = $installSchema->installConfig($setup);
+            $setup = $this->fixTransactionTable($setup);
         }
 
         $setup->endSetup();
@@ -141,6 +142,40 @@ class UpgradeSchema implements UpgradeSchemaInterface
         );
 
         $installer->endSetup();
+
+        return $setup;
+    }
+
+    protected function fixTransactionTable($setup)
+    {
+        $installer = $setup;
+
+        $connection = $installer->getConnection();
+
+        $connection->modifyColumn(
+            $installer->getTable('mundipagg_module_core_transaction'),
+            'acquirer_tid',
+            [
+                'type' => Table::TYPE_TEXT,
+                'length' => 300,
+            ]
+        )
+        ->modifyColumn(
+            $installer->getTable('mundipagg_module_core_transaction'),
+            'acquirer_nsu',
+            [
+                'type' => Table::TYPE_TEXT,
+                'length' => 300,
+            ]
+        )
+        ->modifyColumn(
+            $installer->getTable('mundipagg_module_core_transaction'),
+            'acquirer_auth_code',
+            [
+                'type' => Table::TYPE_TEXT,
+                'length' => 300,
+            ]
+        );
 
         return $setup;
     }
