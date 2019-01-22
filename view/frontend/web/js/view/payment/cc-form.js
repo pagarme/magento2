@@ -61,7 +61,7 @@ define(
                 this._super();
 
                 //Set credit card number to credit card data object
-                this.creditCardNumber.subscribe(function (value) {
+                /*this.creditCardNumber.subscribe(function (value) {
                     window.checkoutConfig.payment.mundipagg_creditcard.brandIsValid = false;
                     var result;
 
@@ -91,7 +91,7 @@ define(
                     if(cardsAvailables[result.card.type]){
                         window.checkoutConfig.payment.mundipagg_creditcard.brandIsValid = true;
                     }
-                });
+                });*/
 
                 //Set expiration year to credit card data object
                 this.creditCardExpYear.subscribe(function (value) {

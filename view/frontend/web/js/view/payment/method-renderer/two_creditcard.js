@@ -24,7 +24,8 @@ define(
         'Magento_Checkout/js/action/select-payment-method',
         'MundiPagg_MundiPagg/js/action/creditcard/token',
         'Magento_Checkout/js/model/full-screen-loader',
-        'mage/translate'
+        'mage/translate',
+        'jquerymask'
     ],
     function (
         Component,

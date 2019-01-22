@@ -52,7 +52,8 @@
                                 'src': $parent.getIcons(item.value).url,
                                 'alt': item.type,
                                 'width': $parent.getIcons(item.value).width,
-                                'height': $parent.getIcons(item.value).height
+                                'height': $parent.getIcons(item.value).height,
+                                'class': 'brands '  + item.type.toLowerCase()
                                 }">
                         </li>
                     <!--/ko-->
@@ -91,13 +92,16 @@
             <span><!-- ko i18n: 'Credit Card Number'--><!-- /ko --></span>
         </label>
         <div class="control">
-            <input type="number" onKeyPress="if(this.value.length==window.checkoutConfig.payment.mundipagg_creditcard.size_credit_card) return false;" min="0" name="payment[cc_number]" class="input-text" value=""
+
+            <input
+                data-mundipagg="cartao"
+                    type="number" onKeyPress="if(this.value.length==window.checkoutConfig.payment.mundipagg_creditcard.size_credit_card) return false;" min="0" name="payment[cc_number]" class="input-text" value=""
                    data-bind="attr: {
                                     autocomplete: off,
-                                    id: getCode() + '_cc_number',
+
                                     title: $t('Credit Card Number'),
                                     'data-container': getCode() + '-cc-number',
-                                    'data-validate': JSON.stringify({'required-number':true, 'validate-card-type':getCcAvailableTypesValues(), 'validate-card-number':'#' + getCode() + '_cc_type', 'validate-cc-type':'#' + getCode() + '_cc_type'})},
+                                    'data-validate': JSON.stringify({'required-number':true})},
                               enable: isActive($parents),
                               value: creditCardNumber,
                               valueUpdate: 'keyup' "/>
@@ -171,7 +175,7 @@
                    class="input-text cvv"
                    name="payment[cc_cid]"
                    value=""
-                   onKeyPress="if(this.value.length==4) return false;" 
+                   onKeyPress="if(this.value.length==4) return false;"
                    min="0"
                    data-bind="attr: {id: getCode() + '_cc_cid',
                         title: $t('Card Verification Number'),
@@ -223,3 +227,5 @@
     </div>
     <!-- /ko -->
 </fieldset>
+
+<div data-bind="afterRender: function() {MundiPaggCore.initPaymentMethod('creditCard');}"></div>
