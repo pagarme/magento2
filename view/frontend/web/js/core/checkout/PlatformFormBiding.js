@@ -15,7 +15,6 @@ FormObject.creditCardInit = function () {
         'creditCardCvv' : jQuery(containerSelector + " input[name='payment[cc_cid]']"),
         'creditCardInstallments' : jQuery(containerSelector + " input[name='payment[cc_installments]']"),
         'creditCardBrand' : jQuery(containerSelector + " input[name='payment[cc_type]']")
-
     };
 
     return this.FormObject;

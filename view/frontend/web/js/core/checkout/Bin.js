@@ -46,7 +46,7 @@ Bin.prototype.getBrand = function () {
         type: 'GET',
         dataType: 'json',
         url: 'https://api.mundipagg.com/bin/v1/' + bin,
-        async: false,
+        async: true,
         cache: true,
     });
 };

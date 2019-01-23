@@ -16,5 +16,4 @@ FormHandler.prototype.switchBrand = function (brand) {
 
         return;
     }
-
 }

@@ -24,11 +24,11 @@ define(
         'MundiPagg_MundiPagg/js/action/creditcard/token',
         'Magento_Checkout/js/action/redirect-on-success',
         'mage/translate',
-        'MundiPagg_MundiPagg/js/plugins/PaymentModuleBootstrap',
-        'MundiPagg_MundiPagg/js/plugins/PaymentMethodController',
-        'MundiPagg_MundiPagg/js/plugins/PlatformFormBiding',
-        'MundiPagg_MundiPagg/js/plugins/Bin',
-        'MundiPagg_MundiPagg/js/plugins/PlatformFormHandler'
+        'MundiPagg_MundiPagg/js/core/checkout/PaymentModuleBootstrap',
+        'MundiPagg_MundiPagg/js/core/checkout/PaymentMethodController',
+        'MundiPagg_MundiPagg/js/core/checkout/PlatformFormBiding',
+        'MundiPagg_MundiPagg/js/core/checkout/Bin',
+        'MundiPagg_MundiPagg/js/core/checkout/PlatformFormHandler'
     ],
     function (
         Component,
