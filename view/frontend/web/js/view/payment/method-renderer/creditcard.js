@@ -288,7 +288,6 @@ define(
                 checkoutData.setSelectedPaymentMethod(this.item.method);
                 $("#mundipagg_creditcard_installments").val('');
 
-
                 return true;
             },
             /**

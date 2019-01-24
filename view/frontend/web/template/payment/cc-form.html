@@ -92,19 +92,22 @@
             <span><!-- ko i18n: 'Credit Card Number'--><!-- /ko --></span>
         </label>
         <div class="control">
-
             <input
                 data-mundipagg="cartao"
-                    type="number" onKeyPress="if(this.value.length > 18) return false;" min="0" name="payment[cc_number]" class="input-text" value=""
-                   data-bind="attr: {
-                                    autocomplete: off,
-
-                                    title: $t('Credit Card Number'),
-                                    'data-container': getCode() + '-cc-number',
-                                    'data-validate': JSON.stringify({'required-number':true})},
-                              enable: isActive($parents),
-                              value: creditCardNumber,
-                              valueUpdate: 'keyup' "/>
+                type="number" onKeyPress="if(this.value.length > 18) return false;"
+                min="0"
+                name="payment[cc_number]"
+                class="input-text"
+                value=""
+                data-bind="attr: {
+                    autocomplete: off,
+                    title: $t('Credit Card Number'),
+                    'data-container': getCode() + '-cc-number',
+                    'data-validate': JSON.stringify({'required-number':true})},
+                    enable: isActive($parents),
+                    value: creditCardNumber,
+                    valueUpdate: 'keyup' "
+                />
         </div>
     </div>
 
