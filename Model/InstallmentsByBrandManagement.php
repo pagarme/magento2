@@ -47,7 +47,7 @@ class InstallmentsByBrandManagement
      */
     public function getInstallmentsByBrand($brand = null)
     {
-        $baseBrand = $brand !== null ? $brand : 'nobrand';
+        $baseBrand = strlen($brand) > 0 ? $brand : 'nobrand';
         $baseBrand = strtolower($baseBrand);
 
         return $this->getCoreInstallments(
