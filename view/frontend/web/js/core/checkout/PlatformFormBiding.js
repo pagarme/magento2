@@ -1,6 +1,4 @@
-var FormObject = {
-
-};
+var FormObject = {};
 
 FormObject.creditCardInit = function () {
 
@@ -18,4 +16,4 @@ FormObject.creditCardInit = function () {
     };
 
     return this.FormObject;
-}
+};
