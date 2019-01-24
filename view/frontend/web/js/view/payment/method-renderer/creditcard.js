@@ -23,7 +23,12 @@ define(
         'Magento_Checkout/js/model/payment/additional-validators',
         'MundiPagg_MundiPagg/js/action/creditcard/token',
         'Magento_Checkout/js/action/redirect-on-success',
-        'mage/translate'
+        'mage/translate',
+        'MundiPagg_MundiPagg/js/core/checkout/PaymentModuleBootstrap',
+        'MundiPagg_MundiPagg/js/core/checkout/PaymentMethodController',
+        'MundiPagg_MundiPagg/js/core/checkout/PlatformFormBiding',
+        'MundiPagg_MundiPagg/js/core/checkout/Bin',
+        'MundiPagg_MundiPagg/js/core/checkout/PlatformFormHandler'
     ],
     function (
         Component,
@@ -131,7 +136,11 @@ define(
 
             createAndSendTokenCreditCard: function (data, event) {
 
-                var brandIsValid = window.checkoutConfig.payment.mundipagg_creditcard.brandIsValid;
+                /**
+                 * @todo Move all validation from here to
+                 * MundiPaggCore.validatePaymentMethod
+                 */
+                var brandIsValid = MundiPaggCore.validatePaymentMethod('creditCard');
 
                 if(!brandIsValid){
                     this.messageContainer.addErrorMessage({
@@ -278,6 +287,7 @@ define(
                 selectPaymentMethodAction(this.getData());
                 checkoutData.setSelectedPaymentMethod(this.item.method);
                 $("#mundipagg_creditcard_installments").val('');
+
                 return true;
             },
             /**
@@ -361,7 +371,6 @@ define(
                 return {
                     'method': this.item.method,
                     'additional_data': {
-                        // 'cc_cid': this.creditCardVerificationNumber(),
                         'cc_type': this.creditCardType(),
                         'cc_last_4': this.creditCardSavedNumber() ? this.creditCardSavedNumber().substr(-4, 4) : this.creditCardNumber().substr(-4, 4),
                         'cc_exp_year': this.creditCardExpYear(),
