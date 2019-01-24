@@ -48,7 +48,7 @@ class InstallmentsByBrandAndAmountManagement
      */
     public function getInstallmentsByBrandAndAmount($brand = null, $amount = null)
     {
-        $baseBrand = $brand !== null ? $brand : 'nobrand';
+        $baseBrand = strlen($brand) > 0 ? $brand : 'nobrand';
         $baseBrand = strtolower($baseBrand);
 
         $baseAmount = $this->builder->getSession()->getQuote()->getGrandTotal();
