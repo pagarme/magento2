@@ -136,7 +136,11 @@ define(
 
             createAndSendTokenCreditCard: function (data, event) {
 
-                var brandIsValid = jQuery("input[name='payment[cc_type]']").val();
+                /**
+                 * @todo Move all validation from here to
+                 * MundiPaggCore.validatePaymentMethod
+                 */
+                var brandIsValid = MundiPaggCore.validatePaymentMethod('creditCard');
 
                 if(!brandIsValid){
                     this.messageContainer.addErrorMessage({

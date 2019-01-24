@@ -39,24 +39,22 @@ Bin.prototype.validate = function (newValue) {
 };
 
 Bin.prototype.getBrand = function () {
-
     var bin = this.binValue.slice(0, 6);
 
     return jQuery.ajax({
         type: 'GET',
         dataType: 'json',
         url: 'https://api.mundipagg.com/bin/v1/' + bin,
-        async: true,
+        async: false,
         cache: true,
     });
 };
 
 Bin.prototype.saveBinInformation = function (data) {
-
     if (typeof this.checkedBins == 'undefined') {
         this.checkedBins = [];
     }
 
     this.checkedBins[this.binValue] = data.brand;
     this.selectedBrand = data.brand;
-}
+};

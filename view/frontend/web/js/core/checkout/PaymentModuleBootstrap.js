@@ -7,9 +7,16 @@ var MundiPaggCore = {
 };
 
 MundiPaggCore.initPaymentMethod = function (methodCode) {
-
     this.paymentMethod =
         new PaymentMethodController(methodCode);
 
     this.paymentMethod.init();
 };
+
+MundiPaggCore.validatePaymentMethod = function (methodCode) {
+    this.paymentMethod =
+        new PaymentMethodController(methodCode);
+
+    this.paymentMethod.init();
+    return this.paymentMethod.formValidation();
+}
