@@ -7,6 +7,7 @@ use Magento\Sales\Model\Order\Invoice;
 use Mundipagg\Core\Kernel\Abstractions\AbstractInvoiceDecorator;
 use Mundipagg\Core\Kernel\Interfaces\PlatformOrderInterface;
 use Mundipagg\Core\Kernel\ValueObjects\InvoiceState;
+use MundiPagg\MundiPagg\Observer\SalesOrderPlaceAfter;
 
 
 class Magento2PlatformInvoiceDecorator extends AbstractInvoiceDecorator
@@ -35,6 +36,19 @@ class Magento2PlatformInvoiceDecorator extends AbstractInvoiceDecorator
 
     public function createFor(PlatformOrderInterface $order)
     {
+        $objectManager = ObjectManager::getInstance();
+        /**
+         * @var SalesOrderPlaceAfter $observer;
+         */
+        $observer = $objectManager->get(SalesOrderPlaceAfter::class);
+        $observer->createInvoice($order->getPlatformOrder());
+
+        $this->platformInvoice =
+            $order->getPlatformOrder()->getPayment()->getCreatedInvoice();
+
+        return;
+
+        //@deprecated code
         $this->prepareFor($order);
         $this->platformInvoice->setRequestedCaptureCase(\Magento\Sales\Model\Order\Invoice::CAPTURE_OFFLINE);
         $this->platformInvoice->register();
