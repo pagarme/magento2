@@ -117,7 +117,7 @@ class SalesOrderPlaceAfter implements ObserverInterface
      * @param Order $order
      * @return $invoice
      */
-    protected function createInvoice($order)
+    public function createInvoice($order)
     {
         $payment = $order->getPayment();
         $payment
