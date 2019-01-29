@@ -95,9 +95,12 @@ class Magento2PlatformInvoiceDecorator extends AbstractInvoiceDecorator
         );
         $transactionSave->save();
 
+        //Remove comments if you need to send e-mail here until we don't create
+        //a class for e-mail sending.
         //$invoiceSender->send($invoice);
 
         $order->addStatusHistoryComment(
+            'MP - ' .
             __('Notified customer about invoice #%1.', $invoice->getIncrementId())
         )
             ->setIsCustomerNotified(true)
