@@ -7,7 +7,9 @@ use Magento\Sales\Model\Order\Invoice;
 use Mundipagg\Core\Kernel\Abstractions\AbstractInvoiceDecorator;
 use Mundipagg\Core\Kernel\Interfaces\PlatformOrderInterface;
 use Mundipagg\Core\Kernel\ValueObjects\InvoiceState;
-use MundiPagg\MundiPagg\Observer\SalesOrderPlaceAfter;
+use Magento\Sales\Model\Service\InvoiceService;
+use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
+use Magento\Framework\DB\Transaction;
 
 
 class Magento2PlatformInvoiceDecorator extends AbstractInvoiceDecorator
@@ -36,15 +38,7 @@ class Magento2PlatformInvoiceDecorator extends AbstractInvoiceDecorator
 
     public function createFor(PlatformOrderInterface $order)
     {
-        $objectManager = ObjectManager::getInstance();
-        /**
-         * @var SalesOrderPlaceAfter $observer;
-         */
-        $observer = $objectManager->get(SalesOrderPlaceAfter::class);
-        $observer->createInvoice($order->getPlatformOrder());
-
-        $this->platformInvoice =
-            $order->getPlatformOrder()->getPayment()->getCreatedInvoice();
+        $this->platformInvoice = $this->createInvoice($order->getPlatformOrder());
 
         return;
 
@@ -81,5 +75,48 @@ class Magento2PlatformInvoiceDecorator extends AbstractInvoiceDecorator
     public function isCanceled()
     {
         return $this->platformInvoice->isCanceled();
+    }
+
+    private function createInvoice($order)
+    {
+        $objectManager = ObjectManager::getInstance();
+        $invoiceService = $objectManager->get(InvoiceService::class);
+        $transaction = $objectManager->get(Transaction::class);
+        $invoiceSender = $objectManager->get(InvoiceSender::class);
+
+        $invoice = $invoiceService->prepareInvoice($order);
+        $invoice->setRequestedCaptureCase(\Magento\Sales\Model\Order\Invoice::CAPTURE_OFFLINE);
+        $invoice->register();
+        $invoice->save();
+        $transactionSave = $transaction->addObject(
+            $invoice
+        )->addObject(
+            $invoice->getOrder()
+        );
+        $transactionSave->save();
+
+        //Remove comments if you need to send e-mail here until we don't create
+        //a class for e-mail sending.
+        //$invoiceSender->send($invoice);
+
+        $order->addStatusHistoryComment(
+            'MP - ' .
+            __('Notified customer about invoice #%1.', $invoice->getIncrementId())
+        )
+            ->setIsCustomerNotified(true)
+            ->save();
+
+        $payment = $order->getPayment();
+        $payment
+            ->setIsTransactionClosed(true)
+            ->registerCaptureNotification(
+                $order->getGrandTotal(),
+                true
+            );
+
+        $order->setState('processing')->setStatus('processing');
+        $order->save();
+
+        return $invoice;
     }
 }
