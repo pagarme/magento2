@@ -77,9 +77,18 @@ class DataValidateAdmin implements ObserverInterface
      */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
+        if (!$this->moduleIsEnable()) {
+            return $this;
+        }
+
         $this->validateConfigMagento();
         
         return $this;
+    }
+
+    public function moduleIsEnable()
+    {
+        return $this->configProviderMundipagg->getModuleStatus();
     }
 
     protected function validateConfigMagento()
