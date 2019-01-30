@@ -38,9 +38,9 @@ class Magento2PlatformInvoiceDecorator extends AbstractInvoiceDecorator
 
     public function createFor(PlatformOrderInterface $order)
     {
-        $this->platformInvoice = $this->createInvoice($order->getPlatformOrder());
+        //$this->platformInvoice = $this->createInvoice($order->getPlatformOrder());
 
-        return;
+        //return;
 
         //@deprecated code
         $this->prepareFor($order);
