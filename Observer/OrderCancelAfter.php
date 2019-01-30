@@ -12,6 +12,7 @@ use Magento\Framework\Webapi\Exception as M2WebApiException;
 use Magento\Framework\Phrase;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 use MundiPagg\MundiPagg\Concrete\Magento2PlatformOrderDecorator;
+use MundiPagg\MundiPagg\Model\MundiPaggConfigProvider;
 
 class OrderCancelAfter implements ObserverInterface
 {
@@ -21,6 +22,10 @@ class OrderCancelAfter implements ObserverInterface
      */
     public function execute(EventObserver $observer)
     {
+        if (!$this->moduleIsEnable()) {
+            return $this;
+        }
+
         try {
             Magento2CoreSetup::bootstrap();
 
@@ -44,6 +49,14 @@ class OrderCancelAfter implements ObserverInterface
                 $e->getCode()
             );
         }
+    }
+
+    public function moduleIsEnable()
+    {
+        $objectManager = ObjectManager::getInstance();
+        $mundipaggProvider = $objectManager->get(MundiPaggConfigProvider::class);
+
+        return $mundipaggProvider->getModuleStatus();
     }
 
     private function cancelOrderByTransactionInfo($transaction)

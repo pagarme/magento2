@@ -14,6 +14,8 @@ use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
 use Magento\Framework\DB\Transaction;
 use MundiPagg\MundiPagg\Gateway\Transaction\CreditCard\Config\Config as ConfigCreditCard;
 use MundiPagg\MundiPagg\Helper\Logger;
+use MundiPagg\MundiPagg\Model\MundiPaggConfigProvider;
+use Magento\Framework\App\ObjectManager;
 
 class SalesOrderPlaceAfter implements ObserverInterface
 {
@@ -97,6 +99,10 @@ class SalesOrderPlaceAfter implements ObserverInterface
      */
     public function execute(EventObserver $observer)
     {
+        if (!$this->moduleIsEnable()) {
+            return $this;
+        }
+
         $event = $observer->getEvent();
         $order = $event->getOrder();
         $payment = $order->getPayment();
@@ -111,6 +117,14 @@ class SalesOrderPlaceAfter implements ObserverInterface
         }
 
         return $this;
+    }
+
+    public function moduleIsEnable()
+    {
+        $objectManager = ObjectManager::getInstance();
+        $mundipaggProvider = $objectManager->get(MundiPaggConfigProvider::class);
+
+        return $mundipaggProvider->getModuleStatus();
     }
 
     /**

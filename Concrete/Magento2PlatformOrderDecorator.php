@@ -199,6 +199,12 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
     /** @return OrderId */
     public function getMundipaggId()
     {
+        $orderId = $this->platformOrder->getPayment()->getLastTransId();
+
+        if (empty($orderId)) {
+            return null;
+        }
+
         return new OrderId($this->platformOrder->getPayment()->getLastTransId());
     }
 }
