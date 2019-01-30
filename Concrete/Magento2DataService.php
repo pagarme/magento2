@@ -3,6 +3,7 @@
 namespace MundiPagg\MundiPagg\Concrete;
 
 use Magento\Framework\App\ObjectManager;
+use Magento\Sales\Model\Order\Payment\Transaction\Repository;
 use Mundipagg\Core\Kernel\Abstractions\AbstractDataService;
 use Mundipagg\Core\Kernel\Aggregates\Order;
 use Mundipagg\Core\Kernel\ValueObjects\Id\ChargeId;
@@ -14,7 +15,7 @@ class Magento2DataService extends AbstractDataService
         $platformOrder = $order->getPlatformOrder()->getPlatformOrder();
 
         $objectManager = ObjectManager::getInstance();
-        $transactionRepository = $objectManager->get('Magento\Sales\Model\Order\Payment\Transaction\Repository');
+        $transactionRepository = $objectManager->get(Repository::class);
         $lastTransId = $platformOrder->getPayment()->getLastTransId();
         $paymentId = $platformOrder->getPayment()->getEntityId();
         $orderId = $platformOrder->getPayment()->getParentId();
@@ -25,18 +26,7 @@ class Magento2DataService extends AbstractDataService
             $orderId
         );
 
-        $transactionCapture = $transactionRepository->getByTransactionId(
-            $lastTransId,
-            $paymentId,
-            $orderId
-        );
-
-        //to prevent overwriting auth transaction
-        if ($transactionAuth->getTxnId() === $transactionCapture->getTxnId())
-        {
-            return;
-        }
-
+        $additionalInfo = [];
         if ($transactionAuth !== false) {
             $currentCharges = $order->getCharges();
 
@@ -48,43 +38,33 @@ class Magento2DataService extends AbstractDataService
 
                 $lastMundipaggTransaction = $charge->getLastTransaction();
 
-                $transactionCapture->setAdditionalInformation(
-                    $baseKey . '_acquirer_nsu',
-                    $lastMundipaggTransaction->getAcquirerNsu()
-                );
+                $additionalInfo[$baseKey . '_acquirer_nsu'] =
+                    $lastMundipaggTransaction->getAcquirerNsu();
 
-                $transactionCapture->setAdditionalInformation(
-                    $baseKey . '_acquirer_tid',
-                    $lastMundipaggTransaction->getAcquirerTid()
-                );
+                $additionalInfo[$baseKey . '_acquirer_tid'] =
+                    $lastMundipaggTransaction->getAcquirerTid();
 
-                $transactionCapture->setAdditionalInformation(
-                    $baseKey . '_acquirer_auth_code',
-                    $lastMundipaggTransaction->getAcquirerAuthCode()
-                );
+                $additionalInfo[$baseKey . '_acquirer_auth_code'] =
+                    $lastMundipaggTransaction->getAcquirerAuthCode();
 
-                $transactionCapture->setAdditionalInformation(
-                    $baseKey . '_acquirer_name',
-                    $lastMundipaggTransaction->getAcquirerName()
-                );
+                $additionalInfo[$baseKey . '_acquirer_name'] =
+                    $lastMundipaggTransaction->getAcquirerName();
 
-                $transactionCapture->setAdditionalInformation(
-                    $baseKey . '_acquirer_message',
-                    $lastMundipaggTransaction->getAcquirerMessage()
-                );
+                $additionalInfo[$baseKey . '_acquirer_message'] =
+                    $lastMundipaggTransaction->getAcquirerMessage();
 
-                $transactionCapture->setAdditionalInformation(
-                    $baseKey . '_brand',
-                    $lastMundipaggTransaction->getBrand()
-                );
+                $additionalInfo[$baseKey . '_brand'] =
+                    $lastMundipaggTransaction->getBrand();
 
-                $transactionCapture->setAdditionalInformation(
-                    $baseKey . '_installments',
-                    $lastMundipaggTransaction->getInstallments()
-                );
+                $additionalInfo[$baseKey . '_installments'] =
+                    $lastMundipaggTransaction->getInstallments();
             }
 
-            $transactionCapture->save();
+            $this->createCaptureTransaction(
+                $platformOrder,
+                $transactionAuth,
+                $additionalInfo
+            );
         }
     }
 
@@ -128,5 +108,30 @@ class Magento2DataService extends AbstractDataService
         }
 
         return null;
+    }
+
+    private function createCaptureTransaction($order, $transactionAuth, $additionalInformation)
+    {
+        $objectManager = ObjectManager::getInstance();
+        $transactionRepository = $objectManager->get(Repository::class);
+
+        /** @var Order\Payment $payment */
+        $payment = $order->getPayment();
+
+        $transaction = $transactionRepository->create();
+        $transaction->setParentId($transactionAuth->getTransactionId());
+        $transaction->setOrderId($order->getEntityId());
+        $transaction->setPaymentId($payment->getEntityId());
+        $transaction->setTxnId($transactionAuth->getTxnId() . '-capture');
+        $transaction->setParentTxnId($transactionAuth->getTxnId(), $transactionAuth->getTxnId() . '-capture');
+        $transaction->setTxnType('capture');
+        $transaction->setIsClosed(true);
+
+
+        foreach ( $additionalInformation as $key => $value ) {
+            $transaction->setAdditionalInformation($key, $value);
+        }
+
+        $transactionRepository->save($transaction);
     }
 }
