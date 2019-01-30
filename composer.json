@@ -1,7 +1,7 @@
 {
     "name": "mundipagg/mundipagg-magento2-module",
     "license": "MIT",
-    "version": "1.4.6",
+    "version": "1.4.7",
     "type": "magento2-module",
     "description": "Magento 2 Module Mundipagg",
     "require": {

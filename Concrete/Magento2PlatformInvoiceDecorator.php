@@ -54,6 +54,10 @@ class Magento2PlatformInvoiceDecorator extends AbstractInvoiceDecorator
             $this->platformInvoice->getOrder()
         );
         $transactionSave->save();
+
+        $objectManager = ObjectManager::getInstance();
+        $invoiceSender = $objectManager->get(InvoiceSender::class);
+        $invoiceSender->send($this->platformInvoice);
     }
 
     public function setState(InvoiceState $state)
