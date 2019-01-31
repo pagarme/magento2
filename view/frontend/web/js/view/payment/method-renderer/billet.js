@@ -20,7 +20,6 @@ define(
         selectPaymentMethodAction, 
         Component
     ) {
-        'use strict';
 
         return Component.extend({
             defaults: {
