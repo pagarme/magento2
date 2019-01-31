@@ -59,6 +59,39 @@ define(
 
                 this._super();
 
+                //Set credit card number to credit card data object
+                this.creditCardNumber.subscribe(function (value) {
+                    window.checkoutConfig.payment.mundipagg_creditcard.brandIsValid = false;
+                    var result;
+
+                    self.selectedCardType(null);
+
+                    if (value === '' || value === null) {
+                        return false;
+                    }
+                    result = cardNumberValidator(value);
+
+                    if (!result.isPotentiallyValid && !result.isValid) {
+                        return false;
+                    }
+
+                    if (result.card.title !== null) {
+                        self.selectedCardType(result.card.type);
+                        creditCardData.creditCard = result.card;
+                    }
+
+                    if (result.isValid) {
+                        creditCardData.creditCardNumber = value;
+                        self.creditCardType(result.card.type);
+                    }
+
+                    var cardsAvailables = window.checkoutConfig.payment.ccform.availableTypes.mundipagg_creditcard;
+
+                    if(cardsAvailables[result.card.type]){
+                        window.checkoutConfig.payment.mundipagg_creditcard.brandIsValid = true;
+                    }
+                });
+
                 //Set expiration year to credit card data object
                 this.creditCardExpYear.subscribe(function (value) {
                     creditCardData.expirationYear = value;
