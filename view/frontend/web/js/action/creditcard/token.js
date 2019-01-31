@@ -18,7 +18,6 @@ define(
         storage,
         urlBuilder
     ) {
-        'use strict';
 
         return function (dataJson) {
             var serviceUrl = 'https://api.mundipagg.com/core/v1/tokens?appId=' + window.checkoutConfig.payment.ccform.pk_token;

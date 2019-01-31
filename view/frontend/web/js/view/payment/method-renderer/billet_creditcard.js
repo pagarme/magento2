@@ -44,7 +44,6 @@ define(
         fullScreenLoader,
         $t
     ) {
-        'use strict';
 
         return Component.extend({
             defaults: {

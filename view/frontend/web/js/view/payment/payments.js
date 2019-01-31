@@ -16,7 +16,6 @@ define(
         Component,
         rendererList
     ) {
-        'use strict';
 
         rendererList.push(
             {

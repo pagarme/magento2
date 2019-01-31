@@ -20,7 +20,6 @@ define(
         urlBuilder,
         mageUrl
     ) {
-        'use strict';
 
         return function (data) {
             var serviceUrl;

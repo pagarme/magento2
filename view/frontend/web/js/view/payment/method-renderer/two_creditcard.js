@@ -44,8 +44,6 @@ define(
         fullScreenLoader,
         $t
     ) {
-        'use strict';
-
         return Component.extend({
             defaults: {
                 template: 'MundiPagg_MundiPagg/payment/two-creditcard',
