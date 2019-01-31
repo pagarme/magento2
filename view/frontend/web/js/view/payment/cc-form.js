@@ -13,7 +13,6 @@ define(
         'mage/translate'
     ],
     function (_, Component, creditCardData, cardNumberValidator, $t) {
-        'use strict';
 
         return Component.extend({
             defaults: {

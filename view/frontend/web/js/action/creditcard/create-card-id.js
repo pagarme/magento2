@@ -20,7 +20,6 @@ define(
         urlBuilder,
         mageUrl
     ) {
-        'use strict';
 
         return function (data, customer_id) {
             var serviceUrl = 'https://api.mundipagg.com/core/v1/customers/' + customer_id + '/cards';
