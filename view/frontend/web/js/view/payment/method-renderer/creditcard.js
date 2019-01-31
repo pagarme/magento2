@@ -47,7 +47,6 @@ define(
         redirectOnSuccessAction,
         $t
     ) {
-        'use strict';
         return Component.extend({
             defaults: {
                 template: 'MundiPagg_MundiPagg/payment/creditcard',
