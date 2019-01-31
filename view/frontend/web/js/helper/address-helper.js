@@ -1,7 +1,6 @@
 define(
     [],
     function () {
-        'use strict';
 
         var states = [
             {value: 'AC', name: 'Acre'},

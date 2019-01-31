@@ -11,7 +11,6 @@ define(
         'MundiPagg_MundiPagg/js/model/credit-card-validation/credit-card-number-validator/credit-card-type'
     ],
     function (utils, luhn10, creditCardTypes) {
-        'use strict';
 
         /**
          * Validation result wrapper

@@ -16,7 +16,6 @@ define(
         storage,
         urlBuilder
     ) {
-        'use strict';
 
         return function (orderId) {
             var serviceUrl;
