@@ -90,8 +90,14 @@ define(
                     });
                 }
                 if (this.creditSavedCard()) {
-                    var brand = this.creditSavedCard();
-                    self.getInstallmentsByBrand(brand);
+                    var cards = window.checkoutConfig.payment.mundipagg_creditcard.cards;
+
+                    for (var i = 0; i < cards.length; i++) {
+                        if (cards[i].id == this.creditSavedCard()) {
+                            self.getInstallmentsByBrand(cards[i].brand);
+                            break
+                        }
+                    }
                 }
                 this.creditCardType.subscribe(function (brand) {
                     self.getInstallmentsByBrand(brand);
