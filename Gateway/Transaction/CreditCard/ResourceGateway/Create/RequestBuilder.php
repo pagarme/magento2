@@ -375,7 +375,6 @@ class RequestBuilder implements BuilderInterface
             ];
         }else{
             $tokenCard = $requestDataProvider->getCcTokenCreditCard();
-            $requestDataProvider->getCustomerAddressStreet(self::BILLING);
             $order->payments = [
                 [
                     'payment_method' => 'credit_card',

@@ -44,6 +44,8 @@ class CustomerAddressSaveBefore implements ObserverInterface
 
     private function filterAddressIndexes($addressConfig)
     {
+        $addressIndexes = [];
+
         foreach ($addressConfig as $key => $value) {
             if (preg_match('/street_\w{1}$/', $value) > 0) {
                 $addressIndexes[$key] = explode('street_', $value)[1];
@@ -64,16 +66,18 @@ class CustomerAddressSaveBefore implements ObserverInterface
                 $this->getModuleAddressConfig()
             );
 
-        if(empty($customerAddress->getStreetLine($addressIndexes['street']))){
-            throw new InputException(__("Please check your address. Street Address field (Street) is required."));
-        }
+        if($addressIndexes) {
+            if(empty($customerAddress->getStreetLine($addressIndexes['street']))){
+                throw new InputException(__("Please check your address. Street Address field (Street) is required."));
+            }
 
-        if(empty($customerAddress->getStreetLine($addressIndexes['number']))){
-            throw new InputException(__("Please check your address. Street Address field (Number) is required."));
-        }
+            if(empty($customerAddress->getStreetLine($addressIndexes['number']))){
+                throw new InputException(__("Please check your address. Street Address field (Number) is required."));
+            }
 
-        if(empty($customerAddress->getStreetLine($addressIndexes['district']))){
-            throw new InputException(__("Please check your address. Street Address field (Neighborhood) is required."));
+            if(empty($customerAddress->getStreetLine($addressIndexes['district']))){
+                throw new InputException(__("Please check your address. Street Address field (Neighborhood) is required."));
+            }
         }
     }
 
