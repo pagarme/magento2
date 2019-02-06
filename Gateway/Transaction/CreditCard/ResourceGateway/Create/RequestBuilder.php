@@ -348,7 +348,6 @@ class RequestBuilder implements BuilderInterface
 
             $model = $this->getCreateCardHelper();
             $card = $model->getById($payment->getAdditionalInformation('cc_saved_card'));
-
             $order->payments = [
                 [
                     'payment_method' => 'credit_card',
@@ -376,7 +375,6 @@ class RequestBuilder implements BuilderInterface
             ];
         }else{
             $tokenCard = $requestDataProvider->getCcTokenCreditCard();
-
             $order->payments = [
                 [
                     'payment_method' => 'credit_card',
