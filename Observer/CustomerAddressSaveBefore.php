@@ -35,22 +35,45 @@ class CustomerAddressSaveBefore implements ObserverInterface
         return $mundipaggProvider->getModuleStatus();
     }
 
+    public function getModuleAddressConfig()
+    {
+        $objectManager = ObjectManager::getInstance();
+        $mundipaggProvider = $objectManager->get(MundiPaggConfigProvider::class);
+        return $mundipaggProvider->getCustomerAddressConfiguration();
+    }
+
+    private function filterAddressIndexes($addressConfig)
+    {
+        foreach ($addressConfig as $key => $value) {
+            if (preg_match('/street_\w{1}$/', $value) > 0) {
+                $addressIndexes[$key] = explode('street_', $value)[1];
+            }
+        }
+
+        return $addressIndexes;
+    }
+
     /**
      * @param $customerAddress
      * @throws InputException
      */
     public function addressValidation($customerAddress)
     {
-        if(empty($customerAddress->getStreetLine(1))){
-            throw new InputException(__("Please check your address. First field of Street Address (Street) is required."));
+        $addressIndexes =
+            $this->filterAddressIndexes(
+                $this->getModuleAddressConfig()
+            );
+
+        if(empty($customerAddress->getStreetLine($addressIndexes['street']))){
+            throw new InputException(__("Please check your address. Street Address field (Street) is required."));
         }
 
-        if(empty($customerAddress->getStreetLine(2))){
-            throw new InputException(__("Please check your address. Second field of Street Address (Number) is required."));
+        if(empty($customerAddress->getStreetLine($addressIndexes['number']))){
+            throw new InputException(__("Please check your address. Street Address field (Number) is required."));
         }
 
-        if(empty($customerAddress->getStreetLine(3))){
-            throw new InputException(__("Please check your address. Fourth field of Street Address (Neighborhood) is required."));
+        if(empty($customerAddress->getStreetLine($addressIndexes['district']))){
+            throw new InputException(__("Please check your address. Street Address field (Neighborhood) is required."));
         }
     }
 

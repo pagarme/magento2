@@ -13,9 +13,12 @@ class MundiPaggConfigProvider
     /**
      * Contains if the module is active or not
      */
-    const XML_PATH_SOFTDESCRIPTION = 'payment/mundipagg_creditcard/soft_description';
-
-    const XML_PATH_ATIVE           = 'mundipagg_mundipagg/global/ative';
+    const XML_PATH_SOFTDESCRIPTION  = 'payment/mundipagg_creditcard/soft_description';
+    const XML_PATH_ATIVE            = 'mundipagg_mundipagg/global/ative';
+    const PATH_CUSTOMER_STREET      = 'payment/mundipagg_customer_address/street_attribute';
+    const PATH_CUSTOMER_NUMBER      = 'payment/mundipagg_customer_address/number_attribute';
+    const PATH_CUSTOMER_COMPLEMENT  = 'payment/mundipagg_customer_address/complement_attribute';
+    const PATH_CUSTOMER_DISTRICT    = 'payment/mundipagg_customer_address/district_attribute';
 
 
     /**
@@ -76,7 +79,35 @@ class MundiPaggConfigProvider
      */
     public function getModuleStatus()
     {
-        return $this->scopeConfig->getValue(self::XML_PATH_ATIVE, ScopeInterface::SCOPE_STORE);
+        return
+            $this->scopeConfig->getValue(
+                self::XML_PATH_ATIVE,
+                ScopeInterface::SCOPE_STORE
+            );
+    }
+
+    public function getCustomerAddressConfiguration()
+    {
+        $street = $this->scopeConfig->getValue(
+            self::PATH_CUSTOMER_STREET,
+            ScopeInterface::SCOPE_STORE
+        );
+
+        $number = $this->scopeConfig->getValue(
+            self::PATH_CUSTOMER_NUMBER,
+            ScopeInterface::SCOPE_STORE
+        );
+
+        $district = $this->scopeConfig->getValue(
+            self::PATH_CUSTOMER_DISTRICT,
+            ScopeInterface::SCOPE_STORE
+        );
+
+        return [
+            'street' => $street,
+            'number' => $number,
+            'district' => $district
+        ];
     }
 
 }
