@@ -73,7 +73,6 @@ define(
                 this.getCcInstallments();
                 var self = this;
                 this.getInstallmentsByBrand = function (brand) {
-
                     $.when(
                         installmentsByBrand(brand)
                     ).done(function (data) {
@@ -88,7 +87,6 @@ define(
                     }).always(function () {
                         //fullScreenLoader.stopLoader();
                     });
-
                 }
                 if (this.creditSavedCard()) {
                     var cards = window.checkoutConfig.payment.mundipagg_creditcard.cards;
