@@ -48,7 +48,11 @@ class InstallmentsByBrandManagement
     public function getInstallmentsByBrand($brand = null)
     {
         $baseBrand = 'nobrand';
-        if (strlen($brand) > 0 && $brand !== "null") {
+        if (
+            strlen($brand) > 0 &&
+            $brand !== "null" &&
+            method_exists(CardBrand::class, $brand)
+        ) {
             $baseBrand = strtolower($brand);
         }
 
