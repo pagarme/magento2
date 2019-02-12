@@ -70,7 +70,6 @@ define(
             totals: quote.getTotals(),
             initialize: function () {
                 this._super();
-
                 this.getCcInstallments();
                 var self = this;
                 this.getInstallmentsByBrand = function (brand) {
