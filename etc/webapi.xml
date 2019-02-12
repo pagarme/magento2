@@ -46,4 +46,12 @@
         </resources>
     </route>
 
+    <route url="/V1/mundipagg/maintenance/:params" method="GET">
+        <service class="MundiPagg\MundiPagg\Api\MaintenanceInterface"
+                 method="index"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+
 </routes>
