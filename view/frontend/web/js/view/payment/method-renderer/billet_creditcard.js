@@ -362,29 +362,25 @@ define(
             },
 
             getCcInstallments: function () {
-                var creditCardInput = jQuery("input[name='payment[cc_number]']");
+                var self = this;
 
-                if (typeof(creditCardInput.val()) !== "undefined") {
-                    var self = this;
+                //fullScreenLoader.startLoader();
+                $.when(
+                    installments()
+                ).done(function (transport) {
+                    self.allInstallments.removeAll();
 
-                    //fullScreenLoader.startLoader();
-                    $.when(
-                        installments()
-                    ).done(function (transport) {
-                        self.allInstallments.removeAll();
-
-                        _.map(transport, function (value, key) {
-                            self.allInstallments.push({
-                                'value': value.id,
-                                'interest': value.interest,
-                                'installments': value.label
-                            });
+                    _.map(transport, function (value, key) {
+                        self.allInstallments.push({
+                            'value': value.id,
+                            'interest': value.interest,
+                            'installments': value.label
                         });
-
-                    }).always(function () {
-                        //fullScreenLoader.stopLoader();
                     });
-                }
+
+                }).always(function () {
+                    //fullScreenLoader.stopLoader();
+                });
             },
 
             setInterest: function (option, item) {
