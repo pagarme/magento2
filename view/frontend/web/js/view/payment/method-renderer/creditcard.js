@@ -70,24 +70,26 @@ define(
             totals: quote.getTotals(),
             initialize: function () {
                 this._super();
-
                 this.getCcInstallments();
                 var self = this;
                 this.getInstallmentsByBrand = function (brand) {
-                    $.when(
-                        installmentsByBrand(brand)
-                    ).done(function (data) {
-                        self.allInstallments.removeAll();
-                        _.map(data, function (value, key) {
-                            self.allInstallments.push({
-                                'value': value.id,
-                                'interest': value.interest,
-                                'installments': value.label
+                    var creditCardInput = jQuery("input[name='payment[cc_number]']");
+                    if (typeof(creditCardInput.val()) !== "undefined") {
+                        $.when(
+                            installmentsByBrand(brand)
+                        ).done(function (data) {
+                            self.allInstallments.removeAll();
+                            _.map(data, function (value, key) {
+                                self.allInstallments.push({
+                                    'value': value.id,
+                                    'interest': value.interest,
+                                    'installments': value.label
+                                });
                             });
+                        }).always(function () {
+                            //fullScreenLoader.stopLoader();
                         });
-                    }).always(function () {
-                        //fullScreenLoader.stopLoader();
-                    });
+                    }
                 }
                 if (this.creditSavedCard()) {
                     var cards = window.checkoutConfig.payment.mundipagg_creditcard.cards;
@@ -338,22 +340,27 @@ define(
                 return window.checkoutConfig.payment.ccform.installments.active[this.getCode()];
             },
             getCcInstallments: function () {
-                var self = this;
-                fullScreenLoader.startLoader();
-                $.when(
-                    installments()
-                ).done(function (transport) {
-                    self.allInstallments.removeAll();
-                    _.map(transport, function (value, key) {
-                        self.allInstallments.push({
-                            'value': value.id,
-                            'interest': value.interest,
-                            'installments': value.label
+
+                var creditCardInput = jQuery("input[name='payment[cc_number]']");
+
+                if (typeof(creditCardInput.val()) !== "undefined") {
+                    var self = this;
+                    fullScreenLoader.startLoader();
+                    $.when(
+                        installments()
+                    ).done(function (transport) {
+                        self.allInstallments.removeAll();
+                        _.map(transport, function (value, key) {
+                            self.allInstallments.push({
+                                'value': value.id,
+                                'interest': value.interest,
+                                'installments': value.label
+                            });
                         });
+                    }).always(function () {
+                        fullScreenLoader.stopLoader();
                     });
-                }).always(function () {
-                    fullScreenLoader.stopLoader();
-                });
+                }
             },
             setInterest: function (option, item) {
                 if (typeof item != 'undefined') {

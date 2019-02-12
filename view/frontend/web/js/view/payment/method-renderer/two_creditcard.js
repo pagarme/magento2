@@ -530,47 +530,55 @@ define(
                 return window.checkoutConfig.payment.ccform.installments.active['mundipagg_creditcard'];
             },
             getCcInstallmentsFirst: function() {
-                var self = this;
+                var creditCardInput = jQuery("input[name='payment[cc_number_first]']");
 
-                //fullScreenLoader.startLoader();
-                $.when(
-                    installments()
-                ).done(function (transport) {
-                    self.allInstallmentsFirst.removeAll();
-                    _.map(transport, function (value, key) {
-                        self.allInstallmentsFirst.push({
-                            'value': value.id,
-                            'interest': value.interest,
-                            'installments': value.label
+                if (typeof(creditCardInput.val()) !== "undefined") {
+                    var self = this;
+
+                    //fullScreenLoader.startLoader();
+                    $.when(
+                        installments()
+                    ).done(function (transport) {
+                        self.allInstallmentsFirst.removeAll();
+                        _.map(transport, function (value, key) {
+                            self.allInstallmentsFirst.push({
+                                'value': value.id,
+                                'interest': value.interest,
+                                'installments': value.label
+                            });
                         });
-                    });
-                    // self.creditCardInstallmentsFirst(transport.length);
+                        // self.creditCardInstallmentsFirst(transport.length);
 
-                }).always(function () {
-                    //fullScreenLoader.stopLoader();
-                });
+                    }).always(function () {
+                        //fullScreenLoader.stopLoader();
+                    });
+                }
             },
 
             getCcInstallmentsSecond: function() {
-                var self = this;
+                var creditCardInput = jQuery("input[name='payment[cc_number_second]']");
 
-                //fullScreenLoader.startLoader();
-                $.when(
-                    installments()
-                ).done(function (transport) {
-                    self.allInstallmentsSecond.removeAll();
-                    _.map(transport, function (value, key) {
-                        self.allInstallmentsSecond.push({
-                            'value': value.id,
-                            'interest': value.interest,
-                            'installments': value.label
+                if (typeof(creditCardInput.val()) !== "undefined") {
+                    var self = this;
+
+                    //fullScreenLoader.startLoader();
+                    $.when(
+                        installments()
+                    ).done(function (transport) {
+                        self.allInstallmentsSecond.removeAll();
+                        _.map(transport, function (value, key) {
+                            self.allInstallmentsSecond.push({
+                                'value': value.id,
+                                'interest': value.interest,
+                                'installments': value.label
+                            });
                         });
-                    });
-                    self.creditCardInstallmentsSecond(transport.length);
+                        self.creditCardInstallmentsSecond(transport.length);
 
-                }).always(function () {
-                    //fullScreenLoader.stopLoader();
-                });
+                    }).always(function () {
+                        //fullScreenLoader.stopLoader();
+                    });
+                }
             },
 
             setInterest: function (option, item) {
