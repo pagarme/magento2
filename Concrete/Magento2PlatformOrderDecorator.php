@@ -2,8 +2,12 @@
 
 namespace MundiPagg\MundiPagg\Concrete;
 
+use Magento\Framework\Api\FilterBuilder;
+use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\ObjectManager;
 use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Payment\Transaction\Repository as TransactionRepository;
+use Magento\Sales\Model\Order\Payment\Repository as PaymentRepository;
 use Mundipagg\Core\Kernel\Abstractions\AbstractPlatformOrderDecorator;
 use Mundipagg\Core\Kernel\Interfaces\PlatformInvoiceInterface;
 use Mundipagg\Core\Kernel\ValueObjects\Id\OrderId;
@@ -206,5 +210,75 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         }
 
         return new OrderId($this->platformOrder->getPayment()->getLastTransId());
+    }
+
+    public function getHistoryCommentCollection()
+    {
+        $baseHistoryCollection = $this->platformOrder->getStatusHistoryCollection();
+
+        $historyCollection = [];
+        foreach ($baseHistoryCollection as $history) {
+            $historyCollection[] = $history->getData();
+        }
+
+        return $historyCollection;
+    }
+
+    public function getData()
+    {
+        return $this->platformOrder->getData();
+    }
+
+    public function getTransactionCollection()
+    {
+        $objectManager = ObjectManager::getInstance();
+        $transactionRepository = $objectManager->get(TransactionRepository::class);
+        $searchCriteriaBuilder = $objectManager->get(SearchCriteriaBuilder::class);;
+        $filterBuilder = $objectManager->get(FilterBuilder::class);
+
+        $filters[] = $filterBuilder->setField('payment_id')
+            ->setValue($this->platformOrder->getPayment()->getId())
+            ->create();
+
+        $filters[] = $filterBuilder->setField('order_id')
+            ->setValue($this->platformOrder->getId())
+            ->create();
+
+        $searchCriteria = $searchCriteriaBuilder->addFilters($filters)
+            ->create();
+
+        $baseTransactionCollection = $transactionRepository->getList($searchCriteria);
+
+        $transactionCollection = [];
+        foreach ($baseTransactionCollection as $transaction) {
+            $transactionCollection[] = $transaction->getData();
+        }
+
+        return $transactionCollection;
+
+    }
+
+    public function getPaymentCollection()
+    {
+        $objectManager = ObjectManager::getInstance();
+        $paymentRepository = $objectManager->get(PaymentRepository::class);
+        $searchCriteriaBuilder = $objectManager->get(SearchCriteriaBuilder::class);;
+        $filterBuilder = $objectManager->get(FilterBuilder::class);
+
+        $filters[] = $filterBuilder->setField('parent_id')
+            ->setValue($this->platformOrder->getId())
+            ->create();
+
+        $searchCriteria = $searchCriteriaBuilder->addFilters($filters)
+            ->create();
+
+        $basePaymentCollection = $paymentRepository->getList($searchCriteria);
+
+        $paymentCollection = [];
+        foreach ($basePaymentCollection as $payment) {
+            $paymentCollection[] = $payment->getData();
+        }
+
+        return $paymentCollection;
     }
 }
