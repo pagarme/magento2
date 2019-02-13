@@ -11,6 +11,7 @@ use Mundipagg\Core\Kernel\ValueObjects\CardBrand;
 use Mundipagg\Core\Kernel\ValueObjects\Configuration\CardConfig;
 use MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\Config;
 use MundiPagg\MundiPagg\Helper\ModuleHelper;
+use MundiPagg\MundiPagg\Model\Enum\CreditCardBrandEnum;
 
 final class Magento2CoreSetup extends AbstractModuleCoreSetup
 {
@@ -126,6 +127,12 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         {
             $brand = "_" . strtolower($brand);
             $brandMethod = str_replace('_','', $brand);
+            $adapted = self::getBrandAdapter(strtoupper($brandMethod));
+            if ($adapted !== false) {
+                $brand = "_" . strtolower($adapted);
+                $brandMethod = str_replace('_','', $brand);
+            }
+
             if ($brandMethod == '')
             {
                 $brand = '';
@@ -154,6 +161,20 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
             );
         }
         return $cardConfigs;
+    }
+
+    /** @see AbstractRequestDataProvider::getBrandAdapter() */
+    private static function getBrandAdapter($brand)
+    {
+        $fromTo = [
+            'VI' => CreditCardBrandEnum::VISA,
+            'MC' => CreditCardBrandEnum::MASTERCARD,
+            'AE' => CreditCardBrandEnum::AMEX,
+            'DI' => CreditCardBrandEnum::DISCOVER,
+            'DN' => CreditCardBrandEnum::DINERS,
+        ];
+
+        return (isset($fromTo[$brand])) ? $fromTo[$brand] : false;
     }
 
     protected static function _formatToCurrency($price)
