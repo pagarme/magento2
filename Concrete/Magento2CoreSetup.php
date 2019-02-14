@@ -27,8 +27,10 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
 
     static protected function setLogPath()
     {
-        //@todo get this from config.
-        self::$logPath = 'var/log';
+        self::$logPath = [
+            'var/log',
+            'var/report'
+        ];
     }
 
     static protected function setConfig()

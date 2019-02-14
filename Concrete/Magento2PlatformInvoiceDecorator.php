@@ -2,6 +2,7 @@
 
 namespace MundiPagg\MundiPagg\Concrete;
 
+use JsonSerializable;
 use Magento\Framework\App\ObjectManager;
 use Magento\Sales\Model\Order\Invoice;
 use Mundipagg\Core\Kernel\Abstractions\AbstractInvoiceDecorator;
@@ -12,7 +13,8 @@ use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
 use Magento\Framework\DB\Transaction;
 
 
-class Magento2PlatformInvoiceDecorator extends AbstractInvoiceDecorator
+class Magento2PlatformInvoiceDecorator extends AbstractInvoiceDecorator implements
+    JsonSerializable
 {
     public function save()
     {
@@ -122,5 +124,17 @@ class Magento2PlatformInvoiceDecorator extends AbstractInvoiceDecorator
         $order->save();
 
         return $invoice;
+    }
+
+    /**
+     * Specify data which should be serialized to JSON
+     * @link https://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     * @since 5.4.0
+     */
+    public function jsonSerialize()
+    {
+        return $this->platformInvoice->getData();
     }
 }
