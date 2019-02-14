@@ -14,7 +14,7 @@ class MundiPaggConfigProvider
      * Contains if the module is active or not
      */
     const XML_PATH_SOFTDESCRIPTION  = 'payment/mundipagg_creditcard/soft_description';
-    const XML_PATH_ATIVE            = 'mundipagg_mundipagg/global/ative';
+    const XML_PATH_ACTIVE            = 'mundipagg_mundipagg/global/active';
     const PATH_CUSTOMER_STREET      = 'payment/mundipagg_customer_address/street_attribute';
     const PATH_CUSTOMER_NUMBER      = 'payment/mundipagg_customer_address/number_attribute';
     const PATH_CUSTOMER_COMPLEMENT  = 'payment/mundipagg_customer_address/complement_attribute';
@@ -81,7 +81,7 @@ class MundiPaggConfigProvider
     {
         return
             $this->scopeConfig->getValue(
-                self::XML_PATH_ATIVE,
+                self::XML_PATH_ACTIVE,
                 ScopeInterface::SCOPE_STORE
             );
     }
