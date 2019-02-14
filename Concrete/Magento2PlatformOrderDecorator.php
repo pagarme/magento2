@@ -255,7 +255,6 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         }
 
         return $transactionCollection;
-
     }
 
     public function getPaymentCollection()
