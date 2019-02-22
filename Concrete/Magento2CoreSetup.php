@@ -12,6 +12,7 @@ use Mundipagg\Core\Kernel\ValueObjects\Configuration\CardConfig;
 use MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\Config;
 use MundiPagg\MundiPagg\Helper\ModuleHelper;
 use MundiPagg\MundiPagg\Model\Enum\CreditCardBrandEnum;
+use Magento\Framework\Filesystem\DirectoryList;
 
 final class Magento2CoreSetup extends AbstractModuleCoreSetup
 {
@@ -27,9 +28,13 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
 
     static protected function setLogPath()
     {
+        $objectManager = ObjectManager::getInstance();
+
+        $directoryConfig = $objectManager->get(DirectoryList::class);
+
         self::$logPath = [
-            'var/log',
-            'var/report'
+            $directoryConfig->getPath('log'),
+            $directoryConfig->getPath('var') . DIRECTORY_SEPARATOR . 'report'
         ];
     }
 
