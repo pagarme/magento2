@@ -4,6 +4,7 @@ namespace MundiPagg\MundiPagg\Concrete;
 
 use Magento\Framework\App\Config as Magento2StoreConfig;
 use Magento\Framework\App\ObjectManager;
+use Magento\Framework\Filesystem\DirectoryList;
 use Mundipagg\Core\Kernel\Abstractions\AbstractModuleCoreSetup;
 use Mundipagg\Core\Kernel\Aggregates\Configuration;
 use Mundipagg\Core\Kernel\Factories\ConfigurationFactory;
@@ -27,9 +28,13 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
 
     static protected function setLogPath()
     {
+        $objectManager = ObjectManager::getInstance();
+
+        $directoryConfig = $objectManager->get(DirectoryList::class);
+
         self::$logPath = [
-            'var/log',
-            'var/report'
+            $directoryConfig->getPath('log'),
+            $directoryConfig->getPath('var') . DIRECTORY_SEPARATOR . 'report'
         ];
     }
 
