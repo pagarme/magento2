@@ -22,11 +22,7 @@ use Mundipagg\Core\Payment\Aggregates\Item;
 use Mundipagg\Core\Payment\Aggregates\Payments\AbstractCreditCardPayment;
 use Mundipagg\Core\Payment\Aggregates\Payments\AbstractPayment;
 use Mundipagg\Core\Payment\Aggregates\Payments\BoletoPayment;
-use Mundipagg\Core\Payment\Aggregates\Payments\NewCreditCardPayment;
-use Mundipagg\Core\Payment\Aggregates\Payments\SavedCreditCardPayment;
-use Mundipagg\Core\Payment\ValueObjects\AbstractCardIdentifier;
-use Mundipagg\Core\Payment\ValueObjects\CardId;
-use Mundipagg\Core\Payment\ValueObjects\CardToken;
+use Mundipagg\Core\Payment\Factories\PaymentFactory;
 use Mundipagg\Core\Payment\ValueObjects\CustomerPhones;
 use Mundipagg\Core\Payment\ValueObjects\CustomerType;
 use Mundipagg\Core\Payment\ValueObjects\Phone;
@@ -345,6 +341,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $address->setCity($addresses[0]->getCity());
         $address->setCountry($addresses[0]->getCountryId());
         $address->setZipCode($addresses[0]->getPostcode());
+        $address->setState($addresses[0]->getRegion()->getRegionCode());
 
         $customer->setAddress($address);
 
@@ -388,15 +385,19 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
     {
         $payments = $this->getPaymentCollection();
 
-        $paymentMethods = [];
+        $paymentData = [];
 
         foreach ($payments as $payment) {
             $handler = explode('_', $payment['method']);
             array_walk($handler, function(&$part){$part = ucfirst($part);});
             $handler = 'extractPaymentDataFrom' . implode('', $handler);
-            $this->$handler($payment['additional_information'], $paymentMethods);
+            $this->$handler($payment['additional_information'], $paymentData);
         }
-        //@todo pass this to paymentMethodFactory.
+
+        $paymentFactory = new PaymentFactory();
+        $paymentMethods = $paymentFactory->createFromJson(
+            json_encode($paymentData)
+        );
         return $paymentMethods;
     }
 
