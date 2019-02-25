@@ -22,6 +22,7 @@ use Mundipagg\Core\Payment\Aggregates\Item;
 use Mundipagg\Core\Payment\Aggregates\Payments\AbstractCreditCardPayment;
 use Mundipagg\Core\Payment\Aggregates\Payments\AbstractPayment;
 use Mundipagg\Core\Payment\Aggregates\Payments\BoletoPayment;
+use Mundipagg\Core\Payment\Aggregates\Shipping;
 use Mundipagg\Core\Payment\Factories\PaymentFactory;
 use Mundipagg\Core\Payment\ValueObjects\CustomerPhones;
 use Mundipagg\Core\Payment\ValueObjects\CustomerType;
@@ -507,4 +508,55 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         }
         $paymentData[$boletoDataIndex][] = $newPaymentData;
     }
+
+    public function getShipping()
+    {
+        /** @var Shipping $shipping */
+        $shipping = null;
+        $quote = $this->getQuote();
+        /** @var \Magento\Quote\Model\Quote\Address $platformShipping */
+        $platformShipping = $quote->getShippingAddress();
+
+        $shipping = new Shipping();
+
+        $shipping->setAmount($platformShipping->getShippingAmount() * 100);
+        $shipping->setDescription($platformShipping->getShippingDescription());
+        $shipping->setRecipientName(
+            $platformShipping->getName() . ' ' .
+            $platformShipping->getMiddlename() . ' ' .
+            $platformShipping->getLastname()
+        );
+        $shipping->setRecipientPhone(new Phone(
+            '55',
+            substr($platformShipping->getTelephone(), 0, 2),
+            substr($platformShipping->getTelephone(), 2)
+        ));
+
+        $address = new Address();
+        $address->setStreet($platformShipping->getStreet()[0]);
+        $address->setNumber($platformShipping->getStreet()[1]);
+        $address->setNeighborhood($platformShipping->getStreet()[2]);
+        $address->setComplement($platformShipping->getStreet()[3]);
+        $address->setCity($platformShipping->getCity());
+        $address->setCountry($platformShipping->getCountryId());
+        $address->setZipCode($platformShipping->getPostcode());
+
+        $_regionFactory = ObjectManager::getInstance()->get('Magento\Directory\Model\RegionFactory');
+        $regionId = $platformShipping->getRegionId();
+
+        if (is_numeric($regionId)) {
+            $shipperRegion = $_regionFactory->create()->load($regionId);
+            if ($shipperRegion->getId()) {
+                $address->setState($shipperRegion->getCode());
+            }
+        }
+
+        $shipping->setAddress($address);
+        return $shipping;
+    }
+
+    /**
+        private $state;
+
+    */
 }
