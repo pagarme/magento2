@@ -12,6 +12,7 @@ use Magento\Sales\Model\Order\Payment\Transaction\Repository as TransactionRepos
 use Magento\Sales\Model\Order\Payment\Repository as PaymentRepository;
 use Mundipagg\Core\Kernel\Abstractions\AbstractPlatformOrderDecorator;
 use Mundipagg\Core\Kernel\Interfaces\PlatformInvoiceInterface;
+use Mundipagg\Core\Kernel\Services\MoneyService;
 use Mundipagg\Core\Kernel\ValueObjects\Id\CustomerId;
 use Mundipagg\Core\Kernel\ValueObjects\Id\OrderId;
 use Mundipagg\Core\Kernel\ValueObjects\OrderState;
@@ -352,12 +353,15 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
     /** @return Item[] */
     public function getItemCollection()
     {
+        $moneyService = new MoneyService();
         $quote = $this->getQuote();
         $itemCollection = $quote->getItemsCollection();
         $items = [];
         foreach ($itemCollection as $quoteItem) {
             $item = new Item;
-            $item->setAmount($quoteItem->getPriceInclTax() * 100) ;
+            $item->setAmount(
+                $moneyService->floatToCents($quoteItem->getPriceInclTax())
+            );
             $item->setQuantity($quoteItem->getQty()) ;
             $item->setDescription(
                 $quoteItem->getName() . ' : ' .
@@ -413,6 +417,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 
     private function extractPaymentDataFromMundipaggCreditCard($additionalInformation, &$paymentData)
     {
+        $moneyService = new MoneyService();
         $identifier = null;
         if (isset($additionalInformation['cc_token_credit_card'])) {
             $identifier = $additionalInformation['cc_token_credit_card'];
@@ -429,7 +434,8 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $newPaymentData = new \stdClass();
         $newPaymentData->identifier = $identifier;
         $newPaymentData->installments = $additionalInformation['cc_installments'];
-        $newPaymentData->amount = $this->platformOrder->getGrandTotal() * 100;
+        $newPaymentData->amount =
+            $moneyService->floatToCents($this->platformOrder->getGrandTotal());
 
         $creditCardDataIndex = AbstractCreditCardPayment::getBaseCode();
         if (!isset($paymentData[$creditCardDataIndex])) {
@@ -440,6 +446,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 
     private function extractPaymentDataFromMundipaggTwoCreditCard($additionalInformation, &$paymentData)
     {
+        $moneyService = new MoneyService();
         $indexes = ['first', 'second'];
         foreach ($indexes as $index) {
             $identifier = null;
@@ -458,7 +465,8 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             $newPaymentData = new \stdClass();
             $newPaymentData->identifier = $identifier;
             $newPaymentData->installments = $additionalInformation["cc_installments_{$index}"];
-            $newPaymentData->amount = $additionalInformation["cc_{$index}_card_amount"] * 100;
+            $newPaymentData->amount =
+                $moneyService->floatToCents($additionalInformation["cc_{$index}_card_amount"]);
 
             $creditCardDataIndex = AbstractCreditCardPayment::getBaseCode();
             if (!isset($paymentData[$creditCardDataIndex])) {
@@ -470,6 +478,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 
     private function extractPaymentDataFromMundipaggBilletCreditcard($additionalInformation, &$paymentData)
     {
+        $moneyService = new MoneyService();
         $identifier = null;
         if (isset($additionalInformation['cc_token_credit_card'])) {
             $identifier = $additionalInformation['cc_token_credit_card'];
@@ -486,7 +495,8 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $newPaymentData = new \stdClass();
         $newPaymentData->identifier = $identifier;
         $newPaymentData->installments = $additionalInformation['cc_installments'];
-        $newPaymentData->amount = $additionalInformation["cc_cc_amount"] * 100;
+        $newPaymentData->amount =
+            $moneyService->floatToCents($additionalInformation["cc_cc_amount"]);
 
         $creditCardDataIndex = AbstractCreditCardPayment::getBaseCode();
         if (!isset($paymentData[$creditCardDataIndex])) {
@@ -497,7 +507,8 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         //boleto
 
         $newPaymentData = new \stdClass();
-        $newPaymentData->amount = $additionalInformation["cc_billet_amount"] * 100;
+        $newPaymentData->amount =
+            $moneyService->floatToCents($additionalInformation["cc_billet_amount"]);
 
         $boletoDataIndex = BoletoPayment::getBaseCode();
         if (!isset($paymentData[$boletoDataIndex])) {
@@ -508,8 +519,10 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 
     private function extractPaymentDataFromMundipaggBillet($additionalInformation, &$paymentData)
     {
+        $moneyService = new MoneyService();
         $newPaymentData = new \stdClass();
-        $newPaymentData->amount =  $this->platformOrder->getGrandTotal() * 100;
+        $newPaymentData->amount =
+            $moneyService->floatToCents($this->platformOrder->getGrandTotal());
 
         $boletoDataIndex = BoletoPayment::getBaseCode();
         if (!isset($paymentData[$boletoDataIndex])) {
@@ -520,6 +533,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 
     public function getShipping()
     {
+        $moneyService = new MoneyService();
         /** @var Shipping $shipping */
         $shipping = null;
         $quote = $this->getQuote();
@@ -528,7 +542,9 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 
         $shipping = new Shipping();
 
-        $shipping->setAmount($platformShipping->getShippingAmount() * 100);
+        $shipping->setAmount(
+            $moneyService->floatToCents($platformShipping->getShippingAmount())
+        );
         $shipping->setDescription($platformShipping->getShippingDescription());
         $shipping->setRecipientName(
             $platformShipping->getName() . ' ' .
@@ -563,9 +579,4 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $shipping->setAddress($address);
         return $shipping;
     }
-
-    /**
-        private $state;
-
-    */
 }

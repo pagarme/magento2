@@ -26,6 +26,15 @@ class Magento2DataService extends AbstractDataService
             $orderId
         );
 
+        if ($transactionAuth === false) {
+            $transactionAuth =
+                $transactionRepository->getByTransactionId(
+                    $lastTransId,
+                    $paymentId,
+                    $orderId
+                );
+        }
+
         $additionalInfo = [];
         if ($transactionAuth !== false) {
             $currentCharges = $order->getCharges();
@@ -137,6 +146,16 @@ class Magento2DataService extends AbstractDataService
 
     public function createCaptureTransaction(Order $order)
     {
+        $this->createTransaction($order, parent::TRANSACTION_TYPE_CAPTURE);
+    }
+
+    public function createAuthorizationTransaction(Order $order)
+    {
+        $this->createTransaction($order, parent::TRANSACTION_TYPE_AUTHORIZATION);
+    }
+
+    private function createTransaction(Order $order, $transactionType)
+    {
         $platformOrder = $order->getPlatformOrder()->getPlatformOrder();
         $platformPayment = $platformOrder->getPayment();
 
@@ -147,9 +166,9 @@ class Magento2DataService extends AbstractDataService
 
         $transaction->setOrderId($platformOrder->getEntityId());
         $transaction->setPaymentId($platformPayment->getEntityId());
-        $transaction->setTxnType('capture');
+        $transaction->setTxnType($transactionType);
         $transaction->setIsClosed(true);
-        $transaction->setTxnId($order->getMundipaggId()->getValue() . '-capture');
+        $transaction->setTxnId($order->getMundipaggId()->getValue() . '-' . $transactionType);
 
         $charges = $order->getCharges();
         $additionalInformation = [];
@@ -189,10 +208,5 @@ class Magento2DataService extends AbstractDataService
         $transactionRepository->save($transaction);
         $platformPayment->setLastTransId($transaction->getTxnId());
         $platformPayment->save();
-    }
-
-    public function createAuthorizationTransaction(Order $order)
-    {
-        $a = 1;
     }
 }

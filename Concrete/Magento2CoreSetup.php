@@ -4,6 +4,7 @@ namespace MundiPagg\MundiPagg\Concrete;
 
 use Magento\Framework\App\Config as Magento2StoreConfig;
 use Magento\Framework\App\ObjectManager;
+use Magento\Framework\App\ProductMetadataInterface;
 use Magento\Framework\Filesystem\DirectoryList;
 use Mundipagg\Core\Kernel\Abstractions\AbstractModuleCoreSetup;
 use Mundipagg\Core\Kernel\Aggregates\Configuration;
@@ -24,6 +25,18 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         $moduleHelper = $objectManager->get(ModuleHelper::class);
 
         self::$moduleVersion = $moduleHelper->getVersion(self::MODULE_NAME);
+    }
+
+    static protected function setPlatformVersion()
+    {
+        $objectManager = ObjectManager::getInstance();
+        /** @var ProductMetadataInterface $productMetadata */
+        $productMetadata = $objectManager->get(ProductMetadataInterface::class);
+        $version = $productMetadata->getName() . ' ';
+        $version .= $productMetadata->getEdition() . ' ';
+        $version .= $productMetadata->getVersion();
+
+        self::$platformVersion = $version;
     }
 
     static protected function setLogPath()
@@ -97,11 +110,20 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         $storeConfig = $objectManager->get(Magento2StoreConfig::class);
 
         $configData = new \stdClass;
-        $configData->boletoEnabled = false;
-        $configData->creditCardEnabled = false;
-        $configData->boletoCreditCardEnabled = false;
-        $configData->twoCreditCardsEnabled = false;
+        $configData->boletoEnabled = $storeConfig->getValue('payment/mundipagg_billet/active') === '1';
+        $configData->creditCardEnabled = $storeConfig->getValue('payment/mundipagg_creditcard/active') === '1';
+        $configData->boletoCreditCardEnabled = $storeConfig->getValue('payment/mundipagg_billet_creditcard/active') === '1';
+        $configData->twoCreditCardsEnabled = $storeConfig->getValue('payment/mundipagg_two_creditcard/active') === '1';
         $configData->hubInstallId = null;
+        $configData->enabled =
+            $storeConfig->getValue('mundipagg/general/is_active') === '1' &&
+            $storeConfig->getValue('mundipagg_mundipagg/global/active') === '1';
+
+        $cardAction = $storeConfig->getValue('payment/mundipagg_creditcard/payment_action');
+        $configData->cardOperation = Configuration::CARD_OPERATION_AUTH_ONLY;
+        if ($cardAction === 'authorize_capture') {
+            $configData->cardOperation = Configuration::CARD_OPERATION_AUTH_AND_CAPTURE;
+        }
 
         $configData->testMode = $platformBaseConfig->getTestMode();
         $configData->keys = [
