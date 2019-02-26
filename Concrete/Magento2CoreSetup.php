@@ -12,6 +12,7 @@ use Mundipagg\Core\Kernel\ValueObjects\CardBrand;
 use Mundipagg\Core\Kernel\ValueObjects\Configuration\CardConfig;
 use MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\Config;
 use MundiPagg\MundiPagg\Helper\ModuleHelper;
+use MundiPagg\MundiPagg\Model\Enum\CreditCardBrandEnum;
 
 final class Magento2CoreSetup extends AbstractModuleCoreSetup
 {

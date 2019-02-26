@@ -51,7 +51,7 @@ class CustomerUpdateMundipaggHelper
 
             $this->updateCustomerRequest->email = $customer->getEmail();
             $this->updateCustomerRequest->name = $oldCustomer->getFirstName() . ' ' . $oldCustomer->getLastName();
-            $this->updateCustomerRequest->document = $oldCustomer->getTaxvat();
+            $this->updateCustomerRequest->document = preg_replace('/[\/.-]/', '', $oldCustomer->getTaxvat());
             $this->updateCustomerRequest->type = 'individual';
 
             $this->getApi()->getCustomers()->updateCustomer($customerIdMundipagg, $this->updateCustomerRequest);

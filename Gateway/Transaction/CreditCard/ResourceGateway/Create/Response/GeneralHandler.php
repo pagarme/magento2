@@ -120,11 +120,11 @@ class GeneralHandler extends AbstractHandler implements HandlerInterface
 
         $apiResponseStatus = $response->status;
 
-        if (!$capture && $apiResponseStatus == 'pending') {
+        if ($apiResponseStatus == 'pending') {
             $stateMagento->setState('pending_payment')->setStatus('pending_payment');
         }
 
-        if ($capture && $apiResponseStatus == 'pending') {
+        if ($capture && $apiResponseStatus == 'paid') {
             $stateMagento->setState('processing')->setStatus('processing');
         }
 
