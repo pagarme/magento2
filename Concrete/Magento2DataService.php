@@ -60,7 +60,7 @@ class Magento2DataService extends AbstractDataService
                     $lastMundipaggTransaction->getInstallments();
             }
 
-            $this->createCaptureTransaction(
+            $this->OLDcreateCaptureTransaction(
                 $platformOrder,
                 $transactionAuth,
                 $additionalInfo
@@ -110,7 +110,8 @@ class Magento2DataService extends AbstractDataService
         return null;
     }
 
-    private function createCaptureTransaction($order, $transactionAuth, $additionalInformation)
+    /** This method is to mantain compatibility with legacy orders */
+    private function OLDcreateCaptureTransaction($order, $transactionAuth, $additionalInformation)
     {
         $objectManager = ObjectManager::getInstance();
         $transactionRepository = $objectManager->get(Repository::class);
@@ -127,11 +128,71 @@ class Magento2DataService extends AbstractDataService
         $transaction->setTxnType('capture');
         $transaction->setIsClosed(true);
 
-
         foreach ( $additionalInformation as $key => $value ) {
             $transaction->setAdditionalInformation($key, $value);
         }
 
         $transactionRepository->save($transaction);
+    }
+
+    public function createCaptureTransaction(Order $order)
+    {
+        $platformOrder = $order->getPlatformOrder()->getPlatformOrder();
+        $platformPayment = $platformOrder->getPayment();
+
+        $objectManager = ObjectManager::getInstance();
+        $transactionRepository = $objectManager->get(Repository::class);
+
+        $transaction = $transactionRepository->create();
+
+        $transaction->setOrderId($platformOrder->getEntityId());
+        $transaction->setPaymentId($platformPayment->getEntityId());
+        $transaction->setTxnType('capture');
+        $transaction->setIsClosed(true);
+        $transaction->setTxnId($order->getMundipaggId()->getValue() . '-capture');
+
+        $charges = $order->getCharges();
+        $additionalInformation = [];
+        foreach ($charges as $charge) {
+            //@todo verify behavior for other types of charge, like boleto.
+            $chargeId = $charge->getMundipaggId()->getValue();
+            $lastTransaction = $charge->getLastTransaction();
+
+            $additionalInformation[$chargeId] = [];
+
+            $additionalInformation[$chargeId]['acquirer_nsu'] =
+                $lastTransaction->getAcquirerNsu();
+
+            $additionalInformation[$chargeId]['acquirer_tid'] =
+                $lastTransaction->getAcquirerTid();
+
+            $additionalInformation[$chargeId]['acquirer_auth_code'] =
+                $lastTransaction->getAcquirerAuthCode();
+
+            $additionalInformation[$chargeId]['acquirer_name'] =
+                $lastTransaction->getAcquirerName();
+
+            $additionalInformation[$chargeId]['acquirer_message'] =
+                $lastTransaction->getAcquirerMessage();
+
+            $additionalInformation[$chargeId]['brand'] =
+                $lastTransaction->getBrand();
+
+            $additionalInformation[$chargeId]['installments'] =
+                $lastTransaction->getInstallments();
+        }
+
+        foreach ($additionalInformation as $key => $value ) {
+            $transaction->setAdditionalInformation($key, $value);
+        }
+
+        $transactionRepository->save($transaction);
+        $platformPayment->setLastTransId($transaction->getTxnId());
+        $platformPayment->save();
+    }
+
+    public function createAuthorizationTransaction(Order $order)
+    {
+        $a = 1;
     }
 }

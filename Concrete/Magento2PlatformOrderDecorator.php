@@ -311,7 +311,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $savedCustomer = $customerRepository->getById($quoteCustomer->getId());
         $mpId = $savedCustomer->getCustomAttribute('customer_id_mundipagg')
             ->getValue();
-
+        //@todo verify behavior with new customer.
         $customerId = new CustomerId($mpId);
 
         $customer = new Customer;
@@ -385,6 +385,15 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
     public function getPaymentMethodCollection()
     {
         $payments = $this->getPaymentCollection();
+
+        if (empty($payments)) {
+            $baseNewPayment = $this->platformOrder->getPayment();
+            $newPayment = [];
+            $newPayment['method'] = $baseNewPayment->getMethod();
+            $newPayment['additional_information'] =
+                $baseNewPayment->getAdditionalInformation();
+            $payments = [$newPayment];
+        }
 
         $paymentData = [];
 
