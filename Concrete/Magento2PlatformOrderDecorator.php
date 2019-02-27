@@ -44,6 +44,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
     {
         $objectManager = ObjectManager::getInstance();
         $this->orderFactory = $objectManager->get('Magento\Sales\Model\Order');
+        parent::__construct();
     }
 
     public function save()
@@ -55,7 +56,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $this->platformOrder->save();
     }
 
-    public function setState(OrderState $state)
+    public function setStateAfterLog(OrderState $state)
     {
        $stringState = $state->getState();
        $this->platformOrder->setState($stringState);
@@ -81,7 +82,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         return OrderState::$state();
     }
 
-    public function setStatus(OrderStatus $status)
+    public function setStatusAfterLog(OrderStatus $status)
     {
         $stringStatus = $status->getStatus();
         $this->platformOrder->setStatus($stringStatus);
