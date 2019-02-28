@@ -237,7 +237,29 @@ define(
                         }
                     }
                 };
-                $.when(token(dataJson)).done(function (transport) {
+
+                var data = data;
+                var event = event;
+
+                function successCallback (card) {
+                    self.tokenCreditCard = card.id;
+                    self.placeOrder.call(this, data, event);
+                }
+
+                function failCallback (fail) {
+                    console.log(fail);
+
+                    fullScreenLoader.stopLoader();
+
+                    self.messageContainer.addErrorMessage({
+                        message: $t('Cartão inválido. Por favor, verifique os dados digitados e tente novamente')
+                    });
+                    $("html, body").animate({scrollTop: 0}, 600);
+                }
+
+                token.call(this, dataJson, successCallback, failCallback);
+
+                /*$.when(token(dataJson)).done(function (transport) {
                     self.tokenCreditCard = transport.id;
                     self.placeOrder(data, event);
                 //}).fail(function ($xhr) {
@@ -253,7 +275,7 @@ define(
                         message: $t('Cartão inválido. Por favor, verifique os dados digitados e tente novamente')
                     });
                     $("html, body").animate({scrollTop: 0}, 600);
-                });
+                });*/
             },
             getGender: function (gender) {
                 if (gender == 1) {
