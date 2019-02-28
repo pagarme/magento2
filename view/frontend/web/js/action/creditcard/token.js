@@ -19,7 +19,6 @@ define(
         urlBuilder
     ) {
         return function (dataJson, successCallback, failCallback) {
-            console.log(this);
             var self = this;
             var serviceUrl = 'https://api.mundipagg.com/core/v1/tokens?appId=' + window.checkoutConfig.payment.ccform.pk_token;
 
