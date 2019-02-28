@@ -421,6 +421,15 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $moneyService = new MoneyService();
         $identifier = null;
         $customerId = null;
+        $brand = null;
+        try {
+            $brand = strtolower($additionalInformation['cc_type']);
+        }
+        catch (\Throwable $e)
+        {
+
+        }
+
         if (isset($additionalInformation['cc_token_credit_card'])) {
             $identifier = $additionalInformation['cc_token_credit_card'];
         }
@@ -442,6 +451,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 
         $newPaymentData = new \stdClass();
         $newPaymentData->customerId = $customerId;
+        $newPaymentData->brand = $brand;
         $newPaymentData->identifier = $identifier;
         $newPaymentData->installments = $additionalInformation['cc_installments'];
         $newPaymentData->amount =
@@ -461,6 +471,16 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         foreach ($indexes as $index) {
             $identifier = null;
             $customerId = null;
+
+            $brand = null;
+            try {
+                $brand = strtolower($additionalInformation["cc_type_{$index}"]);
+            }
+            catch (\Throwable $e)
+            {
+
+            }
+
             if (isset($additionalInformation["cc_token_credit_card_{$index}"])) {
                 $identifier = $additionalInformation["cc_token_credit_card_{$index}"];
             }
@@ -484,6 +504,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             $newPaymentData = new \stdClass();
             $newPaymentData->customerId = $customerId;
             $newPaymentData->identifier = $identifier;
+            $newPaymentData->brand = $brand;
             $newPaymentData->installments = $additionalInformation["cc_installments_{$index}"];
             $newPaymentData->amount =
                 $moneyService->floatToCents($additionalInformation["cc_{$index}_card_amount"]);
@@ -501,6 +522,16 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $moneyService = new MoneyService();
         $identifier = null;
         $customerId = null;
+
+        $brand = null;
+        try {
+            $brand = strtolower($additionalInformation['cc_type']);
+        }
+        catch (\Throwable $e)
+        {
+
+        }
+
         if (isset($additionalInformation['cc_token_credit_card'])) {
             $identifier = $additionalInformation['cc_token_credit_card'];
         }
@@ -524,6 +555,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $newPaymentData = new \stdClass();
         $newPaymentData->identifier = $identifier;
         $newPaymentData->customerId = $customerId;
+        $newPaymentData->brand = $brand;
         $newPaymentData->installments = $additionalInformation['cc_installments'];
         $newPaymentData->amount =
             $moneyService->floatToCents($additionalInformation["cc_cc_amount"]);
