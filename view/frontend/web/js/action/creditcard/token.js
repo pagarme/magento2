@@ -21,9 +21,7 @@ define(
         return function (dataJson, successCallback, failCallback) {
             var self = this;
             var serviceUrl = 'https://api.mundipagg.com/core/v1/tokens?appId=' + window.checkoutConfig.payment.ccform.pk_token;
-
-            var requestBody = dataJson;
-
+            
             var getAPIData = function(url, data, success, fail) {
                 var xhr = new XMLHttpRequest();
                 xhr.open('POST', url);
@@ -44,7 +42,7 @@ define(
                 return xhr;
             };
 
-            getAPIData(serviceUrl, requestBody, successCallback, failCallback);
+            getAPIData(serviceUrl, dataJson, successCallback, failCallback);
         };
     }
 );
