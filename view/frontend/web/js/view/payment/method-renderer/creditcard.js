@@ -237,15 +237,17 @@ define(
                         }
                     }
                 };
-                $.when(token(dataJson)).done(function (transport) {
-                    self.tokenCreditCard = transport.id;
-                    self.placeOrder(data, event);
-                //}).fail(function ($xhr) {
-                }).fail(function (jqXHR, textStatus, error) {
 
-                    console.log("jqXHR: " + jqXHR);
-                    console.log("textStatus: " + textStatus);
-                    console.log("error: " + error);
+                var data = data;
+                var event = event;
+
+                function successCallback (card) {
+                    self.tokenCreditCard = card.id;
+                    self.placeOrder.call(this, data, event);
+                }
+
+                function failCallback (fail) {
+                    console.log(fail);
 
                     fullScreenLoader.stopLoader();
 
@@ -253,7 +255,9 @@ define(
                         message: $t('Cartão inválido. Por favor, verifique os dados digitados e tente novamente')
                     });
                     $("html, body").animate({scrollTop: 0}, 600);
-                });
+                }
+
+                token.call(this, dataJson, successCallback, failCallback);
             },
             getGender: function (gender) {
                 if (gender == 1) {

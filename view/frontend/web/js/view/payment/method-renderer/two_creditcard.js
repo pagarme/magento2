@@ -532,7 +532,6 @@ define(
             getCcInstallmentsFirst: function() {
                 var self = this;
 
-                //fullScreenLoader.startLoader();
                 $.when(
                     installments()
                 ).done(function (transport) {
@@ -819,20 +818,28 @@ define(
                             }
                         }
                     };
-                $.when(
-                    token(dataJson)
-                ).done(function(transport) {
-                    self.tokenCreditCardFirst = transport.id;
-                    self.placeOrder(data, event);
-                }).fail(function ($xhr) {
-                    fullScreenLoader.stopLoader();
-                    self.messageContainer.addErrorMessage({
-                        message: $t('Cartão inválido. Por favor, verifique os dados digitados e tente novamente')
-                    });
-                   $("html, body").animate({scrollTop: 0}, 600);
-               });
-            },
 
+                var data = data;
+                var event = event;
+
+                function successCallbackFirst (card) {
+                    self.tokenCreditCardFirst = card.id;
+                    self.placeOrder.call(this, data, event);
+                }
+
+                function failCallbackFirst (fail) {
+                    console.log(fail);
+
+                    fullScreenLoader.stopLoader();
+
+                    self.messageContainer.addErrorMessage({
+                        message: $t('Primeiro cartão inválido. Por favor, verifique os dados digitados e tente novamente')
+                    });
+                    $("html, body").animate({scrollTop: 0}, 600);
+                }
+
+                token.call(this, dataJson, successCallbackFirst, failCallbackFirst);
+            },
 
             createAndSendTokenCreditCard: function (data, event) {
                 var self = this;
@@ -922,18 +929,25 @@ define(
                         }
                     };
 
-                $.when(
-                    token(dataJson)
-                ).done(function(transport) {
-                    self.tokenCreditCardFirst = transport.id;
+                var data = data;
+                var event = event;
+
+                function successCallbackFirst (card) {
+                    self.tokenCreditCardFirst = card.id;
                     self.createAndSendTokenCreditCardSecond(data, event);
-                }).fail(function ($xhr) {
-                        fullScreenLoader.stopLoader();
-                        self.messageContainer.addErrorMessage({
-                            message: $t('Cartão inválido. Por favor, verifique os dados digitados e tente novamente')
-                        });
-                        $("html, body").animate({scrollTop: 0}, 600);
-                });
+                }
+
+                function failCallbackFirst (fail) {
+                    console.log(fail);
+
+                    fullScreenLoader.stopLoader();
+
+                    self.messageContainer.addErrorMessage({
+                        message: $t('Primeiro cartão inválido. Por favor, verifique os dados digitados e tente novamente')
+                    });
+                    $("html, body").animate({scrollTop: 0}, 600);
+                }
+                token.call(this, dataJson, successCallbackFirst, failCallbackFirst);
             },
 
             createAndSendTokenCreditCardSecond: function (data, event) {
@@ -1013,19 +1027,26 @@ define(
                         }
                     }
                 };
-                $.when(
-                    token(dataJson)
-                ).done(function(transport) {
-                    self.tokenCreditCardSecond = transport.id;
-                    self.placeOrder(data, event);
-                }).fail(function ($xhr) {
+
+                var data = data;
+                var event = event;
+
+                function successCallbackSecond (card) {
+                    self.tokenCreditCardSecond = card.id;
+                    self.placeOrder.call(this, data, event);
+                }
+
+                function failCallbackSecond (fail) {
+                    console.log(fail);
+
                     fullScreenLoader.stopLoader();
+
                     self.messageContainer.addErrorMessage({
-                        message: $t('Cartão inválido. Por favor, verifique os dados digitados e tente novamente')
+                        message: $t('Segundo cartão inválido. Por favor, verifique os dados digitados e tente novamente')
                     });
                     $("html, body").animate({scrollTop: 0}, 600);
-                });
-
+                }
+                token.call(this, dataJson, successCallbackSecond, failCallbackSecond);
             },
 
             onInstallmentItemChange: function() {
@@ -1064,7 +1085,6 @@ define(
                     if(total.total_segments[i].code != "tax") continue;
                     total.total_segments[i].value = sumTax;
                 }
-
 
                 total.total_segments[subTotalIndex].value = +total.total_segments[subTotalIndex].value - sumOldTax;
                 total.total_segments[subTotalIndex].value = +total.total_segments[subTotalIndex].value + sumTax;
