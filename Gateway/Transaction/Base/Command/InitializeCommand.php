@@ -24,6 +24,8 @@ use Mundipagg\Core\Kernel\Services\OrderService;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 use MundiPagg\MundiPagg\Model\Ui\CreditCard\ConfigProvider;
 use MundiPagg\MundiPagg\Model\Ui\TwoCreditCard\ConfigProvider as TwoCreditCardConfigProvider;
+use Magento\Framework\Phrase;
+use Magento\Framework\Webapi\Exception as M2WebApiException;
 
 class InitializeCommand implements CommandInterface
 {
@@ -85,29 +87,37 @@ class InitializeCommand implements CommandInterface
      /** @return AbstractPlatformOrderDecorator */
     private function doCoreDetour($payment)
     {
-        $paymentMethod = $payment->getMethod();
-        $order =  $payment->getOrder();
+        try {
+            $paymentMethod = $payment->getMethod();
+            $order =  $payment->getOrder();
 
-        if ($paymentMethod === 'mundipagg_creditcard') {
+            if ($paymentMethod === 'mundipagg_creditcard') {
 
-            Magento2CoreSetup::bootstrap();
+                Magento2CoreSetup::bootstrap();
 
-            $platformOrderDecoratorClass = MPSetup::get(
-                MPSetup::CONCRETE_PLATFORM_ORDER_DECORATOR_CLASS
+                $platformOrderDecoratorClass = MPSetup::get(
+                    MPSetup::CONCRETE_PLATFORM_ORDER_DECORATOR_CLASS
+                );
+
+                /** @var PlatformOrderInterface $orderDecorator */
+                $orderDecorator = new $platformOrderDecoratorClass();
+                $orderDecorator->setPlatformOrder($order);
+
+                $orderDecorator->save();
+
+                $orderService = new OrderService();
+                $orderService->createOrderAtMundipagg($orderDecorator);
+
+                return $orderDecorator;
+            }
+            return false;
+        } catch (\Exception $e) {
+            throw new M2WebApiException(
+                new Phrase($e->getMessage()),
+                0,
+                $e->getCode()
             );
-
-            /** @var PlatformOrderInterface $orderDecorator */
-            $orderDecorator = new $platformOrderDecoratorClass();
-            $orderDecorator->setPlatformOrder($order);
-
-            $orderDecorator->save();
-
-            $orderService = new OrderService();
-            $orderService->createOrderAtMundipagg($orderDecorator);
-
-            return $orderDecorator;
         }
-        return false;
     }
 
 

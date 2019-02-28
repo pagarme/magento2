@@ -423,6 +423,12 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         if (isset($additionalInformation['cc_token_credit_card'])) {
             $identifier = $additionalInformation['cc_token_credit_card'];
         }
+        if (
+            isset($additionalInformation['cc_saved_card']) &&
+            $additionalInformation['cc_saved_card'] !== null
+        ) {
+            $identifier = null;
+        }
 
         if ($identifier === null) {
 
@@ -455,6 +461,13 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
                 $identifier = $additionalInformation["cc_token_credit_card_{$index}"];
             }
 
+            if (
+                isset($additionalInformation["cc_saved_card_{$index}"]) &&
+                $additionalInformation["cc_saved_card_{$index}"] !== null
+            ) {
+                $identifier = null;
+            }
+
             if ($identifier === null) {
 
                 $objectManager = ObjectManager::getInstance();
@@ -483,6 +496,13 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $identifier = null;
         if (isset($additionalInformation['cc_token_credit_card'])) {
             $identifier = $additionalInformation['cc_token_credit_card'];
+        }
+
+        if (
+            isset($additionalInformation['cc_saved_card']) &&
+            $additionalInformation['cc_saved_card'] !== null
+        ) {
+            $identifier = null;
         }
 
         if ($identifier === null) {
