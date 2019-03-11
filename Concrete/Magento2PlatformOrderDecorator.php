@@ -128,6 +128,12 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         return $this->getPlatformOrder()->getGrandTotal();
     }
 
+
+    public function getBaseTaxAmount()
+    {
+        return $this->getPlatformOrder()->getBaseTaxAmount();
+    }
+
     public function getTotalPaid()
     {
         return $this->getPlatformOrder()->getTotalPaid();
@@ -454,8 +460,11 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $newPaymentData->brand = $brand;
         $newPaymentData->identifier = $identifier;
         $newPaymentData->installments = $additionalInformation['cc_installments'];
+        //This amount should be the amount without interest.
         $newPaymentData->amount =
-            $moneyService->floatToCents($this->platformOrder->getGrandTotal());
+            $moneyService->floatToCents(
+                $this->platformOrder->getBaseTotalDue() - $this->platformOrder->getBaseTaxAmount()
+            );
 
         $creditCardDataIndex = AbstractCreditCardPayment::getBaseCode();
         if (!isset($paymentData[$creditCardDataIndex])) {
