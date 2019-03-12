@@ -110,6 +110,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         $storeConfig = $objectManager->get(Magento2StoreConfig::class);
 
         $configData = new \stdClass;
+        $configData->isAntifraudEnabled = $storeConfig->getValue('payment/mundipagg_creditcard/antifraud_active') === '1';
         $configData->boletoEnabled = $storeConfig->getValue('payment/mundipagg_billet/active') === '1';
         $configData->creditCardEnabled = $storeConfig->getValue('payment/mundipagg_creditcard/active') === '1';
         $configData->boletoCreditCardEnabled = $storeConfig->getValue('payment/mundipagg_billet_creditcard/active') === '1';
