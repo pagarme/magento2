@@ -317,13 +317,18 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $customerRepository =
             ObjectManager::getInstance()->get(CustomerRepository::class);
         $savedCustomer = $customerRepository->getById($quoteCustomer->getId());
-        $mpId = $savedCustomer->getCustomAttribute('customer_id_mundipagg')
-            ->getValue();
-        //@todo verify behavior with new customer.
-        $customerId = new CustomerId($mpId);
 
         $customer = new Customer;
-        $customer->setMundipaggId($customerId);
+
+        try {
+            $mpId = $savedCustomer->getCustomAttribute('customer_id_mundipagg')
+                ->getValue();
+            $customerId = new CustomerId($mpId);
+            $customer->setMundipaggId($customerId);
+        } catch (\Throwable $e) {
+
+        }
+
         $customer->setName(
             implode(' ', [
                 $quote->getCustomerFirstname(),
@@ -440,7 +445,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             $identifier = $additionalInformation['cc_token_credit_card'];
         }
         if (
-            isset($additionalInformation['cc_saved_card']) &&
+            !empty($additionalInformation['cc_saved_card']) &&
             $additionalInformation['cc_saved_card'] !== null
         ) {
             $identifier = null;
@@ -495,7 +500,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             }
 
             if (
-                isset($additionalInformation["cc_saved_card_{$index}"]) &&
+                !empty($additionalInformation["cc_saved_card_{$index}"]) &&
                 $additionalInformation["cc_saved_card_{$index}"] !== null
             ) {
                 $identifier = null;
@@ -546,7 +551,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         }
 
         if (
-            isset($additionalInformation['cc_saved_card']) &&
+            !empty($additionalInformation['cc_saved_card']) &&
             $additionalInformation['cc_saved_card'] !== null
         ) {
             $identifier = null;
