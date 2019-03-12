@@ -370,9 +370,16 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $itemCollection = $quote->getItemsCollection();
         $items = [];
         foreach ($itemCollection as $quoteItem) {
+            //adjusting price.
+            $price = $quoteItem->getPrice();
+            $price = $price > 0 ? $price : "0.01";
+
+            if ($price === null) {
+                continue;
+            }
             $item = new Item;
             $item->setAmount(
-                $moneyService->floatToCents($quoteItem->getPriceInclTax())
+                $moneyService->floatToCents($price)
             );
             $item->setQuantity($quoteItem->getQty()) ;
             $item->setDescription(
