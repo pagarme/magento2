@@ -9,6 +9,7 @@ use Magento\Framework\Filesystem\DirectoryList;
 use Mundipagg\Core\Kernel\Abstractions\AbstractModuleCoreSetup;
 use Mundipagg\Core\Kernel\Aggregates\Configuration;
 use Mundipagg\Core\Kernel\Factories\ConfigurationFactory;
+use Mundipagg\Core\Kernel\Services\MoneyService;
 use Mundipagg\Core\Kernel\ValueObjects\CardBrand;
 use Mundipagg\Core\Kernel\ValueObjects\Configuration\CardConfig;
 use MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\Config;
@@ -102,6 +103,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
 
     protected static function loadModuleConfiguration()
     {
+        $moneyService = new MoneyService();
         $objectManager = ObjectManager::getInstance();
         /** @var  Config $platformBaseConfig
          */
@@ -111,6 +113,9 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
 
         $configData = new \stdClass;
         $configData->isAntifraudEnabled = $storeConfig->getValue('payment/mundipagg_creditcard/antifraud_active') === '1';
+        $configData->antifraudMinAmount = $moneyService->floatToCents(
+            $storeConfig->getValue('payment/mundipagg_creditcard/antifraud_min_amount') * 1
+        );
         $configData->boletoEnabled = $storeConfig->getValue('payment/mundipagg_billet/active') === '1';
         $configData->creditCardEnabled = $storeConfig->getValue('payment/mundipagg_creditcard/active') === '1';
         $configData->boletoCreditCardEnabled = $storeConfig->getValue('payment/mundipagg_billet_creditcard/active') === '1';
