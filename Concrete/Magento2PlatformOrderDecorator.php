@@ -623,6 +623,11 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         /** @var \Magento\Quote\Model\Quote\Address $platformShipping */
         $platformShipping = $quote->getShippingAddress();
 
+        $shippingMethod = $platformShipping->getShippingMethod();
+        if ($shippingMethod === null) { //this is a order without a shipping.
+            return null;
+        }
+
         $shipping = new Shipping();
 
         $shipping->setAmount(
