@@ -18,21 +18,31 @@ define(
         storage,
         urlBuilder
     ) {
-
-        return function (dataJson) {
+        return function (dataJson, successCallback, failCallback) {
+            var self = this;
             var serviceUrl = 'https://api.mundipagg.com/core/v1/tokens?appId=' + window.checkoutConfig.payment.ccform.pk_token;
+            
+            var getAPIData = function(url, data, success, fail) {
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', url);
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState < 4) {
+                        return;
+                    }
+                    if (xhr.status === 200) {
+                        success.call(self, JSON.parse(xhr.responseText));
+                    } else {
+                        var errorObj = JSON.parse(xhr.response);
+                        errorObj.statusCode = xhr.status;
+                        fail.call(null, errorObj);
+                    }
+                };
+                xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+                xhr.send(JSON.stringify(data));
+                return xhr;
+            };
 
-            return $.ajax({
-                method: "POST",
-                beforeSend: function(request) {
-                    request.setRequestHeader("Content-type", 'application/json');
-                },
-                url: serviceUrl,
-                cache: false,
-                crossDomain: true,
-                data: JSON.stringify(dataJson),
-                dataType: 'json'
-            });
+            getAPIData(serviceUrl, dataJson, successCallback, failCallback);
         };
     }
 );
