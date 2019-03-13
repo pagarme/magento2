@@ -138,6 +138,16 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
             Configuration::KEY_SECRET => $platformBaseConfig->getSecretKey(),
         ];
 
+        $configData->addressAttributes = new \stdClass();
+        $configData->addressAttributes->street =
+            $storeConfig->getValue('payment/mundipagg_customer_address/street_attribute');
+        $configData->addressAttributes->number =
+            $storeConfig->getValue('payment/mundipagg_customer_address/number_attribute');
+        $configData->addressAttributes->neighborhood =
+            $storeConfig->getValue('payment/mundipagg_customer_address/district_attribute');
+        $configData->addressAttributes->complement =
+            $storeConfig->getValue('payment/mundipagg_customer_address/complement_attribute');
+
 
         $configData->cardConfigs = self::getCardConfigs($storeConfig);
 

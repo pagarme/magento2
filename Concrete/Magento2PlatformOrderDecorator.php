@@ -10,6 +10,7 @@ use Magento\Quote\Model\QuoteFactory;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment\Transaction\Repository as TransactionRepository;
 use Magento\Sales\Model\Order\Payment\Repository as PaymentRepository;
+use Mundipagg\Core\Kernel\Abstractions\AbstractModuleCoreSetup as MPSetup;
 use Mundipagg\Core\Kernel\Abstractions\AbstractPlatformOrderDecorator;
 use Mundipagg\Core\Kernel\Interfaces\PlatformInvoiceInterface;
 use Mundipagg\Core\Kernel\Services\MoneyService;
@@ -645,11 +646,19 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             substr($platformShipping->getTelephone(), 2)
         ));
 
+        $addressAttributes =
+            MPSetup::getModuleConfiguration()->getAddressAttributes();
+
+        $addressAttributes = json_decode(json_encode($addressAttributes), true);
+
         $address = new Address();
-        $address->setStreet($platformShipping->getStreet()[0]);
-        $address->setNumber($platformShipping->getStreet()[1]);
-        $address->setNeighborhood($platformShipping->getStreet()[2]);
-        $address->setComplement($platformShipping->getStreet()[3]);
+        foreach ($addressAttributes as $attribute => $value) {
+            $value = $value === null ? 1 : $value;
+            $value = filter_var($value, FILTER_SANITIZE_NUMBER_INT) - 1;
+            $setter = 'set' . ucfirst($attribute);
+            $address->$setter($platformShipping->getStreet()[$value]);
+        }
+
         $address->setCity($platformShipping->getCity());
         $address->setCountry($platformShipping->getCountryId());
         $address->setZipCode($platformShipping->getPostcode());
