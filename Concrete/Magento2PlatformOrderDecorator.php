@@ -342,19 +342,29 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $customer->setEmail($quote->getCustomerEmail());
         $customer->setDocument($quote->getCustomerTaxvat());
         $customer->setType(CustomerType::individual());
+
+        $telephone = $quote->getCustomer()->getAddresses()[0]->getTelephone();
+        $phone = new Phone(
+            '55',
+            substr($telephone, 0, 2),
+            substr($telephone, 2)
+        );
         $customer->setPhones(
-            CustomerPhones::create([
-                new Phone('55','21','12345678'),
-                new Phone('55','21','999999999')
-            ])
+            CustomerPhones::create([$phone, $phone])
         );
 
         $address = new Address();
+        $addressAttributes =
+            MPSetup::getModuleConfiguration()->getAddressAttributes();
 
-        $address->setStreet($addresses[0]->getStreet()[0]);
-        $address->setNumber($addresses[0]->getStreet()[1]);
-        $address->setNeighborhood($addresses[0]->getStreet()[2]);
-        $address->setComplement($addresses[0]->getStreet()[3]);
+        $addressAttributes = json_decode(json_encode($addressAttributes), true);
+        foreach ($addressAttributes as $attribute => $value) {
+            $value = $value === null ? 1 : $value;
+            $value = filter_var($value, FILTER_SANITIZE_NUMBER_INT) - 1;
+            $setter = 'set' . ucfirst($attribute);
+            $address->$setter($addresses[0]->getStreet()[$value]);
+        }
+
         $address->setCity($addresses[0]->getCity());
         $address->setCountry($addresses[0]->getCountryId());
         $address->setZipCode($addresses[0]->getPostcode());
@@ -567,7 +577,6 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         }
 
         if ($identifier === null) {
-
             $objectManager = ObjectManager::getInstance();
             $cardRepo = $objectManager->get(CardsRepository::class);
             $card = $cardRepo->getById($additionalInformation['cc_saved_card']);
@@ -580,7 +589,6 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $newPaymentData->customerId = $customerId;
         $newPaymentData->brand = $brand;
         $newPaymentData->installments = $additionalInformation['cc_installments'];
-
 
         $amount = $additionalInformation["cc_cc_amount"];
         $newPaymentData->amount = $moneyService->floatToCents($amount);
