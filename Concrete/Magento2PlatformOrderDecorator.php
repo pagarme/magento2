@@ -13,7 +13,9 @@ use Magento\Sales\Model\Order\Payment\Repository as PaymentRepository;
 use Mundipagg\Core\Kernel\Abstractions\AbstractModuleCoreSetup as MPSetup;
 use Mundipagg\Core\Kernel\Abstractions\AbstractPlatformOrderDecorator;
 use Mundipagg\Core\Kernel\Interfaces\PlatformInvoiceInterface;
+use Mundipagg\Core\Kernel\Services\InstallmentService;
 use Mundipagg\Core\Kernel\Services\MoneyService;
+use Mundipagg\Core\Kernel\ValueObjects\CardBrand;
 use Mundipagg\Core\Kernel\ValueObjects\Id\CustomerId;
 use Mundipagg\Core\Kernel\ValueObjects\Id\OrderId;
 use Mundipagg\Core\Kernel\ValueObjects\OrderState;
@@ -473,11 +475,9 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $newPaymentData->brand = $brand;
         $newPaymentData->identifier = $identifier;
         $newPaymentData->installments = $additionalInformation['cc_installments'];
-        //This amount should be the amount without interest.
-        $newPaymentData->amount =
-            $moneyService->floatToCents(
-                $this->platformOrder->getBaseTotalDue() - $this->platformOrder->getBaseTaxAmount()
-            );
+
+        $amount = $this->getGrandTotal() - $this->getBaseTaxAmount();
+        $newPaymentData->amount = $moneyService->floatToCents($amount);
 
         $creditCardDataIndex = AbstractCreditCardPayment::getBaseCode();
         if (!isset($paymentData[$creditCardDataIndex])) {
@@ -528,8 +528,9 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             $newPaymentData->identifier = $identifier;
             $newPaymentData->brand = $brand;
             $newPaymentData->installments = $additionalInformation["cc_installments_{$index}"];
-            $newPaymentData->amount =
-                $moneyService->floatToCents($additionalInformation["cc_{$index}_card_amount"]);
+
+            $amount = $additionalInformation["cc_{$index}_card_amount"];
+            $newPaymentData->amount = $moneyService->floatToCents($amount);
 
             $creditCardDataIndex = AbstractCreditCardPayment::getBaseCode();
             if (!isset($paymentData[$creditCardDataIndex])) {
@@ -579,8 +580,10 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $newPaymentData->customerId = $customerId;
         $newPaymentData->brand = $brand;
         $newPaymentData->installments = $additionalInformation['cc_installments'];
-        $newPaymentData->amount =
-            $moneyService->floatToCents($additionalInformation["cc_cc_amount"]);
+
+
+        $amount = $additionalInformation["cc_cc_amount"];
+        $newPaymentData->amount = $moneyService->floatToCents($amount);
 
         $creditCardDataIndex = AbstractCreditCardPayment::getBaseCode();
         if (!isset($paymentData[$creditCardDataIndex])) {

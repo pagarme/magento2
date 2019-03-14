@@ -148,6 +148,10 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         $configData->addressAttributes->complement =
             $storeConfig->getValue('payment/mundipagg_customer_address/complement_attribute');
 
+        $configData->cardStatementDescriptor =
+            $storeConfig->getValue('payment/mundipagg_creditcard/soft_description');
+        $configData->boletoInstructions =
+            $storeConfig->getValue('payment/mundipagg_billet/instructions');
 
         $configData->cardConfigs = self::getCardConfigs($storeConfig);
 
