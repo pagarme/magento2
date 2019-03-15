@@ -134,6 +134,10 @@ class SalesOrderPlaceAfter implements ObserverInterface
     public function createInvoice($order)
     {
         $payment = $order->getPayment();
+        if ($payment->getMethod() === 'mundipagg_creditcard') {
+            return true;
+        }
+
         $payment
             ->setIsTransactionClosed(true)
             ->registerCaptureNotification(

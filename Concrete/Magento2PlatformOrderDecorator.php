@@ -2,17 +2,36 @@
 
 namespace MundiPagg\MundiPagg\Concrete;
 
+use Magento\Customer\Model\ResourceModel\CustomerRepository;
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\ObjectManager;
+use Magento\Quote\Model\QuoteFactory;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment\Transaction\Repository as TransactionRepository;
 use Magento\Sales\Model\Order\Payment\Repository as PaymentRepository;
+use Mundipagg\Core\Kernel\Abstractions\AbstractModuleCoreSetup as MPSetup;
 use Mundipagg\Core\Kernel\Abstractions\AbstractPlatformOrderDecorator;
 use Mundipagg\Core\Kernel\Interfaces\PlatformInvoiceInterface;
+use Mundipagg\Core\Kernel\Services\InstallmentService;
+use Mundipagg\Core\Kernel\Services\MoneyService;
+use Mundipagg\Core\Kernel\ValueObjects\CardBrand;
+use Mundipagg\Core\Kernel\ValueObjects\Id\CustomerId;
 use Mundipagg\Core\Kernel\ValueObjects\Id\OrderId;
 use Mundipagg\Core\Kernel\ValueObjects\OrderState;
 use Mundipagg\Core\Kernel\ValueObjects\OrderStatus;
+use Mundipagg\Core\Payment\Aggregates\Address;
+use Mundipagg\Core\Payment\Aggregates\Customer;
+use Mundipagg\Core\Payment\Aggregates\Item;
+use Mundipagg\Core\Payment\Aggregates\Payments\AbstractCreditCardPayment;
+use Mundipagg\Core\Payment\Aggregates\Payments\AbstractPayment;
+use Mundipagg\Core\Payment\Aggregates\Payments\BoletoPayment;
+use Mundipagg\Core\Payment\Aggregates\Shipping;
+use Mundipagg\Core\Payment\Factories\PaymentFactory;
+use Mundipagg\Core\Payment\ValueObjects\CustomerPhones;
+use Mundipagg\Core\Payment\ValueObjects\CustomerType;
+use Mundipagg\Core\Payment\ValueObjects\Phone;
+use MundiPagg\MundiPagg\Model\CardsRepository;
 
 class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 {
@@ -22,11 +41,13 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
      * @var Order
      */
     private $orderFactory;
+    private $quote;
 
     public function __construct()
     {
         $objectManager = ObjectManager::getInstance();
         $this->orderFactory = $objectManager->get('Magento\Sales\Model\Order');
+        parent::__construct();
     }
 
     public function save()
@@ -38,7 +59,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $this->platformOrder->save();
     }
 
-    public function setState(OrderState $state)
+    public function setStateAfterLog(OrderState $state)
     {
        $stringState = $state->getState();
        $this->platformOrder->setState($stringState);
@@ -64,7 +85,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         return OrderState::$state();
     }
 
-    public function setStatus(OrderStatus $status)
+    public function setStatusAfterLog(OrderStatus $status)
     {
         $stringStatus = $status->getStatus();
         $this->platformOrder->setStatus($stringStatus);
@@ -108,6 +129,12 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
     public function getGrandTotal()
     {
         return $this->getPlatformOrder()->getGrandTotal();
+    }
+
+
+    public function getBaseTaxAmount()
+    {
+        return $this->getPlatformOrder()->getBaseTaxAmount();
     }
 
     public function getTotalPaid()
@@ -208,8 +235,9 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         if (empty($orderId)) {
             return null;
         }
+        $orderId = substr($orderId, 0 , 19);
 
-        return new OrderId($this->platformOrder->getPayment()->getLastTransId());
+        return new OrderId($orderId);
     }
 
     public function getHistoryCommentCollection()
@@ -279,5 +307,384 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         }
 
         return $paymentCollection;
+    }
+
+    /** @return Customer */
+    public function getCustomer()
+    {
+        $quote = $this->getQuote();
+
+        $quoteCustomer =  $quote->getCustomer();
+        $addresses = $quoteCustomer->getAddresses();
+
+        $customerRepository =
+            ObjectManager::getInstance()->get(CustomerRepository::class);
+        $savedCustomer = $customerRepository->getById($quoteCustomer->getId());
+
+        $customer = new Customer;
+
+        try {
+            $mpId = $savedCustomer->getCustomAttribute('customer_id_mundipagg')
+                ->getValue();
+            $customerId = new CustomerId($mpId);
+            $customer->setMundipaggId($customerId);
+        } catch (\Throwable $e) {
+
+        }
+
+        $customer->setName(
+            implode(' ', [
+                $quote->getCustomerFirstname(),
+                $quote->getCustomerMiddlename(),
+                $quote->getCustomerLastname(),
+            ])
+        );
+        $customer->setEmail($quote->getCustomerEmail());
+        $customer->setDocument($quote->getCustomerTaxvat());
+        $customer->setType(CustomerType::individual());
+
+        $telephone = $quote->getCustomer()->getAddresses()[0]->getTelephone();
+        $phone = new Phone(
+            '55',
+            substr($telephone, 0, 2),
+            substr($telephone, 2)
+        );
+        $customer->setPhones(
+            CustomerPhones::create([$phone, $phone])
+        );
+
+        $address = new Address();
+        $addressAttributes =
+            MPSetup::getModuleConfiguration()->getAddressAttributes();
+
+        $addressAttributes = json_decode(json_encode($addressAttributes), true);
+        foreach ($addressAttributes as $attribute => $value) {
+            $value = $value === null ? 1 : $value;
+            $value = filter_var($value, FILTER_SANITIZE_NUMBER_INT) - 1;
+            $setter = 'set' . ucfirst($attribute);
+            $address->$setter($addresses[0]->getStreet()[$value]);
+        }
+
+        $address->setCity($addresses[0]->getCity());
+        $address->setCountry($addresses[0]->getCountryId());
+        $address->setZipCode($addresses[0]->getPostcode());
+        $address->setState($addresses[0]->getRegion()->getRegionCode());
+
+        $customer->setAddress($address);
+
+        return $customer;
+    }
+
+    /** @return Item[] */
+    public function getItemCollection()
+    {
+        $moneyService = new MoneyService();
+        $quote = $this->getQuote();
+        $itemCollection = $quote->getItemsCollection();
+        $items = [];
+        foreach ($itemCollection as $quoteItem) {
+            //adjusting price.
+            $price = $quoteItem->getPrice();
+            $price = $price > 0 ? $price : "0.01";
+
+            if ($price === null) {
+                continue;
+            }
+            $item = new Item;
+            $item->setAmount(
+                $moneyService->floatToCents($price)
+            );
+            $item->setQuantity($quoteItem->getQty()) ;
+            $item->setDescription(
+                $quoteItem->getName() . ' : ' .
+                $quoteItem->getDescription()
+            );
+            $items[] = $item;
+        }
+        return $items;
+    }
+
+    private function getQuote()
+    {
+        if ($this->quote === null) {
+            $quoteId = $this->platformOrder->getQuoteId();
+
+            $objectManager = ObjectManager::getInstance();
+            $quoteFactory = $objectManager->get(QuoteFactory::class);
+            $this->quote = $quoteFactory->create()->load($quoteId);
+        }
+
+        return $this->quote;
+    }
+
+    /** @return AbstractPayment[] */
+    public function getPaymentMethodCollection()
+    {
+        $payments = $this->getPaymentCollection();
+
+        if (empty($payments)) {
+            $baseNewPayment = $this->platformOrder->getPayment();
+            $newPayment = [];
+            $newPayment['method'] = $baseNewPayment->getMethod();
+            $newPayment['additional_information'] =
+                $baseNewPayment->getAdditionalInformation();
+            $payments = [$newPayment];
+        }
+
+        $paymentData = [];
+
+        foreach ($payments as $payment) {
+            $handler = explode('_', $payment['method']);
+            array_walk($handler, function(&$part){$part = ucfirst($part);});
+            $handler = 'extractPaymentDataFrom' . implode('', $handler);
+            $this->$handler($payment['additional_information'], $paymentData);
+        }
+
+        $paymentFactory = new PaymentFactory();
+        $paymentMethods = $paymentFactory->createFromJson(
+            json_encode($paymentData)
+        );
+        return $paymentMethods;
+    }
+
+    private function extractPaymentDataFromMundipaggCreditCard($additionalInformation, &$paymentData)
+    {
+        $moneyService = new MoneyService();
+        $identifier = null;
+        $customerId = null;
+        $brand = null;
+        try {
+            $brand = strtolower($additionalInformation['cc_type']);
+        }
+        catch (\Throwable $e)
+        {
+
+        }
+
+        if (isset($additionalInformation['cc_token_credit_card'])) {
+            $identifier = $additionalInformation['cc_token_credit_card'];
+        }
+        if (
+            !empty($additionalInformation['cc_saved_card']) &&
+            $additionalInformation['cc_saved_card'] !== null
+        ) {
+            $identifier = null;
+        }
+
+        if ($identifier === null) {
+
+            $objectManager = ObjectManager::getInstance();
+            $cardRepo = $objectManager->get(CardsRepository::class);
+            $card = $cardRepo->getById($additionalInformation['cc_saved_card']);
+            $identifier = $card->getCardToken();
+            $customerId = $card->getCardId();
+        }
+
+        $newPaymentData = new \stdClass();
+        $newPaymentData->customerId = $customerId;
+        $newPaymentData->brand = $brand;
+        $newPaymentData->identifier = $identifier;
+        $newPaymentData->installments = $additionalInformation['cc_installments'];
+
+        $amount = $this->getGrandTotal() - $this->getBaseTaxAmount();
+        $newPaymentData->amount = $moneyService->floatToCents($amount);
+
+        $creditCardDataIndex = AbstractCreditCardPayment::getBaseCode();
+        if (!isset($paymentData[$creditCardDataIndex])) {
+            $paymentData[$creditCardDataIndex] = [];
+        }
+        $paymentData[$creditCardDataIndex][] = $newPaymentData;
+    }
+
+    private function extractPaymentDataFromMundipaggTwoCreditCard($additionalInformation, &$paymentData)
+    {
+        $moneyService = new MoneyService();
+        $indexes = ['first', 'second'];
+        foreach ($indexes as $index) {
+            $identifier = null;
+            $customerId = null;
+
+            $brand = null;
+            try {
+                $brand = strtolower($additionalInformation["cc_type_{$index}"]);
+            }
+            catch (\Throwable $e)
+            {
+
+            }
+
+            if (isset($additionalInformation["cc_token_credit_card_{$index}"])) {
+                $identifier = $additionalInformation["cc_token_credit_card_{$index}"];
+            }
+
+            if (
+                !empty($additionalInformation["cc_saved_card_{$index}"]) &&
+                $additionalInformation["cc_saved_card_{$index}"] !== null
+            ) {
+                $identifier = null;
+            }
+
+            if ($identifier === null) {
+
+                $objectManager = ObjectManager::getInstance();
+                $cardRepo = $objectManager->get(CardsRepository::class);
+                $card = $cardRepo->getById($additionalInformation["cc_saved_card_{$index}"]);
+                $identifier = $card->getCardToken();
+                $customerId = $card->getCardId();
+            }
+
+            $newPaymentData = new \stdClass();
+            $newPaymentData->customerId = $customerId;
+            $newPaymentData->identifier = $identifier;
+            $newPaymentData->brand = $brand;
+            $newPaymentData->installments = $additionalInformation["cc_installments_{$index}"];
+
+            $amount = $additionalInformation["cc_{$index}_card_amount"];
+            $newPaymentData->amount = $moneyService->floatToCents($amount);
+
+            $creditCardDataIndex = AbstractCreditCardPayment::getBaseCode();
+            if (!isset($paymentData[$creditCardDataIndex])) {
+                $paymentData[$creditCardDataIndex] = [];
+            }
+            $paymentData[$creditCardDataIndex][] = $newPaymentData;
+        }
+    }
+
+    private function extractPaymentDataFromMundipaggBilletCreditcard($additionalInformation, &$paymentData)
+    {
+        $moneyService = new MoneyService();
+        $identifier = null;
+        $customerId = null;
+
+        $brand = null;
+        try {
+            $brand = strtolower($additionalInformation['cc_type']);
+        }
+        catch (\Throwable $e)
+        {
+
+        }
+
+        if (isset($additionalInformation['cc_token_credit_card'])) {
+            $identifier = $additionalInformation['cc_token_credit_card'];
+        }
+
+        if (
+            !empty($additionalInformation['cc_saved_card']) &&
+            $additionalInformation['cc_saved_card'] !== null
+        ) {
+            $identifier = null;
+        }
+
+        if ($identifier === null) {
+            $objectManager = ObjectManager::getInstance();
+            $cardRepo = $objectManager->get(CardsRepository::class);
+            $card = $cardRepo->getById($additionalInformation['cc_saved_card']);
+            $identifier = $card->getCardToken();
+            $customerId = $card->getCardId();
+        }
+
+        $newPaymentData = new \stdClass();
+        $newPaymentData->identifier = $identifier;
+        $newPaymentData->customerId = $customerId;
+        $newPaymentData->brand = $brand;
+        $newPaymentData->installments = $additionalInformation['cc_installments'];
+
+        $amount = $additionalInformation["cc_cc_amount"];
+        $newPaymentData->amount = $moneyService->floatToCents($amount);
+
+        $creditCardDataIndex = AbstractCreditCardPayment::getBaseCode();
+        if (!isset($paymentData[$creditCardDataIndex])) {
+            $paymentData[$creditCardDataIndex] = [];
+        }
+        $paymentData[$creditCardDataIndex][] = $newPaymentData;
+
+        //boleto
+
+        $newPaymentData = new \stdClass();
+        $newPaymentData->amount =
+            $moneyService->floatToCents($additionalInformation["cc_billet_amount"]);
+
+        $boletoDataIndex = BoletoPayment::getBaseCode();
+        if (!isset($paymentData[$boletoDataIndex])) {
+            $paymentData[$boletoDataIndex] = [];
+        }
+        $paymentData[$boletoDataIndex][] = $newPaymentData;
+    }
+
+    private function extractPaymentDataFromMundipaggBillet($additionalInformation, &$paymentData)
+    {
+        $moneyService = new MoneyService();
+        $newPaymentData = new \stdClass();
+        $newPaymentData->amount =
+            $moneyService->floatToCents($this->platformOrder->getGrandTotal());
+
+        $boletoDataIndex = BoletoPayment::getBaseCode();
+        if (!isset($paymentData[$boletoDataIndex])) {
+            $paymentData[$boletoDataIndex] = [];
+        }
+        $paymentData[$boletoDataIndex][] = $newPaymentData;
+    }
+
+    public function getShipping()
+    {
+        $moneyService = new MoneyService();
+        /** @var Shipping $shipping */
+        $shipping = null;
+        $quote = $this->getQuote();
+        /** @var \Magento\Quote\Model\Quote\Address $platformShipping */
+        $platformShipping = $quote->getShippingAddress();
+
+        $shippingMethod = $platformShipping->getShippingMethod();
+        if ($shippingMethod === null) { //this is a order without a shipping.
+            return null;
+        }
+
+        $shipping = new Shipping();
+
+        $shipping->setAmount(
+            $moneyService->floatToCents($platformShipping->getShippingAmount())
+        );
+        $shipping->setDescription($platformShipping->getShippingDescription());
+        $shipping->setRecipientName(
+            $platformShipping->getName() . ' ' .
+            $platformShipping->getMiddlename() . ' ' .
+            $platformShipping->getLastname()
+        );
+        $shipping->setRecipientPhone(new Phone(
+            '55',
+            substr($platformShipping->getTelephone(), 0, 2),
+            substr($platformShipping->getTelephone(), 2)
+        ));
+
+        $addressAttributes =
+            MPSetup::getModuleConfiguration()->getAddressAttributes();
+
+        $addressAttributes = json_decode(json_encode($addressAttributes), true);
+
+        $address = new Address();
+        foreach ($addressAttributes as $attribute => $value) {
+            $value = $value === null ? 1 : $value;
+            $value = filter_var($value, FILTER_SANITIZE_NUMBER_INT) - 1;
+            $setter = 'set' . ucfirst($attribute);
+            $address->$setter($platformShipping->getStreet()[$value]);
+        }
+
+        $address->setCity($platformShipping->getCity());
+        $address->setCountry($platformShipping->getCountryId());
+        $address->setZipCode($platformShipping->getPostcode());
+
+        $_regionFactory = ObjectManager::getInstance()->get('Magento\Directory\Model\RegionFactory');
+        $regionId = $platformShipping->getRegionId();
+
+        if (is_numeric($regionId)) {
+            $shipperRegion = $_regionFactory->create()->load($regionId);
+            if ($shipperRegion->getId()) {
+                $address->setState($shipperRegion->getCode());
+            }
+        }
+
+        $shipping->setAddress($address);
+        return $shipping;
     }
 }
