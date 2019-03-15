@@ -11,11 +11,17 @@
 
 namespace MundiPagg\MundiPagg\Gateway\Transaction\Base\Command;
 
+use Magento\Framework\App\ObjectManager;
 use Magento\Payment\Gateway\CommandInterface;
 use Magento\Payment\Gateway\Request\BuilderInterface as RequestBuilder;
 use Magento\Payment\Gateway\Response\HandlerInterface as ResponseHandler;
 use Magento\Payment\Gateway\Validator\ValidatorInterface;
 use Magento\Payment\Gateway\Command\CommandException;
+use Magento\Quote\Model\QuoteFactory;
+use Mundipagg\Core\Kernel\Abstractions\AbstractModuleCoreSetup as MPSetup;
+use Mundipagg\Core\Kernel\Interfaces\PlatformOrderInterface;
+use Mundipagg\Core\Kernel\Services\OrderService;
+use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 use MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\ConfigInterface;
 
 abstract class AbstractApiCommand implements CommandInterface

@@ -4,15 +4,17 @@ namespace MundiPagg\MundiPagg\Concrete;
 
 use Magento\Framework\App\Config as Magento2StoreConfig;
 use Magento\Framework\App\ObjectManager;
+use Magento\Framework\App\ProductMetadataInterface;
+use Magento\Framework\Filesystem\DirectoryList;
 use Mundipagg\Core\Kernel\Abstractions\AbstractModuleCoreSetup;
 use Mundipagg\Core\Kernel\Aggregates\Configuration;
 use Mundipagg\Core\Kernel\Factories\ConfigurationFactory;
+use Mundipagg\Core\Kernel\Services\MoneyService;
 use Mundipagg\Core\Kernel\ValueObjects\CardBrand;
 use Mundipagg\Core\Kernel\ValueObjects\Configuration\CardConfig;
 use MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\Config;
 use MundiPagg\MundiPagg\Helper\ModuleHelper;
 use MundiPagg\MundiPagg\Model\Enum\CreditCardBrandEnum;
-use Magento\Framework\Filesystem\DirectoryList;
 
 final class Magento2CoreSetup extends AbstractModuleCoreSetup
 {
@@ -24,6 +26,18 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         $moduleHelper = $objectManager->get(ModuleHelper::class);
 
         self::$moduleVersion = $moduleHelper->getVersion(self::MODULE_NAME);
+    }
+
+    static protected function setPlatformVersion()
+    {
+        $objectManager = ObjectManager::getInstance();
+        /** @var ProductMetadataInterface $productMetadata */
+        $productMetadata = $objectManager->get(ProductMetadataInterface::class);
+        $version = $productMetadata->getName() . ' ';
+        $version .= $productMetadata->getEdition() . ' ';
+        $version .= $productMetadata->getVersion();
+
+        self::$platformVersion = $version;
     }
 
     static protected function setLogPath()
@@ -89,6 +103,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
 
     protected static function loadModuleConfiguration()
     {
+        $moneyService = new MoneyService();
         $objectManager = ObjectManager::getInstance();
         /** @var  Config $platformBaseConfig
          */
@@ -97,11 +112,25 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         $storeConfig = $objectManager->get(Magento2StoreConfig::class);
 
         $configData = new \stdClass;
-        $configData->boletoEnabled = false;
-        $configData->creditCardEnabled = false;
-        $configData->boletoCreditCardEnabled = false;
-        $configData->twoCreditCardsEnabled = false;
+        $configData->isAntifraudEnabled = $storeConfig->getValue('payment/mundipagg_creditcard/antifraud_active') === '1';
+        $configData->antifraudMinAmount = $moneyService->floatToCents(
+            $storeConfig->getValue('payment/mundipagg_creditcard/antifraud_min_amount') * 1
+        );
+        $configData->boletoEnabled = $storeConfig->getValue('payment/mundipagg_billet/active') === '1';
+        $configData->installmentsEnabled = $storeConfig->getValue('payment/mundipagg_creditcard/installments_active') === '1';
+        $configData->creditCardEnabled = $storeConfig->getValue('payment/mundipagg_creditcard/active') === '1';
+        $configData->boletoCreditCardEnabled = $storeConfig->getValue('payment/mundipagg_billet_creditcard/active') === '1';
+        $configData->twoCreditCardsEnabled = $storeConfig->getValue('payment/mundipagg_two_creditcard/active') === '1';
         $configData->hubInstallId = null;
+        $configData->enabled =
+            $storeConfig->getValue('mundipagg/general/is_active') === '1' &&
+            $storeConfig->getValue('mundipagg_mundipagg/global/active') === '1';
+
+        $cardAction = $storeConfig->getValue('payment/mundipagg_creditcard/payment_action');
+        $configData->cardOperation = Configuration::CARD_OPERATION_AUTH_ONLY;
+        if ($cardAction === 'authorize_capture') {
+            $configData->cardOperation = Configuration::CARD_OPERATION_AUTH_AND_CAPTURE;
+        }
 
         $configData->testMode = $platformBaseConfig->getTestMode();
         $configData->keys = [
@@ -109,6 +138,20 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
             Configuration::KEY_SECRET => $platformBaseConfig->getSecretKey(),
         ];
 
+        $configData->addressAttributes = new \stdClass();
+        $configData->addressAttributes->street =
+            $storeConfig->getValue('payment/mundipagg_customer_address/street_attribute');
+        $configData->addressAttributes->number =
+            $storeConfig->getValue('payment/mundipagg_customer_address/number_attribute');
+        $configData->addressAttributes->neighborhood =
+            $storeConfig->getValue('payment/mundipagg_customer_address/district_attribute');
+        $configData->addressAttributes->complement =
+            $storeConfig->getValue('payment/mundipagg_customer_address/complement_attribute');
+
+        $configData->cardStatementDescriptor =
+            $storeConfig->getValue('payment/mundipagg_creditcard/soft_description');
+        $configData->boletoInstructions =
+            $storeConfig->getValue('payment/mundipagg_billet/instructions');
 
         $configData->cardConfigs = self::getCardConfigs($storeConfig);
 

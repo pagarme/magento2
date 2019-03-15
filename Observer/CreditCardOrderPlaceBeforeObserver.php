@@ -47,7 +47,10 @@ class CreditCardOrderPlaceBeforeObserver implements ObserverInterface
         }
 
         if($payment->getMethod() == 'mundipagg_creditcard'){
-            $tax = $this->getTaxOrder($payment->getAdditionalInformation('cc_installments'), $payment->getCcType());
+            $tax = $this->getTaxOrder(
+                $payment->getAdditionalInformation('cc_installments'),
+                $payment->getAdditionalInformation('cc_type')
+            );
         }
 
         if($payment->getMethod() == 'mundipagg_billet_creditcard'){

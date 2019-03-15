@@ -88,7 +88,7 @@ class BilletCreditCardDataAssignObserver extends AbstractDataAssignObserver
         $info->setAdditionalInformation('cc_billet_amount', $additionalData->getCcBilletAmount());
 
         if ($additionalData->getCcInstallments()) {
-            $info->setAdditionalInformation('cc_installsments', (int) $additionalData->getCcInstallments());
+            $info->setAdditionalInformation('cc_installments', (int) $additionalData->getCcInstallments());
         }
 
         return $this;
