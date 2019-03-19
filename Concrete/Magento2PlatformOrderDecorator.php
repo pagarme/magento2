@@ -314,7 +314,21 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
     {
         $quote = $this->getQuote();
 
-        $quoteCustomer =  $quote->getCustomer();
+        $quoteCustomer = $quote->getCustomer();
+
+        $method = 'getRegisteredCustomer';
+        if ($quoteCustomer->getId() === null) {
+            $method = 'getGuestCustomer';
+        }
+
+        return $this->$method($quote);
+    }
+
+
+    private function getRegisteredCustomer($quote)
+    {
+        $quoteCustomer = $quote->getCustomer();
+
         $addresses = $quoteCustomer->getAddresses();
 
         $customerRepository =
@@ -369,6 +383,56 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $address->setCountry($addresses[0]->getCountryId());
         $address->setZipCode($addresses[0]->getPostcode());
         $address->setState($addresses[0]->getRegion()->getRegionCode());
+
+        $customer->setAddress($address);
+
+        return $customer;
+
+    }
+
+    private function getGuestCustomer($quote)
+    {
+        $guestAddress = $quote->getBillingAddress();
+
+        $customer = new Customer;
+
+        $customer->setName(
+            implode(' ', [
+                $guestAddress->getFirstname(),
+                $guestAddress->getMiddlename(),
+                $guestAddress->getLastname(),
+            ])
+        );
+        $customer->setEmail($guestAddress->getEmail());
+        $customer->setDocument($guestAddress->getVatId());
+        $customer->setType(CustomerType::individual());
+
+        $telephone = $guestAddress->getTelephone();
+        $phone = new Phone(
+            '55',
+            substr($telephone, 0, 2),
+            substr($telephone, 2)
+        );
+        $customer->setPhones(
+            CustomerPhones::create([$phone, $phone])
+        );
+
+        $address = new Address();
+        $addressAttributes =
+            MPSetup::getModuleConfiguration()->getAddressAttributes();
+
+        $addressAttributes = json_decode(json_encode($addressAttributes), true);
+        foreach ($addressAttributes as $attribute => $value) {
+            $value = $value === null ? 1 : $value;
+            $value = filter_var($value, FILTER_SANITIZE_NUMBER_INT) - 1;
+            $setter = 'set' . ucfirst($attribute);
+            $address->$setter($guestAddress->getStreet()[$value]);
+        }
+
+        $address->setCity($guestAddress->getCity());
+        $address->setCountry($guestAddress->getCountryId());
+        $address->setZipCode($guestAddress->getPostcode());
+        $address->setState($guestAddress->getRegionCode());
 
         $customer->setAddress($address);
 
