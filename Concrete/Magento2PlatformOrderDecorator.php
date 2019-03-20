@@ -354,7 +354,13 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             ])
         );
         $customer->setEmail($quote->getCustomerEmail());
-        $customer->setDocument($quote->getCustomerTaxvat());
+
+        $cleanDocument = preg_replace(
+            '/\D/',
+            '',
+            $quote->getCustomerTaxvat()
+        );
+        $customer->setDocument($cleanDocument);
         $customer->setType(CustomerType::individual());
 
         $telephone = $quote->getCustomer()->getAddresses()[0]->getTelephone();
@@ -404,7 +410,14 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             ])
         );
         $customer->setEmail($guestAddress->getEmail());
-        $customer->setDocument($guestAddress->getVatId());
+
+        $cleanDocument = preg_replace(
+            '/\D/',
+            '',
+            $guestAddress->getVatId()
+        );
+
+        $customer->setDocument($cleanDocument);
         $customer->setType(CustomerType::individual());
 
         $telephone = $guestAddress->getTelephone();
@@ -458,7 +471,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             $item->setAmount(
                 $moneyService->floatToCents($price)
             );
-            $item->setQuantity($quoteItem->getQty()) ;
+            $item->setQuantity($quoteItem->getQty());
             $item->setDescription(
                 $quoteItem->getName() . ' : ' .
                 $quoteItem->getDescription()
