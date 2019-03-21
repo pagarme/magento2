@@ -13,9 +13,7 @@ use Magento\Sales\Model\Order\Payment\Repository as PaymentRepository;
 use Mundipagg\Core\Kernel\Abstractions\AbstractModuleCoreSetup as MPSetup;
 use Mundipagg\Core\Kernel\Abstractions\AbstractPlatformOrderDecorator;
 use Mundipagg\Core\Kernel\Interfaces\PlatformInvoiceInterface;
-use Mundipagg\Core\Kernel\Services\InstallmentService;
 use Mundipagg\Core\Kernel\Services\MoneyService;
-use Mundipagg\Core\Kernel\ValueObjects\CardBrand;
 use Mundipagg\Core\Kernel\ValueObjects\Id\CustomerId;
 use Mundipagg\Core\Kernel\ValueObjects\Id\OrderId;
 use Mundipagg\Core\Kernel\ValueObjects\OrderState;
@@ -336,6 +334,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $savedCustomer = $customerRepository->getById($quoteCustomer->getId());
 
         $customer = new Customer;
+        $customer->setCode($savedCustomer->getId());
 
         try {
             $mpId = $savedCustomer->getCustomAttribute('customer_id_mundipagg')

@@ -41,6 +41,9 @@ class UpgradeSchema implements UpgradeSchemaInterface
             $setup = $installSchema->installConfig($setup);
             $setup = $this->fixTransactionTable($setup);
         }
+        if (version_compare($version, "1.7.0", "<")) {
+            $setup = $installSchema->installSavedCard($setup);
+        }
 
         $setup->endSetup();
     }

@@ -13,6 +13,7 @@ use Magento\Sales\Model\Service\CreditmemoService;
 use Magento\Sales\Model\Service\InvoiceService;
 use Magento\Sales\Model\Service\OrderService;
 use Mundipagg\Core\Kernel\Exceptions\AbstractMundipaggCoreException;
+use Mundipagg\Core\Webhook\Exceptions\WebhookAlreadyHandledException;
 use Mundipagg\Core\Webhook\Exceptions\WebhookHandlerNotFoundException;
 use Mundipagg\Core\Webhook\Services\WebhookReceiverService;
 use MundiPagg\MundiPagg\Api\WebhookManagementInterface;
@@ -118,7 +119,12 @@ class WebhookManagement implements WebhookManagementInterface
 
             $webhookReceiverService = new WebhookReceiverService();
             return $webhookReceiverService->handle($postData);
-        } catch (WebhookHandlerNotFoundException $e)  {
+        } catch (WebhookHandlerNotFoundException $e) {
+            return [
+                "message" => $e->getMessage(),
+                "code" => 200
+            ];
+        } catch (WebhookAlreadyHandledException $e)  {
             return  [
                 "message" => $e->getMessage(),
                 "code" => 200
