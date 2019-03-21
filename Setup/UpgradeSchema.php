@@ -43,6 +43,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
         }
         if (version_compare($version, "1.7.0", "<")) {
             $setup = $installSchema->installSavedCard($setup);
+            $setup = $installSchema->installCustomer($setup);
         }
 
         $setup->endSetup();

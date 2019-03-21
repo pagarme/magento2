@@ -336,6 +336,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $customer = new Customer;
         $customer->setCode($savedCustomer->getId());
 
+        $mpId = null;
         try {
             $mpId = $savedCustomer->getCustomAttribute('customer_id_mundipagg')
                 ->getValue();

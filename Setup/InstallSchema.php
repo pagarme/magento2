@@ -27,6 +27,7 @@ class InstallSchema implements InstallSchemaInterface
         $this->installCharge($setup);
         $this->installTransaction($setup);
         $this->installSavedCard($setup);
+        $this->installCustomer($setup);
 
         $setup->endSetup();
     }
@@ -490,6 +491,51 @@ class InstallSchema implements InstallSchemaInterface
             ;
 
             $installer->getConnection()->createTable($savedCardTable);
+        }
+        return $installer;
+    }
+
+    public function installCustomer(SchemaSetupInterface $installer)
+    {
+        $tableName = $installer->getTable('mundipagg_module_core_customer');
+        if (!$installer->getConnection()->isTableExists($tableName)) {
+            $customer = $installer->getConnection()
+                ->newTable($tableName)
+                ->addColumn(
+                    'id',
+                    Table::TYPE_INTEGER,
+                    null,
+                    [
+                        'identity' => true,
+                        'unsigned' => true,
+                        'nullable' => false,
+                        'primary' => true
+                    ],
+                    'ID'
+                )
+                ->addColumn(
+                    'code',
+                    Table::TYPE_TEXT,
+                    100,
+                    [
+                        'nullable' => false
+                    ],
+                    'platform customer id'
+                )
+                ->addColumn(
+                    'mundipagg_id',
+                    Table::TYPE_TEXT,
+                    20,
+                    [
+                        'nullable' => false
+                    ],
+                    'format: cus_xxxxxxxxxxxxxxxx'
+                )
+                ->setComment('Customer Table')
+                ->setOption('charset', 'utf8')
+            ;
+
+            $installer->getConnection()->createTable($customer);
         }
         return $installer;
     }
