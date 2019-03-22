@@ -607,6 +607,9 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $newPaymentData->brand = $brand;
         $newPaymentData->identifier = $identifier;
         $newPaymentData->installments = $additionalInformation['cc_installments'];
+        $newPaymentData->saveOnSuccess =
+            isset($additionalInformation['cc_savecard']) &&
+            $additionalInformation['cc_savecard'] === '1';
 
         $amount = $this->getGrandTotal() - $this->getBaseTaxAmount();
         $newPaymentData->amount = $moneyService->floatToCents($amount);
