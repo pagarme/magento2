@@ -349,6 +349,16 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         } catch (\Throwable $e) {
         }
 
+        if ($mpId === null) {
+            $coreCustomerRespository = new CoreCustomerRepository();
+            $coreCustomer = $coreCustomerRespository->findByCode(
+                $savedCustomer->getId()
+            );
+            if ($coreCustomer !== null) {
+                $customer->setMundipaggId($coreCustomer->getMundipaggId());
+            }
+        }
+
         $customer->setName(
             implode(' ', [
                 $quote->getCustomerFirstname(),
