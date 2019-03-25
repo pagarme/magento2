@@ -527,7 +527,11 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             $handler = explode('_', $payment['method']);
             array_walk($handler, function(&$part){$part = ucfirst($part);});
             $handler = 'extractPaymentDataFrom' . implode('', $handler);
-            $this->$handler($payment['additional_information'], $paymentData);
+            $this->$handler(
+                $payment['additional_information'],
+                $paymentData,
+                $payment
+            );
         }
 
         $paymentFactory = new PaymentFactory();
@@ -537,7 +541,8 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         return $paymentMethods;
     }
 
-    private function extractPaymentDataFromMundipaggCreditCard($additionalInformation, &$paymentData)
+    private function extractPaymentDataFromMundipaggCreditCard
+    ($additionalInformation, &$paymentData, $payment)
     {
         $moneyService = new MoneyService();
         $identifier = null;
@@ -621,7 +626,8 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $paymentData[$creditCardDataIndex][] = $newPaymentData;
     }
 
-    private function extractPaymentDataFromMundipaggTwoCreditCard($additionalInformation, &$paymentData)
+    private function extractPaymentDataFromMundipaggTwoCreditCard
+    ($additionalInformation, &$paymentData, $payment)
     {
         $moneyService = new MoneyService();
         $indexes = ['first', 'second'];
@@ -675,7 +681,10 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         }
     }
 
-    private function extractPaymentDataFromMundipaggBilletCreditcard($additionalInformation, &$paymentData)
+    private function extractPaymentDataFromMundipaggBilletCreditcard(
+        $additionalInformation,
+        &$paymentData, $payment
+    )
     {
         $moneyService = new MoneyService();
         $identifier = null;
@@ -737,12 +746,18 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $paymentData[$boletoDataIndex][] = $newPaymentData;
     }
 
-    private function extractPaymentDataFromMundipaggBillet($additionalInformation, &$paymentData)
+    private function extractPaymentDataFromMundipaggBillet(
+        $additionalInformation,
+        &$paymentData,
+        $payment
+    )
     {
         $moneyService = new MoneyService();
         $newPaymentData = new \stdClass();
         $newPaymentData->amount =
             $moneyService->floatToCents($this->platformOrder->getGrandTotal());
+
+        //$newPaymentData->document =
 
         $boletoDataIndex = BoletoPayment::getBaseCode();
         if (!isset($paymentData[$boletoDataIndex])) {

@@ -44,6 +44,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
         if (version_compare($version, "1.7.0", "<")) {
             $setup = $installSchema->installSavedCard($setup);
             $setup = $installSchema->installCustomer($setup);
+            $setup = $this->addBoletoInfoToTransactionTable($setup);
         }
 
         $setup->endSetup();
@@ -178,6 +179,27 @@ class UpgradeSchema implements UpgradeSchemaInterface
             [
                 'type' => Table::TYPE_TEXT,
                 'length' => 300,
+            ]
+        );
+
+        return $setup;
+    }
+
+    protected function addBoletoInfoToTransactionTable($setup)
+    {
+        $installer = $setup;
+
+        $connection = $installer->getConnection();
+        $tableName = $installer->getTable('mundipagg_module_core_transaction');
+
+        $connection->addColumn(
+            $tableName,
+            'boleto_url',
+            [
+                'type' => Table::TYPE_TEXT,
+                'length' => 500,
+                'nullable' => true,
+                'comment' => 'Boleto url'
             ]
         );
 

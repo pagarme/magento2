@@ -91,8 +91,12 @@ class InitializeCommand implements CommandInterface
             $paymentMethod = $payment->getMethod();
             $order =  $payment->getOrder();
 
-            if ($paymentMethod === 'mundipagg_creditcard') {
+            $detourOn = [
+                'mundipagg_creditcard',
+                'mundipagg_billet'
+            ];
 
+            if (in_array($paymentMethod, $detourOn)) {
                 Magento2CoreSetup::bootstrap();
 
                 $platformOrderDecoratorClass = MPSetup::get(
