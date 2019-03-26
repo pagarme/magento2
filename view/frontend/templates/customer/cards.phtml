@@ -31,7 +31,7 @@ $i = 0;
 				<?php $url = $this->getBaseUrl() . 'mundipagg/customer/remove/id/'. $item->getId() ?>
 				<tr>
 					<td><?php echo $i ?></td>
-					<td><?php echo __('****.****.****.') ?><?php echo $item->getLastFourNumbers() ?></td>
+					<td><?php echo $item->getMaskedNumber() ?></td>
 					<td><?php echo $item->getBrand() ?></td>
 					<td><?php echo $item->getCreatedAt() ?></td>
 					<td><button onclick="location.href = '<?php echo $url ?>';" id="remove"><?php echo __('Remove') ?></button></td>
@@ -41,4 +41,3 @@ $i = 0;
 		</tbody>
 	</table>
 </div>
-
