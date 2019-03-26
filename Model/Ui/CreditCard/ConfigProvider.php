@@ -79,6 +79,7 @@ final class ConfigProvider implements ConfigProviderInterface
                     $savedCardRepository->findByOwnerId($customer->getMundipaggId());
 
                 foreach ($coreCards as $coreCard) {
+                    $is_saved_card = 1;
                     $cards[] = [
                         'id' => 'mp_core_' . $coreCard->getId(),
                         'first_six_digits' => $coreCard->getFirstSixDigits(),
