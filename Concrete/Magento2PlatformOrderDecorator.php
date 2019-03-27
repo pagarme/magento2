@@ -766,8 +766,6 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $newPaymentData->amount =
             $moneyService->floatToCents($this->platformOrder->getGrandTotal());
 
-        //$newPaymentData->document =
-
         $boletoDataIndex = BoletoPayment::getBaseCode();
         if (!isset($paymentData[$boletoDataIndex])) {
             $paymentData[$boletoDataIndex] = [];

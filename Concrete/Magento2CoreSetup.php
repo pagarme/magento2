@@ -159,7 +159,6 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         $configData->saveCards =
             $storeConfig->getValue(ConfigInterface::PATH_ENABLED_SAVED_CARDS) === '1';
 
-
         $configurationFactory = new ConfigurationFactory();
         $config = $configurationFactory->createFromJsonData(
             json_encode($configData)
