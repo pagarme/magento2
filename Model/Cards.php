@@ -75,7 +75,7 @@ class Cards extends AbstractModel implements CardsInterface
 
     /**
      * Get card_id
-     * @return string|null
+     * @return string|NULL
      */
     public function getCardId()
     {

@@ -14,6 +14,10 @@ namespace MundiPagg\MundiPagg\Block\Customer;
 
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
+use Mundipagg\Core\Payment\Repositories\CustomerRepository;
+use Mundipagg\Core\Payment\Repositories\SavedCardRepository;
+use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use MundiPagg\MundiPagg\Concrete\Magento2SavedCardAdapter;
 use MundiPagg\MundiPagg\Model\CardsRepository;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use \Magento\Customer\Model\Session;
@@ -56,7 +60,33 @@ class Cards extends Template
         $searchCriteria = $this->addFilterCriteria('customer_id', $customerId);
         $listCards = $this->getCardsRepository()->getList($searchCriteria);
 
-        return $listCards->getItems();
+        $cards = $listCards->getItems();
+
+        foreach ($cards as &$card) {
+            $card->setMaskedNumber('****.****.****.' . $card->getLastFourNumbers());
+        }
+
+        return array_merge($cards, $this->getCoreCards($customerId));
+    }
+
+    private function getCoreCards($idCustomer)
+    {
+        Magento2CoreSetup::bootstrap();
+
+        $customerRepository = new CustomerRepository();
+        $savedCardRepository = new SavedCardRepository();
+
+        $customer = $customerRepository->findByCode($idCustomer);
+        $cards = [];
+        if ($customer !== null) {
+            $coreCards =
+                $savedCardRepository->findByOwnerId($customer->getMundipaggId());
+
+            foreach ($coreCards as $coreCard) {
+                $cards[] = new Magento2SavedCardAdapter($coreCard);
+            }
+        }
+        return $cards;
     }
 
     public function getIdCustomer()

@@ -14,6 +14,9 @@ namespace MundiPagg\MundiPagg\Model\Ui\CreditCard;
 
 use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Customer\Model\Session;
+use Mundipagg\Core\Payment\Repositories\CustomerRepository;
+use Mundipagg\Core\Payment\Repositories\SavedCardRepository;
+use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 use MundiPagg\MundiPagg\Model\CardsFactory;
 use MundiPagg\MundiPagg\Gateway\Transaction\CreditCard\Config\ConfigInterface;
 
@@ -65,6 +68,26 @@ final class ConfigProvider implements ConfigProviderInterface
                 $selectedCard = $card->getId();
             }
 
+            Magento2CoreSetup::bootstrap();
+
+            $customerRepository = new CustomerRepository();
+            $savedCardRepository = new SavedCardRepository();
+
+            $customer = $customerRepository->findByCode($idCustomer);
+            if ($customer !== null) {
+                $coreCards =
+                    $savedCardRepository->findByOwnerId($customer->getMundipaggId());
+
+                foreach ($coreCards as $coreCard) {
+                    $is_saved_card = 1;
+                    $cards[] = [
+                        'id' => 'mp_core_' . $coreCard->getId(),
+                        'first_six_digits' => $coreCard->getFirstSixDigits(),
+                        'last_four_numbers' => $coreCard->getLastFourDigits(),
+                        'brand' => $coreCard->getBrand()->getName()
+                    ];
+                }
+            }
         }
         return [
             'payment' => [

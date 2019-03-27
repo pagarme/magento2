@@ -13,6 +13,7 @@ use Mundipagg\Core\Kernel\Services\MoneyService;
 use Mundipagg\Core\Kernel\ValueObjects\CardBrand;
 use Mundipagg\Core\Kernel\ValueObjects\Configuration\CardConfig;
 use MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\Config;
+use MundiPagg\MundiPagg\Gateway\Transaction\CreditCard\Config\ConfigInterface;
 use MundiPagg\MundiPagg\Helper\ModuleHelper;
 use MundiPagg\MundiPagg\Model\Enum\CreditCardBrandEnum;
 
@@ -154,6 +155,9 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
             $storeConfig->getValue('payment/mundipagg_billet/instructions');
 
         $configData->cardConfigs = self::getCardConfigs($storeConfig);
+
+        $configData->saveCards =
+            $storeConfig->getValue(ConfigInterface::PATH_ENABLED_SAVED_CARDS) === '1';
 
         $configurationFactory = new ConfigurationFactory();
         $config = $configurationFactory->createFromJsonData(

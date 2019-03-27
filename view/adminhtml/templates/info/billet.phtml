@@ -9,7 +9,7 @@
  * @link        http://www.mundipagg.com
  */
 ?>
-<?php if ($this->getBilletUrl() && $this->getInfo()->getOrder()->getState() == 'pending_payment'): ?>
+<?php if ($this->getBilletUrl() && $this->getInfo()->getOrder()->getStatus() == 'pending'): ?>
     <span><?php echo __($this->getTitle()) ?></span>
     <hr />
     <a class="action tocart primary" href="<?php echo $this->getBilletUrl() ?>" target="_blank"><?php echo __('Print Billet') ?></a>
