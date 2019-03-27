@@ -69,7 +69,14 @@ class Remove extends Action
         try {
             try {
                 $result = $this->cardsRepository->getById($idCard);
-                $response = $this->getApi()->getCustomers()->deleteCard($result->getCardId(),$result->getCardToken());
+                $response =
+                    $this
+                        ->getApi()
+                        ->getCustomers()
+                        ->deleteCard(
+                            $result->getCardId(),
+                            $result->getCardToken()
+                        );
                 $this->logger->logger($response);
 
                 $result = $this->cardsRepository->deleteById($idCard);
