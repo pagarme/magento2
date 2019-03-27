@@ -6,6 +6,7 @@ use Magento\Customer\Model\ResourceModel\CustomerRepository;
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\ObjectManager;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Quote\Model\QuoteFactory;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment\Transaction\Repository as TransactionRepository;
@@ -13,9 +14,7 @@ use Magento\Sales\Model\Order\Payment\Repository as PaymentRepository;
 use Mundipagg\Core\Kernel\Abstractions\AbstractModuleCoreSetup as MPSetup;
 use Mundipagg\Core\Kernel\Abstractions\AbstractPlatformOrderDecorator;
 use Mundipagg\Core\Kernel\Interfaces\PlatformInvoiceInterface;
-use Mundipagg\Core\Kernel\Services\InstallmentService;
 use Mundipagg\Core\Kernel\Services\MoneyService;
-use Mundipagg\Core\Kernel\ValueObjects\CardBrand;
 use Mundipagg\Core\Kernel\ValueObjects\Id\CustomerId;
 use Mundipagg\Core\Kernel\ValueObjects\Id\OrderId;
 use Mundipagg\Core\Kernel\ValueObjects\OrderState;
@@ -28,9 +27,12 @@ use Mundipagg\Core\Payment\Aggregates\Payments\AbstractPayment;
 use Mundipagg\Core\Payment\Aggregates\Payments\BoletoPayment;
 use Mundipagg\Core\Payment\Aggregates\Shipping;
 use Mundipagg\Core\Payment\Factories\PaymentFactory;
+use Mundipagg\Core\Payment\Repositories\CustomerRepository as CoreCustomerRepository;
+use Mundipagg\Core\Payment\Repositories\SavedCardRepository;
 use Mundipagg\Core\Payment\ValueObjects\CustomerPhones;
 use Mundipagg\Core\Payment\ValueObjects\CustomerType;
 use Mundipagg\Core\Payment\ValueObjects\Phone;
+use MundiPagg\MundiPagg\Model\Cards;
 use MundiPagg\MundiPagg\Model\CardsRepository;
 
 class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
@@ -336,14 +338,25 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $savedCustomer = $customerRepository->getById($quoteCustomer->getId());
 
         $customer = new Customer;
+        $customer->setCode($savedCustomer->getId());
 
+        $mpId = null;
         try {
             $mpId = $savedCustomer->getCustomAttribute('customer_id_mundipagg')
                 ->getValue();
             $customerId = new CustomerId($mpId);
             $customer->setMundipaggId($customerId);
         } catch (\Throwable $e) {
+        }
 
+        if ($mpId === null) {
+            $coreCustomerRespository = new CoreCustomerRepository();
+            $coreCustomer = $coreCustomerRespository->findByCode(
+                $savedCustomer->getId()
+            );
+            if ($coreCustomer !== null) {
+                $customer->setMundipaggId($coreCustomer->getMundipaggId());
+            }
         }
 
         $customer->setName(
@@ -360,6 +373,15 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             '',
             $quote->getCustomerTaxvat()
         );
+
+        if (empty($cleanDocument)) {
+            $cleanDocument = preg_replace(
+                '/\D/',
+                '',
+                $addresses[0]->getVatId()
+            );
+        }
+
         $customer->setDocument($cleanDocument);
         $customer->setType(CustomerType::individual());
 
@@ -514,7 +536,11 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             $handler = explode('_', $payment['method']);
             array_walk($handler, function(&$part){$part = ucfirst($part);});
             $handler = 'extractPaymentDataFrom' . implode('', $handler);
-            $this->$handler($payment['additional_information'], $paymentData);
+            $this->$handler(
+                $payment['additional_information'],
+                $paymentData,
+                $payment
+            );
         }
 
         $paymentFactory = new PaymentFactory();
@@ -524,7 +550,8 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         return $paymentMethods;
     }
 
-    private function extractPaymentDataFromMundipaggCreditCard($additionalInformation, &$paymentData)
+    private function extractPaymentDataFromMundipaggCreditCard
+    ($additionalInformation, &$paymentData, $payment)
     {
         $moneyService = new MoneyService();
         $identifier = null;
@@ -552,7 +579,39 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 
             $objectManager = ObjectManager::getInstance();
             $cardRepo = $objectManager->get(CardsRepository::class);
-            $card = $cardRepo->getById($additionalInformation['cc_saved_card']);
+
+            $cardId = $additionalInformation['cc_saved_card'];
+            $card = null;
+            try {
+                $card = $cardRepo->getById($cardId);
+            } catch (NoSuchEntityException $e) {
+            }
+
+            if ($card === null) {
+                Magento2CoreSetup::bootstrap();
+
+                $savedCardRepository = new SavedCardRepository();
+
+                $matchIds = [];
+                preg_match('/mp_core_\d/', $cardId, $matchIds);
+
+                if (isset($matchIds[0])) {
+                    $savedCardId = preg_replace('/\D/', '', $matchIds[0]);
+                    $savedCard = $savedCardRepository->find($savedCardId);
+                    if ($savedCard !== null) {
+                        $objectManager = ObjectManager::getInstance();
+                        /** @var Cards $card */
+                        $card = $objectManager->get(Cards::class);
+                        $card->setCardToken($savedCard->getMundipaggId()->getValue());
+                        $card->setCardId($savedCard->getOwnerId()->getValue());
+                    }
+                }
+            }
+
+            if ($card === null) {
+                throw new NoSuchEntityException(__('Cards with id "%1" does not exist.', $cardId));
+            }
+
             $identifier = $card->getCardToken();
             $customerId = $card->getCardId();
         }
@@ -562,6 +621,9 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $newPaymentData->brand = $brand;
         $newPaymentData->identifier = $identifier;
         $newPaymentData->installments = $additionalInformation['cc_installments'];
+        $newPaymentData->saveOnSuccess =
+            isset($additionalInformation['cc_savecard']) &&
+            $additionalInformation['cc_savecard'] === '1';
 
         $amount = $this->getGrandTotal() - $this->getBaseTaxAmount();
         $newPaymentData->amount = $moneyService->floatToCents($amount);
@@ -573,7 +635,8 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $paymentData[$creditCardDataIndex][] = $newPaymentData;
     }
 
-    private function extractPaymentDataFromMundipaggTwoCreditCard($additionalInformation, &$paymentData)
+    private function extractPaymentDataFromMundipaggTwoCreditCard
+    ($additionalInformation, &$paymentData, $payment)
     {
         $moneyService = new MoneyService();
         $indexes = ['first', 'second'];
@@ -627,7 +690,10 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         }
     }
 
-    private function extractPaymentDataFromMundipaggBilletCreditcard($additionalInformation, &$paymentData)
+    private function extractPaymentDataFromMundipaggBilletCreditcard(
+        $additionalInformation,
+        &$paymentData, $payment
+    )
     {
         $moneyService = new MoneyService();
         $identifier = null;
@@ -689,7 +755,11 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $paymentData[$boletoDataIndex][] = $newPaymentData;
     }
 
-    private function extractPaymentDataFromMundipaggBillet($additionalInformation, &$paymentData)
+    private function extractPaymentDataFromMundipaggBillet(
+        $additionalInformation,
+        &$paymentData,
+        $payment
+    )
     {
         $moneyService = new MoneyService();
         $newPaymentData = new \stdClass();

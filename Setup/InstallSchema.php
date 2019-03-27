@@ -26,6 +26,8 @@ class InstallSchema implements InstallSchemaInterface
         $this->installOrder($setup);
         $this->installCharge($setup);
         $this->installTransaction($setup);
+        $this->installSavedCard($setup);
+        $this->installCustomer($setup);
 
         $setup->endSetup();
     }
@@ -417,6 +419,123 @@ class InstallSchema implements InstallSchemaInterface
             ;
 
             $installer->getConnection()->createTable($webhookTable);
+        }
+        return $installer;
+    }
+
+    public function installSavedCard(SchemaSetupInterface $installer)
+    {
+        $tableName = $installer->getTable('mundipagg_module_core_saved_card');
+        if (!$installer->getConnection()->isTableExists($tableName)) {
+            $savedCardTable = $installer->getConnection()
+                ->newTable($tableName)
+                ->addColumn(
+                    'id',
+                    Table::TYPE_INTEGER,
+                    null,
+                    [
+                        'identity' => true,
+                        'unsigned' => true,
+                        'nullable' => false,
+                        'primary' => true
+                    ],
+                    'ID'
+                )
+                ->addColumn(
+                    'mundipagg_id',
+                    Table::TYPE_TEXT,
+                    21,
+                    [
+                        'nullable' => false
+                    ],
+                    'format: card_xxxxxxxxxxxxxxxx'
+                )
+                ->addColumn(
+                    'owner_id',
+                    Table::TYPE_TEXT,
+                    21,
+                    [
+                        'nullable' => false
+                    ],
+                    'format: cus_xxxxxxxxxxxxxxxx'
+                )
+                ->addColumn(
+                    'first_six_digits',
+                    Table::TYPE_TEXT,
+                    6,
+                    [
+                        'nullable' => false
+                    ],
+                    'card first six digits'
+                )
+                ->addColumn(
+                    'last_four_digits',
+                    Table::TYPE_TEXT,
+                    4,
+                    [
+                        'nullable' => false
+                    ],
+                    'card last four digits'
+                )
+                ->addColumn(
+                    'brand',
+                    Table::TYPE_TEXT,
+                    30,
+                    [
+                        'nullable' => false
+                    ],
+                    'card brand'
+                )
+                ->setComment('Saved Card Table')
+                ->setOption('charset', 'utf8')
+            ;
+
+            $installer->getConnection()->createTable($savedCardTable);
+        }
+        return $installer;
+    }
+
+    public function installCustomer(SchemaSetupInterface $installer)
+    {
+        $tableName = $installer->getTable('mundipagg_module_core_customer');
+        if (!$installer->getConnection()->isTableExists($tableName)) {
+            $customer = $installer->getConnection()
+                ->newTable($tableName)
+                ->addColumn(
+                    'id',
+                    Table::TYPE_INTEGER,
+                    null,
+                    [
+                        'identity' => true,
+                        'unsigned' => true,
+                        'nullable' => false,
+                        'primary' => true
+                    ],
+                    'ID'
+                )
+                ->addColumn(
+                    'code',
+                    Table::TYPE_TEXT,
+                    100,
+                    [
+                        'nullable' => false
+                    ],
+                    'platform customer id'
+                )
+                ->addColumn(
+                    'mundipagg_id',
+                    Table::TYPE_TEXT,
+                    20,
+                    [
+                        'nullable' => false
+                    ],
+                    'format: cus_xxxxxxxxxxxxxxxx'
+                )
+                ->setComment('Customer Table')
+                ->setOption('charset', 'utf8')
+            ;
+
+            $installer->getConnection()->createTable($customer);
         }
         return $installer;
     }

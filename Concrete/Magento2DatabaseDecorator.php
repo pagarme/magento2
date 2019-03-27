@@ -23,6 +23,12 @@ final class Magento2DatabaseDecorator extends AbstractDatabaseDecorator
 
             AbstractDatabaseDecorator::TABLE_TRANSACTION =>
                 $this->db->getTableName('mundipagg_module_core_transaction'),
+
+            AbstractDatabaseDecorator::TABLE_SAVED_CARD =>
+                $this->db->getTableName('mundipagg_module_core_saved_card'),
+
+            AbstractDatabaseDecorator::TABLE_CUSTOMER =>
+                $this->db->getTableName('mundipagg_module_core_customer'),
         ];
     }
 
