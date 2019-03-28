@@ -88,34 +88,24 @@ class InitializeCommand implements CommandInterface
     private function doCoreDetour($payment)
     {
         try {
-            $paymentMethod = $payment->getMethod();
             $order =  $payment->getOrder();
 
-            $detourOn = [
-                'mundipagg_creditcard',
-                'mundipagg_billet',
-                'mundipagg_two_creditcard'
-            ];
+            Magento2CoreSetup::bootstrap();
 
-            if (in_array($paymentMethod, $detourOn)) {
-                Magento2CoreSetup::bootstrap();
+            $platformOrderDecoratorClass = MPSetup::get(
+                MPSetup::CONCRETE_PLATFORM_ORDER_DECORATOR_CLASS
+            );
 
-                $platformOrderDecoratorClass = MPSetup::get(
-                    MPSetup::CONCRETE_PLATFORM_ORDER_DECORATOR_CLASS
-                );
+            /** @var PlatformOrderInterface $orderDecorator */
+            $orderDecorator = new $platformOrderDecoratorClass();
+            $orderDecorator->setPlatformOrder($order);
 
-                /** @var PlatformOrderInterface $orderDecorator */
-                $orderDecorator = new $platformOrderDecoratorClass();
-                $orderDecorator->setPlatformOrder($order);
+            $orderDecorator->save();
 
-                $orderDecorator->save();
+            $orderService = new OrderService();
+            $orderService->createOrderAtMundipagg($orderDecorator);
 
-                $orderService = new OrderService();
-                $orderService->createOrderAtMundipagg($orderDecorator);
-
-                return $orderDecorator;
-            }
-            return false;
+            return $orderDecorator;
         } catch (\Exception $e) {
             throw new M2WebApiException(
                 new Phrase($e->getMessage()),
@@ -125,3 +115,5 @@ class InitializeCommand implements CommandInterface
         }
     }
 }
+
+

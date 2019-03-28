@@ -755,7 +755,38 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         if ($identifier === null) {
             $objectManager = ObjectManager::getInstance();
             $cardRepo = $objectManager->get(CardsRepository::class);
-            $card = $cardRepo->getById($additionalInformation['cc_saved_card']);
+            $cardId = $additionalInformation['cc_saved_card'];
+            $card = null;
+            try {
+                $card = $cardRepo->getById($cardId);
+            } catch (NoSuchEntityException $e) {
+            }
+
+            if ($card === null) {
+                Magento2CoreSetup::bootstrap();
+
+                $savedCardRepository = new SavedCardRepository();
+
+                $matchIds = [];
+                preg_match('/mp_core_\d*/', $cardId, $matchIds);
+
+                if (isset($matchIds[0])) {
+                    $savedCardId = preg_replace('/\D/', '', $matchIds[0]);
+                    $savedCard = $savedCardRepository->find($savedCardId);
+                    if ($savedCard !== null) {
+                        $objectManager = ObjectManager::getInstance();
+                        /** @var Cards $card */
+                        $card = $objectManager->get(Cards::class);
+                        $card->setCardToken($savedCard->getMundipaggId()->getValue());
+                        $card->setCardId($savedCard->getOwnerId()->getValue());
+                    }
+                }
+            }
+
+            if ($card === null) {
+                throw new NoSuchEntityException(__('Cards with id "%1" does not exist.', $cardId));
+            }
+
             $identifier = $card->getCardToken();
             $customerId = $card->getCardId();
         }
@@ -765,6 +796,11 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $newPaymentData->customerId = $customerId;
         $newPaymentData->brand = $brand;
         $newPaymentData->installments = $additionalInformation['cc_installments'];
+
+        $newPaymentData->saveOnSuccess =
+            isset($additionalInformation["cc_savecard"]) &&
+            $additionalInformation["cc_savecard"] === '1';
+
 
         $amount = $additionalInformation["cc_cc_amount"];
         $newPaymentData->amount = $moneyService->floatToCents($amount);
