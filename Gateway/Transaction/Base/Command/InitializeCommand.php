@@ -93,7 +93,8 @@ class InitializeCommand implements CommandInterface
 
             $detourOn = [
                 'mundipagg_creditcard',
-                'mundipagg_billet'
+                'mundipagg_billet',
+                'mundipagg_two_creditcard'
             ];
 
             if (in_array($paymentMethod, $detourOn)) {

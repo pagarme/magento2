@@ -135,7 +135,8 @@ class SalesOrderPlaceAfter implements ObserverInterface
     {
         $detourOn = [
             'mundipagg_creditcard',
-            'mundipagg_billet'
+            'mundipagg_billet',
+            'mundipagg_two_creditcard'
         ];
 
         $payment = $order->getPayment();
