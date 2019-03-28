@@ -86,7 +86,7 @@ class Remove extends Action
                 $savedCardRepository = new SavedCardRepository();
 
                 $matchIds = [];
-                preg_match('/mp_core_\d/', $idCard, $matchIds);
+                preg_match('/mp_core_\d*/', $idCard, $matchIds);
 
 
                 if (!isset($matchIds[0])) {

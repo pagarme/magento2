@@ -15,7 +15,6 @@ namespace MundiPagg\MundiPagg\Observer;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\DataObject;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\GiftMessage\Model\Save;
 use Magento\Payment\Observer\AbstractDataAssignObserver;
 use Magento\Framework\Event\Observer;
 use Magento\Quote\Api\Data\PaymentInterface;
@@ -23,7 +22,6 @@ use Mundipagg\Core\Payment\Repositories\SavedCardRepository;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 use MundiPagg\MundiPagg\Model\Cards;
 use MundiPagg\MundiPagg\Model\CardsRepository;
-use Zend\Form\Annotation\Object;
 
 class CreditCardDataAssignObserver extends AbstractDataAssignObserver
 {
@@ -68,7 +66,7 @@ class CreditCardDataAssignObserver extends AbstractDataAssignObserver
                 $savedCardRepository = new SavedCardRepository();
 
                 $matchIds = [];
-                preg_match('/mp_core_\d/', $cardId, $matchIds);
+                preg_match('/mp_core_\d*/', $cardId, $matchIds);
 
                 if (isset($matchIds[0])) {
                     $savedCardId = preg_replace('/\D/', '', $matchIds[0]);

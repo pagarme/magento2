@@ -12,10 +12,15 @@
 namespace MundiPagg\MundiPagg\Observer;
 
 
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\DataObject;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Payment\Observer\AbstractDataAssignObserver;
 use Magento\Framework\Event\Observer;
 use Magento\Quote\Api\Data\PaymentInterface;
+use Mundipagg\Core\Payment\Repositories\SavedCardRepository;
+use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use MundiPagg\MundiPagg\Model\Cards;
 use MundiPagg\MundiPagg\Model\CardsRepository;
 
 class TwoCreditCardDataAssignObserver extends AbstractDataAssignObserver
@@ -49,7 +54,38 @@ class TwoCreditCardDataAssignObserver extends AbstractDataAssignObserver
         $info->setAdditionalInformation('cc_saved_card_second', '0');
 
         if ($additionalData->getCcSavedCardFirst()) {
-            $card = $this->cardsRepository->getById($additionalData->getCcSavedCardFirst());
+            $cardId = $additionalData->getCcSavedCardFirst();
+            $card = null;
+            try {
+                $card = $this->cardsRepository->getById($cardId);
+            } catch (NoSuchEntityException $e) {
+            }
+
+            if ($card === null) {
+                Magento2CoreSetup::bootstrap();
+
+                $savedCardRepository = new SavedCardRepository();
+
+                $matchIds = [];
+                preg_match('/mp_core_\d*/', $cardId, $matchIds);
+
+                if (isset($matchIds[0])) {
+                    $savedCardId = preg_replace('/\D/', '', $matchIds[0]);
+                    $savedCard = $savedCardRepository->find($savedCardId);
+                    if ($savedCard !== null) {
+                        $objectManager = ObjectManager::getInstance();
+                        /** @var Cards $card */
+                        $card = $objectManager->get(Cards::class);
+                        $card->setBrand($savedCard->getBrand()->getName());
+                        $card->setLastFourNumbers($savedCard->getLastFourDigits()->getValue());
+                    }
+                }
+            }
+
+            if ($card === null) {
+                throw new NoSuchEntityException(__('Cards with id "%1" does not exist.', $cardId));
+            }
+
             $info->setAdditionalInformation('cc_saved_card_first', $additionalData->getCcSavedCardFirst());
             $info->setAdditionalInformation('cc_first_card_amount', $additionalData->getCcFirstCardAmount());
             $info->setAdditionalInformation('cc_first_card_tax_amount', $additionalData->getCcFirstCardTaxAmount());
@@ -79,7 +115,38 @@ class TwoCreditCardDataAssignObserver extends AbstractDataAssignObserver
         }
 
         if ($additionalData->getCcSavedCardSecond()) {
-            $card = $this->cardsRepository->getById($additionalData->getCcSavedCardSecond());
+            $cardId = $additionalData->getCcSavedCardSecond();
+            $card = null;
+            try {
+                $card = $this->cardsRepository->getById($cardId);
+            } catch (NoSuchEntityException $e) {
+            }
+
+            if ($card === null) {
+                Magento2CoreSetup::bootstrap();
+
+                $savedCardRepository = new SavedCardRepository();
+
+                $matchIds = [];
+                preg_match('/mp_core_\d*/', $cardId, $matchIds);
+
+                if (isset($matchIds[0])) {
+                    $savedCardId = preg_replace('/\D/', '', $matchIds[0]);
+                    $savedCard = $savedCardRepository->find($savedCardId);
+                    if ($savedCard !== null) {
+                        $objectManager = ObjectManager::getInstance();
+                        /** @var Cards $card */
+                        $card = $objectManager->get(Cards::class);
+                        $card->setBrand($savedCard->getBrand()->getName());
+                        $card->setLastFourNumbers($savedCard->getLastFourDigits()->getValue());
+                    }
+                }
+            }
+
+            if ($card === null) {
+                throw new NoSuchEntityException(__('Cards with id "%1" does not exist.', $cardId));
+            }
+
             $info->setAdditionalInformation('cc_saved_card_second', $additionalData->getCcSavedCardSecond());
             $info->setAdditionalInformation('cc_second_card_amount', $additionalData->getCcSecondCardAmount());
             $info->setAdditionalInformation('cc_second_card_tax_amount', $additionalData->getCcSecondCardTaxAmount());
