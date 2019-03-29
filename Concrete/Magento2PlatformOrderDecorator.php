@@ -708,6 +708,10 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             $newPaymentData->identifier = $identifier;
             $newPaymentData->brand = $brand;
             $newPaymentData->installments = $additionalInformation["cc_installments_{$index}"];
+            $newPaymentData->customer = $this->extractMultibuyerFromTwoCreditCards(
+                $additionalInformation,
+                $index
+            );
 
             $amount = $additionalInformation["cc_{$index}_card_amount"];
             $newPaymentData->amount = $moneyService->floatToCents($amount);
@@ -721,6 +725,54 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             }
             $paymentData[$creditCardDataIndex][] = $newPaymentData;
         }
+    }
+
+    private function extractMultibuyerFromTwoCreditCards(
+        $additionalInformation,
+        $index
+    ) {
+        if ($additionalInformation["cc_buyer_checkbox_{$index}"] !== "1") {
+            return null;
+        }
+
+        $fields = [
+            "cc_buyer_name_{$index}" => "name",
+            "cc_buyer_email_{$index}" => "email",
+            "cc_buyer_document_{$index}" => "document",
+            "cc_buyer_street_title_{$index}" => "street",
+            "cc_buyer_street_number_{$index}" => "number",
+            "cc_buyer_neighborhood_{$index}" => "neighborhood",
+            "cc_buyer_street_complement_{$index}" => "complement",
+            "cc_buyer_city_{$index}" => "city",
+            "cc_buyer_state_{$index}" => "state",
+            "cc_buyer_zipcode_{$index}" => "zipCode"
+        ];
+
+        $multibuyer = new \stdClass();
+
+        foreach ($fields as $key => $attribute) {
+            $value = $additionalInformation[$key];
+
+            if ($attribute === 'document' || $attribute === 'zipCode') {
+                $value = preg_replace(
+                    '/\D/',
+                    '',
+                    $value
+                );
+            }
+
+            $multibuyer->$attribute = $value;
+        }
+
+        /** @todo @fixme since the frontend form doesn't have the phone input yet,
+         *        we are getting it from the order customer itself.
+         */
+        $orderCustomer = $this->getCustomer();
+        $homePhone = $orderCustomer->getPhones()->getHome();
+        $multibuyer->homePhone = $homePhone->getFullNumber();
+        $multibuyer->mobilePhone = $homePhone->getFullNumber();
+
+        return $multibuyer;
     }
 
     private function extractPaymentDataFromMundipaggBilletCreditcard(
