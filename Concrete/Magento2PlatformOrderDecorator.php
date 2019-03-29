@@ -708,7 +708,8 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             $newPaymentData->identifier = $identifier;
             $newPaymentData->brand = $brand;
             $newPaymentData->installments = $additionalInformation["cc_installments_{$index}"];
-            $newPaymentData->customer = $this->extractMultibuyerFromTwoCreditCards(
+            $newPaymentData->customer = $this->extractMultibuyerData(
+                'cc',
                 $additionalInformation,
                 $index
             );
@@ -727,25 +728,28 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         }
     }
 
-    private function extractMultibuyerFromTwoCreditCards(
+    private function extractMultibuyerData(
+        $prefix,
         $additionalInformation,
-        $index
+        $index = null
     ) {
-        if ($additionalInformation["cc_buyer_checkbox_{$index}"] !== "1") {
+        $index = $index !== null ? '_' . $index : null;
+
+        if ($additionalInformation["{$prefix}_buyer_checkbox{$index}"] !== "1") {
             return null;
         }
 
         $fields = [
-            "cc_buyer_name_{$index}" => "name",
-            "cc_buyer_email_{$index}" => "email",
-            "cc_buyer_document_{$index}" => "document",
-            "cc_buyer_street_title_{$index}" => "street",
-            "cc_buyer_street_number_{$index}" => "number",
-            "cc_buyer_neighborhood_{$index}" => "neighborhood",
-            "cc_buyer_street_complement_{$index}" => "complement",
-            "cc_buyer_city_{$index}" => "city",
-            "cc_buyer_state_{$index}" => "state",
-            "cc_buyer_zipcode_{$index}" => "zipCode"
+            "{$prefix}_buyer_name{$index}" => "name",
+            "{$prefix}_buyer_email{$index}" => "email",
+            "{$prefix}_buyer_document{$index}" => "document",
+            "{$prefix}_buyer_street_title{$index}" => "street",
+            "{$prefix}_buyer_street_number{$index}" => "number",
+            "{$prefix}_buyer_neighborhood{$index}" => "neighborhood",
+            "{$prefix}_buyer_street_complement{$index}" => "complement",
+            "{$prefix}_buyer_city{$index}" => "city",
+            "{$prefix}_buyer_state{$index}" => "state",
+            "{$prefix}_buyer_zipcode{$index}" => "zipCode"
         ];
 
         $multibuyer = new \stdClass();
@@ -861,6 +865,12 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         if (!isset($paymentData[$creditCardDataIndex])) {
             $paymentData[$creditCardDataIndex] = [];
         }
+
+        $newPaymentData->customer = $this->extractMultibuyerData(
+            'cc',
+            $additionalInformation
+        );
+
         $paymentData[$creditCardDataIndex][] = $newPaymentData;
 
         //boleto
@@ -873,6 +883,12 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         if (!isset($paymentData[$boletoDataIndex])) {
             $paymentData[$boletoDataIndex] = [];
         }
+
+        $newPaymentData->customer = $this->extractMultibuyerData(
+            'billet',
+            $additionalInformation
+        );
+
         $paymentData[$boletoDataIndex][] = $newPaymentData;
     }
 
