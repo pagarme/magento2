@@ -735,7 +735,10 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
     ) {
         $index = $index !== null ? '_' . $index : null;
 
-        if ($additionalInformation["{$prefix}_buyer_checkbox{$index}"] !== "1") {
+        if (
+            !isset($additionalInformation["{$prefix}_buyer_checkbox{$index}"]) ||
+            $additionalInformation["{$prefix}_buyer_checkbox{$index}"] !== "1"
+        ) {
             return null;
         }
 

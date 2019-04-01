@@ -115,5 +115,3 @@ class InitializeCommand implements CommandInterface
         }
     }
 }
-
-
