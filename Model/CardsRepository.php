@@ -3,6 +3,8 @@
 
 namespace MundiPagg\MundiPagg\Model;
 
+use Magento\Framework\App\ObjectManager;
+use Mundipagg\Core\Payment\Repositories\SavedCardRepository;
 use MundiPagg\MundiPagg\Api\CardsRepositoryInterface;
 use MundiPagg\MundiPagg\Api\Data\CardsSearchResultsInterfaceFactory;
 use MundiPagg\MundiPagg\Api\Data\CardsInterfaceFactory;
@@ -12,6 +14,7 @@ use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Reflection\DataObjectProcessor;
+use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 use MundiPagg\MundiPagg\Model\ResourceModel\Cards as ResourceCards;
 use MundiPagg\MundiPagg\Model\ResourceModel\Cards\CollectionFactory as CardsCollectionFactory;
 use Magento\Store\Model\StoreManagerInterface;
@@ -92,7 +95,31 @@ class CardsRepository implements CardsRepositoryInterface
         $cards = $this->cardsFactory->create();
         $cards->getResource()->load($cards, $cardsId);
         if (!$cards->getId()) {
-            throw new NoSuchEntityException(__('Cards with id "%1" does not exist.', $cardsId));
+            //for compatibility with core saving card feature.
+            $cards = null;
+
+            Magento2CoreSetup::bootstrap();
+
+            $savedCardRepository = new SavedCardRepository();
+
+            $matchIds = [];
+            preg_match('/mp_core_\d*/', $cardsId, $matchIds);
+
+            if (isset($matchIds[0])) {
+                $savedCardId = preg_replace('/\D/', '', $matchIds[0]);
+                $savedCard = $savedCardRepository->find($savedCardId);
+                if ($savedCard !== null) {
+                    $objectManager = ObjectManager::getInstance();
+                    /** @var Cards $card */
+                    $cards = $objectManager->get(Cards::class);
+                    $cards->setCardToken($savedCard->getMundipaggId()->getValue());
+                    $cards->setCardId($savedCard->getOwnerId()->getValue());
+                }
+            }
+
+            if ($cards === null) {
+                throw new NoSuchEntityException(__('Cards with id "%1" does not exist.', $cardsId));
+            }
         }
 
         return $cards;
