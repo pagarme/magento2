@@ -576,41 +576,10 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         }
 
         if ($identifier === null) {
-
             $objectManager = ObjectManager::getInstance();
             $cardRepo = $objectManager->get(CardsRepository::class);
-
             $cardId = $additionalInformation['cc_saved_card'];
-            $card = null;
-            try {
-                $card = $cardRepo->getById($cardId);
-            } catch (NoSuchEntityException $e) {
-            }
-
-            if ($card === null) {
-                Magento2CoreSetup::bootstrap();
-
-                $savedCardRepository = new SavedCardRepository();
-
-                $matchIds = [];
-                preg_match('/mp_core_\d/', $cardId, $matchIds);
-
-                if (isset($matchIds[0])) {
-                    $savedCardId = preg_replace('/\D/', '', $matchIds[0]);
-                    $savedCard = $savedCardRepository->find($savedCardId);
-                    if ($savedCard !== null) {
-                        $objectManager = ObjectManager::getInstance();
-                        /** @var Cards $card */
-                        $card = $objectManager->get(Cards::class);
-                        $card->setCardToken($savedCard->getMundipaggId()->getValue());
-                        $card->setCardId($savedCard->getOwnerId()->getValue());
-                    }
-                }
-            }
-
-            if ($card === null) {
-                throw new NoSuchEntityException(__('Cards with id "%1" does not exist.', $cardId));
-            }
+            $card = $cardRepo->getById($cardId);
 
             $identifier = $card->getCardToken();
             $customerId = $card->getCardId();
@@ -665,10 +634,11 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             }
 
             if ($identifier === null) {
-
                 $objectManager = ObjectManager::getInstance();
                 $cardRepo = $objectManager->get(CardsRepository::class);
-                $card = $cardRepo->getById($additionalInformation["cc_saved_card_{$index}"]);
+                $cardId = $additionalInformation["cc_saved_card_{$index}"];
+                $card = $cardRepo->getById($cardId);
+
                 $identifier = $card->getCardToken();
                 $customerId = $card->getCardId();
             }
@@ -678,9 +648,17 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             $newPaymentData->identifier = $identifier;
             $newPaymentData->brand = $brand;
             $newPaymentData->installments = $additionalInformation["cc_installments_{$index}"];
+            $newPaymentData->customer = $this->extractMultibuyerData(
+                'cc',
+                $additionalInformation,
+                $index
+            );
 
             $amount = $additionalInformation["cc_{$index}_card_amount"];
             $newPaymentData->amount = $moneyService->floatToCents($amount);
+            $newPaymentData->saveOnSuccess =
+                isset($additionalInformation["cc_savecard_{$index}"]) &&
+                $additionalInformation["cc_savecard_{$index}"] === '1';
 
             $creditCardDataIndex = AbstractCreditCardPayment::getBaseCode();
             if (!isset($paymentData[$creditCardDataIndex])) {
@@ -688,6 +666,60 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             }
             $paymentData[$creditCardDataIndex][] = $newPaymentData;
         }
+    }
+
+    private function extractMultibuyerData(
+        $prefix,
+        $additionalInformation,
+        $index = null
+    ) {
+        $index = $index !== null ? '_' . $index : null;
+
+        if (
+            !isset($additionalInformation["{$prefix}_buyer_checkbox{$index}"]) ||
+            $additionalInformation["{$prefix}_buyer_checkbox{$index}"] !== "1"
+        ) {
+            return null;
+        }
+
+        $fields = [
+            "{$prefix}_buyer_name{$index}" => "name",
+            "{$prefix}_buyer_email{$index}" => "email",
+            "{$prefix}_buyer_document{$index}" => "document",
+            "{$prefix}_buyer_street_title{$index}" => "street",
+            "{$prefix}_buyer_street_number{$index}" => "number",
+            "{$prefix}_buyer_neighborhood{$index}" => "neighborhood",
+            "{$prefix}_buyer_street_complement{$index}" => "complement",
+            "{$prefix}_buyer_city{$index}" => "city",
+            "{$prefix}_buyer_state{$index}" => "state",
+            "{$prefix}_buyer_zipcode{$index}" => "zipCode"
+        ];
+
+        $multibuyer = new \stdClass();
+
+        foreach ($fields as $key => $attribute) {
+            $value = $additionalInformation[$key];
+
+            if ($attribute === 'document' || $attribute === 'zipCode') {
+                $value = preg_replace(
+                    '/\D/',
+                    '',
+                    $value
+                );
+            }
+
+            $multibuyer->$attribute = $value;
+        }
+
+        /** @todo @fixme since the frontend form doesn't have the phone input yet,
+         *        we are getting it from the order customer itself.
+         */
+        $orderCustomer = $this->getCustomer();
+        $homePhone = $orderCustomer->getPhones()->getHome();
+        $multibuyer->homePhone = $homePhone->getFullNumber();
+        $multibuyer->mobilePhone = $homePhone->getFullNumber();
+
+        return $multibuyer;
     }
 
     private function extractPaymentDataFromMundipaggBilletCreditcard(
@@ -722,7 +754,9 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         if ($identifier === null) {
             $objectManager = ObjectManager::getInstance();
             $cardRepo = $objectManager->get(CardsRepository::class);
-            $card = $cardRepo->getById($additionalInformation['cc_saved_card']);
+            $cardId = $additionalInformation['cc_saved_card'];
+            $card = $cardRepo->getById($cardId);
+
             $identifier = $card->getCardToken();
             $customerId = $card->getCardId();
         }
@@ -733,6 +767,10 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $newPaymentData->brand = $brand;
         $newPaymentData->installments = $additionalInformation['cc_installments'];
 
+        $newPaymentData->saveOnSuccess =
+            isset($additionalInformation["cc_savecard"]) &&
+            $additionalInformation["cc_savecard"] === '1';
+
         $amount = $additionalInformation["cc_cc_amount"];
         $newPaymentData->amount = $moneyService->floatToCents($amount);
 
@@ -740,6 +778,12 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         if (!isset($paymentData[$creditCardDataIndex])) {
             $paymentData[$creditCardDataIndex] = [];
         }
+
+        $newPaymentData->customer = $this->extractMultibuyerData(
+            'cc',
+            $additionalInformation
+        );
+
         $paymentData[$creditCardDataIndex][] = $newPaymentData;
 
         //boleto
@@ -752,6 +796,12 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         if (!isset($paymentData[$boletoDataIndex])) {
             $paymentData[$boletoDataIndex] = [];
         }
+
+        $newPaymentData->customer = $this->extractMultibuyerData(
+            'billet',
+            $additionalInformation
+        );
+
         $paymentData[$boletoDataIndex][] = $newPaymentData;
     }
 

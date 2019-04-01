@@ -14,6 +14,7 @@ use Mundipagg\Core\Kernel\ValueObjects\CardBrand;
 use Mundipagg\Core\Kernel\ValueObjects\Configuration\CardConfig;
 use MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\Config;
 use MundiPagg\MundiPagg\Gateway\Transaction\CreditCard\Config\ConfigInterface;
+use MundiPagg\MundiPagg\Model\Installments\Config\ConfigInterface as InstallmentConfigInterface;
 use MundiPagg\MundiPagg\Helper\ModuleHelper;
 use MundiPagg\MundiPagg\Model\Enum\CreditCardBrandEnum;
 
@@ -158,6 +159,11 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
 
         $configData->saveCards =
             $storeConfig->getValue(ConfigInterface::PATH_ENABLED_SAVED_CARDS) === '1';
+
+        $configData->multiBuyer =
+            $storeConfig->getValue(
+                InstallmentConfigInterface::PATH_MULTI_BUYER_ACTIVE
+            ) === '1';
 
         $configurationFactory = new ConfigurationFactory();
         $config = $configurationFactory->createFromJsonData(

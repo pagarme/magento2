@@ -12,10 +12,15 @@
 namespace MundiPagg\MundiPagg\Observer;
 
 
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\DataObject;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Payment\Observer\AbstractDataAssignObserver;
 use Magento\Framework\Event\Observer;
 use Magento\Quote\Api\Data\PaymentInterface;
+use Mundipagg\Core\Payment\Repositories\SavedCardRepository;
+use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use MundiPagg\MundiPagg\Model\Cards;
 use MundiPagg\MundiPagg\Model\CardsRepository;
 
 class TwoCreditCardDataAssignObserver extends AbstractDataAssignObserver
@@ -49,7 +54,9 @@ class TwoCreditCardDataAssignObserver extends AbstractDataAssignObserver
         $info->setAdditionalInformation('cc_saved_card_second', '0');
 
         if ($additionalData->getCcSavedCardFirst()) {
-            $card = $this->cardsRepository->getById($additionalData->getCcSavedCardFirst());
+            $cardId = $additionalData->getCcSavedCardFirst();
+            $card = $this->cardsRepository->getById($cardId);
+
             $info->setAdditionalInformation('cc_saved_card_first', $additionalData->getCcSavedCardFirst());
             $info->setAdditionalInformation('cc_first_card_amount', $additionalData->getCcFirstCardAmount());
             $info->setAdditionalInformation('cc_first_card_tax_amount', $additionalData->getCcFirstCardTaxAmount());
@@ -79,7 +86,9 @@ class TwoCreditCardDataAssignObserver extends AbstractDataAssignObserver
         }
 
         if ($additionalData->getCcSavedCardSecond()) {
-            $card = $this->cardsRepository->getById($additionalData->getCcSavedCardSecond());
+            $cardId = $additionalData->getCcSavedCardSecond();
+            $card = $this->cardsRepository->getById($cardId);
+
             $info->setAdditionalInformation('cc_saved_card_second', $additionalData->getCcSavedCardSecond());
             $info->setAdditionalInformation('cc_second_card_amount', $additionalData->getCcSecondCardAmount());
             $info->setAdditionalInformation('cc_second_card_tax_amount', $additionalData->getCcSecondCardTaxAmount());

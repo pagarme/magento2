@@ -265,10 +265,16 @@ define(
 
             getCardsCustomer:function () {
                 return _.map(window.checkoutConfig.payment.mundipagg_two_creditcard.cards, function (value, key) {
+                    var text = 'xxxx.xxxx.xxxx.' + value.last_four_numbers;
+                    if (typeof value.first_six_digits !== "undefined") {
+                        text = (value.first_six_digits / 100).toFixed(2) +
+                            'xx.xxxx.' + value.last_four_numbers;
+                    }
+
                     return {
                         'key': value.id,
                         'value': value.id,
-                        'text': 'xxxx.xxxx.xxxx.' + value.last_four_numbers
+                        text
                     };
                 });
             },

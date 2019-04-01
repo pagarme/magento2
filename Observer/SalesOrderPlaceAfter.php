@@ -133,15 +133,7 @@ class SalesOrderPlaceAfter implements ObserverInterface
      */
     public function createInvoice($order)
     {
-        $detourOn = [
-            'mundipagg_creditcard',
-            'mundipagg_billet'
-        ];
-
-        $payment = $order->getPayment();
-        if (in_array($payment->getMethod(), $detourOn)) {
-            return true;
-        }
+        return true;
 
         $payment
             ->setIsTransactionClosed(true)
