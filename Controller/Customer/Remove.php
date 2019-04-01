@@ -67,52 +67,32 @@ class Remove extends Action
         $idCard = $this->request->getParam('id');
 
         try {
-            try {
-                $result = $this->cardsRepository->getById($idCard);
-                $response =
-                    $this
-                        ->getApi()
-                        ->getCustomers()
-                        ->deleteCard(
-                            $result->getCardId(),
-                            $result->getCardToken()
-                        );
-                $this->logger->logger($response);
+            $card = $this->cardsRepository->getById($idCard);
 
+            $matchIds = [];
+            preg_match('/mp_core_\d*/', $idCard, $matchIds);
+
+            if (!isset($matchIds[0])) {
                 $result = $this->cardsRepository->deleteById($idCard);
-            } catch (NoSuchEntityException $e) {
-                Magento2CoreSetup::bootstrap();
-
-                $savedCardRepository = new SavedCardRepository();
-
-                $matchIds = [];
-                preg_match('/mp_core_\d/', $idCard, $matchIds);
-
-
-                if (!isset($matchIds[0])) {
-                    throw $e;
-                }
-
-                $savedCardId = preg_replace('/\D/', '', $matchIds[0]);
-                $savedCard = $savedCardRepository->find($savedCardId);
-                if ($savedCard === null) {
-                    throw $e;
-                }
-
-                $customerId = $this->customerSession->getCustomer()->getId();
-                $customerRepository = new CustomerRepository();
-                $customer = $customerRepository->findByCode($customerId);
-
-                if ($customer === null) {
-                    throw $e;
-                }
-
-                if (!$customer->getMundipaggId()->equals($savedCard->getOwnerId())) {
-                    throw $e;
-                }
-
-                $savedCardRepository->delete($savedCard);
             }
+            else {
+                $this->deleteCoreCard(
+                    $idCard,
+                    new NoSuchEntityException(
+                        __('Cards with id "%1" does not exist.', $idCard)
+                    )
+                );
+            }
+
+            $response =
+            $this
+                ->getApi()
+                ->getCustomers()
+                ->deleteCard(
+                    $card->getCardId(),
+                    $card->getCardToken()
+                );
+            $this->logger->logger($response);
 
             $this->messageManager->addSuccess(__('You deleted card id: %1', $idCard));
         } catch (\Exception $e) {
@@ -124,6 +104,41 @@ class Remove extends Action
         return;
     }
 
+    private function deleteCoreCard($coreCardId, $baseException)
+    {
+        Magento2CoreSetup::bootstrap();
+
+        $savedCardRepository = new SavedCardRepository();
+
+        $matchIds = [];
+        preg_match('/mp_core_\d*/', $coreCardId, $matchIds);
+
+
+        if (!isset($matchIds[0])) {
+            throw $baseException;
+        }
+
+        $savedCardId = preg_replace('/\D/', '', $matchIds[0]);
+        $savedCard = $savedCardRepository->find($savedCardId);
+        if ($savedCard === null) {
+            throw $baseException;
+        }
+
+        $customerId = $this->customerSession->getCustomer()->getId();
+        $customerRepository = new CustomerRepository();
+        $customer = $customerRepository->findByCode($customerId);
+
+        if ($customer === null) {
+            throw $baseException;
+        }
+
+        if (!$customer->getMundipaggId()->equals($savedCard->getOwnerId())) {
+            throw $baseException;
+        }
+
+        $savedCardRepository->delete($savedCard);
+    }
+
     /**
      * @return \MundiAPILib\MundiAPIClient
      */
@@ -131,5 +146,4 @@ class Remove extends Action
     {
         return new \MundiAPILib\MundiAPIClient($this->config->getSecretKey(), '');
     }
-
 }

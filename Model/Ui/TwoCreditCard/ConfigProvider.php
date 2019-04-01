@@ -14,6 +14,9 @@ namespace MundiPagg\MundiPagg\Model\Ui\TwoCreditCard;
 
 use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Customer\Model\Session;
+use Mundipagg\Core\Payment\Repositories\CustomerRepository;
+use Mundipagg\Core\Payment\Repositories\SavedCardRepository;
+use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 use MundiPagg\MundiPagg\Model\CardsFactory;
 use MundiPagg\MundiPagg\Gateway\Transaction\TwoCreditCard\Config\ConfigInterface;
 
@@ -47,9 +50,8 @@ final class ConfigProvider implements ConfigProviderInterface
         $selectedCard = '';
         $cards = [];
 
+        $is_saved_card = 0;
         if ($this->getCustomerSession()->isLoggedIn()) {
-            $is_saved_card = 0;
-            
             $cards = [];
             $idCustomer = $this->getCustomerSession()->getCustomer()->getId();
 
@@ -66,10 +68,27 @@ final class ConfigProvider implements ConfigProviderInterface
                 $selectedCard = $card->getId();
             }
 
-        }else{
-            $is_saved_card = 0;
+            Magento2CoreSetup::bootstrap();
+
+            $customerRepository = new CustomerRepository();
+            $savedCardRepository = new SavedCardRepository();
+
+            $customer = $customerRepository->findByCode($idCustomer);
+            if ($customer !== null) {
+                $coreCards =
+                    $savedCardRepository->findByOwnerId($customer->getMundipaggId());
+
+                foreach ($coreCards as $coreCard) {
+                    $is_saved_card = 1;
+                    $cards[] = [
+                        'id' => 'mp_core_' . $coreCard->getId(),
+                        'first_six_digits' => $coreCard->getFirstSixDigits(),
+                        'last_four_numbers' => $coreCard->getLastFourDigits(),
+                        'brand' => $coreCard->getBrand()->getName()
+                    ];
+                }
+            }
         }
-        
         return [
             'payment' => [
                 self::CODE =>[
