@@ -114,6 +114,7 @@ class CardsRepository implements CardsRepositoryInterface
                     $cards = $objectManager->get(Cards::class);
                     $cards->setCardToken($savedCard->getMundipaggId()->getValue());
                     $cards->setCardId($savedCard->getOwnerId()->getValue());
+                    $cards->setBrand($savedCard->getBrand()->getName());
                 }
             }
 
