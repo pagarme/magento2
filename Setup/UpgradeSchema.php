@@ -49,7 +49,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
 
         if (version_compare($version, "1.7.2", "<")) {
             $setup = $this->addStoreIdToConfigurationTable($setup);
-            $setup = $this->addCardOwnerToCardsTable($setup);
+            $setup = $this->addCardOwnerNameToCardsTable($setup);
         }
 
         $setup->endSetup();
@@ -231,6 +231,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
 
         return $setup;
     }
+
     protected function addCardOwnerNameToCardsTable($setup)
     {
         $installer = $setup;

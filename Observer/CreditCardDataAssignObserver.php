@@ -58,10 +58,11 @@ class CreditCardDataAssignObserver extends AbstractDataAssignObserver
 
             $info->setAdditionalInformation('cc_saved_card', $additionalData->getCcSavedCard());
             $info->setAdditionalInformation('cc_type', $card->getBrand());
-            $info->setAdditionalInformation('cc_last_4', $card->getLastFourNumbers());
+            $info->setAdditionalInformation('cc_last_4', $card->getLastFourNumbers()->getValue());
             $info->addData([
                 'cc_type' => $card->getBrand(),
-                'cc_last_4' => $card->getLastFourNumbers()
+                'cc_owner' => $card->getCardHolderName(),
+                'cc_last_4' => $card->getLastFourNumbers()->getValue()
             ]);
         }else{
             $info->setAdditionalInformation('cc_saved_card', $additionalData->getCcSavedCard());

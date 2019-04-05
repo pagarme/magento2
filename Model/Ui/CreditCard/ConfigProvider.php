@@ -84,7 +84,8 @@ final class ConfigProvider implements ConfigProviderInterface
                         'id' => 'mp_core_' . $coreCard->getId(),
                         'first_six_digits' => $coreCard->getFirstSixDigits(),
                         'last_four_numbers' => $coreCard->getLastFourDigits(),
-                        'brand' => $coreCard->getBrand()->getName()
+                        'brand' => $coreCard->getBrand()->getName(),
+                        'owner_name' => $coreCard->getOwnerName()
                     ];
                 }
             }
