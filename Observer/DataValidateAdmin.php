@@ -10,6 +10,9 @@ use Magento\Framework\UrlInterface;
 use Magento\Framework\App\ResponseFactory;
 use Magento\Framework\App\Cache\TypeListInterface;
 use Magento\Framework\App\Cache\Frontend\Pool;
+use Mundipagg\Core\Kernel\Abstractions\AbstractModuleCoreSetup;
+use Mundipagg\Core\Kernel\Repositories\ConfigurationRepository;
+use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 use MundiPagg\MundiPagg\Model\MundiPaggConfigProvider;
 
 class DataValidateAdmin implements ObserverInterface
@@ -77,6 +80,29 @@ class DataValidateAdmin implements ObserverInterface
      */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
+        Magento2CoreSetup::bootstrap();
+
+        Magento2CoreSetup::loadModuleConfigurationFromPlatform();
+
+        $moduleConfig = AbstractModuleCoreSetup::getModuleConfiguration();
+
+        $storeId = Magento2CoreSetup::getCurrentStoreId();
+
+        $moduleConfig->setStoreId($storeId);
+
+        $configRepository = new ConfigurationRepository();
+        $outdatedConfiguration = $configRepository->findByStore($storeId);
+
+        if ($outdatedConfiguration !== null) {
+            $moduleConfig->setId($outdatedConfiguration->getId());
+        }
+
+        $configRepository->save($moduleConfig);
+
+        AbstractModuleCoreSetup::setModuleConfiguration($moduleConfig);
+
+
+
         if (!$this->moduleIsEnable()) {
             return $this;
         }

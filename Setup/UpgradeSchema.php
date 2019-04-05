@@ -47,6 +47,11 @@ class UpgradeSchema implements UpgradeSchemaInterface
             $setup = $this->addBoletoInfoToTransactionTable($setup);
         }
 
+        if (version_compare($version, "1.7.2", "<")) {
+            $setup = $this->addStoreIdToConfigurationTable($setup);
+            $setup = $this->addCardOwnerToCardsTable($setup);
+        }
+
         $setup->endSetup();
     }
 
@@ -200,6 +205,47 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 'length' => 500,
                 'nullable' => true,
                 'comment' => 'Boleto url'
+            ]
+        );
+
+        return $setup;
+    }
+
+    protected function addStoreIdToConfigurationTable($setup)
+    {
+        $installer = $setup;
+
+        $connection = $installer->getConnection();
+        $tableName = $installer->getTable('mundipagg_module_core_configuration');
+
+        $connection->addColumn(
+            $tableName,
+            'store_id',
+            [
+                'type' => Table::TYPE_TEXT,
+                'length' => 50,
+                'nullable' => true,
+                'comment' => 'Store id'
+            ]
+        );
+
+        return $setup;
+    }
+    protected function addCardOwnerNameToCardsTable($setup)
+    {
+        $installer = $setup;
+
+        $connection = $installer->getConnection();
+        $tableName = $installer->getTable('mundipagg_module_core_saved_card');
+
+        $connection->addColumn(
+            $tableName,
+            'owner_name',
+            [
+                'type' => Table::TYPE_TEXT,
+                'length' => 50,
+                'nullable' => true,
+                'comment' => 'Card owner name'
             ]
         );
 

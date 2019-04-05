@@ -3,9 +3,12 @@
 namespace MundiPagg\MundiPagg\Concrete;
 
 use Magento\Framework\App\Config as Magento2StoreConfig;
+use Magento\Config\Model\Config as Magento2ModelConfig;
+use Magento\Store\Model\ScopeInterface as ScopeInterface;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\ProductMetadataInterface;
 use Magento\Framework\Filesystem\DirectoryList;
+use Magento\Store\Model\StoreManager as MagentoStoreManager;
 use Mundipagg\Core\Kernel\Abstractions\AbstractModuleCoreSetup;
 use Mundipagg\Core\Kernel\Aggregates\Configuration;
 use Mundipagg\Core\Kernel\Factories\ConfigurationFactory;
@@ -103,36 +106,34 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         return $store->getLocaleCode();
     }
 
-    protected static function loadModuleConfiguration()
+    public static function loadModuleConfigurationFromPlatform()
     {
-        $moneyService = new MoneyService();
+        $storeId = self::getCurrentStoreId();
+        $scope = ScopeInterface::SCOPE_STORE;
+
         $objectManager = ObjectManager::getInstance();
-        /** @var  Config $platformBaseConfig
-         */
         $platformBaseConfig = $objectManager->get(Config::class);
-        /** @var Magento2StoreConfig $storeConfig */
         $storeConfig = $objectManager->get(Magento2StoreConfig::class);
 
+        $section = 'payment/mundipagg_';
+        $creditCardSection = $section . 'creditcard/';
+        $boletoSection = $section . 'billet/';
+        $boletoCartaoSection = $section . 'billet_creditcard/';
+        $TwoCreditCardsSection = $section . 'two_creditcard/';
+
         $configData = new \stdClass;
-        $configData->isAntifraudEnabled = $storeConfig->getValue('payment/mundipagg_creditcard/antifraud_active') === '1';
-        $configData->antifraudMinAmount = $moneyService->floatToCents(
-            $storeConfig->getValue('payment/mundipagg_creditcard/antifraud_min_amount') * 1
-        );
+
+        $configData = self::fillWithCardConfigs($configData, $storeConfig);
+
         $configData->boletoEnabled = $storeConfig->getValue('payment/mundipagg_billet/active') === '1';
-        $configData->installmentsEnabled = $storeConfig->getValue('payment/mundipagg_creditcard/installments_active') === '1';
-        $configData->creditCardEnabled = $storeConfig->getValue('payment/mundipagg_creditcard/active') === '1';
+
         $configData->boletoCreditCardEnabled = $storeConfig->getValue('payment/mundipagg_billet_creditcard/active') === '1';
         $configData->twoCreditCardsEnabled = $storeConfig->getValue('payment/mundipagg_two_creditcard/active') === '1';
+
         $configData->hubInstallId = null;
         $configData->enabled =
             $storeConfig->getValue('mundipagg/general/is_active') === '1' &&
             $storeConfig->getValue('mundipagg_mundipagg/global/active') === '1';
-
-        $cardAction = $storeConfig->getValue('payment/mundipagg_creditcard/payment_action');
-        $configData->cardOperation = Configuration::CARD_OPERATION_AUTH_ONLY;
-        if ($cardAction === 'authorize_capture') {
-            $configData->cardOperation = Configuration::CARD_OPERATION_AUTH_AND_CAPTURE;
-        }
 
         $configData->testMode = $platformBaseConfig->getTestMode();
         $configData->keys = [
@@ -150,15 +151,8 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         $configData->addressAttributes->complement =
             $storeConfig->getValue('payment/mundipagg_customer_address/complement_attribute');
 
-        $configData->cardStatementDescriptor =
-            $storeConfig->getValue('payment/mundipagg_creditcard/soft_description');
         $configData->boletoInstructions =
             $storeConfig->getValue('payment/mundipagg_billet/instructions');
-
-        $configData->cardConfigs = self::getCardConfigs($storeConfig);
-
-        $configData->saveCards =
-            $storeConfig->getValue(ConfigInterface::PATH_ENABLED_SAVED_CARDS) === '1';
 
         $configData->multiBuyer =
             $storeConfig->getValue(
@@ -173,7 +167,61 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         self::$moduleConfig = $config;
     }
 
-    static private function getCardConfigs($storeConfig)
+    static private function fillWithCardConfigs($dataObj, $storeConfig)
+    {
+        $moneyService = new MoneyService();
+
+        $options = [
+            'creditCardEnabled' => 'active',
+            'installmentsEnabled' => 'installments_active',
+            'cardOperation' => 'payment_action',
+            'cardStatementDescriptor' => 'soft_description',
+            'isAntifraudEnabled' => 'antifraud_active',
+            'antifraudMinAmount' => 'antifraud_min_amount'
+        ];
+        $creditCardSection = 'payment/mundipagg_creditcard/';
+
+        $dataObj = self::fillDataObj($storeConfig, $options, $dataObj, $creditCardSection);
+
+        if ($dataObj->cardOperation === 'authorize_capture') {
+            $dataObj->cardOperation = Configuration::CARD_OPERATION_AUTH_AND_CAPTURE;
+        } else {
+            $dataObj->cardOperation = Configuration::CARD_OPERATION_AUTH_ONLY;
+        }
+
+        $dataObj->antifraudMinAmount =
+            $moneyService->floatToCents($dataObj->antifraudMinAmount * 1);
+
+        $dataObj->saveCards =
+            $storeConfig->getValue(ConfigInterface::PATH_ENABLED_SAVED_CARDS) === '1';
+
+        $dataObj->cardConfigs = self::getBrandConfigs($storeConfig);
+
+        return $dataObj;
+    }
+
+    static private function fillDataObj($storeConfig, $options, $dataObj, $section) {
+        $storeId = self::getCurrentStoreId();
+        $scope = ScopeInterface::SCOPE_STORE;
+
+        foreach ($options as $key => $option) {
+            $value = $storeConfig->getValue($section . $option, $scope, $storeId);
+
+            if (!$value) {
+                $value = false;
+            }
+
+            if ($value === '1') {
+                $value = true;
+            }
+
+            $dataObj->$key = $value;
+        }
+
+        return $dataObj;
+    }
+
+    static private function getBrandConfigs($storeConfig)
     {
         $brands = array_merge([''],explode(
             ',',
@@ -241,5 +289,29 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         $priceHelper = $objectManager->create('Magento\Framework\Pricing\Helper\Data');
 
         return $priceHelper->currency($price, true, false);
+    }
+
+    public static function getCurrentStoreId()
+    {
+        $objectManager = ObjectManager::getInstance();
+        $config = $objectManager->get(Magento2ModelConfig::class);
+
+        if (!$config->getStore()) {
+            return 1;
+        }
+
+        return $config->getStore();
+    }
+
+    public static function getDefaultStoreId()
+    {
+        $objectManager = ObjectManager::getInstance();
+        $storeInterfaceName = '\Magento\Store\Model\StoreManagerInterface';
+        $storeManager = $objectManager->get($storeInterfaceName);
+
+        $stores = $storeManager->getStores();
+        $store = current($stores);
+
+        return $store->getStoreId();
     }
 }
