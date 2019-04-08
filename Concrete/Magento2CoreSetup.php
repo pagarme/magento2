@@ -115,15 +115,13 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         $platformBaseConfig = $objectManager->get(Config::class);
         $storeConfig = $objectManager->get(Magento2StoreConfig::class);
 
-        $section = 'payment/mundipagg_';
-        $creditCardSection = $section . 'creditcard/';
-        $boletoSection = $section . 'billet/';
-        $boletoCartaoSection = $section . 'billet_creditcard/';
-        $TwoCreditCardsSection = $section . 'two_creditcard/';
-
         $configData = new \stdClass;
 
         $configData = self::fillWithCardConfigs($configData, $storeConfig);
+
+        /**
+         * @todo Refact billet, billet_creditcard and other sections
+         */
 
         $configData->boletoEnabled = $storeConfig->getValue('payment/mundipagg_billet/active') === '1';
 
@@ -179,9 +177,9 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
             'isAntifraudEnabled' => 'antifraud_active',
             'antifraudMinAmount' => 'antifraud_min_amount'
         ];
-        $creditCardSection = 'payment/mundipagg_creditcard/';
+        $cardSection = 'payment/mundipagg_creditcard/';
 
-        $dataObj = self::fillDataObj($storeConfig, $options, $dataObj, $creditCardSection);
+        $dataObj = self::fillDataObj($storeConfig, $options, $dataObj, $cardSection);
 
         if ($dataObj->cardOperation === 'authorize_capture') {
             $dataObj->cardOperation = Configuration::CARD_OPERATION_AUTH_AND_CAPTURE;
@@ -200,7 +198,8 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         return $dataObj;
     }
 
-    static private function fillDataObj($storeConfig, $options, $dataObj, $section) {
+    static private function fillDataObj($storeConfig, $options, $dataObj, $section)
+    {
         $storeId = self::getCurrentStoreId();
         $scope = ScopeInterface::SCOPE_STORE;
 
