@@ -112,50 +112,18 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         $scope = ScopeInterface::SCOPE_STORE;
 
         $objectManager = ObjectManager::getInstance();
-        $platformBaseConfig = $objectManager->get(Config::class);
         $storeConfig = $objectManager->get(Magento2StoreConfig::class);
-
         $configData = new \stdClass;
 
-        $configData = self::fillWithCardConfigs($configData, $storeConfig);
-
-        /**
-         * @todo Refact billet, billet_creditcard and other sections
-         */
-
-        $configData->boletoEnabled = $storeConfig->getValue('payment/mundipagg_billet/active') === '1';
-
-        $configData->boletoCreditCardEnabled = $storeConfig->getValue('payment/mundipagg_billet_creditcard/active') === '1';
-        $configData->twoCreditCardsEnabled = $storeConfig->getValue('payment/mundipagg_two_creditcard/active') === '1';
-
+        self::fillWithGeneralConfig($configData, $storeConfig);
+        self::fillWithMundipaggKeys($configData, $storeConfig);
+        self::fillWithCardConfig($configData, $storeConfig);
+        self::fillWithBoletoConfig($configData, $storeConfig);
+        self::fillWithBoletoCreditCardConfig($configData, $storeConfig);
+        self::fillWithTwoCreditCardsConfig($configData, $storeConfig);
+        self::fillWithAddressConfig($configData, $storeConfig);
+        self::fillWithMultiBuyerConfig($configData, $storeConfig);
         $configData->hubInstallId = null;
-        $configData->enabled =
-            $storeConfig->getValue('mundipagg/general/is_active') === '1' &&
-            $storeConfig->getValue('mundipagg_mundipagg/global/active') === '1';
-
-        $configData->testMode = $platformBaseConfig->getTestMode();
-        $configData->keys = [
-            Configuration::KEY_PUBLIC => $platformBaseConfig->getPublicKey(),
-            Configuration::KEY_SECRET => $platformBaseConfig->getSecretKey(),
-        ];
-
-        $configData->addressAttributes = new \stdClass();
-        $configData->addressAttributes->street =
-            $storeConfig->getValue('payment/mundipagg_customer_address/street_attribute');
-        $configData->addressAttributes->number =
-            $storeConfig->getValue('payment/mundipagg_customer_address/number_attribute');
-        $configData->addressAttributes->neighborhood =
-            $storeConfig->getValue('payment/mundipagg_customer_address/district_attribute');
-        $configData->addressAttributes->complement =
-            $storeConfig->getValue('payment/mundipagg_customer_address/complement_attribute');
-
-        $configData->boletoInstructions =
-            $storeConfig->getValue('payment/mundipagg_billet/instructions');
-
-        $configData->multiBuyer =
-            $storeConfig->getValue(
-                InstallmentConfigInterface::PATH_MULTI_BUYER_ACTIVE
-            ) === '1';
 
         $configurationFactory = new ConfigurationFactory();
         $config = $configurationFactory->createFromJsonData(
@@ -165,7 +133,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         self::$moduleConfig = $config;
     }
 
-    static private function fillWithCardConfigs($dataObj, $storeConfig)
+    static private function fillWithCardConfig(&$dataObj, $storeConfig)
     {
         $moneyService = new MoneyService();
 
@@ -175,11 +143,12 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
             'cardOperation' => 'payment_action',
             'cardStatementDescriptor' => 'soft_description',
             'isAntifraudEnabled' => 'antifraud_active',
-            'antifraudMinAmount' => 'antifraud_min_amount'
+            'antifraudMinAmount' => 'antifraud_min_amount',
+            'saveCards' => 'enabled_saved_cards'
         ];
-        $cardSection = 'payment/mundipagg_creditcard/';
+        $section = 'payment/mundipagg_creditcard/';
 
-        $dataObj = self::fillDataObj($storeConfig, $options, $dataObj, $cardSection);
+        $dataObj = self::fillDataObj($storeConfig, $options, $dataObj, $section);
 
         if ($dataObj->cardOperation === 'authorize_capture') {
             $dataObj->cardOperation = Configuration::CARD_OPERATION_AUTH_AND_CAPTURE;
@@ -188,14 +157,101 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         }
 
         $dataObj->antifraudMinAmount =
-            $moneyService->floatToCents($dataObj->antifraudMinAmount * 1);
+            $moneyService->floatToCents(
+                $dataObj->antifraudMinAmount * 1
+            );
 
-        $dataObj->saveCards =
-            $storeConfig->getValue(ConfigInterface::PATH_ENABLED_SAVED_CARDS) === '1';
-
-        $dataObj->cardConfigs = self::getBrandConfigs($storeConfig);
+        $dataObj->cardConfigs = self::getBrandConfig($storeConfig);
 
         return $dataObj;
+    }
+
+    static private function fillWithBoletoConfig(&$dataObj, $storeConfig)
+    {
+        $options = [
+            'boletoEnabled' => 'active',
+            'boletoInstructions' => 'instructions'
+        ];
+        $section = 'payment/mundipagg_billet/';
+        $dataObj = self::fillDataObj($storeConfig, $options, $dataObj, $section);
+    }
+
+    static private function fillWithBoletoCreditCardConfig(&$dataObj, $storeConfig)
+    {
+        $options = ['boletoCreditCardEnabled' => 'active'];
+        $section = 'payment/mundipagg_billet_creditcard/';
+        $dataObj = self::fillDataObj($storeConfig, $options, $dataObj, $section);
+    }
+
+    static private function fillWithTwoCreditCardsConfig(&$dataObj, $storeConfig)
+    {
+        $options = ['twoCreditCardsEnabled' => 'active'];
+        $section = 'payment/mundipagg_two_creditcard/';
+        $dataObj = self::fillDataObj($storeConfig, $options, $dataObj, $section);
+    }
+
+    static private function fillWithMultiBuyerConfig(&$dataObj, $storeConfig)
+    {
+        $options = ['multibuyer' => 'active'];
+        $section = 'payment/mundipagg_multibuyer/';
+        $dataObj = self::fillDataObj($storeConfig, $options, $dataObj, $section);
+    }
+
+    static private function fillWithMundipaggKeys(&$dataObj, $storeConfig)
+    {
+        $options = [
+            Configuration::KEY_SECRET => 'secret_key',
+            Configuration::KEY_PUBLIC => 'public_key'
+        ];
+
+        if ($dataObj->testMode) {
+            $options[Configuration::KEY_SECRET] .= '_test';
+            $options[Configuration::KEY_PUBLIC] .= '_test';
+        }
+
+        $section = 'mundipagg_mundipagg/global/';
+
+        $keys = new \stdClass;
+
+        $dataObj->keys =
+            self::fillDataObj(
+                $storeConfig,
+                $options,
+                $keys,
+                $section
+            );
+    }
+
+    static private function fillWithGeneralConfig(&$dataObj, $storeConfig)
+    {
+        $options = [
+            'enabled' => 'active',
+            'testMode' => 'test_mode'
+        ];
+
+        $section = 'mundipagg_mundipagg/global/';
+
+        $dataObj = self::fillDataObj($storeConfig, $options, $dataObj, $section);
+    }
+
+    static private function fillWithAddressConfig(&$dataObj, $storeConfig)
+    {
+        $options = [
+            'street' => 'street_attribute',
+            'number' => 'number_attribute',
+            'neighborhood' => 'district_attribute',
+            'complement' => 'complement_attribute',
+        ];
+        $section = 'payment/mundipagg_customer_address/';
+
+        $addressAttributes = new \stdClass();
+        $dataObj->addressAttributes =
+            self::fillDataObj(
+                $storeConfig,
+                $options,
+                $addressAttributes,
+                $section
+            );
     }
 
     static private function fillDataObj($storeConfig, $options, $dataObj, $section)
@@ -220,7 +276,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         return $dataObj;
     }
 
-    static private function getBrandConfigs($storeConfig)
+    static private function getBrandConfig($storeConfig)
     {
         $brands = array_merge([''],explode(
             ',',
