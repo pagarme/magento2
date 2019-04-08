@@ -80,8 +80,20 @@ class DataValidateAdmin implements ObserverInterface
      */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
-        Magento2CoreSetup::bootstrap();
+        $this->updateModuleConfiguration();
 
+        if (!$this->moduleIsEnable()) {
+            return $this;
+        }
+
+        $this->validateConfigMagento();
+        
+        return $this;
+    }
+
+    private function updateModuleConfiguration()
+    {
+        Magento2CoreSetup::bootstrap();
         Magento2CoreSetup::loadModuleConfigurationFromPlatform();
 
         $moduleConfig = AbstractModuleCoreSetup::getModuleConfiguration();
@@ -100,16 +112,6 @@ class DataValidateAdmin implements ObserverInterface
         $configRepository->save($moduleConfig);
 
         AbstractModuleCoreSetup::setModuleConfiguration($moduleConfig);
-
-
-
-        if (!$this->moduleIsEnable()) {
-            return $this;
-        }
-
-        $this->validateConfigMagento();
-        
-        return $this;
     }
 
     public function moduleIsEnable()
