@@ -91,19 +91,24 @@ class DataValidateAdmin implements ObserverInterface
         return $this;
     }
 
-    private function updateModuleConfiguration()
+    protected function initializeModule()
     {
         Magento2CoreSetup::bootstrap();
         Magento2CoreSetup::loadModuleConfigurationFromPlatform();
+    }
+
+    private function updateModuleConfiguration()
+    {
+        $this->initializeModule();
 
         $moduleConfig = AbstractModuleCoreSetup::getModuleConfiguration();
-
-        $storeId = Magento2CoreSetup::getCurrentStoreId();
-
-        $moduleConfig->setStoreId($storeId);
-
         $configRepository = new ConfigurationRepository();
-        $outdatedConfiguration = $configRepository->findByStore($storeId);
+
+        $outdatedConfiguration =
+            $this->getOutDatedConfiguration(
+                $moduleConfig,
+                $configRepository
+            );
 
         if ($outdatedConfiguration !== null) {
             $moduleConfig->setId($outdatedConfiguration->getId());
@@ -113,6 +118,7 @@ class DataValidateAdmin implements ObserverInterface
 
         AbstractModuleCoreSetup::setModuleConfiguration($moduleConfig);
     }
+
 
     public function moduleIsEnable()
     {
@@ -166,5 +172,13 @@ class DataValidateAdmin implements ObserverInterface
         }
 
         return $this;
+    }
+
+    protected function getOutDatedConfiguration($moduleConfig, $configRepository)
+    {
+        $storeId = Magento2CoreSetup::getCurrentStoreId();
+        $moduleConfig->setStoreId($storeId);
+
+        return $configRepository->findByStore($storeId);
     }
 }
