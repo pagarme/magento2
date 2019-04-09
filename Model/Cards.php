@@ -55,6 +55,26 @@ class Cards extends AbstractModel implements CardsInterface
     }
 
     /**
+     * Set card_owner
+     * @param string $customerName
+     * @return \MundiPagg\MundiPagg\Api\Data\CardsInterface
+     */
+    public function getCardHolderName()
+    {
+        return $this->getData(self::CARD_HOLDER_NAME);
+    }
+
+    /**
+     * Set card_holder_name
+     * @param string $cardToken
+     * @return \MundiPagg\MundiPagg\Api\Data\CardsInterface
+     */
+    public function setCardHolderName($cardHolderName)
+    {
+        return $this->setData(self::CARD_HOLDER_NAME, $cardHolderName);
+    }
+
+    /**
      * Get card_token
      * @return string|null
      */
@@ -109,6 +129,25 @@ class Cards extends AbstractModel implements CardsInterface
     public function setLastFourNumbers($lastFourNumbers)
     {
         return $this->setData(self::LAST_FOUR_NUMBERS, $lastFourNumbers);
+    }
+
+    /**
+     * Get first_six_numbers
+     * @return string|null
+     */
+    public function getFirstSixNumbers()
+    {
+        return $this->getData(self::FIRST_SIX_NUMBERS);
+    }
+
+    /**
+     * Set first_six_numbers
+     * @param string $lastFourNumbers
+     * @return \MundiPagg\MundiPagg\Api\Data\CardsInterface
+     */
+    public function setFirstSixNumbers($firstSixNumbers)
+    {
+        return $this->setData(self::FIRST_SIX_NUMBERS, $firstSixNumbers);
     }
 
     /**

@@ -551,7 +551,11 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
     }
 
     private function extractPaymentDataFromMundipaggCreditCard
-    ($additionalInformation, &$paymentData, $payment)
+    (
+        $additionalInformation,
+        &$paymentData,
+        $payment
+    )
     {
         $moneyService = new MoneyService();
         $identifier = null;
