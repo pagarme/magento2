@@ -2,6 +2,7 @@
 
 namespace MundiPagg\MundiPagg\Observer;
 
+use Mundipagg\Core\Kernel\Repositories\OrderRepository;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Event\Observer as EventObserver;
@@ -33,20 +34,22 @@ class OrderCancelAfter implements ObserverInterface
 
             $platformOrder = $this->getPlatformOrderFromObserver($observer);
             if ($platformOrder === null) {
-                return;
+                return false;
             }
 
             $transaction = $this->getTransaction($platformOrder);
-            if ($transaction !== false) {
-                $this->cancelOrderByTransactionInfo(
-                    $transaction,
-                    $platformOrder->getIncrementId()
-                );
+            $chargeInfo = $this->getChargeInfo($transaction);
+
+            if ($chargeInfo === false) {
+                $this->cancelOrderByIncrementId($platformOrder->getIncrementId());
                 return;
             }
 
-            $incrementId = $platformOrder->getIncrementId();
-            $this->cancelOrderByIncrementId($incrementId);
+            $this->cancelOrderByTransactionInfo(
+                $transaction,
+                $platformOrder->getIncrementId()
+            );
+
         } catch(AbstractMundipaggCoreException $e) {
             throw new M2WebApiException(
                 new Phrase($e->getMessage()),
@@ -68,39 +71,18 @@ class OrderCancelAfter implements ObserverInterface
     {
         $orderService = new OrderService();
 
-        $additionalInfo =  $transaction->getAdditionalInformation();
-        if (!empty($additionalInfo['mundipagg_payment_module_api_response'])) {
-            $orderCreationResponse =
-                $additionalInfo['mundipagg_payment_module_api_response'];
-        }
+        $chargeInfo = $this->getChargeInfo($transaction);
 
-        if (!empty($orderCreationResponse)) {
-            $orderCreationResponse = json_decode(
-                $orderCreationResponse,
-                true
-            );
+        if ($chargeInfo !== false) {
 
             $orderFactory = new OrderFactory();
-            $order = $orderFactory->createFromPostData($orderCreationResponse);
+            $order = $orderFactory->createFromPostData($chargeInfo);
 
             $orderService->cancelAtMundipagg($order);
             return;
         }
 
-        $i18n = new LocalizationService();
-        $message1 =
-            "Can't cancel current order. Please cancel it by Mundipagg panel";
-        $message2 = "Charge not found";
-
-        $ExceptionMessage =
-            $i18n->getDashboard($message1) . ' | ' .
-            $i18n->getDashboard($message2);
-
-        $e = new \Exception($ExceptionMessage);
-        $log = new OrderLogService();
-        $log->orderException($e, $orderId);
-
-        throw $e;
+        $this->throwErrorMessage($orderId);
     }
 
     private function cancelOrderByIncrementId($incrementId)
@@ -143,5 +125,36 @@ class OrderCancelAfter implements ObserverInterface
             $paymentId,
             $orderId
         );
+    }
+
+    private function getChargeInfo($transaction)
+    {
+        if ($transaction === false) {
+            return false;
+        }
+
+        $chargeInfo =  $transaction->getAdditionalInformation();
+
+        if (!empty($chargeInfo['mundipagg_payment_module_api_response'])) {
+            $chargeInfo =
+                $chargeInfo['mundipagg_payment_module_api_response'];
+            return json_decode($chargeInfo,true);
+        }
+
+        return false;
+    }
+
+    private function throwErrorMessage($orderId)
+    {
+        $i18n = new LocalizationService();
+        $message = "Can't cancel current order. Please cancel it by Mundipagg panel";
+
+        $ExceptionMessage = $i18n->getDashboard($message1);
+
+        $e = new \Exception($ExceptionMessage);
+        $log = new OrderLogService();
+        $log->orderException($e, $orderId);
+
+        throw $e;
     }
 }
