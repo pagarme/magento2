@@ -149,12 +149,12 @@ class OrderCancelAfter implements ObserverInterface
         $i18n = new LocalizationService();
         $message = "Can't cancel current order. Please cancel it by Mundipagg panel";
 
-        $ExceptionMessage = $i18n->getDashboard($message1);
+        $ExceptionMessage = $i18n->getDashboard($message);
 
-        $e = new \Exception($ExceptionMessage);
+        $exception = new \Exception($ExceptionMessage);
         $log = new OrderLogService();
         $log->orderException($e, $orderId);
 
-        throw $e;
+        throw $exception;
     }
 }
