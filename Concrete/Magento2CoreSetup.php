@@ -142,7 +142,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
             'installmentsEnabled' => 'installments_active',
             'cardOperation' => 'payment_action',
             'cardStatementDescriptor' => 'soft_description',
-            'isAntifraudEnabled' => 'antifraud_active',
+            'antifraudEnabled' => 'antifraud_active',
             'antifraudMinAmount' => 'antifraud_min_amount',
             'saveCards' => 'enabled_saved_cards'
         ];
