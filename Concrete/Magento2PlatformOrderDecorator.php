@@ -493,6 +493,11 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             $item->setAmount(
                 $moneyService->floatToCents($price)
             );
+
+            if ($quoteItem->getId()) {
+                $item->setCode($quoteItem->getItemId());
+            }
+
             $item->setQuantity($quoteItem->getQty());
             $item->setDescription(
                 $quoteItem->getName() . ' : ' .
