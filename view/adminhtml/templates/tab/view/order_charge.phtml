@@ -1,0 +1,97 @@
+<?php
+/**
+ * @var $block \Mundipagg\Mundipagg\Block\Adminhtml\Order\Charge\Tab\View
+ */
+
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance(); // Instance of Object Manager
+$priceHelper = $objectManager->create('Magento\Framework\Pricing\Helper\Data'); // Instance of Pricing Helper
+
+?>
+
+<div class="fieldset-wrapper">
+    <div class="fieldset-wrapper-title">
+        <span class="title"><?php echo __('Charges') ?></span>
+    </div>
+    <table class="admin__table-secondary">
+        <thead>
+            <th><?php echo __('Charge ID') ?></th>
+            <th><?php echo __('Amount') ?></th>
+            <th><?php echo __('Paid Amount') ?></th>
+            <th><?php echo __('Canceled Amount') ?></th>
+            <th><?php echo __('Refunded Amount') ?></th>
+            <th><?php echo __('Status') ?></th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </thead>
+        <tbody>
+            <?php foreach ($block->getCharges() as $charge) :?>
+                <tr>
+                    <td><?php echo $charge->getMundipaggId()->getValue();?></td>
+                    <td><?php echo $priceHelper->currency($charge->getAmount() / 100, true, false); ?></td>
+                    <td><?php echo $priceHelper->currency($charge->getPaidAmount() / 100, true, false);?></td>
+                    <td><?php echo $priceHelper->currency($charge->getCanceledAmount() / 100, true, false);?></td>
+                    <td><?php echo $priceHelper->currency($charge->getRefundedAmount() / 100, true, false);?></td>
+                    <td><?php echo $charge->getStatus()->getStatus();?></td>
+                    <td class="amount"><input class="amount-value" type="number" value="<?php echo $charge->getAmount();?>" /></td>
+                    <td>
+                        <button class="action charge-button"
+                                action="capture"
+                                order="<?php echo $charge->getOrderId()->getValue();?>"
+                                charge="<?php echo $charge->getMundipaggId()->getValue();?>"
+                                message="<?php echo __('Do you would capture this charge?') ?>"
+                        >Capture</button>
+                    </td>
+                    <td>
+                        <button class="action charge-button"
+                                action="cancel"
+                                charge="<?php echo $charge->getMundipaggId()->getValue();?>"
+                                message="<?php echo __('Do you would cancel this charge?') ?>"
+                        >Cancel</button>
+                    </td>
+                </tr>
+            <?php endforeach;?>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    
+    window.onload = function() {
+        jQuery(".charge-button").click(function(){
+            var urlCancel = '<?php echo $block->getChargeCancelUrl();?>';
+            var urlCaprute = '<?php echo $block->getChargeCaptureUrl();?>';
+            var action = this.getAttribute('action');
+            var charge = this.getAttribute('charge');
+            var amount = jQuery(this).parent().parent().children("td.amount").children().val();
+            var msg = this.getAttribute('message');
+            if(confirm(msg)) {
+                var serviceUrl;
+
+                if (action == 'cancel') {
+                    serviceUrl = urlCancel
+                } else {
+                    serviceUrl = urlCaprute
+                }
+                serviceUrl += "amount/" + amount + "/chargeId/" + charge;
+
+                return jQuery.ajax({
+                    method: "GET",
+                    beforeSend: function(request) {
+                        request.setRequestHeader("Content-type", 'application/json');
+                    },
+                    url: serviceUrl,
+                    showLoader: true,
+                    cache: false,
+                    // data: JSON.stringify(data),
+                    success: function(data) {
+                        if (data.code === 200) {
+                            document.location.reload(true);
+                        }
+                        alert(data.message);
+                    }
+                });
+            }
+        });
+    };
+</script>
