@@ -33,7 +33,7 @@ $priceHelper = $objectManager->create('Magento\Framework\Pricing\Helper\Data'); 
                     <td><?php echo $priceHelper->currency($charge->getCanceledAmount() / 100, true, false);?></td>
                     <td><?php echo $priceHelper->currency($charge->getRefundedAmount() / 100, true, false);?></td>
                     <td><?php echo $charge->getStatus()->getStatus();?></td>
-                    <td class="amount"><input class="amount-value" type="number" value="<?php echo $charge->getAmount();?>" /></td>
+                    <td class="amount"><input class="amount-value" value="<?php echo $charge->getAmount();?>" /></td>
                     <td>
                         <button class="action charge-button"
                                 action="capture"
@@ -45,6 +45,7 @@ $priceHelper = $objectManager->create('Magento\Framework\Pricing\Helper\Data'); 
                     <td>
                         <button class="action charge-button"
                                 action="cancel"
+                                order="<?php echo $charge->getOrderId()->getValue();?>"
                                 charge="<?php echo $charge->getMundipaggId()->getValue();?>"
                                 message="<?php echo __('Do you would cancel this charge?') ?>"
                         >Cancel</button>
@@ -63,6 +64,7 @@ $priceHelper = $objectManager->create('Magento\Framework\Pricing\Helper\Data'); 
             var urlCaprute = '<?php echo $block->getChargeCaptureUrl();?>';
             var action = this.getAttribute('action');
             var charge = this.getAttribute('charge');
+            var order = this.getAttribute('order');
             var amount = jQuery(this).parent().parent().children("td.amount").children().val();
             var msg = this.getAttribute('message');
             if(confirm(msg)) {
@@ -73,7 +75,7 @@ $priceHelper = $objectManager->create('Magento\Framework\Pricing\Helper\Data'); 
                 } else {
                     serviceUrl = urlCaprute
                 }
-                serviceUrl += "amount/" + amount + "/chargeId/" + charge;
+                serviceUrl += "amount/" + amount + "/chargeId/" + charge + "/orderId/" + order;
 
                 return jQuery.ajax({
                     method: "GET",
@@ -93,5 +95,15 @@ $priceHelper = $objectManager->create('Magento\Framework\Pricing\Helper\Data'); 
                 });
             }
         });
+        jQuery('.amount-value').keyup(function(){
+            var v = jQuery(this).val();
+            v=v.replace(/\D/g,"");//Remove tudo o que não é dígito
+            v=v.replace(/(\d)(\d{8})$/,"$1.$2");//coloca o ponto dos milhões
+            v=v.replace(/(\d)(\d{5})$/,"$1.$2");//coloca o ponto dos milhares
+
+            v=v.replace(/(\d)(\d{2})$/,"$1,$2");//coloca a virgula antes dos 2 últimos dígitos
+            return jQuery(this).val(v);
+        });
+        jQuery('.amount-value').keyup();
     };
 </script>

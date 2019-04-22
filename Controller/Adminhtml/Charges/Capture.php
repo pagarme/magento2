@@ -2,11 +2,8 @@
 
 namespace MundiPagg\MundiPagg\Controller\Adminhtml\Charges;
 
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
-
-use Magento\Framework\App\Request\Http;
-use Magento\Backend\App\Action\Context;
-use Magento\Framework\Controller\Result\JsonFactory;
+use Mundipagg\Core\Kernel\Factories\TransactionFactory;
+use Mundipagg\Core\Kernel\ValueObjects\Id\OrderId;
 
 use Mundipagg\Core\Kernel\Repositories\ChargeRepository;
 use Mundipagg\Core\Kernel\Services\APIService;
@@ -25,10 +22,12 @@ use Mundipagg\Core\Webhook\Services\ChargeHandlerService;
 use Mundipagg\Core\Kernel\ValueObjects\ChargeStatus;
 use Mundipagg\Core\Kernel\ValueObjects\OrderStatus;
 use Mundipagg\Core\Kernel\ValueObjects\TransactionType;
+use Mundipagg\Core\Kernel\Services\LogService;
+use MundiAPILib\Models\GetChargeResponse;
+use Mundipagg\Core\Payment\Services\ResponseHandlers\OrderHandler;
 
 class Capture extends ChargeAction
 {
-
     /**
      * Capture action
      *
@@ -36,59 +35,86 @@ class Capture extends ChargeAction
      */
     public function execute()
     {
+        parent::execute();
+        $logService = new LogService(
+            'Charge.Capture',
+            true
+        );
 
         $orderRepository = new OrderRepository();
         $chargeRepository = new ChargeRepository();
         $orderService = new OrderService();
+        $moneyService = new MoneyService();
+        $chargeHandlerService = new ChargeHandlerService();
 
         $params = $this->request->getParams();
-        $code = 200;
-        $message = "";
 
         if (!isset($params['amount']) || !isset($params['chargeId'])) {
-            return $this->handlerFail("Amount or ChardId not found");
+            $logService->info("Amount or Charge not found");
+            return $this->handlerFail("Amount or Charge not found");
         }
 
-        $amount = $params['amount'];
+        $amount = str_replace([',', '.'], "", $params['amount']);
         $chargeId = $params['chargeId'];
         $orderId = $params['orderId'];
 
-        $order = $orderRepository->findByMundipaggId($orderId);
+        $order = $orderRepository->findByMundipaggId(
+            new OrderId($orderId)
+        );
+
+        $platformOrder = $order->getPlatformOrder();
 
         $charge = $chargeRepository->findByMundipaggId(
             new ChargeId($chargeId)
         );
 
-        $paidAmount = $transaction->getPaidAmount();
-        if (!$charge->getStatus()->equals(ChargeStatus::paid())) {
-            $charge->pay($amount);
-        }
-
-        if ($charge->getPaidAmount() == 0) {
-            $charge->setPaidAmount($paidAmount);
-        }
-
         $apiService = new APIService();
+        $logService->info("Capturing charge on Mundipagg - " . $chargeId);
         $resultApi = $apiService->captureCharge($charge, $amount);
 
-        if (($resultApi instanceof \MundiAPILib\Models\GetChargeResponse) === false) {
-            $code = 400;
-            $message = $resultApi;
-        }
+        if ($resultApi instanceof GetChargeResponse) {
 
-        if ($code === 200) {
+            if (!$charge->getStatus()->equals(ChargeStatus::paid())) {
+                $logService->info("Pay charge - " . $chargeId);
+                $charge->pay($amount);
+            }
 
+            if ($charge->getPaidAmount() == 0) {
+                $charge->setPaidAmount($amount);
+            }
+
+            $logService->info("Update Charge on Order");
             $order->updateCharge($charge);
-
             $orderRepository->save($order);
+
+            $logService->info("Adding history on Order");
+            $history = $chargeHandlerService->prepareHistoryComment($charge);
+            $platformOrder->addHistoryComment($history);
+
+
+            $logService->info("Synchronizing with platform Order");
             $orderService->syncPlatformWith($order);
 
-            $chargeRepository->save($charge);
-            $message = "Charge captured with success";
+            $platformOrderGrandTotal = $moneyService->floatToCents(
+                $platformOrder->getGrandTotal()
+            );
+            $platformOrderTotalPaid = $moneyService->floatToCents(
+                $platformOrder->getTotalPaid()
+            );
+
+            if ($platformOrderGrandTotal === $platformOrderTotalPaid) {
+                $logService->info("Change status");
+                $order->setStatus(OrderStatus::paid());
+                $orderHandlerService = new OrderHandler();
+                $cantCreateReason = $orderHandlerService->handle($order);
+            }
+
+            $message = $chargeHandlerService->prepareReturnMessage($charge);
 
             return $this->responseSuccess($message);
         }
-        return $this->responseFail($message);
 
+        $logService->info($resultApi);
+        return $this->responseFail($resultApi);
     }
 }

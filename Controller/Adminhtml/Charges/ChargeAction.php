@@ -2,6 +2,12 @@
 
 namespace MundiPagg\MundiPagg\Controller\Adminhtml\Charges;
 
+use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+
+use Magento\Framework\App\Request\Http;
+use Magento\Backend\App\Action\Context;
+use Magento\Framework\Controller\Result\JsonFactory;
+
 
 class ChargeAction extends \Magento\Backend\App\Action
 {
@@ -23,6 +29,16 @@ class ChargeAction extends \Magento\Backend\App\Action
         $this->request = $request;
         $this->resultJsonFactory = $resultJsonFactory;
         parent::__construct($context);
+    }
+
+    /**
+     * Capture action
+     *
+     * @return \Magento\Framework\Controller\ResultInterface
+     */
+    public function execute()
+    {
+
     }
 
     public function responseSuccess($message)

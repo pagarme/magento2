@@ -49,6 +49,10 @@ class View  extends \Magento\Backend\Block\Template implements \Magento\Backend\
         $platformOrderID = $this->getOrderIncrementId();
         $mundipaggOrder = (new OrderRepository)->findByPlatformId($platformOrderID);
 
+        if ($mundipaggOrder === null) {
+            return [];
+        }
+
         $charges = (new ChargeRepository)->findByOrderId(
             new OrderId($mundipaggOrder->getMundipaggId()->getValue())
         );
