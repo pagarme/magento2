@@ -21,6 +21,7 @@ use Mundipagg\Core\Webhook\Services\ChargeHandlerService;
 
 use Mundipagg\Core\Kernel\ValueObjects\ChargeStatus;
 use Mundipagg\Core\Kernel\ValueObjects\OrderStatus;
+use Mundipagg\Core\Kernel\ValueObjects\OrderState;
 use Mundipagg\Core\Kernel\ValueObjects\TransactionType;
 use Mundipagg\Core\Kernel\Services\LogService;
 use MundiAPILib\Models\GetChargeResponse;
@@ -46,6 +47,7 @@ class Cancel extends ChargeAction
         $orderService = new OrderService();
         $moneyService = new MoneyService();
         $chargeHandlerService = new ChargeHandlerService();
+        $i18n = new LocalizationService();
 
         $params = $this->request->getParams();
 
@@ -70,7 +72,7 @@ class Cancel extends ChargeAction
 
         $apiService = new APIService();
         $logService->info("Cancel charge on Mundipagg - " . $chargeId);
-        $resultApi = $apiService->cancelCharge($charge);
+        $resultApi = $apiService->cancelCharge($charge, $amount);
 
         if ($resultApi === null) {
 
@@ -82,10 +84,35 @@ class Cancel extends ChargeAction
             $order->getPlatformOrder()->addHistoryComment($history);
             $orderService->syncPlatformWith($order);
 
-            $logService->info("Change Order status");
-            $order->setStatus(OrderStatus::canceled());
-            $orderHandlerService = new OrderHandler();
-            $cantCreateReason = $orderHandlerService->handle($order);
+            $platformOrderGrandTotal = $moneyService->floatToCents(
+                $platformOrder->getGrandTotal()
+            );
+            $platformOrderTotalCanceled = $moneyService->floatToCents(
+                $platformOrder->getTotalCanceled()
+            );
+
+            $platformOrderTotalRefunded = $moneyService->floatToCents(
+                $platformOrder->getTotalRefunded()
+            );
+
+            if (
+                $platformOrderGrandTotal === $platformOrderTotalCanceled ||
+                $platformOrderGrandTotal === $platformOrderTotalRefunded
+            ) {
+                $logService->info("Change Order status");
+
+                $order->setStatus(OrderStatus::canceled());
+                $order->getPlatformOrder()->setState(OrderState::canceled());
+                $order->getPlatformOrder()->save();
+
+                $order->getPlatformOrder()->addHistoryComment(
+                    $i18n->getDashboard('Order canceled.')
+                );
+
+                $orderRepository->save($order);
+
+                $orderService->syncPlatformWith($order);
+            }
 
             $message = "Charge canceled with success";
             return $this->responseSuccess($message);

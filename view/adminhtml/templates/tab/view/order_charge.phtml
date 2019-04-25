@@ -34,6 +34,7 @@ $priceHelper = $objectManager->create('Magento\Framework\Pricing\Helper\Data'); 
                     <td><?php echo $priceHelper->currency($charge->getRefundedAmount() / 100, true, false);?></td>
                     <td><?php echo $charge->getStatus()->getStatus();?></td>
                     <td class="amount"><input class="amount-value" value="<?php echo $charge->getAmount();?>" /></td>
+                    <?php if ($charge->getCanceledAmount() <= 0) :?>
                     <td>
                         <button class="action charge-button"
                                 action="capture"
@@ -42,6 +43,7 @@ $priceHelper = $objectManager->create('Magento\Framework\Pricing\Helper\Data'); 
                                 message="<?php echo __('Do you would capture this charge?') ?>"
                         >Capture</button>
                     </td>
+                    <?php endif;?>
                     <td>
                         <button class="action charge-button"
                                 action="cancel"
@@ -57,7 +59,7 @@ $priceHelper = $objectManager->create('Magento\Framework\Pricing\Helper\Data'); 
 </div>
 
 <script>
-    
+
     window.onload = function() {
         jQuery(".charge-button").click(function(){
             var urlCancel = '<?php echo $block->getChargeCancelUrl();?>';

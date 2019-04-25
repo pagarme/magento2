@@ -888,4 +888,9 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $shipping->setAddress($address);
         return $shipping;
     }
+
+    public function getTotalCanceled()
+    {
+        return $this->platformOrder->getTotalCanceled();
+    }
 }

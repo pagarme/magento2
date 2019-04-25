@@ -46,6 +46,7 @@ class Capture extends ChargeAction
         $orderService = new OrderService();
         $moneyService = new MoneyService();
         $chargeHandlerService = new ChargeHandlerService();
+        $i18n = new LocalizationService();
 
         $params = $this->request->getParams();
 
@@ -95,19 +96,10 @@ class Capture extends ChargeAction
             $logService->info("Synchronizing with platform Order");
             $orderService->syncPlatformWith($order);
 
-            $platformOrderGrandTotal = $moneyService->floatToCents(
-                $platformOrder->getGrandTotal()
-            );
-            $platformOrderTotalPaid = $moneyService->floatToCents(
-                $platformOrder->getTotalPaid()
-            );
-
-            if ($platformOrderGrandTotal === $platformOrderTotalPaid) {
-                $logService->info("Change status");
-                $order->setStatus(OrderStatus::paid());
-                $orderHandlerService = new OrderHandler();
-                $cantCreateReason = $orderHandlerService->handle($order);
-            }
+            $logService->info("Change Order status");
+            $order->setStatus(OrderStatus::paid());
+            $orderHandlerService = new OrderHandler();
+            $cantCreateReason = $orderHandlerService->handle($order);
 
             $message = $chargeHandlerService->prepareReturnMessage($charge);
 
