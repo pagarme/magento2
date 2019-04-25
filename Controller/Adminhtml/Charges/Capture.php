@@ -19,20 +19,17 @@ class Capture extends ChargeAction
         $params = $this->request->getParams();
 
         if (!isset($params['amount']) || !isset($params['chargeId'])) {
-            $logService->info("Amount or Charge not found");
-            return $this->handlerFail("Amount or Charge not found");
+            $error = "Amount or ChargeID not found";
+            $logService->info($error);
+            return $this->responseFail($error);
         }
 
         $amount = str_replace([',', '.'], "", $params['amount']);
         $chargeId = $params['chargeId'];
 
-        $chargeRepository = new ChargeRepository();
-        $charge = $chargeRepository->findByMundipaggId(
-            new ChargeId($chargeId)
-        );
+        $chargeService = new ChargeService();
+        $response = $chargeService->captureById($chargeId, $amount);
 
-        $chargeService = new ChargeService($charge);
-        $response = $chargeService->capture($amount);
         if ($response->isSuccess()) {
             return $this->responseSuccess($response->getMessage());
         }
