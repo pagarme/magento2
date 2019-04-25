@@ -151,10 +151,10 @@ class OrderCancelAfter implements ObserverInterface
 
         $ExceptionMessage = $i18n->getDashboard($message);
 
-        $exception = new \Exception($ExceptionMessage);
+        $e = new \Exception($ExceptionMessage);
         $log = new OrderLogService();
         $log->orderException($e, $orderId);
 
-        throw $exception;
+        throw $e;
     }
 }

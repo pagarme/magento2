@@ -326,4 +326,5 @@
 "My Cards MundiPagg","Meus Cartões MundiPagg"
 "Your transaction was processed with failure","Sua transação foi processada com falha"
 " first card"," primeiro cartão"
-" secound card"," segundo cartão"
+" second card"," segundo cartão"
+"Invalid address. Please fill the street lines and try again.", "Endereço inválido. Preencha rua, número e bairro e tente novamente."

@@ -1,3 +1,4 @@
+[![CircleCI](https://circleci.com/gh/mundipagg/magento2/tree/master.svg?style=shield)](https://circleci.com/gh/mundipagg/magento2/tree/master)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/2213fc1ce8f14e7bb0861f232a310233)](https://www.codacy.com/app/mundipagg/magento2?utm_source=github.com&utm_medium=referral&utm_content=mundipagg/magento2&utm_campaign=badger)
 [![Maintainability](https://api.codeclimate.com/v1/badges/e279af4b87b47e56723a/maintainability)](https://codeclimate.com/github/mundipagg/magento2/maintainability)
 [![Latest Stable Version](https://poser.pugx.org/mundipagg/mundipagg-magento2-module/v/stable)](https://packagist.org/packages/mundipagg/mundipagg-magento2-module)
