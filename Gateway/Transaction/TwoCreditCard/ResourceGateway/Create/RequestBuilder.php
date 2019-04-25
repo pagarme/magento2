@@ -522,7 +522,7 @@ class RequestBuilder implements BuilderInterface
             if(($response->charges[1]->status == 'failed')){
                 if(!empty($response->charges[1]->lastTransaction->acquirerMessage)){
                     $responseCancel = $this->getApi()->getCharges()->cancelCharge($response->charges[0]->id);
-                    $messageError = __('Your transaction was processed with failure').__(' secound card');
+                    $messageError = __('Your transaction was processed with failure').__(' second card');
                     throw new \InvalidArgumentException($messageError);
 
                 }
