@@ -7,6 +7,9 @@ use Magento\Framework\Event\Observer as EventObserver;
 use Magento\Framework\Exception\InputException;
 use MundiPagg\MundiPagg\Model\MundiPaggConfigProvider;
 use Magento\Framework\App\ObjectManager;
+use Mundipagg\Core\Kernel\Services\LogService;
+use Mundipagg\Core\Kernel\Services\LocalizationService;
+use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 
 class CustomerAddressSaveBefore implements ObserverInterface
 {
@@ -61,6 +64,8 @@ class CustomerAddressSaveBefore implements ObserverInterface
      */
     public function addressValidation($customerAddress)
     {
+        $allStreetLines = $customerAddress->getStreet();
+
         $addressIndexes =
             $this->filterAddressIndexes(
                 $this->getModuleAddressConfig()
@@ -74,11 +79,24 @@ class CustomerAddressSaveBefore implements ObserverInterface
             if(empty($customerAddress->getStreetLine($addressIndexes['number']))){
                 throw new InputException(__("Please check your address. Street Address field (Number) is required."));
             }
+        }
 
-            if(empty($customerAddress->getStreetLine($addressIndexes['district']))){
-                throw new InputException(__("Please check your address. Street Address field (Neighborhood) is required."));
-            }
+        if (!is_array($allStreetLines) || count($allStreetLines) < 3) {
+
+            Magento2CoreSetup::bootstrap();
+
+            $i18n = new LocalizationService();
+            $message = "Invalid address. Please fill the street lines and try again.";
+            $ExceptionMessage = $i18n->getDashboard($message);
+            $incorrectAddress = json_encode($allStreetLines, JSON_PRETTY_PRINT);
+            $ExceptionMessage .= ' ' . $incorrectAddress;
+
+            $e = new \Exception($ExceptionMessage );
+            $log = new LogService('Order', true);
+            $log->exception($e);
+
+            //Magento accepts only Phrase() exceptions in this case
+            throw new InputException(__($message));
         }
     }
-
 }
