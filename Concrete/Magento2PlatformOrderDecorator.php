@@ -835,16 +835,16 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         return $shipping;
     }
 
-    protected function getAddress($platformAddressFormat)
+    protected function getAddress($platformAddress)
     {
         $address = new Address();
         $addressAttributes =
             MPSetup::getModuleConfiguration()->getAddressAttributes();
 
         $addressAttributes = json_decode(json_encode($addressAttributes), true);
-        $allStreetLines = $platformAddressFormat->getStreet();
+        $allStreetLines = $platformAddress->getStreet();
 
-        $this->validateAddress($allStreetLines, $addressAttributes);
+        $this->validateAddress($allStreetLines);
 
         if (count($allStreetLines) < 4) {
             $addressAttributes['neighborhood'] = "street_3";
@@ -861,15 +861,15 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
                 continue;
             }
 
-            $address->$setter($platformAddressFormat->getStreet()[$value]);
+            $address->$setter($platformAddress->getStreet()[$value]);
         }
 
-        $address->setCity($platformAddressFormat->getCity());
-        $address->setCountry($platformAddressFormat->getCountryId());
-        $address->setZipCode($platformAddressFormat->getPostcode());
+        $address->setCity($platformAddress->getCity());
+        $address->setCountry($platformAddress->getCountryId());
+        $address->setZipCode($platformAddress->getPostcode());
 
         $_regionFactory = ObjectManager::getInstance()->get('Magento\Directory\Model\RegionFactory');
-        $regionId = $platformAddressFormat->getRegionId();
+        $regionId = $platformAddress->getRegionId();
 
         if (is_numeric($regionId)) {
             $shipperRegion = $_regionFactory->create()->load($regionId);
@@ -881,7 +881,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         return $address;
     }
 
-    protected function validateAddress($allStreetLines, $addressAttributes)
+    protected function validateAddress($allStreetLines)
     {
         if (
             !is_array($allStreetLines) ||
@@ -890,11 +890,16 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             $message = "Invalid address. Please fill the street lines and try again.";
             $ExceptionMessage = $this->i18n->getDashboard($message);
 
-            $e = new \Exception($ExceptionMessage);
+            $exception = new \Exception($ExceptionMessage);
             $log = new LogService('Order', true);
-            $log->exception($e);
+            $log->exception($exception);
 
-            throw $e;
+            throw $exception;
         }
+    }
+
+    public function getTotalCanceled()
+    {
+        return $this->platformOrder->getTotalCanceled();
     }
 }
