@@ -46,6 +46,7 @@ class View  extends \Magento\Backend\Block\Template implements \Magento\Backend\
 
     public function getCharges()
     {
+        //@todo Create service to return the charges
         $platformOrderID = $this->getOrderIncrementId();
         $mundipaggOrder = (new OrderRepository)->findByPlatformId($platformOrderID);
 
