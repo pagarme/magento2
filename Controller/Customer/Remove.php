@@ -112,13 +112,14 @@ class Remove extends Action
             $message = $i18n->getDashboard("The card '%s' was deleted.", $mask);
             $this->messageManager->addSuccess($message);
         } catch (\Exception $e) {
-            //$this->messageManager->addError(__($e->getMessage()));
-            $error = $i18n->getDashboard("The informed card couldn't be deleted.");
-            if (!empty($mask)) {
-                $error = $i18n->getDashboard("The card '%s' couldn't be deleted.", $mask);
+            $messagesCollection = $this->messageManager->getMessages();
+            if (empty($messagesCollection->getItemsByType('success'))) {
+                $error = $i18n->getDashboard("The informed card couldn't be deleted.");
+                if (!empty($mask)) {
+                    $error = $i18n->getDashboard("The card '%s' couldn't be deleted.", $mask);
+                }
+                $this->messageManager->addError($error);
             }
-            $this->messageManager->addError($error);
-
         }
 
         $this->_redirect('mundipagg/customer/cards'); 
