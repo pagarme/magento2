@@ -257,7 +257,6 @@ class UpgradeSchema implements UpgradeSchemaInterface
         return $setup;
     }
 
-
     protected function addCreatedAtToCardsTable($setup)
     {
         $installer = $setup;
