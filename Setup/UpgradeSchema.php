@@ -269,7 +269,6 @@ class UpgradeSchema implements UpgradeSchemaInterface
             'created_at',
             [
                 'type' => Table::TYPE_DATETIME,
-                //'length' => 50, //@todo check this for type_datetime.
                 'nullable' => false,
                 'comment' => 'Card createdAt'
             ]
