@@ -9,6 +9,7 @@ use Magento\Framework\View\Result\PageFactory;
 use Magento\Customer\Model\Session;
 use Magento\Framework\App\Request\Http;
 use Mundipagg\Core\Kernel\Services\LocalizationService;
+use Mundipagg\Core\Kernel\Services\LogService;
 use Mundipagg\Core\Payment\Repositories\CustomerRepository;
 use Mundipagg\Core\Payment\Repositories\SavedCardRepository;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
@@ -112,6 +113,13 @@ class Remove extends Action
             $message = $i18n->getDashboard("The card '%s' was deleted.", $mask);
             $this->messageManager->addSuccess($message);
         } catch (\Exception $e) {
+            $logService = new LogService(
+                'Card',
+                true
+            );
+
+            $logService->exception($e);
+
             $messagesCollection = $this->messageManager->getMessages();
             if (empty($messagesCollection->getItemsByType('success'))) {
                 $error = $i18n->getDashboard("The informed card couldn't be deleted.");
