@@ -11,7 +11,7 @@
 	        <block class="Magento\Framework\View\Element\Html\Link\Current" name="customer-account-navigation-about-me">
 	            <arguments>
 	                <argument name="path" xsi:type="string">mundipagg/customer/cards</argument>
-	                <argument name="label" xsi:type="string" translate="true">My Cards MundiPagg</argument>
+	                <argument name="label" xsi:type="string" translate="true">My Cards</argument>
 	            </arguments>
 	        </block>
 	    </referenceBlock>

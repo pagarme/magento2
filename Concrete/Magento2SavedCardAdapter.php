@@ -25,6 +25,11 @@ final class Magento2SavedCardAdapter
 
     public function getCreatedAt()
     {
+        $createdAt = $this->adaptee->getCreatedAt();
+        if ($createdAt !== null) {
+            return $createdAt->format(SavedCard::DATE_FORMAT);
+        }
+
         return null;
     }
 
