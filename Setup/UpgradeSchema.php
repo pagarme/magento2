@@ -52,6 +52,10 @@ class UpgradeSchema implements UpgradeSchemaInterface
             $setup = $this->addCardOwnerNameToCardsTable($setup);
         }
 
+        if (version_compare($version, "1.8.1", "<")) {
+            $setup = $this->addCreatedAtToCardsTable($setup);
+        }
+
         $setup->endSetup();
     }
 
@@ -247,6 +251,26 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 'length' => 50,
                 'nullable' => true,
                 'comment' => 'Card owner name'
+            ]
+        );
+
+        return $setup;
+    }
+
+    protected function addCreatedAtToCardsTable($setup)
+    {
+        $installer = $setup;
+
+        $connection = $installer->getConnection();
+        $tableName = $installer->getTable('mundipagg_module_core_saved_card');
+
+        $connection->addColumn(
+            $tableName,
+            'created_at',
+            [
+                'type' => Table::TYPE_DATETIME,
+                'nullable' => false,
+                'comment' => 'Card createdAt'
             ]
         );
 

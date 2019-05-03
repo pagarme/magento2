@@ -4,6 +4,7 @@ namespace MundiPagg\MundiPagg\Concrete;
 
 use Magento\Framework\App\Config as Magento2StoreConfig;
 use Magento\Config\Model\Config as Magento2ModelConfig;
+use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use Magento\Store\Model\ScopeInterface as ScopeInterface;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\ProductMetadataInterface;
@@ -368,5 +369,25 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         $store = current($stores);
 
         return $store->getStoreId();
+    }
+
+    /**
+     * @since 1.7.1
+     *
+     * @return \DateTimeZone
+     */
+    protected function getPlatformStoreTimezone()
+    {
+        $objectManager = ObjectManager::getInstance();
+        /** @var TimezoneInterface $timezone */
+        $timezone = $objectManager->create(
+            TimezoneInterface::class
+        );
+        $timezoneString = $timezone->getConfigTimezone(
+            ScopeInterface::SCOPE_STORE
+        );
+        $dateTimeZone = new \DateTimeZone($timezoneString);
+
+        return $dateTimeZone;
     }
 }

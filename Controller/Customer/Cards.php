@@ -37,7 +37,7 @@ class Cards extends Action
             return; # code... 
         }
         $result = $this->pageFactory->create();
-        $result->getConfig()->getTitle()->set("My Cards MundiPagg");
+        $result->getConfig()->getTitle()->set("My Cards");
         
         return $result;
     }
