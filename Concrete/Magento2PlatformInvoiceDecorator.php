@@ -41,30 +41,6 @@ class Magento2PlatformInvoiceDecorator extends AbstractInvoiceDecorator implemen
         $this->platformInvoice = $invoiceService->prepareInvoice($platformOrder);
     }
 
-    private function getTotalPaidFor(PlatformOrderInterface $order)
-    {
-        $mpOrderId = $order->getMundipaggId();
-        $grandTotal = $order->getGrandTotal();
-        if ($mpOrderId === null) {
-            return $grandTotal;
-        }
-
-        $orderRepository = new OrderRepository();
-        $mpOrder = $orderRepository->findByMundipaggId($mpOrderId);
-        if ($mpOrder === null) {
-            return $grandTotal;
-        }
-
-        $grandTotal = 0;
-        foreach ($mpOrder->getCharges() as $charge) {
-            $grandTotal += $charge->getPaidAmount();
-        }
-        $moneyService = new MoneyService();
-        $grandTotal = $moneyService->centsToFloat($grandTotal);
-
-        return $grandTotal;
-    }
-
     public function createFor(PlatformOrderInterface $order)
     {
         //$this->platformInvoice = $this->createInvoice($order->getPlatformOrder());
@@ -76,12 +52,16 @@ class Magento2PlatformInvoiceDecorator extends AbstractInvoiceDecorator implemen
         $this->platformInvoice->setRequestedCaptureCase(\Magento\Sales\Model\Order\Invoice::CAPTURE_OFFLINE);
         $this->platformInvoice->register();
 
-        $grandTotal = $this->getTotalPaidFor($order);
+        $grandTotal = $order->getTotalPaidFromCharges();
         $this->platformInvoice->setBaseGrandTotal($grandTotal);
         $this->platformInvoice->setGrandTotal($grandTotal);
 
-        if ($grandTotal !== $order->getGrandTotal()) {
+        $orderGrandTotal = $order->getGrandTotal();
+        $moneyService = new MoneyService();
+        $orderGrandTotal = $moneyService->floatToCents($orderGrandTotal);
+        $orderGrandTotal = $moneyService->centsToFloat($orderGrandTotal);
 
+        if ($grandTotal !== $orderGrandTotal) {
             $i18n = new LocalizationService();
             $comment = $i18n->getDashboard(
                 "This invoice was paid with a value different than the order grand total. Paid value: %.2f",
