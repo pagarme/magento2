@@ -126,6 +126,3 @@ workflows:
       - deploy_staging:
           requires:
             - publish
-          filters:
-            branches:
-              only: master
