@@ -61,7 +61,10 @@ class TwoCreditCardDataAssignObserver extends AbstractDataAssignObserver
             $info->setAdditionalInformation('cc_first_card_amount', $additionalData->getCcFirstCardAmount());
             $info->setAdditionalInformation('cc_first_card_tax_amount', $additionalData->getCcFirstCardTaxAmount());
             $info->setAdditionalInformation('cc_type_first', $card->getBrand());
-            $info->setAdditionalInformation('cc_last_4_first', $card->getLastFourNumbers());
+            $info->setAdditionalInformation(
+                'cc_last_4_first',
+                (string) $card->getLastFourNumbers()
+            );
             $info->addData([
                 'cc_first_card_amount' => $additionalData->getCcFirstCardAmount(),
                 'cc_type_first' => $additionalData->getCcTypeFirst()
@@ -93,7 +96,10 @@ class TwoCreditCardDataAssignObserver extends AbstractDataAssignObserver
             $info->setAdditionalInformation('cc_second_card_amount', $additionalData->getCcSecondCardAmount());
             $info->setAdditionalInformation('cc_second_card_tax_amount', $additionalData->getCcSecondCardTaxAmount());
             $info->setAdditionalInformation('cc_type_second', $card->getBrand());
-            $info->setAdditionalInformation('cc_last_4_second', $card->getLastFourNumbers());
+            $info->setAdditionalInformation(
+                'cc_last_4_second',
+                (string) $card->getLastFourNumbers()
+            );
             $info->addData([
                 'cc_second_card_amount' => $additionalData->getCcSecondCardAmount(),
                 'cc_type_second' => $additionalData->getCcTypeSecond()
