@@ -7,4 +7,5 @@ use Mundipagg\Core\Test\Functional\Features\Bootstrap\CoreFeature;
  */
 class FeatureContext extends CoreFeature
 {
+
 }
