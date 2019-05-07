@@ -7,6 +7,9 @@ use Magento\Framework\App\ObjectManager;
 use Magento\Sales\Model\Order\Invoice;
 use Mundipagg\Core\Kernel\Abstractions\AbstractInvoiceDecorator;
 use Mundipagg\Core\Kernel\Interfaces\PlatformOrderInterface;
+use Mundipagg\Core\Kernel\Repositories\OrderRepository;
+use Mundipagg\Core\Kernel\Services\LocalizationService;
+use Mundipagg\Core\Kernel\Services\MoneyService;
 use Mundipagg\Core\Kernel\ValueObjects\InvoiceState;
 use Magento\Sales\Model\Service\InvoiceService;
 use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
@@ -38,6 +41,30 @@ class Magento2PlatformInvoiceDecorator extends AbstractInvoiceDecorator implemen
         $this->platformInvoice = $invoiceService->prepareInvoice($platformOrder);
     }
 
+    private function getTotalPaidFor(PlatformOrderInterface $order)
+    {
+        $mpOrderId = $order->getMundipaggId();
+        $grandTotal = $order->getGrandTotal();
+        if ($mpOrderId === null) {
+            return $grandTotal;
+        }
+
+        $orderRepository = new OrderRepository();
+        $mpOrder = $orderRepository->findByMundipaggId($mpOrderId);
+        if ($mpOrder === null) {
+            return $grandTotal;
+        }
+
+        $grandTotal = 0;
+        foreach ($mpOrder->getCharges() as $charge) {
+            $grandTotal += $charge->getPaidAmount();
+        }
+        $moneyService = new MoneyService();
+        $grandTotal = $moneyService->centsToFloat($grandTotal);
+
+        return $grandTotal;
+    }
+
     public function createFor(PlatformOrderInterface $order)
     {
         //$this->platformInvoice = $this->createInvoice($order->getPlatformOrder());
@@ -48,6 +75,22 @@ class Magento2PlatformInvoiceDecorator extends AbstractInvoiceDecorator implemen
         $this->prepareFor($order);
         $this->platformInvoice->setRequestedCaptureCase(\Magento\Sales\Model\Order\Invoice::CAPTURE_OFFLINE);
         $this->platformInvoice->register();
+
+        $grandTotal = $this->getTotalPaidFor($order);
+        $this->platformInvoice->setBaseGrandTotal($grandTotal);
+        $this->platformInvoice->setGrandTotal($grandTotal);
+
+        if ($grandTotal !== $order->getGrandTotal()) {
+
+            $i18n = new LocalizationService();
+            $comment = $i18n->getDashboard(
+                "This invoice was paid with a value different than the order grand total. Paid value: %.2f",
+                $grandTotal
+            );
+
+            $this->addComment($comment);
+        }
+
         $this->save();
         $transactionSave = ObjectManager::getInstance()->get('Magento\Framework\DB\Transaction');
         $transactionSave->addObject(
@@ -136,5 +179,10 @@ class Magento2PlatformInvoiceDecorator extends AbstractInvoiceDecorator implemen
     public function jsonSerialize()
     {
         return $this->platformInvoice->getData();
+    }
+
+    protected function addMPComment($comment)
+    {
+        $this->platformInvoice->addComment($comment);
     }
 }
