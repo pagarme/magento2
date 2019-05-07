@@ -61,13 +61,14 @@ jobs:
               "wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
               echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list && \
               apt-get -y update && apt-get -y install google-chrome-unstable"
-            docker exec -it newimage sh -c "cd /var/www/html/vendor/mundipagg/ecommerce-module-core/ && git checkout enhancement-MOD-685-Create-functional-tests-structure"
-            docker exec -it newimage sh -c "cd /var/www/html/vendor/mundipagg/mundipagg-magento2-module/ && git checkout enhancement-MOD-685-Create-functional-tests-structure"
+
       - run:
           name: Activate and setup Plugin
           command: |
             docker exec -it newimage sh -c "ls"
             docker exec -it newimage sh -c "ls /app"
+            docker exec -it newimage sh -c "cd /var/www/html/vendor/mundipagg/ecommerce-module-core/ && git checkout enhancement-MOD-685-Create-functional-tests-structure"
+            docker exec -it newimage sh -c "cd /var/www/html/vendor/mundipagg/mundipagg-magento2-module/ && git checkout enhancement-MOD-685-Create-functional-tests-structure"
             docker exec -it newimage sh -c "cd /var/www/html && composer require mundipagg/mundipagg-magento2-module -vvv"
             docker exec -it newimage sh -c "cd /var/www/html && composer update -vvv"
             docker exec -it newimage sh -c "cd /var/www/ && find html/ -type d -exec chmod 775 {} \;"
