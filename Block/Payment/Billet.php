@@ -69,6 +69,12 @@ class Billet extends Template
      */
     public function getBilletUrl()
     {
+        $lastOrder = $this->getLastOrder();
+        
+        if ($lastOrder->getMethod() !== 'mundipagg_billet') {
+            return;
+        }
+        
         $boletoUrl = $this->getPayment()->getAdditionalInformation('billet_url');
 
         Magento2CoreSetup::bootstrap();
