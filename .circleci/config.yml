@@ -116,7 +116,7 @@ jobs:
             docker exec -i newimage sh -c "cd /var/www/html/vendor/mundipagg/mundipagg-magento2-module/ \
               && ls /var/www/html/vendor/ \
               && ls /var/www/html/vendor/mundipagg \
-              && ../ecommerce-module-core/vendor/bin/behat"
+              && ../../../vendor/bin/behat"
       - run:
           name: Clear useless files
           command: |
