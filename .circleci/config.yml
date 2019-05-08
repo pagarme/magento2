@@ -116,9 +116,6 @@ jobs:
             docker exec -it newimage sh -c "cd /var/www/ && find html/ -type d -exec chmod 775 {} \;"
                         docker exec -it newimage sh -c "cd /var/www/ && find html/ -type f -exec chmod 664 {} \;"
                         docker exec -it newimage sh -c "cd /var/www/ && chown -R www-data:www-data html/"
-                        docker exec -it newimage sh -c "cd /var/www/html && php bin/magento setup:upgrade"
-                        docker exec -it newimage sh -c "cd /var/www/html && php bin/magento setup:di:compile"
-                        docker exec -it newimage php index.php
             docker exec -i newimage sh -c "cd /var/www/html/vendor/mundipagg/mundipagg-magento2-module/ \
               && ls /var/www/html/vendor/ \
               && ls /var/www/html/vendor/mundipagg \
