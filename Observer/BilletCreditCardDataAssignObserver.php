@@ -60,7 +60,10 @@ class BilletCreditCardDataAssignObserver extends AbstractDataAssignObserver
             $info->setAdditionalInformation('cc_cc_amount', $additionalData->getCcCcAmount());
             $info->setAdditionalInformation('cc_cc_tax_amount', $additionalData->getCcCcTaxAmount());
             $info->setAdditionalInformation('cc_type', $card->getBrand());
-            $info->setAdditionalInformation('cc_last_4', $card->getLastFourNumbers());
+            $info->setAdditionalInformation(
+                'cc_last_4',
+                (string) $card->getLastFourNumbers()
+            );
 
             $info->addData([
                 'cc_cc_amount' => $additionalData->getCcCcAmount(),
