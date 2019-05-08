@@ -69,8 +69,16 @@ jobs:
             docker exec -it newimage sh -c "ls /app"
             docker exec -it newimage sh -c "cd /var/www/html && composer require mundipagg/mundipagg-magento2-module -vvv"
             docker exec -it newimage sh -c "cd /var/www/html && composer update -vvv"
-            docker exec -it newimage sh -c "cd /var/www/html/vendor/mundipagg/ecommerce-module-core/ && git fetch --all && git checkout enhancement-MOD-685-Create-functional-tests-structure"
-            docker exec -it newimage sh -c "cd /var/www/html/vendor/mundipagg/mundipagg-magento2-module/ && git fetch --all && git checkout enhancement-MOD-685-Create-functional-tests-structure"
+            docker exec -it newimage sh -c "cd /var/www/html/vendor && rm -rf ecommerce-module-core \
+              && rm -rf mundipagg-magento2-module \
+              && git clone https://github.com/mundipagg/ecommerce-module-core.git \
+              && git clone https://github.com/mundipagg/magento2.git mundipagg-magento2-module \
+              && cd ecommerce-module-core \
+              && git fetch --all \
+              && git checkout enhancement-MOD-685-Create-functional-tests-structure \
+              && cd .. && cd mundipagg-magento2-module \
+              && git fetch --all \
+              && git checkout enhancement-MOD-685-Create-functional-tests-structure
             docker exec -it newimage sh -c "cd /var/www/html && composer update -vvv"
             docker exec -it newimage sh -c "cd /var/www/ && find html/ -type d -exec chmod 775 {} \;"
             docker exec -it newimage sh -c "cd /var/www/ && find html/ -type f -exec chmod 664 {} \;"
