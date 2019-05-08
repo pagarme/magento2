@@ -111,8 +111,11 @@ jobs:
       - run:
           name: Run Functional Tests
           command: |
-            docker exec --detach newimage google-chrome-unstable --disable-gpu --no-sandbox --headless --remote-debugging-address=127.0.0.1 --remote-debugging-port=9222 --disable-extensions &
-            docker exec -i newimage sh -c 'cd /var/www/html/vendor/mundipagg/mundipagg-magento2-module/ && ../ecommerce-module-core/vendor/bin/behat'
+            docker exec --detach newimage google-chrome-unstable --disable-gpu --no-sandbox --headless --remote-debugging-address=127.0.0.1 --remote-debugging-port=9222 --disable-extensions
+            docker exec -i newimage sh -c "cd /var/www/html/vendor/mundipagg/mundipagg-magento2-module/ \
+              && ls /var/www/html/vendor/ \
+              && ls /var/www/html/vendor/mundipagg \
+              && ../ecommerce-module-core/vendor/bin/behat"
       - run:
           name: Clear useless files
           command: |
