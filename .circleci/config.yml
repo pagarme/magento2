@@ -117,8 +117,8 @@ jobs:
                         docker exec -it newimage sh -c "cd /var/www/ && find html/ -type f -exec chmod 664 {} \;"
                         docker exec -it newimage sh -c "cd /var/www/ && chown -R www-data:www-data html/"
             docker exec -i newimage sh -c "cd /var/www/html/vendor/mundipagg/mundipagg-magento2-module/ \
-              && ls /var/www/html/vendor/ \
-              && ls /var/www/html/vendor/mundipagg \
+              && ls . \
+              && ls ../ecommerce-module-core/ \
               && chmod +x ../../../vendor/bin/behat \
               && ../../../vendor/bin/behat"
       - run:
