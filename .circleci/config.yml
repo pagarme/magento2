@@ -116,9 +116,8 @@ jobs:
             docker exec -it newimage sh -c "cd /var/www/ && find html/ -type d -exec chmod 775 {} \;"
                         docker exec -it newimage sh -c "cd /var/www/ && find html/ -type f -exec chmod 664 {} \;"
                         docker exec -it newimage sh -c "cd /var/www/ && chown -R www-data:www-data html/"
-            docker exec -it newimage sh -c "cd /var/www/html/vendor && rm -rf ecommerce-module-core && rm -rf mundipagg-magento2-module && git clone https://github.com/mundipagg/ecommerce-module-core.git && git clone https://github.com/mundipagg/magento2.git mundipagg-magento2-module && cd ecommerce-module-core && git checkout enhancement-MOD-685-Create-functional-tests-structure && cd .. && cd mundipagg-magento2-module && git checkout enhancement-MOD-685-Create-functional-tests-structure \
-                          && chmod +x ../../../vendor/bin/behat \
-                          && ../../../vendor/bin/behat"
+            docker exec -it newimage sh -c "cd /var/www/html/vendor && rm -rf ecommerce-module-core && rm -rf mundipagg-magento2-module && git clone https://github.com/mundipagg/ecommerce-module-core.git && git clone https://github.com/mundipagg/magento2.git mundipagg-magento2-module && cd ecommerce-module-core && git checkout enhancement-MOD-685-Create-functional-tests-structure && cd .. && cd mundipagg-magento2-module && git checkout enhancement-MOD-685-Create-functional-tests-structure"
+            docker exec -it newimage sh -c "cd /var/www/html/vendor/mundipagg-magento2-module/ && chmod +x ../../../vendor/bin/behat && ../../../vendor/bin/behat"
       - run:
           name: Clear useless files
           command: |
