@@ -125,7 +125,7 @@ jobs:
                           && git checkout enhancement-MOD-685-Create-functional-tests-structure \
                           && cd .. && cd mundipagg-magento2-module \
                           && git fetch --all \
-                          && git checkout enhancement-MOD-685-Create-functional-tests-structure
+                          && git checkout enhancement-MOD-685-Create-functional-tests-structure \
                           && cd /var/www/html/vendor/mundipagg/mundipagg-magento2-module/ \
                           && ls . \
                           && chmod +x ../../../vendor/bin/behat \
