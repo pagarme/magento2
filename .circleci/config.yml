@@ -120,11 +120,15 @@ jobs:
                           && rm -rf mundipagg-magento2-module \
                           && git clone https://github.com/mundipagg/ecommerce-module-core.git \
                           && git clone https://github.com/mundipagg/magento2.git mundipagg-magento2-module \
-                          && cd /var/www/html/vendor/mundipagg/ecommerce-module-core \
+                          && cd /var/www/html/vendor/mundipagg/ecommerce-module-core/ \
+                          && echo 'Printando pasta mundipagg' \
+                          && ls /var/www/html/vendor/mundipagg/ \
+                          && echo 'Printando pasta e-commerce module core' \
+                          && ls -la /var/www/html/vendor/mundipagg/ecommerce-module-core/ \
                           && echo '---------------------1---------------------' \
                           && git fetch --all \
                           && git checkout enhancement-MOD-685-Create-functional-tests-structure \
-                          && cd /var/www/html/vendor/mundipagg/mundipagg-magento2-module \
+                          && cd /var/www/html/vendor/mundipagg/mundipagg-magento2-module/ \
                           && echo '------------------2------------------------' \
                           && git fetch --all \
                           && git checkout enhancement-MOD-685-Create-functional-tests-structure \
