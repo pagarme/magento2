@@ -125,12 +125,11 @@ jobs:
                           && git checkout enhancement-MOD-685-Create-functional-tests-structure \
                           && cd .. && cd mundipagg-magento2-module \
                           && git fetch --all \
-                          && git checkout enhancement-MOD-685-Create-functional-tests-structure"
-            docker exec -i newimage sh -c "cd /var/www/html/vendor/mundipagg/mundipagg-magento2-module/ \
-              && ls . \
-              && ls ../ecommerce-module-core/ \
-              && chmod +x ../../../vendor/bin/behat \
-              && ../../../vendor/bin/behat"
+                          && git checkout enhancement-MOD-685-Create-functional-tests-structure
+                          && cd /var/www/html/vendor/mundipagg/mundipagg-magento2-module/ \
+                          && ls . \
+                          && chmod +x ../../../vendor/bin/behat \
+                          && ../../../vendor/bin/behat"
       - run:
           name: Clear useless files
           command: |
