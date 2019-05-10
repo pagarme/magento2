@@ -9,7 +9,7 @@ use Behat\MinkExtension\Context\MinkContext;
 /**
  * Features context.
  */
-class CoreFeature extends MinkContext
+class FeatureContext extends MinkContext
 {
     /**
      *
