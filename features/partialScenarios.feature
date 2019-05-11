@@ -4,4 +4,4 @@ Feature: Partial Scenarios
   @javascript @smartStep
   Scenario: I call a partial scenario
     Given I am on "http://127.0.0.1/admin"
-    Then I wait for text "Password" to appear, for 20 seconds
+    Then I wait for text "Username" to appear, for 20 seconds
