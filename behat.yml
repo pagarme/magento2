@@ -12,5 +12,5 @@ default:
   suites:
     core_features:
       ##Path to core features
-      paths: [ ../ecommerce-module-core/tests/Functional/Features, ./features ]
+      paths: [ ./features ]
 
