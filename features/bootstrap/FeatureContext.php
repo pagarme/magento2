@@ -1,7 +1,7 @@
 <?php
 
 
-
+use Mundipagg\Core\Test\Functional\Features\Bootstrap\CoreFeature;
 use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Mink\Exception\ResponseTextException;
 use Behat\MinkExtension\Context\MinkContext;
@@ -9,7 +9,7 @@ use Behat\MinkExtension\Context\MinkContext;
 /**
  * Features context.
  */
-class FeatureContext extends MinkContext
+class FeatureContext extends CoreFeature
 {
     /**
      *
