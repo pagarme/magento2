@@ -11,15 +11,6 @@ class FeatureContext extends CoreFeature
 {
     /**
      *
-     * @var Behat\Gherkin\Node\StepNode
-     */
-    protected $currentStep = null;
-    protected $scenarioTokens = null;
-    protected static $featureHash = null;
-    protected $screenshotDir = DIRECTORY_SEPARATOR . 'tmp';
-
-    /**
-     *
      * @AfterStep
      * @param     $event
      */
