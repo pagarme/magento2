@@ -5,3 +5,4 @@ Feature: Partial Scenarios
   Scenario: I call a partial scenario
     Given I am on "/admin"
     Then I wait for text "Username" to appear, for 20 seconds
+    And I fill in "username" with "admin"
