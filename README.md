@@ -63,3 +63,15 @@ Open a new Issue following our issue template [ISSUE-TEMPLATE](ISSUE-TEMPLATE.md
 
 ## Changelog
 See in [releases](https://github.com/mundipagg/magento2/releases)
+
+## Running tests
+We use [Behat](https://github.com/Behat/Behat) for functional tests.
+
+Run [Google Chrome headless](https://developers.google.com/web/updates/2017/04/headless-chrome) server
+
+`google-chrome-unstable --no-sandbox --remote-debugging-address=127.0.0.1 --remote-debugging-port=9222`
+
+Run local test suite at module root directory
+
+`../bin/behat --profile local`
+
