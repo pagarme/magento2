@@ -6,5 +6,4 @@ Feature: Partial Scenarios
     #Passos aqui
     Given I am on "/admin"
 
-
     
