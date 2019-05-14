@@ -1,6 +1,6 @@
 Feature: Partial Scenarios
 
-  #Add sunglasses to card
+  #Add sunglasses to cart
   @javascript @smartStep
-  Scenario: I add a Aviator Sunglasses to cart and go to checkout
+  Scenario: I add a product to cart and go to checkout
     Given I am on "/admin"
