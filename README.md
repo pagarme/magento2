@@ -7,13 +7,13 @@
 # Magento2/Mundipagg Integration module
 This is the official Magento2 module for Mundipagg integration
 
-# Documentation
+## Documentation
 Refer to [module documentation](https://github.com/mundipagg/magento2/wiki)
 
-# Plugin in Magento Marketplace
+## Plugin in Magento Marketplace
 Coming soon :construction:
 
-# Installation
+## Installation
 
 This module is now available through *Packagist*! You don't need to specify the repository anymore.
 
@@ -41,25 +41,37 @@ composer update
 ./bin/magento setup:di:compile
 ```
 
-# Requirements
+## Requirements
 * PHP >= 5.6
 * Magento >= 2.1
 
-# Configuration
+## Configuration
 
 After installation has completed go to **Stores** > **Settings** > **Configuration** > **Sales** > **Payment Methods** > **Other Payment Methods** > **MundiPagg Payments**.
 
 To learn more about how detailed configure the module, see our [wiki](https://github.com/mundipagg/magento2/wiki)
 
-# Business/Technical Support
+## Business/Technical Support
 
 Please, send a e-mail to [suporte@mundipagg.com](mailto:suporte@mundipagg.com)
 
-# How can I contribute?
+## How can I contribute?
 Please, refer to [CONTRIBUTING](CONTRIBUTING.md)
 
-# Found something strange or need a new feature?
+## Found something strange or need a new feature?
 Open a new Issue following our issue template [ISSUE-TEMPLATE](ISSUE-TEMPLATE.md)
 
-# Changelog
+## Changelog
 See in [releases](https://github.com/mundipagg/magento2/releases)
+
+## Running tests
+We use [Behat](https://github.com/Behat/Behat) for functional tests.
+
+Run [Google Chrome headless](https://developers.google.com/web/updates/2017/04/headless-chrome) server
+
+`google-chrome-unstable --no-sandbox --remote-debugging-address=127.0.0.1 --remote-debugging-port=9222`
+
+Run local test suite at module root directory
+
+`../bin/behat --profile local`
+
