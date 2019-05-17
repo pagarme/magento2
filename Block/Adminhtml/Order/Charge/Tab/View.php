@@ -8,8 +8,6 @@ use Mundipagg\Core\Kernel\Repositories\ChargeRepository;
 use Mundipagg\Core\Kernel\Repositories\OrderRepository;
 use Mundipagg\Core\Kernel\ValueObjects\Id\OrderId;
 
-use Magento\Framework\UrlInterface;
-
 class View  extends \Magento\Backend\Block\Template implements \Magento\Backend\Block\Widget\Tab\TabInterface
 {
     protected $_template = 'tab/view/order_charge.phtml';
@@ -23,13 +21,11 @@ class View  extends \Magento\Backend\Block\Template implements \Magento\Backend\
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
         \Magento\Framework\Registry $registry,
-        UrlInterface $urlBuilder,
         array $data = []
     ) {
         Magento2CoreSetup::bootstrap();
 
         $this->_coreRegistry = $registry;
-        $this->urlBuilder = $urlBuilder;
 
         parent::__construct($context, $data);
     }
@@ -115,11 +111,11 @@ class View  extends \Magento\Backend\Block\Template implements \Magento\Backend\
 
     public function getChargeCancelUrl()
     {
-        return $this->urlBuilder->getUrl('mundipagg_mundipagg/charges/cancel');
+        return $this->_urlBuilder->getUrl('mundipagg_mundipagg/charges/cancel');
     }
 
     public function getChargeCaptureUrl()
     {
-        return $this->urlBuilder->getUrl('mundipagg_mundipagg/charges/capture');
+        return $this->_urlBuilder->getUrl('mundipagg_mundipagg/charges/capture');
     }
 }
