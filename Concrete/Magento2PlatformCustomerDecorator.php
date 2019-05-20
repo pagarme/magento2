@@ -41,6 +41,7 @@ class Magento2PlatformCustomerDecorator implements PlatformCustomerInterface
             return $this->mundipaggId;
         }
 
+        /** @var  $mpIdLegado deprecated */
         $mpIdLegado = $this->platformCustomer->getCustomAttribute('customer_id_mundipagg');
         if (!empty($mpIdLegado->getValue())) {
             $this->mundipaggId = $mpIdLegado;
