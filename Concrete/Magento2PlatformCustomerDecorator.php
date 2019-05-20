@@ -69,7 +69,10 @@ class Magento2PlatformCustomerDecorator implements PlatformCustomerInterface
 
     public function getDocument()
     {
-        return $this->platformCustomer->getTaxvat();
+        if (!empty($this->platformCustomer->getTaxvat())) {
+            return $this->platformCustomer->getTaxvat();
+        }
+        return null;
     }
 
     public function getType()
