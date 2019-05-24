@@ -26,7 +26,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
 {
     const MODULE_NAME = 'MundiPagg_MundiPagg';
 
-    static protected function setModuleVersion()
+    protected function setModuleVersion()
     {
         $objectManager = ObjectManager::getInstance();
         $moduleHelper = $objectManager->get(ModuleHelper::class);
@@ -34,7 +34,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         self::$moduleVersion = $moduleHelper->getVersion(self::MODULE_NAME);
     }
 
-    static protected function setPlatformVersion()
+    protected function setPlatformVersion()
     {
         $objectManager = ObjectManager::getInstance();
         /** @var ProductMetadataInterface $productMetadata */
@@ -46,7 +46,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         self::$platformVersion = $version;
     }
 
-    static protected function setLogPath()
+    protected function setLogPath()
     {
         $objectManager = ObjectManager::getInstance();
 
@@ -58,7 +58,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         ];
     }
 
-    static protected function setConfig()
+    protected function setConfig()
     {
         self::$config = [
             AbstractModuleCoreSetup::CONCRETE_DATABASE_DECORATOR_CLASS =>
@@ -87,7 +87,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         return "2d2db409-fed0-4bd8-ac1e-43eeff33458d";
     }
 
-    static public function _getDashboardLanguage()
+    public function _getDashboardLanguage()
     {
         $objectManager = ObjectManager::getInstance();
         $resolver = $objectManager->get('Magento\Framework\Locale\Resolver');
@@ -95,7 +95,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         return $resolver->getLocale();
     }
 
-    static public function _getStoreLanguage()
+    public function _getStoreLanguage()
     {
         /**
          * @todo verify if this work as expected in the store screens.
@@ -107,7 +107,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         return $store->getLocaleCode();
     }
 
-    public static function loadModuleConfigurationFromPlatform()
+    public function loadModuleConfigurationFromPlatform()
     {
         $storeId = self::getCurrentStoreId();
         $scope = ScopeInterface::SCOPE_STORE;
@@ -339,7 +339,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         return (isset($fromTo[$brand])) ? $fromTo[$brand] : false;
     }
 
-    protected static function _formatToCurrency($price)
+    protected function _formatToCurrency($price)
     {
         $objectManager = ObjectManager::getInstance();
         $priceHelper = $objectManager->create('Magento\Framework\Pricing\Helper\Data');
