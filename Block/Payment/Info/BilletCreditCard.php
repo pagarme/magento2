@@ -71,6 +71,12 @@ class BilletCreditCard extends Cc
 
     public function getBilletUrl()
     {
+        $method = $this->getInfo()->getMethod();
+
+        if (strpos($method, "mundipagg_billet") === false) {
+            return;
+        }
+
         $boletoUrl = $this->getInfo()->getAdditionalInformation('billet_url');
 
         Magento2CoreSetup::bootstrap();
