@@ -69,9 +69,7 @@ class Billet extends Template
      */
     public function getBilletUrl()
     {
-        $lastOrder = $this->getLastOrder();
-        
-        if ($lastOrder->getMethod() !== 'mundipagg_billet') {
+        if ($this->getPayment()->getMethod() !== 'mundipagg_billet') {
             return;
         }
         
