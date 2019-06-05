@@ -20,7 +20,7 @@ define(
         rendererList.push(
             {
                 type: 'mundipagg_creditcard',
-                component: 'MundiPagg_MundiPagg/js/view/payment/method-renderer/creditcard'
+                component: 'MundiPagg_MundiPagg/js/view/payment/creditcard'
             },
             {
                 type: 'mundipagg_billet_creditcard',
