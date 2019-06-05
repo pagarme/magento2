@@ -8,6 +8,7 @@
     </event>
     <event name="sales_order_place_before">
         <observer name="mundipagg_payment_sales_order_place_before_mundipagg_creditcard" instance="MundiPagg\MundiPagg\Observer\CreditCardOrderPlaceBeforeObserver" />
+        <observer name="mundipagg_payment_sales_order_place_before" instance="MundiPagg\MundiPagg\Observer\OrderPlaceBeforeObserver" />
     </event>
     <event name="payment_method_assign_data_mundipagg_two_creditcard">
         <observer name="mundipagg_payment_method_assign_data_mundipagg_two_creditcard" instance="MundiPagg\MundiPagg\Observer\TwoCreditCardDataAssignObserver" />
