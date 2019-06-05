@@ -7,6 +7,7 @@ var MundiPaggCore = {
 };
 
 MundiPaggCore.initPaymentMethod = function (methodCode) {
+
     this.paymentMethod =
         new PaymentMethodController(methodCode);
 

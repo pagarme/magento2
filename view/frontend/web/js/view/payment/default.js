@@ -20,7 +20,13 @@ define(
         'Magento_Checkout/js/model/full-screen-loader',
         'Magento_Checkout/js/model/payment/additional-validators',
         'Magento_Checkout/js/action/redirect-on-success',
-        'mage/translate'
+        'mage/translate',
+        'Magento_Ui/js/model/messageList',
+        'MundiPagg_MundiPagg/js/core/checkout/PaymentModuleBootstrap',
+        'MundiPagg_MundiPagg/js/core/checkout/PaymentMethodController',
+        'MundiPagg_MundiPagg/js/core/checkout/PlatformFormBiding',
+        'MundiPagg_MundiPagg/js/core/checkout/Bin',
+        'MundiPagg_MundiPagg/js/core/checkout/PlatformFormHandler'
     ],
     function (
         Component,
@@ -34,7 +40,8 @@ define(
         fullScreenLoader,
         additionalValidators,
         redirectOnSuccessAction,
-        $t
+        $t,
+        globalMessageList
     ) {
         return Component.extend({
 
@@ -43,15 +50,21 @@ define(
                     'mundipagg-content'
                 ]);
 
-                console.log(123);
+
 
             },
             /**
              * Place order.
              */
             beforeplaceOrder: function (data, event) {
-                self.messageContainer.addErrorMessage({
-                    message: $t('Installments not informed.')
+
+                MundiPaggCore.validatePaymentMethod("creditCard");
+
+
+                console.log(globalMessageList);
+
+                globalMessageList.addErrorMessage({
+                    message: $t('Error message.')
                 });
                 $("html, body").animate({scrollTop: 0}, 600);
                 return false;
