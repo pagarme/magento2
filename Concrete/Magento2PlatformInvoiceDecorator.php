@@ -64,7 +64,7 @@ class Magento2PlatformInvoiceDecorator extends AbstractInvoiceDecorator implemen
         if ($grandTotal !== $orderGrandTotal) {
             $i18n = new LocalizationService();
             $comment = $i18n->getDashboard(
-                "This invoice was paid with a value different than the order grand total. Paid value: %.2f",
+                "Different paid amount for this invoice. Paid value: %.2f",
                 $grandTotal
             );
 
