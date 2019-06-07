@@ -9,7 +9,7 @@ define(
 
         return Component.extend({
             defaults: {
-                template: 'MundiPagg_MundiPagg/payment/boleto'
+                template: 'MundiPagg_MundiPagg/payment/default'
             },
 
             getCode: function () {
@@ -21,7 +21,10 @@ define(
             },
             getTitle: function () {
                 return window.checkoutConfig.payment.mundipagg_billet.title;
-            }
+            },
+            getForm: function () {
+                return 'MundiPagg_MundiPagg/payment/boleto'
+            },
         });
     }
 );

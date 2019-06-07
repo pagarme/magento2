@@ -58,7 +58,7 @@ define(
              */
             beforeplaceOrder: function (data, event) {
 
-                MundiPaggCore.validatePaymentMethod("creditCard");
+                /*MundiPaggCore.validatePaymentMethod("creditCard");
 
 
 
@@ -66,7 +66,7 @@ define(
                     message: $t('Error message.')
                 });
                 $("html, body").animate({scrollTop: 0}, 600);
-                return false;
+                return false;*/
                 this.placeOrder(data, event);
             },
 

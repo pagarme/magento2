@@ -3,11 +3,13 @@
         <ul class="credit-card-types">
 
         </ul>
-        <input type="hidden"
+        <p>TIPO</p>
+        <input type=""
                name="payment[cc_type]"
                class="input-text"
-               value=""
+               value="visa"
                >
+        <input type="" name="payment[cc_token_credit_card]" class="input-text" value="">
     </div>
 </div>
 <div class="field number required">
@@ -15,7 +17,7 @@
         <span>Number</span>
     </label>
     <div class="control">
-        <input type="number" min="0" maxlength="19" name="payment[cc_number]" class="input-text" />
+        <input type="number" min="0" maxlength="19" name="payment[cc_number]" class="input-text" value="4024007150256427"/>
     </div>
 </div>
 
@@ -29,6 +31,7 @@
                style="width: 225px;"
                class="input-text"
                name="payment[cc_owner]"
+               value="Teste teste"
               />
     </div>
 </div>
@@ -69,7 +72,7 @@
                autocomplete="off"
                class="input-text cvv"
                name="payment[cc_cid]"
-               value=""
+               value="123"
                onKeyPress="if(this.value.length==4) return false;"
                min="0"
                 />
@@ -79,8 +82,7 @@
                   >
                 <span>CVV</span>
             </span>
-            <div class="field-tooltip-content"
-                 ></div>
+            <div class="field-tooltip-content"></div>
         </div>
     </div>
 </div>
@@ -97,14 +99,14 @@
                              style="width: 335px;"
                              class="select select-installments"
                              >
-                        <option value="1">1</option>
+                        <option value="2" interest="0">2x of $156.60 without interest (Total: $313.20)</option>
                     </select>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<div class="field choice" >
+<!--div class="field choice" >
     <input type="checkbox" class="checkbox" id="creditcard-save" />
     <label class="label" >
         <span>Save</span>
@@ -118,4 +120,4 @@
         <div class="field-tooltip-content"
              ></div>
     </div>
-</div>
+</div-->
