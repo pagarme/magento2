@@ -9,20 +9,19 @@ define(
 
         return Component.extend({
             defaults: {
-                template: 'MundiPagg_MundiPagg/payment/creditcard'
+                template: 'MundiPagg_MundiPagg/payment/boleto'
             },
 
             getCode: function () {
-                return 'mundipagg_creditcard';
+                return 'mundipagg_billet';
             },
 
             isActive: function () {
-                return window.checkoutConfig.payment.mundipagg_creditcard.active;
+                return window.checkoutConfig.payment.mundipagg_billet.active;
             },
             getTitle: function () {
-                return window.checkoutConfig.payment.mundipagg_creditcard.title;
-            },
-
+                return window.checkoutConfig.payment.mundipagg_billet.title;
+            }
         });
     }
 );

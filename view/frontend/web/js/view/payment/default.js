@@ -61,7 +61,6 @@ define(
                 MundiPaggCore.validatePaymentMethod("creditCard");
 
 
-                console.log(globalMessageList);
 
                 globalMessageList.addErrorMessage({
                     message: $t('Error message.')
@@ -83,12 +82,6 @@ define(
             },
 
 
-            isActive: function () {
-                return window.checkoutConfig.payment.mundipagg_creditcard.active;
-            },
-            getTitle: function () {
-                return window.checkoutConfig.payment.mundipagg_creditcard.title;
-            },
 
 
             updateTotalWithTax: function (newTax) {
