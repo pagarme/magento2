@@ -4,7 +4,7 @@ var PaymentMethodController = function (methodCode) {
 
 PaymentMethodController.prototype.init = function () {
     var paymentMethodInit = this.methodCode + 'Init';
-
+debugger;
     this[paymentMethodInit]();
 };
 

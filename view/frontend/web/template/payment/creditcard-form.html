@@ -1,123 +1,125 @@
-<div class="field type">
-    <div class="control">
-        <ul class="credit-card-types">
+<div id="mundipagg_creditcard-form">
+    <div class="field type">
+        <div class="control">
+            <ul class="credit-card-types">
 
-        </ul>
-        <p>TIPO</p>
-        <input type=""
-               name="payment[cc_type]"
-               class="input-text"
-               value="visa"
-               >
-        <input type="" name="payment[cc_token_credit_card]" class="input-text" value="">
+            </ul>
+            <p>TIPO</p>
+            <input type=""
+                   name="payment[cc_type]"
+                   class="input-text"
+                   value="visa"
+                   >
+            <input type="" name="payment[cc_token_credit_card]" class="input-text" value="">
+        </div>
     </div>
-</div>
-<div class="field number required">
-    <label class="label">
-        <span>Number</span>
-    </label>
-    <div class="control">
-        <input type="number" min="0" maxlength="19" name="payment[cc_number]" class="input-text" value="4024007150256427"/>
+    <div class="field number required">
+        <label class="label">
+            <span>Number</span>
+        </label>
+        <div class="control">
+            <input type="number" min="0" maxlength="19" name="payment[cc_number]" class="input-text" value="4024007150256427"/>
+        </div>
     </div>
-</div>
 
-<div class="field owner required" >
-    <label class="label">
-        <span>Holder Name</span>
-    </label>
-    <div class="control">
-        <input type="text"
-               autocomplete="off"
-               style="width: 225px;"
-               class="input-text"
-               name="payment[cc_owner]"
-               value="Teste teste"
-              />
+    <div class="field owner required" >
+        <label class="label">
+            <span>Holder Name</span>
+        </label>
+        <div class="control">
+            <input type="text"
+                   autocomplete="off"
+                   style="width: 225px;"
+                   class="input-text"
+                   name="payment[cc_owner]"
+                   value="Teste teste"
+                  />
+        </div>
     </div>
-</div>
 
-<div class="field date required" >
-    <label class="label">
-        <span>Date</span>
-    </label>
-    <div class="control">
-        <div class="fields group group-2">
-            <div class="field no-label month">
-                <div class="control">
-                    <select  name="payment[cc_exp_month]"
-                             class="select select-month"
-                             >
-                        <option value="22">22</option>
-                    </select>
+    <div class="field date required" >
+        <label class="label">
+            <span>Date</span>
+        </label>
+        <div class="control">
+            <div class="fields group group-2">
+                <div class="field no-label month">
+                    <div class="control">
+                        <select  name="payment[cc_exp_month]"
+                                 class="select select-month"
+                                 >
+                            <option value="22">22</option>
+                        </select>
+                    </div>
                 </div>
-            </div>
-            <div class="field no-label year">
-                <div class="control">
-                    <select name="payment[cc_exp_year]"
-                            class="select select-year"
-                            >
-                        <option value="12">12</option>
-                    </select>
+                <div class="field no-label year">
+                    <div class="control">
+                        <select name="payment[cc_exp_year]"
+                                class="select select-year"
+                                >
+                            <option value="12">12</option>
+                        </select>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<div class="field cvv required" >
-    <label class="label">
-        <span>CVV</span>
-    </label>
-    <div class="control _with-tooltip">
-        <input type="number"
-               autocomplete="off"
-               class="input-text cvv"
-               name="payment[cc_cid]"
-               value="123"
-               onKeyPress="if(this.value.length==4) return false;"
-               min="0"
-                />
+    <div class="field cvv required" >
+        <label class="label">
+            <span>CVV</span>
+        </label>
+        <div class="control _with-tooltip">
+            <input type="number"
+                   autocomplete="off"
+                   class="input-text cvv"
+                   name="payment[cc_cid]"
+                   value="123"
+                   onKeyPress="if(this.value.length==4) return false;"
+                   min="0"
+                    />
+            <div class="field-tooltip toggle">
+                <span class="field-tooltip-action action-cvv"
+                      tabindex="0"
+                      >
+                    <span>CVV</span>
+                </span>
+                <div class="field-tooltip-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="field installments required">
+        <label class="label">
+            <span>Installments</span>
+        </label>
+        <div class="control">
+            <div class="fields">
+                <div class="field no-label installments">
+                    <div class="control">
+                        <select  name="payment[cc_installments]"
+                                 style="width: 335px;"
+                                 class="select select-installments"
+                                 >
+                            <option value="2" interest="0">2x of $156.60 without interest (Total: $313.20)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--div class="field choice" >
+        <input type="checkbox" class="checkbox" id="creditcard-save" />
+        <label class="label" >
+            <span>Save</span>
+        </label>
         <div class="field-tooltip toggle">
             <span class="field-tooltip-action action-cvv"
                   tabindex="0"
                   >
-                <span>CVV</span>
+                <span>Choice</span>
             </span>
-            <div class="field-tooltip-content"></div>
+            <div class="field-tooltip-content"
+                 ></div>
         </div>
-    </div>
+    </div-->
 </div>
-
-<div class="field installments required">
-    <label class="label">
-        <span>Installments</span>
-    </label>
-    <div class="control">
-        <div class="fields">
-            <div class="field no-label installments">
-                <div class="control">
-                    <select  name="payment[cc_installments]"
-                             style="width: 335px;"
-                             class="select select-installments"
-                             >
-                        <option value="2" interest="0">2x of $156.60 without interest (Total: $313.20)</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!--div class="field choice" >
-    <input type="checkbox" class="checkbox" id="creditcard-save" />
-    <label class="label" >
-        <span>Save</span>
-    </label>
-    <div class="field-tooltip toggle">
-        <span class="field-tooltip-action action-cvv"
-              tabindex="0"
-              >
-            <span>Choice</span>
-        </span>
-        <div class="field-tooltip-content"
-             ></div>
-    </div>
-</div-->

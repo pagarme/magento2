@@ -49,24 +49,32 @@ define(
                 this._super().observe([
                     'mundipagg-content'
                 ]);
-
-
-
             },
+
+            getData: function () {
+                return {
+                    'method': this.item.method
+                }
+            },
+
             /**
              * Place order.
              */
             beforeplaceOrder: function (data, event) {
 
-                /*MundiPaggCore.validatePaymentMethod("creditCard");
-
-
-
+                /*
                 globalMessageList.addErrorMessage({
                     message: $t('Error message.')
                 });
                 $("html, body").animate({scrollTop: 0}, 600);
                 return false;*/
+
+                MundiPaggCore.initPaymentMethod("creditCard");
+
+                //Mix data with core formObject;
+
+
+                this.getData();
                 this.placeOrder(data, event);
             },
 
@@ -80,9 +88,6 @@ define(
                 checkoutData.setSelectedPaymentMethod(this.item.method);
                 return true;
             },
-
-
-
 
             updateTotalWithTax: function (newTax) {
                 //Interest
@@ -109,12 +114,6 @@ define(
                 window.checkoutConfig.payment.ccform.installments.value = newTax;
                 quote.setTotals(total);*/
             },
-
-            tpl: function () {
-                console.log(123);
-
-            }
-
         })
     }
 );
