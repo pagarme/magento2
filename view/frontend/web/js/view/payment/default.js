@@ -9,26 +9,22 @@
 /*global define*/
 define(
     [
-        'Magento_Checkout/js/view/payment/default',
-        'ko',
-        'jquery',
-        'Magento_Checkout/js/model/quote',
-        'Magento_Catalog/js/price-utils',
-        'Magento_Checkout/js/model/totals',
-        'Magento_Checkout/js/checkout-data',
-        'Magento_Checkout/js/action/select-payment-method',
-        'Magento_Checkout/js/model/full-screen-loader',
-        'Magento_Checkout/js/model/payment/additional-validators',
-        'Magento_Checkout/js/action/redirect-on-success',
-        'mage/translate',
-        'Magento_Ui/js/model/messageList',
-        'MundiPagg_MundiPagg/js/core/checkout/PaymentModuleBootstrap',
-        'MundiPagg_MundiPagg/js/core/checkout/PaymentMethodController',
-        'MundiPagg_MundiPagg/js/core/checkout/PlatformFormBiding',
-        'MundiPagg_MundiPagg/js/core/checkout/Bin',
-        'MundiPagg_MundiPagg/js/core/checkout/PlatformFormHandler'
+        "Magento_Checkout/js/view/payment/default",
+        "ko",
+        "jquery",
+        "Magento_Checkout/js/model/quote",
+        "Magento_Catalog/js/price-utils",
+        "Magento_Checkout/js/model/totals",
+        "Magento_Checkout/js/checkout-data",
+        "Magento_Checkout/js/action/select-payment-method",
+        "Magento_Checkout/js/model/full-screen-loader",
+        "Magento_Checkout/js/model/payment/additional-validators",
+        "Magento_Checkout/js/action/redirect-on-success",
+        "mage/translate",
+        "Magento_Ui/js/model/messageList",
+        "MundiPagg_MundiPagg/js/core/checkout/PaymentModuleBootstrap"
     ],
-    function (
+    function(
         Component,
         ko,
         $,
@@ -41,30 +37,30 @@ define(
         additionalValidators,
         redirectOnSuccessAction,
         $t,
-        globalMessageList
+        globalMessageList,
+        MundiPaggCore
     ) {
         return Component.extend({
 
-            initialize: function () {
+            initialize: function() {
                 this._super().observe([
-                    'mundipagg-content'
+                    "mundipagg-content"
                 ]);
             },
 
-            getData: function () {
+            getData: function() {
                 return {
-                    'method': this.item.method
-                }
+                    "method": this.item.method
+                };
             },
 
             /**
              * Place order.
              */
-            beforeplaceOrder: function (data, event) {
-
+            beforeplaceOrder: function(data, event){
                 /*
                 globalMessageList.addErrorMessage({
-                    message: $t('Error message.')
+                    message: $t("Error message.")
                 });
                 $("html, body").animate({scrollTop: 0}, 600);
                 return false;*/
@@ -72,7 +68,6 @@ define(
                 MundiPaggCore.initPaymentMethod("creditCard");
 
                 //Mix data with core formObject;
-
 
                 this.getData();
                 this.placeOrder(data, event);
@@ -82,16 +77,15 @@ define(
             /**
              * Select current payment token
              */
-            selectPaymentMethod: function () {
-
+            selectPaymentMethod: function() {
                 selectPaymentMethodAction(this.getData());
                 checkoutData.setSelectedPaymentMethod(this.item.method);
                 return true;
             },
 
-            updateTotalWithTax: function (newTax) {
+            updateTotalWithTax: function(newTax) {
                 //Interest
-                /*if (typeof this.oldInstallmentTax == 'undefined') {
+                /*if (typeof this.oldInstallmentTax == "undefined") {
                     this.oldInstallmentTax = 0;
                 }
                 // console.log(newTax);

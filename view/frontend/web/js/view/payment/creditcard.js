@@ -3,28 +3,28 @@
 /*global define*/
 define(
     [
-        'MundiPagg_MundiPagg/js/view/payment/default'
+        "MundiPagg_MundiPagg/js/view/payment/default"
     ],
-    function (Component, $t) {
+    function(Component, $t) {
         return Component.extend({
             defaults: {
-                template: 'MundiPagg_MundiPagg/payment/default'
+                template: MundiPagg_MundiPagg/payment/default"
             },
 
-            getCode: function () {
-                return 'mundipagg_creditcard';
+            getCode: function() {
+                return "mundipagg_creditcard";
             },
 
-            isActive: function () {
+            isActive: function() {
                 return window.checkoutConfig.payment.mundipagg_creditcard.active;
             },
 
-            getTitle: function () {
+            getTitle: function() {
                 return window.checkoutConfig.payment.mundipagg_creditcard.title;
             },
 
             getForm: function () {
-                return 'MundiPagg_MundiPagg/payment/creditcard-form'
+                return "MundiPagg_MundiPagg/payment/creditcard-form";
             },
 
             /*getData: function () {

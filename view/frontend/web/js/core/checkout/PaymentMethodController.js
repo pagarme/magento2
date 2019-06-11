@@ -4,7 +4,6 @@ var PaymentMethodController = function (methodCode) {
 
 PaymentMethodController.prototype.init = function () {
     var paymentMethodInit = this.methodCode + 'Init';
-debugger;
     this[paymentMethodInit]();
 };
 
@@ -46,13 +45,12 @@ PaymentMethodController.prototype.addCreditCardListeners = function (formObject)
  */
 PaymentMethodController.prototype.creditCardValidation = function () {
     if (
-        typeof this.formObject != 'undefined' &&
-        typeof this.formObject.creditCardBrand.val() != 'undefined' &&
+        typeof this.formObject != "undefined" &&
+        typeof this.formObject.creditCardBrand.val() != "undefined" &&
         this.formObject.creditCardBrand.val().length > 0
     ) {
         return true
     }
 
-    console.log("formObject not found!");
     return false;
 };

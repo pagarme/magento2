@@ -3,27 +3,25 @@
 /*global define*/
 define(
     [
-        'MundiPagg_MundiPagg/js/view/payment/default'
+        "MundiPagg_MundiPagg/js/view/payment/default"
     ],
     function (Component, $t) {
 
         return Component.extend({
             defaults: {
-                template: 'MundiPagg_MundiPagg/payment/default'
+                template: "MundiPagg_MundiPagg/payment/default"
             },
-
-            getCode: function () {
-                return 'mundipagg_billet';
+            getCode: function() {
+                return "mundipagg_billet";
             },
-
-            isActive: function () {
+            isActive: function() {
                 return window.checkoutConfig.payment.mundipagg_billet.active;
             },
-            getTitle: function () {
+            getTitle: function() {
                 return window.checkoutConfig.payment.mundipagg_billet.title;
             },
-            getForm: function () {
-                return 'MundiPagg_MundiPagg/payment/boleto'
+            getForm: function() {
+                return "MundiPagg_MundiPagg/payment/boleto";
             },
         });
     }
