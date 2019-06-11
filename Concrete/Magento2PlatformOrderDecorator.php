@@ -336,6 +336,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $quoteCustomer = $quote->getCustomer();
 
         $addresses = $quoteCustomer->getAddresses();
+        $address = end($addresses);
 
         $customerRepository =
             ObjectManager::getInstance()->get(CustomerRepository::class);
@@ -384,14 +385,14 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             $cleanDocument = preg_replace(
                 '/\D/',
                 '',
-                $addresses[0]->getVatId()
+                $address->getVatId()
             );
         }
 
         $customer->setDocument($cleanDocument);
         $customer->setType(CustomerType::individual());
 
-        $telephone = $quote->getCustomer()->getAddresses()[0]->getTelephone();
+        $telephone = $address->getTelephone();
         $phone = new Phone(
             '55',
             substr($telephone, 0, 2),
@@ -401,7 +402,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             CustomerPhones::create([$phone, $phone])
         );
 
-        $address = $this->getAddress($addresses[0]);
+        $address = $this->getAddress($address);
 
         $customer->setAddress($address);
 
