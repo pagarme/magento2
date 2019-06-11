@@ -8,7 +8,7 @@ define(
     function(Component, $t) {
         return Component.extend({
             defaults: {
-                template: MundiPagg_MundiPagg/payment/default"
+                template: "MundiPagg_MundiPagg/payment/default"
             },
 
             getCode: function() {

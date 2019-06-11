@@ -94,7 +94,6 @@ class DataValidateAdmin implements ObserverInterface
     protected function initializeModule()
     {
         Magento2CoreSetup::bootstrap();
-        Magento2CoreSetup::loadModuleConfigurationFromPlatform();
     }
 
     private function updateModuleConfiguration()
