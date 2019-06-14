@@ -20,6 +20,8 @@ PaymentMethodController.prototype.formValidation = function () {
 PaymentMethodController.prototype.creditCardInit = function () {
     this.formObject = FormObject.creditCardInit();
 
+    this.modelToken = new CreditCardToken(this.formObject);
+
     this.addCreditCardListeners(this.formObject);
 };
 
@@ -54,3 +56,15 @@ PaymentMethodController.prototype.creditCardValidation = function () {
 
     return false;
 };
+
+
+// @todo Mover to another class
+
+PaymentMethodController.prototype.getCreditCardToken = function (pkKey, callback) {
+
+    if (this.creditCardValidation()) {
+        this.modelToken
+            .getToken(pkKey)
+            .done(callback);
+    }
+}

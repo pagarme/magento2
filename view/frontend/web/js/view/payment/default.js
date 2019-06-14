@@ -22,7 +22,12 @@ define(
         "Magento_Checkout/js/action/redirect-on-success",
         "mage/translate",
         "Magento_Ui/js/model/messageList",
-        "MundiPagg_MundiPagg/js/core/checkout/PaymentModuleBootstrap"
+        "MundiPagg_MundiPagg/js/core/checkout/PaymentModuleBootstrap",
+        "MundiPagg_MundiPagg/js/core/checkout/PaymentMethodController",
+        "MundiPagg_MundiPagg/js/core/checkout/Bin",
+        "MundiPagg_MundiPagg/js/core/checkout/PlatformFormBiding",
+        "MundiPagg_MundiPagg/js/core/checkout/PlatformFormHandler",
+        "MundiPagg_MundiPagg/js/core/checkout/CreditCardToken"
     ],
     function(
         Component,
@@ -38,7 +43,8 @@ define(
         redirectOnSuccessAction,
         $t,
         globalMessageList,
-        MundiPaggCore
+        MundiPaggCore,
+        PaymentController
     ) {
         return Component.extend({
 
@@ -58,6 +64,8 @@ define(
              * Place order.
              */
             beforeplaceOrder: function(data, event){
+
+                var _self = this;
                 /*
                 globalMessageList.addErrorMessage({
                     message: $t("Error message.")
@@ -65,12 +73,9 @@ define(
                 $("html, body").animate({scrollTop: 0}, 600);
                 return false;*/
 
-                MundiPaggCore.initPaymentMethod("creditCard");
+                window.MundiPaggCore.initPaymentMethod("creditCard");
 
-                //Mix data with core formObject;
-
-                this.getData();
-                this.placeOrder(data, event);
+                window.MundiPaggCore.placeOrder(_self, "creditCard", data, event);
             },
 
 

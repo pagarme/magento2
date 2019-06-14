@@ -3,9 +3,10 @@
 /*global define*/
 define(
     [
-        "MundiPagg_MundiPagg/js/view/payment/default"
+        "MundiPagg_MundiPagg/js/view/payment/default",
+        "MundiPagg_MundiPagg/js/core/checkout/PaymentModuleBootstrap"
     ],
-    function(Component, $t) {
+    function(Component, MundipaggCore, $t) {
         return Component.extend({
             defaults: {
                 template: "MundiPagg_MundiPagg/payment/default"
@@ -27,22 +28,25 @@ define(
                 return "MundiPagg_MundiPagg/payment/creditcard-form";
             },
 
-            /*getData: function () {
+            getData: function () {
+                var formObject = FormObject.creditCardInit();
+
+
                 return {
                     'method': this.item.method,
                     'additional_data': {
-                        'cc_type': 'visa',
+                        'cc_type': formObject.creditCardBrand.val(),
                         'cc_last_4': '1111',
-                        'cc_exp_year': 19,
-                        'cc_exp_month': 22,
-                        'cc_owner': 'Holder name',
+                        'cc_exp_year': formObject.creditCardExpYear.val(),
+                        'cc_exp_month': formObject.creditExpMonth.val(),
+                        'cc_owner': formObject.creditCardHolderName.val(),
                         'cc_savecard': 0,
                         'cc_saved_card': 0,
-                        'cc_installments': 1,
-                        'cc_token_credit_card': "token_n2pmbDMfJ0SEgWrw",
+                        'cc_installments': formObject.creditCardInstallments.val(),
+                        'cc_token_credit_card': formObject.creditCardToken.val(),
                     }
                 };
-            },*/
+            },
 
         });
     }

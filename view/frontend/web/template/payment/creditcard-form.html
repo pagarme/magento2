@@ -48,16 +48,20 @@
                         <select  name="payment[cc_exp_month]"
                                  class="select select-month"
                                  >
-                            <option value="22">22</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
                         </select>
                     </div>
                 </div>
                 <div class="field no-label year">
                     <div class="control">
                         <select name="payment[cc_exp_year]"
-                                class="select select-year"
-                                >
-                            <option value="12">12</option>
+                                class="select select-year">
+
+                            <option value="22">22</option>
+                            <option value="23">23</option>
+                            <option value="24">24</option>
                         </select>
                     </div>
                 </div>
@@ -107,6 +111,7 @@
             </div>
         </div>
     </div>
+    <input type="hidden" name="payment[cc_token]" />
     <!--div class="field choice" >
         <input type="checkbox" class="checkbox" id="creditcard-save" />
         <label class="label" >
