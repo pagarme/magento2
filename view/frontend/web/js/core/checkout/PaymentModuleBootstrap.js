@@ -25,11 +25,13 @@ MundiPaggCore.validatePaymentMethod = function (methodCode) {
 MundiPaggCore.placeOrder = function(platformObject, data, event) {
 
     if (platformObject.getCode().indexOf('creditcard') >= 0) {
+
+        var formId = '#' + platformObject.getCode() + '-form';
         this.paymentMethod.getCreditCardToken(
             platformObject.getKey(),
             function (response) {
                 if (response !== false) {
-                    jQuery("#mundipagg_creditcard-form input[name='payment[cc_token_credit_card]']").val(response.id);
+                    jQuery(formId + " input[name='payment[cc_token]']").val(response.id);
                     platformObject.placeOrder(data, event);
                 }
             }

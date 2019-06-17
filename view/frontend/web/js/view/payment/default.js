@@ -82,6 +82,8 @@ define(
 
                 window.MundiPaggCore.initPaymentMethod("creditCard");
 
+                //@todo Validar dados inclusive de endereço pelo MundiPaggCore.quote setado acima
+
                 window.MundiPaggCore.placeOrder(_self, data, event);
             },
 
@@ -92,6 +94,11 @@ define(
             selectPaymentMethod: function() {
                 selectPaymentMethodAction(this.getData());
                 checkoutData.setSelectedPaymentMethod(this.item.method);
+
+                //iniciar o metodo de pagamento para setar o observer do Bin
+                window.MundiPaggCore.initPaymentMethod("creditCard");
+
+
                 return true;
             },
 
