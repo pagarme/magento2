@@ -22,15 +22,19 @@ MundiPaggCore.validatePaymentMethod = function (methodCode) {
     return this.paymentMethod.formValidation();
 }
 
-MundiPaggCore.placeOrder = function(_self, methodCode, data, event) {
+MundiPaggCore.placeOrder = function(platformObject, data, event) {
 
-    this.paymentMethod.getCreditCardToken(
-        "pk_test_mak6gbVi8iEgb4oB",
-        function (response) {
-            if (response !== false) {
-                jQuery("#mundipagg_creditcard-form input[name='payment[cc_token]']").val(response.id);
-                _self.placeOrder(data, event);
+    if (platformObject.getCode().indexOf('creditcard') >= 0) {
+        this.paymentMethod.getCreditCardToken(
+            platformObject.getKey(),
+            function (response) {
+                if (response !== false) {
+                    jQuery("#mundipagg_creditcard-form input[name='payment[cc_token_credit_card]']").val(response.id);
+                    platformObject.placeOrder(data, event);
+                }
             }
-        }
-    );
+        );
+    } else {
+        platformObject.placeOrder(data, event);
+    }
 }

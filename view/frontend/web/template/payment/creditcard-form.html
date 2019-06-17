@@ -1,3 +1,5 @@
+<fieldset data-bind="attr: {class: 'fieldset payment items ccard ' + getCode(), id: 'payment_form_' + getCode()}">
+
 <div id="mundipagg_creditcard-form">
     <div class="field type">
         <div class="control">
@@ -10,7 +12,7 @@
                    class="input-text"
                    value="visa"
                    >
-            <input type="" name="payment[cc_token_credit_card]" class="input-text" value="">
+            <input type="hidden" name="payment[cc_token_credit_card]" class="input-text" value="">
         </div>
     </div>
     <div class="field number required">
@@ -111,7 +113,6 @@
             </div>
         </div>
     </div>
-    <input type="hidden" name="payment[cc_token]" />
     <!--div class="field choice" >
         <input type="checkbox" class="checkbox" id="creditcard-save" />
         <label class="label" >
@@ -128,3 +129,4 @@
         </div>
     </div-->
 </div>
+</fieldset>

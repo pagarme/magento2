@@ -46,6 +46,9 @@ define(
         MundiPaggCore,
         PaymentController
     ) {
+
+        window.MundiPaggCore.quote = quote;
+
         return Component.extend({
 
             initialize: function() {
@@ -58,6 +61,10 @@ define(
                 return {
                     "method": this.item.method
                 };
+            },
+
+            getKey : function() {
+                return window.checkoutConfig.payment.ccform.pk_token
             },
 
             /**
@@ -75,7 +82,7 @@ define(
 
                 window.MundiPaggCore.initPaymentMethod("creditCard");
 
-                window.MundiPaggCore.placeOrder(_self, "creditCard", data, event);
+                window.MundiPaggCore.placeOrder(_self, data, event);
             },
 
 
