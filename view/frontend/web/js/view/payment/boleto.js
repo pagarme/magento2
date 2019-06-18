@@ -22,6 +22,9 @@ define(
             getForm: function() {
                 return "MundiPagg_MundiPagg/payment/boleto";
             },
+            getText: function () {
+                return window.checkoutConfig.payment.mundipagg_billet.text;
+            },
         });
     }
 );
