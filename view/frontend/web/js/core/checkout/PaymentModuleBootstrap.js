@@ -34,6 +34,14 @@ MundiPaggCore.placeOrder = function(platformObject, data, event) {
                     jQuery(formId + " input[name='payment[cc_token]']").val(response.id);
                     platformObject.placeOrder(data, event);
                 }
+            },
+            function (error) {
+                console.log(error);
+                window.globalMessageList.addErrorMessage({
+                    message: $t("Error to generate card token.")
+                });
+
+                $("html, body").animate({scrollTop: 0}, 600);
             }
         );
     } else {

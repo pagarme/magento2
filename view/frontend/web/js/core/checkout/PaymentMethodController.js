@@ -60,11 +60,12 @@ PaymentMethodController.prototype.creditCardValidation = function () {
 
 // @todo Mover to another class
 
-PaymentMethodController.prototype.getCreditCardToken = function (pkKey, callback) {
+PaymentMethodController.prototype.getCreditCardToken = function (pkKey, success, error) {
 
     if (this.creditCardValidation()) {
         this.modelToken
             .getToken(pkKey)
-            .done(callback);
+            .done(success)
+            .fail(error);
     }
 }
