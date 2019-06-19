@@ -3,15 +3,20 @@
  */
 
 var MundiPaggCore = {
-    paymentMethod : null
+    paymentMethod : []
 };
 
 MundiPaggCore.initPaymentMethod = function (methodCode) {
 
-    this.paymentMethod =
+    this.paymentMethod[methodCode] =
         new PaymentMethodController(methodCode);
 
-    this.paymentMethod.init();
+    this.paymentMethod[methodCode].init();
+};
+
+
+MundiPaggCore.initBin = function (methodCode, obj) {
+    this.paymentMethod[methodCode].initBin(obj);
 };
 
 MundiPaggCore.validatePaymentMethod = function (methodCode) {
@@ -24,10 +29,13 @@ MundiPaggCore.validatePaymentMethod = function (methodCode) {
 
 MundiPaggCore.placeOrder = function(platformObject, data, event) {
 
-    if (platformObject.getCode().indexOf('creditcard') >= 0) {
+    var code = platformObject.getCode();
+    var model = platformObject.getModel();
 
-        var formId = '#' + platformObject.getCode() + '-form';
-        this.paymentMethod.getCreditCardToken(
+    if (code.indexOf('creditcard') >= 0) {
+
+        var formId = '#' + code + '-form';
+        this.paymentMethod[model].getCreditCardToken(
             platformObject.getKey(),
             function (response) {
                 if (response !== false) {

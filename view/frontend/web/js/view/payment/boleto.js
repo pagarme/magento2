@@ -2,7 +2,8 @@
 /*global define*/
 define(
     [
-        "MundiPagg_MundiPagg/js/view/payment/default"
+        "MundiPagg_MundiPagg/js/view/payment/default",
+        "MundiPagg_MundiPagg/js/core/models/BoletoModel",
     ],
     function (Component, $t) {
 
@@ -24,6 +25,9 @@ define(
             },
             getText: function () {
                 return window.checkoutConfig.payment.mundipagg_billet.text;
+            },
+            getModel: function() {
+                return 'boleto';
             },
         });
     }

@@ -17,23 +17,38 @@ PaymentMethodController.prototype.formValidation = function () {
     return this[formValidation]();
 };
 
-PaymentMethodController.prototype.creditCardInit = function () {
+PaymentMethodController.prototype.creditcardInit = function () {
     this.formObject = FormObject.creditCardInit();
 
     this.modelToken = new CreditCardToken(this.formObject);
-
-    this.addCreditCardListeners(this.formObject);
 };
 
-PaymentMethodController.prototype.addCreditCardListeners = function (formObject) {
+PaymentMethodController.prototype.boletoInit = function () {
+};
+
+PaymentMethodController.prototype.initBin = function (obj) {
+    if (this.methodCode != 'creditcard') {
+        return;
+    }
+    this.addCreditCardListeners(FormObject.creditCardInit(), obj)
+}
+
+PaymentMethodController.prototype.addCreditCardListeners = function (formObject, obj ) {
     bin = new Bin();
     formHandler = new FormHandler();
+    installments = new Installments();
 
     formObject.creditCardNumber.on('keyup', function () {
         setTimeout(function(){
             bin.init(formObject.creditCardNumber.val());
+            installments.init(bin);
             formHandler.init(formObject);
             formHandler.switchBrand(bin.selectedBrand);
+
+            obj.getInstallmentsByBrand(
+                bin.selectedBrand,
+                installments.addOptions
+            );
         }, 1300);
     });
 
