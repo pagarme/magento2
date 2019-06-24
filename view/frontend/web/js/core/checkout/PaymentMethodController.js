@@ -40,17 +40,32 @@ PaymentMethodController.prototype.addCreditCardListeners = function (formObject,
 
     formObject.creditCardNumber.on('keyup', function () {
         setTimeout(function(){
-            bin.init(formObject.creditCardNumber.val());
-            installments.init(bin);
+            var cardNumber = bin.formatNumber(formObject.creditCardNumber.val());
+
+            var isNewBrand = bin.validate(cardNumber);
+
+            bin.init(cardNumber);
+
+            if (isNewBrand) {
+                obj.getInstallmentsByBrand(
+                    bin.selectedBrand,
+                    installments.addOptions
+                );
+            }
+
             formHandler.init(formObject);
             formHandler.switchBrand(bin.selectedBrand);
 
-            obj.getInstallmentsByBrand(
-                bin.selectedBrand,
-                installments.addOptions
-            );
         }, 1300);
     });
+
+    formObject.creditCardInstallments.on('change', function() {
+        var value = jQuery(this).val();
+        if (value != "" && value != 'undefined') {
+            var interest = jQuery(this).find(':selected').attr("interest");
+            obj.updateTotalWithTax(interest);
+        }
+    })
 
     formObject.creditCardNumber.on('change', function () {
         bin.init(jQuery(this).val());

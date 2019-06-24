@@ -101,10 +101,10 @@ define(
 
             updateTotalWithTax: function(newTax) {
                 //Interest
-                /*if (typeof this.oldInstallmentTax == "undefined") {
+                if (typeof this.oldInstallmentTax == "undefined") {
                     this.oldInstallmentTax = 0;
                 }
-                // console.log(newTax);
+                
                 var total = quote.getTotals()();
                 var subTotalIndex = null;
                 for (var i = 0, len = total.total_segments.length; i < len; i++) {
@@ -122,7 +122,7 @@ define(
                 total.base_tax_amount = parseFloat(newTax);
                 this.oldInstallmentTax = newTax;
                 window.checkoutConfig.payment.ccform.installments.value = newTax;
-                quote.setTotals(total);*/
+                quote.setTotals(total);
             },
         })
     }
