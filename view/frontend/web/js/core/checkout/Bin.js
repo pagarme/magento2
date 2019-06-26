@@ -6,8 +6,8 @@ var Bin = function () {
 };
 
 Bin.prototype.init = function (newValue) {
-    var newValue = String(newValue);
-    newValue = newValue.slice(0, 6);
+
+    var newValue = this.formatNumber(newValue);
 
     if (
         typeof this.checkedBins != 'undefined' &&
@@ -28,6 +28,11 @@ Bin.prototype.init = function (newValue) {
     }
 
     this.selectedBrand = '';
+};
+
+Bin.prototype.formatNumber = function (number) {
+    var newValue = String(number);
+    return newValue.slice(0, 6);
 };
 
 Bin.prototype.validate = function (newValue) {

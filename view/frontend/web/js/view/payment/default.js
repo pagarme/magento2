@@ -27,7 +27,8 @@ define(
         "MundiPagg_MundiPagg/js/core/checkout/Bin",
         "MundiPagg_MundiPagg/js/core/checkout/PlatformFormBiding",
         "MundiPagg_MundiPagg/js/core/checkout/PlatformFormHandler",
-        "MundiPagg_MundiPagg/js/core/checkout/CreditCardToken"
+        "MundiPagg_MundiPagg/js/core/checkout/CreditCardToken",
+        "MundiPagg_MundiPagg/js/core/checkout/Installments",
     ],
     function(
         Component,
@@ -52,6 +53,9 @@ define(
         return Component.extend({
 
             initialize: function() {
+
+                window.MundiPaggCore.initPaymentMethod(this.getModel());
+
                 this._super().observe([
                     "mundipagg-content"
                 ]);
@@ -80,10 +84,8 @@ define(
                 $("html, body").animate({scrollTop: 0}, 600);
                 return false;*/
 
-                window.MundiPaggCore.initPaymentMethod("creditCard");
-
                 //@todo Validar dados inclusive de endereço pelo MundiPaggCore.quote setado acima
-
+                window.MundiPaggCore.initPaymentMethod(this.getModel());
                 window.MundiPaggCore.placeOrder(_self, data, event);
             },
 
@@ -94,20 +96,15 @@ define(
             selectPaymentMethod: function() {
                 selectPaymentMethodAction(this.getData());
                 checkoutData.setSelectedPaymentMethod(this.item.method);
-
-                //iniciar o metodo de pagamento para setar o observer do Bin
-                window.MundiPaggCore.initPaymentMethod("creditCard");
-
-
                 return true;
             },
 
             updateTotalWithTax: function(newTax) {
                 //Interest
-                /*if (typeof this.oldInstallmentTax == "undefined") {
+                if (typeof this.oldInstallmentTax == "undefined") {
                     this.oldInstallmentTax = 0;
                 }
-                // console.log(newTax);
+                
                 var total = quote.getTotals()();
                 var subTotalIndex = null;
                 for (var i = 0, len = total.total_segments.length; i < len; i++) {
@@ -125,7 +122,7 @@ define(
                 total.base_tax_amount = parseFloat(newTax);
                 this.oldInstallmentTax = newTax;
                 window.checkoutConfig.payment.ccform.installments.value = newTax;
-                quote.setTotals(total);*/
+                quote.setTotals(total);
             },
         })
     }

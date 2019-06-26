@@ -4,16 +4,80 @@
 define(
     [
         "MundiPagg_MundiPagg/js/view/payment/default",
-        "MundiPagg_MundiPagg/js/core/checkout/PaymentModuleBootstrap"
+        "MundiPagg_MundiPagg/js/core/checkout/PaymentModuleBootstrap",
+        "MundiPagg_MundiPagg/js/core/models/CreditCardModel",
+        "underscore",
+        'mage/translate',
+        'MundiPagg_MundiPagg/js/action/installments',
+        'MundiPagg_MundiPagg/js/action/installmentsByBrand',
+        'Magento_Checkout/js/model/full-screen-loader',
+        'ko',
+        'jquery'
     ],
-    function(Component, MundipaggCore, $t) {
+    function(
+        Component,
+        MundipaggCore,
+        CreditCardModel,
+        _,
+        $t,
+        installments,
+        installmentsByBrand,
+        fullScreenLoader,
+        ko,
+        $
+    ) {
         return Component.extend({
+
             defaults: {
-                template: "MundiPagg_MundiPagg/payment/default"
+                template: "MundiPagg_MundiPagg/payment/default",
+                allInstallments: ko.observableArray([]),
+                creditCardType: '',
+            },
+
+            initObservable: function () {
+                this._super()
+                    .observe([
+                        'creditCardType',
+                        'creditCardExpYear',
+                        'creditCardExpMonth',
+                        'creditCardNumber',
+                        'creditCardVerificationNumber',
+                        'creditCardSsStartMonth',
+                        'creditCardSsStartYear',
+                        'creditCardSsIssue',
+                        'creditSavedCard',
+                        'creditCardsavecard',
+                        'selectedCardType'
+                    ]);
+
+                return this;
+            },
+
+            initBin: function() {
+                var _self = this;
+                window.MundiPaggCore.initBin(this.getModel(), _self);
+            },
+
+            getInstallmentsByBrand: function (brand, success) {
+                if (brand == "") {
+                    return;
+                }
+
+                var formObject = FormObject.creditCardInit()
+
+                $.when(
+                    installmentsByBrand(brand)
+                ).done(
+                    success.bind(null, formObject.creditCardInstallments)
+                )
             },
 
             getCode: function() {
                 return "mundipagg_creditcard";
+            },
+
+            getModel: function() {
+                return 'creditcard';
             },
 
             isActive: function() {
@@ -25,12 +89,11 @@ define(
             },
 
             getForm: function () {
-                return "MundiPagg_MundiPagg/payment/creditcard-form";
+                return "MundiPagg_MundiPagg/payment/creditcard";
             },
 
             getData: function () {
                 var formObject = FormObject.creditCardInit();
-
 
                 return {
                     'method': this.item.method,
@@ -46,6 +109,72 @@ define(
                         'cc_token_credit_card': formObject.creditCardToken.val(),
                     }
                 };
+            },
+
+            /**
+             * Get list of available month values
+             * @returns {Object}
+             */
+            getMonthsValues: function () {
+                var months = window.checkoutConfig.payment.ccform.months[this.getCode()];
+                return _.map(months, function (value, key) {
+                    return {
+                        'value': key,
+                        'month': value
+                    };
+                });
+            },
+
+            /**
+             * Get list of available year values
+             * @returns {Object}
+             */
+            getYearsValues: function () {
+                var year = window.checkoutConfig.payment.ccform.years[this.getCode()];
+                return _.map(year, function (value, key) {
+                    return {
+                        'value': key,
+                        'year': value
+                    };
+                });
+            },
+
+            /**
+             * Get image for CVV
+             * @returns {String}
+             */
+            getCvvImageHtml: function () {
+                var cvvImgUrl = window.checkoutConfig.payment.ccform.cvvImageUrl[this.getCode()];
+
+                return '<img src="' + cvvImgUrl +
+                    '" alt="' + $t('Card Verification Number Visual Reference') +
+                    '" title="' + $t('Card Verification Number Visual Reference') +
+                    '" />';
+            },
+
+            /**
+             * Get list of available credit card types values
+             * @returns {Object}
+             */
+            getAvailableTypesValues: function () {
+                var types = window.checkoutConfig.payment.ccform.availableTypes[this.getCode()];
+                return _.map(types, function (value, key) {
+                    return {
+                        'value': key,
+                        'type': value
+                    };
+                });
+            },
+
+            /**
+             * Get payment icons
+             * @param {String} type
+             * @returns {Boolean}
+             */
+            getIcons: function (type) {
+                return window.checkoutConfig.payment.ccform.icons.hasOwnProperty(type) ?
+                    window.checkoutConfig.payment.ccform.icons[type]
+                    : false;
             },
 
         });
