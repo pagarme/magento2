@@ -17,25 +17,55 @@ PaymentMethodController.prototype.formValidation = function () {
     return this[formValidation]();
 };
 
-PaymentMethodController.prototype.creditCardInit = function () {
+PaymentMethodController.prototype.creditcardInit = function () {
     this.formObject = FormObject.creditCardInit();
 
     this.modelToken = new CreditCardToken(this.formObject);
-
-    this.addCreditCardListeners(this.formObject);
 };
 
-PaymentMethodController.prototype.addCreditCardListeners = function (formObject) {
+PaymentMethodController.prototype.boletoInit = function () {
+};
+
+PaymentMethodController.prototype.initBin = function (obj) {
+    if (this.methodCode != 'creditcard') {
+        return;
+    }
+    this.addCreditCardListeners(FormObject.creditCardInit(), obj)
+}
+
+PaymentMethodController.prototype.addCreditCardListeners = function (formObject, obj ) {
     bin = new Bin();
     formHandler = new FormHandler();
+    installments = new Installments();
 
     formObject.creditCardNumber.on('keyup', function () {
         setTimeout(function(){
-            bin.init(formObject.creditCardNumber.val());
+            var cardNumber = bin.formatNumber(formObject.creditCardNumber.val());
+
+            var isNewBrand = bin.validate(cardNumber);
+
+            bin.init(cardNumber);
+
+            if (isNewBrand) {
+                obj.getInstallmentsByBrand(
+                    bin.selectedBrand,
+                    installments.addOptions
+                );
+            }
+
             formHandler.init(formObject);
             formHandler.switchBrand(bin.selectedBrand);
+
         }, 1300);
     });
+
+    formObject.creditCardInstallments.on('change', function() {
+        var value = jQuery(this).val();
+        if (value != "" && value != 'undefined') {
+            var interest = jQuery(this).find(':selected').attr("interest");
+            obj.updateTotalWithTax(interest);
+        }
+    })
 
     formObject.creditCardNumber.on('change', function () {
         bin.init(jQuery(this).val());

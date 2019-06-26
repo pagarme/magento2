@@ -3,29 +3,50 @@
     <div class="field type">
         <div class="control">
             <ul class="credit-card-types">
+            <!-- ko foreach: {data: getAvailableTypesValues(), as: 'item'} -->
+                <!--ko if: $parent.getIcons(item.value) -->
+                <li class="item" data-bind="css: {
 
+                                                         } ">
+                    <img data-bind="attr: {
+                                'src': $parent.getIcons(item.value).url,
+                                'alt': item.type,
+                                'width': $parent.getIcons(item.value).width,
+                                'height': $parent.getIcons(item.value).height,
+                                'class': 'brands '  + item.type.toLowerCase()
+                                }">
+                </li>
+                <!--/ko-->
+            <!--/ko-->
             </ul>
-            <p>TIPO</p>
-            <input type=""
+            <input type="hidden"
                    name="payment[cc_type]"
                    class="input-text"
-                   value="visa"
+                   value=""
                    >
             <input type="hidden" name="payment[cc_token]" class="input-text" value="">
         </div>
     </div>
     <div class="field number required">
         <label class="label">
-            <span>Number</span>
+            <span><!-- ko i18n: 'Credit Card Number'--><!-- /ko --></span>
         </label>
         <div class="control">
-            <input type="number" min="0" maxlength="19" name="payment[cc_number]" class="input-text" value="4024007150256427"/>
+            <input
+                    type="number"
+                    min="0"
+                    maxlength="19"
+                    name="payment[cc_number]"
+                    class="input-text"
+                    value=""
+                    afterRender="initBin"
+            />
         </div>
     </div>
 
     <div class="field owner required" >
         <label class="label">
-            <span>Holder Name</span>
+            <span><!-- ko i18n: 'Name on Card'--><!-- /ko --></span>
         </label>
         <div class="control">
             <input type="text"
@@ -40,29 +61,34 @@
 
     <div class="field date required" >
         <label class="label">
-            <span>Date</span>
+            <span><!-- ko i18n: 'Expiration Date'--><!-- /ko --></span>
         </label>
         <div class="control">
             <div class="fields group group-2">
                 <div class="field no-label month">
                     <div class="control">
-                        <select  name="payment[cc_exp_month]"
-                                 class="select select-month"
-                                 >
-                            <option value="10">10</option>
-                            <option value="11">11</option>
-                            <option value="12">12</option>
+                        <select
+                                name="payment[cc_exp_month]"
+                                class="select select-month"
+                                data-bind="
+                                options: getMonthsValues(),
+                                optionsValue: 'value',
+                                optionsText: 'month',
+                                optionsCaption: $t('Month')"
+                         >
                         </select>
                     </div>
                 </div>
                 <div class="field no-label year">
                     <div class="control">
                         <select name="payment[cc_exp_year]"
-                                class="select select-year">
-
-                            <option value="22">22</option>
-                            <option value="23">23</option>
-                            <option value="24">24</option>
+                                class="select select-year"
+                                data-bind="
+                                options: getYearsValues(),
+                                optionsValue: 'value',
+                                optionsText: 'year',
+                                optionsCaption: $t('Year')"
+                        >
                         </select>
                     </div>
                 </div>
@@ -85,10 +111,14 @@
             <div class="field-tooltip toggle">
                 <span class="field-tooltip-action action-cvv"
                       tabindex="0"
+                      data-toggle="dropdown"
+                      data-bind="attr: {title: $t('What is this?')}, mageInit: {'dropdown':{'activeClass': '_active'}}"
                       >
                     <span>CVV</span>
                 </span>
-                <div class="field-tooltip-content"></div>
+                <div class="field-tooltip-content"
+                     data-target="dropdown"
+                     data-bind="html: getCvvImageHtml()"></div>
             </div>
         </div>
     </div>
@@ -104,15 +134,19 @@
                         <select  name="payment[cc_installments]"
                                  style="width: 335px;"
                                  class="select select-installments"
+                                 data-bind="
+                                        options: allInstallments,
+                                        optionsValue: 'value',
+                                        optionsText: 'installments',
+                                        optionsCaption: $t('Installments'),"
                                  >
-                            <option value="2" interest="0">2x of $156.60 without interest (Total: $313.20)</option>
                         </select>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!--div class="field choice" >
+    <!--div class="field choice">
         <input type="checkbox" class="checkbox" id="creditcard-save" />
         <label class="label" >
             <span>Save</span>
