@@ -3,7 +3,7 @@
 define(
     [
         "MundiPagg_MundiPagg/js/view/payment/default",
-        "MundiPagg_MundiPagg/js/core/models/BoletoModel",
+        "MundiPagg_MundiPagg/js/core/models/BoletoModel"
     ],
     function (Component, $t) {
 

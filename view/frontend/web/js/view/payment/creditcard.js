@@ -12,7 +12,7 @@ define(
         'MundiPagg_MundiPagg/js/action/installmentsByBrand',
         'Magento_Checkout/js/model/full-screen-loader',
         'ko',
-        'jquery',
+        'jquery'
     ],
     function(
         Component,

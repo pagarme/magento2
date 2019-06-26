@@ -14,7 +14,6 @@ MundiPaggCore.initPaymentMethod = function (methodCode) {
     this.paymentMethod[methodCode].init();
 };
 
-
 MundiPaggCore.initBin = function (methodCode, obj) {
     this.paymentMethod[methodCode].initBin(obj);
 };

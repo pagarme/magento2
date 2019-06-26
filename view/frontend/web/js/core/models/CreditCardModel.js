@@ -2,7 +2,6 @@ var CreditCardModel = function () {
     this.formObject = ''
 };
 
-
 CreditCardModel.prototype.init = function () {
     this.formObject = FormObject.creditCardInit();
 
