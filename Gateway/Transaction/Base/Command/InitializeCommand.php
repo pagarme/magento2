@@ -100,10 +100,9 @@ class InitializeCommand implements CommandInterface
             $orderDecorator = new $platformOrderDecoratorClass();
             $orderDecorator->setPlatformOrder($order);
 
-
             $orderService = new OrderService();
             $orderService->createOrderAtMundipagg($orderDecorator);
-            
+
             $orderDecorator->save();
 
             return $orderDecorator;
