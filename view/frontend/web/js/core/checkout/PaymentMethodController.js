@@ -26,6 +26,9 @@ PaymentMethodController.prototype.creditcardInit = function () {
 PaymentMethodController.prototype.boletoInit = function () {
 };
 
+PaymentMethodController.prototype.twocreditcardsInit = function () {
+};
+
 PaymentMethodController.prototype.initBin = function (obj) {
     if (this.methodCode != 'creditcard') {
         return;

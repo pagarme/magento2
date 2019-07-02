@@ -53,7 +53,7 @@ define(
         return Component.extend({
 
             initialize: function() {
-
+console.log(1);
                 window.MundiPaggCore.initPaymentMethod(this.getModel());
 
                 this._super().observe([

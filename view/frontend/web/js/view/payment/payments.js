@@ -25,6 +25,10 @@ define(
             {
                 type: 'mundipagg_billet',
                 component: 'MundiPagg_MundiPagg/js/view/payment/boleto'
+            },
+            {
+                type: 'mundipagg_two_creditcard',
+                component: 'MundiPagg_MundiPagg/js/view/payment/twocreditcards'
             }
 
         );
