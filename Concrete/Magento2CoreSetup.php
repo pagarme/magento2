@@ -146,7 +146,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
             'antifraudEnabled' => 'antifraud_active',
             'antifraudMinAmount' => 'antifraud_min_amount',
             'saveCards' => 'enabled_saved_cards',
-            'defaultInstallmentsConfig' => 'installments_type'
+            'installmentsDefaultConfig' => 'installments_type'
         ];
         $section = 'payment/mundipagg_creditcard/';
 
