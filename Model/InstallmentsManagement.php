@@ -13,6 +13,8 @@ namespace MundiPagg\MundiPagg\Model;
 
 use Magento\Framework\Api\SimpleBuilderInterface;
 use MundiPagg\MundiPagg\Api\InstallmentsManagementInterface;
+use Mundipagg\Core\Kernel\Abstractions\AbstractModuleCoreSetup as MPSetup;
+use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 
 class InstallmentsManagement
     extends AbstractInstallmentManagement
@@ -29,6 +31,7 @@ class InstallmentsManagement
     {
         $this->setBuilder($builder);
         parent::__construct();
+        Magento2CoreSetup::bootstrap();
     }
 
     /**
@@ -36,6 +39,12 @@ class InstallmentsManagement
      */
     public function getInstallments()
     {
+        $useDefaultInstallmentsConfig = MPSetup::getModuleConfiguration()->isInstallmentsDefaultConfig();
+
+        if (!$useDefaultInstallmentsConfig) {
+            return [];
+        }
+
         return $this->getCoreInstallments(
             null,
             null,
