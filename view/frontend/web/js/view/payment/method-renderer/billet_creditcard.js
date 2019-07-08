@@ -186,7 +186,8 @@ define(
 
                 this.getInstallmentsByApi = function () {
                     if (!isNaN(this.creditCardCcAmountBcc()) && this.creditCardCcAmountBcc() != '') {
-
+                        self.allInstallments.removeAll();
+                        fullScreenLoader.startLoader();
                         $.when(
                             installmentsByBrandAndAmount(self.selectedCardTypeBcc(), this.creditCardCcAmountBcc())
                         ).done(function (data) {
@@ -201,7 +202,7 @@ define(
                             });
 
                         }).always(function () {
-                            // fullScreenLoader.stopLoader();
+                            fullScreenLoader.stopLoader();
                         });
 
                     }
@@ -212,8 +213,8 @@ define(
 
                     if (newValue) {
 
-                        //fullScreenLoader.startLoader();
-
+                        fullScreenLoader.startLoader();
+                        self.allInstallments.removeAll();
                         var creditCardAmount = self.creditCardCcAmountBcc() ? self.creditCardCcAmountBcc() : 0;
                         $.when(
                             installmentsByBrandAndAmount(newValue, creditCardAmount)
@@ -229,7 +230,7 @@ define(
                             });
 
                         }).always(function () {
-                            //fullScreenLoader.stopLoader();
+                            fullScreenLoader.stopLoader();
                         });
 
                     }

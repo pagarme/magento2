@@ -124,7 +124,7 @@ define(
                     self.creditCardTypeFirst(newValue);
 
                     var amountFirst = self.firstCreditCardAmount() != '' ? self.firstCreditCardAmount() : 0;
-                    //fullScreenLoader.startLoader();
+                    fullScreenLoader.startLoader();
                     var currentAmount = jQuery("select[name='payment[cc_installments_first]']").attr('amount');
                     var currentBrand = jQuery("select[name='payment[cc_installments_first]']").attr('brand');
 
@@ -150,7 +150,7 @@ define(
                             jQuery("select[name='payment[cc_installments_first]']").attr('brand', newValue)
 
                         }).always(function () {
-                            //fullScreenLoader.stopLoader();
+                            fullScreenLoader.stopLoader();
                         });
                     }
                 }
@@ -160,7 +160,7 @@ define(
                     self.creditCardTypeSecond(newValue);
 
                     var amountSecond = self.secondCreditCardAmount() != '' ? self.secondCreditCardAmount() : 0;
-                    //fullScreenLoader.startLoader();
+                    fullScreenLoader.startLoader();
 
                     var currentAmount = jQuery("select[name='payment[cc_installments_second]']").attr('amount');
                     var currentBrand = jQuery("select[name='payment[cc_installments_second]']").attr('brand');
@@ -187,7 +187,7 @@ define(
                             jQuery("select[name='payment[cc_installments_second]']").attr('brand', newValue);
 
                         }).always(function () {
-                            //fullScreenLoader.stopLoader();
+                            fullScreenLoader.stopLoader();
                         });
                     }
 
