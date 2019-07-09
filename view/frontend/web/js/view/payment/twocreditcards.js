@@ -20,11 +20,27 @@ define(
             getTitle: function() {
                 return window.checkoutConfig.payment.mundipagg_two_creditcard.title;
             },
-            getForm: function() {
+            getBase: function() {
                 return "MundiPagg_MundiPagg/payment/twocreditcards";
+            },
+            getForm: function() {
+                return "MundiPagg_MundiPagg/payment/creditcard-form";
             },
             getModel: function() {
                 return 'twocreditcards';
+            },
+            initBin: function() {
+                var _self = this;
+                window.MundiPaggCore.initBin(this.getModel(), _self);
+            },
+            getMonthsValues: function () {
+                return '';
+            },
+            getYearsValues: function () {
+                return '';
+            },
+            getCvvImageHtml: function () {
+                
             }
         });
     }

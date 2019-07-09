@@ -53,12 +53,16 @@ define(
         return Component.extend({
 
             initialize: function() {
-console.log(1);
-                window.MundiPaggCore.initPaymentMethod(this.getModel());
+                this.initPaymentMethod();
 
                 this._super().observe([
                     "mundipagg-content"
                 ]);
+            },
+
+            initPaymentMethod: function() {
+                var _self = this;
+                window.MundiPaggCore.initPaymentMethod(this.getModel());
             },
 
             getData: function() {

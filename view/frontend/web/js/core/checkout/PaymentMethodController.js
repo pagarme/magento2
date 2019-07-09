@@ -19,14 +19,16 @@ PaymentMethodController.prototype.formValidation = function () {
 
 PaymentMethodController.prototype.creditcardInit = function () {
     this.formObject = FormObject.creditCardInit();
+    this.addCreditCardListeners(this.formObject);
 
     this.modelToken = new CreditCardToken(this.formObject);
 };
 
-PaymentMethodController.prototype.boletoInit = function () {
+PaymentMethodController.prototype.twocreditcardsInit = function () {
+    this.formObject = FormObject.twoCreditCardsInit();
 };
 
-PaymentMethodController.prototype.twocreditcardsInit = function () {
+PaymentMethodController.prototype.boletoInit = function () {
 };
 
 PaymentMethodController.prototype.initBin = function (obj) {
@@ -36,13 +38,14 @@ PaymentMethodController.prototype.initBin = function (obj) {
     this.addCreditCardListeners(FormObject.creditCardInit(), obj)
 }
 
-PaymentMethodController.prototype.addCreditCardListeners = function (formObject, obj ) {
+PaymentMethodController.prototype.addCreditCardListeners = function (formObject, obj) {
     bin = new Bin();
     formHandler = new FormHandler();
     installments = new Installments();
 
     formObject.creditCardNumber.on('keyup', function () {
         setTimeout(function(){
+            debugger;
             var cardNumber = bin.formatNumber(formObject.creditCardNumber.val());
 
             var isNewBrand = bin.validate(cardNumber);

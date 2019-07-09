@@ -20,8 +20,11 @@ define(
             getTitle: function() {
                 return window.checkoutConfig.payment.mundipagg_billet.title;
             },
-            getForm: function() {
+            getBase: function() {
                 return "MundiPagg_MundiPagg/payment/boleto";
+            },
+            getForm: function() {
+                return "MundiPagg_MundiPagg/payment/boleto-form";
             },
             getText: function () {
                 return window.checkoutConfig.payment.mundipagg_billet.text;

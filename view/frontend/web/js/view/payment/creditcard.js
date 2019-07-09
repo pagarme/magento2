@@ -53,11 +53,6 @@ define(
                 return this;
             },
 
-            initBin: function() {
-                var _self = this;
-                window.MundiPaggCore.initBin(this.getModel(), _self);
-            },
-
             getInstallmentsByBrand: function (brand, success) {
                 if (brand == "") {
                     return;
@@ -88,8 +83,12 @@ define(
                 return window.checkoutConfig.payment.mundipagg_creditcard.title;
             },
 
-            getForm: function () {
+            getBase: function () {
                 return "MundiPagg_MundiPagg/payment/creditcard";
+            },
+
+            getForm: function () {
+                return "MundiPagg_MundiPagg/payment/creditcard-form";
             },
 
             getData: function () {
