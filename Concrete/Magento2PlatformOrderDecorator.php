@@ -393,11 +393,8 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $customer->setType(CustomerType::individual());
 
         $telephone = $address->getTelephone();
-        $phone = new Phone(
-            '55',
-            substr($telephone, 0, 2),
-            substr($telephone, 2)
-        );
+        $phone = new Phone($telephone);
+
         $customer->setPhones(
             CustomerPhones::create([$phone, $phone])
         );
@@ -429,11 +426,8 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $customer->setType(CustomerType::individual());
 
         $telephone = $guestAddress->getTelephone();
-        $phone = new Phone(
-            '55',
-            substr($telephone, 0, 2),
-            substr($telephone, 2)
-        );
+        $phone = new Phone($telephone);
+
         $customer->setPhones(
             CustomerPhones::create([$phone, $phone])
         );
@@ -824,11 +818,10 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $shipping->setDescription($platformShipping->getShippingDescription());
         $shipping->setRecipientName($platformShipping->getName());
 
-        $shipping->setRecipientPhone(new Phone(
-            '55',
-            substr($platformShipping->getTelephone(), 0, 2),
-            substr($platformShipping->getTelephone(), 2)
-        ));
+        $telephone = $platformShipping->getTelephone();
+        $phone = new Phone($telephone);
+
+        $shipping->setRecipientPhone($phone);
 
         $address = $this->getAddress($platformShipping);
         $shipping->setAddress($address);
