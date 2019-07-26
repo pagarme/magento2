@@ -1,4 +1,23 @@
 var FormObject = {};
+var PlarformConfig = {};
+
+
+PlarformConfig.bind = function (plarformConfig) {
+    grandTotal = parseFloat(plarformConfig.quoteData.grand_total);
+debugger;
+    var config = {
+        orderAmount : grandTotal.toFixed(2),
+        currency : {
+            code : plarformConfig.quoteData.base_currency_code,
+            symbol : plarformConfig.basePriceFormat.decimalSymbol,
+            precision : plarformConfig.basePriceFormat.precision
+        }
+    };
+
+    this.PlarformConfig = config;
+
+    return this.PlarformConfig;
+}
 
 FormObject.creditCardInit = function () {
 
@@ -46,23 +65,21 @@ FormObject.fillTwoCreditCardsElements = function (containerSelector, elementId) 
     var elements = {
         "creditCardNumber" : jQuery(containerSelector + " input[name='payment[cc_number]']"),
         "creditCardHolderName" : jQuery(containerSelector + " input[name='payment[cc_owner]']"),
-        "creditExpMonth" : jQuery(containerSelector + " select[name='payment[cc_exp_month]']"),
+        "creditCardExpMonth" : jQuery(containerSelector + " select[name='payment[cc_exp_month]']"),
         "creditCardExpYear" : jQuery(containerSelector + " select[name='payment[cc_exp_year]']"),
         "creditCardCvv" : jQuery(containerSelector + " input[name='payment[cc_cid]']"),
         "creditCardInstallments" : jQuery(containerSelector + " select[name='payment[cc_installments]']"),
         "creditCardBrand" : jQuery(containerSelector + " input[name='payment[cc_type]']"),
         "creditCardToken" : jQuery(containerSelector + " input[name='payment[cc_token]']"),
+        "creditCardAmount" : jQuery(containerSelector + " input[name='payment[cc_amount]']")
     };
 
     for (var key in elements) {
         newName = elements[key].attr('name') + '[' + elementId + ']';
         elements[key].attr('name', newName);
-
-    debugger;
-        twoCreditCardForm.elementId = elementId;
-        twoCreditCardForm.elementId.key = jQuery(containerSelector + " input[name='" + newName + "']");
+        twoCreditCardForm[key] = jQuery(containerSelector + " input[name='" + newName + "']");
     }
 
-    this.FormObject = twoCreditCardForm;
+    this.FormObject[elementId] = twoCreditCardForm;
     return this.FormObject;
 }

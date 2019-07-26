@@ -6,10 +6,9 @@ var MundiPaggCore = {
     paymentMethod : []
 };
 
-MundiPaggCore.initPaymentMethod = function (methodCode) {
+MundiPaggCore.initPaymentMethod = function (methodCode, platformConfig) {
     this.paymentMethod[methodCode] =
-        new PaymentMethodController(methodCode);
-
+        new PaymentMethodController(methodCode, platformConfig);
     this.paymentMethod[methodCode].init();
 };
 

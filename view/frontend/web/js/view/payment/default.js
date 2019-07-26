@@ -62,7 +62,10 @@ define(
 
             initPaymentMethod: function() {
                 var _self = this;
-                window.MundiPaggCore.initPaymentMethod(this.getModel());
+                window.MundiPaggCore.initPaymentMethod(
+                    this.getModel(),
+                    window.checkoutConfig
+                );
             },
 
             getData: function() {

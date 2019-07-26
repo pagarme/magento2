@@ -175,6 +175,9 @@ define(
                     window.checkoutConfig.payment.ccform.icons[type]
                     : false;
             },
+            getAmountText: function () {
+                return 'Amount for this card'
+            }
 
         });
     }

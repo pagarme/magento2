@@ -13,6 +13,21 @@
         <input type="hidden" name="payment[cc_token]" class="input-text" value="">
     </div>
 </div>
+<div class="field amount required" >
+    <label class="label">
+        <span><!-- ko i18n: 'Amount for first card'--><!-- /ko --></span>
+    </label>
+    <div class="control">
+        <input type="text"
+               autocomplete="off"
+               style="width: 225px;"
+               class="input-text"
+               name="payment[cc_amount]"
+               value=""
+        />
+    </div>
+</div>
+
 <div class="field number required">
     <label class="label">
         <span><!-- ko i18n: 'Credit Card Number'--><!-- /ko --></span>
@@ -39,7 +54,7 @@
                style="width: 225px;"
                class="input-text"
                name="payment[cc_owner]"
-               value="Teste teste"
+               value=""
               />
     </div>
 </div>

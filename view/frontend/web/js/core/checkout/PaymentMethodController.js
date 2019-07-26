@@ -1,5 +1,6 @@
-var PaymentMethodController = function (methodCode) {
+var PaymentMethodController = function (methodCode, plarformConfig) {
    this.methodCode = methodCode;
+   this.plarformConfig = plarformConfig;
 };
 
 PaymentMethodController.prototype.init = function () {
@@ -20,12 +21,14 @@ PaymentMethodController.prototype.formValidation = function () {
 PaymentMethodController.prototype.creditcardInit = function () {
     this.formObject = FormObject.creditCardInit();
     this.addCreditCardListeners(this.formObject);
-
+    this.plarformConfig = PlarformConfig.bind(this.plarformConfig);
     this.modelToken = new CreditCardToken(this.formObject);
 };
 
 PaymentMethodController.prototype.twocreditcardsInit = function () {
     this.formObject = FormObject.twoCreditCardsInit();
+    this.plarformConfig = PlarformConfig.bind(this.plarformConfig);
+    this.fillCardAmount();
 };
 
 PaymentMethodController.prototype.boletoInit = function () {
@@ -45,7 +48,6 @@ PaymentMethodController.prototype.addCreditCardListeners = function (formObject,
 
     formObject.creditCardNumber.on('keyup', function () {
         setTimeout(function(){
-            debugger;
             var cardNumber = bin.formatNumber(formObject.creditCardNumber.val());
 
             var isNewBrand = bin.validate(cardNumber);
@@ -104,4 +106,12 @@ PaymentMethodController.prototype.getCreditCardToken = function (pkKey, success,
             .done(success)
             .fail(error);
     }
+}
+
+PaymentMethodController.prototype.fillCardAmount = function () {
+    var orderAmount = this.plarformConfig.orderAmount / 2;
+
+    var amount = orderAmount.toFixed(this.plarformConfig.currency.precision);
+    this.formObject[0].creditCardAmount.val(amount);
+    this.formObject[1].creditCardAmount.val(amount);
 }

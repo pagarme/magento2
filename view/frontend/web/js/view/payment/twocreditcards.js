@@ -41,7 +41,7 @@ define(
             },
             getCvvImageHtml: function () {
                 
-            }
+            },
         });
     }
 );
