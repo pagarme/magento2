@@ -23,3 +23,16 @@ FormHandler.prototype.switchBrand = function (brand) {
     this.formObject.creditCardBrand.val('');
     this.formObject.creditCardNumber.change();
 };
+
+FormHandler.prototype.updateInstallmentSelect = function (installmentsObj, element) {
+
+    var content = '';
+    console.log(installmentsObj);
+
+    for (var i = 0, len = installmentsObj.length; i < len; i++) {
+        content += '<option>' + installmentsObj[i].label + '</option>';
+    }
+
+debugger;
+    element.html(content);
+}

@@ -122,15 +122,15 @@ PaymentMethodController.prototype.getCreditCardToken = function (pkKey, success,
 }
 
 PaymentMethodController.prototype.fillInstallments = function (form) {
-    var installmentsUrl = this.plarformConfig.moduleUrls.installments;
-
+    var installmentsUrl = BASE_URL + this.plarformConfig.urls.installments;
     jQuery.ajax({
         url: installmentsUrl,
-        method: 'POST'
-    }).done(function() {
-
+        method: 'POST',
+        cache: true
+    }).done(function(data) {
+        formHandler = new FormHandler();
+        formHandler.updateInstallmentSelect(data, form.creditCardInstallments);
     });
-    //form.creditCardInstallments.html(options);
 }
 
 PaymentMethodController.prototype.fillCardAmount = function () {

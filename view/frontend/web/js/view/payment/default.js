@@ -12,6 +12,7 @@ define(
         "Magento_Checkout/js/view/payment/default",
         "ko",
         "jquery",
+        'MundiPagg_MundiPagg/js/action/installments',
         "Magento_Checkout/js/model/quote",
         "Magento_Catalog/js/price-utils",
         "Magento_Checkout/js/model/totals",
@@ -35,6 +36,7 @@ define(
         Component,
         ko,
         $,
+        installmentsAction,
         quote,
         priceUtils,
         totals,
@@ -65,9 +67,8 @@ define(
             initPaymentMethod: function() {
                 var _self = this;
                 platFormConfig = window.checkoutConfig;
-                baseUrl = window.BASE_URL;
                 platFormConfig.moduleUrls = {};
-                installmentsUrl = '';
+                installmentsUrl = installmentsAction();
 
                 platFormConfig.moduleUrls.installments = installmentsUrl;
 
