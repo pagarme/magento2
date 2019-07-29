@@ -4,9 +4,8 @@ var PlarformConfig = {};
 PlarformConfig.bind = function (plarformConfig) {
     grandTotal = parseFloat(plarformConfig.quoteData.grand_total);
 
-    debugger;
     var config = {
-        orderAmount : grandTotal.toFixed(2),
+        orderAmount : grandTotal.toFixed(plarformConfig.basePriceFormat.precision),
         currency : {
             code : plarformConfig.quoteData.base_currency_code,
             decimalSeparator : plarformConfig.basePriceFormat.decimalSymbol,
@@ -59,7 +58,6 @@ FormObject.twoCreditCardsInit = function () {
     containerSelector.push("#mundipagg_two_creditcard-form #two-credit-cards-form-0");
     containerSelector.push("#mundipagg_two_creditcard-form #two-credit-cards-form-1");
 
-    debugger;
 
     if (typeof jQuery(containerSelector[0]).html() == 'undefined') {
         this.FormObject = null;

@@ -29,10 +29,6 @@ define(
             getModel: function() {
                 return 'twocreditcards';
             },
-            initBin: function() {
-                var _self = this;
-                window.MundiPaggCore.initBin(this.getModel(), _self);
-            },
             getMonthsValues: function () {
                 return '';
             },

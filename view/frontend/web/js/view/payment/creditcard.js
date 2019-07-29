@@ -24,7 +24,7 @@ define(
         installmentsByBrand,
         fullScreenLoader,
         ko,
-        $
+        $,
     ) {
         return Component.extend({
 
@@ -35,6 +35,7 @@ define(
             },
 
             initObservable: function () {
+
                 this._super()
                     .observe([
                         'creditCardType',
@@ -54,17 +55,7 @@ define(
             },
 
             getInstallmentsByBrand: function (brand, success) {
-                if (brand == "") {
-                    return;
-                }
 
-                var formObject = FormObject.creditCardInit()
-
-                $.when(
-                    installmentsByBrand(brand)
-                ).done(
-                    success.bind(null, formObject.creditCardInstallments)
-                )
             },
 
             getCode: function() {
@@ -92,12 +83,13 @@ define(
             },
 
             getData: function () {
-                var formObject = FormObject.creditCardInit();
+                this.initPaymentMethod();
 
                 return {
                     'method': this.item.method,
                     'additional_data': {
-                        'cc_type': formObject.creditCardBrand.val(),
+                        //'cc_type': formObject.creditCardBrand.val(),
+                        'cc_type': 'VISA',
                         'cc_last_4': '1111',
                         'cc_exp_year': formObject.creditCardExpYear.val(),
                         'cc_exp_month': formObject.creditExpMonth.val(),
