@@ -22,6 +22,7 @@ define(
         "Magento_Checkout/js/action/redirect-on-success",
         "mage/translate",
         "Magento_Ui/js/model/messageList",
+        'Magento_Checkout/js/model/url-builder',
         "MundiPagg_MundiPagg/js/core/checkout/PaymentModuleBootstrap",
         "MundiPagg_MundiPagg/js/core/checkout/PaymentMethodController",
         "MundiPagg_MundiPagg/js/core/checkout/Bin",
@@ -63,9 +64,16 @@ define(
 
             initPaymentMethod: function() {
                 var _self = this;
+                platFormConfig = window.checkoutConfig;
+                baseUrl = window.BASE_URL;
+                platFormConfig.moduleUrls = {};
+                installmentsUrl = '';
+
+                platFormConfig.moduleUrls.installments = installmentsUrl;
+
                 window.MundiPaggCore.initPaymentMethod(
                     this.getModel(),
-                    window.checkoutConfig
+                    platFormConfig
                 );
             },
 

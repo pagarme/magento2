@@ -12,7 +12,7 @@ define(
         'MundiPagg_MundiPagg/js/action/installmentsByBrand',
         'Magento_Checkout/js/model/full-screen-loader',
         'ko',
-        'jquery'
+        'jquery',
     ],
     function(
         Component,
@@ -32,26 +32,6 @@ define(
                 template: "MundiPagg_MundiPagg/payment/default",
                 allInstallments: ko.observableArray([]),
                 creditCardType: '',
-            },
-
-            initObservable: function () {
-
-                this._super()
-                    .observe([
-                        'creditCardType',
-                        'creditCardExpYear',
-                        'creditCardExpMonth',
-                        'creditCardNumber',
-                        'creditCardVerificationNumber',
-                        'creditCardSsStartMonth',
-                        'creditCardSsStartYear',
-                        'creditCardSsIssue',
-                        'creditSavedCard',
-                        'creditCardsavecard',
-                        'selectedCardType'
-                    ]);
-
-                return this;
             },
 
             getInstallmentsByBrand: function (brand, success) {
@@ -82,8 +62,9 @@ define(
                 return "MundiPagg_MundiPagg/payment/creditcard-form";
             },
 
-            getData: function () {
+            /*getData: function () {
                 this.initPaymentMethod();
+
 
                 return {
                     'method': this.item.method,
@@ -100,7 +81,7 @@ define(
                         'cc_token_credit_card': formObject.creditCardToken.val(),
                     }
                 };
-            },
+            },*/
 
             /**
              * Get list of available month values

@@ -20,6 +20,10 @@ PaymentMethodController.prototype.formValidation = function () {
 
 PaymentMethodController.prototype.creditcardInit = function () {
     this.formObject = FormObject.creditCardInit();
+    if (!this.formObject) {
+        return;
+    }
+
     this.addCreditCardListeners(this.formObject);
     this.plarformConfig = PlarformConfig.bind(this.plarformConfig);
     this.modelToken = new CreditCardToken(this.formObject);
@@ -27,8 +31,15 @@ PaymentMethodController.prototype.creditcardInit = function () {
 
 PaymentMethodController.prototype.twocreditcardsInit = function () {
     this.formObject = FormObject.twoCreditCardsInit();
+
+    if (!this.formObject) {
+        return;
+    }
     this.plarformConfig = PlarformConfig.bind(this.plarformConfig);
     this.fillCardAmount();
+
+    this.fillInstallments(this.formObject[0]);
+    this.fillInstallments(this.formObject[1]);
 };
 
 PaymentMethodController.prototype.boletoInit = function () {
@@ -110,11 +121,19 @@ PaymentMethodController.prototype.getCreditCardToken = function (pkKey, success,
     }
 }
 
-PaymentMethodController.prototype.fillCardAmount = function () {
+PaymentMethodController.prototype.fillInstallments = function (form) {
+    var installmentsUrl = this.plarformConfig.moduleUrls.installments;
 
-    if (!this.formObject) {
-        return;
-    }
+    jQuery.ajax({
+        url: installmentsUrl,
+        method: 'POST'
+    }).done(function() {
+
+    });
+    //form.creditCardInstallments.html(options);
+}
+
+PaymentMethodController.prototype.fillCardAmount = function () {
     var orderAmount = this.plarformConfig.orderAmount / 2;
 
     var amount = orderAmount.toFixed(this.plarformConfig.currency.precision);

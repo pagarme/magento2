@@ -6,6 +6,7 @@ PlarformConfig.bind = function (plarformConfig) {
 
     var config = {
         orderAmount : grandTotal.toFixed(plarformConfig.basePriceFormat.precision),
+        moduleUrls: plarformConfig.BASE_URL + 'rest/default/V1/mundipagg/creditcard/installments',
         currency : {
             code : plarformConfig.quoteData.base_currency_code,
             decimalSeparator : plarformConfig.basePriceFormat.decimalSymbol,
@@ -40,7 +41,7 @@ FormObject.creditCardInit = function () {
         'creditCardCvv' : jQuery(containerSelector + " input[name='payment[cc_cid]']"),
         'creditCardInstallments' : jQuery(containerSelector + " select[name='payment[cc_installments]']"),
         'creditCardBrand' : jQuery(containerSelector + " input[name='payment[cc_type]']"),
-        'creditCardToken' : jQuery(containerSelector + " input[name='payment[cc_token]']"),
+        'creditCardToken' : jQuery(containerSelector + " input[name='payment[cc_token]']")
     };
 
     this.FormObject = creditCardForm;
@@ -73,8 +74,6 @@ FormObject.twoCreditCardsInit = function () {
 };
 
 FormObject.fillTwoCreditCardsElements = function (containerSelector, elementId) {
-
-    var twoCreditCardForm = {};
     var elements = {
         "creditCardNumber" : jQuery(containerSelector + " input[name='payment[cc_number]']"),
         "creditCardHolderName" : jQuery(containerSelector + " input[name='payment[cc_owner]']"),
@@ -87,12 +86,35 @@ FormObject.fillTwoCreditCardsElements = function (containerSelector, elementId) 
         "creditCardAmount" : jQuery(containerSelector + " input[name='payment[cc_amount]']")
     };
 
+    this.FormObject[elementId] = this.renameTwoCreditCardsElements(elements, elementId);
+    return this.FormObject;
+}
+
+
+FormObject.renameTwoCreditCardsElements = function (elements, elementId) {
+    var twoCreditCardForm = {};
+
     for (var key in elements) {
         newName = elements[key].attr('name') + '[' + elementId + ']';
         elements[key].attr('name', newName);
-        twoCreditCardForm[key] = jQuery(containerSelector + " input[name='" + newName + "']");
+        elementType = 'input';
+
+        if (elements[key].is('select')) {
+            elementType = 'select';
+        }
+
+        newElement =
+            jQuery(
+                containerSelector +
+                " " +
+                elementType +
+                "[name='" +
+                newName +
+                "']"
+            );
+
+        twoCreditCardForm[key] = newElement;
     }
 
-    this.FormObject[elementId] = twoCreditCardForm;
-    return this.FormObject;
+    return twoCreditCardForm;
 }
