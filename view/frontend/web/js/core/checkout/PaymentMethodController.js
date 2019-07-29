@@ -42,6 +42,10 @@ PaymentMethodController.prototype.initBin = function (obj) {
 }
 
 PaymentMethodController.prototype.addCreditCardListeners = function (formObject, obj) {
+    if (!formObject) {
+        return;
+    }
+
     bin = new Bin();
     formHandler = new FormHandler();
     installments = new Installments();
@@ -95,9 +99,7 @@ PaymentMethodController.prototype.creditCardValidation = function () {
     return false;
 };
 
-
-// @todo Mover to another class
-
+// @todo Move to another class
 PaymentMethodController.prototype.getCreditCardToken = function (pkKey, success, error) {
 
     if (this.creditCardValidation()) {
@@ -109,9 +111,17 @@ PaymentMethodController.prototype.getCreditCardToken = function (pkKey, success,
 }
 
 PaymentMethodController.prototype.fillCardAmount = function () {
+
+    if (!this.formObject) {
+        return;
+    }
     var orderAmount = this.plarformConfig.orderAmount / 2;
 
     var amount = orderAmount.toFixed(this.plarformConfig.currency.precision);
+    var separator = ".";
+
+    amount = amount.replace(separator, this.plarformConfig.currency.decimalSeparator);
+
     this.formObject[0].creditCardAmount.val(amount);
     this.formObject[1].creditCardAmount.val(amount);
 }

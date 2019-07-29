@@ -22,6 +22,7 @@ define(
         "Magento_Checkout/js/action/redirect-on-success",
         "mage/translate",
         "Magento_Ui/js/model/messageList",
+        'Magento_Checkout/js/model/url-builder',
         "MundiPagg_MundiPagg/js/core/checkout/PaymentModuleBootstrap",
         "MundiPagg_MundiPagg/js/core/checkout/PaymentMethodController",
         "MundiPagg_MundiPagg/js/core/checkout/Bin",
@@ -44,6 +45,7 @@ define(
         redirectOnSuccessAction,
         $t,
         globalMessageList,
+        urlBuilder,
         MundiPaggCore,
         PaymentController
     ) {
@@ -58,6 +60,7 @@ define(
                 this._super().observe([
                     "mundipagg-content"
                 ]);
+                serviceUrl = urlBuilder.createUrl('/mundipagg/creditcard/installments/', {});
             },
 
             initPaymentMethod: function() {

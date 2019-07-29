@@ -1,15 +1,15 @@
 var FormObject = {};
 var PlarformConfig = {};
 
-
 PlarformConfig.bind = function (plarformConfig) {
     grandTotal = parseFloat(plarformConfig.quoteData.grand_total);
-debugger;
+
+    debugger;
     var config = {
         orderAmount : grandTotal.toFixed(2),
         currency : {
             code : plarformConfig.quoteData.base_currency_code,
-            symbol : plarformConfig.basePriceFormat.decimalSymbol,
+            decimalSeparator : plarformConfig.basePriceFormat.decimalSymbol,
             precision : plarformConfig.basePriceFormat.precision
         }
     };
@@ -26,6 +26,12 @@ FormObject.creditCardInit = function () {
     }
 
     var containerSelector = '#mundipagg_creditcard-form';
+
+    if (typeof jQuery(containerSelector).html() == 'undefined') {
+        this.FormObject = null;
+        return;
+    }
+
     var creditCardForm = {
         'containerSelector' : containerSelector,
         'creditCardNumber' : jQuery(containerSelector + " input[name='payment[cc_number]']"),
@@ -37,6 +43,7 @@ FormObject.creditCardInit = function () {
         'creditCardBrand' : jQuery(containerSelector + " input[name='payment[cc_type]']"),
         'creditCardToken' : jQuery(containerSelector + " input[name='payment[cc_token]']"),
     };
+
     this.FormObject = creditCardForm;
 
     return this.FormObject;
@@ -47,9 +54,17 @@ FormObject.twoCreditCardsInit = function () {
     if (typeof(this.FormObject === 'undefined')) {
         this.FormObject = {};
     }
+
     containerSelector = [];
     containerSelector.push("#mundipagg_two_creditcard-form #two-credit-cards-form-0");
     containerSelector.push("#mundipagg_two_creditcard-form #two-credit-cards-form-1");
+
+    debugger;
+
+    if (typeof jQuery(containerSelector[0]).html() == 'undefined') {
+        this.FormObject = null;
+        return;
+    }
 
     //Using for for IE compatibility
     for (var i = 0, len = containerSelector.length; i < len; i++) {
