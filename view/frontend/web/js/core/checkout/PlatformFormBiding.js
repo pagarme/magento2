@@ -96,7 +96,6 @@ FormObject.fillTwoCreditCardsElements = function (containerSelector, elementId) 
     return this.FormObject;
 }
 
-
 FormObject.renameTwoCreditCardsElements = function (elements, elementId) {
     var twoCreditCardForm = {};
 

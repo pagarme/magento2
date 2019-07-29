@@ -16,7 +16,6 @@ define(
         storage,
         urlBuilder
     ) {
-
         return function () {
             var serviceUrl;
             return urlBuilder.createUrl('/mundipagg/creditcard/installments/', {});

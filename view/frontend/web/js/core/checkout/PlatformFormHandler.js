@@ -33,6 +33,5 @@ FormHandler.prototype.updateInstallmentSelect = function (installmentsObj, eleme
         content += '<option>' + installmentsObj[i].label + '</option>';
     }
 
-debugger;
     element.html(content);
 }
