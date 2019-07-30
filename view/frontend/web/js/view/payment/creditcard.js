@@ -129,13 +129,13 @@ define(
              * @returns {Object}
              */
             getAvailableTypesValues: function () {
-                var types = window.checkoutConfig.payment.ccform.availableTypes[this.getCode()];
+                /*var types = window.checkoutConfig.payment.ccform.availableTypes[this.getCode()];
                 return _.map(types, function (value, key) {
                     return {
                         'value': key,
                         'type': value
                     };
-                });
+                });*/
             },
 
             /**
@@ -144,9 +144,9 @@ define(
              * @returns {Boolean}
              */
             getIcons: function (type) {
-                return window.checkoutConfig.payment.ccform.icons.hasOwnProperty(type) ?
+                /*return window.checkoutConfig.payment.ccform.icons.hasOwnProperty(type) ?
                     window.checkoutConfig.payment.ccform.icons[type]
-                    : false;
+                    : false;*/
             },
             getAmountText: function () {
                 return 'Amount for this card'

@@ -25,9 +25,7 @@ FormHandler.prototype.switchBrand = function (brand) {
 };
 
 FormHandler.prototype.updateInstallmentSelect = function (installmentsObj, element) {
-
     var content = '';
-    console.log(installmentsObj);
 
     for (var i = 0, len = installmentsObj.length; i < len; i++) {
         content +=
@@ -41,4 +39,26 @@ FormHandler.prototype.updateInstallmentSelect = function (installmentsObj, eleme
     }
 
     element.html(content);
+}
+
+FormHandler.prototype.fillBrandList = function (listContainer, brandsObject) {
+
+    var content = '';
+
+    for (var i = 0, len = brandsObject.length; i < len; i++) {
+
+        content +=
+            "<li class='item'>" +
+            "<img src='" + brandsObject[i].image + "' " +
+            "alt='" + brandsObject[i].title + "' " +
+            "width='46' " +
+            "height='30' " +
+            "class='brands visa'>" +
+            "</li>";
+
+    }
+
+    jQuery('.credit-card-types').each(function () {
+      jQuery(this).html(content);
+    });
 }

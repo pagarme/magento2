@@ -4,25 +4,42 @@ var PlarformConfig = {};
 PlarformConfig.bind = function (plarformConfig) {
     grandTotal = parseFloat(plarformConfig.quoteData.grand_total);
     urls = {
-        'base': BASE_URL,
-        'installments' : plarformConfig.moduleUrls.installments
+        base: BASE_URL,
+        installments : plarformConfig.moduleUrls.installments
     };
 
     currency = {
         code : plarformConfig.quoteData.base_currency_code,
         decimalSeparator : plarformConfig.basePriceFormat.decimalSymbol,
         precision : plarformConfig.basePriceFormat.precision
-    }
+    };
 
+    avaliableBrands = this.getAvaliableBrands(plarformConfig);
     var config = {
+        avaliableBrands: avaliableBrands,
         orderAmount : grandTotal.toFixed(plarformConfig.basePriceFormat.precision),
         urls: urls,
-        currency : currency
+        currency : currency,
     };
 
     this.PlarformConfig = config;
 
     return this.PlarformConfig;
+}
+
+PlarformConfig.getAvaliableBrands = function (data) {
+    var avaliableBrands = [];
+    var payment = data.payment.ccform.availableTypes.mundipagg_creditcard;
+    var brands = Object.keys(payment);
+
+    for (var i = 0, len = brands.length; i < len; i++) {
+        avaliableBrands[i] = {
+            'title': brands[i],
+            'image': data.payment.ccform.icons[brands[i]].url
+        };
+    }
+
+    return avaliableBrands;
 }
 
 FormObject.creditCardInit = function () {

@@ -36,8 +36,10 @@ PaymentMethodController.prototype.twocreditcardsInit = function () {
         return;
     }
     this.plarformConfig = PlarformConfig.bind(this.plarformConfig);
-    this.fillCardAmount();
 
+    this.fillCardAmount();
+    this.fillBrandList(this.formObject[0].container);
+    this.fillBrandList(this.formObject[1].container);
     this.fillInstallments(this.formObject[0]);
     this.fillInstallments(this.formObject[1]);
 };
@@ -139,6 +141,14 @@ PaymentMethodController.prototype.fillInstallments = function (form) {
         formHandler = new FormHandler();
         formHandler.updateInstallmentSelect(data, form.creditCardInstallments);
     });
+}
+
+PaymentMethodController.prototype.fillBrandList = function (formContainer) {
+    formHandler = new FormHandler();
+    formHandler.fillBrandList(
+        formContainer,
+        this.plarformConfig.avaliableBrands
+    );
 }
 
 PaymentMethodController.prototype.fillCardAmount = function () {
