@@ -122,6 +122,14 @@ PaymentMethodController.prototype.getCreditCardToken = function (pkKey, success,
 }
 
 PaymentMethodController.prototype.fillInstallments = function (form) {
+
+    var defaulOption = [{
+        'id' : 0,
+        'interest' : 0,
+        'label' : 'Selecione'
+    }];
+    formHandler.updateInstallmentSelect(defaulOption, form.creditCardInstallments);
+
     var installmentsUrl = BASE_URL + this.plarformConfig.urls.installments;
     jQuery.ajax({
         url: installmentsUrl,

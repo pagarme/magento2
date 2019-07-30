@@ -30,7 +30,14 @@ FormHandler.prototype.updateInstallmentSelect = function (installmentsObj, eleme
     console.log(installmentsObj);
 
     for (var i = 0, len = installmentsObj.length; i < len; i++) {
-        content += '<option>' + installmentsObj[i].label + '</option>';
+        content +=
+            "<option value='" +
+                installmentsObj[i].id +
+                "' interest='" +
+                installmentsObj[i].interest +
+                "'>" +
+                installmentsObj[i].label +
+            "</option>";
     }
 
     element.html(content);
