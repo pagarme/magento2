@@ -66,11 +66,15 @@ define(
 
             initPaymentMethod: function() {
                 var _self = this;
+
                 platFormConfig = window.checkoutConfig;
                 platFormConfig.moduleUrls = {};
                 installmentsUrl = installmentsAction();
 
-                platFormConfig.moduleUrls.installments = installmentsUrl;
+                platFormConfig.base_url = window.BASE_URL;
+
+                platFormConfig.moduleUrls.installments =
+                    window.BASE_URL + installmentsUrl;
 
                 window.MundiPaggCore.initPaymentMethod(
                     this.getModel(),

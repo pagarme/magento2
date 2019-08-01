@@ -3,8 +3,9 @@ var PlarformConfig = {};
 
 PlarformConfig.bind = function (plarformConfig) {
     grandTotal = parseFloat(plarformConfig.quoteData.grand_total);
+
     urls = {
-        base: BASE_URL,
+        base: plarformConfig.base_url,
         installments : plarformConfig.moduleUrls.installments
     };
 
@@ -68,6 +69,7 @@ FormObject.creditCardInit = function () {
     };
 
     this.FormObject = creditCardForm;
+    //FormObject.numberOfPaymentForms = 1;
 
     return this.FormObject;
 };
@@ -93,20 +95,22 @@ FormObject.twoCreditCardsInit = function () {
         FormObject.fillTwoCreditCardsElements(containerSelector[i], i);
     }
 
+    //FormObject.numberOfPaymentForms = 2;
+
     return this.FormObject;
 };
 
 FormObject.fillTwoCreditCardsElements = function (containerSelector, elementId) {
     var elements = {
-        "creditCardNumber" : jQuery("input[name='payment[cc_number]']"),
-        "creditCardHolderName" : jQuery("input[name='payment[cc_owner]']"),
-        "creditCardExpMonth" : jQuery("select[name='payment[cc_exp_month]']"),
-        "creditCardExpYear" : jQuery("select[name='payment[cc_exp_year]']"),
-        "creditCardCvv" : jQuery("input[name='payment[cc_cid]']"),
-        "creditCardInstallments" : jQuery("select[name='payment[cc_installments]']"),
-        "creditCardBrand" : jQuery("input[name='payment[cc_type]']"),
-        "creditCardToken" : jQuery("input[name='payment[cc_token]']"),
-        "creditCardAmount" : jQuery("input[name='payment[cc_amount]']")
+        "creditCardNumber" : jQuery(containerSelector + " input[name='payment[cc_number]']"),
+        "creditCardHolderName" : jQuery(containerSelector + " input[name='payment[cc_owner]']"),
+        "creditCardExpMonth" : jQuery(containerSelector + " select[name='payment[cc_exp_month]']"),
+        "creditCardExpYear" : jQuery(containerSelector + " select[name='payment[cc_exp_year]']"),
+        "creditCardCvv" : jQuery(containerSelector + " input[name='payment[cc_cid]']"),
+        "creditCardInstallments" : jQuery(containerSelector + " select[name='payment[cc_installments]']"),
+        "creditCardBrand" : jQuery(containerSelector + " input[name='payment[cc_type]']"),
+        "creditCardToken" : jQuery(containerSelector + " input[name='payment[cc_token]']"),
+        "creditCardAmount" : jQuery(containerSelector + " input[name='payment[cc_amount]']")
     };
 
     this.FormObject[elementId] = this.renameTwoCreditCardsElements(elements, elementId);
