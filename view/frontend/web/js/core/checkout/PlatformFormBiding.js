@@ -112,8 +112,9 @@ FormObject.fillTwoCreditCardsElements = function (containerSelector, elementId) 
         "creditCardToken" : jQuery(containerSelector + " input[name='payment[cc_token]']"),
         "creditCardAmount" : jQuery(containerSelector + " input[name='payment[cc_amount]']")
     };
-
     this.FormObject[elementId] = this.renameTwoCreditCardsElements(elements, elementId);
+    this.FormObject[elementId].containerSelector = containerSelector;
+
     return this.FormObject;
 }
 

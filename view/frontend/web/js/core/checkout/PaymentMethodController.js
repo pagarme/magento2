@@ -42,7 +42,7 @@ PaymentMethodController.prototype.twocreditcardsInit = function () {
     this.fillInstallments(this.formObject[0]);
     this.fillInstallments(this.formObject[1]);
     this.addCreditCardListeners(this.formObject[0]);
-    this.addCreditCardListeners(this.formObject[0]);
+    this.addCreditCardListeners(this.formObject[1]);
 };
 
 PaymentMethodController.prototype.boletoInit = function () {
@@ -162,22 +162,20 @@ PaymentMethodController.prototype.fillCardAmount = function () {
 
 PaymentMethodController.prototype.setBin = function (binObj, creditCardNumberElement, formObject) {
     var bin = binObj;
-
     var cardNumber = bin.formatNumber(creditCardNumberElement.val());
     var isNewBrand = bin.validate(cardNumber);
 
     bin.init(cardNumber);
 
     if (isNewBrand) {
-        /*obj.getInstallmentsByBrand(
-            bin.selectedBrand,
-            installments.addOptions
-        );*/
+        //Call update installments sending the credit card brand
+        //this.fillInstallments(this.formObject[1]);
     }
-
     formHandler = new FormHandler();
     formHandler.init(formObject);
     formHandler.switchBrand(bin.selectedBrand);
+
+    return;
 }
 
 PaymentMethodController.prototype.limitCharacters = function (element, limit) {
