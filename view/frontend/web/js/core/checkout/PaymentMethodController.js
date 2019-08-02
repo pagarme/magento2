@@ -68,7 +68,7 @@ PaymentMethodController.prototype.addCreditCardNumberListener = function(formObj
     var paymentMethodController = this;
 
     formObject.creditCardNumber.on('keydown', function () {
-        var element = jQuery(this);
+        element = jQuery(this);
         paymentMethodController.limitCharacters(element, 19);
     });
 
@@ -188,8 +188,8 @@ PaymentMethodController.prototype.setBin = function (binObj, creditCardNumberEle
 PaymentMethodController.prototype.limitCharacters = function (element, limit) {
     var val = element.val();
 
-    if(val != "" && val.length > 19) {
-        element.val(val.substring(0, 19));
+    if(val != "" && val.length > limit) {
+        element.val(val.substring(0, limit));
     }
 };
 
