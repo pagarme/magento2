@@ -63,3 +63,7 @@ FormHandler.prototype.fillBrandList = function (listContainer, brandsObject) {
       jQuery(this).html(content);
     });
 };
+
+FormHandler.prototype.hideCreditCardAmount = function () {
+    jQuery(this.formObject.creditCardAmount).parent().parent('.field').hide();
+};

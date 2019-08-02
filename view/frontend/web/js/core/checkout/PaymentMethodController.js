@@ -24,6 +24,8 @@ PaymentMethodController.prototype.creditcardInit = function () {
         return;
     }
     this.plarformConfig = PlarformConfig.bind(this.plarformConfig);
+    this.fillCardAmount(this.formObject, 1);
+    this.hideCardAmount(this.formObject);
     this.fillInstallments(this.formObject);
     this.addCreditCardListeners(this.formObject);
     this.modelToken = new CreditCardToken(this.formObject);
@@ -36,7 +38,8 @@ PaymentMethodController.prototype.twocreditcardsInit = function () {
         return;
     }
     this.plarformConfig = PlarformConfig.bind(this.plarformConfig);
-    this.fillCardAmount();
+    this.fillCardAmount(this.formObject[0], 2);
+    this.fillCardAmount(this.formObject[1], 2);
     this.fillBrandList(this.formObject[0].container);
     this.fillBrandList(this.formObject[1].container);
     this.fillInstallments(this.formObject[0]);
@@ -148,16 +151,15 @@ PaymentMethodController.prototype.fillBrandList = function (formContainer) {
     );
 };
 
-PaymentMethodController.prototype.fillCardAmount = function () {
-    var orderAmount = this.plarformConfig.orderAmount / 2;
+PaymentMethodController.prototype.fillCardAmount = function (formObject, count) {
+    var orderAmount = this.plarformConfig.orderAmount / count;
 
     var amount = orderAmount.toFixed(this.plarformConfig.currency.precision);
     var separator = ".";
 
     amount = amount.replace(separator, this.plarformConfig.currency.decimalSeparator);
 
-    this.formObject[0].creditCardAmount.val(amount);
-    this.formObject[1].creditCardAmount.val(amount);
+    formObject.creditCardAmount.val(amount);
 };
 
 PaymentMethodController.prototype.setBin = function (binObj, creditCardNumberElement, formObject) {
@@ -176,7 +178,7 @@ PaymentMethodController.prototype.setBin = function (binObj, creditCardNumberEle
     formHandler.switchBrand(bin.selectedBrand);
 
     return;
-}
+};
 
 PaymentMethodController.prototype.limitCharacters = function (element, limit) {
     var val = element.val();
@@ -184,4 +186,10 @@ PaymentMethodController.prototype.limitCharacters = function (element, limit) {
     if(val != "" && val.length > 19) {
         element.val(val.substring(0, 19));
     }
-}
+};
+
+PaymentMethodController.prototype.hideCardAmount = function (formObject) {
+    formHandler = new FormHandler();
+    formHandler.init(formObject);
+    formHandler.hideCreditCardAmount();
+};
