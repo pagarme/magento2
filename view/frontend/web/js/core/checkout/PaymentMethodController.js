@@ -26,6 +26,7 @@ PaymentMethodController.prototype.creditcardInit = function () {
     this.plarformConfig = PlarformConfig.bind(this.plarformConfig);
     this.fillCardAmount(this.formObject, 1);
     this.hideCardAmount(this.formObject);
+    this.fillFormText(this.formObject);
     this.fillInstallments(this.formObject);
     this.addCreditCardListeners(this.formObject);
     this.modelToken = new CreditCardToken(this.formObject);
@@ -40,6 +41,8 @@ PaymentMethodController.prototype.twocreditcardsInit = function () {
     this.plarformConfig = PlarformConfig.bind(this.plarformConfig);
     this.fillCardAmount(this.formObject[0], 2);
     this.fillCardAmount(this.formObject[1], 2);
+    this.fillFormText(this.formObject[0]);
+    this.fillFormText(this.formObject[1]);
     this.fillBrandList(this.formObject[0].container);
     this.fillBrandList(this.formObject[1].container);
     this.fillInstallments(this.formObject[0]);
@@ -81,6 +84,7 @@ PaymentMethodController.prototype.addCreditCardNumberListener = function(formObj
         setTimeout(function() {
             paymentMethodController.setBin(binObj,  element, formObject);
         }, 1300);
+        //@Todo
         //installments
     }).bind(this);
 };
@@ -170,6 +174,7 @@ PaymentMethodController.prototype.setBin = function (binObj, creditCardNumberEle
     bin.init(cardNumber);
 
     if (isNewBrand) {
+        //@Todo
         //Call update installments sending the credit card brand
         //this.fillInstallments(this.formObject[1]);
     }
@@ -192,4 +197,14 @@ PaymentMethodController.prototype.hideCardAmount = function (formObject) {
     formHandler = new FormHandler();
     formHandler.init(formObject);
     formHandler.hideCreditCardAmount();
+};
+
+PaymentMethodController.prototype.fillFormText = function (formObject) {
+    formText = this.plarformConfig.text;
+
+    formHandler = new FormHandler();
+    formHandler.init(formObject);
+    formHandler.fillExpirationYearSelect(formText);
+    formHandler.fillExpirationMonthSelect(formText);
+    //@Todo add other texts
 };

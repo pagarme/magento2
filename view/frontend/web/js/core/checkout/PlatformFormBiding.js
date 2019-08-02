@@ -15,18 +15,25 @@ PlarformConfig.bind = function (plarformConfig) {
         precision : plarformConfig.basePriceFormat.precision
     };
 
+    text = {
+        months: plarformConfig.payment.ccform.months.mundipagg_creditcard,
+        years: plarformConfig.payment.ccform.years.mundipagg_creditcard
+    }
+
     avaliableBrands = this.getAvaliableBrands(plarformConfig);
+
     var config = {
         avaliableBrands: avaliableBrands,
         orderAmount : grandTotal.toFixed(plarformConfig.basePriceFormat.precision),
         urls: urls,
         currency : currency,
+        text: text
     };
 
     this.PlarformConfig = config;
 
     return this.PlarformConfig;
-}
+};
 
 PlarformConfig.getAvaliableBrands = function (data) {
     var avaliableBrands = [];
@@ -60,7 +67,7 @@ FormObject.creditCardInit = function () {
         'containerSelector' : containerSelector,
         'creditCardNumber' : jQuery("input[name='payment[cc_number]']"),
         'creditCardHolderName' : jQuery("input[name='payment[cc_owner]']"),
-        'creditExpMonth' : jQuery("select[name='payment[cc_exp_month]']"),
+        'creditCardExpMonth' : jQuery("select[name='payment[cc_exp_month]']"),
         'creditCardExpYear' : jQuery("select[name='payment[cc_exp_year]']"),
         'creditCardCvv' : jQuery("input[name='payment[cc_cid]']"),
         'creditCardInstallments' : jQuery("select[name='payment[cc_installments]']"),
