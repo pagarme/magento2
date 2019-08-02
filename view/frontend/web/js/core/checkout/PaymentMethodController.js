@@ -41,6 +41,8 @@ PaymentMethodController.prototype.twocreditcardsInit = function () {
     this.fillBrandList(this.formObject[1].container);
     this.fillInstallments(this.formObject[0]);
     this.fillInstallments(this.formObject[1]);
+    this.addCreditCardListeners(this.formObject[0]);
+    this.addCreditCardListeners(this.formObject[0]);
 };
 
 PaymentMethodController.prototype.boletoInit = function () {
@@ -74,7 +76,7 @@ PaymentMethodController.prototype.addCreditCardNumberListener = function(formObj
         var element = jQuery(this);
 
         setTimeout(function() {
-            paymentMethodController.setBin(binObj,  element);
+            paymentMethodController.setBin(binObj,  element, formObject);
         }, 1300);
         //installments
     }).bind(this);
@@ -158,7 +160,7 @@ PaymentMethodController.prototype.fillCardAmount = function () {
     this.formObject[1].creditCardAmount.val(amount);
 };
 
-PaymentMethodController.prototype.setBin = function (binObj, creditCardNumberElement) {
+PaymentMethodController.prototype.setBin = function (binObj, creditCardNumberElement, formObject) {
     var bin = binObj;
 
     var cardNumber = bin.formatNumber(creditCardNumberElement.val());
@@ -174,7 +176,7 @@ PaymentMethodController.prototype.setBin = function (binObj, creditCardNumberEle
     }
 
     formHandler = new FormHandler();
-    formHandler.init(this.formObject);
+    formHandler.init(formObject);
     formHandler.switchBrand(bin.selectedBrand);
 }
 

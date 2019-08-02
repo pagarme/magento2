@@ -50,6 +50,6 @@ final class Magento2SavedCardAdapter
 
         $firstSix = number_format($firstSix/100, 2, '.', '');
 
-        return $firstSix . '**.****.****.' . $lastFour;
+        return $firstSix . '**.****.' . $lastFour;
     }
 }
