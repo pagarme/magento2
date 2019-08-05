@@ -134,12 +134,26 @@ PaymentMethodController.prototype.fillInstallments = function (form) {
         'label' : 'Selecione'
     }];
 
+    var selectedBrand = form.creditCardBrand.val();
+    var amount = form.creditCardAmount.val();
+
+    if (typeof selectedBrand == "undefined") {
+        selectedBrand = 'default';
+    }
+
+    if (typeof amount == "undefined") {
+        amount = 0;
+    }
+
     formHandler.updateInstallmentSelect(defaulOption, form.creditCardInstallments);
-    var installmentsUrl = this.plarformConfig.urls.installments;
+    var installmentsUrl =
+        this.plarformConfig.urls.installments + '/' +
+        selectedBrand + '/' +
+        amount;
 
     jQuery.ajax({
         url: installmentsUrl,
-        method: 'POST',
+        method: 'GET',
         cache: true
     }).done(function(data) {
         formHandler = new FormHandler();
@@ -207,4 +221,8 @@ PaymentMethodController.prototype.fillFormText = function (formObject) {
     formHandler.fillExpirationYearSelect(formText);
     formHandler.fillExpirationMonthSelect(formText);
     //@Todo add other texts
+};
+
+PaymentMethodController.prototype.createToken = function () {
+  var token = new CreditCardToken(this.formObject);
 };

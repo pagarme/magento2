@@ -12,7 +12,7 @@ define(
         "Magento_Checkout/js/view/payment/default",
         "ko",
         "jquery",
-        'MundiPagg_MundiPagg/js/action/installments',
+        'MundiPagg_MundiPagg/js/action/installmentsByBrand',
         "Magento_Checkout/js/model/quote",
         "Magento_Catalog/js/price-utils",
         "Magento_Checkout/js/model/totals",
@@ -98,6 +98,7 @@ define(
             beforeplaceOrder: function(data, event){
 
                 var _self = this;
+                //@Todo Create token
                 /*
                 globalMessageList.addErrorMessage({
                     message: $t("Error message.")

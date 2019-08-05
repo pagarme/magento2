@@ -19,11 +19,7 @@ define(
 
         return function (brand) {
             var serviceUrl;
-            serviceUrl = urlBuilder.createUrl('/mundipagg/installments/brand/' + brand, {});
-
-            return storage.get(
-                serviceUrl, false
-            )
+            return urlBuilder.createUrl('/mundipagg/installments/brandbyamount/', {});
         };
     }
 );

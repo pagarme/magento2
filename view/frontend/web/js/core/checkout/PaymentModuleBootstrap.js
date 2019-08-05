@@ -22,7 +22,7 @@ MundiPaggCore.validatePaymentMethod = function (methodCode) {
 
     this.paymentMethod.init();
     return this.paymentMethod.formValidation();
-}
+};
 
 MundiPaggCore.placeOrder = function(platformObject, data, event) {
 
