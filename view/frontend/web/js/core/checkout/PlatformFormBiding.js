@@ -1,41 +1,44 @@
 var FormObject = {};
-var PlarformConfig = {};
+var PlatformConfig = {};
 
-PlarformConfig.bind = function (plarformConfig) {
-    grandTotal = parseFloat(plarformConfig.quoteData.grand_total);
+PlatformConfig.bind = function (platformConfig) {
+    grandTotal = parseFloat(platformConfig.quoteData.grand_total);
+
+    publicKey = platformConfig.payment.ccform.pk_token;
 
     urls = {
-        base: plarformConfig.base_url,
-        installments : plarformConfig.moduleUrls.installments
+        base: platformConfig.base_url,
+        installments : platformConfig.moduleUrls.installments
     };
 
     currency = {
-        code : plarformConfig.quoteData.base_currency_code,
-        decimalSeparator : plarformConfig.basePriceFormat.decimalSymbol,
-        precision : plarformConfig.basePriceFormat.precision
+        code : platformConfig.quoteData.base_currency_code,
+        decimalSeparator : platformConfig.basePriceFormat.decimalSymbol,
+        precision : platformConfig.basePriceFormat.precision
     };
 
     text = {
-        months: plarformConfig.payment.ccform.months.mundipagg_creditcard,
-        years: plarformConfig.payment.ccform.years.mundipagg_creditcard
+        months: platformConfig.payment.ccform.months.mundipagg_creditcard,
+        years: platformConfig.payment.ccform.years.mundipagg_creditcard
     }
 
-    avaliableBrands = this.getAvaliableBrands(plarformConfig);
+    avaliableBrands = this.getAvaliableBrands(platformConfig);
 
     var config = {
         avaliableBrands: avaliableBrands,
-        orderAmount : grandTotal.toFixed(plarformConfig.basePriceFormat.precision),
+        orderAmount : grandTotal.toFixed(platformConfig.basePriceFormat.precision),
         urls: urls,
         currency : currency,
-        text: text
+        text: text,
+        publicKey: publicKey
     };
 
-    this.PlarformConfig = config;
+    this.PlatformConfig = config;
 
-    return this.PlarformConfig;
+    return this.PlatformConfig;
 };
 
-PlarformConfig.getAvaliableBrands = function (data) {
+PlatformConfig.getAvaliableBrands = function (data) {
     var avaliableBrands = [];
     var payment = data.payment.ccform.availableTypes.mundipagg_creditcard;
     var brands = Object.keys(payment);
@@ -77,7 +80,7 @@ FormObject.creditCardInit = function () {
     };
 
     this.FormObject = creditCardForm;
-    //FormObject.numberOfPaymentForms = 1;
+    this.FormObject.numberOfPaymentForms = 1;
 
     return this.FormObject;
 };
@@ -103,22 +106,22 @@ FormObject.twoCreditCardsInit = function () {
         FormObject.fillTwoCreditCardsElements(containerSelector[i], i);
     }
 
-    //FormObject.numberOfPaymentForms = 2;
+    this.FormObject.numberOfPaymentForms = 2;
 
     return this.FormObject;
 };
 
 FormObject.fillTwoCreditCardsElements = function (containerSelector, elementId) {
     var elements = {
-        "creditCardNumber" : jQuery(containerSelector + " input[name='payment[cc_number]']"),
-        "creditCardHolderName" : jQuery(containerSelector + " input[name='payment[cc_owner]']"),
-        "creditCardExpMonth" : jQuery(containerSelector + " select[name='payment[cc_exp_month]']"),
-        "creditCardExpYear" : jQuery(containerSelector + " select[name='payment[cc_exp_year]']"),
-        "creditCardCvv" : jQuery(containerSelector + " input[name='payment[cc_cid]']"),
-        "creditCardInstallments" : jQuery(containerSelector + " select[name='payment[cc_installments]']"),
-        "creditCardBrand" : jQuery(containerSelector + " input[name='payment[cc_type]']"),
-        "creditCardToken" : jQuery(containerSelector + " input[name='payment[cc_token]']"),
-        "creditCardAmount" : jQuery(containerSelector + " input[name='payment[cc_amount]']")
+        "creditCardNumber" : jQuery(containerSelector + " .cc_number"),
+        "creditCardHolderName" : jQuery(containerSelector + " .cc_owner"),
+        "creditCardExpMonth" : jQuery(containerSelector + " .cc_exp_month"),
+        "creditCardExpYear" : jQuery(containerSelector + " .cc_exp_year"),
+        "creditCardCvv" : jQuery(containerSelector + " .cc_cid"),
+        "creditCardInstallments" : jQuery(containerSelector + " .cc_installments"),
+        "creditCardBrand" : jQuery(containerSelector + " .cc_type"),
+        "creditCardToken" : jQuery(containerSelector + " .cc_token"),
+        "creditCardAmount" : jQuery(containerSelector + " .cc_amount")
     };
     this.FormObject[elementId] = this.renameTwoCreditCardsElements(elements, elementId);
     this.FormObject[elementId].containerSelector = containerSelector;

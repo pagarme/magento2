@@ -38,6 +38,10 @@ define(
             getCvvImageHtml: function () {
                 
             },
+            getData: function () {
+                var paymentModel = window.MundiPaggCore.paymentMethod[this.getModel()].model;
+                return paymentModel.getData();
+            },
         });
     }
 );

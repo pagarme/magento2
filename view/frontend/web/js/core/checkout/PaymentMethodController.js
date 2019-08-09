@@ -1,6 +1,6 @@
-var PaymentMethodController = function (methodCode, plarformConfig) {
+var PaymentMethodController = function (methodCode, platformConfig) {
    this.methodCode = methodCode;
-   this.plarformConfig = plarformConfig;
+   this.platformConfig = platformConfig;
 };
 
 PaymentMethodController.prototype.init = function () {
@@ -23,7 +23,11 @@ PaymentMethodController.prototype.creditcardInit = function () {
     if (!this.formObject) {
         return;
     }
-    this.plarformConfig = PlarformConfig.bind(this.plarformConfig);
+    this.platformConfig = PlatformConfig.bind(this.platformConfig);
+    this.model = new CreditCardModel(
+        this.formObject,
+        this.platformConfig.publicKey
+    );
     this.fillCardAmount(this.formObject, 1);
     this.hideCardAmount(this.formObject);
     this.fillFormText(this.formObject);
@@ -38,7 +42,11 @@ PaymentMethodController.prototype.twocreditcardsInit = function () {
     if (!this.formObject) {
         return;
     }
-    this.plarformConfig = PlarformConfig.bind(this.plarformConfig);
+    this.platformConfig = PlatformConfig.bind(this.platformConfig);
+    this.model = new TwoCreditcardsModel(
+        this.formObject,
+        this.platformConfig.publicKey
+    );
     this.fillCardAmount(this.formObject[0], 2);
     this.fillCardAmount(this.formObject[1], 2);
     this.fillFormText(this.formObject[0]);
@@ -49,12 +57,15 @@ PaymentMethodController.prototype.twocreditcardsInit = function () {
     this.fillInstallments(this.formObject[1]);
     this.addCreditCardListeners(this.formObject[0]);
     this.addCreditCardListeners(this.formObject[1]);
+
+    this.modelToken = new CreditCardToken(this.formObject);
 };
 
 PaymentMethodController.prototype.boletoInit = function () {
+    this.model = new BoletoModel({});
 };
 
-PaymentMethodController.prototype.addCreditCardListeners = function (formObject, obj) {
+PaymentMethodController.prototype.addCreditCardListeners = function (formObject) {
     if (!formObject) {
         return;
     }
@@ -90,40 +101,28 @@ PaymentMethodController.prototype.addCreditCardNumberListener = function(formObj
 };
 
 PaymentMethodController.prototype.addCreditCardInstallmentsListener = function(formObject) {
+
+    var paymentMethodController = this;
+
     formObject.creditCardInstallments.on('change', function() {
         var value = jQuery(this).val();
         if (value != "" && value != 'undefined') {
             var interest = jQuery(this).find(':selected').attr("interest");
-            obj.updateTotalWithTax(interest);
+            paymentMethodController.updateTotal(interest);
         }
     });
 };
 
-/**
- * @todo Move other validations from platform to here
- */
-PaymentMethodController.prototype.creditCardValidation = function () {
-    if (
-        typeof this.formObject != "undefined" &&
-        typeof this.formObject.creditCardBrand.val() != "undefined" &&
-        this.formObject.creditCardBrand.val().length > 0
-    ) {
-        return true
-    }
+PaymentMethodController.prototype.placeOrder = function (placeOrderObject) {
+    this.model.placeOrder(placeOrderObject);
+}
 
-    return false;
+PaymentMethodController.prototype.updateTotal = function(interest) {
+    var paymentMethodController = this;
+
 };
 
-// @todo Move to another class
-PaymentMethodController.prototype.getCreditCardToken = function (pkKey, success, error) {
 
-    if (this.creditCardValidation()) {
-        this.modelToken
-            .getToken(pkKey)
-            .done(success)
-            .fail(error);
-    }
-};
 
 PaymentMethodController.prototype.fillInstallments = function (form) {
     formHandler = new FormHandler();
@@ -147,7 +146,7 @@ PaymentMethodController.prototype.fillInstallments = function (form) {
 
     formHandler.updateInstallmentSelect(defaulOption, form.creditCardInstallments);
     var installmentsUrl =
-        this.plarformConfig.urls.installments + '/' +
+        this.platformConfig.urls.installments + '/' +
         selectedBrand + '/' +
         amount;
 
@@ -165,17 +164,17 @@ PaymentMethodController.prototype.fillBrandList = function (formContainer) {
     formHandler = new FormHandler();
     formHandler.fillBrandList(
         formContainer,
-        this.plarformConfig.avaliableBrands
+        this.platformConfig.avaliableBrands
     );
 };
 
 PaymentMethodController.prototype.fillCardAmount = function (formObject, count) {
-    var orderAmount = this.plarformConfig.orderAmount / count;
+    var orderAmount = this.platformConfig.orderAmount / count;
 
-    var amount = orderAmount.toFixed(this.plarformConfig.currency.precision);
+    var amount = orderAmount.toFixed(this.platformConfig.currency.precision);
     var separator = ".";
 
-    amount = amount.replace(separator, this.plarformConfig.currency.decimalSeparator);
+    amount = amount.replace(separator, this.platformConfig.currency.decimalSeparator);
 
     formObject.creditCardAmount.val(amount);
 };
@@ -214,15 +213,11 @@ PaymentMethodController.prototype.hideCardAmount = function (formObject) {
 };
 
 PaymentMethodController.prototype.fillFormText = function (formObject) {
-    formText = this.plarformConfig.text;
+    formText = this.platformConfig.text;
 
     formHandler = new FormHandler();
     formHandler.init(formObject);
     formHandler.fillExpirationYearSelect(formText);
     formHandler.fillExpirationMonthSelect(formText);
     //@Todo add other texts
-};
-
-PaymentMethodController.prototype.createToken = function () {
-  var token = new CreditCardToken(this.formObject);
 };

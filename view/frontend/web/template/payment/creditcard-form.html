@@ -3,10 +3,10 @@
         <ul class="credit-card-types"></ul>
         <input type="hidden"
                name="payment[cc_type]"
-               class="input-text"
+               class="input-text cc_type"
                value="default"
                >
-        <input type="hidden" name="payment[cc_token]" class="input-text" value="">
+        <input type="hidden" name="payment[cc_token]" class="input-text cc_token" value="">
     </div>
 </div>
 <div class="field amount required" >
@@ -17,7 +17,7 @@
         <input type="text"
                autocomplete="off"
                style="width: 225px;"
-               class="input-text"
+               class="input-text cc_amount"
                name="payment[cc_amount]"
                value=""
         />
@@ -34,7 +34,7 @@
                 min="0"
                 maxlength="19"
                 name="payment[cc_number]"
-                class="input-text"
+                class="input-text cc_number"
                 value=""
         />
     </div>
@@ -48,7 +48,7 @@
         <input type="text"
                autocomplete="off"
                style="width: 225px;"
-               class="input-text"
+               class="input-text cc_owner"
                maxlength="40"
                name="payment[cc_owner]"
                value=""
@@ -64,13 +64,13 @@
         <div class="fields group group-2">
             <div class="field no-label month">
                 <div class="control">
-                    <select name="payment[cc_exp_month]" class="select select-month">
+                    <select name="payment[cc_exp_month]" class="select select-month cc_exp_month">
                     </select>
                 </div>
             </div>
             <div class="field no-label year">
                 <div class="control">
-                    <select name="payment[cc_exp_year]" class="select select-year">
+                    <select name="payment[cc_exp_year]" class="select select-year cc_exp_year">
 
                     </select>
                 </div>
@@ -85,7 +85,7 @@
     <div class="control _with-tooltip">
         <input type="number"
                autocomplete="off"
-               class="input-text cvv"
+               class="input-text cvv cc_cid"
                name="payment[cc_cid]"
                value="123"
                onKeyPress="if(this.value.length==4) return false;"
@@ -116,7 +116,7 @@
                 <div class="control">
                     <select name="payment[cc_installments]"
                              style="width: 335px;"
-                             class="select select-installments"
+                             class="select select-installments cc_installments"
                     >
                     </select>
                 </div>

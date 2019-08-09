@@ -1,28 +1,70 @@
-var CreditCardModel = function () {
-    this.formObject = ''
+var CreditCardModel = function (formObject, publicKey) {
+    this.formObject = formObject;
+    this.publicKey = publicKey;
+
 };
 
-CreditCardModel.prototype.init = function () {
-    this.formObject = FormObject.creditCardInit();
+CreditCardModel.prototype.placeOrder = function (placeOrderObject) {
+    this.placeOrderObject = placeOrderObject;
+    var _self = this;
 
-    this.modelToken = new CreditCardToken(this.formObject);
-
-    this.addCreditCardListeners();
+    this.getCreditCardToken(
+        function (data) {
+            _self.formObject.creditCardToken.val(data.id);
+            _self.placeOrderObject.placeOrder();
+        },
+        function (error) {
+            var errors = error.responseJSON;
+            _self.placeOrderObject.platformObject.messageContainer.addErrorMessage(errors);
+        }
+    );
 };
 
-CreditCardModel.prototype.addCreditCardListeners = function () {
-    bin = new Bin();
-    formHandler = new FormHandler();
+CreditCardModel.prototype.creditCardValidation = function () {
 
-    this.formObject.creditCardNumber.on('keyup', function () {
-        setTimeout(function(){
-            bin.init(formObject.creditCardNumber.val());
-            formHandler.init(formObject);
-            formHandler.switchBrand(bin.selectedBrand);
-        }, 1300);
-    });
+    if (typeof this.formObject == "undefined") {
+        return false;
+    }
 
-    this.formObject.creditCardNumber.on('change', function () {
-        bin.init(jQuery(this).val());
-    });
+    var isValid = true;
+    var cardBrand = this.formObject.creditCardBrand.val();
+
+    if (typeof cardBrand == "undefined" || cardBrand.length <= 0 ) {
+        isValid = false;
+    }
+
+    return isValid;
 };
+
+CreditCardModel.prototype.getCreditCardToken = function (success, error) {
+    var modelToken = new CreditCardToken(this.formObject);
+    var _self = this;
+    if (this.creditCardValidation()) {
+        modelToken.getToken(_self.publicKey)
+            .done(success)
+            .fail(error);
+    }
+};
+
+
+CreditCardModel.prototype.getData = function () {
+    return {
+        'method': "mundipagg_creditcard",
+        'additional_data': {
+            'cc_type': this.formObject.creditCardBrand.val(),
+            'cc_last_4': this.getLastFourNumbers(),
+            'cc_exp_year': this.formObject.creditCardExpYear.val(),
+            'cc_exp_month': this.formObject.creditCardExpMonth.val(),
+            'cc_owner': this.formObject.creditCardHolderName.val(),
+            'cc_savecard': 0,
+            'cc_saved_card': 0,
+            'cc_installments': this.formObject.creditCardInstallments.val(),
+            'cc_token_credit_card': this.formObject.creditCardToken.val(),
+        }
+    };
+};
+
+CreditCardModel.prototype.getLastFourNumbers = function() {
+    var number = this.formObject.creditCardNumber.val();
+    return number.slice(-4);
+}

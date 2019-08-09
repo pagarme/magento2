@@ -24,32 +24,14 @@ MundiPaggCore.validatePaymentMethod = function (methodCode) {
     return this.paymentMethod.formValidation();
 };
 
-MundiPaggCore.placeOrder = function(platformObject, data, event) {
+MundiPaggCore.placeOrder = function(platformObject, model) {
 
-    var code = platformObject.getCode();
-    var model = platformObject.getModel();
+    //This object should be injected on this method, not instantiated here
+    var platformOrderPlace = new PlatformPlaceOrder(
+        platformObject.obj,
+        platformObject.data,
+        platformObject.event
+    );
 
-    if (code.indexOf('creditcard') >= 0) {
-
-        var formId = '#' + code + '-form';
-        this.paymentMethod[model].getCreditCardToken(
-            platformObject.getKey(),
-            function (response) {
-                if (response !== false) {
-                    jQuery(formId + " input[name='payment[cc_token]']").val(response.id);
-                    platformObject.placeOrder(data, event);
-                }
-            },
-            function (error) {
-                console.log(error);
-                window.globalMessageList.addErrorMessage({
-                    message: $t("Error to generate card token.")
-                });
-
-                $("html, body").animate({scrollTop: 0}, 600);
-            }
-        );
-    } else {
-        platformObject.placeOrder(data, event);
-    }
+    this.paymentMethod[model].placeOrder(platformOrderPlace);
 }

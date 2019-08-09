@@ -627,8 +627,13 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
                 $index
             );
 
-            $amount = $additionalInformation["cc_{$index}_card_amount"];
-            $newPaymentData->amount = $moneyService->floatToCents($amount);
+            $amount = str_replace(
+                ['.', ','],
+                "",
+                $additionalInformation["cc_{$index}_card_amount"]
+            );
+
+            $newPaymentData->amount = $moneyService->floatToCents($amount / 100);
             $newPaymentData->saveOnSuccess =
                 isset($additionalInformation["cc_savecard_{$index}"]) &&
                 $additionalInformation["cc_savecard_{$index}"] === '1';
@@ -744,8 +749,12 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             isset($additionalInformation["cc_savecard"]) &&
             $additionalInformation["cc_savecard"] === '1';
 
-        $amount = $additionalInformation["cc_cc_amount"];
-        $newPaymentData->amount = $moneyService->floatToCents($amount);
+        $amount = str_replace(
+            ['.', ','],
+            "",
+            $additionalInformation["cc_cc_amount"]
+            );
+        $newPaymentData->amount = $moneyService->floatToCents($amount / 100);
 
         $creditCardDataIndex = AbstractCreditCardPayment::getBaseCode();
         if (!isset($paymentData[$creditCardDataIndex])) {

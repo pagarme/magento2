@@ -26,6 +26,7 @@ define(
         'Magento_Checkout/js/model/url-builder',
         "MundiPagg_MundiPagg/js/core/checkout/PaymentModuleBootstrap",
         "MundiPagg_MundiPagg/js/core/checkout/PaymentMethodController",
+        "MundiPagg_MundiPagg/js/core/checkout/PlatformPlaceOrder",
         "MundiPagg_MundiPagg/js/core/checkout/Bin",
         "MundiPagg_MundiPagg/js/core/checkout/PlatformFormBiding",
         "MundiPagg_MundiPagg/js/core/checkout/PlatformFormHandler",
@@ -49,10 +50,9 @@ define(
         globalMessageList,
         urlBuilder,
         MundiPaggCore,
-        PaymentController
+        PaymentController,
+        PlatformPlaceOrder
     ) {
-
-        window.MundiPaggCore.quote = quote;
 
         return Component.extend({
 
@@ -71,11 +71,14 @@ define(
                 platFormConfig.moduleUrls = {};
                 installmentsUrl = installmentsAction();
 
-                platFormConfig.base_url = window.BASE_URL;
+                var baseUrl = platFormConfig.payment.ccform.base_url;
+
+                platFormConfig.base_url = baseUrl;
 
                 platFormConfig.moduleUrls.installments =
-                    window.BASE_URL + installmentsUrl;
+                    baseUrl + installmentsUrl;
 
+                window.MundiPaggCore.platFormConfig = platFormConfig;
                 window.MundiPaggCore.initPaymentMethod(
                     this.getModel(),
                     platFormConfig
@@ -107,10 +110,20 @@ define(
                 return false;*/
 
                 //@todo Validar dados inclusive de endereço pelo MundiPaggCore.quote setado acima
-                /*window.MundiPaggCore.initPaymentMethod(this.getModel());
-                window.MundiPaggCore.placeOrder(_self, data, event);*/
-            },
 
+                //Should be an instance of PlatformPlaceOrder
+                var PlatformPlaceOrder = {
+                    obj : _self,
+                    data: data,
+                    event: event
+                };
+
+                window.MundiPaggCore.placeOrder(
+                    PlatformPlaceOrder,
+                    this.getModel()
+                );
+                return false;
+            },
 
             /**
              * Select current payment token

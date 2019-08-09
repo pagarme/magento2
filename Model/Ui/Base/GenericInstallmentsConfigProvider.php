@@ -15,6 +15,7 @@ namespace MundiPagg\MundiPagg\Model\Ui\Base;
 use MundiPagg\MundiPagg\Model\Installments\Config\ConfigInterface;
 use MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\ConfigInterface as BaseConfig;
 use Magento\Checkout\Model\ConfigProviderInterface;
+use \Magento\Store\Model\StoreManagerInterface;
 
 abstract class GenericInstallmentsConfigProvider implements ConfigProviderInterface
 {
@@ -30,11 +31,13 @@ abstract class GenericInstallmentsConfigProvider implements ConfigProviderInterf
     public function __construct(
         \Magento\Framework\View\Asset\Repository $assetRepo,
         ConfigInterface $config,
-        BaseConfig $baseConfig
+        BaseConfig $baseConfig,
+        StoreManagerInterface $storeManager
     )
     {
         $this->_assetRepo = $assetRepo;
         $this->baseConfig = $baseConfig;
+        $this->storageManager = $storeManager;
         $this->setConfig($config);
     }
 
@@ -43,6 +46,7 @@ abstract class GenericInstallmentsConfigProvider implements ConfigProviderInterf
         $config = [
             'payment' => [
                 'ccform' => [
+                    'base_url' => $this->storageManager->getStore()->getBaseUrl(),
                     'installments' => [
                         'active' => [$this::CODE => $this->_getConfig()->isActive()],
                         'value' => 0,

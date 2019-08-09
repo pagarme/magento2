@@ -62,26 +62,10 @@ define(
                 return "MundiPagg_MundiPagg/payment/creditcard-form";
             },
 
-            /*getData: function () {
-                this.initPaymentMethod();
-
-
-                return {
-                    'method': this.item.method,
-                    'additional_data': {
-                        //'cc_type': formObject.creditCardBrand.val(),
-                        'cc_type': 'VISA',
-                        'cc_last_4': '1111',
-                        'cc_exp_year': formObject.creditCardExpYear.val(),
-                        'cc_exp_month': formObject.creditExpMonth.val(),
-                        'cc_owner': formObject.creditCardHolderName.val(),
-                        'cc_savecard': 0,
-                        'cc_saved_card': 0,
-                        'cc_installments': formObject.creditCardInstallments.val(),
-                        'cc_token_credit_card': formObject.creditCardToken.val(),
-                    }
-                };
-            },*/
+            getData: function () {
+                var paymentModel = window.MundiPaggCore.paymentMethod[this.getModel()].model;
+                return paymentModel.getData();
+            },
 
             /**
              * Get list of available month values

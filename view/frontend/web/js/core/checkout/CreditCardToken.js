@@ -9,7 +9,7 @@ CreditCardToken.prototype.getDataToGenerateToken = function () {
         card : {
             holder_name: this.formObject.creditCardHolderName.val(),
             number: this.formObject.creditCardNumber.val(),
-            exp_month: this.formObject.creditExpMonth.val(),
+            exp_month: this.formObject.creditCardExpMonth.val(),
             exp_year: this.formObject.creditCardExpYear.val(),
             cvv: this.formObject.creditCardCvv.val()
         }
