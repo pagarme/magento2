@@ -24,13 +24,18 @@ PlatformConfig.bind = function (platformConfig) {
 
     avaliableBrands = this.getAvaliableBrands(platformConfig);
 
+    totals = platformConfig.totalsData;
+    quote = platformConfig.quote;
+
     var config = {
         avaliableBrands: avaliableBrands,
         orderAmount : grandTotal.toFixed(platformConfig.basePriceFormat.precision),
         urls: urls,
         currency : currency,
         text: text,
-        publicKey: publicKey
+        publicKey: publicKey,
+        totals: totals,
+        quote: quote,
     };
 
     this.PlatformConfig = config;
@@ -112,6 +117,11 @@ FormObject.twoCreditCardsInit = function () {
 };
 
 FormObject.fillTwoCreditCardsElements = function (containerSelector, elementId) {
+
+    if (jQuery(containerSelector).children().length == 0) {
+        return;
+    }
+
     var elements = {
         "creditCardNumber" : jQuery(containerSelector + " .cc_number"),
         "creditCardHolderName" : jQuery(containerSelector + " .cc_owner"),
@@ -133,7 +143,15 @@ FormObject.renameTwoCreditCardsElements = function (elements, elementId) {
     var twoCreditCardForm = {};
 
     for (var key in elements) {
-        newName = elements[key].attr('name') + '[' + elementId + ']';
+
+        name = elements[key].attr('name');
+
+        newName =  name + '[' + elementId + ']';
+
+        if (name.match(/\[\d\]/g)) {
+            newName = name;
+        }
+
         elements[key].attr('name', newName);
         elementType = 'input';
 

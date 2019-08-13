@@ -54,6 +54,7 @@ define(
         PlatformPlaceOrder
     ) {
 
+        window.MundiPaggCore.messageList = globalMessageList;
         return Component.extend({
 
             initialize: function() {
@@ -74,9 +75,10 @@ define(
                 var baseUrl = platFormConfig.payment.ccform.base_url;
 
                 platFormConfig.base_url = baseUrl;
-
                 platFormConfig.moduleUrls.installments =
                     baseUrl + installmentsUrl;
+
+                platFormConfig.quote = quote;
 
                 window.MundiPaggCore.platFormConfig = platFormConfig;
                 window.MundiPaggCore.initPaymentMethod(
@@ -122,7 +124,6 @@ define(
                     PlatformPlaceOrder,
                     this.getModel()
                 );
-                return false;
             },
 
             /**

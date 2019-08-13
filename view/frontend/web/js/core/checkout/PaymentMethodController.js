@@ -47,16 +47,16 @@ PaymentMethodController.prototype.twocreditcardsInit = function () {
         this.formObject,
         this.platformConfig.publicKey
     );
-    this.fillCardAmount(this.formObject[0], 2);
-    this.fillCardAmount(this.formObject[1], 2);
-    this.fillFormText(this.formObject[0]);
-    this.fillFormText(this.formObject[1]);
-    this.fillBrandList(this.formObject[0].container);
-    this.fillBrandList(this.formObject[1].container);
-    this.fillInstallments(this.formObject[0]);
-    this.fillInstallments(this.formObject[1]);
-    this.addCreditCardListeners(this.formObject[0]);
-    this.addCreditCardListeners(this.formObject[1]);
+
+    if (typeof this.formObject[1] !== "undefined") {
+        for (var i = 0, len = this.formObject.numberOfPaymentForms; i < len; i++) {
+            this.fillCardAmount(this.formObject[i], 2);
+            this.fillFormText(this.formObject[i]);
+            this.fillBrandList(this.formObject[i].container);
+            this.fillInstallments(this.formObject[i]);
+            this.addCreditCardListeners(this.formObject[i]);
+        }
+    }
 
     this.modelToken = new CreditCardToken(this.formObject);
 };
@@ -72,7 +72,16 @@ PaymentMethodController.prototype.addCreditCardListeners = function (formObject)
 
     this.addCreditCardNumberListener(formObject);
     this.addCreditCardInstallmentsListener(formObject);
+    this.addCreditCardHolderNameListener(formObject);
 };
+
+PaymentMethodController.prototype.addCreditCardHolderNameListener = function(formObject) {
+    var paymentMethodController = this;
+    formObject.creditCardHolderName.on('keyup', function () {
+        var element = jQuery(this);
+        paymentMethodController.clearNumbers(element);
+    });
+}
 
 PaymentMethodController.prototype.addCreditCardNumberListener = function(formObject) {
 
@@ -86,7 +95,9 @@ PaymentMethodController.prototype.addCreditCardNumberListener = function(formObj
     var binObj = new Bin();
 
     formObject.creditCardNumber.on('keyup', function () {
-        jQuery(this).change();
+        var element = jQuery(this);
+        paymentMethodController.clearLetters(element);
+        element.change();
     });
 
     formObject.creditCardNumber.on('change', function () {
@@ -108,7 +119,10 @@ PaymentMethodController.prototype.addCreditCardInstallmentsListener = function(f
         var value = jQuery(this).val();
         if (value != "" && value != 'undefined') {
             var interest = jQuery(this).find(':selected').attr("interest");
-            paymentMethodController.updateTotal(interest);
+            paymentMethodController.updateTotal(
+                interest,
+                jQuery(this).attr('name')
+            );
         }
     });
 };
@@ -117,12 +131,59 @@ PaymentMethodController.prototype.placeOrder = function (placeOrderObject) {
     this.model.placeOrder(placeOrderObject);
 }
 
-PaymentMethodController.prototype.updateTotal = function(interest) {
+PaymentMethodController.prototype.updateTotal = function(interest, selectName) {
     var paymentMethodController = this;
+
+    if (paymentMethodController.formObject.numberOfPaymentForms > 1) {
+        interest = this.sumInterests(interest, selectName);
+    }
+
+
+    var total = paymentMethodController.platformConfig.totals;
+    total.tax_amount = parseFloat(interest);
+    total.base_tax_amount = parseFloat(interest);
+
+    for (var i = 0, len = total.total_segments.length; i < len; i++) {
+        if (total.total_segments[i].code === "grand_total") {
+            total.total_segments[i].value = parseFloat(total.base_grand_total) + parseFloat(interest)
+            continue;
+        }
+        if (total.total_segments[i].code === "tax") {
+            total.total_segments[i].value = interest;
+        }
+    }
+
+    paymentMethodController.platformConfig.quote.setTotals(total);
 
 };
 
+PaymentMethodController.prototype.sumInterests = function(interest, selectName) {
+    var interest = interest;
+    var paymentMethodController = this;
 
+    var formObject = paymentMethodController.formObject;
+
+    for (id in formObject) {
+
+        if (id.length > 1) {
+            continue;
+        }
+
+        var name = formObject[id].creditCardInstallments.attr('name');
+        if (name == selectName) {
+            continue;
+        }
+
+        var otherInterest = formObject[id].creditCardInstallments.find(':selected').attr('interest');
+        if (isNaN(otherInterest)) {
+            continue;
+        }
+
+        interest = parseFloat(otherInterest) + parseFloat(interest);
+    }
+
+    return interest;
+}
 
 PaymentMethodController.prototype.fillInstallments = function (form) {
     formHandler = new FormHandler();
@@ -204,6 +265,18 @@ PaymentMethodController.prototype.limitCharacters = function (element, limit) {
     if(val != "" && val.length > limit) {
         element.val(val.substring(0, limit));
     }
+};
+
+PaymentMethodController.prototype.clearLetters = function (element) {
+    var val = element.val();
+    var newVal = val.replace(/[^0-9]+/g, '');
+    element.val(newVal);
+};
+
+PaymentMethodController.prototype.clearNumbers = function (element) {
+    var val = element.val();
+    var newVal = val.replace(/[0-9]+/g, '');
+    element.val(newVal);
 };
 
 PaymentMethodController.prototype.hideCardAmount = function (formObject) {

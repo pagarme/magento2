@@ -1,6 +1,7 @@
 var CreditCardModel = function (formObject, publicKey) {
     this.formObject = formObject;
     this.publicKey = publicKey;
+    this.errors = [];
 
 };
 
@@ -15,10 +16,16 @@ CreditCardModel.prototype.placeOrder = function (placeOrderObject) {
         },
         function (error) {
             var errors = error.responseJSON;
-            _self.placeOrderObject.platformObject.messageContainer.addErrorMessage(errors);
+            _self.addErrors("Cartão inválido. Por favor, verifique os dados digitados e tente novamente");
         }
     );
 };
+
+CreditCardModel.prototype.addErrors = function (error) {
+    this.errors.push({
+        message: error
+    })
+}
 
 CreditCardModel.prototype.creditCardValidation = function () {
 
@@ -60,6 +67,7 @@ CreditCardModel.prototype.getData = function () {
             'cc_saved_card': 0,
             'cc_installments': this.formObject.creditCardInstallments.val(),
             'cc_token_credit_card': this.formObject.creditCardToken.val(),
+            'cc_card_tax_amount' : this.formObject.creditCardInstallments.find(':selected').attr('interest'),
         }
     };
 };
