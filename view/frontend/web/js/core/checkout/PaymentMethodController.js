@@ -55,6 +55,7 @@ PaymentMethodController.prototype.twocreditcardsInit = function () {
             this.fillBrandList(this.formObject[i].container);
             this.fillInstallments(this.formObject[i]);
             this.addCreditCardListeners(this.formObject[i]);
+            this.addCreditCardAmountBalanceListener(this.formObject[i], i);
         }
     }
 
@@ -74,6 +75,41 @@ PaymentMethodController.prototype.addCreditCardListeners = function (formObject)
     this.addCreditCardInstallmentsListener(formObject);
     this.addCreditCardHolderNameListener(formObject);
 };
+
+PaymentMethodController.prototype.addCreditCardAmountBalanceListener = function(formObject, id) {
+    var paymentMethodController = this;
+    var id = id;
+    formObject.creditCardAmount.on('keyup', function(){
+        element = jQuery(this);
+
+        var orderAmount = paymentMethodController.platformConfig.orderAmount;
+        orderAmount = orderAmount.replace(/[^0-9]/g, '');
+        orderAmount = Number(orderAmount);
+
+        var value = element.val();
+        value = value.replace(/[^0-9]/g, '');
+        value = Number(value);
+
+        if (value > orderAmount) {
+            value = orderAmount - 1;
+        }
+
+        if (isNaN(value) || value == 0) {
+            value = 1;
+        }
+
+        var remaining = orderAmount - value;
+
+        remaining = (remaining / 100).toFixed(2);
+        value = (value / 100).toFixed(2);
+
+        var formId = paymentMethodController.model.getFormIdInverted(id);
+        var form = paymentMethodController.formObject[formId];
+
+        form.creditCardAmount.val(remaining.toString().replace('.', paymentMethodController.platformConfig.currency.decimalSeparator));
+        element.val(value.toString().replace('.', paymentMethodController.platformConfig.currency.decimalSeparator));
+    });
+}
 
 PaymentMethodController.prototype.addCreditCardHolderNameListener = function(formObject) {
     var paymentMethodController = this;
@@ -137,7 +173,6 @@ PaymentMethodController.prototype.updateTotal = function(interest, selectName) {
     if (paymentMethodController.formObject.numberOfPaymentForms > 1) {
         interest = this.sumInterests(interest, selectName);
     }
-
 
     var total = paymentMethodController.platformConfig.totals;
     total.tax_amount = parseFloat(interest);

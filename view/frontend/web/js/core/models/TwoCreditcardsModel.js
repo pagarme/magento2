@@ -3,6 +3,7 @@ var TwoCreditcardsModel= function (formObject, publicKey) {
     this.publicKey = publicKey;
     this.modelToken = new CreditCardToken(this.formObject);
     this.errors = [];
+    this.formIds = [0, 1];
 };
 
 TwoCreditcardsModel.prototype.placeOrder = function (placeOrderObject) {
@@ -29,6 +30,14 @@ TwoCreditcardsModel.prototype.placeOrder = function (placeOrderObject) {
 
     _self.placeOrderObject.placeOrder();
 };
+
+TwoCreditcardsModel.prototype.getFormIdInverted = function (id) {
+    var ids = this.formIds.slice(0);
+    var index = ids.indexOf(id);
+    ids.splice(index, 1);
+
+    return ids[0];
+}
 
 TwoCreditcardsModel.prototype.addErrors = function (error) {
     this.errors.push({
