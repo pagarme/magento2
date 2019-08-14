@@ -79,6 +79,14 @@ PaymentMethodController.prototype.addCreditCardListeners = function (formObject)
 PaymentMethodController.prototype.addCreditCardAmountBalanceListener = function(formObject, id) {
     var paymentMethodController = this;
     var id = id;
+
+    formObject.creditCardAmount.on('change', function () {
+        paymentMethodController.fillInstallments(formObject);
+        var formId = paymentMethodController.model.getFormIdInverted(id);
+        var form = paymentMethodController.formObject[formId];
+        paymentMethodController.fillInstallments(form);
+    });
+
     formObject.creditCardAmount.on('keyup', function(){
         element = jQuery(this);
 
@@ -282,14 +290,12 @@ PaymentMethodController.prototype.setBin = function (binObj, creditCardNumberEle
 
     bin.init(cardNumber);
 
-    if (isNewBrand) {
-        //@Todo
-        //Call update installments sending the credit card brand
-        //this.fillInstallments(this.formObject[1]);
-    }
     formHandler = new FormHandler();
     formHandler.init(formObject);
     formHandler.switchBrand(bin.selectedBrand);
+    if (isNewBrand) {
+        this.fillInstallments(formObject);
+    }
 
     return;
 };
