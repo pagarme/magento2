@@ -78,7 +78,16 @@ define(
                 platFormConfig.moduleUrls.installments =
                     baseUrl + installmentsUrl;
 
-                platFormConfig.quote = quote;
+                platFormConfig.addresses = {
+                    billingAddress: quote.billingAddress()
+                };
+
+                platFormConfig.loader = fullScreenLoader;
+
+                platFormConfig.updateTotals = {
+                    getTotals: quote.getTotals,
+                    setTotals: quote.setTotals
+                }
 
                 window.MundiPaggCore.platFormConfig = platFormConfig;
                 window.MundiPaggCore.initPaymentMethod(

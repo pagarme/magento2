@@ -9,7 +9,7 @@ var TwoCreditcardsModel= function (formObject, publicKey) {
 TwoCreditcardsModel.prototype.placeOrder = function (placeOrderObject) {
     this.placeOrderObject = placeOrderObject;
     var _self = this;
-
+    var errors = false;
     for (id in this.formObject) {
 
         if (id.length > 1) {
@@ -22,13 +22,15 @@ TwoCreditcardsModel.prototype.placeOrder = function (placeOrderObject) {
                 _self.formObject[id].creditCardToken.val(data.id);
             },
             function (error) {
-                var errors = error.responseJSON;
+                errors = true;
                 _self.addErrors("Cartão inválido. Por favor, verifique os dados digitados e tente novamente");
             }
         );
     }
 
-    _self.placeOrderObject.placeOrder();
+    if (!errors) {
+        _self.placeOrderObject.placeOrder();
+    }
 };
 
 TwoCreditcardsModel.prototype.getFormIdInverted = function (id) {

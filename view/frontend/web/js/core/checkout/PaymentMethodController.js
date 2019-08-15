@@ -141,7 +141,6 @@ PaymentMethodController.prototype.addCreditCardNumberListener = function(formObj
     formObject.creditCardNumber.on('keyup', function () {
         var element = jQuery(this);
         paymentMethodController.clearLetters(element);
-        element.change();
     });
 
     formObject.creditCardNumber.on('change', function () {
@@ -149,9 +148,7 @@ PaymentMethodController.prototype.addCreditCardNumberListener = function(formObj
 
         setTimeout(function() {
             paymentMethodController.setBin(binObj,  element, formObject);
-        }, 1300);
-        //@Todo
-        //installments
+        }, 300);
     }).bind(this);
 };
 
@@ -172,7 +169,29 @@ PaymentMethodController.prototype.addCreditCardInstallmentsListener = function(f
 };
 
 PaymentMethodController.prototype.placeOrder = function (placeOrderObject) {
+    var errors = this.validateAddress();
+    if (errors.length > 0) {
+        for (id in errors) {
+            this.model.addErrors(errors[id]);
+        }
+        return;
+    }
     this.model.placeOrder(placeOrderObject);
+};
+
+PaymentMethodController.prototype.validateAddress = function () {
+    var errors = [];
+    var address = this.platformConfig.addresses.billingAddress;
+
+    if (address.vatId <= 0) {
+        errors.push("VatId não informado");
+    }
+
+    if (address.street.length < 3) {
+        errors.push("Endereço invalido");
+    }
+
+    return errors;
 }
 
 PaymentMethodController.prototype.updateTotal = function(interest, selectName) {
@@ -196,7 +215,7 @@ PaymentMethodController.prototype.updateTotal = function(interest, selectName) {
         }
     }
 
-    paymentMethodController.platformConfig.quote.setTotals(total);
+    paymentMethodController.platformConfig.updateTotals.setTotals(total);
 
 };
 
@@ -229,6 +248,9 @@ PaymentMethodController.prototype.sumInterests = function(interest, selectName) 
 }
 
 PaymentMethodController.prototype.fillInstallments = function (form) {
+    var _self = this;
+
+    _self.platformConfig.loader.start();
     formHandler = new FormHandler();
 
     var defaulOption = [{
@@ -236,24 +258,23 @@ PaymentMethodController.prototype.fillInstallments = function (form) {
         'interest' : 0,
         'label' : 'Selecione'
     }];
-
     var selectedBrand = form.creditCardBrand.val();
-    var amount = form.creditCardAmount.val();
 
+    var amount = form.creditCardAmount.val();
     if (typeof selectedBrand == "undefined") {
         selectedBrand = 'default';
-    }
 
+    }
     if (typeof amount == "undefined") {
         amount = 0;
-    }
 
+    }
     formHandler.updateInstallmentSelect(defaulOption, form.creditCardInstallments);
+
     var installmentsUrl =
         this.platformConfig.urls.installments + '/' +
         selectedBrand + '/' +
         amount;
-
     jQuery.ajax({
         url: installmentsUrl,
         method: 'GET',
@@ -261,6 +282,7 @@ PaymentMethodController.prototype.fillInstallments = function (form) {
     }).done(function(data) {
         formHandler = new FormHandler();
         formHandler.updateInstallmentSelect(data, form.creditCardInstallments);
+        _self.platformConfig.loader.stop();
     });
 };
 

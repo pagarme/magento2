@@ -24,8 +24,12 @@ PlatformConfig.bind = function (platformConfig) {
 
     avaliableBrands = this.getAvaliableBrands(platformConfig);
 
+    loader = {
+        start: platformConfig.loader.startLoader,
+        stop: platformConfig.loader.stopLoader
+    };
+
     totals = platformConfig.totalsData;
-    quote = platformConfig.quote;
 
     var config = {
         avaliableBrands: avaliableBrands,
@@ -35,7 +39,9 @@ PlatformConfig.bind = function (platformConfig) {
         text: text,
         publicKey: publicKey,
         totals: totals,
-        quote: quote,
+        loader: loader,
+        addresses: platformConfig.addresses,
+        updateTotals: platformConfig.updateTotals,
     };
 
     this.PlatformConfig = config;

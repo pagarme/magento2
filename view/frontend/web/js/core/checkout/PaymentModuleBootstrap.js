@@ -34,7 +34,6 @@ MundiPaggCore.placeOrder = function(platformObject, model) {
     );
 
     try {
-
         this.paymentMethod[model].placeOrder(platformOrderPlace);
     } catch(e) {
         console.log(e)
@@ -45,6 +44,7 @@ MundiPaggCore.placeOrder = function(platformObject, model) {
         for (index in errors) {
             this.messageList.addErrorMessage(errors[index]);
         }
+        jQuery("html, body").animate({scrollTop: 0}, 600);
         console.log(errors)
     }
 }
