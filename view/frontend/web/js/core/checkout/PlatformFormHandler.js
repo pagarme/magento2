@@ -12,7 +12,9 @@ FormHandler.prototype.switchBrand = function (brand) {
     jQuery(brandsSelector).css('filter', 'grayscale(100%)');
 
     if(typeof brand != 'undefined' && brand.length > 0){
-        var brandSelector = this.formObject.containerSelector + ' .' + brand;
+        var brandSelector =
+            this.formObject.containerSelector + ' .' +
+            brand.toLowerCase();
 
         jQuery(brandSelector).css('filter', 'none');
         this.formObject.creditCardBrand.val(brand);
@@ -116,13 +118,19 @@ FormHandler.prototype.fillSavedCreditCardsSelect = function (platformConfig, for
         html +=
             "<option value='" +
                 cardKeys[i] +
-            "'>" +
+            "'" +
+            " brand='" + cards[i].brand  + "'" +
+            ">" +
                 cards[i].brand + " " +
                 cards[i].first_six_digits +
                 ".xxxxxx." +
                 cards[i].last_four_numbers +
             "</option>"
         ;
+    }
+
+    if (html.length > 0) {
+        jQuery(formObject.containerSelector + ' .new').hide();
     }
 
     html += "<option value='new'>Preencher dados</option>";

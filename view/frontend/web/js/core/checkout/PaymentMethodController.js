@@ -31,8 +31,8 @@ PaymentMethodController.prototype.creditcardInit = function () {
     this.fillCardAmount(this.formObject, 1);
     this.hideCardAmount(this.formObject);
     this.fillFormText(this.formObject);
-    this.fillInstallments(this.formObject);
     this.fillSavedCreditCardsSelect(this.formObject);
+    this.fillInstallments(this.formObject);
     this.addCreditCardListeners(this.formObject);
     this.modelToken = new CreditCardToken(this.formObject);
 };
@@ -54,6 +54,7 @@ PaymentMethodController.prototype.twocreditcardsInit = function () {
             this.fillCardAmount(this.formObject[i], 2);
             this.fillFormText(this.formObject[i]);
             this.fillBrandList(this.formObject[i].container);
+            this.fillSavedCreditCardsSelect(this.formObject[i]);
             this.fillInstallments(this.formObject[i]);
             this.fillSavedCreditCardsSelect(this.formObject[i]);
             this.addCreditCardListeners(this.formObject[i]);
@@ -76,6 +77,7 @@ PaymentMethodController.prototype.addCreditCardListeners = function (formObject)
     this.addCreditCardNumberListener(formObject);
     this.addCreditCardInstallmentsListener(formObject);
     this.addCreditCardHolderNameListener(formObject);
+    this.addSavedCreditCardsListener(formObject);
 };
 
 PaymentMethodController.prototype.addCreditCardAmountBalanceListener = function(formObject, id) {
@@ -143,6 +145,7 @@ PaymentMethodController.prototype.addCreditCardNumberListener = function(formObj
     formObject.creditCardNumber.on('keyup', function () {
         var element = jQuery(this);
         paymentMethodController.clearLetters(element);
+        element.change();
     });
 
     formObject.creditCardNumber.on('change', function () {
@@ -167,6 +170,28 @@ PaymentMethodController.prototype.addCreditCardInstallmentsListener = function(f
                 jQuery(this).attr('name')
             );
         }
+    });
+};
+
+PaymentMethodController.prototype.addSavedCreditCardsListener = function(formObject) {
+
+    var paymentMethodController = this;
+    var selector = formObject.savedCreditCardSelect.selector;
+    var brand = jQuery(selector + ' option:selected').attr('brand');
+    formObject.creditCardBrand.val(brand);
+
+    formObject.savedCreditCardSelect.on('change', function() {
+        var value = jQuery(this).val();
+        var brand = jQuery(selector + ' option:selected').attr('brand');
+
+        formObject.creditCardBrand.val(brand);
+        if (value === 'new') {
+            jQuery(formObject.containerSelector + ' .new').show();
+            return;
+        }
+
+        paymentMethodController.fillInstallments(formObject);
+        jQuery(formObject.containerSelector + ' .new').hide();
     });
 };
 
@@ -252,7 +277,7 @@ PaymentMethodController.prototype.sumInterests = function(interest, selectName) 
 PaymentMethodController.prototype.fillInstallments = function (form) {
     var _self = this;
 
-    _self.platformConfig.loader.start();
+    //_self.platformConfig.loader.start();
     formHandler = new FormHandler();
 
     var defaulOption = [{
@@ -272,6 +297,7 @@ PaymentMethodController.prototype.fillInstallments = function (form) {
 
     }
     formHandler.updateInstallmentSelect(defaulOption, form.creditCardInstallments);
+    form.creditCardInstallments.prop('disabled', true);
 
     var installmentsUrl =
         this.platformConfig.urls.installments + '/' +
@@ -284,7 +310,8 @@ PaymentMethodController.prototype.fillInstallments = function (form) {
     }).done(function(data) {
         formHandler = new FormHandler();
         formHandler.updateInstallmentSelect(data, form.creditCardInstallments);
-        _self.platformConfig.loader.stop();
+        form.creditCardInstallments.prop('disabled', false);
+        //_self.platformConfig.loader.stop();
     });
 };
 
@@ -366,4 +393,10 @@ PaymentMethodController.prototype.fillSavedCreditCardsSelect = function (formObj
     formHandler = new FormHandler();
     formHandler.init(formObject);
     formHandler.fillSavedCreditCardsSelect(platformConfig, formObject);
+
+    if (typeof formObject.savedCreditCardSelect.selector != 'undefined') {
+        selector = formObject.savedCreditCardSelect.selector;
+        var brand = jQuery(selector + ' option:selected').attr('brand');
+        formObject.creditCardBrand.val(brand);
+    }
 };

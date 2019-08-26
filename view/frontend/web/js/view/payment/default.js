@@ -84,10 +84,12 @@ define(
 
                 platFormConfig.loader = fullScreenLoader;
 
-                platFormConfig.updateTotals = {
+                /*platFormConfig.updateTotals = {
                     getTotals: quote.getTotals,
                     setTotals: quote.setTotals
-                }
+                }*/
+
+                platFormConfig.updateTotals = quote;
 
                 window.MundiPaggCore.platFormConfig = platFormConfig;
                 window.MundiPaggCore.initPaymentMethod(
