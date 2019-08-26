@@ -34,6 +34,8 @@ use Mundipagg\Core\Payment\ValueObjects\CustomerType;
 use Mundipagg\Core\Payment\ValueObjects\Phone;
 use MundiPagg\MundiPagg\Model\Cards;
 use MundiPagg\MundiPagg\Model\CardsRepository;
+use Mundipagg\Core\Kernel\Services\LocalizationService;
+use Mundipagg\Core\Kernel\Services\LogService;
 
 class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 {
@@ -44,9 +46,11 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
      */
     private $orderFactory;
     private $quote;
+    private $i18n;
 
     public function __construct()
     {
+        $this->i18n = new LocalizationService();
         $objectManager = ObjectManager::getInstance();
         $this->orderFactory = $objectManager->get('Magento\Sales\Model\Order');
         parent::__construct();
@@ -332,6 +336,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $quoteCustomer = $quote->getCustomer();
 
         $addresses = $quoteCustomer->getAddresses();
+        $address = end($addresses);
 
         $customerRepository =
             ObjectManager::getInstance()->get(CustomerRepository::class);
@@ -359,13 +364,15 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             }
         }
 
-        $customer->setName(
-            implode(' ', [
-                $quote->getCustomerFirstname(),
-                $quote->getCustomerMiddlename(),
-                $quote->getCustomerLastname(),
-            ])
-        );
+        $fullName = implode(' ', [
+            $quote->getCustomerFirstname(),
+            $quote->getCustomerMiddlename(),
+            $quote->getCustomerLastname(),
+        ]);
+
+        $fullName = preg_replace("/  /", " ", $fullName);
+
+        $customer->setName($fullName);
         $customer->setEmail($quote->getCustomerEmail());
 
         $cleanDocument = preg_replace(
@@ -378,39 +385,21 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             $cleanDocument = preg_replace(
                 '/\D/',
                 '',
-                $addresses[0]->getVatId()
+                $address->getVatId()
             );
         }
 
         $customer->setDocument($cleanDocument);
         $customer->setType(CustomerType::individual());
 
-        $telephone = $quote->getCustomer()->getAddresses()[0]->getTelephone();
-        $phone = new Phone(
-            '55',
-            substr($telephone, 0, 2),
-            substr($telephone, 2)
-        );
+        $telephone = $address->getTelephone();
+        $phone = new Phone($telephone);
+
         $customer->setPhones(
             CustomerPhones::create([$phone, $phone])
         );
 
-        $address = new Address();
-        $addressAttributes =
-            MPSetup::getModuleConfiguration()->getAddressAttributes();
-
-        $addressAttributes = json_decode(json_encode($addressAttributes), true);
-        foreach ($addressAttributes as $attribute => $value) {
-            $value = $value === null ? 1 : $value;
-            $value = filter_var($value, FILTER_SANITIZE_NUMBER_INT) - 1;
-            $setter = 'set' . ucfirst($attribute);
-            $address->$setter($addresses[0]->getStreet()[$value]);
-        }
-
-        $address->setCity($addresses[0]->getCity());
-        $address->setCountry($addresses[0]->getCountryId());
-        $address->setZipCode($addresses[0]->getPostcode());
-        $address->setState($addresses[0]->getRegion()->getRegionCode());
+        $address = $this->getAddress($address);
 
         $customer->setAddress($address);
 
@@ -424,13 +413,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 
         $customer = new Customer;
 
-        $customer->setName(
-            implode(' ', [
-                $guestAddress->getFirstname(),
-                $guestAddress->getMiddlename(),
-                $guestAddress->getLastname(),
-            ])
-        );
+        $customer->setName($guestAddress->getName());
         $customer->setEmail($guestAddress->getEmail());
 
         $cleanDocument = preg_replace(
@@ -443,32 +426,13 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $customer->setType(CustomerType::individual());
 
         $telephone = $guestAddress->getTelephone();
-        $phone = new Phone(
-            '55',
-            substr($telephone, 0, 2),
-            substr($telephone, 2)
-        );
+        $phone = new Phone($telephone);
+
         $customer->setPhones(
             CustomerPhones::create([$phone, $phone])
         );
 
-        $address = new Address();
-        $addressAttributes =
-            MPSetup::getModuleConfiguration()->getAddressAttributes();
-
-        $addressAttributes = json_decode(json_encode($addressAttributes), true);
-        foreach ($addressAttributes as $attribute => $value) {
-            $value = $value === null ? 1 : $value;
-            $value = filter_var($value, FILTER_SANITIZE_NUMBER_INT) - 1;
-            $setter = 'set' . ucfirst($attribute);
-            $address->$setter($guestAddress->getStreet()[$value]);
-        }
-
-        $address->setCity($guestAddress->getCity());
-        $address->setCountry($guestAddress->getCountryId());
-        $address->setZipCode($guestAddress->getPostcode());
-        $address->setState($guestAddress->getRegionCode());
-
+        $address = $this->getAddress($guestAddress);
         $customer->setAddress($address);
 
         return $customer;
@@ -493,6 +457,11 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             $item->setAmount(
                 $moneyService->floatToCents($price)
             );
+
+            if ($quoteItem->getItemId()) {
+                $item->setCode($quoteItem->getItemId());
+            }
+
             $item->setQuantity($quoteItem->getQty());
             $item->setDescription(
                 $quoteItem->getName() . ' : ' .
@@ -551,7 +520,11 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
     }
 
     private function extractPaymentDataFromMundipaggCreditCard
-    ($additionalInformation, &$paymentData, $payment)
+    (
+        $additionalInformation,
+        &$paymentData,
+        $payment
+    )
     {
         $moneyService = new MoneyService();
         $identifier = null;
@@ -843,36 +816,64 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             $moneyService->floatToCents($platformShipping->getShippingAmount())
         );
         $shipping->setDescription($platformShipping->getShippingDescription());
-        $shipping->setRecipientName(
-            $platformShipping->getName() . ' ' .
-            $platformShipping->getMiddlename() . ' ' .
-            $platformShipping->getLastname()
-        );
-        $shipping->setRecipientPhone(new Phone(
-            '55',
-            substr($platformShipping->getTelephone(), 0, 2),
-            substr($platformShipping->getTelephone(), 2)
-        ));
+        $shipping->setRecipientName($platformShipping->getName());
 
+        $telephone = $platformShipping->getTelephone();
+        $phone = new Phone($telephone);
+
+        $shipping->setRecipientPhone($phone);
+
+        $address = $this->getAddress($platformShipping);
+        $shipping->setAddress($address);
+
+        return $shipping;
+    }
+
+    protected function getAddress($platformAddress)
+    {
+        $address = new Address();
         $addressAttributes =
             MPSetup::getModuleConfiguration()->getAddressAttributes();
 
         $addressAttributes = json_decode(json_encode($addressAttributes), true);
+        $allStreetLines = $platformAddress->getStreet();
 
-        $address = new Address();
-        foreach ($addressAttributes as $attribute => $value) {
-            $value = $value === null ? 1 : $value;
-            $value = filter_var($value, FILTER_SANITIZE_NUMBER_INT) - 1;
-            $setter = 'set' . ucfirst($attribute);
-            $address->$setter($platformShipping->getStreet()[$value]);
+        $this->validateAddress($allStreetLines);
+        $this->validateAddressConfiguration($addressAttributes);
+
+        if (count($allStreetLines) < 4) {
+            $addressAttributes['neighborhood'] = "street_3";
+            $addressAttributes['complement'] = "street_4";
         }
 
-        $address->setCity($platformShipping->getCity());
-        $address->setCountry($platformShipping->getCountryId());
-        $address->setZipCode($platformShipping->getPostcode());
+        foreach ($addressAttributes as $attribute => $value) {
+            $value = $value === null ? 1 : $value;
+
+            $street = explode("_", $value);
+            if (count($street) > 1) {
+                $value = intval($street[1]) - 1;
+            }
+
+            if ($value !== '0' && empty($value)) {
+                continue;
+            }
+
+            $setter = 'set' . ucfirst($attribute);
+
+            if (!isset($allStreetLines[$value])) {
+                $address->$setter('');
+                continue;
+            }
+
+            $address->$setter($platformAddress->getStreet()[$value]);
+        }
+
+        $address->setCity($platformAddress->getCity());
+        $address->setCountry($platformAddress->getCountryId());
+        $address->setZipCode($platformAddress->getPostcode());
 
         $_regionFactory = ObjectManager::getInstance()->get('Magento\Directory\Model\RegionFactory');
-        $regionId = $platformShipping->getRegionId();
+        $regionId = $platformAddress->getRegionId();
 
         if (is_numeric($regionId)) {
             $shipperRegion = $_regionFactory->create()->load($regionId);
@@ -881,7 +882,44 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             }
         }
 
-        $shipping->setAddress($address);
-        return $shipping;
+        return $address;
+    }
+
+    protected function validateAddress($allStreetLines)
+    {
+        if (
+            !is_array($allStreetLines) ||
+            count($allStreetLines) < 3
+        ) {
+            $message = "Invalid address. Please fill the street lines and try again.";
+            $ExceptionMessage = $this->i18n->getDashboard($message);
+
+            $exception = new \Exception($ExceptionMessage);
+            $log = new LogService('Order', true);
+            $log->exception($exception);
+
+            throw $exception;
+        }
+    }
+
+    protected function validateAddressConfiguration($addressAttributes)
+    {
+        $arrayFiltered = array_filter($addressAttributes);
+        if (empty($arrayFiltered)) {
+            $message = "Invalid address configuration. Please fill the address configuration on admin panel.";
+            $ExceptionMessage = $this->i18n->getDashboard($message);
+            $exception = new \Exception($ExceptionMessage);
+
+            $log = new LogService('Order', true);
+            $log->exception($exception);
+
+
+            throw $exception;
+        }
+    }
+
+    public function getTotalCanceled()
+    {
+        return $this->platformOrder->getTotalCanceled();
     }
 }

@@ -47,6 +47,21 @@ class UpgradeSchema implements UpgradeSchemaInterface
             $setup = $this->addBoletoInfoToTransactionTable($setup);
         }
 
+        if (version_compare($version, "1.7.2", "<")) {
+            $setup = $this->addStoreIdToConfigurationTable($setup);
+            $setup = $this->addCardOwnerNameToCardsTable($setup);
+        }
+
+        if (version_compare($version, "1.8.1", "<")) {
+            $setup = $this->addCreatedAtToCardsTable($setup);
+        }
+
+        if (version_compare($version, "1.8.7", "<")) {
+            $setup = $this->addMetadataToChargeTable($setup);
+            $setup = $this->addCustomerIdToChargeTable($setup);
+            $setup = $this->addCardDataToTransactionTable($setup);
+        }
+
         $setup->endSetup();
     }
 
@@ -205,4 +220,130 @@ class UpgradeSchema implements UpgradeSchemaInterface
 
         return $setup;
     }
+
+    protected function addStoreIdToConfigurationTable($setup)
+    {
+        $installer = $setup;
+
+        $connection = $installer->getConnection();
+        $tableName = $installer->getTable('mundipagg_module_core_configuration');
+
+        $connection->addColumn(
+            $tableName,
+            'store_id',
+            [
+                'type' => Table::TYPE_TEXT,
+                'length' => 50,
+                'nullable' => true,
+                'comment' => 'Store id'
+            ]
+        );
+
+        return $setup;
+    }
+
+    protected function addCardOwnerNameToCardsTable($setup)
+    {
+        $installer = $setup;
+
+        $connection = $installer->getConnection();
+        $tableName = $installer->getTable('mundipagg_module_core_saved_card');
+
+        $connection->addColumn(
+            $tableName,
+            'owner_name',
+            [
+                'type' => Table::TYPE_TEXT,
+                'length' => 50,
+                'nullable' => true,
+                'comment' => 'Card owner name'
+            ]
+        );
+
+        return $setup;
+    }
+
+    protected function addCreatedAtToCardsTable($setup)
+    {
+        $installer = $setup;
+
+        $connection = $installer->getConnection();
+        $tableName = $installer->getTable('mundipagg_module_core_saved_card');
+
+        $connection->addColumn(
+            $tableName,
+            'created_at',
+            [
+                'type' => Table::TYPE_DATETIME,
+                'nullable' => false,
+                'comment' => 'Card createdAt'
+            ]
+        );
+
+        return $setup;
+    }
+
+    protected function addMetadataToChargeTable($setup)
+    {
+        $installer = $setup;
+
+        $connection = $installer->getConnection();
+        $tableName = $installer->getTable('mundipagg_module_core_charge');
+
+        $connection->addColumn(
+            $tableName,
+            'metadata',
+            [
+                'type' => Table::TYPE_TEXT,
+                'length' => 500,
+                'nullable' => true,
+                'comment' => 'Charge metadata'
+            ]
+        );
+
+        return $setup;
+    }
+
+    protected function addCustomerIdToChargeTable($setup)
+    {
+        $installer = $setup;
+
+        $connection = $installer->getConnection();
+        $tableName = $installer->getTable('mundipagg_module_core_charge');
+
+        $connection->addColumn(
+            $tableName,
+            'customer_id',
+            [
+                'type' => Table::TYPE_TEXT,
+                'length' => 50,
+                'nullable' => true,
+                'comment' => 'Charge customer id'
+            ]
+        );
+
+        return $setup;
+    }
+
+    protected function addCardDataToTransactionTable($setup)
+    {
+        $installer = $setup;
+
+        $connection = $installer->getConnection();
+        $tableName = $installer->getTable('mundipagg_module_core_transaction');
+
+        $connection->addColumn(
+            $tableName,
+            'card_data',
+            [
+                'type' => Table::TYPE_TEXT,
+                'length' => 600,
+                'nullable' => true,
+                'comment' => 'Card data'
+            ]
+        );
+
+        return $setup;
+    }
+
 }

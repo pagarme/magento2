@@ -10,6 +10,9 @@ use Magento\Framework\UrlInterface;
 use Magento\Framework\App\ResponseFactory;
 use Magento\Framework\App\Cache\TypeListInterface;
 use Magento\Framework\App\Cache\Frontend\Pool;
+use Mundipagg\Core\Kernel\Abstractions\AbstractModuleCoreSetup;
+use Mundipagg\Core\Kernel\Repositories\ConfigurationRepository;
+use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 use MundiPagg\MundiPagg\Model\MundiPaggConfigProvider;
 
 class DataValidateAdmin implements ObserverInterface
@@ -77,6 +80,8 @@ class DataValidateAdmin implements ObserverInterface
      */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
+        $this->updateModuleConfiguration();
+
         if (!$this->moduleIsEnable()) {
             return $this;
         }
@@ -85,6 +90,34 @@ class DataValidateAdmin implements ObserverInterface
         
         return $this;
     }
+
+    protected function initializeModule()
+    {
+        Magento2CoreSetup::bootstrap();
+    }
+
+    private function updateModuleConfiguration()
+    {
+        $this->initializeModule();
+
+        $moduleConfig = AbstractModuleCoreSetup::getModuleConfiguration();
+        $configRepository = new ConfigurationRepository();
+
+        $outdatedConfiguration =
+            $this->getOutDatedConfiguration(
+                $moduleConfig,
+                $configRepository
+            );
+
+        if ($outdatedConfiguration !== null) {
+            $moduleConfig->setId($outdatedConfiguration->getId());
+        }
+
+        $configRepository->save($moduleConfig);
+
+        AbstractModuleCoreSetup::setModuleConfiguration($moduleConfig);
+    }
+
 
     public function moduleIsEnable()
     {
@@ -138,5 +171,13 @@ class DataValidateAdmin implements ObserverInterface
         }
 
         return $this;
+    }
+
+    protected function getOutDatedConfiguration($moduleConfig, $configRepository)
+    {
+        $storeId = Magento2CoreSetup::getCurrentStoreId();
+        $moduleConfig->setStoreId($storeId);
+
+        return $configRepository->findByStore($storeId);
     }
 }

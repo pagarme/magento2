@@ -6,5 +6,12 @@
                 <argument name="template" translate="true" xsi:type="string">MundiPagg_MundiPagg::order/view/info.phtml</argument>
             </action>
         </referenceBlock>
+        <referenceBlock name="sales_order_tabs">
+            <action method="addTab">
+                <!--<uiComponent name="mundipagg_mundipagg_charges_index"/>-->
+                <argument name="name" xsi:type="string">charges</argument>
+                <argument name="block" xsi:type="string">MundiPagg\MundiPagg\Block\Adminhtml\Order\Charge\Tab\View</argument>
+            </action>
+        </referenceBlock>
     </body>
 </page>

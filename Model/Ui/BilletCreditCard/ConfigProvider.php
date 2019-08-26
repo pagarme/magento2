@@ -79,8 +79,10 @@ final class ConfigProvider implements ConfigProviderInterface
 
                 foreach ($coreCards as $coreCard) {
                     $is_saved_card = 1;
+                    $selectedCard = 'mp_core_' . $coreCard->getId();
+
                     $cards[] = [
-                        'id' => 'mp_core_' . $coreCard->getId(),
+                        'id' => $selectedCard,
                         'first_six_digits' => $coreCard->getFirstSixDigits(),
                         'last_four_numbers' => $coreCard->getLastFourDigits(),
                         'brand' => $coreCard->getBrand()->getName()

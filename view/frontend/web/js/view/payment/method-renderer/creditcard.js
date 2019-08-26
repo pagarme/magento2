@@ -73,6 +73,8 @@ define(
                 this.getCcInstallments();
                 var self = this;
                 this.getInstallmentsByBrand = function (brand) {
+                    self.allInstallments.removeAll();
+                    fullScreenLoader.startLoader();
                     $.when(
                         installmentsByBrand(brand)
                     ).done(function (data) {
@@ -85,7 +87,7 @@ define(
                             });
                         });
                     }).always(function () {
-                        //fullScreenLoader.stopLoader();
+                        fullScreenLoader.stopLoader();
                     });
                 }
                 if (this.creditSavedCard()) {

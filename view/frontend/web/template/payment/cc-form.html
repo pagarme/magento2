@@ -121,6 +121,7 @@
                    style="width: 225px;"
                    class="input-text"
                    name="payment[cc_owner]"
+                   onKeyPress="if(this.value.length > 60) return false;"
                    data-bind="attr: {id: getCode() + '_cc_owner',
                         title: $t('Name on Card'),
                         'data-container': getCode() + '-cc-owner',

@@ -16,14 +16,14 @@
 
 <?php endif ?>
 
-<?php if ($this->getBilletUrl() && $this->getInfo()->getOrder()->getState() == 'pending_payment'): ?>
     <hr />
     <strong class="box-title">
         <span><?php echo __('Billet'); ?></span>
     </strong>
     <br/>
     <span><b><?php echo __('Amount') ?>: </b><?php echo 'R$ ' . number_format($this->getBilletAmount(),2,',', '.'); ?></span>
+<?php if ($this->getBilletUrl() && $this->getInfo()->getOrder()->getStatus() == 'pending'): ?>
     <br/>
     <br/>
-    <a class="action tocart primary" href="<?php echo $this->getBilletUrl() ?>" target="_blank"><?php echo __('Print Billet') ?></a>
+    <a class="action tocart primary" id="mundipagg-link-boleto" href="<?php echo $this->getBilletUrl() ?>" target="_blank"><?php echo __('Print Billet') ?></a>
 <?php endif ?>

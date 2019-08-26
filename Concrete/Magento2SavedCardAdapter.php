@@ -25,6 +25,11 @@ final class Magento2SavedCardAdapter
 
     public function getCreatedAt()
     {
+        $createdAt = $this->adaptee->getCreatedAt();
+        if ($createdAt !== null) {
+            return $createdAt->format(SavedCard::DATE_FORMAT);
+        }
+
         return null;
     }
 
@@ -45,6 +50,6 @@ final class Magento2SavedCardAdapter
 
         $firstSix = number_format($firstSix/100, 2, '.', '');
 
-        return $firstSix . '**.****.****.' . $lastFour;
+        return $firstSix . '**.****.' . $lastFour;
     }
 }

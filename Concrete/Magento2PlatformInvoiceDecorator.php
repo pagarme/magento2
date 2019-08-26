@@ -7,6 +7,9 @@ use Magento\Framework\App\ObjectManager;
 use Magento\Sales\Model\Order\Invoice;
 use Mundipagg\Core\Kernel\Abstractions\AbstractInvoiceDecorator;
 use Mundipagg\Core\Kernel\Interfaces\PlatformOrderInterface;
+use Mundipagg\Core\Kernel\Repositories\OrderRepository;
+use Mundipagg\Core\Kernel\Services\LocalizationService;
+use Mundipagg\Core\Kernel\Services\MoneyService;
 use Mundipagg\Core\Kernel\ValueObjects\InvoiceState;
 use Magento\Sales\Model\Service\InvoiceService;
 use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
@@ -48,6 +51,26 @@ class Magento2PlatformInvoiceDecorator extends AbstractInvoiceDecorator implemen
         $this->prepareFor($order);
         $this->platformInvoice->setRequestedCaptureCase(\Magento\Sales\Model\Order\Invoice::CAPTURE_OFFLINE);
         $this->platformInvoice->register();
+
+        $grandTotal = $order->getTotalPaidFromCharges();
+        $this->platformInvoice->setBaseGrandTotal($grandTotal);
+        $this->platformInvoice->setGrandTotal($grandTotal);
+
+        $orderGrandTotal = $order->getGrandTotal();
+        $moneyService = new MoneyService();
+        $orderGrandTotal = $moneyService->floatToCents($orderGrandTotal);
+        $orderGrandTotal = $moneyService->centsToFloat($orderGrandTotal);
+
+        if ($grandTotal !== $orderGrandTotal) {
+            $i18n = new LocalizationService();
+            $comment = $i18n->getDashboard(
+                "Different paid amount for this invoice. Paid value: %.2f",
+                $grandTotal
+            );
+
+            $this->addComment($comment);
+        }
+
         $this->save();
         $transactionSave = ObjectManager::getInstance()->get('Magento\Framework\DB\Transaction');
         $transactionSave->addObject(
@@ -136,5 +159,10 @@ class Magento2PlatformInvoiceDecorator extends AbstractInvoiceDecorator implemen
     public function jsonSerialize()
     {
         return $this->platformInvoice->getData();
+    }
+
+    protected function addMPComment($comment)
+    {
+        $this->platformInvoice->addComment($comment);
     }
 }

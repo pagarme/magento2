@@ -9,7 +9,9 @@ interface CardsInterface
     const CUSTOMER_ID = 'customer_id';
     const CARD_TOKEN = 'card_token';
     const CARD_ID = 'card_id';
+    const CARD_HOLDER_NAME = 'card_holder_name';
     const LAST_FOUR_NUMBERS = 'last_four_numbers';
+    const FIRST_SIX_NUMBERS = 'first_six_numbers';
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
     const BRAND = 'brand';
@@ -39,6 +41,19 @@ interface CardsInterface
      * @return \MundiPagg\MundiPagg\Api\Data\CardsInterface
      */
     public function setCustomerId($customerId);
+
+    /**
+     * Get card_holder_name
+     * @return string|null
+     */
+    public function getCardHolderName();
+
+    /**
+     * Set card_holder_name
+     * @param string $cardHolderName
+     * @return \MundiPagg\MundiPagg\Api\Data\CardsInterface
+     */
+    public function setCardHolderName($cardHolderName);
 
     /**
      * Get card_token
@@ -78,6 +93,19 @@ interface CardsInterface
      * @return \MundiPagg\MundiPagg\Api\Data\CardsInterface
      */
     public function setLastFourNumbers($lastFourNumbers);
+
+    /**
+     * Get first_six_numbers
+     * @return string|null
+     */
+    public function getFirstSixNumbers();
+
+    /**
+     * Set first_six_numbers
+     * @param string $firstSixNumbers
+     * @return \MundiPagg\MundiPagg\Api\Data\CardsInterface
+     */
+    public function setFirstSixNumbers($firstSixNumbers);
 
     /**
      * Get created_at
