@@ -23,6 +23,7 @@ PlatformConfig.bind = function (platformConfig) {
     }
 
     avaliableBrands = this.getAvaliableBrands(platformConfig);
+    savedCreditCards = this.getSavedCreditCards(platformConfig);
 
     loader = {
         start: platformConfig.loader.startLoader,
@@ -42,6 +43,7 @@ PlatformConfig.bind = function (platformConfig) {
         loader: loader,
         addresses: platformConfig.addresses,
         updateTotals: platformConfig.updateTotals,
+        savedCreditCards: savedCreditCards
     };
 
     this.PlatformConfig = config;
@@ -87,7 +89,8 @@ FormObject.creditCardInit = function () {
         'creditCardInstallments' : jQuery("select[name='payment[cc_installments]']"),
         'creditCardBrand' : jQuery("input[name='payment[cc_type]']"),
         'creditCardToken' : jQuery("input[name='payment[cc_token]']"),
-        "creditCardAmount" : jQuery("input[name='payment[cc_amount]']")
+        'creditCardAmount' : jQuery("input[name='payment[cc_amount]']"),
+        'savedCreditCardSelect' :jQuery("select[name='payment[cc_saved_creditcards]']")
     };
 
     this.FormObject = creditCardForm;
@@ -137,13 +140,15 @@ FormObject.fillTwoCreditCardsElements = function (containerSelector, elementId) 
         "creditCardInstallments" : jQuery(containerSelector + " .cc_installments"),
         "creditCardBrand" : jQuery(containerSelector + " .cc_type"),
         "creditCardToken" : jQuery(containerSelector + " .cc_token"),
-        "creditCardAmount" : jQuery(containerSelector + " .cc_amount")
+        "creditCardAmount" : jQuery(containerSelector + " .cc_amount"),
+        "savedCreditCardSelect" : jQuery(containerSelector + " .cc_saved_creditcards")
+
     };
     this.FormObject[elementId] = this.renameTwoCreditCardsElements(elements, elementId);
     this.FormObject[elementId].containerSelector = containerSelector;
 
     return this.FormObject;
-}
+};
 
 FormObject.renameTwoCreditCardsElements = function (elements, elementId) {
     var twoCreditCardForm = {};
@@ -177,4 +182,13 @@ FormObject.renameTwoCreditCardsElements = function (elements, elementId) {
     }
 
     return twoCreditCardForm;
-}
+};
+
+PlatformConfig.getSavedCreditCards = function (platFormConfig) {
+    if (typeof(platFormConfig.payment.mundipagg_creditcard.cards != 'undefined')) {
+        cards = platFormConfig.payment.mundipagg_creditcard.cards;
+        return cards;
+    }
+
+    return null;
+};

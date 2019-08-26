@@ -32,6 +32,7 @@ PaymentMethodController.prototype.creditcardInit = function () {
     this.hideCardAmount(this.formObject);
     this.fillFormText(this.formObject);
     this.fillInstallments(this.formObject);
+    this.fillSavedCreditCardsSelect(this.formObject);
     this.addCreditCardListeners(this.formObject);
     this.modelToken = new CreditCardToken(this.formObject);
 };
@@ -54,6 +55,7 @@ PaymentMethodController.prototype.twocreditcardsInit = function () {
             this.fillFormText(this.formObject[i]);
             this.fillBrandList(this.formObject[i].container);
             this.fillInstallments(this.formObject[i]);
+            this.fillSavedCreditCardsSelect(this.formObject[i]);
             this.addCreditCardListeners(this.formObject[i]);
             this.addCreditCardAmountBalanceListener(this.formObject[i], i);
         }
@@ -356,4 +358,12 @@ PaymentMethodController.prototype.fillFormText = function (formObject) {
     formHandler.fillExpirationYearSelect(formText);
     formHandler.fillExpirationMonthSelect(formText);
     //@Todo add other texts
+};
+
+PaymentMethodController.prototype.fillSavedCreditCardsSelect = function (formObject) {
+    platformConfig = this.platformConfig;
+
+    formHandler = new FormHandler();
+    formHandler.init(formObject);
+    formHandler.fillSavedCreditCardsSelect(platformConfig, formObject);
 };

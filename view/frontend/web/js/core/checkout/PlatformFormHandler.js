@@ -104,3 +104,28 @@ FormHandler.prototype.fillExpirationMonthSelect = function (formText) {
 
     jQuery(this.formObject.creditCardExpMonth).html(html);
 };
+
+FormHandler.prototype.fillSavedCreditCardsSelect = function (platformConfig, formObject) {
+
+    var html = '';
+    var cards = platformConfig.savedCreditCards;
+    var cardKeys = Object.keys(cards);
+    var len = cardKeys.length;
+
+    for (var i = 0; i < len; i++) {
+        html +=
+            "<option value='" +
+                cardKeys[i] +
+            "'>" +
+                cards[i].brand + " " +
+                cards[i].first_six_digits +
+                ".xxxxxx." +
+                cards[i].last_four_numbers +
+            "</option>"
+        ;
+    }
+
+    html += "<option value='new'>Preencher dados</option>";
+
+    jQuery(formObject.savedCreditCardSelect).html(html);
+};
