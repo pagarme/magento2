@@ -108,32 +108,33 @@ FormHandler.prototype.fillExpirationMonthSelect = function (formText) {
 };
 
 FormHandler.prototype.fillSavedCreditCardsSelect = function (platformConfig, formObject) {
-
     var html = '';
     var cards = platformConfig.savedCreditCards;
-    var cardKeys = Object.keys(cards);
-    var len = cardKeys.length;
 
-    for (var i = 0; i < len; i++) {
-        html +=
-            "<option value='" +
-                cardKeys[i] +
-            "'" +
-            " brand='" + cards[i].brand  + "'" +
-            ">" +
-                cards[i].brand + " " +
-                cards[i].first_six_digits +
-                ".xxxxxx." +
-                cards[i].last_four_numbers +
-            "</option>"
-        ;
+    if (cards) {
+        var cardKeys = Object.keys(cards);
+        var len = cardKeys.length;
+
+        for (var i = 0; i < len; i++) {
+            html +=
+                "<option value='" +
+                    cardKeys[i] +
+                "'" +
+                " brand='" + cards[i].brand  + "'" +
+                ">" +
+                    cards[i].brand + " " +
+                    cards[i].first_six_digits +
+                    ".xxxxxx." +
+                    cards[i].last_four_numbers +
+                "</option>"
+            ;
+        }
     }
 
     if (html.length > 0) {
         jQuery(formObject.containerSelector + ' .new').hide();
+        jQuery('.saved').show();
+        html += "<option value='new'>Preencher dados</option>";
+        jQuery(formObject.savedCreditCardSelect).html(html);
     }
-
-    html += "<option value='new'>Preencher dados</option>";
-
-    jQuery(formObject.savedCreditCardSelect).html(html);
 };

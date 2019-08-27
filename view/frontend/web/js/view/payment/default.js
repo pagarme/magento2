@@ -84,11 +84,7 @@ define(
 
                 platFormConfig.loader = fullScreenLoader;
 
-                /*platFormConfig.updateTotals = {
-                    getTotals: quote.getTotals,
-                    setTotals: quote.setTotals
-                }*/
-
+                /** @fixme Update total should be moved to platformFormBinging **/
                 platFormConfig.updateTotals = quote;
 
                 window.MundiPaggCore.platFormConfig = platFormConfig;

@@ -185,7 +185,10 @@ FormObject.renameTwoCreditCardsElements = function (elements, elementId) {
 };
 
 PlatformConfig.getSavedCreditCards = function (platFormConfig) {
-    if (typeof(platFormConfig.payment.mundipagg_creditcard.cards != 'undefined')) {
+    if (
+        platFormConfig.payment.mundipagg_creditcard.enabled_saved_cards &&
+        typeof(platFormConfig.payment.mundipagg_creditcard.cards != 'undefined')
+    ) {
         cards = platFormConfig.payment.mundipagg_creditcard.cards;
         return cards;
     }
