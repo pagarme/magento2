@@ -10,9 +10,18 @@ TwoCreditcardsModel.prototype.placeOrder = function (placeOrderObject) {
     this.placeOrderObject = placeOrderObject;
     var _self = this;
     var errors = false;
+
     for (id in this.formObject) {
 
         if (id.length > 1) {
+            continue;
+        }
+
+        if (
+            typeof this.formObject[id].savedCreditCardSelect.val() != 'undefined' &&
+            this.formObject[id].savedCreditCardSelect.val() != 'new' &&
+            this.formObject[id].savedCreditCardSelect.val() != ''
+        ) {
             continue;
         }
 
@@ -74,6 +83,19 @@ TwoCreditcardsModel.prototype.creditCardValidation = function (formObject) {
 };
 
 TwoCreditcardsModel.prototype.getData = function () {
+    saveThiscard = [];
+
+    saveThiscard[0] = 0;
+    saveThiscard[1] = 0;
+
+    if (this.formObject[0].saveThisCard.prop('checked')=== 'on') {
+        saveThiscard[0] = 1;
+    }
+
+    if (this.formObject[1].saveThisCard.prop('checked') === 'on') {
+        saveThiscard[1] = 1;
+    }
+
     return {
         'method': "mundipagg_two_creditcard",
         'additional_data': {
@@ -87,8 +109,8 @@ TwoCreditcardsModel.prototype.getData = function () {
             'cc_exp_month_first': this.formObject[0].creditCardExpMonth.val(),
             'cc_number_first': this.formObject[0].creditCardNumber.val(),
             'cc_owner_first': this.formObject[0].creditCardHolderName.val(),
-            'cc_savecard_first' : 0,
-            'cc_saved_card_first' : 0,
+            'cc_savecard_first' : saveThiscard[0],
+            'cc_saved_card_first' : this.formObject[0].savedCreditCardSelect.val(),
             'cc_installments_first': this.formObject[0].creditCardInstallments.val(),
             'cc_token_credit_card_first' : this.formObject[0].creditCardToken.val(),
             //second
@@ -101,14 +123,13 @@ TwoCreditcardsModel.prototype.getData = function () {
             'cc_exp_month_second': this.formObject[1].creditCardExpMonth.val(),
             'cc_number_second': this.formObject[1].creditCardNumber.val(),
             'cc_owner_second': this.formObject[1].creditCardHolderName.val(),
-            'cc_savecard_second' : 0,
-            'cc_saved_card_second' : 0,
+            'cc_savecard_first' : saveThiscard[1],
+            'cc_saved_card_second' : this.formObject[1].savedCreditCardSelect.val(),
             'cc_installments_second': this.formObject[1].creditCardInstallments.val(),
             'cc_token_credit_card_second' : this.formObject[1].creditCardToken.val(),
         }
     };
 };
-
 
 TwoCreditcardsModel.prototype.getLastFourNumbers = function(id) {
     var number = this.formObject[id].creditCardNumber.val();

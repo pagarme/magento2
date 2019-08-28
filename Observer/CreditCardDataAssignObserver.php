@@ -50,6 +50,10 @@ class CreditCardDataAssignObserver extends AbstractDataAssignObserver
             $additionalData = new DataObject($additionalData ?: []);
         }
 
+        if ($additionalData->getCcSavedCard() === 'new') {
+            $additionalData->setCcSavedCard('');
+        }
+
         $info->setAdditionalInformation('cc_saved_card', '0');
 
         if ($additionalData->getCcSavedCard()) {

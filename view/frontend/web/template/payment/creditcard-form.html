@@ -145,19 +145,10 @@
     </div>
 </div>
 
-<!--div class="field choice new">
-    <input type="checkbox" class="checkbox" id="creditcard-save" />
-    <label class="label" >
-        <span>Save</span>
+<div class="field choice new">
+    <input type="checkbox" class="checkbox save_this_card" name="payment[cc_save_this_card]" id="payment[cc_save_this_card]" />
+    <label class="label" for="payment[cc_save_this_card]" >
+        <span><!-- ko i18n: 'Salvar cartão para compras futuras'--><!-- /ko --></span>
     </label>
-    <div class="field-tooltip toggle">
-        <span class="field-tooltip-action action-cvv"
-              tabindex="0"
-              >
-            <span>Choice</span>
-        </span>
-        <div class="field-tooltip-content"
-             ></div>
-    </div>
-</div-->
+</div>
 <div afterRender="initPaymentMethod()"></div>

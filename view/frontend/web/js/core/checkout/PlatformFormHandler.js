@@ -118,13 +118,13 @@ FormHandler.prototype.fillSavedCreditCardsSelect = function (platformConfig, for
         for (var i = 0; i < len; i++) {
             html +=
                 "<option value='" +
-                    cardKeys[i] +
+                    cards[i].id +
                 "'" +
                 " brand='" + cards[i].brand  + "'" +
                 ">" +
                     cards[i].brand + " " +
                     cards[i].first_six_digits +
-                    ".xxxxxx." +
+                    ".xxxxxx. " +
                     cards[i].last_four_numbers +
                 "</option>"
             ;

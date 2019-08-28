@@ -6,8 +6,18 @@ var CreditCardModel = function (formObject, publicKey) {
 };
 
 CreditCardModel.prototype.placeOrder = function (placeOrderObject) {
+
     this.placeOrderObject = placeOrderObject;
     var _self = this;
+
+    if (
+        typeof _self.formObject.savedCreditCardSelect.val() != 'undefined' &&
+        _self.formObject.savedCreditCardSelect.val() != 'new' &&
+        _self.formObject.savedCreditCardSelect.val() != ''
+    ) {
+        _self.placeOrderObject.placeOrder();
+        return;
+    }
 
     this.getCreditCardToken(
         function (data) {
@@ -55,6 +65,13 @@ CreditCardModel.prototype.getCreditCardToken = function (success, error) {
 
 
 CreditCardModel.prototype.getData = function () {
+
+    saveThiscard = 0;
+
+    if (this.formObject.saveThisCard.prop( "checked" )) {
+        saveThiscard = 1;
+    }
+
     return {
         'method': "mundipagg_creditcard",
         'additional_data': {
@@ -63,8 +80,8 @@ CreditCardModel.prototype.getData = function () {
             'cc_exp_year': this.formObject.creditCardExpYear.val(),
             'cc_exp_month': this.formObject.creditCardExpMonth.val(),
             'cc_owner': this.formObject.creditCardHolderName.val(),
-            'cc_savecard': 0,
-            'cc_saved_card': 0,
+            'cc_savecard': saveThiscard,
+            'cc_saved_card': this.formObject.savedCreditCardSelect.val(),
             'cc_installments': this.formObject.creditCardInstallments.val(),
             'cc_token_credit_card': this.formObject.creditCardToken.val(),
             'cc_card_tax_amount' : this.formObject.creditCardInstallments.find(':selected').attr('interest'),

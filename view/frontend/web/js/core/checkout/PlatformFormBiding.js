@@ -90,7 +90,8 @@ FormObject.creditCardInit = function () {
         'creditCardBrand' : jQuery("input[name='payment[cc_type]']"),
         'creditCardToken' : jQuery("input[name='payment[cc_token]']"),
         'creditCardAmount' : jQuery("input[name='payment[cc_amount]']"),
-        'savedCreditCardSelect' :jQuery("select[name='payment[cc_saved_creditcards]']")
+        'savedCreditCardSelect' : jQuery("select[name='payment[cc_saved_creditcards]']"),
+        'saveThisCard' : jQuery("input[name='payment[cc_save_this_card]']")
     };
 
     this.FormObject = creditCardForm;
@@ -141,7 +142,8 @@ FormObject.fillTwoCreditCardsElements = function (containerSelector, elementId) 
         "creditCardBrand" : jQuery(containerSelector + " .cc_type"),
         "creditCardToken" : jQuery(containerSelector + " .cc_token"),
         "creditCardAmount" : jQuery(containerSelector + " .cc_amount"),
-        "savedCreditCardSelect" : jQuery(containerSelector + " .cc_saved_creditcards")
+        "savedCreditCardSelect" : jQuery(containerSelector + " .cc_saved_creditcards"),
+        "saveThisCard" : jQuery(containerSelector + " .save_this_card")
 
     };
     this.FormObject[elementId] = this.renameTwoCreditCardsElements(elements, elementId);
