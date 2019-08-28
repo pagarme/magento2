@@ -71,6 +71,7 @@ define(
                 platFormConfig = window.checkoutConfig;
                 platFormConfig.moduleUrls = {};
                 installmentsUrl = installmentsAction();
+                platFormConfig.grand_total = quote.getTotals()().grand_total;
 
                 var baseUrl = platFormConfig.payment.ccform.base_url;
 

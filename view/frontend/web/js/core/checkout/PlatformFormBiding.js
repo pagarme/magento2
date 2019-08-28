@@ -2,7 +2,7 @@ var FormObject = {};
 var PlatformConfig = {};
 
 PlatformConfig.bind = function (platformConfig) {
-    grandTotal = parseFloat(platformConfig.quoteData.grand_total);
+    grandTotal = parseFloat(platformConfig.grand_total);
 
     publicKey = platformConfig.payment.ccform.pk_token;
 
@@ -29,7 +29,6 @@ PlatformConfig.bind = function (platformConfig) {
         start: platformConfig.loader.startLoader,
         stop: platformConfig.loader.stopLoader
     };
-
     totals = platformConfig.totalsData;
 
     var config = {

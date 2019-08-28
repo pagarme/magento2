@@ -51,8 +51,8 @@ PaymentMethodController.prototype.twocreditcardsInit = function () {
 
     if (typeof this.formObject[1] !== "undefined") {
         for (var i = 0, len = this.formObject.numberOfPaymentForms; i < len; i++) {
-            this.fillCardAmount(this.formObject[i], 2);
             this.fillFormText(this.formObject[i]);
+            this.fillCardAmount(this.formObject[i], 2);
             this.fillBrandList(this.formObject[i].container);
             this.fillSavedCreditCardsSelect(this.formObject[i]);
             this.fillInstallments(this.formObject[i]);
@@ -227,8 +227,8 @@ PaymentMethodController.prototype.updateTotal = function(interest, selectName) {
     if (paymentMethodController.formObject.numberOfPaymentForms > 1) {
         interest = this.sumInterests(interest, selectName);
     }
-
-    var total = paymentMethodController.platformConfig.totals;
+    /**@fixme Move gettotals() to PlatformFormBiding */
+    var total = paymentMethodController.platformConfig.updateTotals.getTotals()();
     total.tax_amount = parseFloat(interest);
     total.base_tax_amount = parseFloat(interest);
 
@@ -243,7 +243,6 @@ PaymentMethodController.prototype.updateTotal = function(interest, selectName) {
     }
 
     paymentMethodController.platformConfig.updateTotals.setTotals(total);
-
 };
 
 PaymentMethodController.prototype.sumInterests = function(interest, selectName) {
