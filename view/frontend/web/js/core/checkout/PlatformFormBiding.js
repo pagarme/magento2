@@ -143,7 +143,6 @@ FormObject.fillTwoCreditCardsElements = function (containerSelector, elementId) 
         "creditCardAmount" : jQuery(containerSelector + " .cc_amount"),
         "savedCreditCardSelect" : jQuery(containerSelector + " .cc_saved_creditcards"),
         "saveThisCard" : jQuery(containerSelector + " .save_this_card")
-
     };
     this.FormObject[elementId] = this.renameTwoCreditCardsElements(elements, elementId);
     this.FormObject[elementId].containerSelector = containerSelector;

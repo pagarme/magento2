@@ -17,3 +17,8 @@
 .actions-toolbar {
     margin-bottom: 10px;
 }
+
+.multibuyer {
+    width: 225px;
+    display: none;
+}

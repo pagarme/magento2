@@ -42,6 +42,9 @@ define(
                 var paymentModel = window.MundiPaggCore.paymentMethod[this.getModel()].model;
                 return paymentModel.getData();
             },
+            getMultibuyerForm: function () {
+                return "MundiPagg_MundiPagg/payment/multibuyer-form";
+            }
         });
     }
 );

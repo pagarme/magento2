@@ -62,6 +62,10 @@ define(
                 return "MundiPagg_MundiPagg/payment/creditcard-form";
             },
 
+            getMultibuyerForm: function () {
+                return "MundiPagg_MundiPagg/payment/multibuyer-form";
+            },
+
             getData: function () {
                 var paymentModel = window.MundiPaggCore.paymentMethod[this.getModel()].model;
                 return paymentModel.getData();
@@ -134,8 +138,7 @@ define(
             },
             getAmountText: function () {
                 return 'Amount for this card'
-            }
-
+            },
         });
     }
 );
