@@ -138,3 +138,33 @@ FormHandler.prototype.fillSavedCreditCardsSelect = function (platformConfig, for
         jQuery(formObject.savedCreditCardSelect).html(html);
     }
 };
+
+FormHandler.prototype.fillMultibuyerStateSelect = function (platformConfig, formObject) {
+    var html = "<option value=''>Selecione</option>";
+    var states = platformConfig.region_states;
+
+    if (states) {
+        var stateKeys = Object.keys(states);
+        var len = stateKeys.length;
+
+        for (var i = 0; i < len; i++) {
+            html +=
+                "<option value='" +
+                    states[i].code +
+
+                ">" +
+                    states[i].name +
+                "</option>"
+            ;
+        }
+    }
+
+    if (html.length > 0) {
+        jQuery(formObject.multibuyer.state).html(html);
+    }
+};
+
+FormHandler.prototype.removeMultibuyerForm = function (formObject) {
+    debugger;
+    jQuery(formObject.containerSelector + ' .multibuyer').remove();
+}

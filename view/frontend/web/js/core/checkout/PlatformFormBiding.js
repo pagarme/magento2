@@ -42,7 +42,9 @@ PlatformConfig.bind = function (platformConfig) {
         loader: loader,
         addresses: platformConfig.addresses,
         updateTotals: platformConfig.updateTotals,
-        savedCreditCards: savedCreditCards
+        savedCreditCards: savedCreditCards,
+        region_states: platformConfig.region_states,
+        isMultibuyerEnabled: platformConfig.is_multi_buyer_enabled
     };
 
     this.PlatformConfig = config;
@@ -65,7 +67,7 @@ PlatformConfig.getAvaliableBrands = function (data) {
     return avaliableBrands;
 }
 
-FormObject.creditCardInit = function () {
+FormObject.creditCardInit = function (isMultibuyerEnabled) {
 
     if (typeof(this.FormObject === 'undefined')) {
         this.FormObject = {};
@@ -93,13 +95,30 @@ FormObject.creditCardInit = function () {
         'saveThisCard' : jQuery("input[name='payment[cc_save_this_card]']")
     };
 
+    if (isMultibuyerEnabled) {
+        var multibuyerForm = {
+            "firstname" : jQuery(containerSelector + " .multibuyer_firstname"),
+            "lastname" : jQuery(containerSelector + " .multibuyer_lastname"),
+            "email" : jQuery(containerSelector + " .multibuyer_email"),
+            "zipcode" : jQuery(containerSelector + " .multibuyer_zipcode"),
+            "document" : jQuery(containerSelector + " .multibuyer_document"),
+            "street" : jQuery(containerSelector + " .multibuyer_street"),
+            "number" : jQuery(containerSelector + " .multibuyer_number"),
+            "complement" : jQuery(containerSelector + " .multibuyer_complement"),
+            "neighborhood" : jQuery(containerSelector + " .multibuyer_neighborhood"),
+            "city" : jQuery(containerSelector + " .multibuyer_city"),
+            "state" : jQuery(containerSelector + " .multibuyer_state")
+        }
+    }
+
     this.FormObject = creditCardForm;
     this.FormObject.numberOfPaymentForms = 1;
+    this.FormObject.multibuyer = multibuyerForm;
 
     return this.FormObject;
 };
 
-FormObject.twoCreditCardsInit = function () {
+FormObject.twoCreditCardsInit = function (isMultibuyerEnabled) {
 
     if (typeof(this.FormObject === 'undefined')) {
         this.FormObject = {};
@@ -117,7 +136,7 @@ FormObject.twoCreditCardsInit = function () {
 
     //Using for for IE compatibility
     for (var i = 0, len = containerSelector.length; i < len; i++) {
-        FormObject.fillTwoCreditCardsElements(containerSelector[i], i);
+        FormObject.fillTwoCreditCardsElements(containerSelector[i], i, isMultibuyerEnabled);
     }
 
     this.FormObject.numberOfPaymentForms = 2;
@@ -125,7 +144,7 @@ FormObject.twoCreditCardsInit = function () {
     return this.FormObject;
 };
 
-FormObject.fillTwoCreditCardsElements = function (containerSelector, elementId) {
+FormObject.fillTwoCreditCardsElements = function (containerSelector, elementId, isMultibuyerEnabled) {
 
     if (jQuery(containerSelector).children().length == 0) {
         return;
@@ -144,7 +163,35 @@ FormObject.fillTwoCreditCardsElements = function (containerSelector, elementId) 
         "savedCreditCardSelect" : jQuery(containerSelector + " .cc_saved_creditcards"),
         "saveThisCard" : jQuery(containerSelector + " .save_this_card")
     };
-    this.FormObject[elementId] = this.renameTwoCreditCardsElements(elements, elementId);
+
+    if (isMultibuyerEnabled) {
+        var multibuyerForm = {
+            "firstname" : jQuery(containerSelector + " .multibuyer_firstname"),
+            "lastname" : jQuery(containerSelector + " .multibuyer_lastname"),
+            "email" : jQuery(containerSelector + " .multibuyer_email"),
+            "zipcode" : jQuery(containerSelector + " .multibuyer_zipcode"),
+            "document" : jQuery(containerSelector + " .multibuyer_document"),
+            "street" : jQuery(containerSelector + " .multibuyer_street"),
+            "number" : jQuery(containerSelector + " .multibuyer_number"),
+            "complement" : jQuery(containerSelector + " .multibuyer_complement"),
+            "neighborhood" : jQuery(containerSelector + " .multibuyer_neighborhood"),
+            "city" : jQuery(containerSelector + " .multibuyer_city"),
+            "state" : jQuery(containerSelector + " .multibuyer_state")
+        }
+    }
+
+    this.FormObject[elementId] =
+        this.renameTwoCreditCardsElements(
+            elements,
+            elementId
+        );
+
+    this.FormObject[elementId].multibuyer =
+        this.renameTwoCreditCardsElements(
+            multibuyerForm,
+            elementId
+        );
+
     this.FormObject[elementId].containerSelector = containerSelector;
 
     return this.FormObject;
