@@ -170,10 +170,12 @@ FormHandler.prototype.removeMultibuyerForm = function (formObject) {
 
 FormHandler.prototype.toggleMultibuyer = function (formObject) {
     if (formObject.multibuyer.showMultibuyer.prop('checked')) {
+        formObject.saveThisCard.parent().hide();
         jQuery(formObject.containerSelector + ' .multibuyer').show();
         return;
     }
 
+    formObject.saveThisCard.parent().show();
     jQuery(formObject.containerSelector + ' .multibuyer').hide();
     return;
 }

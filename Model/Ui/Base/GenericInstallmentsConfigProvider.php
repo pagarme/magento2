@@ -152,7 +152,7 @@ abstract class GenericInstallmentsConfigProvider implements ConfigProviderInterf
                 ]
             ],
             'is_multi_buyer_enabled' => $this->_getConfig()->getMultiBuyerActive(),
-            'region_states' => $this->getBrazilianStates()
+            'region_states' => $this->getRegionStates()
         ];
 
         return $config;
@@ -177,8 +177,9 @@ abstract class GenericInstallmentsConfigProvider implements ConfigProviderInterf
         return $this->config;
     }
 
-    protected function getBrazilianStates()
+    protected function getRegionStates()
     {
+        /** @fixme Get current country **/
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $states = $objectManager
             ->create('Magento\Directory\Model\RegionFactory')

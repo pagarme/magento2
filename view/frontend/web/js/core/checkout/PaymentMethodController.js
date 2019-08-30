@@ -202,6 +202,7 @@ PaymentMethodController.prototype.addSavedCreditCardsListener = function(formObj
     var paymentMethodController = this;
     var selector = formObject.savedCreditCardSelect.selector;
     var brand = jQuery(selector + ' option:selected').attr('brand');
+    var formObject = formObject;
     formObject.creditCardBrand.val(brand);
 
     formObject.savedCreditCardSelect.on('change', function() {
@@ -211,11 +212,13 @@ PaymentMethodController.prototype.addSavedCreditCardsListener = function(formObj
         formObject.creditCardBrand.val(brand);
         if (value === 'new') {
             jQuery(formObject.containerSelector + ' .new').show();
+            formObject.multibuyer.showMultibuyer.parent().show();
             return;
         }
 
         paymentMethodController.fillInstallments(formObject);
         jQuery(formObject.containerSelector + ' .new').hide();
+        formObject.multibuyer.showMultibuyer.parent().hide();
     });
 };
 
@@ -421,6 +424,10 @@ PaymentMethodController.prototype.fillSavedCreditCardsSelect = function (formObj
         selector = formObject.savedCreditCardSelect.selector;
         var brand = jQuery(selector + ' option:selected').attr('brand');
         formObject.creditCardBrand.val(brand);
+
+        if (typeof formObject.multibuyer != 'undefined') {
+            formObject.multibuyer.showMultibuyer.parent().hide();
+        }
     }
 };
 
