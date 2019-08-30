@@ -41,6 +41,7 @@ PaymentMethodController.prototype.creditcardInit = function () {
     }
     if (this.platformConfig.isMultibuyerEnabled) {
         this.fillMultibuyerStateSelect(this.formObject);
+        this.addShowMultibuyerListener(this.formObject);
     }
 
     this.addCreditCardListeners(this.formObject);
@@ -60,6 +61,9 @@ PaymentMethodController.prototype.twocreditcardsInit = function () {
     );
 
     if (typeof this.formObject[1] !== "undefined") {
+
+        var formHandler = new FormHandler();
+
         for (var i = 0, len = this.formObject.numberOfPaymentForms; i < len; i++) {
             this.fillFormText(this.formObject[i]);
             this.fillCardAmount(this.formObject[i], 2);
@@ -74,6 +78,7 @@ PaymentMethodController.prototype.twocreditcardsInit = function () {
 
             if (this.platformConfig.isMultibuyerEnabled) {
                 this.fillMultibuyerStateSelect(this.formObject[i]);
+                this.addShowMultibuyerListener(this.formObject[i]);
             }
 
             this.addCreditCardListeners(this.formObject[i]);
@@ -428,9 +433,14 @@ PaymentMethodController.prototype.fillMultibuyerStateSelect = function (formObje
 };
 
 PaymentMethodController.prototype.removeMultibuyerForm = function (formObject) {
-    platformConfig = this.platformConfig;
-
     formHandler = new FormHandler();
     formHandler.init(formObject);
     formHandler.removeMultibuyerForm(formObject);
 };
+
+PaymentMethodController.prototype.addShowMultibuyerListener = function(formObject) {
+    jQuery(formObject.multibuyer.showMultibuyer.selector).on('click', function () {
+        formHandler.init(formObject);
+        formHandler.toggleMultibuyer(formObject);
+    });
+}

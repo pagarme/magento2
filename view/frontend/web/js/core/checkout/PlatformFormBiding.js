@@ -97,6 +97,7 @@ FormObject.creditCardInit = function (isMultibuyerEnabled) {
 
     if (isMultibuyerEnabled) {
         var multibuyerForm = {
+            "showMultibuyer" : jQuery(containerSelector + " .show_multibuyer"),
             "firstname" : jQuery(containerSelector + " .multibuyer_firstname"),
             "lastname" : jQuery(containerSelector + " .multibuyer_lastname"),
             "email" : jQuery(containerSelector + " .multibuyer_email"),
@@ -166,6 +167,7 @@ FormObject.fillTwoCreditCardsElements = function (containerSelector, elementId, 
 
     if (isMultibuyerEnabled) {
         var multibuyerForm = {
+            "showMultibuyer" : jQuery(containerSelector + " .show_multibuyer"),
             "firstname" : jQuery(containerSelector + " .multibuyer_firstname"),
             "lastname" : jQuery(containerSelector + " .multibuyer_lastname"),
             "email" : jQuery(containerSelector + " .multibuyer_email"),

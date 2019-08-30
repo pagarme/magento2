@@ -1,6 +1,13 @@
 <br>
-<h4 class="new multibuyer" style="display: none;">Preencher dados de outro comprador</h4>
-<div class="field  multibuyer required new">
+<div class="field choice show_multibuyer_box">
+    <input type="checkbox" class="checkbox show_multibuyer" name="payment[show_multibuyer]" />
+    <label class="label" for="payment[show_multibuyer]" >
+        <span><!-- ko i18n: 'Preencher dados de outro comprador'--><!-- /ko --></span>
+    </label>
+</div>
+
+<h4 class="multibuyer">Preencher dados de outro comprador</h4>
+<div class="field  multibuyer required">
     <label class="label" for="multibuyer_firstname">
         <span><!-- ko i18n: 'Nome'--><!-- /ko --></span>
     </label>
@@ -9,7 +16,7 @@
     </div>
 </div>
 
-<div class="field multibuyer required new">
+<div class="field multibuyer required">
     <label class="label" for="multibuyer_lastname">
         <span><!-- ko i18n: 'Sobrenome'--><!-- /ko --></span>
     </label>
@@ -18,7 +25,7 @@
     </div>
 </div>
 
-<div class="field multibuyer required new">
+<div class="field multibuyer required">
     <label class="label" for="multibuyer_email">
         <span><!-- ko i18n: 'E-mail'--><!-- /ko --></span>
     </label>
@@ -27,7 +34,7 @@
     </div>
 </div>
 
-<div class="field multibuyer required new">
+<div class="field multibuyer required">
     <label class="label" for="multibuyer_zipcode">
         <span><!-- ko i18n: 'CEP'--><!-- /ko --></span>
     </label>
@@ -36,7 +43,7 @@
     </div>
 </div>
 
-<div class="field multibuyer required new">
+<div class="field multibuyer required">
     <label class="label" for="multibuyer_lastname">
         <span><!-- ko i18n: 'CPF/CNPJ'--><!-- /ko --></span>
     </label>
@@ -45,7 +52,7 @@
     </div>
 </div>
 
-<div class="field multibuyer required new">
+<div class="field multibuyer required">
     <label class="label" for="multibuyer_street">
         <span><!-- ko i18n: 'Rua'--><!-- /ko --></span>
     </label>
@@ -54,7 +61,7 @@
     </div>
 </div>
 
-<div class="field multibuyer required new">
+<div class="field multibuyer required">
     <label class="label" for="multibuyer_number">
         <span><!-- ko i18n: 'Número'--><!-- /ko --></span>
     </label>
@@ -63,7 +70,7 @@
     </div>
 </div>
 
-<div class="field multibuyer new">
+<div class="field multibuyer">
     <label class="label" for="multibuyer_complement">
         <span><!-- ko i18n: 'Complemento'--><!-- /ko --></span>
     </label>
@@ -72,7 +79,7 @@
     </div>
 </div>
 
-<div class="field multibuyer required new">
+<div class="field multibuyer required">
     <label class="label" for="multibuyer_neighborhood">
         <span><!-- ko i18n: 'Bairro'--><!-- /ko --></span>
     </label>
@@ -81,7 +88,7 @@
     </div>
 </div>
 
-<div class="field multibuyer required new">
+<div class="field multibuyer required">
     <label class="label" for="multibuyer_city">
         <span><!-- ko i18n: 'Cidade'--><!-- /ko --></span>
     </label>
@@ -90,7 +97,7 @@
     </div>
 </div>
 
-<div class="field multibuyer required new">
+<div class="field multibuyer required">
     <label class="label" for="multibuyer_state">
         <span><!-- ko i18n: 'Estado'--><!-- /ko --></span>
     </label>
