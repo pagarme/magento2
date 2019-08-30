@@ -166,6 +166,7 @@ FormHandler.prototype.fillMultibuyerStateSelect = function (platformConfig, form
 
 FormHandler.prototype.removeMultibuyerForm = function (formObject) {
     jQuery(formObject.containerSelector + ' .multibuyer').remove();
+    jQuery(formObject.containerSelector + ' .show_multibuyer_box').remove();
 }
 
 FormHandler.prototype.toggleMultibuyer = function (formObject) {

@@ -212,13 +212,25 @@ PaymentMethodController.prototype.addSavedCreditCardsListener = function(formObj
         formObject.creditCardBrand.val(brand);
         if (value === 'new') {
             jQuery(formObject.containerSelector + ' .new').show();
-            formObject.multibuyer.showMultibuyer.parent().show();
+
+            if (
+                typeof formObject.multibuyer != 'undefined' &&
+                typeof formObject.multibuyer.showMultibuyer != 'undefined'
+            ) {
+                formObject.multibuyer.showMultibuyer.parent().show();
+            }
             return;
         }
 
         paymentMethodController.fillInstallments(formObject);
         jQuery(formObject.containerSelector + ' .new').hide();
-        formObject.multibuyer.showMultibuyer.parent().hide();
+
+        if (
+            typeof formObject.multibuyer != 'undefined' &&
+            typeof formObject.multibuyer.showMultibuyer != 'undefined'
+        ) {
+            formObject.multibuyer.showMultibuyer.parent().hide();
+        }
     });
 };
 
@@ -421,11 +433,15 @@ PaymentMethodController.prototype.fillSavedCreditCardsSelect = function (formObj
     formHandler.fillSavedCreditCardsSelect(platformConfig, formObject);
 
     if (typeof formObject.savedCreditCardSelect.selector != 'undefined') {
+
         selector = formObject.savedCreditCardSelect.selector;
         var brand = jQuery(selector + ' option:selected').attr('brand');
         formObject.creditCardBrand.val(brand);
 
-        if (typeof formObject.multibuyer != 'undefined') {
+        if (
+            typeof formObject.multibuyer != 'undefined' &&
+            typeof formObject.multibuyer.showMultibuyer != 'undefined'
+        ) {
             formObject.multibuyer.showMultibuyer.parent().hide();
         }
     }
