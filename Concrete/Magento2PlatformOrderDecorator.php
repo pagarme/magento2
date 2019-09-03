@@ -570,6 +570,13 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $amount = $this->getGrandTotal() - $this->getBaseTaxAmount();
         $newPaymentData->amount = $moneyService->floatToCents($amount);
 
+        if ($additionalInformation['cc_buyer_checkbox']) {
+            $newPaymentData->customer = $this->extractMultibuyerData(
+                'cc',
+                $additionalInformation
+            );
+        }
+
         $creditCardDataIndex = AbstractCreditCardPayment::getBaseCode();
         if (!isset($paymentData[$creditCardDataIndex])) {
             $paymentData[$creditCardDataIndex] = [];

@@ -65,7 +65,7 @@ FormHandler.prototype.fillBrandList = function (listContainer, brandsObject) {
 };
 
 FormHandler.prototype.hideCreditCardAmount = function () {
-    jQuery(this.formObject.creditCardAmount).parent().parent('.field').hide();
+    jQuery(this.formObject.containerSelector).find('.amount').hide();
 };
 
 FormHandler.prototype.fillExpirationYearSelect = function (formText) {
@@ -152,7 +152,7 @@ FormHandler.prototype.fillMultibuyerStateSelect = function (platformConfig, form
                 "<option value='" +
                     states[i].code +
 
-                ">" +
+                "'>" +
                     states[i].name +
                 "</option>"
             ;

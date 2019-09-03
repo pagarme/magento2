@@ -169,7 +169,7 @@ PaymentMethodController.prototype.addCreditCardNumberListener = function(formObj
     formObject.creditCardNumber.on('keyup', function () {
         var element = jQuery(this);
         paymentMethodController.clearLetters(element);
-        element.change();
+        //element.change();
     });
 
     formObject.creditCardNumber.on('change', function () {
@@ -375,6 +375,11 @@ PaymentMethodController.prototype.fillCardAmount = function (formObject, count) 
 PaymentMethodController.prototype.setBin = function (binObj, creditCardNumberElement, formObject) {
     var bin = binObj;
     var cardNumber = bin.formatNumber(creditCardNumberElement.val());
+
+    if (cardNumber.length < 4) {
+        return;
+    }
+
     var isNewBrand = bin.validate(cardNumber);
 
     bin.init(cardNumber);
@@ -412,7 +417,7 @@ PaymentMethodController.prototype.clearNumbers = function (element) {
 PaymentMethodController.prototype.hideCardAmount = function (formObject) {
     formHandler = new FormHandler();
     formHandler.init(formObject);
-    formHandler.hideCreditCardAmount();
+    formHandler.hideCreditCardAmount(formObject);
 };
 
 PaymentMethodController.prototype.fillFormText = function (formObject) {
