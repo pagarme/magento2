@@ -354,7 +354,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         } catch (\Throwable $e) {
         }
 
-        if ($mpId === null) {
+        if (empty($mpId)) {
             $coreCustomerRespository = new CoreCustomerRepository();
             $coreCustomer = $coreCustomerRespository->findByCode(
                 $savedCustomer->getId()
