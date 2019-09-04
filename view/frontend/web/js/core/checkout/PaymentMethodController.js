@@ -62,8 +62,6 @@ PaymentMethodController.prototype.twocreditcardsInit = function () {
 
     if (typeof this.formObject[1] !== "undefined") {
 
-        var formHandler = new FormHandler();
-
         for (var i = 0, len = this.formObject.numberOfPaymentForms; i < len; i++) {
             this.fillFormText(this.formObject[i]);
             this.fillCardAmount(this.formObject[i], 2);

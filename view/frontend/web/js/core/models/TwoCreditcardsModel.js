@@ -168,7 +168,6 @@ TwoCreditcardsModel.prototype.getData = function () {
         data.additional_data.cc_buyer_neighborhood_second = multibuyer.neighborhood.val();
         data.additional_data.cc_buyer_city_second = multibuyer.city.val();
         data.additional_data.cc_buyer_state_second = multibuyer.state.val();
-
     }
 
     return data;
@@ -208,9 +207,9 @@ TwoCreditcardsModel.prototype.fillData = function () {
             'cc_token_credit_card_second' : this.formObject[1].creditCardToken.val()
         }
     };
-}
+};
 
 TwoCreditcardsModel.prototype.getLastFourNumbers = function(id) {
     var number = this.formObject[id].creditCardNumber.val();
     return number.slice(-4);
-}
+};

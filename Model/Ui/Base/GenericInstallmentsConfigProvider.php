@@ -184,7 +184,7 @@ abstract class GenericInstallmentsConfigProvider implements ConfigProviderInterf
         $states = $objectManager
             ->create('Magento\Directory\Model\RegionFactory')
             ->create()->getCollection()->addFieldToFilter('country_id','BR');
-        return $states->getData();
 
+        return $states->getData();
     }
 }

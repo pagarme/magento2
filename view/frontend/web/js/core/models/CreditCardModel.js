@@ -103,9 +103,7 @@ CreditCardModel.prototype.fillData = function() {
             'cc_card_tax_amount' : formObject.creditCardInstallments.find(':selected').attr('interest')
         }
     };
-
-
-}
+};
 
 CreditCardModel.prototype.fillMultibuyerData = function(data) {
     multibuyer = this.formObject.multibuyer;
@@ -126,8 +124,7 @@ CreditCardModel.prototype.fillMultibuyerData = function(data) {
     return data;
 }
 
-
 CreditCardModel.prototype.getLastFourNumbers = function() {
     var number = this.formObject.creditCardNumber.val();
     return number.slice(-4);
-}
+};

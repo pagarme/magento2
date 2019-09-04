@@ -138,7 +138,7 @@ define(
             },
             getAmountText: function () {
                 return 'Amount for this card'
-            },
+            }
         });
     }
 );
