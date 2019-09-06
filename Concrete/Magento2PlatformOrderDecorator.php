@@ -492,6 +492,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 
         if (empty($payments)) {
             $baseNewPayment = $this->platformOrder->getPayment();
+
             $newPayment = [];
             $newPayment['method'] = $baseNewPayment->getMethod();
             $newPayment['additional_information'] =
@@ -809,6 +810,14 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         if (!isset($paymentData[$boletoDataIndex])) {
             $paymentData[$boletoDataIndex] = [];
         }
+
+        if ($additionalInformation['billet_buyer_checkbox']) {
+            $newPaymentData->customer = $this->extractMultibuyerData(
+                'billet',
+                $additionalInformation
+            );
+        }
+
         $paymentData[$boletoDataIndex][] = $newPaymentData;
     }
 

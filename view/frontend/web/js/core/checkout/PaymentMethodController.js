@@ -95,7 +95,7 @@ PaymentMethodController.prototype.boletoInit = function () {
         return;
     }
 
-    this.model = new BoletoModel({});
+    this.model = new BoletoModel(this.formObject);
     this.hideCardAmount(this.formObject);
     if (this.platformConfig.isMultibuyerEnabled) {
         this.fillMultibuyerStateSelect(this.formObject);

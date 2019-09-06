@@ -35,6 +35,11 @@ define(
             getModel: function() {
                 return 'boleto';
             },
+
+            getData: function () {
+                var paymentModel = window.MundiPaggCore.paymentMethod[this.getModel()].model;
+                return paymentModel.getData();
+            },
         });
     }
 );
