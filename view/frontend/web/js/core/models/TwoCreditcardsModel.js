@@ -96,39 +96,7 @@ TwoCreditcardsModel.prototype.getData = function () {
         saveThiscard[1] = 1;
     }
 
-    data = {
-        'method': "mundipagg_two_creditcard",
-        'additional_data': {
-            //first
-            'cc_first_card_amount': this.formObject[0].creditCardAmount.val(),
-            'cc_first_card_tax_amount': this.formObject[0].creditCardInstallments.find(':selected').attr('interest'),
-            'cc_type_first': this.formObject[0].creditCardBrand.val(),
-            'cc_last_4_first': this.getLastFourNumbers(0),
-            'cc_cid_first': this.formObject[0].creditCardCvv.val(),
-            'cc_exp_year_first': this.formObject[0].creditCardExpYear.val(),
-            'cc_exp_month_first': this.formObject[0].creditCardExpMonth.val(),
-            'cc_number_first': this.formObject[0].creditCardNumber.val(),
-            'cc_owner_first': this.formObject[0].creditCardHolderName.val(),
-            'cc_savecard_first': saveThiscard[0],
-            'cc_saved_card_first': this.formObject[0].savedCreditCardSelect.val(),
-            'cc_installments_first': this.formObject[0].creditCardInstallments.val(),
-            'cc_token_credit_card_first': this.formObject[0].creditCardToken.val(),
-            //second
-            'cc_second_card_amount': this.formObject[1].creditCardAmount.val(),
-            'cc_second_card_tax_amount': this.formObject[1].creditCardInstallments.find(':selected').attr('interest'),
-            'cc_type_second': this.formObject[1].creditCardBrand.val(),
-            'cc_last_4_second': this.getLastFourNumbers(1),
-            'cc_cid_second': this.formObject[1].creditCardCvv.val(),
-            'cc_exp_year_first': this.formObject[1].creditCardExpYear.val(),
-            'cc_exp_month_second': this.formObject[1].creditCardExpMonth.val(),
-            'cc_number_second': this.formObject[1].creditCardNumber.val(),
-            'cc_owner_second': this.formObject[1].creditCardHolderName.val(),
-            'cc_savecard_first': saveThiscard[1],
-            'cc_saved_card_second': this.formObject[1].savedCreditCardSelect.val(),
-            'cc_installments_second': this.formObject[1].creditCardInstallments.val(),
-            'cc_token_credit_card_second': this.formObject[1].creditCardToken.val(),
-        }
-    }
+    data = this.fillData();
 
     if (
         typeof this.formObject[0].multibuyer.showMultibuyer != 'undefined' &&
@@ -178,7 +146,7 @@ TwoCreditcardsModel.prototype.fillData = function () {
         'method': "mundipagg_two_creditcard",
         'additional_data': {
             //first
-            'cc_first_card_amount': this.formObject[0].creditCardAmount.val(),
+            'cc_first_card_amount': this.formObject[0].inputAmount.val(),
             'cc_first_card_tax_amount': this.formObject[0].creditCardInstallments.find(':selected').attr('interest'),
             'cc_type_first': this.formObject[0].creditCardBrand.val(),
             'cc_last_4_first': this.getLastFourNumbers(0),
@@ -192,7 +160,7 @@ TwoCreditcardsModel.prototype.fillData = function () {
             'cc_installments_first': this.formObject[0].creditCardInstallments.val(),
             'cc_token_credit_card_first' : this.formObject[0].creditCardToken.val(),
             //second
-            'cc_second_card_amount': this.formObject[1].creditCardAmount.val(),
+            'cc_second_card_amount': this.formObject[1].inputAmount.val(),
             'cc_second_card_tax_amount': this.formObject[1].creditCardInstallments.find(':selected').attr('interest'),
             'cc_type_second': this.formObject[1].creditCardBrand.val(),
             'cc_last_4_second': this.getLastFourNumbers(1),
@@ -211,5 +179,8 @@ TwoCreditcardsModel.prototype.fillData = function () {
 
 TwoCreditcardsModel.prototype.getLastFourNumbers = function(id) {
     var number = this.formObject[id].creditCardNumber.val();
-    return number.slice(-4);
+    if (number !== undefined) {
+        return number.slice(-4);
+    }
+    return "";
 };

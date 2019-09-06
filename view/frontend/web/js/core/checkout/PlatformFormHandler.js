@@ -42,7 +42,7 @@ FormHandler.prototype.updateInstallmentSelect = function (installmentsObj, eleme
     element.html(content);
 };
 
-FormHandler.prototype.fillBrandList = function (listContainer, brandsObject) {
+FormHandler.prototype.fillBrandList = function (brandsObject) {
 
     var html = '';
 
@@ -64,7 +64,7 @@ FormHandler.prototype.fillBrandList = function (listContainer, brandsObject) {
     });
 };
 
-FormHandler.prototype.hideCreditCardAmount = function () {
+FormHandler.prototype.hideInputAmount = function () {
     jQuery(this.formObject.containerSelector).find('.amount').hide();
 };
 
@@ -148,12 +148,15 @@ FormHandler.prototype.fillMultibuyerStateSelect = function (platformConfig, form
         var len = stateKeys.length;
 
         for (var i = 0; i < len; i++) {
+
+            var name = states[i].name || states[i].default_name;
+
             html +=
                 "<option value='" +
                     states[i].code +
 
                 "'>" +
-                    states[i].name +
+                    name +
                 "</option>"
             ;
         }
@@ -171,12 +174,17 @@ FormHandler.prototype.removeMultibuyerForm = function (formObject) {
 
 FormHandler.prototype.toggleMultibuyer = function (formObject) {
     if (formObject.multibuyer.showMultibuyer.prop('checked')) {
-        formObject.saveThisCard.parent().hide();
+
+        if (formObject.saveThisCard !== undefined) {
+            formObject.saveThisCard.parent().hide();
+        }
         jQuery(formObject.containerSelector + ' .multibuyer').show();
         return;
     }
 
-    formObject.saveThisCard.parent().show();
+    if (formObject.saveThisCard !== undefined) {
+        formObject.saveThisCard.parent().show();
+    }
     jQuery(formObject.containerSelector + ' .multibuyer').hide();
     return;
 }

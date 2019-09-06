@@ -126,5 +126,8 @@ CreditCardModel.prototype.fillMultibuyerData = function(data) {
 
 CreditCardModel.prototype.getLastFourNumbers = function() {
     var number = this.formObject.creditCardNumber.val();
-    return number.slice(-4);
+    if (number !== undefined) {
+        return number.slice(-4);
+    }
+    return "";
 };

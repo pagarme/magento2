@@ -7,9 +7,14 @@ var MundiPaggCore = {
 };
 
 MundiPaggCore.initPaymentMethod = function (methodCode, platformConfig) {
-    this.paymentMethod[methodCode] =
-        new PaymentMethodController(methodCode, platformConfig);
-    this.paymentMethod[methodCode].init();
+    var _self = this;
+    setTimeout(function() {
+
+        _self.paymentMethod[methodCode] =
+            new PaymentMethodController(methodCode, platformConfig);
+        _self.paymentMethod[methodCode].init();
+
+    }, 1000);
 };
 
 MundiPaggCore.initBin = function (methodCode, obj) {
