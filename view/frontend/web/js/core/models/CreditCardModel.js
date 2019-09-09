@@ -63,7 +63,6 @@ CreditCardModel.prototype.getCreditCardToken = function (success, error) {
     }
 };
 
-
 CreditCardModel.prototype.getData = function () {
     saveThiscard = 0;
     var formObject = this.formObject;

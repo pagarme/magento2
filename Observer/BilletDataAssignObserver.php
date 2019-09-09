@@ -25,7 +25,6 @@ use MundiPagg\MundiPagg\Model\CardsRepository;
 
 class BilletDataAssignObserver extends AbstractDataAssignObserver
 {
-
     public function execute(Observer $observer)
     {
         $method = $this->readMethodArgument($observer);

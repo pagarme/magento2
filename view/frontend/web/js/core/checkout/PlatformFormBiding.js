@@ -69,7 +69,7 @@ PlatformConfig.getAvaliableBrands = function (data) {
 
 FormObject.creditCardInit = function (isMultibuyerEnabled) {
 
-    if (typeof(this.FormObject === 'undefined')) {
+    if (typeof this.FormObject === 'undefined') {
         this.FormObject = {};
     }
 
@@ -121,7 +121,7 @@ FormObject.creditCardInit = function (isMultibuyerEnabled) {
 
 FormObject.twoCreditCardsInit = function (isMultibuyerEnabled) {
 
-    if (typeof(this.FormObject === 'undefined')) {
+    if (typeof this.FormObject === 'undefined') {
         this.FormObject = {};
     }
 
@@ -147,7 +147,7 @@ FormObject.twoCreditCardsInit = function (isMultibuyerEnabled) {
 
 FormObject.boletoInit = function (isMultibuyerEnabled) {
 
-    if (typeof(this.FormObject === 'undefined')) {
+    if (typeof this.FormObject === 'undefined') {
         this.FormObject = {};
     }
 
@@ -186,8 +186,7 @@ FormObject.boletoCreditCardInit = function (isMultibuyerEnabled) {
     var containerBoletoSelector = "#mundipagg_billet_creditcard-form #billet-form";
     var containerCreditCardSelector = "#mundipagg_billet_creditcard-form #credit-card-form";
 
-
-    if (typeof (this.FormObject === 'undefined')) {
+    if (typeof this.FormObject === 'undefined') {
         this.FormObject = {};
     }
 
