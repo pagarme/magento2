@@ -32,6 +32,9 @@ define(
         "MundiPagg_MundiPagg/js/core/checkout/PlatformFormHandler",
         "MundiPagg_MundiPagg/js/core/checkout/CreditCardToken",
         "MundiPagg_MundiPagg/js/core/checkout/Installments",
+        "MundiPagg_MundiPagg/js/core/validators/CreditCardValidator",
+        "MundiPagg_MundiPagg/js/core/validators/CustomerValidator",
+        "MundiPagg_MundiPagg/js/core/validators/MultibuyerValidator",
     ],
     function(
         Component,

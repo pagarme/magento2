@@ -69,9 +69,7 @@ PlatformConfig.getAvaliableBrands = function (data) {
 
 FormObject.creditCardInit = function (isMultibuyerEnabled) {
 
-    if (typeof this.FormObject === 'undefined') {
-        this.FormObject = {};
-    }
+    this.FormObject = {};
 
     var containerSelector = '#mundipagg_creditcard-form';
 
@@ -121,9 +119,7 @@ FormObject.creditCardInit = function (isMultibuyerEnabled) {
 
 FormObject.twoCreditCardsInit = function (isMultibuyerEnabled) {
 
-    if (typeof this.FormObject === 'undefined') {
-        this.FormObject = {};
-    }
+    this.FormObject = {};
 
     containerSelector = [];
     containerSelector.push("#mundipagg_two_creditcard-form #two-credit-cards-form-0");
@@ -147,9 +143,7 @@ FormObject.twoCreditCardsInit = function (isMultibuyerEnabled) {
 
 FormObject.boletoInit = function (isMultibuyerEnabled) {
 
-    if (typeof this.FormObject === 'undefined') {
-        this.FormObject = {};
-    }
+    this.FormObject = {};
 
     var containerSelector = '#mundipagg_billet-form';
 
@@ -186,9 +180,7 @@ FormObject.boletoCreditCardInit = function (isMultibuyerEnabled) {
     var containerBoletoSelector = "#mundipagg_billet_creditcard-form #billet-form";
     var containerCreditCardSelector = "#mundipagg_billet_creditcard-form #credit-card-form";
 
-    if (typeof this.FormObject === 'undefined') {
-        this.FormObject = {};
-    }
+    this.FormObject = {};
 
     if (typeof jQuery(containerCreditCardSelector + " .cc_installments").html() == 'undefined') {
         this.FormObject = null;

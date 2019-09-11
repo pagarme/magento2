@@ -83,18 +83,7 @@ TwoCreditcardsModel.prototype.creditCardValidation = function (formObject) {
 };
 
 TwoCreditcardsModel.prototype.getData = function () {
-    saveThiscard = [];
 
-    saveThiscard[0] = 0;
-    saveThiscard[1] = 0;
-
-    if (this.formObject[0].saveThisCard.prop('checked')=== 'on') {
-        saveThiscard[0] = 1;
-    }
-
-    if (this.formObject[1].saveThisCard.prop('checked') === 'on') {
-        saveThiscard[1] = 1;
-    }
 
     data = this.fillData();
 
@@ -142,6 +131,20 @@ TwoCreditcardsModel.prototype.getData = function () {
 };
 
 TwoCreditcardsModel.prototype.fillData = function () {
+
+    saveThiscard = [];
+
+    saveThiscard[0] = 0;
+    saveThiscard[1] = 0;
+
+    if (this.formObject[0].saveThisCard.prop('checked')=== 'on') {
+        saveThiscard[0] = 1;
+    }
+
+    if (this.formObject[1].saveThisCard.prop('checked') === 'on') {
+        saveThiscard[1] = 1;
+    }
+
     return {
         'method': "mundipagg_two_creditcard",
         'additional_data': {
