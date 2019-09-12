@@ -1,22 +1,34 @@
 var CreditCardValidator = function (formObject) {
     this.formObject = formObject;
-    this.errors = [];
 };
-
 
 CreditCardValidator.prototype.validate = function () {
 
-    var inputsInvalid = [];
-    var formObject = this.formObject;
-    var isSavedCard = formObject.savedCreditCardSelect.val() !== 'new';
+    var isSavedCard = this.formObject.savedCreditCardSelect.val() !== 'new';
 
-    /**@todo valid data from saved card */
-    if (isSavedCard && formObject.savedCreditCardSelect.val() == "") {
+    if (isSavedCard) {
+        return this.validateSavedCard();
+    }
+    return this.validateNewCard();
+}
+
+CreditCardValidator.prototype.validateSavedCard = function () {
+
+    var formObject = this.formObject;
+
+    if (formObject.savedCreditCardSelect.val() == "") {
         this.errors.push(
             "Card selected invalid"
         )
-        return;
+        return false;
     }
+    return true;
+}
+
+CreditCardValidator.prototype.validateNewCard = function () {
+
+    var inputsInvalid = [];
+    var formObject = this.formObject;
 
     inputsInvalid.push(
         this.isInputInvalid(formObject.creditCardBrand, "This brand is not available"),

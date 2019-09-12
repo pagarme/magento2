@@ -58,28 +58,44 @@ BoletoCreditcardModel.prototype.addErrors = function (error) {
 
 BoletoCreditcardModel.prototype.getCreditCardToken = function (formObject, success, error) {
     var modelToken = new CreditCardToken(formObject);
-    var _self = this;
-    if (this.creditCardValidation(formObject)) {
-        modelToken.getToken(_self.publicKey)
-            .done(success)
-            .fail(error);
-    }
+    modelToken.getToken(this.publicKey)
+        .done(success)
+        .fail(error);
 };
 
-BoletoCreditcardModel.prototype.creditCardValidation = function (formObject) {
+BoletoCreditcardModel.prototype.validate = function () {
 
-    if (typeof formObject == "undefined") {
+    var formsInvalid = [];
+
+    for (id in this.formObject) {
+
+        if (id.length > 1) {
+            continue;
+        }
+        var multibuyerValidator = new MultibuyerValidator(this.formObject[id]);
+        var isMultibuyerValid = multibuyerValidator.validate();
+
+        if (isMultibuyerValid) {
+            continue;
+        }
+
+        formsInvalid.push(true);
+    }
+
+    var creditCardValidator = new CreditCardValidator(this.formObject[1]);
+    var isCreditCardValid = creditCardValidator.validate();
+
+    formsInvalid.push(!isCreditCardValid);
+
+    var hasFormInvalid = formsInvalid.filter(function (item) {
+        return item;
+    });
+
+    if (hasFormInvalid.length > 0) {
         return false;
     }
 
-    var isValid = true;
-    var cardBrand = formObject.creditCardBrand.val();
-
-    if (typeof cardBrand == "undefined" || cardBrand.length <= 0 ) {
-        isValid = false;
-    }
-
-    return isValid;
+    return true;
 };
 
 BoletoCreditcardModel.prototype.getData = function () {
@@ -90,7 +106,7 @@ BoletoCreditcardModel.prototype.getData = function () {
         saveThiscard = 1;
     }
 
-    data = {
+    var data = {
         'method': "mundipagg_billet_creditcard",
         'additional_data': {
             //boleto
