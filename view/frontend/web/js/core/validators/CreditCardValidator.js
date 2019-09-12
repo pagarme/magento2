@@ -17,9 +17,7 @@ CreditCardValidator.prototype.validateSavedCard = function () {
     var formObject = this.formObject;
 
     if (formObject.savedCreditCardSelect.val() == "") {
-        this.errors.push(
-            "Card selected invalid"
-        )
+        this.isInputInvalid(formObject.savedCreditCardSelect);
         return false;
     }
     return true;
