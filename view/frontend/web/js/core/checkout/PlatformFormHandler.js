@@ -27,7 +27,7 @@ FormHandler.prototype.switchBrand = function (brand) {
 };
 
 FormHandler.prototype.updateInstallmentSelect = function (installmentsObj, element) {
-    var content = '';
+    var content = "<option value=''>Selecione</option>";
     for (var i = 0, len = installmentsObj.length; i < len; i++) {
         content +=
             "<option value='" +

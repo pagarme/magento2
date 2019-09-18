@@ -14,12 +14,28 @@ CreditCardValidator.prototype.validate = function () {
 
 CreditCardValidator.prototype.validateSavedCard = function () {
 
+    var inputsInvalid = [];
     var formObject = this.formObject;
 
+
     if (formObject.savedCreditCardSelect.val() == "") {
-        this.isInputInvalid(formObject.savedCreditCardSelect);
+        inputsInvalid.push(
+            this.isInputInvalid(formObject.savedCreditCardSelect)
+        );
+    }
+
+    inputsInvalid.push(
+        this.isInputInstallmentInvalid(formObject.creditCardInstallments)
+    );
+
+    var hasInputInvalid = inputsInvalid.filter(function (item) {
+        return item;
+    });
+
+    if (hasInputInvalid.length > 0) {
         return false;
     }
+
     return true;
 }
 
@@ -96,7 +112,7 @@ CreditCardValidator.prototype.isInputInstallmentInvalid = function (element) {
     if (element.val() == "") {
 
         element.parent().parent().addClass("_error");
-        parentsElements.find('.field-error span').html("Invalid expiration date.");
+        parentsElements.find('.field-error span').html("Invalid installments number.");
         parentsElements.find('.field-error').show();
         return true;
     }
