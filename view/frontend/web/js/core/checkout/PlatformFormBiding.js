@@ -322,7 +322,6 @@ FormObject.renameTwoCreditCardsElements = function (elements, elementId) {
                 newName +
                 "']"
             );
-
         twoCreditCardForm[key] = newElement;
     }
 
