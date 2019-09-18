@@ -450,7 +450,9 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             $price = $quoteItem->getPrice();
             $price = $price > 0 ? $price : "0.01";
 
-            if ($price === null) {
+            $productType = $quoteItem->getProductType();
+
+            if ($price === null || $productType == 'bundle') {
                 continue;
             }
             $item = new Item;
