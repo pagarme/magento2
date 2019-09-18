@@ -20,6 +20,7 @@ use Magento\Sales\Model\Order\Payment;
 use Mundipagg\Core\Kernel\Abstractions\AbstractModuleCoreSetup as MPSetup;
 use Mundipagg\Core\Kernel\Abstractions\AbstractPlatformOrderDecorator;
 use Mundipagg\Core\Kernel\Interfaces\PlatformOrderInterface;
+use Mundipagg\Core\Kernel\Services\OrderLogService;
 use Mundipagg\Core\Kernel\Services\OrderService;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 use MundiPagg\MundiPagg\Model\Ui\CreditCard\ConfigProvider;
@@ -87,18 +88,39 @@ class InitializeCommand implements CommandInterface
      /** @return AbstractPlatformOrderDecorator */
     private function doCoreDetour($payment)
     {
+        $order =  $payment->getOrder();
+        $log = new OrderLogService();
+
+        Magento2CoreSetup::bootstrap();
+
+        $platformOrderDecoratorClass = MPSetup::get(
+            MPSetup::CONCRETE_PLATFORM_ORDER_DECORATOR_CLASS
+        );
+
+        /** @var PlatformOrderInterface $orderDecorator */
+        $orderDecorator = new $platformOrderDecoratorClass();
+        $orderDecorator->setPlatformOrder($order);
+
+        $quote = $orderDecorator->getQuote();
+
         try {
-            $order =  $payment->getOrder();
 
-            Magento2CoreSetup::bootstrap();
+            $quoteSuccess = $quote->getCustomerNote();
+            if ($quoteSuccess == 'mundipagg-processing') {
+                $log->orderInfo(
+                    $orderDecorator->getCode(),
+                    "Quote already used, order duplicated."
+                 );
+                throw new \Exception('Order Payment duplicated');
+            }
 
-            $platformOrderDecoratorClass = MPSetup::get(
-                MPSetup::CONCRETE_PLATFORM_ORDER_DECORATOR_CLASS
+            $quote->setCustomerNote('mundipagg-processing');
+            $quote->save();
+
+            $log->orderInfo(
+                $orderDecorator->getCode(),
+                "Changing status quote to processing."
             );
-
-            /** @var PlatformOrderInterface $orderDecorator */
-            $orderDecorator = new $platformOrderDecoratorClass();
-            $orderDecorator->setPlatformOrder($order);
 
             $orderService = new OrderService();
             $orderService->createOrderAtMundipagg($orderDecorator);
@@ -107,6 +129,15 @@ class InitializeCommand implements CommandInterface
 
             return $orderDecorator;
         } catch (\Exception $e) {
+
+            $quote->setCustomerNote('mundipagg-failed');
+            $quote->save();
+
+            $log->orderInfo(
+                $orderDecorator->getCode(),
+                "Order failed, changing status quote to failed."
+            );
+
             throw new M2WebApiException(
                 new Phrase($e->getMessage()),
                 0,

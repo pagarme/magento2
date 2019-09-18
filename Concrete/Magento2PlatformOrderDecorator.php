@@ -472,7 +472,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         return $items;
     }
 
-    private function getQuote()
+    public function getQuote()
     {
         if ($this->quote === null) {
             $quoteId = $this->platformOrder->getQuoteId();
