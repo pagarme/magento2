@@ -1,6 +1,6 @@
 <div class="field required saved" style="display: none;">
     <label class="label">
-        <span><!-- ko i18n: 'Selecione um cartão ou insira um novo'--><!-- /ko --></span>
+        <span><!-- ko i18n: 'Select a saved credit card or fill a new card data'--><!-- /ko --></span>
     </label>
     <div class="control">
         <div class="fields">
@@ -10,7 +10,7 @@
                             style="width: 335px;"
                             class="select cc_saved_creditcards"
                     >
-                        <option value="">Selecione</option>
+                        <option value=""><!-- ko i18n: 'Select'--><!-- /ko --></option>
                     </select>
                 </div>
                 <div class="field-error" style="display: none">
@@ -38,7 +38,7 @@
 </div>
 <div class="field amount required">
     <label class="label">
-        <span><!-- ko i18n: 'Valor cobrado nesse cartão'--><!-- /ko --></span>
+        <span><!-- ko i18n: 'Charge amount for this card'--><!-- /ko --></span>
     </label>
     <div class="control">
         <input type="text"
@@ -147,7 +147,7 @@
 
 <div class="field installments required">
     <label class="label">
-        <span>Installments</span>
+        <span><!-- ko i18n: 'Installments'--><!-- /ko --></span>
     </label>
     <div class="control">
         <div class="fields">
@@ -170,6 +170,6 @@
 <div class="field choice new">
     <input type="checkbox" class="checkbox save_this_card" name="payment[cc_save_this_card]" />
     <label class="label" for="payment[cc_save_this_card]" >
-        <span><!-- ko i18n: 'Salvar cartão para compras futuras'--><!-- /ko --></span>
+        <span><!-- ko i18n: 'Save card for future purchases'--><!-- /ko --></span>
     </label>
 </div>
