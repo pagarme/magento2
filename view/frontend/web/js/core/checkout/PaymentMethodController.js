@@ -360,7 +360,6 @@ PaymentMethodController.prototype.fillInstallments = function (form) {
         'interest' : 0,
         'label' : 'Selecione',
         'value': ''
-
     }];
     var selectedBrand = form.creditCardBrand.val();
 
