@@ -36,12 +36,11 @@ MultibuyerValidator.prototype.validate = function () {
     return true;
 }
 
-MultibuyerValidator.prototype.isInputInvalid = function (element, message = "This is a required field.") {
+MultibuyerValidator.prototype.isInputInvalid = function (element, message = "") {
     var parentsElements = element.parent().parent();
 
     if (element.val() == "") {
         parentsElements.addClass("_error");
-        parentsElements.find('.field-error span').html(message);
         parentsElements.find('.field-error').show();
         return true;
     }
@@ -51,7 +50,7 @@ MultibuyerValidator.prototype.isInputInvalid = function (element, message = "Thi
     return false;
 }
 
-MultibuyerValidator.prototype.isEmailInvalid = function (element, message = "This is a invalid e-mail.") {
+MultibuyerValidator.prototype.isEmailInvalid = function (element, message = "") {
     if (this.isInputInvalid(element)) {
         return true;
     }
@@ -62,7 +61,6 @@ MultibuyerValidator.prototype.isEmailInvalid = function (element, message = "Thi
 
     if (!isValid) {
         parentsElements.addClass("_error");
-        parentsElements.find('.field-error span').html(message);
         parentsElements.find('.field-error').show();
         return true;
     }

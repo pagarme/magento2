@@ -45,7 +45,7 @@ CreditCardValidator.prototype.validateNewCard = function () {
     var formObject = this.formObject;
 
     inputsInvalid.push(
-        this.isInputInvalid(formObject.creditCardBrand, "This brand is not available"),
+        this.isInputInvalid(formObject.creditCardBrand),
         this.isInputInvalid(formObject.creditCardNumber),
         this.isInputInvalid(formObject.creditCardHolderName),
         this.isInputInvalid(formObject.creditCardCvv),
@@ -64,13 +64,12 @@ CreditCardValidator.prototype.validateNewCard = function () {
     return true;
 }
 
-CreditCardValidator.prototype.isInputInvalid = function (element, message = "This is a required field.") {
+CreditCardValidator.prototype.isInputInvalid = function (element, message = "") {
 
     var parentsElements = element.parent().parent();
 
     if (element.val() == "") {
         parentsElements.addClass("_error");
-        parentsElements.find('.field-error span').html(message);
         parentsElements.find('.field-error').show();
         return true;
     }
@@ -94,7 +93,6 @@ CreditCardValidator.prototype.isInputExpirationInvalid = function (formObject) {
     if (cardDate < dateNow) {
         monthParentsElements.addClass("_error");
         yearParentsElements.addClass("_error");
-        parentsElements.find('.field-error span').html("Invalid expiration date.");
         parentsElements.find('.field-error').show();
         return true;
     }
@@ -112,7 +110,6 @@ CreditCardValidator.prototype.isInputInstallmentInvalid = function (element) {
     if (element.val() == "") {
 
         element.parent().parent().addClass("_error");
-        parentsElements.find('.field-error span').html("Invalid installments number.");
         parentsElements.find('.field-error').show();
         return true;
     }
