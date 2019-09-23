@@ -6,6 +6,39 @@ var TwoCreditcardsModel= function (formObject, publicKey) {
     this.formIds = [0, 1];
 };
 
+TwoCreditcardsModel.prototype.validate = function () {
+
+    var formsInvalid = [];
+
+    for (id in this.formObject) {
+
+        if (id.length > 1) {
+            continue;
+        }
+        var creditCardValidator = new CreditCardValidator(this.formObject[id]);
+        var isCreditCardValid = creditCardValidator.validate();
+
+        var multibuyerValidator = new MultibuyerValidator(this.formObject[id]);
+        var isMultibuyerValid = multibuyerValidator.validate();
+
+        if (isCreditCardValid && isMultibuyerValid) {
+            continue;
+        }
+
+        formsInvalid.push(true);
+    }
+
+    var hasFormInvalid = formsInvalid.filter(function (item) {
+        return item;
+    });
+
+    if (hasFormInvalid.length > 0) {
+        return false;
+    }
+
+    return true;
+};
+
 TwoCreditcardsModel.prototype.placeOrder = function (placeOrderObject) {
     this.placeOrderObject = placeOrderObject;
     var _self = this;
@@ -58,77 +91,13 @@ TwoCreditcardsModel.prototype.addErrors = function (error) {
 
 TwoCreditcardsModel.prototype.getCreditCardToken = function (formObject, success, error) {
     var modelToken = new CreditCardToken(formObject);
-    var _self = this;
-    if (this.creditCardValidation(formObject)) {
-        modelToken.getToken(_self.publicKey)
-            .done(success)
-            .fail(error);
-    }
-};
-
-TwoCreditcardsModel.prototype.creditCardValidation = function (formObject) {
-
-    if (typeof formObject == "undefined") {
-        return false;
-    }
-
-    var isValid = true;
-    var cardBrand = formObject.creditCardBrand.val();
-
-    if (typeof cardBrand == "undefined" || cardBrand.length <= 0 ) {
-        isValid = false;
-    }
-
-    return isValid;
+    modelToken.getToken(this.publicKey)
+        .done(success)
+        .fail(error);
 };
 
 TwoCreditcardsModel.prototype.getData = function () {
-    saveThiscard = [];
-
-    saveThiscard[0] = 0;
-    saveThiscard[1] = 0;
-
-    if (this.formObject[0].saveThisCard.prop('checked')=== 'on') {
-        saveThiscard[0] = 1;
-    }
-
-    if (this.formObject[1].saveThisCard.prop('checked') === 'on') {
-        saveThiscard[1] = 1;
-    }
-
-    data = {
-        'method': "mundipagg_two_creditcard",
-        'additional_data': {
-            //first
-            'cc_first_card_amount': this.formObject[0].creditCardAmount.val(),
-            'cc_first_card_tax_amount': this.formObject[0].creditCardInstallments.find(':selected').attr('interest'),
-            'cc_type_first': this.formObject[0].creditCardBrand.val(),
-            'cc_last_4_first': this.getLastFourNumbers(0),
-            'cc_cid_first': this.formObject[0].creditCardCvv.val(),
-            'cc_exp_year_first': this.formObject[0].creditCardExpYear.val(),
-            'cc_exp_month_first': this.formObject[0].creditCardExpMonth.val(),
-            'cc_number_first': this.formObject[0].creditCardNumber.val(),
-            'cc_owner_first': this.formObject[0].creditCardHolderName.val(),
-            'cc_savecard_first': saveThiscard[0],
-            'cc_saved_card_first': this.formObject[0].savedCreditCardSelect.val(),
-            'cc_installments_first': this.formObject[0].creditCardInstallments.val(),
-            'cc_token_credit_card_first': this.formObject[0].creditCardToken.val(),
-            //second
-            'cc_second_card_amount': this.formObject[1].creditCardAmount.val(),
-            'cc_second_card_tax_amount': this.formObject[1].creditCardInstallments.find(':selected').attr('interest'),
-            'cc_type_second': this.formObject[1].creditCardBrand.val(),
-            'cc_last_4_second': this.getLastFourNumbers(1),
-            'cc_cid_second': this.formObject[1].creditCardCvv.val(),
-            'cc_exp_year_first': this.formObject[1].creditCardExpYear.val(),
-            'cc_exp_month_second': this.formObject[1].creditCardExpMonth.val(),
-            'cc_number_second': this.formObject[1].creditCardNumber.val(),
-            'cc_owner_second': this.formObject[1].creditCardHolderName.val(),
-            'cc_savecard_first': saveThiscard[1],
-            'cc_saved_card_second': this.formObject[1].savedCreditCardSelect.val(),
-            'cc_installments_second': this.formObject[1].creditCardInstallments.val(),
-            'cc_token_credit_card_second': this.formObject[1].creditCardToken.val(),
-        }
-    }
+    var data = this.fillData();
 
     if (
         typeof this.formObject[0].multibuyer.showMultibuyer != 'undefined' &&
@@ -174,11 +143,23 @@ TwoCreditcardsModel.prototype.getData = function () {
 };
 
 TwoCreditcardsModel.prototype.fillData = function () {
+
+    var saveFirstCard = 0;
+    var saveSecondCard = 0;
+
+    if (this.formObject[0].saveThisCard.prop('checked') == true) {
+        saveFirstCard = 1;
+    }
+
+    if (this.formObject[1].saveThisCard.prop('checked') == true) {
+        saveSecondCard = 1;
+    }
+
     return {
         'method': "mundipagg_two_creditcard",
         'additional_data': {
             //first
-            'cc_first_card_amount': this.formObject[0].creditCardAmount.val(),
+            'cc_first_card_amount': this.formObject[0].inputAmount.val(),
             'cc_first_card_tax_amount': this.formObject[0].creditCardInstallments.find(':selected').attr('interest'),
             'cc_type_first': this.formObject[0].creditCardBrand.val(),
             'cc_last_4_first': this.getLastFourNumbers(0),
@@ -187,21 +168,21 @@ TwoCreditcardsModel.prototype.fillData = function () {
             'cc_exp_month_first': this.formObject[0].creditCardExpMonth.val(),
             'cc_number_first': this.formObject[0].creditCardNumber.val(),
             'cc_owner_first': this.formObject[0].creditCardHolderName.val(),
-            'cc_savecard_first' : saveThiscard[0],
+            'cc_savecard_first' : saveFirstCard,
             'cc_saved_card_first' : this.formObject[0].savedCreditCardSelect.val(),
             'cc_installments_first': this.formObject[0].creditCardInstallments.val(),
             'cc_token_credit_card_first' : this.formObject[0].creditCardToken.val(),
             //second
-            'cc_second_card_amount': this.formObject[1].creditCardAmount.val(),
+            'cc_second_card_amount': this.formObject[1].inputAmount.val(),
             'cc_second_card_tax_amount': this.formObject[1].creditCardInstallments.find(':selected').attr('interest'),
             'cc_type_second': this.formObject[1].creditCardBrand.val(),
             'cc_last_4_second': this.getLastFourNumbers(1),
             'cc_cid_second': this.formObject[1].creditCardCvv.val(),
-            'cc_exp_year_first': this.formObject[1].creditCardExpYear.val(),
+            'cc_exp_year_second': this.formObject[1].creditCardExpYear.val(),
             'cc_exp_month_second': this.formObject[1].creditCardExpMonth.val(),
             'cc_number_second': this.formObject[1].creditCardNumber.val(),
             'cc_owner_second': this.formObject[1].creditCardHolderName.val(),
-            'cc_savecard_first' : saveThiscard[1],
+            'cc_savecard_second' : saveSecondCard,
             'cc_saved_card_second' : this.formObject[1].savedCreditCardSelect.val(),
             'cc_installments_second': this.formObject[1].creditCardInstallments.val(),
             'cc_token_credit_card_second' : this.formObject[1].creditCardToken.val()
@@ -211,5 +192,8 @@ TwoCreditcardsModel.prototype.fillData = function () {
 
 TwoCreditcardsModel.prototype.getLastFourNumbers = function(id) {
     var number = this.formObject[id].creditCardNumber.val();
-    return number.slice(-4);
+    if (number !== undefined) {
+        return number.slice(-4);
+    }
+    return "";
 };

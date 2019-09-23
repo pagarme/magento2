@@ -492,6 +492,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 
         if (empty($payments)) {
             $baseNewPayment = $this->platformOrder->getPayment();
+
             $newPayment = [];
             $newPayment['method'] = $baseNewPayment->getMethod();
             $newPayment['additional_information'] =
@@ -809,6 +810,14 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         if (!isset($paymentData[$boletoDataIndex])) {
             $paymentData[$boletoDataIndex] = [];
         }
+
+        if ($additionalInformation['billet_buyer_checkbox']) {
+            $newPaymentData->customer = $this->extractMultibuyerData(
+                'billet',
+                $additionalInformation
+            );
+        }
+
         $paymentData[$boletoDataIndex][] = $newPaymentData;
     }
 
@@ -855,6 +864,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $allStreetLines = $platformAddress->getStreet();
 
         $this->validateAddress($allStreetLines);
+        $this->validateAddressConfiguration($addressAttributes);
 
         if (count($allStreetLines) < 4) {
             $addressAttributes['neighborhood'] = "street_3";
@@ -863,7 +873,16 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 
         foreach ($addressAttributes as $attribute => $value) {
             $value = $value === null ? 1 : $value;
-            $value = filter_var($value, FILTER_SANITIZE_NUMBER_INT) - 1;
+
+            $street = explode("_", $value);
+            if (count($street) > 1) {
+                $value = intval($street[1]) - 1;
+            }
+
+            if ($value !== '0' && empty($value)) {
+                continue;
+            }
+
             $setter = 'set' . ucfirst($attribute);
 
             if (!isset($allStreetLines[$value])) {
@@ -903,6 +922,22 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             $exception = new \Exception($ExceptionMessage);
             $log = new LogService('Order', true);
             $log->exception($exception);
+
+            throw $exception;
+        }
+    }
+
+    protected function validateAddressConfiguration($addressAttributes)
+    {
+        $arrayFiltered = array_filter($addressAttributes);
+        if (empty($arrayFiltered)) {
+            $message = "Invalid address configuration. Please fill the address configuration on admin panel.";
+            $ExceptionMessage = $this->i18n->getDashboard($message);
+            $exception = new \Exception($ExceptionMessage);
+
+            $log = new LogService('Order', true);
+            $log->exception($exception);
+
 
             throw $exception;
         }

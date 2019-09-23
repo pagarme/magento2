@@ -26,11 +26,19 @@ define(
             getForm: function() {
                 return "MundiPagg_MundiPagg/payment/boleto-form";
             },
+            getMultibuyerForm: function () {
+                return "MundiPagg_MundiPagg/payment/multibuyer-form";
+            },
             getText: function () {
                 return window.checkoutConfig.payment.mundipagg_billet.text;
             },
             getModel: function() {
                 return 'boleto';
+            },
+
+            getData: function () {
+                var paymentModel = window.MundiPaggCore.paymentMethod[this.getModel()].model;
+                return paymentModel.getData();
             },
         });
     }
