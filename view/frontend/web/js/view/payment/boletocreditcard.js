@@ -5,7 +5,7 @@ define(
     [
         "MundiPagg_MundiPagg/js/view/payment/default",
         "MundiPagg_MundiPagg/js/core/checkout/PaymentModuleBootstrap",
-        "MundiPagg_MundiPagg/js/core/models/CreditCardModel",
+        "MundiPagg_MundiPagg/js/core/models/BoletoCreditcardModel",
         "underscore",
         'mage/translate',
         'MundiPagg_MundiPagg/js/action/installments',
@@ -17,7 +17,7 @@ define(
     function(
         Component,
         MundipaggCore,
-        CreditCardModel,
+        BoletoCreditcardModel,
         _,
         $t,
         installments,
@@ -34,31 +34,30 @@ define(
                 creditCardType: '',
             },
 
-            getInstallmentsByBrand: function (brand, success) {
-
-            },
-
             getCode: function() {
-                return "mundipagg_creditcard";
+                return "mundipagg_billet_creditcard";
             },
 
             getModel: function() {
-                return 'creditcard';
+                return 'boletoCreditcard';
             },
 
             isActive: function() {
-                return window.checkoutConfig.payment.mundipagg_creditcard.active;
+                return window.checkoutConfig.payment.mundipagg_billet_creditcard.active;
             },
 
             getTitle: function() {
-                return window.checkoutConfig.payment.mundipagg_creditcard.title;
+                return window.checkoutConfig.payment.mundipagg_billet_creditcard.title;
             },
 
             getBase: function () {
-                return "MundiPagg_MundiPagg/payment/creditcard";
+                return "MundiPagg_MundiPagg/payment/boletocreditcard";
             },
 
             getForm: function () {
+                return "MundiPagg_MundiPagg/payment/boleto-form";
+            },
+            getFormCreditcard: function () {
                 return "MundiPagg_MundiPagg/payment/creditcard-form";
             },
 
@@ -69,6 +68,10 @@ define(
             getData: function () {
                 var paymentModel = window.MundiPaggCore.paymentMethod[this.getModel()].model;
                 return paymentModel.getData();
+            },
+
+            getText: function () {
+                return window.checkoutConfig.payment.mundipagg_billet.text;
             },
 
             /**
@@ -138,7 +141,7 @@ define(
             },
             getAmountText: function () {
                 return 'Amount for this card'
-            }
+            },
         });
     }
 );

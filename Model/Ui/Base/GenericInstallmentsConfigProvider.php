@@ -11,7 +11,7 @@
 
 namespace MundiPagg\MundiPagg\Model\Ui\Base;
 
-
+use Mundipagg\Core\Kernel\Services\LocalizationService;
 use MundiPagg\MundiPagg\Model\Installments\Config\ConfigInterface;
 use MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\ConfigInterface as BaseConfig;
 use Magento\Checkout\Model\ConfigProviderInterface;
@@ -151,8 +151,10 @@ abstract class GenericInstallmentsConfigProvider implements ConfigProviderInterf
                     ],
                 ]
             ],
-            'multi_buyer' => $this->_getConfig()->getMultiBuyerActive()
+            'is_multi_buyer_enabled' => $this->_getConfig()->getMultiBuyerActive(),
+            'region_states' => $this->getRegionStates()
         ];
+
         return $config;
     }
 
@@ -173,5 +175,16 @@ abstract class GenericInstallmentsConfigProvider implements ConfigProviderInterf
     protected function _getConfig()
     {
         return $this->config;
+    }
+
+    protected function getRegionStates()
+    {
+        /** @fixme Get current country **/
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $states = $objectManager
+            ->create('Magento\Directory\Model\RegionFactory')
+            ->create()->getCollection()->addFieldToFilter('country_id','BR');
+
+        return $states->getData();
     }
 }

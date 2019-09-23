@@ -7,9 +7,14 @@ var MundiPaggCore = {
 };
 
 MundiPaggCore.initPaymentMethod = function (methodCode, platformConfig) {
-    this.paymentMethod[methodCode] =
-        new PaymentMethodController(methodCode, platformConfig);
-    this.paymentMethod[methodCode].init();
+    var _self = this;
+    setTimeout(function() {
+
+        _self.paymentMethod[methodCode] =
+            new PaymentMethodController(methodCode, platformConfig);
+        _self.paymentMethod[methodCode].init();
+
+    }, 1000);
 };
 
 MundiPaggCore.initBin = function (methodCode, obj) {
@@ -26,17 +31,19 @@ MundiPaggCore.validatePaymentMethod = function (methodCode) {
 
 MundiPaggCore.placeOrder = function(platformObject, model) {
 
-    //This object should be injected on this method, not instantiated here
-    var platformOrderPlace = new PlatformPlaceOrder(
-        platformObject.obj,
-        platformObject.data,
-        platformObject.event
-    );
+    if (this.paymentMethod[model].model.validate()) {
+        try {
+            //This object should be injected on this method, not instantiated here
+            var platformOrderPlace = new PlatformPlaceOrder(
+                platformObject.obj,
+                platformObject.data,
+                platformObject.event
+            );
 
-    try {
-        this.paymentMethod[model].placeOrder(platformOrderPlace);
-    } catch(e) {
-        console.log(e)
+            this.paymentMethod[model].placeOrder(platformOrderPlace);
+        } catch (e) {
+            console.log(e)
+        }
     }
 
     var errors = this.paymentMethod[model].model.errors;

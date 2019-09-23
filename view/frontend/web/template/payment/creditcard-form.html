@@ -1,4 +1,27 @@
-<div class="field type">
+<div class="field required saved" style="display: none;">
+    <label class="label">
+        <span><!-- ko i18n: 'Select a saved credit card or fill a new card data'--><!-- /ko --></span>
+    </label>
+    <div class="control">
+        <div class="fields">
+            <div class="field no-label">
+                <div class="control">
+                    <select name="payment[cc_saved_creditcards]"
+                            style="width: 335px;"
+                            class="select cc_saved_creditcards"
+                    >
+                        <option value=""><!-- ko i18n: 'Select'--><!-- /ko --></option>
+                    </select>
+                </div>
+                <div class="field-error" style="display: none">
+                    <span ><!-- ko i18n: 'This is a required field'--><!-- /ko --></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="field type new">
     <div class="control">
         <ul class="credit-card-types"></ul>
         <input type="hidden"
@@ -8,10 +31,14 @@
                >
         <input type="hidden" name="payment[cc_token]" class="input-text cc_token" value="">
     </div>
+
+    <div class="field-error" style="display: none">
+        <span><!-- ko i18n: 'Invalid credit card brand'--><!-- /ko --></span>
+    </div>
 </div>
-<div class="field amount required" >
+<div class="field amount required">
     <label class="label">
-        <span><!-- ko i18n: 'Valor cobrado nesse cartão'--><!-- /ko --></span>
+        <span><!-- ko i18n: 'Charge amount for this card'--><!-- /ko --></span>
     </label>
     <div class="control">
         <input type="text"
@@ -24,7 +51,7 @@
     </div>
 </div>
 
-<div class="field number required">
+<div class="field number required new">
     <label class="label">
         <span><!-- ko i18n: 'Credit Card Number'--><!-- /ko --></span>
     </label>
@@ -38,9 +65,12 @@
                 value=""
         />
     </div>
+    <div class="field-error" style="display: none">
+        <span ><!-- ko i18n: 'This is a required field'--><!-- /ko --></span>
+    </div>
 </div>
 
-<div class="field owner required" >
+<div class="field owner required new">
     <label class="label">
         <span><!-- ko i18n: 'Name on Card'--><!-- /ko --></span>
     </label>
@@ -54,9 +84,12 @@
                value=""
               />
     </div>
+    <div class="field-error" style="display: none">
+        <span ><!-- ko i18n: 'This is a required field'--><!-- /ko --></span>
+    </div>
 </div>
 
-<div class="field date required" >
+<div class="field date required new">
     <label class="label">
         <span><!-- ko i18n: 'Expiration Date'--><!-- /ko --></span>
     </label>
@@ -77,8 +110,11 @@
             </div>
         </div>
     </div>
+    <div class="field-error" style="display: none">
+        <span ><!-- ko i18n: 'Invalid Expiration Date'--><!-- /ko --></span>
+    </div>
 </div>
-<div class="field cvv required" >
+<div class="field cvv required new">
     <label class="label">
         <span>CVV</span>
     </label>
@@ -104,11 +140,14 @@
                  data-bind="html: getCvvImageHtml()"></div>
         </div>
     </div>
+    <div class="field-error" style="display: none">
+        <span ><!-- ko i18n: 'This is a required field'--><!-- /ko --></span>
+    </div>
 </div>
 
 <div class="field installments required">
     <label class="label">
-        <span>Installments</span>
+        <span><!-- ko i18n: 'Installments'--><!-- /ko --></span>
     </label>
     <div class="control">
         <div class="fields">
@@ -122,22 +161,16 @@
                 </div>
             </div>
         </div>
+
+    </div>
+    <div class="field-error" style="display: none">
+        <span ><!-- ko i18n: 'This is a required field'--><!-- /ko --></span>
     </div>
 </div>
 
-<!--div class="field choice">
-    <input type="checkbox" class="checkbox" id="creditcard-save" />
-    <label class="label" >
-        <span>Save</span>
+<div class="field choice new">
+    <input type="checkbox" class="checkbox save_this_card" name="payment[cc_save_this_card]" />
+    <label class="label" for="payment[cc_save_this_card]" >
+        <span><!-- ko i18n: 'Save card for future purchases'--><!-- /ko --></span>
     </label>
-    <div class="field-tooltip toggle">
-        <span class="field-tooltip-action action-cvv"
-              tabindex="0"
-              >
-            <span>Choice</span>
-        </span>
-        <div class="field-tooltip-content"
-             ></div>
-    </div>
-</div-->
-<div afterRender="initPaymentMethod()"></div>
+</div>

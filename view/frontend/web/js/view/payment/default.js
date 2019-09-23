@@ -32,6 +32,9 @@ define(
         "MundiPagg_MundiPagg/js/core/checkout/PlatformFormHandler",
         "MundiPagg_MundiPagg/js/core/checkout/CreditCardToken",
         "MundiPagg_MundiPagg/js/core/checkout/Installments",
+        "MundiPagg_MundiPagg/js/core/validators/CreditCardValidator",
+        "MundiPagg_MundiPagg/js/core/validators/CustomerValidator",
+        "MundiPagg_MundiPagg/js/core/validators/MultibuyerValidator",
     ],
     function(
         Component,
@@ -71,6 +74,7 @@ define(
                 platFormConfig = window.checkoutConfig;
                 platFormConfig.moduleUrls = {};
                 installmentsUrl = installmentsAction();
+                platFormConfig.grand_total = quote.getTotals()().grand_total;
 
                 var baseUrl = platFormConfig.payment.ccform.base_url;
 
@@ -84,10 +88,8 @@ define(
 
                 platFormConfig.loader = fullScreenLoader;
 
-                platFormConfig.updateTotals = {
-                    getTotals: quote.getTotals,
-                    setTotals: quote.setTotals
-                }
+                /** @fixme Update total should be moved to platformFormBinging **/
+                platFormConfig.updateTotals = quote;
 
                 window.MundiPaggCore.platFormConfig = platFormConfig;
                 window.MundiPaggCore.initPaymentMethod(
