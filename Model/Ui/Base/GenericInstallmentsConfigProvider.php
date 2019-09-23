@@ -11,10 +11,11 @@
 
 namespace MundiPagg\MundiPagg\Model\Ui\Base;
 
-
+use Mundipagg\Core\Kernel\Services\LocalizationService;
 use MundiPagg\MundiPagg\Model\Installments\Config\ConfigInterface;
 use MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\ConfigInterface as BaseConfig;
 use Magento\Checkout\Model\ConfigProviderInterface;
+use \Magento\Store\Model\StoreManagerInterface;
 
 abstract class GenericInstallmentsConfigProvider implements ConfigProviderInterface
 {
@@ -30,11 +31,13 @@ abstract class GenericInstallmentsConfigProvider implements ConfigProviderInterf
     public function __construct(
         \Magento\Framework\View\Asset\Repository $assetRepo,
         ConfigInterface $config,
-        BaseConfig $baseConfig
+        BaseConfig $baseConfig,
+        StoreManagerInterface $storeManager
     )
     {
         $this->_assetRepo = $assetRepo;
         $this->baseConfig = $baseConfig;
+        $this->storageManager = $storeManager;
         $this->setConfig($config);
     }
 
@@ -43,6 +46,7 @@ abstract class GenericInstallmentsConfigProvider implements ConfigProviderInterf
         $config = [
             'payment' => [
                 'ccform' => [
+                    'base_url' => $this->storageManager->getStore()->getBaseUrl(),
                     'installments' => [
                         'active' => [$this::CODE => $this->_getConfig()->isActive()],
                         'value' => 0,
@@ -147,8 +151,10 @@ abstract class GenericInstallmentsConfigProvider implements ConfigProviderInterf
                     ],
                 ]
             ],
-            'multi_buyer' => $this->_getConfig()->getMultiBuyerActive()
+            'is_multi_buyer_enabled' => $this->_getConfig()->getMultiBuyerActive(),
+            'region_states' => $this->getRegionStates()
         ];
+
         return $config;
     }
 
@@ -169,5 +175,16 @@ abstract class GenericInstallmentsConfigProvider implements ConfigProviderInterf
     protected function _getConfig()
     {
         return $this->config;
+    }
+
+    protected function getRegionStates()
+    {
+        /** @fixme Get current country **/
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $states = $objectManager
+            ->create('Magento\Directory\Model\RegionFactory')
+            ->create()->getCollection()->addFieldToFilter('country_id','BR');
+
+        return $states->getData();
     }
 }

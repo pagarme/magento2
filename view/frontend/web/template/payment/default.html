@@ -1,9 +1,8 @@
 <!--
 /**
- *
  * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
  * @copyright   2017 MundiPagg (http://www.mundipagg.com)
- * @license     http://www.mundipagg.com Copyright
+ * @license     http://www.mundipagg.com  Copyright
  *
  * @link        http://www.mundipagg.com
  */
@@ -19,24 +18,20 @@
         </label>
     </div>
 
-    <div class="payment-method-content">
-        <!-- ko foreach: getRegion('messages') -->
-        <!-- ko template: getTemplate() --><!-- /ko -->
-        <!--/ko-->
+    <div class="payment-method-content mundipagg-content">
 
         <form class="form" data-bind="attr: {'id': getCode() + '-form'}">
-            <!-- ko template: 'MundiPagg_MundiPagg/payment/two-cc-form' --><!-- /ko -->
+            <!-- ko template: getBase() --><!-- /ko -->
         </form>
 
         <div class="payment-method-billing-address">
-            <!-- ko foreach: $parent.getRegion(getBillingAddressFormName()) -->
-            <!-- ko template: getTemplate() --><!-- /ko -->
-            <!--/ko-->
+
         </div>
 
-        <div class="actions-toolbar" style="padding-top: 20px;">
+        <div class="actions-toolbar">
             <div class="primary">
-                <button id="twoCreditCardsPlaceOrder" class="action primary checkout"
+
+                <button id="" class="action primary checkout"
                         type="submit"
                         data-bind="
                         click: beforeplaceOrder,
@@ -48,3 +43,4 @@
         </div>
     </div>
 </div>
+

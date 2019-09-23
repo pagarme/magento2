@@ -1,0 +1,176 @@
+<div class="field required saved" style="display: none;">
+    <label class="label">
+        <span><!-- ko i18n: 'Select a saved credit card or fill a new card data'--><!-- /ko --></span>
+    </label>
+    <div class="control">
+        <div class="fields">
+            <div class="field no-label">
+                <div class="control">
+                    <select name="payment[cc_saved_creditcards]"
+                            style="width: 335px;"
+                            class="select cc_saved_creditcards"
+                    >
+                        <option value=""><!-- ko i18n: 'Select'--><!-- /ko --></option>
+                    </select>
+                </div>
+                <div class="field-error" style="display: none">
+                    <span ><!-- ko i18n: 'This is a required field'--><!-- /ko --></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="field type new">
+    <div class="control">
+        <ul class="credit-card-types"></ul>
+        <input type="hidden"
+               name="payment[cc_type]"
+               class="input-text cc_type"
+               value="default"
+               >
+        <input type="hidden" name="payment[cc_token]" class="input-text cc_token" value="">
+    </div>
+
+    <div class="field-error" style="display: none">
+        <span><!-- ko i18n: 'Invalid credit card brand'--><!-- /ko --></span>
+    </div>
+</div>
+<div class="field amount required">
+    <label class="label">
+        <span><!-- ko i18n: 'Charge amount for this card'--><!-- /ko --></span>
+    </label>
+    <div class="control">
+        <input type="text"
+               autocomplete="off"
+               style="width: 225px;"
+               class="input-text cc_amount"
+               name="payment[cc_amount]"
+               value=""
+        />
+    </div>
+</div>
+
+<div class="field number required new">
+    <label class="label">
+        <span><!-- ko i18n: 'Credit Card Number'--><!-- /ko --></span>
+    </label>
+    <div class="control">
+        <input
+                type="number"
+                min="0"
+                maxlength="19"
+                name="payment[cc_number]"
+                class="input-text cc_number"
+                value=""
+        />
+    </div>
+    <div class="field-error" style="display: none">
+        <span ><!-- ko i18n: 'This is a required field'--><!-- /ko --></span>
+    </div>
+</div>
+
+<div class="field owner required new">
+    <label class="label">
+        <span><!-- ko i18n: 'Name on Card'--><!-- /ko --></span>
+    </label>
+    <div class="control">
+        <input type="text"
+               autocomplete="off"
+               style="width: 225px;"
+               class="input-text cc_owner"
+               maxlength="40"
+               name="payment[cc_owner]"
+               value=""
+              />
+    </div>
+    <div class="field-error" style="display: none">
+        <span ><!-- ko i18n: 'This is a required field'--><!-- /ko --></span>
+    </div>
+</div>
+
+<div class="field date required new">
+    <label class="label">
+        <span><!-- ko i18n: 'Expiration Date'--><!-- /ko --></span>
+    </label>
+    <div class="control">
+        <div class="fields group group-2">
+            <div class="field no-label month">
+                <div class="control">
+                    <select name="payment[cc_exp_month]" class="select select-month cc_exp_month">
+                    </select>
+                </div>
+            </div>
+            <div class="field no-label year">
+                <div class="control">
+                    <select name="payment[cc_exp_year]" class="select select-year cc_exp_year">
+
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="field-error" style="display: none">
+        <span ><!-- ko i18n: 'Invalid Expiration Date'--><!-- /ko --></span>
+    </div>
+</div>
+<div class="field cvv required new">
+    <label class="label">
+        <span>CVV</span>
+    </label>
+    <div class="control _with-tooltip">
+        <input type="number"
+               autocomplete="off"
+               class="input-text cvv cc_cid"
+               name="payment[cc_cid]"
+               value="123"
+               onKeyPress="if(this.value.length==4) return false;"
+               min="0"
+                />
+        <div class="field-tooltip toggle">
+            <span class="field-tooltip-action action-cvv"
+                  tabindex="0"
+                  data-toggle="dropdown"
+                  data-bind="attr: {title: $t('What is this?')}, mageInit: {'dropdown':{'activeClass': '_active'}}"
+                  >
+                <span>CVV</span>
+            </span>
+            <div class="field-tooltip-content"
+                 data-target="dropdown"
+                 data-bind="html: getCvvImageHtml()"></div>
+        </div>
+    </div>
+    <div class="field-error" style="display: none">
+        <span ><!-- ko i18n: 'This is a required field'--><!-- /ko --></span>
+    </div>
+</div>
+
+<div class="field installments required">
+    <label class="label">
+        <span><!-- ko i18n: 'Installments'--><!-- /ko --></span>
+    </label>
+    <div class="control">
+        <div class="fields">
+            <div class="field no-label installments">
+                <div class="control">
+                    <select name="payment[cc_installments]"
+                             style="width: 335px;"
+                             class="select select-installments cc_installments"
+                    >
+                    </select>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="field-error" style="display: none">
+        <span ><!-- ko i18n: 'This is a required field'--><!-- /ko --></span>
+    </div>
+</div>
+
+<div class="field choice new">
+    <input type="checkbox" class="checkbox save_this_card" name="payment[cc_save_this_card]" />
+    <label class="label" for="payment[cc_save_this_card]" >
+        <span><!-- ko i18n: 'Save card for future purchases'--><!-- /ko --></span>
+    </label>
+</div>
