@@ -6,12 +6,15 @@ var MundiPaggCore = {
     paymentMethod : []
 };
 
-MundiPaggCore.initPaymentMethod = function (methodCode) {
+MundiPaggCore.initPaymentMethod = function (methodCode, platformConfig) {
+    var _self = this;
+    setTimeout(function() {
 
-    this.paymentMethod[methodCode] =
-        new PaymentMethodController(methodCode);
+        _self.paymentMethod[methodCode] =
+            new PaymentMethodController(methodCode, platformConfig);
+        _self.paymentMethod[methodCode].init();
 
-    this.paymentMethod[methodCode].init();
+    }, 1000);
 };
 
 MundiPaggCore.initBin = function (methodCode, obj) {
@@ -24,34 +27,31 @@ MundiPaggCore.validatePaymentMethod = function (methodCode) {
 
     this.paymentMethod.init();
     return this.paymentMethod.formValidation();
-}
+};
 
-MundiPaggCore.placeOrder = function(platformObject, data, event) {
+MundiPaggCore.placeOrder = function(platformObject, model) {
 
-    var code = platformObject.getCode();
-    var model = platformObject.getModel();
+    if (this.paymentMethod[model].model.validate()) {
+        try {
+            //This object should be injected on this method, not instantiated here
+            var platformOrderPlace = new PlatformPlaceOrder(
+                platformObject.obj,
+                platformObject.data,
+                platformObject.event
+            );
 
-    if (code.indexOf('creditcard') >= 0) {
+            this.paymentMethod[model].placeOrder(platformOrderPlace);
+        } catch (e) {
+            console.log(e)
+        }
+    }
 
-        var formId = '#' + code + '-form';
-        this.paymentMethod[model].getCreditCardToken(
-            platformObject.getKey(),
-            function (response) {
-                if (response !== false) {
-                    jQuery(formId + " input[name='payment[cc_token]']").val(response.id);
-                    platformObject.placeOrder(data, event);
-                }
-            },
-            function (error) {
-                console.log(error);
-                window.globalMessageList.addErrorMessage({
-                    message: $t("Error to generate card token.")
-                });
-
-                $("html, body").animate({scrollTop: 0}, 600);
-            }
-        );
-    } else {
-        platformObject.placeOrder(data, event);
+    var errors = this.paymentMethod[model].model.errors;
+    if (errors.length > 0) {
+        for (index in errors) {
+            this.messageList.addErrorMessage(errors[index]);
+        }
+        jQuery("html, body").animate({scrollTop: 0}, 600);
+        console.log(errors)
     }
 }

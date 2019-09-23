@@ -12,6 +12,7 @@ define(
         "Magento_Checkout/js/view/payment/default",
         "ko",
         "jquery",
+        'MundiPagg_MundiPagg/js/action/installmentsByBrand',
         "Magento_Checkout/js/model/quote",
         "Magento_Catalog/js/price-utils",
         "Magento_Checkout/js/model/totals",
@@ -22,18 +23,24 @@ define(
         "Magento_Checkout/js/action/redirect-on-success",
         "mage/translate",
         "Magento_Ui/js/model/messageList",
+        'Magento_Checkout/js/model/url-builder',
         "MundiPagg_MundiPagg/js/core/checkout/PaymentModuleBootstrap",
         "MundiPagg_MundiPagg/js/core/checkout/PaymentMethodController",
+        "MundiPagg_MundiPagg/js/core/checkout/PlatformPlaceOrder",
         "MundiPagg_MundiPagg/js/core/checkout/Bin",
         "MundiPagg_MundiPagg/js/core/checkout/PlatformFormBiding",
         "MundiPagg_MundiPagg/js/core/checkout/PlatformFormHandler",
         "MundiPagg_MundiPagg/js/core/checkout/CreditCardToken",
         "MundiPagg_MundiPagg/js/core/checkout/Installments",
+        "MundiPagg_MundiPagg/js/core/validators/CreditCardValidator",
+        "MundiPagg_MundiPagg/js/core/validators/CustomerValidator",
+        "MundiPagg_MundiPagg/js/core/validators/MultibuyerValidator",
     ],
     function(
         Component,
         ko,
         $,
+        installmentsAction,
         quote,
         priceUtils,
         totals,
@@ -44,21 +51,51 @@ define(
         redirectOnSuccessAction,
         $t,
         globalMessageList,
+        urlBuilder,
         MundiPaggCore,
-        PaymentController
+        PaymentController,
+        PlatformPlaceOrder
     ) {
 
-        window.MundiPaggCore.quote = quote;
-
+        window.MundiPaggCore.messageList = globalMessageList;
         return Component.extend({
 
             initialize: function() {
-
-                window.MundiPaggCore.initPaymentMethod(this.getModel());
+                this.initPaymentMethod();
 
                 this._super().observe([
                     "mundipagg-content"
                 ]);
+            },
+
+            initPaymentMethod: function() {
+                var _self = this;
+
+                platFormConfig = window.checkoutConfig;
+                platFormConfig.moduleUrls = {};
+                installmentsUrl = installmentsAction();
+                platFormConfig.grand_total = quote.getTotals()().grand_total;
+
+                var baseUrl = platFormConfig.payment.ccform.base_url;
+
+                platFormConfig.base_url = baseUrl;
+                platFormConfig.moduleUrls.installments =
+                    baseUrl + installmentsUrl;
+
+                platFormConfig.addresses = {
+                    billingAddress: quote.billingAddress()
+                };
+
+                platFormConfig.loader = fullScreenLoader;
+
+                /** @fixme Update total should be moved to platformFormBinging **/
+                platFormConfig.updateTotals = quote;
+
+                window.MundiPaggCore.platFormConfig = platFormConfig;
+                window.MundiPaggCore.initPaymentMethod(
+                    this.getModel(),
+                    platFormConfig
+                );
             },
 
             getData: function() {
@@ -77,6 +114,7 @@ define(
             beforeplaceOrder: function(data, event){
 
                 var _self = this;
+                //@Todo Create token
                 /*
                 globalMessageList.addErrorMessage({
                     message: $t("Error message.")
@@ -85,10 +123,19 @@ define(
                 return false;*/
 
                 //@todo Validar dados inclusive de endereço pelo MundiPaggCore.quote setado acima
-                window.MundiPaggCore.initPaymentMethod(this.getModel());
-                window.MundiPaggCore.placeOrder(_self, data, event);
-            },
 
+                //Should be an instance of PlatformPlaceOrder
+                var PlatformPlaceOrder = {
+                    obj : _self,
+                    data: data,
+                    event: event
+                };
+
+                window.MundiPaggCore.placeOrder(
+                    PlatformPlaceOrder,
+                    this.getModel()
+                );
+            },
 
             /**
              * Select current payment token
