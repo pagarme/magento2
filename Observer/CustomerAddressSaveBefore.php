@@ -38,26 +38,6 @@ class CustomerAddressSaveBefore implements ObserverInterface
         return $mundipaggProvider->getModuleStatus();
     }
 
-    public function getModuleAddressConfig()
-    {
-        $objectManager = ObjectManager::getInstance();
-        $mundipaggProvider = $objectManager->get(MundiPaggConfigProvider::class);
-        return $mundipaggProvider->getCustomerAddressConfiguration();
-    }
-
-    private function filterAddressIndexes($addressConfig)
-    {
-        $addressIndexes = [];
-
-        foreach ($addressConfig as $key => $value) {
-            if (preg_match('/street_\w{1}$/', $value) > 0) {
-                $addressIndexes[$key] = explode('street_', $value)[1] -1;
-            }
-        }
-
-        return $addressIndexes;
-    }
-
     /**
      * @param $customerAddress
      * @throws InputException
@@ -66,44 +46,24 @@ class CustomerAddressSaveBefore implements ObserverInterface
     {
         $allStreetLines = $customerAddress->getStreet();
 
-        $addressIndexes =
-            $this->filterAddressIndexes(
-                $this->getModuleAddressConfig()
-            );
+        if (empty($customerAddress->getCity())) {
+            throw new InputException(__("Please check your address. City is required."));
+        }
 
-        if($addressIndexes) {
-            if (empty($allStreetLines[$addressIndexes['street']])) {
-                throw new InputException(__("Please check your address. Street Address field (Street) is required."));
-            }
+        if (empty($customerAddress->getRegionCode())) {
+            throw new InputException(__("Please check your address. Region is required."));
+        }
 
-            if (empty($allStreetLines[$addressIndexes['number']])) {
-                throw new InputException(__("Please check your address. Street Address field (Number) is required."));
-            }
+        if (empty($customerAddress->getPostcode())) {
+            throw new InputException(__("Please check your address. Postcode is required."));
+        }
 
-            if (empty($allStreetLines[$addressIndexes['district']])) {
-                throw new InputException(__("Please check your address. Street Address field (Neighborhood) is required."));
-            }
+        if (empty($customerAddress->getCountryId())) {
+            throw new InputException(__("Please check your address. Country is required."));
+        }
 
-
-            if (empty($customerAddress->getCity())) {
-                throw new InputException(__("Please check your address. City is required."));
-            }
-
-            if (empty($customerAddress->getRegionCode())) {
-                throw new InputException(__("Please check your address. Region is required."));
-            }
-
-            if (empty($customerAddress->getPostcode())) {
-                throw new InputException(__("Please check your address. Postcode is required."));
-            }
-
-            if (empty($customerAddress->getCountryId())) {
-                throw new InputException(__("Please check your address. Country is required."));
-            }
-
-            if (empty($customerAddress->getName()) || $customerAddress->getName() > 65) {
-                throw new InputException(__("Please check your address. Name and firstname are required."));
-            }
+        if (empty($customerAddress->getName()) || $customerAddress->getName() > 65) {
+            throw new InputException(__("Please check your address. Name and firstname are required."));
         }
 
         if (!is_array($allStreetLines) || count($allStreetLines) < 3) {

@@ -354,7 +354,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         } catch (\Throwable $e) {
         }
 
-        if ($mpId === null) {
+        if (empty($mpId)) {
             $coreCustomerRespository = new CoreCustomerRepository();
             $coreCustomer = $coreCustomerRespository->findByCode(
                 $savedCustomer->getId()
@@ -393,11 +393,8 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $customer->setType(CustomerType::individual());
 
         $telephone = $address->getTelephone();
-        $phone = new Phone(
-            '55',
-            substr($telephone, 0, 2),
-            substr($telephone, 2)
-        );
+        $phone = new Phone($telephone);
+
         $customer->setPhones(
             CustomerPhones::create([$phone, $phone])
         );
@@ -429,11 +426,8 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $customer->setType(CustomerType::individual());
 
         $telephone = $guestAddress->getTelephone();
-        $phone = new Phone(
-            '55',
-            substr($telephone, 0, 2),
-            substr($telephone, 2)
-        );
+        $phone = new Phone($telephone);
+
         $customer->setPhones(
             CustomerPhones::create([$phone, $phone])
         );
@@ -498,6 +492,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 
         if (empty($payments)) {
             $baseNewPayment = $this->platformOrder->getPayment();
+
             $newPayment = [];
             $newPayment['method'] = $baseNewPayment->getMethod();
             $newPayment['additional_information'] =
@@ -576,6 +571,13 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $amount = $this->getGrandTotal() - $this->getBaseTaxAmount();
         $newPaymentData->amount = $moneyService->floatToCents($amount);
 
+        if ($additionalInformation['cc_buyer_checkbox']) {
+            $newPaymentData->customer = $this->extractMultibuyerData(
+                'cc',
+                $additionalInformation
+            );
+        }
+
         $creditCardDataIndex = AbstractCreditCardPayment::getBaseCode();
         if (!isset($paymentData[$creditCardDataIndex])) {
             $paymentData[$creditCardDataIndex] = [];
@@ -633,8 +635,13 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
                 $index
             );
 
-            $amount = $additionalInformation["cc_{$index}_card_amount"];
-            $newPaymentData->amount = $moneyService->floatToCents($amount);
+            $amount = str_replace(
+                ['.', ','],
+                "",
+                $additionalInformation["cc_{$index}_card_amount"]
+            );
+
+            $newPaymentData->amount = $moneyService->floatToCents($amount / 100);
             $newPaymentData->saveOnSuccess =
                 isset($additionalInformation["cc_savecard_{$index}"]) &&
                 $additionalInformation["cc_savecard_{$index}"] === '1';
@@ -750,8 +757,12 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             isset($additionalInformation["cc_savecard"]) &&
             $additionalInformation["cc_savecard"] === '1';
 
-        $amount = $additionalInformation["cc_cc_amount"];
-        $newPaymentData->amount = $moneyService->floatToCents($amount);
+        $amount = str_replace(
+            ['.', ','],
+            "",
+            $additionalInformation["cc_cc_amount"]
+            );
+        $newPaymentData->amount = $moneyService->floatToCents($amount / 100);
 
         $creditCardDataIndex = AbstractCreditCardPayment::getBaseCode();
         if (!isset($paymentData[$creditCardDataIndex])) {
@@ -799,6 +810,14 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         if (!isset($paymentData[$boletoDataIndex])) {
             $paymentData[$boletoDataIndex] = [];
         }
+
+        if ($additionalInformation['billet_buyer_checkbox']) {
+            $newPaymentData->customer = $this->extractMultibuyerData(
+                'billet',
+                $additionalInformation
+            );
+        }
+
         $paymentData[$boletoDataIndex][] = $newPaymentData;
     }
 
@@ -824,11 +843,10 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $shipping->setDescription($platformShipping->getShippingDescription());
         $shipping->setRecipientName($platformShipping->getName());
 
-        $shipping->setRecipientPhone(new Phone(
-            '55',
-            substr($platformShipping->getTelephone(), 0, 2),
-            substr($platformShipping->getTelephone(), 2)
-        ));
+        $telephone = $platformShipping->getTelephone();
+        $phone = new Phone($telephone);
+
+        $shipping->setRecipientPhone($phone);
 
         $address = $this->getAddress($platformShipping);
         $shipping->setAddress($address);
@@ -846,6 +864,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $allStreetLines = $platformAddress->getStreet();
 
         $this->validateAddress($allStreetLines);
+        $this->validateAddressConfiguration($addressAttributes);
 
         if (count($allStreetLines) < 4) {
             $addressAttributes['neighborhood'] = "street_3";
@@ -854,7 +873,16 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 
         foreach ($addressAttributes as $attribute => $value) {
             $value = $value === null ? 1 : $value;
-            $value = filter_var($value, FILTER_SANITIZE_NUMBER_INT) - 1;
+
+            $street = explode("_", $value);
+            if (count($street) > 1) {
+                $value = intval($street[1]) - 1;
+            }
+
+            if ($value !== '0' && empty($value)) {
+                continue;
+            }
+
             $setter = 'set' . ucfirst($attribute);
 
             if (!isset($allStreetLines[$value])) {
@@ -894,6 +922,22 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             $exception = new \Exception($ExceptionMessage);
             $log = new LogService('Order', true);
             $log->exception($exception);
+
+            throw $exception;
+        }
+    }
+
+    protected function validateAddressConfiguration($addressAttributes)
+    {
+        $arrayFiltered = array_filter($addressAttributes);
+        if (empty($arrayFiltered)) {
+            $message = "Invalid address configuration. Please fill the address configuration on admin panel.";
+            $ExceptionMessage = $this->i18n->getDashboard($message);
+            $exception = new \Exception($ExceptionMessage);
+
+            $log = new LogService('Order', true);
+            $log->exception($exception);
+
 
             throw $exception;
         }

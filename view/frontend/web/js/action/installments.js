@@ -16,14 +16,9 @@ define(
         storage,
         urlBuilder
     ) {
-
         return function () {
             var serviceUrl;
-            serviceUrl = urlBuilder.createUrl('/mundipagg/creditcard/installments/', {});
-
-            return storage.post(
-                serviceUrl, false
-            )
+            return urlBuilder.createUrl('/mundipagg/creditcard/installments/', {});
         };
     }
 );

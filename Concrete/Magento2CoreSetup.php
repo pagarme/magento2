@@ -145,7 +145,8 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
             'cardStatementDescriptor' => 'soft_description',
             'antifraudEnabled' => 'antifraud_active',
             'antifraudMinAmount' => 'antifraud_min_amount',
-            'saveCards' => 'enabled_saved_cards'
+            'saveCards' => 'enabled_saved_cards',
+            'installmentsDefaultConfig' => 'installments_type'
         ];
         $section = 'payment/mundipagg_creditcard/';
 
@@ -301,16 +302,23 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
                 $brandMethod = 'nobrand';
             }
 
-            $interestByBrand =  $storeConfig->getValue('payment/mundipagg_creditcard/installments_interest_by_issuer' . $brand);
-            if ($interestByBrand != 1) {
+            $max = $storeConfig->getValue('payment/mundipagg_creditcard/installments_number' . $brand);
+            if (empty($max)) {
                 $brand = '';
+                $max = $storeConfig->getValue('payment/mundipagg_creditcard/installments_number' . $brand);
             }
 
-            $max =  $storeConfig->getValue('payment/mundipagg_creditcard/installments_number' . $brand);
             $minValue =  $storeConfig->getValue('payment/mundipagg_creditcard/installment_min_amount' . $brand);
             $initial =  $storeConfig->getValue('payment/mundipagg_creditcard/installments_interest_rate_initial' . $brand);
             $incremental =  $storeConfig->getValue('payment/mundipagg_creditcard/installments_interest_rate_incremental'. $brand);
             $maxWithout =  $storeConfig->getValue('payment/mundipagg_creditcard/installments_max_without_interest' . $brand);
+
+            $interestByBrand =  $storeConfig->getValue('payment/mundipagg_creditcard/installments_interest_by_issuer' . $brand);
+            if (empty($interestByBrand)) {
+                $initial = 0;
+                $incremental = 0;
+                $maxWithout = $max;
+            }
 
             $cardConfigs[] = new CardConfig(
                 true,
@@ -352,11 +360,27 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         $objectManager = ObjectManager::getInstance();
         $config = $objectManager->get(Magento2ModelConfig::class);
 
-        if (!$config->getStore()) {
-            return 1;
+        $storeInterfaceName = '\Magento\Store\Model\StoreManagerInterface';
+        $storeManager = $objectManager->get($storeInterfaceName);
+
+        $store = $storeManager->getWebsite()->getId();
+
+        if ($config->getScope() == 'websites') {
+            $store = $config->getScopeId();
         }
 
-        return $config->getStore();
+        if ($config->getScope() == 'stores') {
+            $store = $storeManager
+                ->getStore($config->getScopeId())
+                ->getWebsite()
+                ->getId();
+        }
+
+        if ($config->getScope() == 'default') {
+            $store = $storeManager->getDefaultStoreView()->getStoreId();
+        }
+
+        return $store;
     }
 
     public static function getDefaultStoreId()
@@ -365,10 +389,9 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         $storeInterfaceName = '\Magento\Store\Model\StoreManagerInterface';
         $storeManager = $objectManager->get($storeInterfaceName);
 
-        $stores = $storeManager->getStores();
-        $store = current($stores);
+        $defaultStoreView = $storeManager->getDefaultStoreView();
 
-        return $store->getStoreId();
+        return $defaultStoreView->getStoreId();
     }
 
     /**

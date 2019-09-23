@@ -1,0 +1,10 @@
+<fieldset id="billet-form" data-bind="attr: { class: 'formId fieldset payment items ccard ' + getCode()}">
+    <!-- ko template: getForm() --><!-- /ko -->
+    <!-- ko template: getMultibuyerForm() --><!-- /ko -->
+</fieldset>
+<fieldset id="credit-card-form" data-bind="attr: { class: 'formId fieldset payment items ccard ' + getCode()}">
+    <!-- ko template: getFormCreditcard() --><!-- /ko -->
+    <!-- ko template: getMultibuyerForm() --><!-- /ko -->
+
+</fieldset>
+<div afterRender="initPaymentMethod()"></div>
