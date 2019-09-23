@@ -11,7 +11,7 @@
 
 namespace MundiPagg\MundiPagg\Model\Ui\Base;
 
-
+use Mundipagg\Core\Kernel\Services\LocalizationService;
 use MundiPagg\MundiPagg\Model\Installments\Config\ConfigInterface;
 use MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\ConfigInterface as BaseConfig;
 use Magento\Checkout\Model\ConfigProviderInterface;

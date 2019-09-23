@@ -31,18 +31,21 @@ MundiPaggCore.validatePaymentMethod = function (methodCode) {
 
 MundiPaggCore.placeOrder = function(platformObject, model) {
 
-    try {
-    //This object should be injected on this method, not instantiated here
-    var platformOrderPlace = new PlatformPlaceOrder(
-        platformObject.obj,
-        platformObject.data,
-        platformObject.event
-    );
+    if (this.paymentMethod[model].model.validate()) {
+        try {
+            //This object should be injected on this method, not instantiated here
+            var platformOrderPlace = new PlatformPlaceOrder(
+                platformObject.obj,
+                platformObject.data,
+                platformObject.event
+            );
 
-        this.paymentMethod[model].placeOrder(platformOrderPlace);
-    } catch(e) {
-        console.log(e)
+            this.paymentMethod[model].placeOrder(platformOrderPlace);
+        } catch (e) {
+            console.log(e)
+        }
     }
+
     var errors = this.paymentMethod[model].model.errors;
     if (errors.length > 0) {
         for (index in errors) {

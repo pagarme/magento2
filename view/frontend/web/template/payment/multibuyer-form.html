@@ -2,26 +2,32 @@
 <div class="field choice show_multibuyer_box">
     <input type="checkbox" class="checkbox show_multibuyer" name="payment[show_multibuyer]" />
     <label class="label" for="payment[show_multibuyer]" >
-        <span><!-- ko i18n: 'Preencher dados de outro comprador'--><!-- /ko --></span>
+        <span><!-- ko i18n: 'Fill data for other buyer'--><!-- /ko --></span>
     </label>
 </div>
 
-<h4 class="multibuyer">Preencher dados de outro comprador</h4>
+<h4 class="multibuyer"><!-- ko i18n: 'Fill data for other buyer'--><!-- /ko --></h4>
 <div class="field  multibuyer required">
     <label class="label" for="multibuyer_firstname">
-        <span><!-- ko i18n: 'Nome'--><!-- /ko --></span>
+        <span><!-- ko i18n: 'Firstname'--><!-- /ko --></span>
     </label>
     <div class="control">
         <input type="text" class="input-text multibuyer_firstname" name="payment[multibuyer_firstname]">
+    </div>
+    <div class="field-error" style="display: none">
+        <span ><!-- ko i18n: 'This is a required field'--><!-- /ko --></span>
     </div>
 </div>
 
 <div class="field multibuyer required">
     <label class="label" for="multibuyer_lastname">
-        <span><!-- ko i18n: 'Sobrenome'--><!-- /ko --></span>
+        <span><!-- ko i18n: 'Lastname'--><!-- /ko --></span>
     </label>
     <div class="control">
         <input type="text" class="input-text multibuyer_lastname" name="payment[multibuyer_lastname]">
+    </div>
+    <div class="field-error" style="display: none">
+        <span ><!-- ko i18n: 'This is a required field'--><!-- /ko --></span>
     </div>
 </div>
 
@@ -32,78 +38,105 @@
     <div class="control">
         <input type="text" class="input-text multibuyer_email" name="payment[multibuyer_email]">
     </div>
+    <div class="field-error" style="display: none">
+        <span ><!-- ko i18n: 'This is a required field'--><!-- /ko --></span>
+    </div>
 </div>
 
 <div class="field multibuyer required">
     <label class="label" for="multibuyer_zipcode">
-        <span><!-- ko i18n: 'CEP'--><!-- /ko --></span>
+        <span><!-- ko i18n: 'Zipcode'--><!-- /ko --></span>
     </label>
     <div class="control">
         <input type="text" class="input-text multibuyer_zipcode" name="payment[multibuyer_zipcode]">
+    </div>
+    <div class="field-error" style="display: none">
+        <span ><!-- ko i18n: 'This is a required field'--><!-- /ko --></span>
     </div>
 </div>
 
 <div class="field multibuyer required">
     <label class="label" for="multibuyer_lastname">
-        <span><!-- ko i18n: 'CPF/CNPJ'--><!-- /ko --></span>
+        <span><!-- ko i18n: 'Document'--><!-- /ko --></span>
     </label>
     <div class="control">
         <input type="text" class="input-text multibuyer_document" name="payment[multibuyer_document]">
+    </div>
+    <div class="field-error" style="display: none">
+        <span ><!-- ko i18n: 'This is a required field'--><!-- /ko --></span>
     </div>
 </div>
 
 <div class="field multibuyer required">
     <label class="label" for="multibuyer_street">
-        <span><!-- ko i18n: 'Rua'--><!-- /ko --></span>
+        <span><!-- ko i18n: 'Street'--><!-- /ko --></span>
     </label>
     <div class="control">
         <input type="text" class="input-text multibuyer_street" name="payment[multibuyer_street]">
+    </div>
+    <div class="field-error" style="display: none">
+        <span ><!-- ko i18n: 'This is a required field'--><!-- /ko --></span>
     </div>
 </div>
 
 <div class="field multibuyer required">
     <label class="label" for="multibuyer_number">
-        <span><!-- ko i18n: 'Número'--><!-- /ko --></span>
+        <span><!-- ko i18n: 'Number'--><!-- /ko --></span>
     </label>
     <div class="control">
         <input type="text" class="input-text multibuyer_number" name="payment[multibuyer_number]">
+    </div>
+    <div class="field-error" style="display: none">
+        <span ><!-- ko i18n: 'This is a required field'--><!-- /ko --></span>
     </div>
 </div>
 
 <div class="field multibuyer">
     <label class="label" for="multibuyer_complement">
-        <span><!-- ko i18n: 'Complemento'--><!-- /ko --></span>
+        <span><!-- ko i18n: 'Complement'--><!-- /ko --></span>
     </label>
     <div class="control">
         <input type="text" class="input-text multibuyer_complement" name="payment[multibuyer_complement]">
+    </div>
+    <div class="field-error" style="display: none">
+        <span ></span>
     </div>
 </div>
 
 <div class="field multibuyer required">
     <label class="label" for="multibuyer_neighborhood">
-        <span><!-- ko i18n: 'Bairro'--><!-- /ko --></span>
+        <span><!-- ko i18n: 'Neighborhood'--><!-- /ko --></span>
     </label>
     <div class="control">
         <input type="text" class="input-text multibuyer_neighborhood" name="payment[multibuyer_neighborhood]">
+    </div>
+    <div class="field-error" style="display: none">
+        <span ><!-- ko i18n: 'This is a required field'--><!-- /ko --></span>
     </div>
 </div>
 
 <div class="field multibuyer required">
     <label class="label" for="multibuyer_city">
-        <span><!-- ko i18n: 'Cidade'--><!-- /ko --></span>
+        <span><!-- ko i18n: 'City'--><!-- /ko --></span>
     </label>
     <div class="control">
         <input type="text" class="input-text multibuyer_city" name="payment[multibuyer_city]">
+    </div>
+    <div class="field-error" style="display: none">
+        <span ><!-- ko i18n: 'This is a required field'--><!-- /ko --></span>
     </div>
 </div>
 
 <div class="field multibuyer required">
     <label class="label" for="multibuyer_state">
-        <span><!-- ko i18n: 'Estado'--><!-- /ko --></span>
+        <span><!-- ko i18n: 'State/Province'--><!-- /ko --></span>
     </label>
     <div class="control">
         <select class="input-text multibuyer_state" name="payment[multibuyer_state]">
         </select>
+    </div>
+    <div class="field-error" style="display: none">
+        <span ><!-- ko i18n: 'This is a required field'--><!-- /ko --></span>
     </div>
 </div>
 

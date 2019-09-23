@@ -8,6 +8,18 @@ BoletoModel.prototype.placeOrder = function (placeOrderObject) {
     this.placeOrderObject.placeOrder();
 }
 
+BoletoModel.prototype.validate = function () {
+
+    var multibuyerValidator = new MultibuyerValidator(this.formObject);
+    var isMultibuyerValid = multibuyerValidator.validate();
+
+    if (isMultibuyerValid) {
+        return true;
+    }
+
+    return false;
+};
+
 BoletoModel.prototype.addErrors = function (error) {
     this.errors.push({
         message: error

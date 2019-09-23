@@ -2,7 +2,6 @@ var CreditCardModel = function (formObject, publicKey) {
     this.formObject = formObject;
     this.publicKey = publicKey;
     this.errors = [];
-
 };
 
 CreditCardModel.prototype.placeOrder = function (placeOrderObject) {
@@ -37,30 +36,26 @@ CreditCardModel.prototype.addErrors = function (error) {
     })
 }
 
-CreditCardModel.prototype.creditCardValidation = function () {
+CreditCardModel.prototype.validate = function () {
 
-    if (typeof this.formObject == "undefined") {
-        return false;
+    var creditCardValidator = new CreditCardValidator(this.formObject);
+    var isCreditCardValid = creditCardValidator.validate();
+
+    var multibuyerValidator = new MultibuyerValidator(this.formObject);
+    var isMultibuyerValid = multibuyerValidator.validate();
+
+    if (isCreditCardValid && isMultibuyerValid) {
+        return true;
     }
 
-    var isValid = true;
-    var cardBrand = this.formObject.creditCardBrand.val();
-
-    if (typeof cardBrand == "undefined" || cardBrand.length <= 0 ) {
-        isValid = false;
-    }
-
-    return isValid;
+    return false;
 };
 
 CreditCardModel.prototype.getCreditCardToken = function (success, error) {
     var modelToken = new CreditCardToken(this.formObject);
-    var _self = this;
-    if (this.creditCardValidation()) {
-        modelToken.getToken(_self.publicKey)
-            .done(success)
-            .fail(error);
-    }
+    modelToken.getToken(this.publicKey)
+        .done(success)
+        .fail(error);
 };
 
 CreditCardModel.prototype.getData = function () {
@@ -121,7 +116,7 @@ CreditCardModel.prototype.fillMultibuyerData = function(data) {
     data.additional_data.cc_buyer_state = multibuyer.state.val()
 
     return data;
-}
+};
 
 CreditCardModel.prototype.getLastFourNumbers = function() {
     var number = this.formObject.creditCardNumber.val();

@@ -283,7 +283,12 @@ PaymentMethodController.prototype.addSavedCreditCardsListener = function(formObj
 };
 
 PaymentMethodController.prototype.placeOrder = function (placeOrderObject) {
-    var errors = this.validateAddress();
+    var customerValidator = new CustomerValidator(
+        this.platformConfig.addresses.billingAddress
+    );
+    customerValidator.validate();
+    var errors = customerValidator.getErrors();
+
     if (errors.length > 0) {
         for (id in errors) {
             this.model.addErrors(errors[id]);
@@ -292,21 +297,6 @@ PaymentMethodController.prototype.placeOrder = function (placeOrderObject) {
     }
     this.model.placeOrder(placeOrderObject);
 };
-
-PaymentMethodController.prototype.validateAddress = function () {
-    var errors = [];
-    var address = this.platformConfig.addresses.billingAddress;
-
-    if (address.vatId <= 0) {
-        errors.push("VatId não informado");
-    }
-
-    if (address.street.length < 3) {
-        errors.push("Endereço invalido");
-    }
-
-    return errors;
-}
 
 PaymentMethodController.prototype.updateTotal = function(interest, selectName) {
     var paymentMethodController = this;
@@ -368,7 +358,8 @@ PaymentMethodController.prototype.fillInstallments = function (form) {
     var defaulOption = [{
         'id' : 0,
         'interest' : 0,
-        'label' : 'Selecione'
+        'label' : 'Selecione',
+        'value': ''
     }];
     var selectedBrand = form.creditCardBrand.val();
 
