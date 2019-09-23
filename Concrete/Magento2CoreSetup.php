@@ -360,11 +360,27 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         $objectManager = ObjectManager::getInstance();
         $config = $objectManager->get(Magento2ModelConfig::class);
 
-        if (!$config->getStore()) {
-            return 1;
+        $storeInterfaceName = '\Magento\Store\Model\StoreManagerInterface';
+        $storeManager = $objectManager->get($storeInterfaceName);
+
+        $store = $storeManager->getWebsite()->getId();
+
+        if ($config->getScope() == 'websites') {
+            $store = $config->getScopeId();
         }
 
-        return $config->getStore();
+        if ($config->getScope() == 'stores') {
+            $store = $storeManager
+                ->getStore($config->getScopeId())
+                ->getWebsite()
+                ->getId();
+        }
+
+        if ($config->getScope() == 'default') {
+            $store = $storeManager->getDefaultStoreView()->getStoreId();
+        }
+
+        return $store;
     }
 
     public static function getDefaultStoreId()
@@ -373,10 +389,9 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         $storeInterfaceName = '\Magento\Store\Model\StoreManagerInterface';
         $storeManager = $objectManager->get($storeInterfaceName);
 
-        $stores = $storeManager->getStores();
-        $store = current($stores);
+        $defaultStoreView = $storeManager->getDefaultStoreView();
 
-        return $store->getStoreId();
+        return $defaultStoreView->getStoreId();
     }
 
     /**

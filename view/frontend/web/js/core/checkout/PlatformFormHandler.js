@@ -27,7 +27,7 @@ FormHandler.prototype.switchBrand = function (brand) {
 };
 
 FormHandler.prototype.updateInstallmentSelect = function (installmentsObj, element) {
-    var content = '';
+    var content = "<option value=''>Selecione</option>";
     for (var i = 0, len = installmentsObj.length; i < len; i++) {
         content +=
             "<option value='" +
@@ -42,7 +42,7 @@ FormHandler.prototype.updateInstallmentSelect = function (installmentsObj, eleme
     element.html(content);
 };
 
-FormHandler.prototype.fillBrandList = function (listContainer, brandsObject) {
+FormHandler.prototype.fillBrandList = function (brandsObject) {
 
     var html = '';
 
@@ -64,8 +64,8 @@ FormHandler.prototype.fillBrandList = function (listContainer, brandsObject) {
     });
 };
 
-FormHandler.prototype.hideCreditCardAmount = function () {
-    jQuery(this.formObject.creditCardAmount).parent().parent('.field').hide();
+FormHandler.prototype.hideInputAmount = function () {
+    jQuery(this.formObject.containerSelector).find('.amount').hide();
 };
 
 FormHandler.prototype.fillExpirationYearSelect = function (formText) {
@@ -138,3 +138,53 @@ FormHandler.prototype.fillSavedCreditCardsSelect = function (platformConfig, for
         jQuery(formObject.savedCreditCardSelect).html(html);
     }
 };
+
+FormHandler.prototype.fillMultibuyerStateSelect = function (platformConfig, formObject) {
+    var html = "<option value=''>Selecione</option>";
+    var states = platformConfig.region_states;
+
+    if (states) {
+        var stateKeys = Object.keys(states);
+        var len = stateKeys.length;
+
+        for (var i = 0; i < len; i++) {
+
+            var name = states[i].name || states[i].default_name;
+
+            html +=
+                "<option value='" +
+                    states[i].code +
+
+                "'>" +
+                    name +
+                "</option>"
+            ;
+        }
+    }
+
+    if (html.length > 0) {
+        jQuery(formObject.multibuyer.state).html(html);
+    }
+};
+
+FormHandler.prototype.removeMultibuyerForm = function (formObject) {
+    jQuery(formObject.containerSelector + ' .multibuyer').remove();
+    jQuery(formObject.containerSelector + ' .show_multibuyer_box').remove();
+}
+
+FormHandler.prototype.toggleMultibuyer = function (formObject) {
+    if (formObject.multibuyer.showMultibuyer.prop('checked')) {
+
+        if (formObject.saveThisCard !== undefined) {
+            formObject.saveThisCard.parent().hide();
+        }
+        jQuery(formObject.containerSelector + ' .multibuyer').show();
+        return;
+    }
+
+    if (formObject.saveThisCard !== undefined) {
+        formObject.saveThisCard.parent().show();
+    }
+    jQuery(formObject.containerSelector + ' .multibuyer').hide();
+    return;
+}
