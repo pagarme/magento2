@@ -19,7 +19,9 @@
     </div>
 
     <div class="payment-method-content mundipagg-content">
-
+        <!-- ko foreach: getRegion('messages') -->
+        <!-- ko template: getTemplate() --><!-- /ko -->
+        <!--/ko-->
         <form class="form" data-bind="attr: {'id': getCode() + '-form'}">
             <!-- ko template: getBase() --><!-- /ko -->
         </form>

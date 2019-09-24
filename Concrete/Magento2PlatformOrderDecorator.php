@@ -781,8 +781,15 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         //boleto
 
         $newPaymentData = new \stdClass();
+
+        $amount = str_replace(
+            ['.', ','],
+            "",
+            $additionalInformation["cc_billet_amount"]
+        );
+
         $newPaymentData->amount =
-            $moneyService->floatToCents($additionalInformation["cc_billet_amount"]);
+            $moneyService->floatToCents($amount / 100);
 
         $boletoDataIndex = BoletoPayment::getBaseCode();
         if (!isset($paymentData[$boletoDataIndex])) {

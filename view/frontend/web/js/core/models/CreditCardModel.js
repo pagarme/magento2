@@ -5,7 +5,6 @@ var CreditCardModel = function (formObject, publicKey) {
 };
 
 CreditCardModel.prototype.placeOrder = function (placeOrderObject) {
-
     this.placeOrderObject = placeOrderObject;
     var _self = this;
 
