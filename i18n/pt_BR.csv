@@ -342,3 +342,5 @@
 "Document", "CPF/CNPJ"
 "This is a required field", "Campo obrigatório"
 "Invalid credit card brand", "Bandeira inválida"
+"Mobile phone", "Celular"
+"Home phone", "Telefone residencial"
