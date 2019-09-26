@@ -64,7 +64,6 @@ define(
                 this.initPaymentMethod();
 
                 this._super().observe([
-                    "mundipagg-content"
                 ]);
             },
 
@@ -114,17 +113,7 @@ define(
             beforeplaceOrder: function(data, event){
 
                 var _self = this;
-                //@Todo Create token
-                /*
-                globalMessageList.addErrorMessage({
-                    message: $t("Error message.")
-                });
-                $("html, body").animate({scrollTop: 0}, 600);
-                return false;*/
 
-                //@todo Validar dados inclusive de endereço pelo MundiPaggCore.quote setado acima
-
-                //Should be an instance of PlatformPlaceOrder
                 var PlatformPlaceOrder = {
                     obj : _self,
                     data: data,

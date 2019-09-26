@@ -5,7 +5,6 @@ var CreditCardModel = function (formObject, publicKey) {
 };
 
 CreditCardModel.prototype.placeOrder = function (placeOrderObject) {
-
     this.placeOrderObject = placeOrderObject;
     var _self = this;
 
@@ -113,7 +112,9 @@ CreditCardModel.prototype.fillMultibuyerData = function(data) {
     data.additional_data.cc_buyer_zipcode = multibuyer.zipcode.val(),
     data.additional_data.cc_buyer_neighborhood = multibuyer.neighborhood.val(),
     data.additional_data.cc_buyer_city = multibuyer.city.val(),
-    data.additional_data.cc_buyer_state = multibuyer.state.val()
+    data.additional_data.cc_buyer_state = multibuyer.state.val(),
+    data.additional_data.cc_buyer_home_phone = multibuyer.homePhone.val(),
+    data.additional_data.cc_buyer_mobile_phone = multibuyer.mobilePhone.val()
 
     return data;
 };

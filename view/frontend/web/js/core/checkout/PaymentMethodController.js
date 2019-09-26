@@ -358,7 +358,7 @@ PaymentMethodController.prototype.fillInstallments = function (form) {
     var defaulOption = [{
         'id' : 0,
         'interest' : 0,
-        'label' : 'Selecione',
+        'label' : 'Carregando...',
         'value': ''
     }];
     var selectedBrand = form.creditCardBrand.val();
