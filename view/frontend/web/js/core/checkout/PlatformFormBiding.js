@@ -154,6 +154,11 @@ FormObject.boletoInit = function (isMultibuyerEnabled) {
         return;
     }
 
+    var boletoElements = {
+        'containerSelector' : containerSelector,
+        "inputAmount" : jQuery(containerSelector + " .cc_amount"),
+    };
+
     if (isMultibuyerEnabled) {
         var multibuyerForm = {
             "showMultibuyer": jQuery(containerSelector + " .show_multibuyer"),
@@ -173,7 +178,7 @@ FormObject.boletoInit = function (isMultibuyerEnabled) {
         }
     }
 
-    this.FormObject.containerSelector = containerSelector;
+    this.FormObject = boletoElements;
     this.FormObject.numberOfPaymentForms = 1;
     this.FormObject.multibuyer = multibuyerForm;
     return this.FormObject;
