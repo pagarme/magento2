@@ -4,7 +4,6 @@ namespace MundiPagg\MundiPagg\Controller\Adminhtml\Recurrence;
 
 class Plans extends \Magento\Backend\App\Action
 {
-
     protected $resultPageFactory;
 
     /**
