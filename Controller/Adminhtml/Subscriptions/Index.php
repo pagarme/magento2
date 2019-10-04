@@ -1,8 +1,10 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Controller\Adminhtml\Recurrence;
+namespace MundiPagg\MundiPagg\Controller\Adminhtml\Subscriptions;
 
-class Subscriptions extends \Magento\Backend\App\Action
+use Magento\Backend\App\Action;
+
+class Index extends Action
 {
     protected $resultPageFactory;
 

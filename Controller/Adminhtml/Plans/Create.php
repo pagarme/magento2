@@ -1,12 +1,12 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Controller\Adminhtml\Recurrence;
+namespace MundiPagg\MundiPagg\Controller\Adminhtml\Plans;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\View\Result\PageFactory;
 
-class Plans extends Action
+class Create extends Action
 {
     protected $resultPageFactory = false;
 
@@ -32,8 +32,8 @@ class Plans extends Action
     public function execute()
     {
         $resultPage = $this->resultPageFactory->create();
-        $resultPage->getConfig()->getTitle()->prepend(__("Plans"));
-        
+        $resultPage->getConfig()->getTitle()->prepend(__("Create Plan"));
+
         return $resultPage;
     }
 }

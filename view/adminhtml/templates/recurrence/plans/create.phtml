@@ -1,0 +1,113 @@
+<main id="anchor-content" class="page-content">
+    <div class="page-main-actions">
+        <div class="page-actions-placeholder"></div>
+        <div class="page-actions" data-ui-id="page-actions-toolbar-content-header">
+            <div class="page-actions-inner" data-title="New Plan">
+                <div class="page-actions-buttons">
+                    <button id="save-button" title="Save" class="action-default primary">
+                        <span>Save</span>
+                    </button>
+                    <button id="back" title="Back" type="button" class="action- scalable back" onclick="location.href = '#;" data-ui-id="back-button">
+                        <span>Back</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="page:main-container" class="page-columns">
+        <div class="admin__old">
+            <div id="container" class="main-col">
+                <div class="entry-edit form-inline">
+                    <div class="fieldset-wrapper">
+                        <div class="admin__fieldset-wrapper-content _hide">
+                            <fieldset class="admin__fieldset">
+
+                                <div class="fieldset-wrapper admin__collapsible-block-wrapper" data-role="collapsible" >
+                                    <h1>Products</h1>
+                                    <form>
+                                        <label></label>
+                                        <input type="text" class="" name="product_search">
+                                    </form>
+                                </div>
+
+                                <div class="admin__field">
+                                    <label class="admin__field-label">
+                                        <span>Enable Product</span>
+                                    </label>
+                                    <div class="admin__field-control">
+                                        <div class="admin__actions-switch" data-role="switcher">
+                                            <input type="checkbox" class="admin__actions-switch-checkbox" name="product[status]" value="1">
+                                            <label class="admin__actions-switch-label">
+                                                <span class="admin__actions-switch-text" data-text-on="Yes" data-text-off="No"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field">
+                                    <label class="admin__field-label">
+                                        <span>Payment Methods</span>
+                                    </label>
+                                    <div class="admin__field-control _with-tooltip">
+                                        <div class="admin__field admin__field-option">
+                                            <input type="checkbox" class="admin__control-checkbox" name="plan[payment_methods][credit_card]" value="1">
+                                            <label class="admin__field-label">Credit Card</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field">
+                                    <label class="admin__field-label">
+                                        <span> </span>
+                                    </label>
+                                    <div class="admin__field-control">
+                                        <div class="admin__field admin__field-option">
+                                            <input type="checkbox" class="admin__control-checkbox" name="plan[payment_methods][boleto]" value="1">
+                                            <label class="admin__field-label">Boleto</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field">
+                                    <label class="admin__field-label">
+                                        <span>Interval</span>
+                                    </label>
+                                    <div class="admin__field-control">
+                                        <select class="admin__control-select" name="plan[interval]">
+                                            <option data-title="Week" value="W">Week</option>
+                                            <option data-title="Month" value="M">Month</option>
+                                            <option data-title="Year" value="Y">Year</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field">
+                                    <label class="admin__field-label">
+                                        <span>Interval Count</span>
+                                    </label>
+                                    <div class="admin__field-control">
+                                        <select class="admin__control-select" name="plan[interval_count]">
+                                            <?php for($i = 1;$i <= 12; $i++):?>
+                                            <option value="<?php echo $i?>"><?php echo $i?></option>
+                                            <?php endfor;?>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field admin__field-small _required">
+                                    <label class="admin__field-label">
+                                        <span>Trial Days</span>
+                                    </label>
+                                    <div class="admin__field-control">
+                                        <input class="admin__control-text" type="text" name="plan[trial_period_days]" id="" maxlength="255">
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

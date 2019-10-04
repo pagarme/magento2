@@ -10,7 +10,7 @@
 				<item name="name" xsi:type="string">add</item>
 				<item name="label" xsi:type="string" translate="true">Add New Plan</item>
 				<item name="class" xsi:type="string">primary</item>
-				<item name="url" xsi:type="string">*/*/newPlan</item>
+				<item name="url" xsi:type="string">*/*/create</item>
 			</item>
 		</item>
 	</argument>
