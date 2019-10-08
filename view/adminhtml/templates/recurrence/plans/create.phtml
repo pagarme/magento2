@@ -23,24 +23,50 @@
                         <div class="admin__fieldset-wrapper-content _hide">
                             <fieldset class="admin__fieldset">
 
-                                <div class="fieldset-wrapper admin__collapsible-block-wrapper" data-role="collapsible" >
+                                <div class="fieldset-wrapper admin__collapsible-block-wrapper products-wrapper" data-role="collapsible" >
+
                                     <h1>Products</h1>
-                                    <form>
-                                        <label></label>
-                                        <input type="text" class="" name="product_search">
-                                    </form>
+                                    <div class="select-product">
+                                        <label>Select the product</label>
+                                        <input type="text" class="product_search" name="product_search" id="product-search">
+                                        <input type="hidden" id="product_id">
+                                        <input type="hidden" id="product_image">
+                                        <button type="button" class="action-basic" id="add-product" data-action="add">
+                                            <span>Add Product</span>
+                                        </button>
+                                    </div>
+
+
+                                    <div class="admin__control-table-wrapper table-products" id="table-products">
+                                        <div id="info-bundle" class="info-bundle">
+                                            <div class="info-bundle-header">
+                                                <strong><span></span></strong>
+                                            </div>
+                                        </div>
+                                        <table id="product-info" class="admin__dynamic-rows admin__control-table">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th>Name</th>
+                                                    <th>Cicle</th>
+                                                    <th>Quantity</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
                                 </div>
 
                                 <div class="admin__field">
-                                    <label class="admin__field-label">
+                                    <label class="admin__field-label" for="enable">
                                         <span>Enable Product</span>
                                     </label>
-                                    <div class="admin__field-control">
-                                        <div class="admin__actions-switch" data-role="switcher">
-                                            <input type="checkbox" class="admin__actions-switch-checkbox" name="product[status]" value="1">
-                                            <label class="admin__actions-switch-label">
-                                                <span class="admin__actions-switch-text" data-text-on="Yes" data-text-off="No"></span>
-                                            </label>
+                                    <div class="admin__field-control _with-tooltip">
+                                        <div class="admin__field admin__field-option">
+                                            <input type="checkbox" class="admin__control-checkbox" name="plan[enabled]" checked id="enable">
+                                            <label class="admin__field-label" for="enable"></label>
                                         </div>
                                     </div>
                                 </div>
@@ -51,8 +77,8 @@
                                     </label>
                                     <div class="admin__field-control _with-tooltip">
                                         <div class="admin__field admin__field-option">
-                                            <input type="checkbox" class="admin__control-checkbox" name="plan[payment_methods][credit_card]" value="1">
-                                            <label class="admin__field-label">Credit Card</label>
+                                            <input type="checkbox" class="admin__control-checkbox" name="plan[payment_methods][credit_card]" id="credit-card">
+                                            <label class="admin__field-label" for="credit-card">Credit Card</label>
                                         </div>
                                     </div>
                                 </div>
@@ -63,8 +89,8 @@
                                     </label>
                                     <div class="admin__field-control">
                                         <div class="admin__field admin__field-option">
-                                            <input type="checkbox" class="admin__control-checkbox" name="plan[payment_methods][boleto]" value="1">
-                                            <label class="admin__field-label">Boleto</label>
+                                            <input type="checkbox" class="admin__control-checkbox" name="plan[payment_methods][boleto]" id="boleto">
+                                            <label class="admin__field-label" for="boleto">Boleto</label>
                                         </div>
                                     </div>
                                 </div>
@@ -111,3 +137,108 @@
         </div>
     </div>
 </main>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script>
+
+    require([
+        'jquery',
+        'jquery/ui'
+    ], function ($) {
+        'use strict';
+
+        $(document).ready(function(){
+
+            var products = Object.values(<?php echo $block->getBundleProducts();?>);
+
+            $("#product-search").autocomplete({
+                minLength:3,
+                source: products,
+                select: function( event, ui ) {
+                    $("#product_id").val(ui.item.id);
+                    $("#product_image").val(ui.item.image);
+                    $("#info-bundle span").html(ui.item.value);
+                },
+                search: function(event, oUi) {
+                    var currentValue = $(event.target).val().toLowerCase();
+                    var arraySearch = [];
+                    for (var index in products) {
+
+                        var productName = products[index].value.toLowerCase();
+
+                        if (productName.indexOf(currentValue) >= 0) {
+                            arraySearch.push(products[index]);
+                        }
+                    }
+                    $(this).autocomplete('option', 'source', arraySearch);
+                }
+            });
+
+
+            $("#add-product").on('click', function() {
+                var data = {
+                    productId: $(this).parent().find("#product_id").val()
+                }
+
+                $(this).attr('disabled', true);
+
+                if ($(this).data('action') == 'add') {
+                    var url = "<?php echo $block->getUrl('*/plans/searchproduct');?>";
+                    $.getJSON(url, data, success);
+                    return;
+                }
+
+                $("#table-products").hide();
+                $("#table-products tbody").empty();
+                $("#product-search").val("");
+                changeButton();
+                return;
+            })
+
+            function success(data) {
+                $("#table-products").show();
+                fillTable(data);
+                changeButton();
+            }
+
+            function fillTable(data) {
+                for (var index in data) {
+                    addRow(data[index], index);
+                }
+            }
+
+            function addRow(data, index) {
+
+                var tr = $('<tr>').append(
+                    $('<td>').html("<img src='" + data.image + "' width='70px' height='70px'>"),
+                    $('<td>').text(data.name),
+                    $('<td>').html("<input type='number' name='plan[itens][" + index +"][cicle]' step='1' min='0'/>"),
+                    $('<td>').html("<input type='number' name='plan[itens][" + index +"][quantity]' step='1' min='1'/>"),
+                );
+
+                var table = $('#table-products tbody');
+                table.append(tr);
+            }
+
+            function changeButton(){
+                var button = $("#add-product");
+                button.attr('disabled', false);
+
+                if (button.data('action') == 'add') {
+                    $('#product-search').attr('disabled', true);
+                    button.data('action', 'remove');
+                    button.find('span').html("Remove Product");
+                    return;
+                }
+                $('#product-search').attr('disabled', false);
+                button.data('action', 'add');
+                button.find('span').html("Add Product");
+                return;
+            }
+
+        });
+
+    });
+
+
+
+</script>
