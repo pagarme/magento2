@@ -6,6 +6,7 @@ use Magento\Catalog\Api\ProductRepositoryInterfaceFactory;
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Controller\Result\JsonFactory;
+use Magento\Framework\Registry;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
 use MundiPagg\MundiPagg\Helper\ProductHelper;
@@ -17,31 +18,41 @@ class Plan extends Template
      */
     private $productCollectionFactory;
     /**
-     * @var ProductRepositoryInterfaceFactory
-     */
-    private $productRepositoryFactory;
-    /**
      * @var ProductHelper
      */
     private $productHelper;
+    /**
+     * @var Registry
+     */
+    private $coreRegistry;
 
     /**
      * Link constructor.
      * @param Context $context
      * @param CollectionFactory $productCollectionFactory
-     * @param ProductRepositoryInterfaceFactory $productRepositoryFactory
+     * @param Registry $registry
      * @param ProductHelper $productHelper
      */
     public function __construct(
         Context $context,
         CollectionFactory $productCollectionFactory,
-        ProductRepositoryInterfaceFactory $productRepositoryFactory,
+        Registry $registry,
         ProductHelper $productHelper
     ){
         parent::__construct($context, []);
         $this->productCollectionFactory = $productCollectionFactory;
-        $this->productRepositoryFactory = $productRepositoryFactory;
+        $this->coreRegistry = $registry;
         $this->productHelper = $productHelper;
+    }
+
+    public function getEditProduct()
+    {
+        $productData = $this->coreRegistry->registry('product_data');
+        if (empty($productData)) {
+            return "";
+        }
+
+        return json_encode($productData->toArray());
     }
 
     public function getBundleProducts()

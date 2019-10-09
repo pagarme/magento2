@@ -7,13 +7,22 @@
                     <button id="save-button" title="Save" class="action-default primary">
                         <span>Save</span>
                     </button>
-                    <button id="back" title="Back" type="button" class="action- scalable back" onclick="location.href = '#;" data-ui-id="back-button">
+                    <button id="back" title="Back" type="button" class="action- scalable back" onclick="location.href = '<?php echo $block->getUrl('mundipagg_mundipagg/plans/index')?>'" data-ui-id="back-button">
                         <span>Back</span>
                     </button>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Bundle Products-->
+    <input id="products-bundle" value='<?php echo $block->getBundleProducts();?>' type="hidden" />
+
+    <!-- Edit Product-->
+    <input id="edit-product" value='<?php echo $block->getEditProduct();?>' type="hidden" />
+
+    <!-- Url Search-->
+    <input id="url-search" value="<?php echo $block->getUrl('*/plans/searchproduct');?>" type="hidden" />
 
     <div id="page:main-container" class="page-columns">
         <div class="admin__old">
@@ -71,7 +80,7 @@
                                     </div>
                                 </div>
 
-                                <div class="admin__field">
+                                <div class="admin__field _required">
                                     <label class="admin__field-label">
                                         <span>Payment Methods</span>
                                     </label>
@@ -95,25 +104,25 @@
                                     </div>
                                 </div>
 
-                                <div class="admin__field">
+                                <div class="admin__field _required">
                                     <label class="admin__field-label">
                                         <span>Interval</span>
                                     </label>
                                     <div class="admin__field-control">
-                                        <select class="admin__control-select" name="plan[interval]">
-                                            <option data-title="Week" value="W">Week</option>
-                                            <option data-title="Month" value="M">Month</option>
-                                            <option data-title="Year" value="Y">Year</option>
+                                        <select class="admin__control-select" name="plan[interval]" id="interval">
+                                            <option data-title="Week" value="week">Week</option>
+                                            <option data-title="Month" value="month">Month</option>
+                                            <option data-title="Year" value="year">Year</option>
                                         </select>
                                     </div>
                                 </div>
 
-                                <div class="admin__field">
+                                <div class="admin__field _required">
                                     <label class="admin__field-label">
                                         <span>Interval Count</span>
                                     </label>
                                     <div class="admin__field-control">
-                                        <select class="admin__control-select" name="plan[interval_count]">
+                                        <select class="admin__control-select" name="plan[interval_count]" id="interval_count">
                                             <?php for($i = 1;$i <= 12; $i++):?>
                                             <option value="<?php echo $i?>"><?php echo $i?></option>
                                             <?php endfor;?>
@@ -121,12 +130,12 @@
                                     </div>
                                 </div>
 
-                                <div class="admin__field admin__field-small _required">
+                                <div class="admin__field admin__field-small">
                                     <label class="admin__field-label">
                                         <span>Trial Days</span>
                                     </label>
                                     <div class="admin__field-control">
-                                        <input class="admin__control-text" type="text" name="plan[trial_period_days]" id="" maxlength="255">
+                                        <input class="admin__control-text" type="text" name="plan[trial_period_days]" id="trial_period_days" maxlength="255">
                                     </div>
                                 </div>
                             </fieldset>
@@ -140,104 +149,7 @@
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <script>
 
-    require([
-        'jquery',
-        'jquery/ui'
-    ], function ($) {
-        'use strict';
 
-        $(document).ready(function(){
-
-            var products = Object.values(<?php echo $block->getBundleProducts();?>);
-
-            $("#product-search").autocomplete({
-                minLength:3,
-                source: products,
-                select: function( event, ui ) {
-                    $("#product_id").val(ui.item.id);
-                    $("#product_image").val(ui.item.image);
-                    $("#info-bundle span").html(ui.item.value);
-                },
-                search: function(event, oUi) {
-                    var currentValue = $(event.target).val().toLowerCase();
-                    var arraySearch = [];
-                    for (var index in products) {
-
-                        var productName = products[index].value.toLowerCase();
-
-                        if (productName.indexOf(currentValue) >= 0) {
-                            arraySearch.push(products[index]);
-                        }
-                    }
-                    $(this).autocomplete('option', 'source', arraySearch);
-                }
-            });
-
-
-            $("#add-product").on('click', function() {
-                var data = {
-                    productId: $(this).parent().find("#product_id").val()
-                }
-
-                $(this).attr('disabled', true);
-
-                if ($(this).data('action') == 'add') {
-                    var url = "<?php echo $block->getUrl('*/plans/searchproduct');?>";
-                    $.getJSON(url, data, success);
-                    return;
-                }
-
-                $("#table-products").hide();
-                $("#table-products tbody").empty();
-                $("#product-search").val("");
-                changeButton();
-                return;
-            })
-
-            function success(data) {
-                $("#table-products").show();
-                fillTable(data);
-                changeButton();
-            }
-
-            function fillTable(data) {
-                for (var index in data) {
-                    addRow(data[index], index);
-                }
-            }
-
-            function addRow(data, index) {
-
-                var tr = $('<tr>').append(
-                    $('<td>').html("<img src='" + data.image + "' width='70px' height='70px'>"),
-                    $('<td>').text(data.name),
-                    $('<td>').html("<input type='number' name='plan[itens][" + index +"][cicle]' step='1' min='0'/>"),
-                    $('<td>').html("<input type='number' name='plan[itens][" + index +"][quantity]' step='1' min='1'/>"),
-                );
-
-                var table = $('#table-products tbody');
-                table.append(tr);
-            }
-
-            function changeButton(){
-                var button = $("#add-product");
-                button.attr('disabled', false);
-
-                if (button.data('action') == 'add') {
-                    $('#product-search').attr('disabled', true);
-                    button.data('action', 'remove');
-                    button.find('span').html("Remove Product");
-                    return;
-                }
-                $('#product-search').attr('disabled', false);
-                button.data('action', 'add');
-                button.find('span').html("Add Product");
-                return;
-            }
-
-        });
-
-    });
 
 
 

@@ -41,3 +41,16 @@
     line-height: 1;
     padding: 1.6rem 4rem 1.6rem 3.8rem;
 }
+
+.ui-autocomplete.ui-menu .ui-menu-item {
+    padding: 3px;
+}
+
+.ui-autocomplete.ui-menu .ui-menu-item a.ui-corner-all{
+    text-decoration: none;
+}
+.ui-autocomplete.ui-menu .ui-menu-item a.ui-state-focus{
+    background-color: transparent!important;
+    border: none;
+    color: #007bdb;
+}
