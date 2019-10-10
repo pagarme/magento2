@@ -13,6 +13,6 @@ class Charges extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
      */
     protected function _construct()
     {
-        $this->_init('mundipagg_mundipagg_charges', 'id');
+        $this->_init('mundipagg_module_core_charge', 'id');
     }
 }
