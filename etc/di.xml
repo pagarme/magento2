@@ -50,7 +50,7 @@
     <preference for="MundiPagg\MundiPagg\Api\Data\ChargesSearchResultsInterface" type="Magento\Framework\Api\SearchResults"/>
     <virtualType name="MundiPagg\MundiPagg\Model\ResourceModel\Charges\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
         <arguments>
-            <argument name="mainTable" xsi:type="string">mundipagg_mundipagg_charges</argument>
+            <argument name="mainTable" xsi:type="string">mundipagg_module_core_charge</argument>
             <argument name="resourceModel" xsi:type="string">MundiPagg\MundiPagg\Model\ResourceModel\Charges\Collection</argument>
         </arguments>
     </virtualType>
