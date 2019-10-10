@@ -5,10 +5,10 @@
             <div class="page-actions-inner" data-title="New Plan">
                 <div class="page-actions-buttons">
                     <button id="save-button" title="Save" class="action-default primary">
-                        <span>Save</span>
+                        <span><?php echo __('Save') ?></span>
                     </button>
                     <button id="back" title="Back" type="button" class="action- scalable back" onclick="location.href = '<?php echo $block->getUrl('mundipagg_mundipagg/plans/index')?>'" data-ui-id="back-button">
-                        <span>Back</span>
+                        <span><?php echo __('Back') ?></span>
                     </button>
                 </div>
             </div>
@@ -34,14 +34,14 @@
 
                                 <div class="fieldset-wrapper admin__collapsible-block-wrapper products-wrapper" data-role="collapsible" >
 
-                                    <h1>Products</h1>
+                                    <h1><?php echo __('Products') ?></h1>
                                     <div class="select-product">
-                                        <label>Select the product</label>
+                                        <label><?php echo __('Select the product') ?></label>
                                         <input type="text" class="product_search" name="product_search" id="product-search">
                                         <input type="hidden" id="product_id">
                                         <input type="hidden" id="product_image">
                                         <button type="button" class="action-basic" id="add-product" data-action="add">
-                                            <span>Add Product</span>
+                                            <span><?php echo __('Add Product') ?></span>
                                         </button>
                                     </div>
 
@@ -56,21 +56,20 @@
                                             <thead>
                                                 <tr>
                                                     <th></th>
-                                                    <th>Name</th>
-                                                    <th>Cicle</th>
-                                                    <th>Quantity</th>
+                                                    <th><?php echo __('Name') ?></th>
+                                                    <th><?php echo __('Cicle') ?></th>
+                                                    <th><?php echo __('Quantity') ?></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                             </tbody>
                                         </table>
                                     </div>
-
                                 </div>
 
                                 <div class="admin__field">
                                     <label class="admin__field-label" for="enable">
-                                        <span>Enable Product</span>
+                                        <span><?php echo __('Enable Product') ?></span>
                                     </label>
                                     <div class="admin__field-control _with-tooltip">
                                         <div class="admin__field admin__field-option">
@@ -82,12 +81,12 @@
 
                                 <div class="admin__field _required">
                                     <label class="admin__field-label">
-                                        <span>Payment Methods</span>
+                                        <span><?php echo __('Payment Methods') ?></span>
                                     </label>
                                     <div class="admin__field-control _with-tooltip">
                                         <div class="admin__field admin__field-option">
                                             <input type="checkbox" class="admin__control-checkbox" name="plan[payment_methods][credit_card]" id="credit-card">
-                                            <label class="admin__field-label" for="credit-card">Credit Card</label>
+                                            <label class="admin__field-label" for="credit-card"><?php echo __('Credit Card') ?></label>
                                         </div>
                                     </div>
                                 </div>
@@ -99,27 +98,27 @@
                                     <div class="admin__field-control">
                                         <div class="admin__field admin__field-option">
                                             <input type="checkbox" class="admin__control-checkbox" name="plan[payment_methods][boleto]" id="boleto">
-                                            <label class="admin__field-label" for="boleto">Boleto</label>
+                                            <label class="admin__field-label" for="boleto"><?php echo __('Boleto') ?></label>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="admin__field _required">
                                     <label class="admin__field-label">
-                                        <span>Interval</span>
+                                        <span><?php echo __('Interval') ?></span>
                                     </label>
                                     <div class="admin__field-control">
                                         <select class="admin__control-select" name="plan[interval]" id="interval">
-                                            <option data-title="Week" value="week">Week</option>
-                                            <option data-title="Month" value="month">Month</option>
-                                            <option data-title="Year" value="year">Year</option>
+                                            <option data-title="Week" value="week"><?php echo __('Week') ?></option>
+                                            <option data-title="Month" value="month"><?php echo __('Month') ?></option>
+                                            <option data-title="Year" value="year"><?php echo __('Year') ?></option>
                                         </select>
                                     </div>
                                 </div>
 
                                 <div class="admin__field _required">
                                     <label class="admin__field-label">
-                                        <span>Interval Count</span>
+                                        <span><?php echo __('Interval Count') ?></span>
                                     </label>
                                     <div class="admin__field-control">
                                         <select class="admin__control-select" name="plan[interval_count]" id="interval_count">
@@ -132,7 +131,7 @@
 
                                 <div class="admin__field admin__field-small">
                                     <label class="admin__field-label">
-                                        <span>Trial Days</span>
+                                        <span><?php echo __('Trial Days') ?></span>
                                     </label>
                                     <div class="admin__field-control">
                                         <input class="admin__control-text" type="text" name="plan[trial_period_days]" id="trial_period_days" maxlength="255">
@@ -146,11 +145,3 @@
         </div>
     </div>
 </main>
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-<script>
-
-
-
-
-
-</script>

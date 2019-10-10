@@ -12,6 +12,7 @@ class Actions extends Column
 {
     /** Url path */
     const URL_PATH_EDIT = 'mundipagg_mundipagg/plans/create';
+    const URL_PATH_DELETE = 'mundipagg_mundipagg/plans/delete';
     /** @var UrlBuilder */
     protected $actionUrlBuilder;
     /** @var UrlInterface */
@@ -48,7 +49,7 @@ class Actions extends Column
                     ];
                     $item[$name]['delete'] = [
                         'href' => $this->urlBuilder->getUrl(
-                            self::URL_PATH_EDIT, ['id' => $item['id']]
+                            self::URL_PATH_DELETE, ['id' => $item['id']]
                         ),
                         'label' => __('Delete')
                     ];

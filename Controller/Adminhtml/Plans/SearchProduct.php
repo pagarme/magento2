@@ -24,7 +24,7 @@ class SearchProduct extends Action
     /**
      * @var ProductHelper
      */
-    private $productHelper;
+    protected $productHelper;
 
     /**
      * Constructor
@@ -81,9 +81,7 @@ class SearchProduct extends Action
                 "price" => $bundle->getPrice()
             ];
         }
-
         $resultJson = $this->resultJsonFactory->create();
         return $resultJson->setData($bundleProducts);
     }
-
 }
