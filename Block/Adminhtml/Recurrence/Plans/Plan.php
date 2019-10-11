@@ -72,6 +72,4 @@ class Plan extends Template
 
         return json_encode($products);
     }
-
-
 }

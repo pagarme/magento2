@@ -15,6 +15,9 @@ class Collection extends AbstractCollection
      */
     protected function _construct()
     {
-        $this->_init('MundiPagg\MundiPagg\Model\ProductsPlan', 'MundiPagg\MundiPagg\Model\ResourceModel\ProductsPlan');
+        $this->_init(
+            'MundiPagg\MundiPagg\Model\ProductsPlan',
+            'MundiPagg\MundiPagg\Model\ResourceModel\ProductsPlan'
+        );
     }
 }

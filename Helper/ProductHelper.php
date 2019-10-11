@@ -16,6 +16,5 @@ class ProductHelper
         $imageUrl = $store->getBaseUrl(UrlInterface::URL_TYPE_MEDIA) . 'catalog/product' . $product->getImage();
 
         return $imageUrl;
-
     }
 }

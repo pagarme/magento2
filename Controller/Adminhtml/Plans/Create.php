@@ -52,7 +52,6 @@ class Create extends Action
 
                 $this->_redirect('mundipagg_mundipagg/plans/index');
                 return;
-
             }
             $this->coreRegistry->register('product_data', $productData);
         }

@@ -53,7 +53,6 @@ require([
         }
 
         element.attr('disabled', true);
-
         if (element.data('action') == 'add') {
             var url = $("#url-search").val();
             $.getJSON(url, data, success);
