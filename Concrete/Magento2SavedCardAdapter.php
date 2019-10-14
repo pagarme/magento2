@@ -2,11 +2,17 @@
 
 namespace MundiPagg\MundiPagg\Concrete;
 
+use Mundipagg\Core\Payment\Aggregates\Customer;
 use Mundipagg\Core\Payment\Aggregates\SavedCard;
 
 final class Magento2SavedCardAdapter
 {
     private $adaptee;
+
+    /**
+     * @var Customer
+     */
+    private $customer;
 
     public function __construct(SavedCard $adaptee)
     {
@@ -51,5 +57,27 @@ final class Magento2SavedCardAdapter
         $firstSix = number_format($firstSix/100, 2, '.', '');
 
         return $firstSix . '**.****.' . $lastFour;
+    }
+
+    public function setCustomer(Customer $customerObject)
+    {
+        $this->customer = $customerObject;
+    }
+
+    public function getCardId()
+    {
+        return $this->adaptee->getMundipaggId()->getValue();
+    }
+
+    /**
+     * int|null
+     */
+    public function getCustomerId()
+    {
+        if (is_null($this->customer)) {
+            return null;
+        }
+
+        return $this->customer->getCode();
     }
 }

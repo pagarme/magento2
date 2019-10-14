@@ -331,3 +331,5 @@
 " first card"," primeiro cartão"
 " second card"," segundo cartão"
 "Invalid address. Please fill the street lines and try again.", "Endereço inválido. Preencha rua, número e bairro e tente novamente."
+"Customer Id", "Identificação do Cliente"
+"Card Id", "Identificação do Cartão"

@@ -1,0 +1,43 @@
+<?php /** @var \MundiPagg\MundiPagg\Block\Adminhtml\Customer\Cards $this */ ?>
+<table class="data-grid data-grid-draggable" data-role="grid">
+    <thead>
+    <tr>
+        <th class="data-grid-th">
+            <span class="data-grid-cell-content"><?= __('Customer Id') ?></span>
+        </th>
+        <th class="data-grid-th">
+            <span class="data-grid-cell-content"><?= __('Card Id') ?></span>
+        </th>
+        <th class="data-grid-th">
+            <span class="data-grid-cell-content"><?= __('Credit Card') ?></span>
+        </th>
+        <th class="data-grid-th">
+            <span class="data-grid-cell-content"><?= __('Brand') ?></span>
+        </th>
+        <th class="data-grid-th">
+            <span class="data-grid-cell-content"><?= __('Created At') ?></span>
+        </th>
+    </thead>
+    <tbody>
+
+    <?php foreach ($this->getCardsList() as $index => $card) { ?>
+        <tr class="data-row <?= ($index % 2) ? '_odd-row' : '' ?>">
+            <td>
+                <div class="data-grid-cell-content"><?= $card->getCustomerId() ?></div>
+            </td>
+            <td>
+                <div class="data-grid-cell-content"><?= $card->getCardId() ?></div>
+            </td>
+            <td>
+                <div class="data-grid-cell-content"><?= $card->getMaskedNumber() ?></div>
+            </td>
+            <td>
+                <div class="data-grid-cell-content"><?= $card->getBrand() ?></div>
+            </td>
+            <td>
+                <div class="data-grid-cell-content"><?= $card->getCreatedAt() ?></div>
+            </td>
+        </tr>
+    <?php } ?>
+    </tbody>
+</table>
