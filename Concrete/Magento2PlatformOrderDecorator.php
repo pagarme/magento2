@@ -882,10 +882,6 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
                 $value = intval($street[1]) - 1;
             }
 
-            if ($value !== '0' && empty($value)) {
-                continue;
-            }
-
             $setter = 'set' . ucfirst($attribute);
 
             if (!isset($allStreetLines[$value])) {
