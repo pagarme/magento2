@@ -1,8 +1,10 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Controller\Adminhtml\Recurrence;
+namespace MundiPagg\MundiPagg\Controller\Adminhtml\Subscriptions;
 
-class Plans extends \Magento\Backend\App\Action
+use Magento\Backend\App\Action;
+
+class Index extends Action
 {
     protected $resultPageFactory;
 
@@ -28,7 +30,7 @@ class Plans extends \Magento\Backend\App\Action
     public function execute()
     {
         $resultPage = $this->resultPageFactory->create();
-        $resultPage->getConfig()->getTitle()->prepend(__("Plans"));
+        $resultPage->getConfig()->getTitle()->prepend(__("Subscriptions"));
         
         return $resultPage;
     }
