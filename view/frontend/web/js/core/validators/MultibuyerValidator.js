@@ -7,7 +7,7 @@ MultibuyerValidator.prototype.validate = function () {
     var inputsInvalid = [];
 
     if (
-        typeof formObject.multibuyer.showMultibuyer != 'undefined' &&
+        typeof formObject.multibuyer != 'undefined' &&
         formObject.multibuyer.showMultibuyer.prop( "checked" ) == true
     ) {
 
