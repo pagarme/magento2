@@ -165,6 +165,8 @@ class TwoCreditCardDataAssignObserver extends AbstractDataAssignObserver
             $info->setAdditionalInformation('cc_buyer_neighborhood_first', $additionalData->getCcBuyerNeighborhoodFirst());
             $info->setAdditionalInformation('cc_buyer_city_first', $additionalData->getCcBuyerCityFirst());
             $info->setAdditionalInformation('cc_buyer_state_first', $additionalData->getCcBuyerStateFirst());
+            $info->setAdditionalInformation('cc_buyer_home_phone_first', $additionalData->getCcBuyerHomePhoneFirst());
+            $info->setAdditionalInformation('cc_buyer_mobile_phone_first', $additionalData->getCcBuyerMobilePhoneFirst());
         }
 
         $info->setAdditionalInformation('cc_buyer_checkbox_second', $additionalData->getCcBuyerCheckboxSecond());
@@ -179,6 +181,8 @@ class TwoCreditCardDataAssignObserver extends AbstractDataAssignObserver
             $info->setAdditionalInformation('cc_buyer_neighborhood_second', $additionalData->getCcBuyerNeighborhoodSecond());
             $info->setAdditionalInformation('cc_buyer_city_second', $additionalData->getCcBuyerCitySecond());
             $info->setAdditionalInformation('cc_buyer_state_second', $additionalData->getCcBuyerStateSecond());
+            $info->setAdditionalInformation('cc_buyer_home_phone_second', $additionalData->getCcBuyerHomePhoneSecond());
+            $info->setAdditionalInformation('cc_buyer_mobile_phone_second', $additionalData->getCcBuyerMobilePhoneSecond());
         }
     }
 }

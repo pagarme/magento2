@@ -125,6 +125,8 @@ class BilletCreditCardDataAssignObserver extends AbstractDataAssignObserver
         $info->setAdditionalInformation('billet_buyer_neighborhood', $additionalData->getBilletBuyerNeighborhood());
         $info->setAdditionalInformation('billet_buyer_city', $additionalData->getBilletBuyerCity());
         $info->setAdditionalInformation('billet_buyer_state', $additionalData->getBilletBuyerState());
+        $info->setAdditionalInformation('billet_buyer_home_phone', $additionalData->getBilletBuyerHomePhone());
+        $info->setAdditionalInformation('billet_buyer_mobile_phone', $additionalData->getBilletBuyerMobilePhone());
 
         $info->setAdditionalInformation('cc_buyer_checkbox', $additionalData->getCcBuyerCheckbox());
         $info->setAdditionalInformation('cc_buyer_name', $additionalData->getCcBuyerName());
@@ -137,6 +139,8 @@ class BilletCreditCardDataAssignObserver extends AbstractDataAssignObserver
         $info->setAdditionalInformation('cc_buyer_neighborhood', $additionalData->getCcBuyerNeighborhood());
         $info->setAdditionalInformation('cc_buyer_city', $additionalData->getCcBuyerCity());
         $info->setAdditionalInformation('cc_buyer_state', $additionalData->getCcBuyerState());
+        $info->setAdditionalInformation('cc_buyer_home_phone', $additionalData->getCcBuyerHomePhone());
+        $info->setAdditionalInformation('cc_buyer_mobile_phone', $additionalData->getCcBuyerMobilePhone());
     }
 
 

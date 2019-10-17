@@ -27,7 +27,7 @@ FormHandler.prototype.switchBrand = function (brand) {
 };
 
 FormHandler.prototype.updateInstallmentSelect = function (installmentsObj, element) {
-    var content = "<option value=''>Selecione</option>";
+    var content = "";
     for (var i = 0, len = installmentsObj.length; i < len; i++) {
         content +=
             "<option value='" +
@@ -140,7 +140,7 @@ FormHandler.prototype.fillSavedCreditCardsSelect = function (platformConfig, for
 };
 
 FormHandler.prototype.fillMultibuyerStateSelect = function (platformConfig, formObject) {
-    var html = "<option value=''>Selecione</option>";
+    var html = "";
     var states = platformConfig.region_states;
 
     if (states) {

@@ -116,6 +116,8 @@ class CreditCardDataAssignObserver extends AbstractDataAssignObserver
             $info->setAdditionalInformation('cc_buyer_neighborhood', $additionalData->getCcBuyerNeighborhood());
             $info->setAdditionalInformation('cc_buyer_city', $additionalData->getCcBuyerCity());
             $info->setAdditionalInformation('cc_buyer_state', $additionalData->getCcBuyerState());
+            $info->setAdditionalInformation('cc_buyer_home_phone', $additionalData->getCcBuyerHomePhone());
+            $info->setAdditionalInformation('cc_buyer_mobile_phone', $additionalData->getCcBuyerMobilePhone());
         }
     }
 }
