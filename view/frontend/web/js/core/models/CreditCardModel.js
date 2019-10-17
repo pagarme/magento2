@@ -10,6 +10,7 @@ CreditCardModel.prototype.placeOrder = function (placeOrderObject) {
 
     if (
         typeof _self.formObject.savedCreditCardSelect.val() != 'undefined' &&
+        _self.formObject.savedCreditCardSelect.html().length > 1 &&
         _self.formObject.savedCreditCardSelect.val() != 'new' &&
         _self.formObject.savedCreditCardSelect.val() != ''
     ) {
@@ -69,7 +70,7 @@ CreditCardModel.prototype.getData = function () {
     data.additional_data.cc_buyer_checkbox = false;
 
     if (
-        typeof formObject.multibuyer.showMultibuyer != 'undefined' &&
+        typeof formObject.multibuyer != 'undefined' &&
         formObject.multibuyer.showMultibuyer.prop( "checked" ) == true
     ) {
         data = this.fillMultibuyerData(data);
