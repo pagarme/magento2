@@ -5,12 +5,12 @@ var CreditCardModel = function (formObject, publicKey) {
 };
 
 CreditCardModel.prototype.placeOrder = function (placeOrderObject) {
-
     this.placeOrderObject = placeOrderObject;
     var _self = this;
 
     if (
         typeof _self.formObject.savedCreditCardSelect.val() != 'undefined' &&
+        _self.formObject.savedCreditCardSelect.html().length > 1 &&
         _self.formObject.savedCreditCardSelect.val() != 'new' &&
         _self.formObject.savedCreditCardSelect.val() != ''
     ) {
