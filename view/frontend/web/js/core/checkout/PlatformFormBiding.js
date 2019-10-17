@@ -106,7 +106,9 @@ FormObject.creditCardInit = function (isMultibuyerEnabled) {
             "complement" : jQuery(containerSelector + " .multibuyer_complement"),
             "neighborhood" : jQuery(containerSelector + " .multibuyer_neighborhood"),
             "city" : jQuery(containerSelector + " .multibuyer_city"),
-            "state" : jQuery(containerSelector + " .multibuyer_state")
+            "state" : jQuery(containerSelector + " .multibuyer_state"),
+            "homePhone" : jQuery(containerSelector + " .multibuyer_home_phone"),
+            "mobilePhone" : jQuery(containerSelector + " .multibuyer_mobile_phone")
         }
     }
 
@@ -152,6 +154,11 @@ FormObject.boletoInit = function (isMultibuyerEnabled) {
         return;
     }
 
+    var boletoElements = {
+        'containerSelector' : containerSelector,
+        "inputAmount" : jQuery(containerSelector + " .cc_amount"),
+    };
+
     if (isMultibuyerEnabled) {
         var multibuyerForm = {
             "showMultibuyer": jQuery(containerSelector + " .show_multibuyer"),
@@ -165,11 +172,13 @@ FormObject.boletoInit = function (isMultibuyerEnabled) {
             "complement": jQuery(containerSelector + " .multibuyer_complement"),
             "neighborhood": jQuery(containerSelector + " .multibuyer_neighborhood"),
             "city": jQuery(containerSelector + " .multibuyer_city"),
-            "state": jQuery(containerSelector + " .multibuyer_state")
+            "state": jQuery(containerSelector + " .multibuyer_state"),
+            "homePhone": jQuery(containerSelector + " .multibuyer_home_phone"),
+            "mobilePhone": jQuery(containerSelector + " .multibuyer_mobile_phone")
         }
     }
 
-    this.FormObject.containerSelector = containerSelector;
+    this.FormObject = boletoElements;
     this.FormObject.numberOfPaymentForms = 1;
     this.FormObject.multibuyer = multibuyerForm;
     return this.FormObject;
@@ -233,7 +242,9 @@ FormObject.fillBoletoCreditCardElements = function (containerSelector, elementId
             "complement" : jQuery(containerSelector + " .multibuyer_complement"),
             "neighborhood" : jQuery(containerSelector + " .multibuyer_neighborhood"),
             "city" : jQuery(containerSelector + " .multibuyer_city"),
-            "state" : jQuery(containerSelector + " .multibuyer_state")
+            "state" : jQuery(containerSelector + " .multibuyer_state"),
+            "homePhone" : jQuery(containerSelector + " .multibuyer_home_phone"),
+            "mobilePhone" : jQuery(containerSelector + " .multibuyer_mobile_phone")
         }
 
         this.FormObject[elementId].multibuyer = multibuyerForm;
@@ -274,7 +285,9 @@ FormObject.fillTwoCreditCardsElements = function (containerSelector, elementId, 
             "complement" : jQuery(containerSelector + " .multibuyer_complement"),
             "neighborhood" : jQuery(containerSelector + " .multibuyer_neighborhood"),
             "city" : jQuery(containerSelector + " .multibuyer_city"),
-            "state" : jQuery(containerSelector + " .multibuyer_state")
+            "state" : jQuery(containerSelector + " .multibuyer_state"),
+            "homePhone" : jQuery(containerSelector + " .multibuyer_home_phone"),
+            "mobilePhone" : jQuery(containerSelector + " .multibuyer_mobile_phone")
         }
     }
 

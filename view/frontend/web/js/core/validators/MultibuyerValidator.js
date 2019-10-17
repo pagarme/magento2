@@ -21,7 +21,8 @@ MultibuyerValidator.prototype.validate = function () {
             this.isInputInvalid(formObject.multibuyer.number),
             this.isInputInvalid(formObject.multibuyer.neighborhood),
             this.isInputInvalid(formObject.multibuyer.city),
-            this.isInputInvalid(formObject.multibuyer.state)
+            this.isInputInvalid(formObject.multibuyer.state),
+            this.isInputInvalid(formObject.multibuyer.mobilePhone)
         );
     }
 

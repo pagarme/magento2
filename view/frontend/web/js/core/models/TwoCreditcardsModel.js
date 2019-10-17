@@ -117,6 +117,8 @@ TwoCreditcardsModel.prototype.getData = function () {
         data.additional_data.cc_buyer_neighborhood_first = multibuyer.neighborhood.val();
         data.additional_data.cc_buyer_city_first = multibuyer.city.val();
         data.additional_data.cc_buyer_state_first = multibuyer.state.val();
+        data.additional_data.cc_buyer_home_phone_first = multibuyer.homePhone.val();
+        data.additional_data.cc_buyer_mobile_phone_first = multibuyer.mobilePhone.val();
     }
 
     if (
@@ -137,6 +139,8 @@ TwoCreditcardsModel.prototype.getData = function () {
         data.additional_data.cc_buyer_neighborhood_second = multibuyer.neighborhood.val();
         data.additional_data.cc_buyer_city_second = multibuyer.city.val();
         data.additional_data.cc_buyer_state_second = multibuyer.state.val();
+        data.additional_data.cc_buyer_home_phone_second = multibuyer.homePhone.val();
+        data.additional_data.cc_buyer_mobile_phone_second = multibuyer.mobilePhone.val();
     }
 
     return data;

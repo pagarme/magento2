@@ -48,6 +48,8 @@ class BilletDataAssignObserver extends AbstractDataAssignObserver
         $info->setAdditionalInformation('billet_buyer_neighborhood', $additionalData->getBilletBuyerNeighborhood());
         $info->setAdditionalInformation('billet_buyer_city', $additionalData->getBilletBuyerCity());
         $info->setAdditionalInformation('billet_buyer_state', $additionalData->getBilletBuyerState());
+        $info->setAdditionalInformation('billet_buyer_home_phone', $additionalData->getBilletBuyerHomePhone());
+        $info->setAdditionalInformation('billet_buyer_mobile_phone', $additionalData->getBilletBuyerMobilePhone());
 
         return $this;
     }
