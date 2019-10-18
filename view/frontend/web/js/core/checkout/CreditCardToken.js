@@ -3,7 +3,6 @@ var CreditCardToken = function (formObject) {
 };
 
 CreditCardToken.prototype.getDataToGenerateToken = function () {
-
     return {
         type: "card",
         card : {
@@ -17,9 +16,7 @@ CreditCardToken.prototype.getDataToGenerateToken = function () {
 }
 
 CreditCardToken.prototype.getToken = function (pkKey) {
-
     var data = this.getDataToGenerateToken();
-
     return jQuery.ajax({
         type: 'POST',
         dataType: 'json',
