@@ -571,6 +571,8 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             $additionalInformation['cc_savecard'] === '1';
 
         $amount = $this->getGrandTotal() - $this->getBaseTaxAmount();
+        $amount = $moneyService->removeSeparators($amount);
+
         $newPaymentData->amount = $moneyService->floatToCents($amount);
 
         if ($additionalInformation['cc_buyer_checkbox']) {
@@ -637,9 +639,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
                 $index
             );
 
-            $amount = str_replace(
-                ['.', ','],
-                "",
+            $amount = $moneyService->removeSeparators(
                 $additionalInformation["cc_{$index}_card_amount"]
             );
 
