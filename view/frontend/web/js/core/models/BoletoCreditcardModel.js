@@ -20,7 +20,8 @@ BoletoCreditcardModel.prototype.placeOrder = function (placeOrderObject) {
         if (
             typeof this.formObject[id].savedCreditCardSelect.val() != 'undefined' &&
             this.formObject[id].savedCreditCardSelect.val() != 'new' &&
-            this.formObject[id].savedCreditCardSelect.val() != ''
+            this.formObject[id].savedCreditCardSelect.val() != '' &&
+            this.formObject[id].savedCreditCardSelect.html().length > 1
         ) {
             continue;
         }
@@ -129,6 +130,7 @@ BoletoCreditcardModel.prototype.getData = function () {
     }
 
     if (
+        typeof this.formObject[0].multibuyer != 'undefined' &&
         typeof this.formObject[0].multibuyer.showMultibuyer != 'undefined' &&
         this.formObject[0].multibuyer.showMultibuyer.prop( "checked" ) == true
     ) {
@@ -151,6 +153,7 @@ BoletoCreditcardModel.prototype.getData = function () {
     }
 
     if (
+        typeof this.formObject[1].multibuyer != 'undefined' &&
         typeof this.formObject[1].multibuyer.showMultibuyer != 'undefined' &&
         this.formObject[1].multibuyer.showMultibuyer.prop( "checked" ) == true
     ) {

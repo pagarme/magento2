@@ -34,6 +34,7 @@ BoletoModel.prototype.getData = function () {
     };
 
     if (
+        typeof this.formObject.multibuyer != 'undefined' &&
         typeof this.formObject.multibuyer.showMultibuyer != 'undefined' &&
         this.formObject.multibuyer.showMultibuyer.prop( "checked" ) == true
     ) {
