@@ -53,7 +53,8 @@ TwoCreditcardsModel.prototype.placeOrder = function (placeOrderObject) {
         if (
             typeof this.formObject[id].savedCreditCardSelect.val() != 'undefined' &&
             this.formObject[id].savedCreditCardSelect.val() != 'new' &&
-            this.formObject[id].savedCreditCardSelect.val() != ''
+            this.formObject[id].savedCreditCardSelect.val() != '' &&
+            this.formObject[id].savedCreditCardSelect.html().length > 1
         ) {
             continue;
         }
