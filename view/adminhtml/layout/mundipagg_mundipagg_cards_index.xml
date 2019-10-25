@@ -3,7 +3,7 @@
 	<update handle="styles"/>
 	<body>
 		<referenceContainer name="content">
-			<uiComponent name="mundipagg_mundipagg_cards_index"/>
+			<block class="MundiPagg\MundiPagg\Block\Adminhtml\Customer\Cards" template="MundiPagg_MundiPagg::customer/cards.phtml" cacheable="false"/>
 		</referenceContainer>
 	</body>
 </page>
