@@ -29,6 +29,7 @@ class InstallSchema implements InstallSchemaInterface
         $this->installSavedCard($setup);
         $this->installCustomer($setup);
         $this->installProductPlan($setup);
+        $this->installProductSubscription($setup);
 
         $setup->endSetup();
     }
@@ -657,6 +658,100 @@ class InstallSchema implements InstallSchemaInterface
                 ->setComment('Product Plan Table')
                 ->setOption('charset', 'utf8')
             ;
+
+            $installer->getConnection()->createTable($customer);
+        }
+        return $installer;
+    }
+
+    public function installProductSubscription(SchemaSetupInterface $installer)
+    {
+        $tableName = $installer->getTable('mundipagg_module_core_products_subscription');
+        if (!$installer->getConnection()->isTableExists($tableName)) {
+            $customer = $installer->getConnection()
+                ->newTable($tableName)
+                ->addColumn(
+                    'id',
+                    Table::TYPE_INTEGER,
+                    null,
+                    [
+                        'identity' => true,
+                        'unsigned' => true,
+                        'nullable' => false,
+                        'primary' => true
+                    ],
+                    'ID'
+                )
+                ->addColumn(
+                    'product_id',
+                    Table::TYPE_INTEGER,
+                    11,
+                    [
+                        'nullable' => true
+                    ],
+                    "Product in Magento's table"
+                )
+                ->addColumn(
+                    'credit_card',
+                    Table::TYPE_BOOLEAN,
+                    11,
+                    [
+                        'nullable' => false
+                    ],
+                    "Accepts credit card"
+                )
+                ->addColumn(
+                    'installments',
+                    Table::TYPE_BOOLEAN,
+                    11,
+                    [
+                        'nullable' => false
+                    ],
+                    "Accepts installments"
+                )
+                ->addColumn(
+                    'boleto',
+                    Table::TYPE_BOOLEAN,
+                    11,
+                    [
+                        'nullable' => false
+                    ],
+                    "Accepts boleto"
+                )
+                ->addColumn(
+                    'billing_type',
+                    Table::TYPE_TEXT,
+                    11,
+                    [
+                        'nullable' => false
+                    ],
+                    "Prepaid, postpaid ou exact_day"
+                )
+                ->addColumn(
+                    'status',
+                    Table::TYPE_TEXT,
+                    11,
+                    [
+                        'nullable' => false
+                    ],
+                    "Active, inactive ou deleted"
+                )
+                ->addColumn(
+                    'created_at',
+                    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
+                    null,
+                    ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT],
+                    'Created At'
+                )
+                ->addColumn(
+                    'updated_at',
+                    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
+                    null,
+                    ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT_UPDATE],
+                    'Updated At'
+                )
+                ->setComment('Product Plan Table')
+                ->setOption('charset', 'utf8');
 
             $installer->getConnection()->createTable($customer);
         }
