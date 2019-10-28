@@ -28,6 +28,7 @@ class InstallSchema implements InstallSchemaInterface
         $this->installTransaction($setup);
         $this->installSavedCard($setup);
         $this->installCustomer($setup);
+        $this->installProductPlan($setup);
 
         $setup->endSetup();
     }
@@ -532,6 +533,128 @@ class InstallSchema implements InstallSchemaInterface
                     'format: cus_xxxxxxxxxxxxxxxx'
                 )
                 ->setComment('Customer Table')
+                ->setOption('charset', 'utf8')
+            ;
+
+            $installer->getConnection()->createTable($customer);
+        }
+        return $installer;
+    }
+
+    public function installProductPlan(SchemaSetupInterface $installer)
+    {
+        $tableName = $installer->getTable('mundipagg_module_core_products_plan');
+        if (!$installer->getConnection()->isTableExists($tableName)) {
+            $customer = $installer->getConnection()
+                ->newTable($tableName)
+                ->addColumn(
+                    'id',
+                    Table::TYPE_INTEGER,
+                    null,
+                    [
+                        'identity' => true,
+                        'unsigned' => true,
+                        'nullable' => false,
+                        'primary' => true
+                    ],
+                    'ID'
+                )
+                ->addColumn(
+                    'interval',
+                    Table::TYPE_TEXT,
+                    15,
+                    [
+                        'nullable' => false
+                    ],
+                    'Day, week, month ou year'
+                )
+                ->addColumn(
+                    'interval_count',
+                    Table::TYPE_SMALLINT,
+                    2,
+                    [
+                        'nullable' => false
+                    ],
+                    '1 - 12'
+                )
+                ->addColumn(
+                    'plan_id',
+                    Table::TYPE_TEXT,
+                    2,
+                    [
+                        'nullable' => true
+                    ],
+                    "Api's id"
+                )
+                ->addColumn(
+                    'product_id',
+                    Table::TYPE_INTEGER,
+                    11,
+                    [
+                        'nullable' => true
+                    ],
+                    "Product in Magento's table"
+                )
+                ->addColumn(
+                    'credit_card',
+                    Table::TYPE_BOOLEAN,
+                    11,
+                    [
+                        'nullable' => false
+                    ],
+                    "Accepts credit card"
+                )
+                ->addColumn(
+                    'installments',
+                    Table::TYPE_BOOLEAN,
+                    11,
+                    [
+                        'nullable' => false
+                    ],
+                    "Accepts installments"
+                )
+                ->addColumn(
+                    'boleto',
+                    Table::TYPE_BOOLEAN,
+                    11,
+                    [
+                        'nullable' => false
+                    ],
+                    "Accepts boleto"
+                )
+                ->addColumn(
+                    'billing_type',
+                    Table::TYPE_TEXT,
+                    11,
+                    [
+                        'nullable' => false
+                    ],
+                    "Prepaid, postpaid ou exact_day"
+                )
+                ->addColumn(
+                    'status',
+                    Table::TYPE_TEXT,
+                    11,
+                    [
+                        'nullable' => false
+                    ],
+                    "Active, inactive ou deleted"
+                )
+                ->addColumn(
+                    'created_at',
+                    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
+                    null,
+                    ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT],
+                    'Created At'
+                )
+                ->addColumn(
+                    'updated_at',
+                    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
+                    null,
+                    ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT_UPDATE],
+                    'Updated At'
+                )
+                ->setComment('Product Plan Table')
                 ->setOption('charset', 'utf8')
             ;
 

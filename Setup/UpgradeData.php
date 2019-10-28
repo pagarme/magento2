@@ -13,8 +13,6 @@ use Magento\Customer\Setup\CustomerSetupFactory;
 use Magento\Eav\Setup\EavSetup;
 use Magento\Eav\Setup\EavSetupFactory;
 
-
-
 class UpgradeData implements UpgradeDataInterface
 {
     private $customerSetupFactory;
@@ -52,11 +50,6 @@ class UpgradeData implements UpgradeDataInterface
             $setup = $this->updateVersionOneTwoFourteen($setup);
         }
 
-        if (version_compare($context->getVersion(), "1.2.24", "<")) {
-            $this->updateVersionRecorrence($setup);
-        }
-
-
         $setup->endSetup();
     }
 
@@ -91,27 +84,6 @@ class UpgradeData implements UpgradeDataInterface
         $setup->endSetup();
 
         return $setup;
-    }
-
-    protected function updateVersionRecorrence($setup)
-    {
-        $this->updateConfigProductPlanPaymment($setup);
-        $this->updateConfigProductPlanInterval($setup);
-        $this->updateConfigProductPlanIntervalPeriod($setup);
-        $this->updateConfigProductPlanBillingType($setup);
-        $this->updateConfigProductPlanBillingPeriodDays($setup);
-        $this->updateConfigProductPlanTrialPeriod($setup);
-        $this->updateConfigProductRecurrencePaymment($setup);
-        $this->updateConfigProductRecurrenceInterval($setup);
-        $this->updateConfigProductRecurrenceIntervalPeriod($setup);
-        $this->updateConfigProductRecurrenceBillingType($setup);
-        $this->updateConfigProductRecurrenceBillingPeriodDays($setup);
-        $this->updateConfigProductRecurrenceStartAt($setup);
-        $this->updateConfigProductRecurrenceStartAtDays($setup);
-        $this->updateConfigProductRecurrenceCycleDiscount($setup);
-        $this->updateConfigProductRecurrenceAllowSet($setup);
-        $this->updateConfigProductRecurrenceGlobal($setup);
-        $this->updateConfigProductRecurrenceAllowOther($setup);
     }
 
     protected function updateVersionZeroOneTwo($setup)
@@ -266,13 +238,10 @@ class UpgradeData implements UpgradeDataInterface
                 'apply_to'=>'plan'
             ]
         );
-
     }
-
 
     public function updateConfigProductPlanInterval($setup)
     {
-
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
@@ -309,7 +278,6 @@ class UpgradeData implements UpgradeDataInterface
 
     public function updateConfigProductPlanIntervalPeriod($setup)
     {
-
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
@@ -338,13 +306,10 @@ class UpgradeData implements UpgradeDataInterface
                 'apply_to'=>'plan,recurrence'
             ]
         );
-
     }
-
 
     public function updateConfigProductPlanBillingType($setup)
     {
-
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
@@ -376,12 +341,10 @@ class UpgradeData implements UpgradeDataInterface
                 'apply_to'=>'plan,recurrence'
             ]
         );
-
     }
 
     public function updateConfigProductPlanBillingPeriodDays($setup)
     {
-
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
@@ -410,12 +373,10 @@ class UpgradeData implements UpgradeDataInterface
                 'apply_to'=>'plan'
             ]
         );
-
     }
 
     public function updateConfigProductPlanTrialPeriod($setup)
     {
-
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
@@ -444,12 +405,10 @@ class UpgradeData implements UpgradeDataInterface
                 'apply_to'=>'plan'
             ]
         );
-
     }
 
     public function updateConfigProductRecurrencePaymment($setup)
     {
-
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
 
         $eavSetup->removeAttribute(
@@ -491,13 +450,10 @@ class UpgradeData implements UpgradeDataInterface
                 'apply_to'=>'recurrence'
             ]
         );
-
     }
-
 
     public function updateConfigProductRecurrenceInterval($setup)
     {
-
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
@@ -529,12 +485,10 @@ class UpgradeData implements UpgradeDataInterface
                 'apply_to'=>'recurrence'
             ]
         );
-
     }
 
     public function updateConfigProductRecurrenceIntervalPeriod($setup)
     {
-
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
@@ -563,12 +517,10 @@ class UpgradeData implements UpgradeDataInterface
                 'apply_to'=>'recurrence'
             ]
         );
-
     }
 
     public function updateConfigProductRecurrenceBillingType($setup)
     {
-
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
@@ -604,7 +556,6 @@ class UpgradeData implements UpgradeDataInterface
 
     public function updateConfigProductRecurrenceBillingPeriodDays($setup)
     {
-
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
@@ -633,15 +584,10 @@ class UpgradeData implements UpgradeDataInterface
                 'apply_to'=>'recurrence'
             ]
         );
-
     }
-
-
-
 
     public function updateConfigProductRecurrenceStartAt($setup)
     {
-
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
@@ -678,7 +624,6 @@ class UpgradeData implements UpgradeDataInterface
 
     public function updateConfigProductRecurrenceStartAtDays($setup)
     {
-
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
@@ -711,46 +656,15 @@ class UpgradeData implements UpgradeDataInterface
 
     public function updateConfigProductRecurrenceCycleDiscount($setup)
     {
-
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
 
         $eavSetup->removeAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
             'eav_mundi_rec_cycle_discount');
-        /*
-        $eavSetup->addAttribute(
-            \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundi_rec_cycle_discount',
-            [
-                'group' => 'Recurrence Config',
-                'type' => 'int',
-                'backend' => '',
-                'frontend' => '',
-                'sort_order' => 8,
-                'label' => 'Day(s)',
-                'input' => 'text',
-                'class' => '',
-                'source' => '',
-                'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_GLOBAL,
-                'visible' => true,
-                'required' => false,
-                'user_defined' => false,
-                'default' => '',
-                'searchable' => false,
-                'filterable' => false,
-                'comparable' => false,
-                'visible_on_front' => true,
-                'used_in_product_listing' => true,
-                'unique' => false,
-                'apply_to'=>'recurrence'
-            ]
-        );
-        */
     }
 
     public function updateConfigProductRecurrenceAllowSet($setup)
     {
-
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
@@ -783,7 +697,6 @@ class UpgradeData implements UpgradeDataInterface
 
     public function updateConfigProductRecurrenceGlobal($setup)
     {
-
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
@@ -816,7 +729,6 @@ class UpgradeData implements UpgradeDataInterface
 
     public function updateConfigProductRecurrenceAllowOther($setup)
     {
-
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
@@ -846,6 +758,4 @@ class UpgradeData implements UpgradeDataInterface
             ]
         );
     }
-
-
 }
