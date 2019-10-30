@@ -34,7 +34,12 @@ require([
                         arraySearch.push(products[index]);
                     }
                 }
+
                 $(this).autocomplete('option', 'source', arraySearch);
+
+                if (arraySearch.length == 0) {
+                    showErrorMessage('Nenhum produto do tipo bundle encontrado');
+                }
             }
         });
 
@@ -55,7 +60,7 @@ require([
         element.attr('disabled', true);
         if (element.data('action') == 'add') {
             var url = $("#url-search").val();
-            $.getJSON(url, data, success);
+            $.getJSON(url, data, showData);
             return;
         }
 
@@ -66,7 +71,16 @@ require([
         return;
     }
 
-    function success(data) {
+    function showData(data) {
+        if (!data || data.length == 0) {
+            var msg =
+                'Não foi possível encontrar os subprodutos deste bundle. ' +
+                'Verifique sua configuração e tente novamente';
+            changeButton();
+            showErrorMessage(msg);
+            return;
+        }
+
         $("#table-products").show();
         for (var index in data) {
             addRow(data[index], index);
@@ -111,5 +125,12 @@ require([
         $("#product_id").val(product.product_id);
         $("#info-bundle span").html(product.name);
         updateTableProduct($("#add-product"));
+    }
+
+    function showErrorMessage(message) {
+        var message = message;
+        $('#error-message').html(message).show();
+
+        setTimeout(function(){ $('#error-message').fadeOut() }, 3000);
     }
 });

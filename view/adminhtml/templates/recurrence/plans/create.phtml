@@ -35,16 +35,16 @@
                                 <div class="fieldset-wrapper admin__collapsible-block-wrapper products-wrapper" data-role="collapsible" >
                                     <h1><?php echo __('Products') ?></h1>
                                     <div class="select-product">
-                                        <label><?php echo __('Select the product') ?></label>
+                                        <h2><?php echo __('Add a bundle product') ?></h2>
+                                        <label><?php echo __('Product search') ?></label>
                                         <input type="text" class="product_search" name="product_search" id="product-search">
                                         <input type="hidden" id="product_id">
                                         <input type="hidden" id="product_image">
                                         <button type="button" class="action-basic" id="add-product" data-action="add">
                                             <span><?php echo __('Add Product') ?></span>
                                         </button>
+                                        <p id="error-message" class="error-message"></p>
                                     </div>
-
-
                                     <div class="admin__control-table-wrapper table-products" id="table-products">
                                         <div id="info-bundle" class="info-bundle">
                                             <div class="info-bundle-header">
@@ -56,7 +56,7 @@
                                                 <tr>
                                                     <th></th>
                                                     <th><?php echo __('Name') ?></th>
-                                                    <th><?php echo __('Cicle') ?></th>
+                                                    <th><?php echo __('Cycle') ?></th>
                                                     <th><?php echo __('Quantity') ?></th>
                                                 </tr>
                                             </thead>

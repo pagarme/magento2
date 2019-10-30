@@ -54,3 +54,10 @@
     border: none;
     color: #007bdb;
 }
+
+#error-message{
+    margin: 10px 0;
+    color: red;
+    font-size: 10px;
+    display: none;
+}
