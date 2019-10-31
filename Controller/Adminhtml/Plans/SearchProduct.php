@@ -63,6 +63,11 @@ class SearchProduct extends Action
         $store_id = $storeManager->getStore()->getId();
 
         $product = $objectManager->get('\Magento\Catalog\Model\Product')->load($productId);
+
+        if (empty($product) || $product->getHasOptions() == 0) {
+            return;
+        }
+
         $options = $objectManager->get('Magento\Bundle\Model\Option')
             ->getResourceCollection()
             ->setProductIdFilter($productId)

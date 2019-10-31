@@ -8,7 +8,7 @@ $quantityOptionCicle = 4;
             <div class="page-actions-placeholder"></div>
             <div class="page-actions"
                  data-ui-id="page-actions-toolbar-content-header">
-                <div class="page-actions-inner" data-title="New Plan">
+                <div class="page-actions-inner" data-title="New Subscription">
                     <div class="page-actions-buttons">
                         <button id="save-subscription-button" title="Save"
                                 class="action-default primary" type="submit">
@@ -57,7 +57,8 @@ $quantityOptionCicle = 4;
                                          data-role="collapsible">
                                         <h1><?php echo __('Products') ?></h1>
                                         <div class="select-product">
-                                            <label><?php echo __('Select the product') ?></label>
+                                            <h2><?php echo __('Add a bundle product') ?></h2>
+                                            <label><?php echo __('Product Search') ?></label>
                                             <input type="text"
                                                    class="product_search"
                                                    name="product_search"
@@ -70,6 +71,7 @@ $quantityOptionCicle = 4;
                                                     data-action="add">
                                                 <span><?php echo __('Add Product') ?></span>
                                             </button>
+                                            <p id="error-message" class="error-message"></p>
                                         </div>
 
 
@@ -87,7 +89,7 @@ $quantityOptionCicle = 4;
                                                 <tr>
                                                     <th></th>
                                                     <th><?php echo __('Name') ?></th>
-                                                    <th><?php echo __('Cicle') ?></th>
+                                                    <th><?php echo __('Cycle') ?></th>
                                                     <th><?php echo __('Quantity') ?></th>
                                                 </tr>
                                                 </thead>
@@ -164,7 +166,7 @@ $quantityOptionCicle = 4;
                                     <div class="admin__field _required">
                                         <label class="admin__field-label"
                                                for="enable">
-                                            <span>Cicle</span>
+                                            <span>Cycle</span>
                                         </label>
                                         <div class="admin__field-control">
                                             <table class="table-cycles">
@@ -214,13 +216,12 @@ $quantityOptionCicle = 4;
                                         </label>
                                         <div class="admin__field-control">
                                             <select class="admin__control-select" name="form[status]">
-                                                <option>Active</option>
-                                                <option>Inactive</option>
-                                                <option>Deleted</option>
+                                                <option>active</option>
+                                                <option>inactive</option>
+                                                <option>deleted</option>
                                             </select>
                                         </div>
                                     </div>
-
                                 </fieldset>
                             </div>
                         </div>

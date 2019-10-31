@@ -66,3 +66,10 @@ table.table-cycles {
     text-align: left;
     padding: 8px;
 }
+
+#error-message{
+    margin: 10px 0;
+    color: red;
+    font-size: 10px;
+    display: none;
+}
