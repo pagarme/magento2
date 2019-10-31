@@ -61,4 +61,11 @@
         </resources>
     </route>
 
+    <route url="/V1/mundipagg/recurrence/plan/product/save" method="POST">
+        <service class="MundiPagg\MundiPagg\Api\ProductPlanInterface" method="saveProductPlan"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+
 </routes>

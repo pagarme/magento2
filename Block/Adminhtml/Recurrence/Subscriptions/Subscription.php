@@ -80,8 +80,8 @@ class Subscription extends Template
     {
         return [
             'interval_count' => range(1, 12),
-            'interval_type' => ['week', 'month', 'year'],
-            'discount' => ['percent', 'real']
+            'interval_type' => [ __('week'), __('month'), __('Year')],
+            'discount' => [__('percentage'), __('real')]
         ];
     }
 }

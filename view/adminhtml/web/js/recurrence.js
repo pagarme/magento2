@@ -47,7 +47,7 @@ require([
             updateTableProduct($(this));
         });
 
-        $("#form-product-subscription").submit(formSubmit);
+        $("#form-product").submit(formSubmit);
         $("#allow_installments_div").hide();
         $("#credit-card").on('change', toogleInstallments);
 
