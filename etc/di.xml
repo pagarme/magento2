@@ -50,7 +50,7 @@
     <preference for="MundiPagg\MundiPagg\Api\Data\ChargesSearchResultsInterface" type="Magento\Framework\Api\SearchResults"/>
     <virtualType name="MundiPagg\MundiPagg\Model\ResourceModel\Charges\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
         <arguments>
-            <argument name="mainTable" xsi:type="string">mundipagg_mundipagg_charges</argument>
+            <argument name="mainTable" xsi:type="string">mundipagg_module_core_charge</argument>
             <argument name="resourceModel" xsi:type="string">MundiPagg\MundiPagg\Model\ResourceModel\Charges\Collection</argument>
         </arguments>
     </virtualType>
@@ -83,6 +83,40 @@
     </type>
 
     <!-- Final Cards Mundipagg -->
+
+    <!-- Plans -->
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="mundipagg_mundipagg_plans_listing_data_source" xsi:type="string">MundiPagg\MundiPagg\Model\ResourceModel\ProductsPlan\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="MundiPagg\MundiPagg\Model\ResourceModel\ProductsPlan\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">mundipagg_module_core_products_plan</argument>
+            <argument name="resourceModel" xsi:type="string">MundiPagg\MundiPagg\Model\ResourceModel\ProductsPlan</argument>
+        </arguments>
+    </virtualType>
+
+
+
+    <!-- Subscriptions -->
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="mundipagg_mundipagg_subscriptions_listing_data_source" xsi:type="string">MundiPagg\MundiPagg\Model\ResourceModel\ProductsSubscription\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="MundiPagg\MundiPagg\Model\ResourceModel\ProductsSubscription\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">mundipagg_module_core_products_subscription</argument>
+            <argument name="resourceModel" xsi:type="string">MundiPagg\MundiPagg\Model\ResourceModel\ProductsSubscription</argument>
+        </arguments>
+    </virtualType>
+
+
 
     <type name="MundiPagg\MundiPagg\Model\InstallmentsManagement">
         <arguments>

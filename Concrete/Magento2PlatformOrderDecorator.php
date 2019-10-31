@@ -494,6 +494,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 
         if (empty($payments)) {
             $baseNewPayment = $this->platformOrder->getPayment();
+
             $newPayment = [];
             $newPayment['method'] = $baseNewPayment->getMethod();
             $newPayment['additional_information'] =
@@ -570,7 +571,16 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             $additionalInformation['cc_savecard'] === '1';
 
         $amount = $this->getGrandTotal() - $this->getBaseTaxAmount();
+        $amount = $moneyService->removeSeparators($amount);
+
         $newPaymentData->amount = $moneyService->floatToCents($amount);
+
+        if ($additionalInformation['cc_buyer_checkbox']) {
+            $newPaymentData->customer = $this->extractMultibuyerData(
+                'cc',
+                $additionalInformation
+            );
+        }
 
         $creditCardDataIndex = AbstractCreditCardPayment::getBaseCode();
         if (!isset($paymentData[$creditCardDataIndex])) {
@@ -629,8 +639,11 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
                 $index
             );
 
-            $amount = $additionalInformation["cc_{$index}_card_amount"];
-            $newPaymentData->amount = $moneyService->floatToCents($amount);
+            $amount = $moneyService->removeSeparators(
+                $additionalInformation["cc_{$index}_card_amount"]
+            );
+
+            $newPaymentData->amount = $moneyService->floatToCents($amount / 100);
             $newPaymentData->saveOnSuccess =
                 isset($additionalInformation["cc_savecard_{$index}"]) &&
                 $additionalInformation["cc_savecard_{$index}"] === '1';
@@ -667,7 +680,9 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             "{$prefix}_buyer_street_complement{$index}" => "complement",
             "{$prefix}_buyer_city{$index}" => "city",
             "{$prefix}_buyer_state{$index}" => "state",
-            "{$prefix}_buyer_zipcode{$index}" => "zipCode"
+            "{$prefix}_buyer_zipcode{$index}" => "zipCode",
+            "{$prefix}_buyer_home_phone{$index}" => "homePhone",
+            "{$prefix}_buyer_mobile_phone{$index}" => "mobilePhone"
         ];
 
         $multibuyer = new \stdClass();
@@ -685,14 +700,6 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 
             $multibuyer->$attribute = $value;
         }
-
-        /** @todo @fixme since the frontend form doesn't have the phone input yet,
-         *        we are getting it from the order customer itself.
-         */
-        $orderCustomer = $this->getCustomer();
-        $homePhone = $orderCustomer->getPhones()->getHome();
-        $multibuyer->homePhone = $homePhone->getFullNumber();
-        $multibuyer->mobilePhone = $homePhone->getFullNumber();
 
         return $multibuyer;
     }
@@ -746,8 +753,12 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             isset($additionalInformation["cc_savecard"]) &&
             $additionalInformation["cc_savecard"] === '1';
 
-        $amount = $additionalInformation["cc_cc_amount"];
-        $newPaymentData->amount = $moneyService->floatToCents($amount);
+        $amount = str_replace(
+            ['.', ','],
+            "",
+            $additionalInformation["cc_cc_amount"]
+            );
+        $newPaymentData->amount = $moneyService->floatToCents($amount / 100);
 
         $creditCardDataIndex = AbstractCreditCardPayment::getBaseCode();
         if (!isset($paymentData[$creditCardDataIndex])) {
@@ -764,8 +775,15 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         //boleto
 
         $newPaymentData = new \stdClass();
+
+        $amount = str_replace(
+            ['.', ','],
+            "",
+            $additionalInformation["cc_billet_amount"]
+        );
+
         $newPaymentData->amount =
-            $moneyService->floatToCents($additionalInformation["cc_billet_amount"]);
+            $moneyService->floatToCents($amount / 100);
 
         $boletoDataIndex = BoletoPayment::getBaseCode();
         if (!isset($paymentData[$boletoDataIndex])) {
@@ -795,6 +813,14 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         if (!isset($paymentData[$boletoDataIndex])) {
             $paymentData[$boletoDataIndex] = [];
         }
+
+        if ($additionalInformation['billet_buyer_checkbox']) {
+            $newPaymentData->customer = $this->extractMultibuyerData(
+                'billet',
+                $additionalInformation
+            );
+        }
+
         $paymentData[$boletoDataIndex][] = $newPaymentData;
     }
 
