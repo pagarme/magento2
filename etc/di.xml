@@ -32,6 +32,9 @@
     <preference for="MundiPagg\MundiPagg\Api\MaintenanceInterface"
                 type="MundiPagg\MundiPagg\Model\Maintenance"/>
 
+    <preference for="MundiPagg\MundiPagg\Api\ProductSubscriptionInterface"
+                type="MundiPagg\MundiPagg\Model\Api\ProductsSubscription"/>
+
     <type name="MundiPagg\MundiPagg\Model\InstallmentsByBrandManagement">
         <arguments>
             <argument name="builder" xsi:type="object">MundiPagg\MundiPagg\Model\Installments\BuilderByBrand</argument>

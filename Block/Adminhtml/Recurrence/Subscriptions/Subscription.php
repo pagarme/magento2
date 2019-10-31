@@ -79,8 +79,8 @@ class Subscription extends Template
     public function getCicleSelectOption()
     {
         return [
-            'interval_count' => range(1, 10),
-            'interval_type' => ['day', 'week', 'year'],
+            'interval_count' => range(1, 12),
+            'interval_type' => ['week', 'month', 'year'],
             'discount' => ['percent', 'real']
         ];
     }
