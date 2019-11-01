@@ -46,7 +46,40 @@ require([
         $("#add-product").on('click', function() {
             updateTableProduct($(this));
         });
+
+        $("#form-product").submit(formSubmit);
+        $("#allow_installments_div").hide();
+        $("#credit-card").on('change', toogleInstallments);
+
     });
+
+    function toogleInstallments(e) {
+        if ($(this).prop('checked')) {
+            return $("#allow_installments_div").show();
+        }
+        return $("#allow_installments_div").hide();
+    }
+
+    function formSubmit(e) {
+        e.preventDefault();
+        var dataSerialize = jQuery(this).serialize();
+        var url =  $("#url-post").val();
+
+        jQuery.ajax({
+            method: "POST",
+            url: url,
+            contentType: 'application/json',
+            data : JSON.stringify(dataSerialize),
+            success: function(data) {
+                data = JSON.parse(data);
+                if (data.code === 200) {
+                    alert(data.message);
+                    return window.history.back();
+                }
+                alert(data.message);
+            }
+        });
+    }
 
     function updateTableProduct(element) {
         var data = {
@@ -92,8 +125,9 @@ require([
         var tr = $('<tr>').append(
             $('<td>').html("<img src='" + data.image + "' width='70px' height='70px'>"),
             $('<td>').text(data.name),
-            $('<td>').html("<input type='number' name='plan[itens][" + index +"][cicle]' step='1' min='0'/>"),
-            $('<td>').html("<input type='number' name='plan[itens][" + index +"][quantity]' step='1' min='1'/>"),
+            $('<td>').html("<input type='number' name='form[itens][" + index +"][cicle]' step='1' min='0'/>"),
+            $('<td>').html("<input type='number' name='form[itens][" + index +"][quantity]' step='1' min='1'/>" +
+                "<input type='hidden' name='form[itens][" + index +"][id]' value='" + data.code + "'/>"),
         );
 
         var table = $('#table-products tbody');
