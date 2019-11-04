@@ -28,6 +28,11 @@ class InstallSchema implements InstallSchemaInterface
         $this->installTransaction($setup);
         $this->installSavedCard($setup);
         $this->installCustomer($setup);
+        $this->installProductsPlan($setup);
+        $this->installSubProductsPlan($setup);
+        $this->installProductsSubscription($setup);
+        $this->installSubProductsSubscription($setup);
+        $this->installSubscriptionRepetitions($setup);
 
         $setup->endSetup();
     }
@@ -536,6 +541,460 @@ class InstallSchema implements InstallSchemaInterface
             ;
 
             $installer->getConnection()->createTable($customer);
+        }
+        return $installer;
+    }
+
+    public function installProductsPlan(SchemaSetupInterface $installer)
+    {
+        $tableName = $installer->getTable('mundipagg_module_core_recurrence_products_plan');
+        if (!$installer->getConnection()->isTableExists($tableName)) {
+            $customer = $installer->getConnection()
+                ->newTable($tableName)
+                ->addColumn(
+                    'id',
+                    Table::TYPE_INTEGER,
+                    null,
+                    [
+                        'identity' => true,
+                        'unsigned' => true,
+                        'nullable' => false,
+                        'primary' => true
+                    ],
+                    'ID'
+                )
+                ->addColumn(
+                    'interval',
+                    Table::TYPE_TEXT,
+                    15,
+                    [
+                        'nullable' => false
+                    ],
+                    'Day, week, month ou year'
+                )
+                ->addColumn(
+                    'interval_count',
+                    Table::TYPE_SMALLINT,
+                    2,
+                    [
+                        'nullable' => false
+                    ],
+                    '1 - 12'
+                )
+                ->addColumn(
+                    'plan_id',
+                    Table::TYPE_TEXT,
+                    2,
+                    [
+                        'nullable' => true
+                    ],
+                    "Api's id"
+                )
+                ->addColumn(
+                    'product_id',
+                    Table::TYPE_INTEGER,
+                    11,
+                    [
+                        'nullable' => true
+                    ],
+                    "Product in Magento's table"
+                )
+                ->addColumn(
+                    'credit_card',
+                    Table::TYPE_BOOLEAN,
+                    11,
+                    [
+                        'nullable' => false
+                    ],
+                    "Accepts credit card"
+                )
+                ->addColumn(
+                    'installments',
+                    Table::TYPE_BOOLEAN,
+                    11,
+                    [
+                        'nullable' => false
+                    ],
+                    "Accepts installments"
+                )
+                ->addColumn(
+                    'boleto',
+                    Table::TYPE_BOOLEAN,
+                    11,
+                    [
+                        'nullable' => false
+                    ],
+                    "Accepts boleto"
+                )
+                ->addColumn(
+                    'billing_type',
+                    Table::TYPE_TEXT,
+                    11,
+                    [
+                        'nullable' => false
+                    ],
+                    "Prepaid, postpaid ou exact_day"
+                )
+                ->addColumn(
+                    'status',
+                    Table::TYPE_TEXT,
+                    11,
+                    [
+                        'nullable' => false
+                    ],
+                    "Active, inactive ou deleted"
+                )
+                ->addColumn(
+                    'created_at',
+                    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
+                    null,
+                    ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT],
+                    'Created At'
+                )
+                ->addColumn(
+                    'updated_at',
+                    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
+                    null,
+                    ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT_UPDATE],
+                    'Updated At'
+                )
+                ->setOption('charset', 'utf8')
+            ;
+
+            $installer->getConnection()->createTable($customer);
+        }
+        return $installer;
+    }
+
+    public function installSubProductsPlan(SchemaSetupInterface $installer)
+    {
+        $tableName = $installer->getTable('mundipagg_module_core_recurrence_sub_products_plan');
+        if (!$installer->getConnection()->isTableExists($tableName)) {
+            $customer = $installer->getConnection()
+                ->newTable($tableName)
+                ->addColumn(
+                    'id',
+                    Table::TYPE_INTEGER,
+                    null,
+                    [
+                        'identity' => true,
+                        'unsigned' => true,
+                        'nullable' => false,
+                        'primary' => true
+                    ],
+                    'ID'
+                )
+                ->addColumn(
+                    'products_plan_id',
+                    Table::TYPE_INTEGER,
+                    255,
+                    [
+                        'nullable' => false
+                    ],
+                    'Id from table mundipagg_module_core_products_plan'
+                )
+                ->addColumn(
+                    'product_id',
+                    Table::TYPE_INTEGER,
+                    255,
+                    [
+                        'nullable' => false
+                    ],
+                    "Magento's product id"
+                )
+                ->addColumn(
+                    'cycle',
+                    Table::TYPE_INTEGER,
+                    5,
+                    [
+                        'nullable' => true
+                    ],
+                    'Cycle'
+                )
+                ->addColumn(
+                    'quantity',
+                    Table::TYPE_INTEGER,
+                    255,
+                    [
+                        'nullable' => true
+                    ],
+                    "Quantity"
+                )
+                ->addColumn(
+                    'created_at',
+                    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
+                    null,
+                    ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT],
+                    'Created At'
+                )
+                ->addColumn(
+                    'updated_at',
+                    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
+                    null,
+                    ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT_UPDATE],
+                    'Updated At'
+                )
+                ->setOption('charset', 'utf8')
+            ;
+
+            $installer->getConnection()->createTable($customer);
+        }
+        return $installer;
+    }
+
+    public function installProductsSubscription(SchemaSetupInterface $installer)
+    {
+        $tableName = $installer->getTable('mundipagg_module_core_recurrence_products_subscription');
+        if (!$installer->getConnection()->isTableExists($tableName)) {
+            $customer = $installer->getConnection()
+                ->newTable($tableName)
+                ->addColumn(
+                    'id',
+                    Table::TYPE_INTEGER,
+                    null,
+                    [
+                        'identity' => true,
+                        'unsigned' => true,
+                        'nullable' => false,
+                        'primary' => true
+                    ],
+                    'ID'
+                )
+                ->addColumn(
+                    'product_id',
+                    Table::TYPE_INTEGER,
+                    11,
+                    [
+                        'nullable' => true
+                    ],
+                    "Product in Magento's table"
+                )
+                ->addColumn(
+                    'credit_card',
+                    Table::TYPE_BOOLEAN,
+                    11,
+                    [
+                        'nullable' => false
+                    ],
+                    "Accepts credit card"
+                )
+                ->addColumn(
+                    'installments',
+                    Table::TYPE_BOOLEAN,
+                    11,
+                    [
+                        'nullable' => false
+                    ],
+                    "Accepts installments"
+                )
+                ->addColumn(
+                    'boleto',
+                    Table::TYPE_BOOLEAN,
+                    11,
+                    [
+                        'nullable' => false
+                    ],
+                    "Accepts boleto"
+                )
+                ->addColumn(
+                    'billing_type',
+                    Table::TYPE_TEXT,
+                    11,
+                    [
+                        'nullable' => false
+                    ],
+                    "Prepaid, postpaid ou exact_day"
+                )
+                ->addColumn(
+                    'status',
+                    Table::TYPE_TEXT,
+                    11,
+                    [
+                        'nullable' => false
+                    ],
+                    "Active, inactive ou deleted"
+                )
+                ->addColumn(
+                    'created_at',
+                    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
+                    null,
+                    ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT],
+                    'Created At'
+                )
+                ->addColumn(
+                    'updated_at',
+                    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
+                    null,
+                    ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT_UPDATE],
+                    'Updated At'
+                )
+                ->setComment('Product Plan Table')
+                ->setOption('charset', 'utf8');
+
+            $installer->getConnection()->createTable($customer);
+        }
+        return $installer;
+    }
+
+    public function installSubProductsSubscription(SchemaSetupInterface $installer
+    ) {
+        $tableName = $installer->getTable('mundipagg_module_core_recurrence_sub_products_subscription');
+        if (!$installer->getConnection()->isTableExists($tableName)) {
+            $configTable = $installer->getConnection()
+                ->newTable($tableName)
+                ->addColumn(
+                    'id',
+                    Table::TYPE_INTEGER,
+                    null,
+                    [
+                        'identity' => true,
+                        'unsigned' => true,
+                        'nullable' => false,
+                        'primary' => true
+                    ],
+                    'ID'
+                )
+                ->addColumn(
+                    'products_subscription_id',
+                    Table::TYPE_INTEGER,
+                    null,
+                    [
+                        'nullable' => false
+                    ],
+                    'Id from mundipagg_module_core_products_subscription'
+                )
+                ->addColumn(
+                    'product_id',
+                    Table::TYPE_INTEGER,
+                    null,
+                    [
+                        'nullable' => false
+                    ],
+                    "Magento's product id"
+                )
+                ->addColumn(
+                    'cycle',
+                    Table::TYPE_INTEGER,
+                    5,
+                    [
+                        'nullable' => true
+                    ],
+                    'Cycle'
+                )
+                ->addColumn(
+                    'quantity',
+                    Table::TYPE_INTEGER,
+                    255,
+                    [
+                        'nullable' => true
+                    ],
+                    "Quantity"
+                )
+                ->addColumn(
+                    'created_at',
+                    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
+                    null,
+                    ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT],
+                    'Created At'
+                )
+                ->addColumn(
+                    'updated_at',
+                    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
+                    null,
+                    ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT_UPDATE],
+                    'Updated At'
+                )
+                ->setOption('charset', 'utf8')
+            ;
+
+            $installer->getConnection()->createTable($configTable);
+        }
+        return $installer;
+    }
+
+    public function installSubscriptionRepetitions(SchemaSetupInterface $installer)
+    {
+        $tableName = $installer->getTable('mundipagg_module_core_recurrence_subscription_repetitions');
+        if (!$installer->getConnection()->isTableExists($tableName)) {
+            $configTable = $installer->getConnection()
+                ->newTable($tableName)
+                ->addColumn(
+                    'id',
+                    Table::TYPE_INTEGER,
+                    null,
+                    [
+                        'identity' => true,
+                        'unsigned' => true,
+                        'nullable' => false,
+                        'primary' => true
+                    ],
+                    'ID'
+                )
+                ->addColumn(
+                    'subsctiption_id',
+                    Table::TYPE_INTEGER,
+                    null,
+                    [
+                        'nullable' => false
+                    ],
+                    'Id from mundipagg_module_core_products_subscription'
+                )
+
+                ->setOption('charset', 'utf8')
+                ->addColumn(
+                    'interval',
+                    Table::TYPE_TEXT,
+                    15,
+                    [
+                        'nullable' => false
+                    ],
+                    'Day, week, month ou year'
+                )
+                ->addColumn(
+                    'interval_count',
+                    Table::TYPE_SMALLINT,
+                    2,
+                    [
+                        'nullable' => false
+                    ],
+                    '1 - 12'
+                )
+                ->addColumn(
+                    'interval_count',
+                    Table::TYPE_TEXT,
+                    1,
+                    [
+                        'nullable' => false,
+                        'default' => 'P'
+                    ],
+                    'Flat ou percentage. O padrão é percentage'
+                )->addColumn(
+                    'discount_value',
+                    Table::TYPE_FLOAT,
+                    1,
+                    [
+                        'nullable' => false,
+                    ],
+                    'Discount value'
+                )
+                ->addColumn(
+                    'created_at',
+                    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
+                    null,
+                    ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT],
+                    'Created At'
+                )
+                ->addColumn(
+                    'updated_at',
+                    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
+                    null,
+                    ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT_UPDATE],
+                    'Updated At'
+                )
+                ->setOption('charset', 'utf8')
+            ;
+
+            $installer->getConnection()->createTable($configTable);
         }
         return $installer;
     }

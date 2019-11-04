@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+	<group id="mundipagg_mundipagg_recurrence" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="40" translate="label">
+		<label>Recurrence Settings</label>
+		<field id="active" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="select">
+			<label>Enable this Solution</label>
+			<comment />
+			<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+			<config_path>mundipagg_mundipagg/recurrence/active</config_path>
+		</field>
+		<field id="conflict_message" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="textarea">
+			<label>Conflict checkout Message</label>
+			<comment />
+			<config_path>mundipagg_mundipagg/recurrence/conflict_message</config_path>
+		</field>
+	</group>
+</include>

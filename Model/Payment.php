@@ -125,7 +125,6 @@ class Payment
 
     }
 
-
     public function addPhonesToCustomer($object, $home_phone = null, $mobile_phone = null, $country_code = 55)
     {
 

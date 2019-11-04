@@ -27,6 +27,7 @@
                 <include path="MundiPagg_MundiPagg::system/global.xml"/>
                 <include path="MundiPagg_MundiPagg::system/customer.xml"/>
                 <include path="MundiPagg_MundiPagg::system/transaction.xml"/>
+                <include path="MundiPagg_MundiPagg::system/recurrence.xml"/>
             </group>
         </section>
 	</system>

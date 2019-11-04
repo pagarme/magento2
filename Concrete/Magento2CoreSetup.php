@@ -124,6 +124,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         self::fillWithTwoCreditCardsConfig($configData, $storeConfig);
         self::fillWithAddressConfig($configData, $storeConfig);
         self::fillWithMultiBuyerConfig($configData, $storeConfig);
+        self::fillWithRecurrenceConfig($configData, $storeConfig);
         $configData->hubInstallId = null;
 
         $configurationFactory = new ConfigurationFactory();
@@ -412,5 +413,23 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         $dateTimeZone = new \DateTimeZone($timezoneString);
 
         return $dateTimeZone;
+    }
+
+    static private function fillWithRecurrenceConfig(&$dataObj, $storeConfig)
+    {
+        $options = [
+            'enabled' => 'active',
+            'checkoutConflictMessage' => 'conflict_message'
+        ];
+
+        $section = 'mundipagg_mundipagg/recurrence/';
+
+        $recurrenceConfig = new \stdClass();
+        $dataObj->recurrenceConfig = self::fillDataObj(
+            $storeConfig,
+            $options,
+            $recurrenceConfig,
+            $section
+        );
     }
 }

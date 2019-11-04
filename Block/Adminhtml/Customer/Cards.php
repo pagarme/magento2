@@ -82,6 +82,7 @@ class Cards extends Template
         }
 
         $cards = array_values($cards);
+       
 
         return array_merge($cards, $this->getCoreCards());
     }
@@ -93,12 +94,12 @@ class Cards extends Template
     private function getCoreCards()
     {
         Magento2CoreSetup::bootstrap();
-
+        
         $savedCardRepository = new SavedCardRepository();
         $customerRepository = new CustomerRepository();
 
-        $listSavedCoreCard = $savedCardRepository->listEntities(0);
-
+        $listSavedCoreCard = $savedCardRepository->listEntities(0, false);
+       
         /* @var Magento2SavedCardAdapter[]|array $cards */
         $cards = [];
         foreach ($listSavedCoreCard as $savedCoreCard) {

@@ -12,6 +12,7 @@
 namespace MundiPagg\MundiPagg\Model;
 
 use Magento\Framework\Api\SimpleBuilderInterface;
+use Mundipagg\Core\Kernel\Services\MoneyService;
 use Mundipagg\Core\Kernel\ValueObjects\CardBrand;
 use MundiPagg\MundiPagg\Api\InstallmentsByBrandAndAmountManagementInterface;
 use Magento\Checkout\Model\Session;
@@ -61,6 +62,16 @@ class InstallmentsByBrandAndAmountManagement
         if ($amount !== null) {
             $baseAmount = $amount;
         }
+
+        $moneyService = new MoneyService();
+
+        $baseAmount = str_replace(
+            [",", "."],
+            "",
+            $baseAmount
+        );
+
+        $baseAmount = $moneyService->centsToFloat($baseAmount);
 
         return $this->getCoreInstallments(
             null,
