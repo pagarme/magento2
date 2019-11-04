@@ -547,7 +547,7 @@ class InstallSchema implements InstallSchemaInterface
 
     public function installProductsPlan(SchemaSetupInterface $installer)
     {
-        $tableName = $installer->getTable('mundipagg_module_core_products_plan');
+        $tableName = $installer->getTable('mundipagg_module_core_recurrence_products_plan');
         if (!$installer->getConnection()->isTableExists($tableName)) {
             $customer = $installer->getConnection()
                 ->newTable($tableName)
@@ -668,7 +668,7 @@ class InstallSchema implements InstallSchemaInterface
 
     public function installSubProductsPlan(SchemaSetupInterface $installer)
     {
-        $tableName = $installer->getTable('mundipagg_module_core_sub_products_plan');
+        $tableName = $installer->getTable('mundipagg_module_core_recurrence_sub_products_plan');
         if (!$installer->getConnection()->isTableExists($tableName)) {
             $customer = $installer->getConnection()
                 ->newTable($tableName)
@@ -744,7 +744,7 @@ class InstallSchema implements InstallSchemaInterface
 
     public function installProductsSubscription(SchemaSetupInterface $installer)
     {
-        $tableName = $installer->getTable('mundipagg_module_core_products_subscription');
+        $tableName = $installer->getTable('mundipagg_module_core_recurrence_products_subscription');
         if (!$installer->getConnection()->isTableExists($tableName)) {
             $customer = $installer->getConnection()
                 ->newTable($tableName)
@@ -838,7 +838,7 @@ class InstallSchema implements InstallSchemaInterface
 
     public function installSubProductsSubscription(SchemaSetupInterface $installer
     ) {
-        $tableName = $installer->getTable('mundipagg_module_core_sub_products_subscription');
+        $tableName = $installer->getTable('mundipagg_module_core_recurrence_sub_products_subscription');
         if (!$installer->getConnection()->isTableExists($tableName)) {
             $configTable = $installer->getConnection()
                 ->newTable($tableName)
@@ -914,7 +914,7 @@ class InstallSchema implements InstallSchemaInterface
 
     public function installSubscriptionRepetitions(SchemaSetupInterface $installer)
     {
-        $tableName = $installer->getTable('mundipagg_module_core_subscription_repetitions');
+        $tableName = $installer->getTable('mundipagg_module_core_recurrence_subscription_repetitions');
         if (!$installer->getConnection()->isTableExists($tableName)) {
             $configTable = $installer->getConnection()
                 ->newTable($tableName)
