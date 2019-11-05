@@ -564,7 +564,7 @@ class InstallSchema implements InstallSchemaInterface
                     'ID'
                 )
                 ->addColumn(
-                    'interval',
+                    'interval_type',
                     Table::TYPE_TEXT,
                     15,
                     [
