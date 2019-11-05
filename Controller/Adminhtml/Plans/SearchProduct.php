@@ -8,6 +8,7 @@ use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\View\Result\PageFactory;
+use Mundipagg\Core\Kernel\Services\MoneyService;
 use MundiPagg\MundiPagg\Helper\ProductHelper;
 
 class SearchProduct extends Action
@@ -76,14 +77,18 @@ class SearchProduct extends Action
         $options->joinValues($store_id);
         $typeInstance = $objectManager->get('Magento\Bundle\Model\Product\Type');
         $selections = $typeInstance->getSelectionsCollection($typeInstance->getOptionsIds($product), $product);
+        $moneyService = new MoneyService();
 
         $bundleProducts = [];
         foreach ($selections as $bundle) {
+
             $bundleProducts[] = [
                 "code" => $bundle->getEntityId(),
                 "name" => $bundle->getName(),
                 "image" => $this->productHelper->getProductImage($bundle->getEntityId()),
-                "price" => $bundle->getPrice()
+                "price" => $moneyService->floatToCents(
+                    $bundle->getSelectionPriceValue()
+                ),
             ];
         }
         $resultJson = $this->resultJsonFactory->create();

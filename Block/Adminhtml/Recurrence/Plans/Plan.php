@@ -66,7 +66,8 @@ class Plan extends Template
             $products[$product->getEntityId()] = [
                 'value' => $product->getName(),
                 'id' => $product->getEntityId(),
-                'image' => $this->productHelper->getProductImage($product->getEntityId())
+                'image' => $this->productHelper->getProductImage($product->getEntityId()),
+                'description' => $product->getDescription()
             ];
         }
 

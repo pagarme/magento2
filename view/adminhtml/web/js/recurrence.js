@@ -20,6 +20,7 @@ require([
             source: products,
             select: function( event, ui ) {
                 $("#product_id").val(ui.item.id);
+                $("#product_name").val(ui.item.value);
                 $("#product_image").val(ui.item.image);
                 $("#info-bundle span").html(ui.item.value);
             },
@@ -125,9 +126,13 @@ require([
         var tr = $('<tr>').append(
             $('<td>').html("<img src='" + data.image + "' width='70px' height='70px'>"),
             $('<td>').text(data.name),
-            $('<td>').html("<input type='number' name='form[itens][" + index +"][cicle]' step='1' min='0'/>"),
-            $('<td>').html("<input type='number' name='form[itens][" + index +"][quantity]' step='1' min='1'/>" +
-                "<input type='hidden' name='form[itens][" + index +"][id]' value='" + data.code + "'/>"),
+            $('<td>').html("<input type='number' name='form[itens][" + index +"][cycles]' step='1' min='0'/>"),
+            $('<td>').html(
+                "<input type='number' name='form[itens][" + index +"][quantity]' step='1' min='1'/>" +
+                "<input type='hidden' name='form[itens][" + index +"][product_id]' value='" + data.code + "'/>" +
+                "<input type='hidden' name='form[itens][" + index +"][name]' value='" + data.name + "'/>" +
+                "<input type='hidden' name='form[itens][" + index +"][price]' value='" + data.price + "'/>"
+            ),
         );
 
         var table = $('#table-products tbody');
