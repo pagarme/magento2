@@ -4,8 +4,6 @@ namespace MundiPagg\MundiPagg\Block\Adminhtml\Recurrence\Subscriptions;
 
 use Magento\Catalog\Api\ProductRepositoryInterfaceFactory;
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
-use Magento\Framework\App\ObjectManager;
-use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\Registry;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
@@ -84,9 +82,9 @@ class Subscription extends Template
         return [
             'interval_count' => range(1, 12),
             'interval_type' => [
-                IntervalValueObject::INTERVAL_WEEK => __('week'),
-                IntervalValueObject::INTERVAL_MONTH => __('month'),
-                IntervalValueObject::INTERVAL_YEAR => __('Year')
+                IntervalValueObject::INTERVAL_TYPE_WEEK => __('week'),
+                IntervalValueObject::INTERVAL_TYPE_MONTH => __('month'),
+                IntervalValueObject::INTERVAL_TYPE_YEAR => __('Year')
             ],
             'discount' => [
                 DiscountValueObject::DISCOUNT_TYPE_PERCENT => __('percentage'),
