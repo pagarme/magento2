@@ -52,7 +52,8 @@ $quantityOptionCicle = 4;
                                             <h2><?php echo __('Add a bundle product') ?></h2>
                                             <label><?php echo __('Product Search') ?></label>
                                             <input type="text" class="product_search" name="product_search" id="product-search">
-                                            <input type="hidden" id="product_id" name="product_bundle_id">
+                                            <input type="hidden" id="product_id" name="form[product_bundle_id]">
+                                            <input type="hidden" id="product_name" name="form[product_bundle_name]">
                                             <input type="hidden" id="product_image">
                                             <button type="button" class="action-basic" id="add-product" data-action="add">
                                                 <span><?php echo __('Add Product') ?></span>
@@ -87,7 +88,7 @@ $quantityOptionCicle = 4;
                                         </label>
                                         <div class="admin__field-control _with-tooltip">
                                             <div class="admin__field admin__field-option">
-                                                <input type="checkbox" class="admin__control-checkbox" name="form[enabled]" checked id="enable">
+                                                <input type="checkbox" class="admin__control-checkbox" name="form[enabled]" checked id="enable" value="true">
                                                 <label class="admin__field-label" for="enable"></label>
                                             </div>
                                         </div>
@@ -97,9 +98,9 @@ $quantityOptionCicle = 4;
                                         <label class="admin__field-label">
                                             <span><?php echo __('Payment Methods') ?></span>
                                         </label>
-                                        <div class="admin__field-control _with-tooltip">
+                                        <div class="admin__field-control">
                                             <div class="admin__field admin__field-option">
-                                                <input type="checkbox" class="admin__control-checkbox" name="form[payment_methods][credit_card]" id="credit-card">
+                                                <input type="checkbox" class="admin__control-checkbox" name="form[payment_methods][credit_card]" id="credit-card" value="true">
                                                 <label class="admin__field-label" for="credit-card"><?php echo __('Credit Card') ?></label>
                                             </div>
                                         </div>
@@ -111,7 +112,7 @@ $quantityOptionCicle = 4;
                                         </label>
                                         <div class="admin__field-control">
                                             <div class="admin__field admin__field-option">
-                                                <input type="checkbox" class="admin__control-checkbox" name="form[payment_methods][boleto]" id="boleto">
+                                                <input type="checkbox" class="admin__control-checkbox" name="form[payment_methods][boleto]" id="boleto" value="true">
                                                 <label class="admin__field-label" for="boleto"><?php echo __('Boleto') ?></label>
                                             </div>
                                         </div>
@@ -123,7 +124,7 @@ $quantityOptionCicle = 4;
                                         </label>
                                         <div class="admin__field-control _with-tooltip">
                                             <div class="admin__field admin__field-option">
-                                                <input type="checkbox" class="admin__control-checkbox" name="form[allow_installments]" id="allow_installments">
+                                                <input type="checkbox" class="admin__control-checkbox" name="form[allow_installments]" id="allow_installments" value="true">
                                                 <label class="admin__field-label" for="allow_installments"></label>
                                             </div>
                                         </div>
@@ -164,8 +165,8 @@ $quantityOptionCicle = 4;
                                                         </td>
                                                         <td>
                                                             <select class="admin__control-select" name="form[intervals][<?php echo $i ?>][discount_type]">
-                                                                <?php foreach ($cicleSelectOption['discount'] as $discount) : ?>
-                                                                    <option><?= $discount ?></option>
+                                                                <?php foreach ($cicleSelectOption['discount'] as $key => $discount) : ?>
+                                                                    <option value="<?= $key ?>"><?= $discount ?></option>
                                                                 <?php endforeach; ?>
                                                             </select>
                                                         </td>
