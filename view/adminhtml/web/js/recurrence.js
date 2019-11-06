@@ -21,6 +21,7 @@ require([
             select: function( event, ui ) {
                 $("#product_id").val(ui.item.id);
                 $("#product_name").val(ui.item.value);
+                $("#product_description").val(ui.item.description);
                 $("#product_image").val(ui.item.image);
                 $("#info-bundle span").html(ui.item.value);
             },

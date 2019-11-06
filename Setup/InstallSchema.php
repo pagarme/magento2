@@ -582,9 +582,27 @@ class InstallSchema implements InstallSchemaInterface
                     '1 - 12'
                 )
                 ->addColumn(
+                    'name',
+                    Table::TYPE_TEXT,
+                    255,
+                    [
+                        'nullable' => true
+                    ],
+                    "Product name"
+                )
+                ->addColumn(
+                    'description',
+                    Table::TYPE_TEXT,
+                    500,
+                    [
+                        'nullable' => true
+                    ],
+                    "Product description"
+                )
+                ->addColumn(
                     'plan_id',
                     Table::TYPE_TEXT,
-                    2,
+                    21,
                     [
                         'nullable' => true
                     ],
@@ -601,8 +619,8 @@ class InstallSchema implements InstallSchemaInterface
                 )
                 ->addColumn(
                     'credit_card',
-                    Table::TYPE_BOOLEAN,
-                    11,
+                    Table::TYPE_TEXT,
+                    1,
                     [
                         'nullable' => false
                     ],
@@ -610,8 +628,8 @@ class InstallSchema implements InstallSchemaInterface
                 )
                 ->addColumn(
                     'installments',
-                    Table::TYPE_BOOLEAN,
-                    11,
+                    Table::TYPE_TEXT,
+                    1,
                     [
                         'nullable' => false
                     ],
@@ -619,8 +637,8 @@ class InstallSchema implements InstallSchemaInterface
                 )
                 ->addColumn(
                     'boleto',
-                    Table::TYPE_BOOLEAN,
-                    11,
+                    Table::TYPE_TEXT,
+                    1,
                     [
                         'nullable' => false
                     ],
@@ -771,8 +789,8 @@ class InstallSchema implements InstallSchemaInterface
                 )
                 ->addColumn(
                     'credit_card',
-                    Table::TYPE_BOOLEAN,
-                    11,
+                    Table::TYPE_TEXT,
+                    1,
                     [
                         'nullable' => false
                     ],
@@ -780,8 +798,8 @@ class InstallSchema implements InstallSchemaInterface
                 )
                 ->addColumn(
                     'installments',
-                    Table::TYPE_BOOLEAN,
-                    11,
+                    Table::TYPE_TEXT,
+                    1,
                     [
                         'nullable' => false
                     ],
@@ -789,8 +807,8 @@ class InstallSchema implements InstallSchemaInterface
                 )
                 ->addColumn(
                     'boleto',
-                    Table::TYPE_BOOLEAN,
-                    11,
+                    Table::TYPE_TEXT,
+                    1,
                     [
                         'nullable' => false
                     ],
