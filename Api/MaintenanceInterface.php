@@ -6,7 +6,7 @@ interface MaintenanceInterface
 {
     /**
      * @param mixed $params
-     * @return array
+     * @return mixed
      */
     public function index($params);
 

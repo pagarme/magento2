@@ -547,7 +547,7 @@ class InstallSchema implements InstallSchemaInterface
 
     public function installProductsPlan(SchemaSetupInterface $installer)
     {
-        $tableName = $installer->getTable('mundipagg_module_core_products_plan');
+        $tableName = $installer->getTable('mundipagg_module_core_recurrence_products_plan');
         if (!$installer->getConnection()->isTableExists($tableName)) {
             $customer = $installer->getConnection()
                 ->newTable($tableName)
@@ -564,7 +564,7 @@ class InstallSchema implements InstallSchemaInterface
                     'ID'
                 )
                 ->addColumn(
-                    'interval',
+                    'interval_type',
                     Table::TYPE_TEXT,
                     15,
                     [
@@ -582,9 +582,27 @@ class InstallSchema implements InstallSchemaInterface
                     '1 - 12'
                 )
                 ->addColumn(
+                    'name',
+                    Table::TYPE_TEXT,
+                    255,
+                    [
+                        'nullable' => true
+                    ],
+                    "Product name"
+                )
+                ->addColumn(
+                    'description',
+                    Table::TYPE_TEXT,
+                    500,
+                    [
+                        'nullable' => true
+                    ],
+                    "Product description"
+                )
+                ->addColumn(
                     'plan_id',
                     Table::TYPE_TEXT,
-                    2,
+                    21,
                     [
                         'nullable' => true
                     ],
@@ -601,8 +619,8 @@ class InstallSchema implements InstallSchemaInterface
                 )
                 ->addColumn(
                     'credit_card',
-                    Table::TYPE_BOOLEAN,
-                    11,
+                    Table::TYPE_TEXT,
+                    1,
                     [
                         'nullable' => false
                     ],
@@ -610,8 +628,8 @@ class InstallSchema implements InstallSchemaInterface
                 )
                 ->addColumn(
                     'installments',
-                    Table::TYPE_BOOLEAN,
-                    11,
+                    Table::TYPE_TEXT,
+                    1,
                     [
                         'nullable' => false
                     ],
@@ -619,8 +637,8 @@ class InstallSchema implements InstallSchemaInterface
                 )
                 ->addColumn(
                     'boleto',
-                    Table::TYPE_BOOLEAN,
-                    11,
+                    Table::TYPE_TEXT,
+                    1,
                     [
                         'nullable' => false
                     ],
@@ -668,7 +686,7 @@ class InstallSchema implements InstallSchemaInterface
 
     public function installSubProductsPlan(SchemaSetupInterface $installer)
     {
-        $tableName = $installer->getTable('mundipagg_module_core_sub_products_plan');
+        $tableName = $installer->getTable('mundipagg_module_core_recurrence_sub_products_plan');
         if (!$installer->getConnection()->isTableExists($tableName)) {
             $customer = $installer->getConnection()
                 ->newTable($tableName)
@@ -744,7 +762,7 @@ class InstallSchema implements InstallSchemaInterface
 
     public function installProductsSubscription(SchemaSetupInterface $installer)
     {
-        $tableName = $installer->getTable('mundipagg_module_core_products_subscription');
+        $tableName = $installer->getTable('mundipagg_module_core_recurrence_products_subscription');
         if (!$installer->getConnection()->isTableExists($tableName)) {
             $customer = $installer->getConnection()
                 ->newTable($tableName)
@@ -771,8 +789,8 @@ class InstallSchema implements InstallSchemaInterface
                 )
                 ->addColumn(
                     'credit_card',
-                    Table::TYPE_BOOLEAN,
-                    11,
+                    Table::TYPE_TEXT,
+                    1,
                     [
                         'nullable' => false
                     ],
@@ -780,8 +798,8 @@ class InstallSchema implements InstallSchemaInterface
                 )
                 ->addColumn(
                     'installments',
-                    Table::TYPE_BOOLEAN,
-                    11,
+                    Table::TYPE_TEXT,
+                    1,
                     [
                         'nullable' => false
                     ],
@@ -789,8 +807,8 @@ class InstallSchema implements InstallSchemaInterface
                 )
                 ->addColumn(
                     'boleto',
-                    Table::TYPE_BOOLEAN,
-                    11,
+                    Table::TYPE_TEXT,
+                    1,
                     [
                         'nullable' => false
                     ],
@@ -838,7 +856,7 @@ class InstallSchema implements InstallSchemaInterface
 
     public function installSubProductsSubscription(SchemaSetupInterface $installer
     ) {
-        $tableName = $installer->getTable('mundipagg_module_core_sub_products_subscription');
+        $tableName = $installer->getTable('mundipagg_module_core_recurrence_sub_products_subscription');
         if (!$installer->getConnection()->isTableExists($tableName)) {
             $configTable = $installer->getConnection()
                 ->newTable($tableName)
@@ -914,7 +932,7 @@ class InstallSchema implements InstallSchemaInterface
 
     public function installSubscriptionRepetitions(SchemaSetupInterface $installer)
     {
-        $tableName = $installer->getTable('mundipagg_module_core_subscription_repetitions');
+        $tableName = $installer->getTable('mundipagg_module_core_recurrence_subscription_repetitions');
         if (!$installer->getConnection()->isTableExists($tableName)) {
             $configTable = $installer->getConnection()
                 ->newTable($tableName)

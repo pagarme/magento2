@@ -15,7 +15,7 @@ namespace MundiPagg\MundiPagg\Api;
 interface InstallmentsManagementInterface
 {
     /**
-     * @return array
+     * @return mixed
      */
     public function getInstallments();
 }

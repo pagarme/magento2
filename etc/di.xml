@@ -100,7 +100,7 @@
     </type>
     <virtualType name="MundiPagg\MundiPagg\Model\ResourceModel\ProductsPlan\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
         <arguments>
-            <argument name="mainTable" xsi:type="string">mundipagg_module_core_products_plan</argument>
+            <argument name="mainTable" xsi:type="string">mundipagg_module_core_recurrence_products_plan</argument>
             <argument name="resourceModel" xsi:type="string">MundiPagg\MundiPagg\Model\ResourceModel\ProductsPlan</argument>
         </arguments>
     </virtualType>
@@ -117,7 +117,7 @@
     </type>
     <virtualType name="MundiPagg\MundiPagg\Model\ResourceModel\ProductsSubscription\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
         <arguments>
-            <argument name="mainTable" xsi:type="string">mundipagg_module_core_products_subscription</argument>
+            <argument name="mainTable" xsi:type="string">mundipagg_module_core_recurrence_products_subscription</argument>
             <argument name="resourceModel" xsi:type="string">MundiPagg\MundiPagg\Model\ResourceModel\ProductsSubscription</argument>
         </arguments>
     </virtualType>

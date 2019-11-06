@@ -67,7 +67,7 @@
 				</item>
 			</argument>
 		</column>
-		<column name="enabled">
+		<column name="status">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
 					<item name="filter" xsi:type="string">text</item>
@@ -77,11 +77,11 @@
 							<item name="required-entry" xsi:type="boolean">true</item>
 						</item>
 					</item>
-					<item name="label" xsi:type="string" translate="true">Enabled</item>
+					<item name="label" xsi:type="string" translate="true">Status</item>
 				</item>
 			</argument>
 		</column>
-		<column name="interval">
+		<column name="interval_type">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
 					<item name="filter" xsi:type="string">text</item>
@@ -91,7 +91,7 @@
 							<item name="required-entry" xsi:type="boolean">true</item>
 						</item>
 					</item>
-					<item name="label" xsi:type="string" translate="true">Interval</item>
+					<item name="label" xsi:type="string" translate="true">Interval Type</item>
 				</item>
 			</argument>
 		</column>
