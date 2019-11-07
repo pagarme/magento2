@@ -45,6 +45,16 @@ class Subscription extends Template
         $this->productHelper = $productHelper;
     }
 
+    public function getProductId()
+    {
+        $productData = $this->coreRegistry->registry('subscription_data');
+        if (empty($productData)) {
+            return "";
+        }
+        $obj = json_decode($productData);
+        return $obj->id;
+    }
+
     public function getEditProduct()
     {
         $productData = $this->coreRegistry->registry('subscription_data');
@@ -52,7 +62,7 @@ class Subscription extends Template
             return "";
         }
 
-        return json_encode($productData->toArray());
+        return $productData;
     }
 
     public function getBundleProducts()

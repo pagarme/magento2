@@ -949,7 +949,7 @@ class InstallSchema implements InstallSchemaInterface
                     'ID'
                 )
                 ->addColumn(
-                    'subsctiption_id',
+                    'subscription_id',
                     Table::TYPE_INTEGER,
                     null,
                     [
@@ -978,15 +978,15 @@ class InstallSchema implements InstallSchemaInterface
                     '1 - 12'
                 )
                 ->addColumn(
-                    'interval_count',
+                    'discount_type',
                     Table::TYPE_TEXT,
-                    1,
+                    15,
                     [
-                        'nullable' => false,
-                        'default' => 'P'
+                        'nullable' => false
                     ],
                     'Flat ou percentage. O padrão é percentage'
-                )->addColumn(
+                )
+                ->addColumn(
                     'discount_value',
                     Table::TYPE_FLOAT,
                     1,
