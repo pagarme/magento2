@@ -27,7 +27,7 @@ class BrazilCurrency extends Column
         $numberFormatter = new NumberFormatter('pt-BR', NumberFormatter::CURRENCY);
         $fieldName = $this->getData('name');
         foreach ($dataSource['data']['items'] as &$item) {
-            $item[$fieldName] = $numberFormatter->format($item[$fieldName]);
+            $item[$fieldName] = $numberFormatter->format(($item[$fieldName]) / 100);
         }
 
         return $dataSource;
