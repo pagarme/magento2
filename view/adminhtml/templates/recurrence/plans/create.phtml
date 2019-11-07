@@ -23,7 +23,10 @@
         <input id="edit-product" name='edit_product_id' value='<?php echo $block->getEditProduct();?>' type="hidden" />
 
         <!-- Product Id-->
-        <input id="product-subscription-id" name='form[id]' value='<?php echo $block->getProductId(); ?>' type="hidden"/>
+        <input id="product-recurrence-id" name='form[id]' value='<?php echo $block->getProductId(); ?>' type="hidden"/>
+
+        <!-- Recurrence Type-->
+        <input id="recurrence-type" name='' value='<?php echo $block->getRecurrenceType(); ?>' type="hidden"/>
 
         <!-- Url Search-->
         <input id="url-search" value="<?php echo $block->getUrl('*/plans/searchproduct');?>" type="hidden" />

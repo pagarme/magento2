@@ -65,6 +65,7 @@ class Create extends Action
             }
 
             $this->coreRegistry->register('subscription_data', json_encode($productData));
+            $this->coreRegistry->register('recurrence_type', $productData->getRecurrenceType());
         }
 
         $title = $productId ? __('Edit Subscription') : __('Create Subscription');

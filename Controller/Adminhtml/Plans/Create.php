@@ -54,6 +54,7 @@ class Create extends Action
                 return;
             }
             $this->coreRegistry->register('product_data', $productData);
+            $this->coreRegistry->register('recurrence_type', $productData->getRecurrenceType());
         }
 
         $title = $productId ? __('Edit Plan') : __('Create Plan');

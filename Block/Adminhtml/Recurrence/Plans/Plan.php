@@ -66,6 +66,11 @@ class Plan extends Template
         return $productData;
     }
 
+    public function getRecurrenceType()
+    {
+        return $this->coreRegistry->registry('recurrence_type');
+    }
+
     public function getBundleProducts()
     {
         $products = [];
