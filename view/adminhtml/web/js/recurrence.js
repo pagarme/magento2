@@ -127,12 +127,12 @@ require([
         var tr = $('<tr>').append(
             $('<td>').html("<img src='" + data.image + "' width='70px' height='70px'>"),
             $('<td>').text(data.name),
-            $('<td>').html("<input type='number' name='form[itens][" + index +"][cycles]' step='1' min='0'/>"),
+            $('<td>').html("<input type='number' name='form[items][" + index +"][cycles]' step='1' min='0'/>"),
             $('<td>').html(
-                "<input type='number' name='form[itens][" + index +"][quantity]' step='1' min='1'/>" +
-                "<input type='hidden' name='form[itens][" + index +"][product_id]' value='" + data.code + "'/>" +
-                "<input type='hidden' name='form[itens][" + index +"][name]' value='" + data.name + "'/>" +
-                "<input type='hidden' name='form[itens][" + index +"][price]' value='" + data.price + "'/>"
+                "<input type='number' name='form[items][" + index +"][quantity]' step='1' min='1'/>" +
+                "<input type='hidden' name='form[items][" + index +"][product_id]' value='" + data.code + "'/>" +
+                "<input type='hidden' name='form[items][" + index +"][name]' value='" + data.name + "'/>" +
+                "<input type='hidden' name='form[items][" + index +"][price]' value='" + data.price + "'/>"
             ),
         );
 
