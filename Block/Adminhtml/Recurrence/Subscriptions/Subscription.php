@@ -4,11 +4,11 @@ namespace MundiPagg\MundiPagg\Block\Adminhtml\Recurrence\Subscriptions;
 
 use Magento\Catalog\Api\ProductRepositoryInterfaceFactory;
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
-use Magento\Framework\App\ObjectManager;
-use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\Registry;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
+use Mundipagg\Core\Recurrence\ValueObjects\DiscountValueObject;
+use Mundipagg\Core\Recurrence\ValueObjects\IntervalValueObject;
 use MundiPagg\MundiPagg\Helper\ProductHelper;
 
 class Subscription extends Template
@@ -45,6 +45,16 @@ class Subscription extends Template
         $this->productHelper = $productHelper;
     }
 
+    public function getProductId()
+    {
+        $productData = $this->coreRegistry->registry('subscription_data');
+        if (empty($productData)) {
+            return "";
+        }
+        $obj = json_decode($productData);
+        return $obj->id;
+    }
+
     public function getEditProduct()
     {
         $productData = $this->coreRegistry->registry('subscription_data');
@@ -52,7 +62,12 @@ class Subscription extends Template
             return "";
         }
 
-        return json_encode($productData->toArray());
+        return $productData;
+    }
+
+    public function getRecurrenceType()
+    {
+        return $this->coreRegistry->registry('recurrence_type');
     }
 
     public function getBundleProducts()
@@ -66,7 +81,8 @@ class Subscription extends Template
             $products[$product->getEntityId()] = [
                 'value' => $product->getName(),
                 'id' => $product->getEntityId(),
-                'image' => $this->productHelper->getProductImage($product->getEntityId())
+                'image' => $this->productHelper->getProductImage($product->getEntityId()),
+                'description' => $product->getDescription()
             ];
         }
 
@@ -80,8 +96,15 @@ class Subscription extends Template
     {
         return [
             'interval_count' => range(1, 12),
-            'interval_type' => [ __('week'), __('month'), __('Year')],
-            'discount' => [__('percentage'), __('real')]
+            'interval_type' => [
+                IntervalValueObject::INTERVAL_TYPE_WEEK => __('week'),
+                IntervalValueObject::INTERVAL_TYPE_MONTH => __('month'),
+                IntervalValueObject::INTERVAL_TYPE_YEAR => __('Year')
+            ],
+            'discount' => [
+                DiscountValueObject::DISCOUNT_TYPE_PERCENT => __('percentage'),
+                DiscountValueObject::DISCOUNT_TYPE_FLAT => __('real')
+            ]
         ];
     }
 }

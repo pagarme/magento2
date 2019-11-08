@@ -11,8 +11,8 @@ use Magento\Framework\UrlInterface;
 class Actions extends Column
 {
     /** Url path */
-    const URL_PATH_EDIT = 'mundipagg_mundipagg/plans/create';
-    const URL_PATH_DELETE = 'mundipagg_mundipagg/plans/delete';
+    const URL_PATH_EDIT = 'mundipagg_mundipagg/*/create';
+    const URL_PATH_DELETE = 'mundipagg_mundipagg/*/delete';
     /** @var UrlBuilder */
     protected $actionUrlBuilder;
     /** @var UrlInterface */
@@ -51,21 +51,26 @@ class Actions extends Column
                 if (isset($item['id'])) {
 
                     $item[$name]['edit'] = [
-                        'href' => $this->urlBuilder->getUrl(
-                            self::URL_PATH_EDIT, ['id' => $item['id']]
-                        ),
+                        'href' => $this->getUrlMundipagg($item, self::URL_PATH_EDIT),
                         'label' => __('Edit')
                     ];
 
                     $item[$name]['delete'] = [
-                        'href' => $this->urlBuilder->getUrl(
-                            self::URL_PATH_DELETE, ['id' => $item['id']]
-                        ),
+                        'href' => $this->getUrlMundipagg($item, self::URL_PATH_DELETE),
                         'label' => __('Delete')
                     ];
                 }
             }
         }
         return $dataSource;
+    }
+
+    protected function getUrlMundipagg($item, $path)
+    {
+        $type = array_key_exists('plan_id', $item) ? "plans" : "subscriptions";
+        $path = str_replace("*", $type, $path);
+
+        $url = $this->urlBuilder->getUrl($path, ['id' => $item['id']]);
+        return $url;
     }
 }

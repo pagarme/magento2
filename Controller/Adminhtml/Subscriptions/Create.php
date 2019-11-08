@@ -6,6 +6,8 @@ use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\Registry;
 use Magento\Framework\View\Result\PageFactory;
+use Mundipagg\Core\Recurrence\Services\ProductSubscriptionService;
+use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 use MundiPagg\MundiPagg\Model\ProductsSubscriptionFactory;
 
 class Create extends Action
@@ -38,6 +40,7 @@ class Create extends Action
         $this->resultPageFactory = $resultPageFactory;
         $this->productsSubscriptionFactory = $productsSubscriptionFactory;
         $this->coreRegistry = $coreRegistry;
+        Magento2CoreSetup::bootstrap();
 
         parent::__construct($context);
     }
@@ -51,7 +54,9 @@ class Create extends Action
     {
         $productId = (int)$this->getRequest()->getParam('id');
         if ($productId) {
-            $productData = $this->productsSubscriptionFactory->create()->load($productId);
+
+            $productSubscriptionService = new ProductSubscriptionService();
+            $productData = $productSubscriptionService->findById($productId);
 
             if (!$productData->getId()) {
                 $this->messageManager->addError(__('row data no longer exist.'));
@@ -59,7 +64,8 @@ class Create extends Action
                 return;
             }
 
-            $this->coreRegistry->register('subscription_data', $productData);
+            $this->coreRegistry->register('subscription_data', json_encode($productData));
+            $this->coreRegistry->register('recurrence_type', $productData->getRecurrenceType());
         }
 
         $title = $productId ? __('Edit Subscription') : __('Create Subscription');

@@ -22,6 +22,12 @@
         <!-- Edit Product-->
         <input id="edit-product" name='edit_product_id' value='<?php echo $block->getEditProduct();?>' type="hidden" />
 
+        <!-- Product Id-->
+        <input id="product-recurrence-id" name='form[id]' value='<?php echo $block->getProductId(); ?>' type="hidden"/>
+
+        <!-- Recurrence Type-->
+        <input id="recurrence-type" name='' value='<?php echo $block->getRecurrenceType(); ?>' type="hidden"/>
+
         <!-- Url Search-->
         <input id="url-search" value="<?php echo $block->getUrl('*/plans/searchproduct');?>" type="hidden" />
 
@@ -44,9 +50,9 @@
                                             <h2><?php echo __('Add a bundle product') ?></h2>
                                             <label><?php echo __('Product search') ?></label>
                                             <input type="text" class="product_search" name="product_search" id="product-search">
-                                            <input type="hidden" id="product_id" name="form[product_bundle_id]">
-                                            <input type="hidden" id="product_name" name="form[product_bundle_name]">
-                                            <input type="hidden" id="product_description" name="form[product_bundle_description]">
+                                            <input type="hidden" id="product_id" name="form[product_id]">
+                                            <input type="hidden" id="product_name" name="form[name]">
+                                            <input type="hidden" id="product_description" name="form[description]">
                                             <input type="hidden" id="product_image">
                                             <button type="button" class="action-basic" id="add-product" data-action="add">
                                                 <span><?php echo __('Add Product') ?></span>
@@ -93,7 +99,7 @@
                                         </label>
                                         <div class="admin__field-control _with-tooltip">
                                             <div class="admin__field admin__field-option">
-                                                <input type="checkbox" class="admin__control-checkbox" name="form[payment_methods][credit_card]" id="credit-card" value="true">
+                                                <input type="checkbox" class="admin__control-checkbox" name="form[credit_card]" id="credit-card" value="true">
                                                 <label class="admin__field-label" for="credit-card"><?php echo __('Credit Card') ?></label>
                                             </div>
                                         </div>
@@ -105,7 +111,7 @@
                                         </label>
                                         <div class="admin__field-control">
                                             <div class="admin__field admin__field-option">
-                                                <input type="checkbox" class="admin__control-checkbox" name="form[payment_methods][boleto]" id="boleto" value="true">
+                                                <input type="checkbox" class="admin__control-checkbox" name="form[boleto]" id="boleto" value="true">
                                                 <label class="admin__field-label" for="boleto"><?php echo __('Boleto') ?></label>
                                             </div>
                                         </div>
@@ -117,7 +123,7 @@
                                         </label>
                                         <div class="admin__field-control _with-tooltip">
                                             <div class="admin__field admin__field-option">
-                                                <input type="checkbox" class="admin__control-checkbox" name="form[allow_installments]" id="allow_installments" value="true">
+                                                <input type="checkbox" class="admin__control-checkbox" name="form[installments]" id="allow_installments" value="true">
                                                 <label class="admin__field-label" for="allow_installments"></label>
                                             </div>
                                         </div>
