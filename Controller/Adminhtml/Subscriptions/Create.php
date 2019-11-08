@@ -58,8 +58,8 @@ class Create extends Action
             $productSubscriptionService = new ProductSubscriptionService();
             $productData = $productSubscriptionService->findById($productId);
 
-            if (!$productData->getId()) {
-                $this->messageManager->addError(__('row data no longer exist.'));
+            if (!$productData || !$productData->getId()) {
+                $this->messageManager->addError(__('Product subscription not exist.'));
                 $this->_redirect('mundipagg_mundipagg/subscriptions/index');
                 return;
             }
