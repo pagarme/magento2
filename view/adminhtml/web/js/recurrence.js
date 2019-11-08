@@ -9,6 +9,7 @@ require([
         $("#allow_installments_div").hide();
         var editProduct = $("#edit-product").val();
         if (editProduct.length > 0) {
+            $(".select-product").hide();
             loadProduct(JSON.parse(editProduct));
         }
 
@@ -168,14 +169,14 @@ require([
     }
 
     function loadProduct(product) {
-        $("#credit-card").prop('checked', product.creditCard);
-        $("#boleto").prop('checked', product.boleto);
+        $("#credit-card").prop('checked', parseInt(product.creditCard));
+        $("#boleto").prop('checked', parseInt(product.boleto));
         $("#interval").val(product.interval);
         $("#interval_count").val(product.interval_count);
         $("#product_id").val(product.productId);
 
-        if (product.creditCard) {
-            $("#allow_installments").prop('checked', product.allowInstallments);
+        if (parseInt(product.creditCard)) {
+            $("#allow_installments").prop('checked', parseInt(product.allowInstallments));
             $("#allow_installments_div").show();
         }
 
