@@ -44,6 +44,9 @@ require([
         });
 
         $("#add-product").on('click', function() {
+            if ($("#product_id").val() == "") {
+                return;
+            }
             updateTableProduct($(this));
         });
 
@@ -61,6 +64,14 @@ require([
 
     function formSubmit(e) {
         e.preventDefault();
+
+        var errors = validateForm(e);
+        if (errors.length > 0) {
+            alert(errors.join("\r\n"));
+            return;
+        }
+        toogleSaveButton();
+
         var dataSerialize = jQuery(this).serialize();
         var url =  $("#url-post").val();
 
@@ -76,8 +87,65 @@ require([
                     return window.history.back();
                 }
                 alert(data.message);
+            },
+            complete: function () {
+                toogleSaveButton()
             }
         });
+    }
+
+    function toogleSaveButton()
+    {
+        var disabled = $("#save-button").attr('disabled');
+        if (disabled) {
+            $("#save-button").attr('disabled', false);
+            $("#save-button span").html("Save");
+        }
+        $("#save-button").attr('disabled', true);
+        $("#save-button span").html("Saving");
+    }
+
+    function validateForm(e) {
+        var errors = [];
+
+        var type = $("#recurrence-type").val();
+
+        var productId = $("#product_id").val();
+        if (productId.length <= 0) {
+            errors.push("Bundle product not selected");
+        }
+
+        var paymentMethod = [
+            $("#boleto").prop("checked"),
+            $("#credit-card").prop("checked")
+        ];
+
+        var paymentsSelecteds = paymentMethod.filter(function (item) {
+           return item !== false;
+        });
+
+        if (paymentsSelecteds.length <= 0) {
+            errors.push("Select at last one payment method");
+        }
+
+        if (type == 'subscription') {
+            var cycles = [
+                $("#interval_count_1").val(),
+                $("#interval_count_2").val(),
+                $("#interval_count_3").val(),
+                $("#interval_count_4").val()
+            ];
+
+            var cyclesSelecteds = cycles.filter(function (item) {
+                return item !== "";
+            });
+
+            if (cyclesSelecteds.length <= 0) {
+                errors.push("Fill at last one cycle option");
+            }
+        }
+
+        return errors;
     }
 
     function updateTableProduct(element) {
@@ -135,16 +203,19 @@ require([
             return;
         }
 
+        var id = data.id == undefined ? "" : data.id;
+        var cycles = data.cycles == undefined ? "" : data.cycles;
+        var quantity = data.quantity == undefined ? 1 : data.quantity;
         var tr = $('<tr>').append(
             $('<td>').html("<img src='" + data.image + "' width='70px' height='70px'>"),
             $('<td>').text(data.name),
-            $('<td>').html("<input type='number' name='form[items][" + index +"][cycles]' value='" + data.cycles + "' step='1' min='0'/>"),
+            $('<td>').html("<input type='number' name='form[items][" + index +"][cycles]' value='" + cycles + "' step='1' min='0'/>"),
             $('<td>').html(
-                "<input type='number' name='form[items][" + index +"][quantity]' value='" + data.quantity + "' step='1' min='1'/>" +
+                "<input type='number' name='form[items][" + index +"][quantity]' value='" + quantity + "' step='1' min='1'/>" +
                 "<input type='hidden' name='form[items][" + index +"][product_id]' value='" + data.code + "'/>" +
                 "<input type='hidden' name='form[items][" + index +"][name]' value='" + data.name + "'/>" +
                 "<input type='hidden' name='form[items][" + index +"][price]' value='" + data.price + "'/>" +
-                "<input type='hidden' name='form[items][" + index +"][id]' value='" + data.id + "'/>"
+                "<input type='hidden' name='form[items][" + index +"][id]' value='" + id + "'/>"
             ),
         );
 

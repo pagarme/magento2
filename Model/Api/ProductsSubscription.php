@@ -45,7 +45,7 @@ class ProductsSubscription implements ProductSubscriptionInterface
         }
 
         $productSubscriptionService = new ProductSubscriptionService();
-        $productSubscription = $productSubscriptionService->createAtPlatform($params['form']);
+        $productSubscription = $productSubscriptionService->saveProductSubscription($params['form']);
         $this->setCustomOption($productSubscription);
 
         return json_encode([

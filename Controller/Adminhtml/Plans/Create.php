@@ -6,6 +6,7 @@ use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\Registry;
 use Magento\Framework\View\Result\PageFactory;
+use Mundipagg\Core\Recurrence\Aggregates\Plan;
 use MundiPagg\MundiPagg\Model\ProductsPlanFactory;
 
 class Create extends Action
@@ -53,9 +54,9 @@ class Create extends Action
                 return;
             }
             $this->coreRegistry->register('product_data', $productData);
-            $this->coreRegistry->register('recurrence_type', $productData->getRecurrenceType());
         }
 
+        $this->coreRegistry->register('recurrence_type', Plan::RECURRENCE_TYPE);
         $title = $productId ? __('Edit Plan') : __('Create Plan');
 
         $resultPage = $this->resultPageFactory->create();
