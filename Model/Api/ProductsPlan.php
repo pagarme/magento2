@@ -48,9 +48,8 @@ class ProductsPlan implements ProductPlanInterface
             ]);
         }
 
-        //@todo Send data to product Plan service
         $planService = new PlanService();
-        $planService->createPlanAtPlatform($params['form']);
+        $planService->create($params['form']);
 
         return json_encode([
             'code' => 200,
