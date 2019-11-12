@@ -5,16 +5,23 @@ namespace MundiPagg\MundiPagg\Ui\Component\Recurrence\Column;
 use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use Magento\Framework\View\Element\UiComponentFactory;
 use Magento\Ui\Component\Listing\Columns\Column;
+use Mundipagg\Core\Kernel\Services\LocalizationService;
 use NumberFormatter;
 
 class PaymentMethodColumn extends Column
 {
+    /**
+     * @var LocalizationService
+     */
+    protected $i18n;
+
     public function __construct(
         ContextInterface $context,
         UiComponentFactory $uiComponentFactory,
         array $components = [],
         array $data = []
     ) {
+        $this->i18n = new LocalizationService();
         parent::__construct($context, $uiComponentFactory, $components, $data);
     }
 
@@ -38,7 +45,7 @@ class PaymentMethodColumn extends Column
     {
         $paymentMethods = [
             'boleto' => "Boleto",
-            'credit_card' => "Credit Card"
+            'credit_card' => $this->i18n->getDashboard("Credit Card")
         ];
         $methodSelecteds = array_keys(
             array_filter(
@@ -54,7 +61,5 @@ class PaymentMethodColumn extends Column
         );
 
         return implode(" - ", $result);
-
-        return "Boleto - Credit Card";
     }
 }
