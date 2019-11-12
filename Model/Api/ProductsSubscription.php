@@ -91,7 +91,7 @@ class ProductsSubscription implements ProductSubscriptionInterface
                 "title" => $this->getCycleTitle($repetition),
                 "price" => 0.0,
                 "price_type"  => "fixed",
-                "sort_order"  => $sortOrder
+                "sort_order"  => $repetition->getId()
             ];
             $sortOrder++;
         }
