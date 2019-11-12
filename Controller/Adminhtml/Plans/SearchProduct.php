@@ -66,24 +66,16 @@ class SearchProduct extends Action
         $recurrenceProductId = $this->getRequest()->getParam('recurrenceProductId');
 
         $objectManager = ObjectManager::getInstance();
-
-        $storeManager = $objectManager->get('\Magento\Store\Model\StoreManagerInterface');
-        $store_id = $storeManager->getStore()->getId();
-
         $productBundle = $objectManager->get('\Magento\Catalog\Model\Product')->load($productId);
 
         if (empty($productBundle) || $productBundle->getHasOptions() == 0) {
             return;
         }
 
-        $options = $objectManager->get('Magento\Bundle\Model\Option')
-            ->getResourceCollection()
-            ->setProductIdFilter($productId)
-            ->setPositionOrder();
-
-        $options->joinValues($store_id);
         $typeInstance = $objectManager->get('Magento\Bundle\Model\Product\Type');
-        $selections = $typeInstance->getSelectionsCollection($typeInstance->getOptionsIds($productBundle), $productBundle);
+        $selections = $typeInstance->getSelectionsCollection(
+            $typeInstance->getOptionsIds($productBundle), $productBundle
+        );
         $moneyService = new MoneyService();
 
         $bundleProducts = [];
@@ -102,7 +94,6 @@ class SearchProduct extends Action
                 $recurrenceProductId,
                 $recurrenceType
             );
-
 
             if ($subProductRecurrence !== null) {
                 $product['cycles'] = $subProductRecurrence->getCycles();

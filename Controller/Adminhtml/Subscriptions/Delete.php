@@ -16,11 +16,6 @@ class Delete extends Action
     protected $resultPageFactory;
 
     /**
-     * @var ProductsSubscriptionFactory
-     */
-    protected $productsSubscriptionFactory;
-
-    /**
      * @var Registry
      */
     protected $coreRegistry;
@@ -30,17 +25,16 @@ class Delete extends Action
      *
      * @param \Magento\Backend\App\Action\Context $context
      * @param \Magento\Framework\View\Result\PageFactory $resultPageFactory
+     * @throws \Exception
      */
     public function __construct(
         \Magento\Backend\App\Action\Context $context,
         \Magento\Framework\View\Result\PageFactory $resultPageFactory,
         Registry $coreRegistry,
-        ProductsSubscriptionFactory $productsSubscriptionFactory,
         Factory $messageFactory
     )
     {
         $this->resultPageFactory = $resultPageFactory;
-        $this->productsSubscriptionFactory = $productsSubscriptionFactory;
         $this->coreRegistry = $coreRegistry;
         $this->messageFactory = $messageFactory;
         Magento2CoreSetup::bootstrap();
@@ -67,7 +61,6 @@ class Delete extends Action
                 $this->_redirect('mundipagg_mundipagg/subscriptions/index');
                 return;
             }
-
         }
 
         $productSubscriptionService->delete($productId);

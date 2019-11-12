@@ -31,7 +31,6 @@ class PaymentMethodColumn extends Column
             return $dataSource;
         }
 
-
         $fieldName = $this->getData('name');
 
         foreach ($dataSource['data']['items'] as &$item) {

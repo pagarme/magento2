@@ -75,17 +75,14 @@ class ProductsSubscription implements ProductSubscriptionInterface
             ->setMaxCharacters(50)
             ->setProductSku($product->getSku());
 
-        $customOptions[] = $customOption;
-
         $product->setHasOptions(1);
         $product->setCanSaveCustomOptions(true);
-        $product->setOptions($customOptions)->save();
+        $product->setOptions([$customOption])->save();
     }
 
     protected function getValuesFromRepetitions($repetitions)
     {
         $values = [];
-        $sortOrder = 1;
         foreach ($repetitions as $repetition) {
             $values[] = [
                 "title" => $this->getCycleTitle($repetition),
@@ -93,7 +90,6 @@ class ProductsSubscription implements ProductSubscriptionInterface
                 "price_type"  => "fixed",
                 "sort_order"  => $repetition->getId()
             ];
-            $sortOrder++;
         }
 
         return $values;
