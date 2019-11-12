@@ -36,7 +36,7 @@ class ProductsPlan implements ProductPlanInterface
         if (empty($params)) {
             return json_encode([
                 'code' => 404,
-                'message' => 'Error on save product Plan'
+                'message' => 'Erro ao tentar criar um produto do tipo plano'
             ]);
         }
 
@@ -48,8 +48,15 @@ class ProductsPlan implements ProductPlanInterface
             ]);
         }
 
-        $planService = new PlanService();
-        $planService->create($params['form']);
+        try {
+            $planService = new PlanService();
+            $planService->create($params['form']);
+        } catch (\Exception $exception) {
+            json_encode([
+                'code' => 404,
+                'message' => 'Erro ao tentar criar um produto do tipo plano'
+            ]);
+        }
 
         return json_encode([
             'code' => 200,
