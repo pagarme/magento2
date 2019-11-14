@@ -36,6 +36,7 @@ use MundiPagg\MundiPagg\Model\Cards;
 use MundiPagg\MundiPagg\Model\CardsRepository;
 use Mundipagg\Core\Kernel\Services\LocalizationService;
 use Mundipagg\Core\Kernel\Services\LogService;
+use mysql_xdevapi\Exception;
 
 class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 {
@@ -570,7 +571,9 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             $additionalInformation['cc_savecard'] === '1';
 
         $amount = $this->getGrandTotal() - $this->getBaseTaxAmount();
-        $amount = number_format($amount, 2, '');
+        $amount = number_format($amount, 2, '.', '');
+        $amount = str_replace('.','', $amount);
+        $amount = str_replace(',','', $amount);
 
         $newPaymentData->amount = $amount;
 
