@@ -36,7 +36,6 @@ use MundiPagg\MundiPagg\Model\Cards;
 use MundiPagg\MundiPagg\Model\CardsRepository;
 use Mundipagg\Core\Kernel\Services\LocalizationService;
 use Mundipagg\Core\Kernel\Services\LogService;
-use mysql_xdevapi\Exception;
 
 class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 {
