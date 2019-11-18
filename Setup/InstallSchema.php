@@ -747,6 +747,15 @@ class InstallSchema implements InstallSchemaInterface
                     "Quantity"
                 )
                 ->addColumn(
+                    'trial_period_days',
+                    Table::TYPE_INTEGER,
+                    255,
+                    [
+                        'nullable' => true
+                    ],
+                    "Trial period"
+                )
+                ->addColumn(
                     'created_at',
                     \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
                     null,
