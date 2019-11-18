@@ -570,7 +570,11 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             $additionalInformation['cc_savecard'] === '1';
 
         $amount = $this->getGrandTotal() - $this->getBaseTaxAmount();
-        $newPaymentData->amount = $moneyService->floatToCents($amount);
+        $amount = number_format($amount, 2, '.', '');
+        $amount = str_replace('.','', $amount);
+        $amount = str_replace(',','', $amount);
+
+        $newPaymentData->amount = $amount;
 
         $creditCardDataIndex = AbstractCreditCardPayment::getBaseCode();
         if (!isset($paymentData[$creditCardDataIndex])) {
