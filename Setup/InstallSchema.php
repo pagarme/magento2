@@ -29,9 +29,8 @@ class InstallSchema implements InstallSchemaInterface
         $this->installSavedCard($setup);
         $this->installCustomer($setup);
         $this->installProductsPlan($setup);
-        $this->installSubProductsPlan($setup);
+        $this->installSubProducts($setup);
         $this->installProductsSubscription($setup);
-        $this->installSubProductsSubscription($setup);
         $this->installSubscriptionRepetitions($setup);
 
         $setup->endSetup();
@@ -564,7 +563,7 @@ class InstallSchema implements InstallSchemaInterface
                     'ID'
                 )
                 ->addColumn(
-                    'interval',
+                    'interval_type',
                     Table::TYPE_TEXT,
                     15,
                     [
@@ -582,9 +581,27 @@ class InstallSchema implements InstallSchemaInterface
                     '1 - 12'
                 )
                 ->addColumn(
+                    'name',
+                    Table::TYPE_TEXT,
+                    255,
+                    [
+                        'nullable' => true
+                    ],
+                    "Product name"
+                )
+                ->addColumn(
+                    'description',
+                    Table::TYPE_TEXT,
+                    500,
+                    [
+                        'nullable' => true
+                    ],
+                    "Product description"
+                )
+                ->addColumn(
                     'plan_id',
                     Table::TYPE_TEXT,
-                    2,
+                    21,
                     [
                         'nullable' => true
                     ],
@@ -601,8 +618,8 @@ class InstallSchema implements InstallSchemaInterface
                 )
                 ->addColumn(
                     'credit_card',
-                    Table::TYPE_BOOLEAN,
-                    11,
+                    Table::TYPE_TEXT,
+                    1,
                     [
                         'nullable' => false
                     ],
@@ -610,8 +627,8 @@ class InstallSchema implements InstallSchemaInterface
                 )
                 ->addColumn(
                     'installments',
-                    Table::TYPE_BOOLEAN,
-                    11,
+                    Table::TYPE_TEXT,
+                    1,
                     [
                         'nullable' => false
                     ],
@@ -619,8 +636,8 @@ class InstallSchema implements InstallSchemaInterface
                 )
                 ->addColumn(
                     'boleto',
-                    Table::TYPE_BOOLEAN,
-                    11,
+                    Table::TYPE_TEXT,
+                    1,
                     [
                         'nullable' => false
                     ],
@@ -666,9 +683,9 @@ class InstallSchema implements InstallSchemaInterface
         return $installer;
     }
 
-    public function installSubProductsPlan(SchemaSetupInterface $installer)
+    public function installSubProducts(SchemaSetupInterface $installer)
     {
-        $tableName = $installer->getTable('mundipagg_module_core_recurrence_sub_products_plan');
+        $tableName = $installer->getTable('mundipagg_module_core_recurrence_sub_products');
         if (!$installer->getConnection()->isTableExists($tableName)) {
             $customer = $installer->getConnection()
                 ->newTable($tableName)
@@ -685,15 +702,6 @@ class InstallSchema implements InstallSchemaInterface
                     'ID'
                 )
                 ->addColumn(
-                    'products_plan_id',
-                    Table::TYPE_INTEGER,
-                    255,
-                    [
-                        'nullable' => false
-                    ],
-                    'Id from table mundipagg_module_core_products_plan'
-                )
-                ->addColumn(
                     'product_id',
                     Table::TYPE_INTEGER,
                     255,
@@ -703,7 +711,25 @@ class InstallSchema implements InstallSchemaInterface
                     "Magento's product id"
                 )
                 ->addColumn(
-                    'cycle',
+                    'product_recurrence_id',
+                    Table::TYPE_INTEGER,
+                    255,
+                    [
+                        'nullable' => false
+                    ],
+                    'Id from table mundipagg_module_core_products_(plan/subscription)'
+                )
+                ->addColumn(
+                    'recurrence_type',
+                    Table::TYPE_TEXT,
+                    255,
+                    [
+                        'nullable' => false
+                    ],
+                    'Type of recurrence product (plan or subscription)'
+                )
+                ->addColumn(
+                    'cycles',
                     Table::TYPE_INTEGER,
                     5,
                     [
@@ -771,8 +797,8 @@ class InstallSchema implements InstallSchemaInterface
                 )
                 ->addColumn(
                     'credit_card',
-                    Table::TYPE_BOOLEAN,
-                    11,
+                    Table::TYPE_TEXT,
+                    1,
                     [
                         'nullable' => false
                     ],
@@ -780,8 +806,8 @@ class InstallSchema implements InstallSchemaInterface
                 )
                 ->addColumn(
                     'installments',
-                    Table::TYPE_BOOLEAN,
-                    11,
+                    Table::TYPE_TEXT,
+                    1,
                     [
                         'nullable' => false
                     ],
@@ -789,8 +815,8 @@ class InstallSchema implements InstallSchemaInterface
                 )
                 ->addColumn(
                     'boleto',
-                    Table::TYPE_BOOLEAN,
-                    11,
+                    Table::TYPE_TEXT,
+                    1,
                     [
                         'nullable' => false
                     ],
@@ -804,15 +830,6 @@ class InstallSchema implements InstallSchemaInterface
                         'nullable' => false
                     ],
                     "Prepaid, postpaid ou exact_day"
-                )
-                ->addColumn(
-                    'status',
-                    Table::TYPE_TEXT,
-                    11,
-                    [
-                        'nullable' => false
-                    ],
-                    "Active, inactive ou deleted"
                 )
                 ->addColumn(
                     'created_at',
@@ -836,82 +853,6 @@ class InstallSchema implements InstallSchemaInterface
         return $installer;
     }
 
-    public function installSubProductsSubscription(SchemaSetupInterface $installer
-    ) {
-        $tableName = $installer->getTable('mundipagg_module_core_recurrence_sub_products_subscription');
-        if (!$installer->getConnection()->isTableExists($tableName)) {
-            $configTable = $installer->getConnection()
-                ->newTable($tableName)
-                ->addColumn(
-                    'id',
-                    Table::TYPE_INTEGER,
-                    null,
-                    [
-                        'identity' => true,
-                        'unsigned' => true,
-                        'nullable' => false,
-                        'primary' => true
-                    ],
-                    'ID'
-                )
-                ->addColumn(
-                    'products_subscription_id',
-                    Table::TYPE_INTEGER,
-                    null,
-                    [
-                        'nullable' => false
-                    ],
-                    'Id from mundipagg_module_core_products_subscription'
-                )
-                ->addColumn(
-                    'product_id',
-                    Table::TYPE_INTEGER,
-                    null,
-                    [
-                        'nullable' => false
-                    ],
-                    "Magento's product id"
-                )
-                ->addColumn(
-                    'cycle',
-                    Table::TYPE_INTEGER,
-                    5,
-                    [
-                        'nullable' => true
-                    ],
-                    'Cycle'
-                )
-                ->addColumn(
-                    'quantity',
-                    Table::TYPE_INTEGER,
-                    255,
-                    [
-                        'nullable' => true
-                    ],
-                    "Quantity"
-                )
-                ->addColumn(
-                    'created_at',
-                    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
-                    null,
-                    ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT],
-                    'Created At'
-                )
-                ->addColumn(
-                    'updated_at',
-                    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
-                    null,
-                    ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT_UPDATE],
-                    'Updated At'
-                )
-                ->setOption('charset', 'utf8')
-            ;
-
-            $installer->getConnection()->createTable($configTable);
-        }
-        return $installer;
-    }
-
     public function installSubscriptionRepetitions(SchemaSetupInterface $installer)
     {
         $tableName = $installer->getTable('mundipagg_module_core_recurrence_subscription_repetitions');
@@ -931,7 +872,7 @@ class InstallSchema implements InstallSchemaInterface
                     'ID'
                 )
                 ->addColumn(
-                    'subsctiption_id',
+                    'subscription_id',
                     Table::TYPE_INTEGER,
                     null,
                     [
@@ -960,15 +901,15 @@ class InstallSchema implements InstallSchemaInterface
                     '1 - 12'
                 )
                 ->addColumn(
-                    'interval_count',
+                    'discount_type',
                     Table::TYPE_TEXT,
-                    1,
+                    15,
                     [
-                        'nullable' => false,
-                        'default' => 'P'
+                        'nullable' => false
                     ],
                     'Flat ou percentage. O padrão é percentage'
-                )->addColumn(
+                )
+                ->addColumn(
                     'discount_value',
                     Table::TYPE_FLOAT,
                     1,

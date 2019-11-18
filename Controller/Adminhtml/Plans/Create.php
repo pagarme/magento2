@@ -6,6 +6,7 @@ use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\Registry;
 use Magento\Framework\View\Result\PageFactory;
+use Mundipagg\Core\Recurrence\Aggregates\Plan;
 use MundiPagg\MundiPagg\Model\ProductsPlanFactory;
 
 class Create extends Action
@@ -46,16 +47,16 @@ class Create extends Action
         if($productId) {
             //@todo this should be a product plan core object
             $productData = $this->productsPlanFactory->create()->load($productId);
-            if(!$productData->getId()) {
-                // @todo Add Error
-                // $this->messageManager->addError(__('row data no longer exist.'));
 
+            if (!$productData || !$productData->getId()) {
+                $this->messageManager->addError(__('Product plan not exist.'));
                 $this->_redirect('mundipagg_mundipagg/plans/index');
                 return;
             }
             $this->coreRegistry->register('product_data', $productData);
         }
 
+        $this->coreRegistry->register('recurrence_type', Plan::RECURRENCE_TYPE);
         $title = $productId ? __('Edit Plan') : __('Create Plan');
 
         $resultPage = $this->resultPageFactory->create();

@@ -4,6 +4,8 @@ namespace MundiPagg\MundiPagg\Model\Api;
 
 use MundiPagg\MundiPagg\Api\ProductPlanInterface;
 use \Magento\Framework\Webapi\Rest\Request;
+use Mundipagg\Core\Recurrence\Services\PlanService;
+use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 
 class ProductsPlan implements ProductPlanInterface
 {
@@ -16,6 +18,7 @@ class ProductsPlan implements ProductPlanInterface
     public function __construct(Request $request)
     {
         $this->request = $request;
+        Magento2CoreSetup::bootstrap();
     }
     /**
      * Returns greeting message to user
@@ -36,6 +39,8 @@ class ProductsPlan implements ProductPlanInterface
         }
 
         //@todo Send data to product Plan service
+        $planService = new PlanService();
+        $planService->createPlanAtPlatform($params['form']);
 
         return json_encode([
             'code' => 200,
