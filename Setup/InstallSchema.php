@@ -832,15 +832,6 @@ class InstallSchema implements InstallSchemaInterface
                     "Prepaid, postpaid ou exact_day"
                 )
                 ->addColumn(
-                    'status',
-                    Table::TYPE_TEXT,
-                    11,
-                    [
-                        'nullable' => false
-                    ],
-                    "Active, inactive ou deleted"
-                )
-                ->addColumn(
                     'created_at',
                     \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
                     null,

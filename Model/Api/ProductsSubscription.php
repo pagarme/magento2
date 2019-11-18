@@ -45,7 +45,7 @@ class ProductsSubscription implements ProductSubscriptionInterface
         }
 
         $productSubscriptionService = new ProductSubscriptionService();
-        $productSubscription = $productSubscriptionService->createAtPlatform($params['form']);
+        $productSubscription = $productSubscriptionService->saveProductSubscription($params['form']);
         $this->setCustomOption($productSubscription);
 
         return json_encode([
@@ -75,25 +75,21 @@ class ProductsSubscription implements ProductSubscriptionInterface
             ->setMaxCharacters(50)
             ->setProductSku($product->getSku());
 
-        $customOptions[] = $customOption;
-
         $product->setHasOptions(1);
         $product->setCanSaveCustomOptions(true);
-        $product->setOptions($customOptions)->save();
+        $product->setOptions([$customOption])->save();
     }
 
     protected function getValuesFromRepetitions($repetitions)
     {
         $values = [];
-        $sortOrder = 1;
         foreach ($repetitions as $repetition) {
             $values[] = [
                 "title" => $this->getCycleTitle($repetition),
                 "price" => 0.0,
                 "price_type"  => "fixed",
-                "sort_order"  => $sortOrder
+                "sort_order"  => $repetition->getId()
             ];
-            $sortOrder++;
         }
 
         return $values;

@@ -47,27 +47,36 @@ class Actions extends Column
     {
         if (isset($dataSource['data']['items'])) {
             foreach ($dataSource['data']['items'] as &$item) {
+                $type = array_key_exists('plan_id', $item) ? "plans" : "subscriptions";
                 $name = $this->getData('name');
                 if (isset($item['id'])) {
-
-                    $item[$name]['edit'] = [
-                        'href' => $this->getUrlMundipagg($item, self::URL_PATH_EDIT),
-                        'label' => __('Edit')
-                    ];
-
-                    $item[$name]['delete'] = [
-                        'href' => $this->getUrlMundipagg($item, self::URL_PATH_DELETE),
-                        'label' => __('Delete')
-                    ];
+                    $actions = $this->getActions($name, $type, $item);
+                    $item = array_merge($item, $actions);
                 }
             }
         }
         return $dataSource;
     }
 
-    protected function getUrlMundipagg($item, $path)
+    protected function getActions($name, $type, $item)
     {
-        $type = array_key_exists('plan_id', $item) ? "plans" : "subscriptions";
+        $actions[$name]['delete'] = [
+            'href' => $this->getUrlMundipagg($type, $item, self::URL_PATH_DELETE),
+            'label' => __('Delete')
+        ];
+
+        if ($type !== 'plans') {
+            $actions[$name]['edit'] = [
+                'href' => $this->getUrlMundipagg($type, $item, self::URL_PATH_EDIT),
+                'label' => __('Edit')
+            ];
+        }
+
+        return $actions;
+    }
+
+    protected function getUrlMundipagg($type, $item, $path)
+    {
         $path = str_replace("*", $type, $path);
 
         $url = $this->urlBuilder->getUrl($path, ['id' => $item['id']]);

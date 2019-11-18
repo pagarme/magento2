@@ -9,7 +9,6 @@ use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
 use Mundipagg\Core\Recurrence\ValueObjects\DiscountValueObject;
 use Mundipagg\Core\Recurrence\ValueObjects\IntervalValueObject;
-use MundiPagg\MundiPagg\Helper\ProductHelper;
 
 class Subscription extends Template
 {
@@ -36,13 +35,11 @@ class Subscription extends Template
     public function __construct(
         Context $context,
         CollectionFactory $productCollectionFactory,
-        Registry $registry,
-        ProductHelper $productHelper
+        Registry $registry
     ) {
         parent::__construct($context, []);
         $this->productCollectionFactory = $productCollectionFactory;
         $this->coreRegistry = $registry;
-        $this->productHelper = $productHelper;
     }
 
     public function getProductId()
@@ -81,7 +78,6 @@ class Subscription extends Template
             $products[$product->getEntityId()] = [
                 'value' => $product->getName(),
                 'id' => $product->getEntityId(),
-                'image' => $this->productHelper->getProductImage($product->getEntityId()),
                 'description' => $product->getDescription()
             ];
         }
@@ -99,7 +95,7 @@ class Subscription extends Template
             'interval_type' => [
                 IntervalValueObject::INTERVAL_TYPE_WEEK => __('week'),
                 IntervalValueObject::INTERVAL_TYPE_MONTH => __('month'),
-                IntervalValueObject::INTERVAL_TYPE_YEAR => __('Year')
+                IntervalValueObject::INTERVAL_TYPE_YEAR => __('year')
             ],
             'discount' => [
                 DiscountValueObject::DISCOUNT_TYPE_PERCENT => __('percentage'),
