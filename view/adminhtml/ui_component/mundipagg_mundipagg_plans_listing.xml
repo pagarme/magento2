@@ -95,6 +95,13 @@
 				</item>
 			</argument>
 		</column>
+		<column name="boleto" class="MundiPagg\MundiPagg\Ui\Component\Recurrence\Column\PaymentMethodColumn">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="label" translate="true" xsi:type="string">Payment Method</item>
+				</item>
+			</argument>
+		</column>
 		<column name="interval_count">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
