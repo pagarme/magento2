@@ -42,7 +42,7 @@ class ProductsPlan implements ProductPlanInterface
 
         $params['form']['items'] = $this->getSubProductsFromPlatform($params);
         if (!$params['form']['items']) {
-            json_encode([
+            return json_encode([
                 'code' => 404,
                 'message' => 'Please add subproducts before product saving'
             ]);
@@ -52,7 +52,7 @@ class ProductsPlan implements ProductPlanInterface
             $planService = new PlanService();
             $planService->create($params['form']);
         } catch (\Exception $exception) {
-            json_encode([
+            return json_encode([
                 'code' => 404,
                 'message' => 'Erro ao tentar criar um produto do tipo plano'
             ]);
