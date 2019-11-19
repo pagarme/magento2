@@ -63,9 +63,7 @@ class ProductsSubscription implements ProductSubscriptionInterface
         $product = $objectManager->get('Magento\Catalog\Model\Product')
             ->load($productId);
 
-        $values = $this->getValuesFromRepetitions(
-            $productSubscription->getRepetitions()
-        );
+        $values = $this->getValuesFromRepetitions($productSubscription);
 
         $customOption = $objectManager->create(
             'Magento\Catalog\Api\Data\ProductCustomOptionInterface'
@@ -114,17 +112,22 @@ class ProductsSubscription implements ProductSubscriptionInterface
         return $customOptions;
     }
 
-    protected function getValuesFromRepetitions($repetitions)
+    protected function getValuesFromRepetitions(ProductSubscription $productSubscription)
     {
-        $values = [
-            [
-                "title" => "None",
-                "price" => 0,
-                "price_type"  => "fixed",
-                "sort_order"  => "0"
-            ]
+        $values = [];
+
+        $sellAsNormalProduct = [
+            "title" => "Compra Única",
+            "price" => 0,
+            "price_type"  => "fixed",
+            "sort_order"  => "0"
         ];
 
+        if (!empty($productSubscription->getSellAsNormalProduct())) {
+            $values[] = $sellAsNormalProduct;
+        }
+
+        $repetitions = $productSubscription->getRepetitions();
         foreach ($repetitions as $repetition) {
             $values[] = [
                 "title" => $this->getCycleTitle($repetition),

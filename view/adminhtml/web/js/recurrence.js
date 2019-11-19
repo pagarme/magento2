@@ -250,6 +250,7 @@ require([
             $("#allow_installments").prop('checked', parseInt(product.allowInstallments));
             $("#allow_installments_div").show();
         }
+        $("#sell_as_normal_product").prop('checked', parseInt(product.sellAsNormalProduct));
 
         updateTableProduct($("#add-product"));
         fillRepetitionTable(product.repetitions);
