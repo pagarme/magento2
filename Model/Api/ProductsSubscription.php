@@ -45,7 +45,8 @@ class ProductsSubscription implements ProductSubscriptionInterface
         }
 
         $productSubscriptionService = new ProductSubscriptionService();
-        $productSubscription = $productSubscriptionService->saveProductSubscription($params['form']);
+        $productSubscription =
+            $productSubscriptionService->saveProductSubscription($params['form']);
         $this->setCustomOption($productSubscription);
 
         return json_encode([
@@ -59,27 +60,58 @@ class ProductsSubscription implements ProductSubscriptionInterface
         $objectManager = ObjectManager::getInstance();
 
         $productId = $productSubscription->getProductId();
-        $product = $objectManager->get('Magento\Catalog\Model\Product')->load($productId);
+        $product = $objectManager->get('Magento\Catalog\Model\Product')
+            ->load($productId);
 
-        $values = $this->getValuesFromRepetitions($productSubscription->getRepetitions());
+        $values = $this->getValuesFromRepetitions(
+            $productSubscription->getRepetitions()
+        );
 
-        /** @var \Magento\Catalog\Api\Data\ProductCustomOptionInterface $customOption */
-        $customOption = $objectManager->create('Magento\Catalog\Api\Data\ProductCustomOptionInterface');
+        $customOption = $objectManager->create(
+            'Magento\Catalog\Api\Data\ProductCustomOptionInterface'
+        );
+
         $customOption->setTitle('Cycles')
             ->setType('radio')
             ->setIsRequire(true)
-            ->setSortOrder(1)
+            ->setSortOrder(100)
             ->setPrice(0)
             ->setPriceType('fixed')
             ->setValues($values)
             ->setMaxCharacters(50)
+            ->setSku("recurrence")
             ->setProductSku($product->getSku());
 
-        $customOptions[] = $customOption;
+        $customOptions = $this->addCustomOptionOnArray($customOption, $product);
 
         $product->setHasOptions(1);
         $product->setCanSaveCustomOptions(true);
         $product->setOptions($customOptions)->save();
+    }
+
+    protected function addCustomOptionOnArray($customOption, $product)
+    {
+        $options = $product->getOptions();
+
+        if (empty($options)) {
+            return [$customOption];
+        }
+
+        $customOptions = [];
+        $hasRecurrenceOption = false;
+        foreach ($options as $option) {
+            if ($option->getSku() !== "recurrence") {
+                $customOptions[] = $option;
+                continue;
+            }
+            $customOptions[] = $customOption;
+            $hasRecurrenceOption = true;
+        }
+
+        if (!$hasRecurrenceOption) {
+            $customOptions[] = $customOption;
+        }
+        return $customOptions;
     }
 
     protected function getValuesFromRepetitions($repetitions)

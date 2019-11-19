@@ -2,11 +2,12 @@
 
 namespace MundiPagg\MundiPagg\Helper;
 
+use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\ObjectManager;
 use Mundipagg\Core\Recurrence\Repositories\RepetitionRepository;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 
-class RecurrenceProductHelper extends \Magento\Framework\App\Helper\AbstractHelper
+class RecurrenceProductHelper extends AbstractHelper
 {
     /**
      * @var RepetitionRepository
@@ -34,15 +35,27 @@ class RecurrenceProductHelper extends \Magento\Framework\App\Helper\AbstractHelp
             return null;
         }
 
-        /** One subscription product should have only one custom option with the
-          * repetitions to be selected
-          */
-        $option = $productOptions['options'][0];
+        $optionValue = null;
 
-        $optionValue =
-            $this->objectManager
-                ->get('Magento\Catalog\Model\Product\Option\Value')
-                ->load($option['option_value']);
+        foreach ($productOptions['options'] as $option) {
+            $productOption = $this->objectManager
+                    ->get('Magento\Catalog\Model\Product\Option')
+                    ->load($option['option_id']);
+
+            if (
+                !empty($productOption) &&
+                $productOption->getSku() === "recurrence"
+            ) {
+                $optionValue = $this->objectManager
+                        ->get('Magento\Catalog\Model\Product\Option\Value')
+                        ->load($option['option_value']);
+            }
+
+        }
+
+        if (empty($optionValue)) {
+            return null;
+        }
 
         $repetitionId = $optionValue->getSortOrder();
 

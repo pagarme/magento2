@@ -30,9 +30,9 @@ class CartAddProductAfterObserver implements ObserverInterface
             $item = $item->getParentItem();
         }
 
-        $recurrenceProduct = $this->getSubscriptionProduct($item);
+        $productSubscription = $this->getSubscriptionProduct($item);
 
-        if (!$recurrenceProduct) {
+        if (!$productSubscription) {
             return;
         }
 
@@ -66,7 +66,8 @@ class CartAddProductAfterObserver implements ObserverInterface
 
     public function getDiscountFromRepetition($item)
     {
-        $repetition = $this->recurrenceProductHelper->getRepetitionSelected($item);
+        $repetition = $this->recurrenceProductHelper
+            ->getRepetitionSelected($item);
 
         if (!empty($repetition)) {
             return $repetition->getDiscount();
@@ -79,7 +80,8 @@ class CartAddProductAfterObserver implements ObserverInterface
     {
         $productId = $item->getProductId();
         $productSubscriptionService = new ProductSubscriptionService();
-        $productSubscription = $productSubscriptionService->findByProductId($productId);
+        $productSubscription =
+            $productSubscriptionService->findByProductId($productId);
 
         if ($productSubscription) {
             return $productSubscription;

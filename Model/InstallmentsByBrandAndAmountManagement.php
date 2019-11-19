@@ -15,13 +15,11 @@ use Magento\Framework\Api\SimpleBuilderInterface;
 use Mundipagg\Core\Kernel\Services\MoneyService;
 use Mundipagg\Core\Kernel\ValueObjects\CardBrand;
 use Mundipagg\Core\Recurrence\Aggregates\Plan;
-use Mundipagg\Core\Recurrence\Repositories\RepetitionRepository;
 use Mundipagg\Core\Recurrence\Services\RecurrenceService;
 use MundiPagg\MundiPagg\Api\InstallmentsByBrandAndAmountManagementInterface;
 use Magento\Checkout\Model\Session;
 use MundiPagg\MundiPagg\Helper\RecurrenceProductHelper;
 use MundiPagg\MundiPagg\Model\Installments\Config\ConfigByBrand as Config;
-use Magento\Framework\App\ObjectManager;
 
 class InstallmentsByBrandAndAmountManagement
     extends AbstractInstallmentManagement
@@ -92,10 +90,12 @@ class InstallmentsByBrandAndAmountManagement
             $baseAmount
         );
 
-        $maxInstallmentsByRecurrence = $this->getInstallmentsByRecurrence($quote, $installments);
+        $maxInstallmentsByRecurrence =
+            $this->getInstallmentsByRecurrence($quote, $installments);
 
         if (count($installments) > $maxInstallmentsByRecurrence) {
-            $installments = array_slice($installments, 0, $maxInstallmentsByRecurrence);
+            $installments =
+                array_slice($installments, 0, $maxInstallmentsByRecurrence);
         }
 
         return $installments;
@@ -105,12 +105,22 @@ class InstallmentsByBrandAndAmountManagement
     {
         $items = $quote->getItems();
         $interval = null;
+        $recurrenceProduct = null;
         $recurrenceService = new RecurrenceService();
 
         foreach($items as $item) {
+            if (!empty($interval)) {
+                continue;
+            }
+
             $productId = $item->getProductId();
-            $recurrenceProduct = $recurrenceService->getRecurrenceProductByProductId($productId);
+            $recurrenceProduct =
+                $recurrenceService->getRecurrenceProductByProductId($productId);
             $interval = $this->getInterval($recurrenceProduct, $item);
+        }
+
+        if (!empty($recurrenceProduct) && !$recurrenceProduct->getAllowInstallments()) {
+            return 1;
         }
 
         if ($interval !== null) {
@@ -122,6 +132,10 @@ class InstallmentsByBrandAndAmountManagement
 
     public function getInterval($recurrenceEntity, $item)
     {
+        if (empty($recurrenceEntity)) {
+            return null;
+        }
+
         if ($recurrenceEntity->getRecurrenceType() == Plan::RECURRENCE_TYPE) {
             return $recurrenceEntity->getInterval();
         }

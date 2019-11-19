@@ -43,12 +43,19 @@ class RepetitionsColumn extends Column
         $productSubscription = $productSubscriptionService->findById($id);
         $repetitions = [];
         foreach ($productSubscription->getRepetitions() as $repetition) {
-            $value = $repetition->getIntervalCount() . " " . $repetition->getIntervalType() . " - ";
-            $value .= "discount: " . $this->getDiscountFormatted($repetition);
+            $value =
+                $repetition->getIntervalCount() .
+                " " .
+                $repetition->getIntervalType();
+
+            if ($repetition->getDiscountValue() > 0) {
+                $value .= " - discount: " . $this->getDiscountFormatted($repetition);
+            }
+
             $repetitions[] = $value;
         }
 
-        return implode(', ', $repetitions);
+        return implode(' | ', $repetitions);
     }
 
     /** Copy Paste, should change to a presentation classe maybe */
