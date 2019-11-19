@@ -84,16 +84,22 @@ class ProductsSubscription implements ProductSubscriptionInterface
 
     protected function getValuesFromRepetitions($repetitions)
     {
-        $values = [];
-        $sortOrder = 1;
+        $values = [
+            [
+                "title" => "None",
+                "price" => 0,
+                "price_type"  => "fixed",
+                "sort_order"  => "0"
+            ]
+        ];
+
         foreach ($repetitions as $repetition) {
             $values[] = [
                 "title" => $this->getCycleTitle($repetition),
-                "price" => 0.0,
+                "price" => 0,
                 "price_type"  => "fixed",
                 "sort_order"  => $repetition->getId()
             ];
-            $sortOrder++;
         }
 
         return $values;
@@ -107,7 +113,13 @@ class ProductsSubscription implements ProductSubscriptionInterface
         );
         $discount = $this->getDiscountFormatted($repetition);
 
-        return "De $intervalCount em $intervalCount $intervalType - $discount de desconto";
+        $discountLabel = " - $discount de desconto";
+        $intervalLabel = "De $intervalCount em $intervalCount $intervalType";
+
+        if (empty($repetition->getDiscountValue())) {
+            return $intervalLabel;
+        }
+        return $intervalLabel . $discountLabel;
     }
 
     protected function getDiscountFormatted(Repetition $repetition)

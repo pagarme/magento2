@@ -41,4 +41,9 @@
         <observer name="cancel_order_at_mundipagg_via_payment_refund"
                   instance="MundiPagg\MundiPagg\Observer\OrderCancelAfter" />
     </event>
+
+    <event name="checkout_cart_product_add_after">
+        <observer name="add_cart_product"
+                  instance="MundiPagg\MundiPagg\Observer\CartAddProductAfterObserver" />
+    </event>
 </config>

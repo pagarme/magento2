@@ -14,9 +14,14 @@ namespace MundiPagg\MundiPagg\Model;
 use Magento\Framework\Api\SimpleBuilderInterface;
 use Mundipagg\Core\Kernel\Services\MoneyService;
 use Mundipagg\Core\Kernel\ValueObjects\CardBrand;
+use Mundipagg\Core\Recurrence\Aggregates\Plan;
+use Mundipagg\Core\Recurrence\Repositories\RepetitionRepository;
+use Mundipagg\Core\Recurrence\Services\RecurrenceService;
 use MundiPagg\MundiPagg\Api\InstallmentsByBrandAndAmountManagementInterface;
 use Magento\Checkout\Model\Session;
+use MundiPagg\MundiPagg\Helper\RecurrenceProductHelper;
 use MundiPagg\MundiPagg\Model\Installments\Config\ConfigByBrand as Config;
+use Magento\Framework\App\ObjectManager;
 
 class InstallmentsByBrandAndAmountManagement
     extends AbstractInstallmentManagement
@@ -25,6 +30,10 @@ class InstallmentsByBrandAndAmountManagement
     protected $builder;
     protected $session;
     protected $cardBrand;
+    /**
+     * @var RecurrenceProductHelper
+     */
+    protected $recurrenceProductHelper;
 
     /**
      * @param SimpleBuilderInterface $builder
@@ -32,12 +41,14 @@ class InstallmentsByBrandAndAmountManagement
     public function __construct(
         SimpleBuilderInterface $builder,
         Session $session,
-        Config $config
+        Config $config,
+        RecurrenceProductHelper $recurrenceProductHelper
     )
     {
         $this->setBuilder($builder);
         $this->setSession($session);
         $this->setConfig($config);
+        $this->recurrenceProductHelper = $recurrenceProductHelper;
 
         parent::__construct();
     }
@@ -58,7 +69,9 @@ class InstallmentsByBrandAndAmountManagement
             $baseBrand = strtolower($brand);
         }
 
-        $baseAmount = $this->builder->getSession()->getQuote()->getGrandTotal();
+        $quote = $this->builder->getSession()->getQuote();
+
+        $baseAmount = $quote->getGrandTotal();
         if ($amount !== null) {
             $baseAmount = $amount;
         }
@@ -73,32 +86,55 @@ class InstallmentsByBrandAndAmountManagement
 
         $baseAmount = $moneyService->centsToFloat($baseAmount);
 
-        return $this->getCoreInstallments(
+        $installments = $this->getCoreInstallments(
             null,
             CardBrand::$baseBrand(),
             $baseAmount
         );
 
-        //@fixme deprecated code.
+        $maxInstallmentsByRecurrence = $this->getInstallmentsByRecurrence($quote, $installments);
 
-        $cardBrand = $brand != 'null' ? $this->formatCardBrand($brand) : null;
-        $this->session->setCardBrand($cardBrand);
-        $this->session->setCreditCardAmount($amount);
-        $this->getBuilder()->create();
-
-            $result = [];
-
-        /** @var Installment $item */
-        foreach ($this->getBuilder()->getData() as $item) {
-            $result[] = [
-                'id' => $item->getQty(),
-                'interest' => $item->getInterest(),
-                'label' => $item->getLabel()
-            ];
+        if (count($installments) > $maxInstallmentsByRecurrence) {
+            $installments = array_slice($installments, 0, $maxInstallmentsByRecurrence);
         }
 
-        return $result;
+        return $installments;
     }
+
+    public function getInstallmentsByRecurrence($quote, $installments)
+    {
+        $items = $quote->getItems();
+        $interval = null;
+        $recurrenceService = new RecurrenceService();
+
+        foreach($items as $item) {
+            $productId = $item->getProductId();
+            $recurrenceProduct = $recurrenceService->getRecurrenceProductByProductId($productId);
+            $interval = $this->getInterval($recurrenceProduct, $item);
+        }
+
+        if ($interval !== null) {
+            return $recurrenceService->getMaxInstallmentByRecurrenceInterval($interval);
+        }
+
+        return count($installments);
+    }
+
+    public function getInterval($recurrenceEntity, $item)
+    {
+        if ($recurrenceEntity->getRecurrenceType() == Plan::RECURRENCE_TYPE) {
+            return $recurrenceEntity->getInterval();
+        }
+
+        $repetition = $this->recurrenceProductHelper->getRepetitionSelected($item);
+
+        if (!empty($repetition)) {
+            return $repetition->getInterval();
+        }
+
+        return null;
+    }
+
 
     /**
      * @param $brand
