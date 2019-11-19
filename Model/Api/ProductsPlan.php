@@ -64,6 +64,11 @@ class ProductsPlan implements ProductPlanInterface
         ]);
     }
 
+    public function editProductPlan()
+    {
+        $post = $this->request->getBodyParams();
+    }
+
     private function getSubProductsFromPlatform($params)
     {
         if (empty($params['form']['items'])) {

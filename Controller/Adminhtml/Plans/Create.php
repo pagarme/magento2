@@ -7,7 +7,8 @@ use Magento\Backend\App\Action\Context;
 use Magento\Framework\Registry;
 use Magento\Framework\View\Result\PageFactory;
 use Mundipagg\Core\Recurrence\Aggregates\Plan;
-use MundiPagg\MundiPagg\Model\ProductsPlanFactory;
+use Mundipagg\Core\Recurrence\Repositories\PlanRepository;
+use Mundipagg\Core\Recurrence\Services\PlanService;
 
 class Create extends Action
 {
@@ -27,13 +28,11 @@ class Create extends Action
     public function __construct(
         Context $context,
         PageFactory $resultPageFactory,
-        Registry $coreRegistry,
-        ProductsPlanFactory $productsPlanFactory
+        Registry $coreRegistry
     ) {
         parent::__construct($context);
         $this->resultPageFactory = $resultPageFactory;
         $this->coreRegistry = $coreRegistry;
-        $this->productsPlanFactory = $productsPlanFactory;
     }
 
     /**
@@ -43,21 +42,22 @@ class Create extends Action
      */
     public function execute()
     {
-        $productId = (int) $this->getRequest()->getParam('id');
-        if($productId) {
+        $planId = (int) $this->getRequest()->getParam('id');
+        if($planId) {
             //@todo this should be a product plan core object
-            $productData = $this->productsPlanFactory->create()->load($productId);
+            $planService = new PlanService();
+            $planData = $planService->findById($planId);
 
-            if (!$productData || !$productData->getId()) {
+            if (!$planData || !$planData->getId()) {
                 $this->messageManager->addError(__('Product plan not exist.'));
                 $this->_redirect('mundipagg_mundipagg/plans/index');
                 return;
             }
-            $this->coreRegistry->register('product_data', $productData);
+            $this->coreRegistry->register('product_data', $planData);
         }
 
         $this->coreRegistry->register('recurrence_type', Plan::RECURRENCE_TYPE);
-        $title = $productId ? __('Edit Plan') : __('Create Plan');
+        $title = $planId ? __('Edit Plan') : __('Create Plan');
 
         $resultPage = $this->resultPageFactory->create();
         $resultPage->getConfig()->getTitle()->prepend($title);
