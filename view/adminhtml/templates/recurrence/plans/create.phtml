@@ -1,162 +1,161 @@
-<main id="anchor-content" class="page-content">
-    <form id="form-product" method="post">
-        <div class="page-main-actions">
-            <div class="page-actions-placeholder"></div>
-            <div class="page-actions" data-ui-id="page-actions-toolbar-content-header">
-                <div class="page-actions-inner" data-title="New Plan">
-                    <div class="page-actions-buttons">
-                        <button id="save-button" title="Save" class="action-default primary" type="submit">
-                            <span><?php echo __('Save') ?></span>
-                        </button>
-                        <button id="back" title="Back" type="button" class="action- scalable back" onclick="location.href = '<?php echo $block->getUrl('mundipagg_mundipagg/plans/index')?>'" data-ui-id="back-button">
-                            <span><?php echo __('Back') ?></span>
-                        </button>
-                    </div>
+
+<form id="form-product" method="post">
+    <div class="page-main-actions">
+        <div class="page-actions-placeholder"></div>
+        <div class="page-actions" data-ui-id="page-actions-toolbar-content-header">
+            <div class="page-actions-inner" data-title="New Plan">
+                <div class="page-actions-buttons">
+                    <button id="save-button" title="Save" class="action-default primary" type="submit">
+                        <span><?php echo __('Save') ?></span>
+                    </button>
+                    <button id="back" title="Back" type="button" class="action- scalable back" onclick="location.href = '<?php echo $block->getUrl('mundipagg_mundipagg/plans/index')?>'" data-ui-id="back-button">
+                        <span><?php echo __('Back') ?></span>
+                    </button>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Bundle Products-->
-        <input id="products-bundle" value='<?php echo $block->getBundleProducts();?>' type="hidden" />
+    <!-- Bundle Products-->
+    <input id="products-bundle" value='<?php echo $block->getBundleProducts();?>' type="hidden" />
 
-        <!-- Edit Product-->
-        <input id="edit-product" name='edit_product_id' value='<?php echo $block->getEditProduct();?>' type="hidden" />
+    <!-- Edit Product-->
+    <input id="edit-product" name='edit_product_id' value='<?php echo $block->getEditProduct();?>' type="hidden" />
 
-        <!-- Product Id-->
-        <input id="product-recurrence-id" name='form[id]' value='<?php echo $block->getProductId(); ?>' type="hidden"/>
+    <!-- Product Id-->
+    <input id="product-recurrence-id" name='form[id]' value='<?php echo $block->getProductId(); ?>' type="hidden"/>
 
-        <!-- Recurrence Type-->
-        <input id="recurrence-type" name='' value='<?php echo $block->getRecurrenceType(); ?>' type="hidden"/>
+    <!-- Recurrence Type-->
+    <input id="recurrence-type" name='' value='<?php echo $block->getRecurrenceType(); ?>' type="hidden"/>
 
-        <!-- Url Search-->
-        <input id="url-search" value="<?php echo $block->getUrl('*/plans/searchproduct');?>" type="hidden" />
+    <!-- Url Search-->
+    <input id="url-search" value="<?php echo $block->getUrl('*/plans/searchproduct');?>" type="hidden" />
 
-        <!-- Url Post-->
-        <input id="url-post" value="<?php echo $block->getBaseUrl() . 'rest/V1/mundipagg/recurrence/plan/product/save'; ?>" type="hidden"/>
+    <!-- Url Post-->
+    <input id="url-post" value="<?php echo $block->getBaseUrl() . 'rest/V1/mundipagg/recurrence/plan/product/save'; ?>" type="hidden"/>
 
-        <input type="hidden" name="form_key" value="<?php echo $block->getFormKey() ?>" />
+    <input type="hidden" name="form_key" value="<?php echo $block->getFormKey() ?>" />
 
-        <div id="page:main-container" class="page-columns">
-            <div class="admin__old">
-                <div id="container" class="main-col">
-                    <div class="entry-edit form-inline">
-                        <div class="fieldset-wrapper">
-                            <div class="admin__fieldset-wrapper-content _hide">
-                                <fieldset class="admin__fieldset">
+    <div id="page:main-container" class="page-columns">
+        <div class="admin__old">
+            <div id="container" class="main-col">
+                <div class="entry-edit form-inline">
+                    <div class="fieldset-wrapper">
+                        <div class="admin__fieldset-wrapper-content _hide">
+                            <fieldset class="admin__fieldset">
 
-                                    <div class="fieldset-wrapper admin__collapsible-block-wrapper products-wrapper" data-role="collapsible" >
-                                        <h1><?php echo __('Products') ?></h1>
-                                        <div class="select-product">
-                                            <h2><?php echo __('Add a bundle product') ?></h2>
-                                            <label><?php echo __('Product search') ?></label>
-                                            <input type="text" class="product_search" name="product_search" id="product-search">
-                                            <input type="hidden" id="product_id" name="form[product_id]">
-                                            <input type="hidden" id="product_name" name="form[name]">
-                                            <input type="hidden" id="product_description" name="form[description]">
-                                            <input type="hidden" id="product_image">
-                                            <button type="button" class="action-basic" id="add-product" data-action="add">
-                                                <span><?php echo __('Add Product') ?></span>
-                                            </button>
-                                            <p id="error-message" class="error-message"></p>
-                                        </div>
-
-                                        <div class="admin__control-table-wrapper table-products" id="table-products">
-                                            <div id="info-bundle" class="info-bundle">
-                                                <div class="info-bundle-header">
-                                                    <strong><span></span></strong>
-                                                </div>
-                                            </div>
-                                            <table id="product-info" class="admin__dynamic-rows admin__control-table">
-                                                <thead>
-                                                    <tr>
-                                                        <th></th>
-                                                        <th><?php echo __('Name') ?></th>
-                                                        <th><?php echo __('Cycle') ?></th>
-                                                        <th><?php echo __('Quantity') ?></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                <div class="fieldset-wrapper admin__collapsible-block-wrapper products-wrapper" data-role="collapsible" >
+                                    <h1><?php echo __('Products') ?></h1>
+                                    <div class="select-product">
+                                        <h2><?php echo __('Add a bundle product') ?></h2>
+                                        <label><?php echo __('Product search') ?></label>
+                                        <input type="text" class="product_search" name="product_search" id="product-search">
+                                        <input type="hidden" id="product_id" name="form[product_id]">
+                                        <input type="hidden" id="product_name" name="form[name]">
+                                        <input type="hidden" id="product_description" name="form[description]">
+                                        <input type="hidden" id="product_image">
+                                        <button type="button" class="action-basic" id="add-product" data-action="add">
+                                            <span><?php echo __('Add Product') ?></span>
+                                        </button>
+                                        <p id="error-message" class="error-message"></p>
                                     </div>
 
-                                    <div class="admin__field _required">
-                                        <label class="admin__field-label">
-                                            <span><?php echo __('Payment Methods') ?></span>
-                                        </label>
-                                        <div class="admin__field-control _with-tooltip">
-                                            <div class="admin__field admin__field-option">
-                                                <input type="checkbox" class="admin__control-checkbox" name="form[credit_card]" id="credit-card" value="true">
-                                                <label class="admin__field-label" for="credit-card"><?php echo __('Credit Card') ?></label>
+                                    <div class="admin__control-table-wrapper table-products" id="table-products">
+                                        <div id="info-bundle" class="info-bundle">
+                                            <div class="info-bundle-header">
+                                                <strong><span></span></strong>
                                             </div>
                                         </div>
+                                        <table id="product-info" class="admin__dynamic-rows admin__control-table">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th><?php echo __('Name') ?></th>
+                                                    <th><?php echo __('Cycle') ?></th>
+                                                    <th><?php echo __('Quantity') ?></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
                                     </div>
+                                </div>
 
-                                    <div class="admin__field">
-                                        <label class="admin__field-label">
-                                            <span> </span>
-                                        </label>
-                                        <div class="admin__field-control">
-                                            <div class="admin__field admin__field-option">
-                                                <input type="checkbox" class="admin__control-checkbox" name="form[boleto]" id="boleto" value="true">
-                                                <label class="admin__field-label" for="boleto"><?php echo __('Boleto') ?></label>
-                                            </div>
+                                <div class="admin__field _required">
+                                    <label class="admin__field-label">
+                                        <span><?php echo __('Payment Methods') ?></span>
+                                    </label>
+                                    <div class="admin__field-control _with-tooltip">
+                                        <div class="admin__field admin__field-option">
+                                            <input type="checkbox" class="admin__control-checkbox" name="form[credit_card]" id="credit-card" value="true">
+                                            <label class="admin__field-label" for="credit-card"><?php echo __('Credit Card') ?></label>
                                         </div>
                                     </div>
+                                </div>
 
-                                    <div class="admin__field" id="allow_installments_div">
-                                        <label class="admin__field-label">
-                                            <span><?php echo __('Allow Installments') ?></span>
-                                        </label>
-                                        <div class="admin__field-control _with-tooltip">
-                                            <div class="admin__field admin__field-option">
-                                                <input type="checkbox" class="admin__control-checkbox" name="form[installments]" id="allow_installments" value="true">
-                                                <label class="admin__field-label" for="allow_installments"></label>
-                                            </div>
+                                <div class="admin__field">
+                                    <label class="admin__field-label">
+                                        <span> </span>
+                                    </label>
+                                    <div class="admin__field-control">
+                                        <div class="admin__field admin__field-option">
+                                            <input type="checkbox" class="admin__control-checkbox" name="form[boleto]" id="boleto" value="true">
+                                            <label class="admin__field-label" for="boleto"><?php echo __('Boleto') ?></label>
                                         </div>
                                     </div>
+                                </div>
 
-                                    <div class="admin__field _required">
-                                        <label class="admin__field-label">
-                                            <span><?php echo __('Interval') ?></span>
-                                        </label>
-                                        <div class="admin__field-control">
-                                            <select class="admin__control-select" name="form[interval_type]" id="interval_type">
-                                                <option data-title="Week" value="week"><?php echo __('Week') ?></option>
-                                                <option data-title="Month" value="month"><?php echo __('Month') ?></option>
-                                                <option data-title="Year" value="year"><?php echo __('Year') ?></option>
-                                            </select>
+                                <div class="admin__field" id="allow_installments_div">
+                                    <label class="admin__field-label">
+                                        <span><?php echo __('Allow Installments') ?></span>
+                                    </label>
+                                    <div class="admin__field-control _with-tooltip">
+                                        <div class="admin__field admin__field-option">
+                                            <input type="checkbox" class="admin__control-checkbox" name="form[installments]" id="allow_installments" value="true">
+                                            <label class="admin__field-label" for="allow_installments"></label>
                                         </div>
                                     </div>
+                                </div>
 
-                                    <div class="admin__field _required">
-                                        <label class="admin__field-label">
-                                            <span><?php echo __('Interval Count') ?></span>
-                                        </label>
-                                        <div class="admin__field-control">
-                                            <select class="admin__control-select" name="form[interval_count]" id="interval_count">
-                                                <?php for($i = 1;$i <= 12; $i++):?>
-                                                <option value="<?php echo $i?>"><?php echo $i?></option>
-                                                <?php endfor;?>
-                                            </select>
-                                        </div>
+                                <div class="admin__field _required">
+                                    <label class="admin__field-label">
+                                        <span><?php echo __('Interval') ?></span>
+                                    </label>
+                                    <div class="admin__field-control">
+                                        <select class="admin__control-select" name="form[interval_type]" id="interval_type">
+                                            <option data-title="Week" value="week"><?php echo __('Week') ?></option>
+                                            <option data-title="Month" value="month"><?php echo __('Month') ?></option>
+                                            <option data-title="Year" value="year"><?php echo __('Year') ?></option>
+                                        </select>
                                     </div>
+                                </div>
 
-                                    <div class="admin__field admin__field-small">
-                                        <label class="admin__field-label">
-                                            <span><?php echo __('Trial Days') ?></span>
-                                        </label>
-                                        <div class="admin__field-control">
-                                            <input class="admin__control-text" type="text" name="form[trial_period_days]" id="trial_period_days" maxlength="255">
-                                        </div>
+                                <div class="admin__field _required">
+                                    <label class="admin__field-label">
+                                        <span><?php echo __('Interval Count') ?></span>
+                                    </label>
+                                    <div class="admin__field-control">
+                                        <select class="admin__control-select" name="form[interval_count]" id="interval_count">
+                                            <?php for($i = 1;$i <= 12; $i++):?>
+                                            <option value="<?php echo $i?>"><?php echo $i?></option>
+                                            <?php endfor;?>
+                                        </select>
                                     </div>
-                                </fieldset>
-                            </div>
+                                </div>
+
+                                <div class="admin__field admin__field-small">
+                                    <label class="admin__field-label">
+                                        <span><?php echo __('Trial Days') ?></span>
+                                    </label>
+                                    <div class="admin__field-control">
+                                        <input class="admin__control-text" type="text" name="form[trial_period_days]" id="trial_period_days" maxlength="255">
+                                    </div>
+                                </div>
+                            </fieldset>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </form>
-</main>
+    </div>
+</form>
