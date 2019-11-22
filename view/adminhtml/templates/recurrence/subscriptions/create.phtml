@@ -79,7 +79,11 @@ $quantityOptionCicle = 4;
                                                         <th></th>
                                                         <th><?php echo __('Name') ?></th>
                                                         <th><?php echo __('Cycle') ?></th>
-                                                        <th><?php echo __('Quantity') ?></th>
+                                                        <?php if($block->getRecurrenceType() !== "subscription"):?>
+                                                            <th><?php echo __('Quantity') ?></th>
+                                                        <?php else:?>
+                                                            <th><?php echo __('Price') ?></th>
+                                                        <?php endif;?>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
