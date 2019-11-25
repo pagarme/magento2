@@ -58,7 +58,7 @@ class Plan extends Template
 
     public function getEditProduct()
     {
-        $productData = $this->coreRegistry->registry('product_data');
+        $productData = $this->coreRegistry->registry('plan_data');
         if (empty($productData)) {
             return "";
         }

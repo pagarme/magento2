@@ -19,6 +19,6 @@ class ProductsPlan extends AbstractModel implements IdentityInterface
      */
     public function getIdentities()
     {
-        return  $this->getId();
+        return $this->getId();
     }
 }

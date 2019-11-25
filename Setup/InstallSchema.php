@@ -28,8 +28,6 @@ class InstallSchema implements InstallSchemaInterface
         $this->installTransaction($setup);
         $this->installSavedCard($setup);
         $this->installCustomer($setup);
-        $this->installProductsPlan($setup);
-        $this->installSubProducts($setup);
         $this->installProductsSubscription($setup);
         $this->installSubscriptionRepetitions($setup);
 
@@ -745,6 +743,15 @@ class InstallSchema implements InstallSchemaInterface
                         'nullable' => true
                     ],
                     "Quantity"
+                )
+                ->addColumn(
+                    'trial_period_days',
+                    Table::TYPE_INTEGER,
+                    255,
+                    [
+                        'nullable' => true
+                    ],
+                    "Trial period"
                 )
                 ->addColumn(
                     'created_at',

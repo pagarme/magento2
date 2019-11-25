@@ -25,7 +25,6 @@ class RepetitionsColumn extends Column
         array $components = [],
         array $data = []
     ) {
-        Magento2CoreSetup::bootstrap();
         $this->i18n = new LocalizationService();
         parent::__construct($context, $uiComponentFactory, $components, $data);
     }
