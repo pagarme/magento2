@@ -206,17 +206,28 @@ require([
         var id = data.id == undefined ? "" : data.id;
         var cycles = data.cycles == undefined ? "" : data.cycles;
         var quantity = data.quantity == undefined ? 1 : data.quantity;
+
+        var inputsHidden = "<input type='hidden' name='form[items][" + index + "][product_id]' value='" + data.code + "'/>" +
+            "<input type='hidden' name='form[items][" + index + "][name]' value='" + data.name + "'/>" +
+            "<input type='hidden' name='form[items][" + index + "][price]' value='" + data.price + "'/>" +
+            "<input type='hidden' name='form[items][" + index + "][id]' value='" + id + "'/>";
+
+        var quantityColumn = "<input type='number' name='form[items][" + index + "][quantity]' value='" + quantity + "' step='1' min='1'/>";
+        var priceColumn = "<input type='number' disabled value='" + (data.price / 100).toFixed(2) + "' />" +
+            "<input type='hidden' name='form[items][" + index + "][quantity]' value='" + quantity + "'/>";
+
+        var type = $("#recurrence-type").val();
+
+        var lastColumn = quantityColumn;
+        if (type == 'subscription') {
+            lastColumn = priceColumn;
+        }
+
         var tr = $('<tr>').append(
             $('<td>').html("<img src='" + data.image + "' width='70px' height='70px'>"),
             $('<td>').text(data.name),
-            $('<td>').html("<input type='number' name='form[items][" + index +"][cycles]' value='" + cycles + "' step='1' min='0'/>"),
-            $('<td>').html(
-                "<input type='number' name='form[items][" + index +"][quantity]' value='" + quantity + "' step='1' min='1'/>" +
-                "<input type='hidden' name='form[items][" + index +"][product_id]' value='" + data.code + "'/>" +
-                "<input type='hidden' name='form[items][" + index +"][name]' value='" + data.name + "'/>" +
-                "<input type='hidden' name='form[items][" + index +"][price]' value='" + data.price + "'/>" +
-                "<input type='hidden' name='form[items][" + index +"][id]' value='" + id + "'/>"
-            ),
+            $('<td>').html("<input type='number' name='form[items][" + index + "][cycles]' value='" + cycles + "' step='1' min='0'/>"),
+            $('<td>').html(lastColumn + inputsHidden),
         );
 
         var table = $('#table-products tbody');
