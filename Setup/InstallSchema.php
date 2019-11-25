@@ -28,8 +28,6 @@ class InstallSchema implements InstallSchemaInterface
         $this->installTransaction($setup);
         $this->installSavedCard($setup);
         $this->installCustomer($setup);
-        $this->installProductsPlan($setup);
-        $this->installSubProducts($setup);
         $this->installProductsSubscription($setup);
         $this->installSubscriptionRepetitions($setup);
 
