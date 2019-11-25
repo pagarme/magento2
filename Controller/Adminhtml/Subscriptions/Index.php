@@ -30,7 +30,7 @@ class Index extends Action
     public function execute()
     {
         $resultPage = $this->resultPageFactory->create();
-        $resultPage->getConfig()->getTitle()->prepend(__("Subscriptions"));
+        $resultPage->getConfig()->getTitle()->prepend(__("Recurrence Products"));
         
         return $resultPage;
     }

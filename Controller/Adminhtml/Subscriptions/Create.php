@@ -69,7 +69,7 @@ class Create extends Action
         }
         $this->coreRegistry->register('recurrence_type', ProductSubscription::RECURRENCE_TYPE);
 
-        $title = $productId ? __('Edit Subscription') : __('Create Subscription');
+        $title = $productId ? __('Edit Recurrence Product') : __('Create Recurrence Product');
 
         $resultPage = $this->resultPageFactory->create();
         $resultPage->getConfig()->getTitle()->prepend($title);

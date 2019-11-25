@@ -72,19 +72,22 @@ class Subscription extends Template
         $products = [];
         $collection = $this->productCollectionFactory->create();
         $collection->addAttributeToSelect(array('name', 'description'))
-            ->addAttributeToFilter('type_id', 'bundle');
+            ->addAttributeToFilter('type_id', 'simple');
 
         foreach ($collection as $product) {
             $products[$product->getEntityId()] = [
-                'value' => $product->getName(),
-                'id' => $product->getEntityId(),
-                'description' => $product->getDescription()
+                'value' => $this->getFormattedName($product->getName()),
+                'id' => $product->getEntityId()
             ];
         }
 
         return json_encode($products);
     }
 
+    public function getFormattedName($name)
+    {
+        return str_replace("'", "", $name);
+    }
     /**
      * @return array
      */
@@ -93,7 +96,6 @@ class Subscription extends Template
         return [
             'interval_count' => range(1, 12),
             'interval_type' => [
-                IntervalValueObject::INTERVAL_TYPE_WEEK => __('week'),
                 IntervalValueObject::INTERVAL_TYPE_MONTH => __('month'),
                 IntervalValueObject::INTERVAL_TYPE_YEAR => __('year')
             ],

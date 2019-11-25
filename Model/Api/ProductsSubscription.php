@@ -45,7 +45,8 @@ class ProductsSubscription implements ProductSubscriptionInterface
         }
 
         $productSubscriptionService = new ProductSubscriptionService();
-        $productSubscription = $productSubscriptionService->saveProductSubscription($params['form']);
+        $productSubscription =
+            $productSubscriptionService->saveProductSubscription($params['form']);
         $this->setCustomOption($productSubscription);
 
         return json_encode([
@@ -59,34 +60,78 @@ class ProductsSubscription implements ProductSubscriptionInterface
         $objectManager = ObjectManager::getInstance();
 
         $productId = $productSubscription->getProductId();
-        $product = $objectManager->get('Magento\Catalog\Model\Product')->load($productId);
+        $product = $objectManager->get('Magento\Catalog\Model\Product')
+            ->load($productId);
 
-        $values = $this->getValuesFromRepetitions($productSubscription->getRepetitions());
+        $values = $this->getValuesFromRepetitions($productSubscription);
 
-        /** @var \Magento\Catalog\Api\Data\ProductCustomOptionInterface $customOption */
-        $customOption = $objectManager->create('Magento\Catalog\Api\Data\ProductCustomOptionInterface');
+        $customOption = $objectManager->create(
+            'Magento\Catalog\Api\Data\ProductCustomOptionInterface'
+        );
+
         $customOption->setTitle('Cycles')
             ->setType('radio')
             ->setIsRequire(true)
-            ->setSortOrder(1)
+            ->setSortOrder(100)
             ->setPrice(0)
             ->setPriceType('fixed')
             ->setValues($values)
             ->setMaxCharacters(50)
+            ->setSku("recurrence")
             ->setProductSku($product->getSku());
+
+        $customOptions = $this->addCustomOptionOnArray($customOption, $product);
 
         $product->setHasOptions(1);
         $product->setCanSaveCustomOptions(true);
-        $product->setOptions([$customOption])->save();
+        $product->setOptions($customOptions)->save();
     }
 
-    protected function getValuesFromRepetitions($repetitions)
+    protected function addCustomOptionOnArray($customOption, $product)
+    {
+        $options = $product->getOptions();
+
+        if (empty($options)) {
+            return [$customOption];
+        }
+
+        $customOptions = [];
+        $hasRecurrenceOption = false;
+        foreach ($options as $option) {
+            if ($option->getSku() !== "recurrence") {
+                $customOptions[] = $option;
+                continue;
+            }
+            $customOptions[] = $customOption;
+            $hasRecurrenceOption = true;
+        }
+
+        if (!$hasRecurrenceOption) {
+            $customOptions[] = $customOption;
+        }
+        return $customOptions;
+    }
+
+    protected function getValuesFromRepetitions(ProductSubscription $productSubscription)
     {
         $values = [];
+
+        $sellAsNormalProduct = [
+            "title" => "Compra Única",
+            "price" => 0,
+            "price_type"  => "fixed",
+            "sort_order"  => "0"
+        ];
+
+        if (!empty($productSubscription->getSellAsNormalProduct())) {
+            $values[] = $sellAsNormalProduct;
+        }
+
+        $repetitions = $productSubscription->getRepetitions();
         foreach ($repetitions as $repetition) {
             $values[] = [
                 "title" => $this->getCycleTitle($repetition),
-                "price" => 0.0,
+                "price" => 0,
                 "price_type"  => "fixed",
                 "sort_order"  => $repetition->getId()
             ];
@@ -103,7 +148,13 @@ class ProductsSubscription implements ProductSubscriptionInterface
         );
         $discount = $this->getDiscountFormatted($repetition);
 
-        return "De $intervalCount em $intervalCount $intervalType - $discount de desconto";
+        $discountLabel = " - $discount de desconto";
+        $intervalLabel = "De $intervalCount em $intervalCount $intervalType";
+
+        if (empty($repetition->getDiscountValue())) {
+            return $intervalLabel;
+        }
+        return $intervalLabel . $discountLabel;
     }
 
     protected function getDiscountFormatted(Repetition $repetition)

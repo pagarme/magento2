@@ -830,6 +830,15 @@ class InstallSchema implements InstallSchemaInterface
                     "Accepts boleto"
                 )
                 ->addColumn(
+                    'sell_as_normal_product',
+                    Table::TYPE_TEXT,
+                    1,
+                    [
+                        'nullable' => false
+                    ],
+                    "Allow sell as normal product"
+                )
+                ->addColumn(
                     'billing_type',
                     Table::TYPE_TEXT,
                     11,

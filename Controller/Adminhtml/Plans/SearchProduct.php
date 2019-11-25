@@ -63,18 +63,52 @@ class SearchProduct extends Action
     {
         $productId = $this->getRequest()->getParam('productId');
         $recurrenceType = $this->getRequest()->getParam('recurrenceType');
-        $recurrenceProductId = $this->getRequest()->getParam('recurrenceProductId');
+        $recurrenceProductId =
+            $this->getRequest()->getParam('recurrenceProductId');
 
         $objectManager = ObjectManager::getInstance();
-        $productBundle = $objectManager->get('\Magento\Catalog\Model\Product')->load($productId);
 
-        if (empty($productBundle) || $productBundle->getHasOptions() == 0) {
+        $product = $objectManager->get('\Magento\Catalog\Model\Product')
+            ->load($productId);
+
+        if (empty($product) ) {
+            return;
+        }
+
+        if ($recurrenceType === Plan::RECURRENCE_TYPE) {
+            $bundleProducts = $this->getProductsPlanArray(
+                $product,
+                $recurrenceProductId,
+                $recurrenceType
+            );
+            $resultJson = $this->resultJsonFactory->create();
+            return $resultJson->setData($bundleProducts);
+        }
+
+        $products = $this->getProductSubscriptionArray(
+            $product,
+            $recurrenceProductId,
+            $recurrenceType
+        );
+
+        $resultJson = $this->resultJsonFactory->create();
+        return $resultJson->setData($products);
+    }
+
+    public function getProductsPlanArray(
+        $productBundle,
+        $recurrenceProductId,
+        $recurrenceType
+    ) {
+        $objectManager = ObjectManager::getInstance();
+        if ($productBundle->getHasOptions() == 0) {
             return;
         }
 
         $typeInstance = $objectManager->get('Magento\Bundle\Model\Product\Type');
         $selections = $typeInstance->getSelectionsCollection(
-            $typeInstance->getOptionsIds($productBundle), $productBundle
+            $typeInstance->getOptionsIds($productBundle),
+            $productBundle
         );
         $moneyService = new MoneyService();
 
@@ -83,7 +117,9 @@ class SearchProduct extends Action
             $product = [
                 "code" => $bundle->getEntityId(),
                 "name" => $bundle->getName(),
-                "image" => $this->productHelper->getProductImage($bundle->getEntityId()),
+                "image" => $this->productHelper->getProductImage(
+                    $bundle->getEntityId()
+                ),
                 "price" => $moneyService->floatToCents(
                     $bundle->getSelectionPriceValue()
                 ),
@@ -110,12 +146,55 @@ class SearchProduct extends Action
             'description' => $productBundle->getDescription()
         ];
 
-        $resultJson = $this->resultJsonFactory->create();
-        return $resultJson->setData($bundleProducts);
+        return $bundleProducts;
     }
 
-    public function getProductRecurrence($productId, $recurrenceProductId, $recurrenceType)
-    {
+    public function getProductSubscriptionArray(
+        $simpleProduct,
+        $recurrenceProductId,
+        $recurrenceType
+    ) {
+        $moneyService = new MoneyService();
+
+        $product = [
+            "code" => $simpleProduct->getEntityId(),
+            "name" => $simpleProduct->getName(),
+            "image" => $this->productHelper->getProductImage(
+                $simpleProduct->getEntityId()
+            ),
+            "price" => $moneyService->floatToCents(
+                $simpleProduct->getPrice()
+            ),
+        ];
+
+        $subProductRecurrence = $this->getProductRecurrence(
+            $simpleProduct->getEntityId(),
+            $recurrenceProductId,
+            $recurrenceType
+        );
+
+        if ($subProductRecurrence !== null) {
+            $product['cycles'] = $subProductRecurrence->getCycles();
+            $product['quantity'] = $subProductRecurrence->getQuantity();
+            $product['id'] = $subProductRecurrence->getId();
+        }
+
+        $products[] = $product;
+
+        $products['productBundle'] = [
+            'id' => $simpleProduct->getEntityId(),
+            'name' => $simpleProduct->getName(),
+            'description' => $simpleProduct->getDescription()
+        ];
+
+        return $products;
+    }
+
+    public function getProductRecurrence(
+        $productId,
+        $recurrenceProductId,
+        $recurrenceType
+    ) {
         if (empty($recurrenceProductId)) {
             return null;
         }
