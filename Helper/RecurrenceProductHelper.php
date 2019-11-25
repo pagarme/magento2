@@ -35,23 +35,7 @@ class RecurrenceProductHelper extends AbstractHelper
             return null;
         }
 
-        $optionValue = null;
-
-        foreach ($productOptions['options'] as $option) {
-            $productOption = $this->objectManager
-                    ->get('Magento\Catalog\Model\Product\Option')
-                    ->load($option['option_id']);
-
-            if (
-                !empty($productOption) &&
-                $productOption->getSku() === "recurrence"
-            ) {
-                $optionValue = $this->objectManager
-                        ->get('Magento\Catalog\Model\Product\Option\Value')
-                        ->load($option['option_value']);
-            }
-
-        }
+        $optionValue = $this->getOptionValue($productOptions);
 
         if (empty($optionValue)) {
             return null;
@@ -65,5 +49,28 @@ class RecurrenceProductHelper extends AbstractHelper
         }
 
         return null;
+    }
+
+    public function getOptionValue($productOptions)
+    {
+        $optionValue = null;
+
+        foreach ($productOptions['options'] as $option) {
+            $optionValue =
+            $productOption = $this->objectManager
+                ->get('Magento\Catalog\Model\Product\Option')
+                ->load($option['option_id']);
+
+            if (
+                !empty($productOption) &&
+                $productOption->getSku() === "recurrence"
+            ) {
+                $optionValue = $this->objectManager
+                    ->get('Magento\Catalog\Model\Product\Option\Value')
+                    ->load($option['option_value']);
+            }
+
+        }
+        return $optionValue;
     }
 }

@@ -94,8 +94,11 @@ class InstallmentsByBrandAndAmountManagement
             $this->getInstallmentsByRecurrence($quote, $installments);
 
         if (count($installments) > $maxInstallmentsByRecurrence) {
-            $installments =
-                array_slice($installments, 0, $maxInstallmentsByRecurrence);
+            $installments = array_slice(
+                $installments,
+                0,
+                $maxInstallmentsByRecurrence
+            );
         }
 
         return $installments;
