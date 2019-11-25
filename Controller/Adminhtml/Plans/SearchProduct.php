@@ -131,7 +131,6 @@ class SearchProduct extends Action
                 $recurrenceType
             );
 
-
             if ($subProductRecurrence !== null) {
                 $product['cycles'] = $subProductRecurrence->getCycles();
                 $product['quantity'] = $subProductRecurrence->getQuantity();

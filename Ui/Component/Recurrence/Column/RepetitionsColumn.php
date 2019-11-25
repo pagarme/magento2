@@ -6,6 +6,7 @@ use Magento\Framework\App\ObjectManager;
 use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use Magento\Framework\View\Element\UiComponentFactory;
 use Magento\Ui\Component\Listing\Columns\Column;
+use Mundipagg\Core\Kernel\Services\LocalizationService;
 use Mundipagg\Core\Recurrence\Aggregates\Repetition;
 use Mundipagg\Core\Recurrence\Services\ProductSubscriptionService;
 use Mundipagg\Core\Recurrence\ValueObjects\DiscountValueObject;
@@ -13,6 +14,11 @@ use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 
 class RepetitionsColumn extends Column
 {
+    /**
+     * @var LocalizationService
+     */
+    protected $i18n;
+
     public function __construct(
         ContextInterface $context,
         UiComponentFactory $uiComponentFactory,
@@ -20,6 +26,7 @@ class RepetitionsColumn extends Column
         array $data = []
     ) {
         Magento2CoreSetup::bootstrap();
+        $this->i18n = new LocalizationService();
         parent::__construct($context, $uiComponentFactory, $components, $data);
     }
 
