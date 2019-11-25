@@ -2,14 +2,16 @@
 
 namespace MundiPagg\MundiPagg\Model\Api;
 
+use Magento\TestFramework\Event\Magento;
 use MundiPagg\MundiPagg\Api\ProductPlanInterface;
-use \Magento\Framework\Webapi\Rest\Request;
+use Magento\Framework\Webapi\Rest\Request;
 use Mundipagg\Core\Recurrence\Services\PlanService;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use MundiPagg\MundiPagg\Concrete\Magento2PlatformProductDecorator;
+use Magento\Framework\App\ObjectManager;
 
 class ProductsPlan implements ProductPlanInterface
 {
-
     /**
      * @var Request
      */
@@ -34,17 +36,60 @@ class ProductsPlan implements ProductPlanInterface
         if (empty($params)) {
             return json_encode([
                 'code' => 404,
-                'message' => 'Error on save product Plan'
+                'message' => 'Erro ao tentar criar um produto do tipo plano'
             ]);
         }
 
-        //@todo Send data to product Plan service
-        $planService = new PlanService();
-        $planService->createPlanAtPlatform($params['form']);
+        $params['form']['items'] = $this->getSubProductsFromPlatform($params);
+        if (!$params['form']['items']) {
+            return json_encode([
+                'code' => 404,
+                'message' => 'Please add subproducts before product saving'
+            ]);
+        }
+
+        try {
+            $planService = new PlanService();
+            $planService->create($params['form']);
+        } catch (\Exception $exception) {
+            return json_encode([
+                'code' => 404,
+                'message' => 'Erro ao tentar criar um produto do tipo plano'
+            ]);
+        }
 
         return json_encode([
             'code' => 200,
             'message' => 'Product Plan saved'
         ]);
+    }
+
+    public function editProductPlan()
+    {
+        $post = $this->request->getBodyParams();
+    }
+
+    private function getSubProductsFromPlatform($params)
+    {
+        if (empty($params['form']['items'])) {
+            return null;
+        }
+
+        $objectManager = ObjectManager::getInstance();
+        $subProducts = [];
+
+        foreach ($params['form']['items'] as $item) {
+            $product =
+                $objectManager
+                    ->create('Magento\Catalog\Model\Product')
+                    ->load($item['product_id']);
+
+            $platformProduct = new Magento2PlatformProductDecorator($product);
+            $item['description'] = $product->getDescription();
+
+            $subProducts[] = $item;
+        }
+
+        return $subProducts;
     }
 }

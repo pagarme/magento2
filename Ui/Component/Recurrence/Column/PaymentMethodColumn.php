@@ -6,6 +6,7 @@ use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use Magento\Framework\View\Element\UiComponentFactory;
 use Magento\Ui\Component\Listing\Columns\Column;
 use Mundipagg\Core\Kernel\Services\LocalizationService;
+use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 use NumberFormatter;
 
 class PaymentMethodColumn extends Column
@@ -21,6 +22,7 @@ class PaymentMethodColumn extends Column
         array $components = [],
         array $data = []
     ) {
+        Magento2CoreSetup::bootstrap();
         $this->i18n = new LocalizationService();
         parent::__construct($context, $uiComponentFactory, $components, $data);
     }
@@ -44,7 +46,7 @@ class PaymentMethodColumn extends Column
     {
         $paymentMethods = [
             'boleto' => "Boleto",
-            'credit_card' => $this->i18n->getDashboard("Credit Card")
+            'credit_card' => $this->i18n->getDashboard('Credit card')
         ];
         $methodSelecteds = array_keys(
             array_filter(

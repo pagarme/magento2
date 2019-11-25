@@ -60,15 +60,19 @@ class Actions extends Column
 
     protected function getActions($name, $type, $item)
     {
-        $actions[$name]['delete'] = [
-            'href' => $this->getUrlMundipagg($type, $item, self::URL_PATH_DELETE),
-            'label' => __('Delete')
+        $actions[$name]['edit'] = [
+            'href' => $this->getUrlMundipagg($type, $item, self::URL_PATH_EDIT),
+            'label' => __('Edit')
         ];
 
         if ($type !== 'plans') {
-            $actions[$name]['edit'] = [
-                'href' => $this->getUrlMundipagg($type, $item, self::URL_PATH_EDIT),
-                'label' => __('Edit')
+            $actions[$name]['delete'] = [
+                'href' => $this->getUrlMundipagg($type, $item, self::URL_PATH_DELETE),
+                'label' => __('Delete'),
+                'confirm' => [
+                    'title' => __('Confirm action'),
+                    'message' => __('Are you sure you want to delete this item?')
+                ]
             ];
         }
 
