@@ -4,14 +4,14 @@ namespace MundiPagg\MundiPagg\Model\Api;
 
 use Magento\TestFramework\Event\Magento;
 use MundiPagg\MundiPagg\Api\ProductPlanInterface;
-use \Magento\Framework\Webapi\Rest\Request;
+use Magento\Framework\Webapi\Rest\Request;
 use Mundipagg\Core\Recurrence\Services\PlanService;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 use MundiPagg\MundiPagg\Concrete\Magento2PlatformProductDecorator;
+use Magento\Framework\App\ObjectManager;
 
 class ProductsPlan implements ProductPlanInterface
 {
-
     /**
      * @var Request
      */
@@ -75,7 +75,7 @@ class ProductsPlan implements ProductPlanInterface
             return null;
         }
 
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $objectManager = ObjectManager::getInstance();
         $subProducts = [];
 
         foreach ($params['form']['items'] as $item) {
