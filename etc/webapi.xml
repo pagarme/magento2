@@ -61,4 +61,25 @@
         </resources>
     </route>
 
+    <route url="/V1/mundipagg/recurrence/product" method="GET">
+        <service class="MundiPagg\MundiPagg\Api\ProductSubscriptionApiInterface" method="list"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+
+    <route url="/V1/mundipagg/recurrence/product/:id" method="GET">
+        <service class="MundiPagg\MundiPagg\Api\ProductSubscriptionApiInterface" method="getProductSubscription"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+
+    <route url="/V1/mundipagg/recurrence/product/:id" method="PUT">
+        <service class="MundiPagg\MundiPagg\Api\ProductSubscriptionApiInterface" method="update"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+
 </routes>

@@ -20,6 +20,10 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
      * @var Request
      */
     protected $request;
+    /**
+     * @var ProductSubscriptionService
+     */
+    protected $productSubscriptionService;
 
     public function __construct(Request $request)
     {
@@ -27,6 +31,7 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
         Magento2CoreSetup::bootstrap();
         $this->i18n = new LocalizationService();
         $this->moneyService = new MoneyService();
+        $this->productSubscriptionService = new ProductSubscriptionService();
     }
 
     /**
@@ -38,9 +43,8 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
     public function save(ProductSubscriptionInterface $productSubscription)
     {
         try {
-            $productSubscriptionService = new ProductSubscriptionService();
-            $productSubscription =
-                $productSubscriptionService->saveProductSubscription($productSubscription);
+            $productSubscription = $this->productSubscriptionService
+                    ->saveProductSubscription($productSubscription);
 
             $this->setCustomOption($productSubscription);
 
@@ -161,5 +165,38 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
             return $intervalLabel;
         }
         return $intervalLabel . $discountLabel;
+    }
+
+    /**
+     * List products subscription
+     *
+     * @return \Mundipagg\Core\Recurrence\Interfaces\ProductSubscriptionInterface[]|array
+     */
+    public function list()
+    {
+        return $this->productSubscriptionService->findAll();
+    }
+
+    /**
+     * Update product subscription
+     *
+     * @param int $id
+     * @param ProductSubscriptionInterface $productSubscription
+     * @return array
+     */
+    public function update($id, ProductSubscriptionInterface $productSubscription)
+    {
+        // TODO: Implement update() method.
+    }
+
+    /**
+     * Get a product subscription
+     *
+     * @param int $id
+     * @return \Mundipagg\Core\Recurrence\Interfaces\ProductSubscriptionInterface|null
+     */
+    public function getProductSubscription($id)
+    {
+        return $this->productSubscriptionService->findById($id);
     }
 }
