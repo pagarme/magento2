@@ -1,0 +1,49 @@
+<?php
+/**
+ * Phtml List Subscription
+ *
+ * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
+ * @copyright   2019 MundiPagg (http://www.mundipagg.com)
+ * @license     http://www.mundipagg.com Copyright
+ *
+ * @link        http://www.mundipagg.com
+ */
+
+$i = 0;
+/* @var \MundiPagg\MundiPagg\Block\Customer\Subscribe $block */
+?>
+<div>
+    <table class="table">
+
+        <thead>
+        <tr>
+            <th><?= __('Id') ?></th>
+            <th><?= __('Order Recurrence') ?></th>
+            <th><?= __('Status') ?></th>
+            <th><?= __('Installments') ?></th>
+            <th><?= __('Type recurrence') ?></th>
+            <th><?= __('Type interval') ?></th>
+            <th><?= __('Count Interval') ?></th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($block->getAllSubscriptionRecurrenceCoreByCustomerId() as $item) : ?>
+            <?php $i++; ?>
+            <tr>
+                <td><?= $i ?></td>
+                <td><?= $item->getCode() ?></td>
+                <td><?= $item->getStatus()->getStatus() ?></td>
+                <td><?= $item->getInstallments() ?></td>
+                <td><?= $item->getRecurrenceType() ?></td>
+                <td><?= $item->getIntervalType()->getIntervalType() ?></td>
+                <td><?= $item->getIntervalType()->getIntervalCount() ?></td>
+                <td>
+                    <button onclick="location.href = '<?= "teste" ?>';" id="details">
+                        <?= __("Detail's") ?>
+                    </button>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
