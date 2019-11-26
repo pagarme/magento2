@@ -30,6 +30,8 @@ class InstallSchema implements InstallSchemaInterface
         $this->installCustomer($setup);
         $this->installProductsSubscription($setup);
         $this->installSubscriptionRepetitions($setup);
+        $this->installRecurrenceSubscription($setup);
+        $this->installRecurrenceCharge($setup);
 
         $setup->endSetup();
     }
@@ -63,8 +65,7 @@ class InstallSchema implements InstallSchemaInterface
                     'data'
                 )
                 ->setComment('Configuration Table')
-                ->setOption('charset', 'utf8')
-            ;
+                ->setOption('charset', 'utf8');
 
             $installer->getConnection()->createTable($configTable);
         }
@@ -110,8 +111,7 @@ class InstallSchema implements InstallSchemaInterface
                     'When the webhook was handled.'
                 )
                 ->setComment('Webhook Table')
-                ->setOption('charset', 'utf8')
-            ;
+                ->setOption('charset', 'utf8');
 
             $installer->getConnection()->createTable($webhookTable);
         }
@@ -166,8 +166,7 @@ class InstallSchema implements InstallSchemaInterface
                     'Status'
                 )
                 ->setComment('Order Table')
-                ->setOption('charset', 'utf8')
-            ;
+                ->setOption('charset', 'utf8');
 
             $installer->getConnection()->createTable($webhookTable);
         }
@@ -271,8 +270,7 @@ class InstallSchema implements InstallSchemaInterface
                     'Status'
                 )
                 ->setComment('Charge Table')
-                ->setOption('charset', 'utf8')
-            ;
+                ->setOption('charset', 'utf8');
 
             $installer->getConnection()->createTable($webhookTable);
         }
@@ -417,8 +415,7 @@ class InstallSchema implements InstallSchemaInterface
                     'Created At'
                 )
                 ->setComment('Transaction Table')
-                ->setOption('charset', 'utf8')
-            ;
+                ->setOption('charset', 'utf8');
 
             $installer->getConnection()->createTable($webhookTable);
         }
@@ -489,8 +486,7 @@ class InstallSchema implements InstallSchemaInterface
                     'card brand'
                 )
                 ->setComment('Saved Card Table')
-                ->setOption('charset', 'utf8')
-            ;
+                ->setOption('charset', 'utf8');
 
             $installer->getConnection()->createTable($savedCardTable);
         }
@@ -534,8 +530,7 @@ class InstallSchema implements InstallSchemaInterface
                     'format: cus_xxxxxxxxxxxxxxxx'
                 )
                 ->setComment('Customer Table')
-                ->setOption('charset', 'utf8')
-            ;
+                ->setOption('charset', 'utf8');
 
             $installer->getConnection()->createTable($customer);
         }
@@ -673,8 +668,7 @@ class InstallSchema implements InstallSchemaInterface
                     ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT_UPDATE],
                     'Updated At'
                 )
-                ->setOption('charset', 'utf8')
-            ;
+                ->setOption('charset', 'utf8');
 
             $installer->getConnection()->createTable($customer);
         }
@@ -767,8 +761,7 @@ class InstallSchema implements InstallSchemaInterface
                     ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT_UPDATE],
                     'Updated At'
                 )
-                ->setOption('charset', 'utf8')
-            ;
+                ->setOption('charset', 'utf8');
 
             $installer->getConnection()->createTable($customer);
         }
@@ -896,7 +889,6 @@ class InstallSchema implements InstallSchemaInterface
                     ],
                     'Id from mundipagg_module_core_products_subscription'
                 )
-
                 ->setOption('charset', 'utf8')
                 ->addColumn(
                     'interval',
@@ -948,8 +940,298 @@ class InstallSchema implements InstallSchemaInterface
                     ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT_UPDATE],
                     'Updated At'
                 )
+                ->setOption('charset', 'utf8');
+
+            $installer->getConnection()->createTable($configTable);
+        }
+        return $installer;
+    }
+
+    public function installRecurrenceSubscription(SchemaSetupInterface $installer)
+    {
+        $tableName = $installer->getTable(
+            'mundipagg_module_core_recurrence_subscription'
+        );
+
+        if (!$installer->getConnection()->isTableExists($tableName)) {
+            $configTable = $installer->getConnection()
+                ->newTable($tableName)
+                ->addColumn(
+                    'id',
+                    Table::TYPE_INTEGER,
+                    null,
+                    [
+                        'identity' => true,
+                        'unsigned' => true,
+                        'nullable' => false,
+                        'primary' => true
+                    ],
+                    'ID'
+                )
+                ->addColumn(
+                    'customer_id',
+                    Table::TYPE_INTEGER,
+                    null,
+                    [
+                        'nullable' => false
+                    ],
+                    'Customer session id'
+                )
+                ->addColumn(
+                    'mundipagg_id',
+                    Table::TYPE_TEXT,
+                    null,
+                    [
+                        'nullable' => false
+                    ],
+                    'format: sub_xxxxxxxxxxxxxxxx'
+                )
                 ->setOption('charset', 'utf8')
-            ;
+                ->addColumn(
+                    'code',
+                    Table::TYPE_TEXT,
+                    100,
+                    [
+                        'nullable' => false,
+                    ],
+                    'Code'
+                )
+                ->addColumn(
+                    'status',
+                    Table::TYPE_TEXT,
+                    30,
+                    [
+                        'unsigned' => true,
+                        'nullable' => false,
+                    ],
+                    'Status'
+                )
+                ->setOption('charset', 'utf8')
+                ->addColumn(
+                    'installments',
+                    Table::TYPE_BOOLEAN,
+                    11,
+                    [
+                        'nullable' => false
+                    ],
+                    "Accepts installments"
+                )
+                ->addColumn(
+                    'payment_method',
+                    Table::TYPE_TEXT,
+                    30,
+                    [
+                        'unsigned' => true,
+                        'nullable' => false,
+                    ],
+                    'Method payment'
+                )
+                ->setOption('charset', 'utf8')
+                ->addColumn(
+                    'recurrence_type',
+                    Table::TYPE_TEXT,
+                    30,
+                    [
+                        'unsigned' => true,
+                        'nullable' => false,
+                    ],
+                    'Type recurrence can use. plan or not'
+                )
+                ->setOption('charset', 'utf8')
+                ->addColumn(
+                    'interval_type',
+                    Table::TYPE_TEXT,
+                    30,
+                    [
+                        'unsigned' => true,
+                        'nullable' => false,
+                    ],
+                    'Interval Type can be. day, month, week and year'
+                )
+                ->setOption('charset', 'utf8')
+                ->addColumn(
+                    'interval_count',
+                    Table::TYPE_SMALLINT,
+                    2,
+                    [
+                        'nullable' => false
+                    ],
+                    '1 - 12'
+                )
+                ->addColumn(
+                    'plan_id',
+                    Table::TYPE_TEXT,
+                    null,
+                    [
+                        'nullable' => true
+                    ],
+                    "Api's id"
+                );
+
+            $installer->getConnection()->createTable($configTable);
+        }
+        return $installer;
+    }
+
+    public function installRecurrenceCharge(SchemaSetupInterface $installer)
+    {
+        $tableName = $installer->getTable(
+            'mundipagg_module_core_recurrence_charge'
+        );
+
+        if (!$installer->getConnection()->isTableExists($tableName)) {
+            $configTable = $installer->getConnection()
+                ->newTable($tableName)
+                ->addColumn(
+                    'id',
+                    Table::TYPE_INTEGER,
+                    null,
+                    [
+                        'identity' => true,
+                        'unsigned' => true,
+                        'nullable' => false,
+                        'primary' => true
+                    ],
+                    'ID'
+                )
+                ->addColumn(
+                    'mundipagg_id',
+                    Table::TYPE_TEXT,
+                    null,
+                    [
+                        'nullable' => false
+                    ],
+                    'format: ch_xxxxxxxxxxxxxxxx'
+                )
+                ->setOption('charset', 'utf8')
+                ->addColumn(
+                    'subscription_id',
+                    Table::TYPE_TEXT,
+                    null,
+                    [
+                        'nullable' => false
+                    ],
+                    'format: sub_xxxxxxxxxxxxxxxx'
+                )
+                ->setOption('charset', 'utf8')
+                ->addColumn(
+                    'code',
+                    Table::TYPE_TEXT,
+                    100,
+                    [
+                        'nullable' => false,
+                    ],
+                    'Code'
+                )
+                ->addColumn(
+                    'amount',
+                    Table::TYPE_INTEGER,
+                    null,
+                    [
+                        'unsigned' => true,
+                        'nullable' => false,
+                    ],
+                    'amount'
+                )
+                ->addColumn(
+                    'paid_amount',
+                    Table::TYPE_INTEGER,
+                    null,
+                    [
+                        'unsigned' => true,
+                        'nullable' => false,
+                    ],
+                    'Paid Amount'
+                )
+                ->addColumn(
+                    'canceled_amount',
+                    Table::TYPE_INTEGER,
+                    null,
+                    [
+                        'unsigned' => true,
+                        'nullable' => false,
+                    ],
+                    'Canceled Amount'
+                )
+                ->addColumn(
+                    'refunded_amount',
+                    Table::TYPE_INTEGER,
+                    null,
+                    [
+                        'unsigned' => true,
+                        'nullable' => false,
+                    ],
+                    'Refunded Amount'
+                )
+                ->addColumn(
+                    'status',
+                    Table::TYPE_TEXT,
+                    30,
+                    [
+                        'unsigned' => true,
+                        'nullable' => false,
+                    ],
+                    'Status'
+                )
+                ->setOption('charset', 'utf8')
+                ->addColumn(
+                    'metadata',
+                    Table::TYPE_TEXT,
+                    null,
+                    [
+                        'unsigned' => true,
+                        'nullable' => false,
+                    ],
+                    'Metadata'
+                )
+                ->setOption('charset', 'utf8')
+                ->addColumn(
+                    'invoice_id',
+                    Table::TYPE_TEXT,
+                    null,
+                    [
+                        'nullable' => false
+                    ],
+                    'format: in_xxxxxxxxxxxxxxxx'
+                )
+                ->setOption('charset', 'utf8')
+                ->addColumn(
+                    'payment_method',
+                    Table::TYPE_TEXT,
+                    30,
+                    [
+                        'unsigned' => true,
+                        'nullable' => false,
+                    ],
+                    'Method payment'
+                )
+                ->setOption('charset', 'utf8')
+                ->addColumn(
+                    'boleto_link',
+                    Table::TYPE_TEXT,
+                    null,
+                    [
+                        'unsigned' => true,
+                        'nullable' => false,
+                    ],
+                    'Method payment'
+                )
+                ->setOption('charset', 'utf8')
+                ->addColumn(
+                    'cycle_start',
+                    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
+                    null,
+                    ['nullable' => false],
+                    'Cycle Start'
+                )
+                ->addColumn(
+                    'cycle_end',
+                    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
+                    null,
+                    ['nullable' => false],
+                    'Cycle End'
+                )
+                ->setOption('charset', 'utf8');
 
             $installer->getConnection()->createTable($configTable);
         }
