@@ -812,7 +812,7 @@ class InstallSchema implements InstallSchemaInterface
                     "Accepts credit card"
                 )
                 ->addColumn(
-                    'installments',
+                    'allow_installments',
                     Table::TYPE_TEXT,
                     1,
                     [
@@ -837,6 +837,15 @@ class InstallSchema implements InstallSchemaInterface
                         'nullable' => false
                     ],
                     "Allow sell as normal product"
+                )
+                ->addColumn(
+                    'cycles',
+                    Table::TYPE_INTEGER,
+                    11,
+                    [
+                        'nullable' => true
+                    ],
+                    "Cycles"
                 )
                 ->addColumn(
                     'billing_type',
@@ -917,22 +926,13 @@ class InstallSchema implements InstallSchemaInterface
                     '1 - 12'
                 )
                 ->addColumn(
-                    'discount_type',
-                    Table::TYPE_TEXT,
+                    'recurrence_price',
+                    Table::TYPE_INTEGER,
                     15,
                     [
                         'nullable' => false
                     ],
-                    'Flat ou percentage. O padrão é percentage'
-                )
-                ->addColumn(
-                    'discount_value',
-                    Table::TYPE_FLOAT,
-                    1,
-                    [
-                        'nullable' => false,
-                    ],
-                    'Discount value'
+                    'Recurrence product price'
                 )
                 ->addColumn(
                     'created_at',

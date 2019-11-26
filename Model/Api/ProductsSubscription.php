@@ -6,13 +6,14 @@ use Magento\Framework\App\ObjectManager;
 use Mundipagg\Core\Kernel\Services\LocalizationService;
 use Mundipagg\Core\Recurrence\Aggregates\ProductSubscription;
 use Mundipagg\Core\Recurrence\Aggregates\Repetition;
+use Mundipagg\Core\Recurrence\Interfaces\ProductSubscriptionInterface;
 use Mundipagg\Core\Recurrence\Services\ProductSubscriptionService;
 use Mundipagg\Core\Recurrence\ValueObjects\DiscountValueObject;
-use MundiPagg\MundiPagg\Api\ProductSubscriptionInterface;
+use MundiPagg\MundiPagg\Api\ProductSubscriptionApiInterface;
 use \Magento\Framework\Webapi\Rest\Request;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 
-class ProductsSubscription implements ProductSubscriptionInterface
+class ProductsSubscription implements ProductSubscriptionApiInterface
 {
 
     /**
@@ -26,28 +27,28 @@ class ProductsSubscription implements ProductSubscriptionInterface
         Magento2CoreSetup::bootstrap();
         $this->i18n = new LocalizationService();
     }
+
     /**
      * Returns greeting message to user
      *
-     * @param mixed $data
+     * @param ProductSubscriptionInterface $productSubscription
      * @return mixed
      */
-    public function saveProductSubscription()
+    public function save(ProductSubscriptionInterface $productSubscription)
     {
-        $post = $this->request->getBodyParams();
-        parse_str($post[0], $params);
+        try {
+            $productSubscriptionService = new ProductSubscriptionService();
+            $productSubscription =
+                $productSubscriptionService->saveProductSubscription($productSubscription);
 
-        if (empty($params)) {
+            $this->setCustomOption($productSubscription);
+
+        } catch (\Exception $exception) {
             return json_encode([
                 'code' => 404,
-                'message' => 'Error on save product subscription'
+                'message' => $exception->getMessage()
             ]);
         }
-
-        $productSubscriptionService = new ProductSubscriptionService();
-        $productSubscription =
-            $productSubscriptionService->saveProductSubscription($params['form']);
-        $this->setCustomOption($productSubscription);
 
         return json_encode([
             'code' => 200,
