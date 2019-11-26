@@ -17,8 +17,7 @@ class InstallSchema implements InstallSchemaInterface
     public function install(
         SchemaSetupInterface $setup,
         ModuleContextInterface $context
-    )
-    {
+    ) {
         $installer = $setup;
         $installer->startSetup();
 
@@ -39,8 +38,7 @@ class InstallSchema implements InstallSchemaInterface
 
     public function installConfig(
         SchemaSetupInterface $installer
-    )
-    {
+    ) {
         $tableName = $installer->getTable('mundipagg_module_core_configuration');
         if (!$installer->getConnection()->isTableExists($tableName)) {
             $configTable = $installer->getConnection()
@@ -76,8 +74,7 @@ class InstallSchema implements InstallSchemaInterface
 
     public function installWebhook(
         SchemaSetupInterface $installer
-    )
-    {
+    ) {
         $tableName = $installer->getTable('mundipagg_module_core_webhook');
         if (!$installer->getConnection()->isTableExists($tableName)) {
             $webhookTable = $installer->getConnection()
@@ -123,8 +120,7 @@ class InstallSchema implements InstallSchemaInterface
 
     public function installOrder(
         SchemaSetupInterface $installer
-    )
-    {
+    ) {
         $tableName = $installer->getTable('mundipagg_module_core_order');
         if (!$installer->getConnection()->isTableExists($tableName)) {
             $webhookTable = $installer->getConnection()
@@ -179,8 +175,7 @@ class InstallSchema implements InstallSchemaInterface
 
     public function installCharge(
         SchemaSetupInterface $installer
-    )
-    {
+    ) {
         $tableName = $installer->getTable('mundipagg_module_core_charge');
         if (!$installer->getConnection()->isTableExists($tableName)) {
             $webhookTable = $installer->getConnection()
@@ -284,8 +279,7 @@ class InstallSchema implements InstallSchemaInterface
 
     public function installTransaction(
         SchemaSetupInterface $installer
-    )
-    {
+    ) {
         $tableName = $installer->getTable('mundipagg_module_core_transaction');
         if (!$installer->getConnection()->isTableExists($tableName)) {
             $webhookTable = $installer->getConnection()
@@ -955,7 +949,10 @@ class InstallSchema implements InstallSchemaInterface
 
     public function installRecurrenceSubscription(SchemaSetupInterface $installer)
     {
-        $tableName = $installer->getTable('mundipagg_module_core_recurrence_subscription');
+        $tableName = $installer->getTable(
+            'mundipagg_module_core_recurrence_subscription'
+        );
+
         if (!$installer->getConnection()->isTableExists($tableName)) {
             $configTable = $installer->getConnection()
                 ->newTable($tableName)
@@ -1078,7 +1075,10 @@ class InstallSchema implements InstallSchemaInterface
 
     public function installRecurrenceCharge(SchemaSetupInterface $installer)
     {
-        $tableName = $installer->getTable('mundipagg_module_core_recurrence_charge');
+        $tableName = $installer->getTable(
+            'mundipagg_module_core_recurrence_charge'
+        );
+
         if (!$installer->getConnection()->isTableExists($tableName)) {
             $configTable = $installer->getConnection()
                 ->newTable($tableName)
