@@ -174,7 +174,28 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
      */
     public function list()
     {
-        return $this->productSubscriptionService->findAll();
+        $products = $this->productSubscriptionService->findAll();
+        if (empty($products)) {
+            return "Subscription Products not found";
+        }
+
+        return $products;
+    }
+
+    /**
+     * Get a product subscription
+     *
+     * @param int $id
+     * @return \Mundipagg\Core\Recurrence\Interfaces\ProductSubscriptionInterface|null
+     */
+    public function getProductSubscription($id)
+    {
+        $product = $this->productSubscriptionService->findById($id);
+        if (empty($product)) {
+            return "Subscription Product not found";
+        }
+
+        return $product;
     }
 
     /**
@@ -190,13 +211,21 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
     }
 
     /**
-     * Get a product subscription
+     * Delete product subscription
      *
      * @param int $id
-     * @return \Mundipagg\Core\Recurrence\Interfaces\ProductSubscriptionInterface|null
+     * @return mixed
      */
-    public function getProductSubscription($id)
+    public function delete($id)
     {
-        return $this->productSubscriptionService->findById($id);
+        try{
+            $this->productSubscriptionService->delete($id);
+        } catch (\Exception $exception) {
+            return [
+                $exception->getMessage()
+            ];
+        }
+
+        return "Subscription Product deleted with success";
     }
 }

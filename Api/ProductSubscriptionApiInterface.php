@@ -38,4 +38,12 @@ interface ProductSubscriptionApiInterface
      */
     public function getProductSubscription($id);
 
+    /**
+     * Delete product subscription
+     *
+     * @param int $id
+     * @return mixed
+     */
+    public function delete($id);
+
 }

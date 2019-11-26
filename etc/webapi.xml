@@ -82,4 +82,11 @@
         </resources>
     </route>
 
+    <route url="/V1/mundipagg/recurrence/product/:id" method="DELETE">
+        <service class="MundiPagg\MundiPagg\Api\ProductSubscriptionApiInterface" method="delete"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+
 </routes>
