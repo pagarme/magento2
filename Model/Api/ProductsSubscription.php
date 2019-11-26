@@ -4,11 +4,11 @@ namespace MundiPagg\MundiPagg\Model\Api;
 
 use Magento\Framework\App\ObjectManager;
 use Mundipagg\Core\Kernel\Services\LocalizationService;
+use Mundipagg\Core\Kernel\Services\MoneyService;
 use Mundipagg\Core\Recurrence\Aggregates\ProductSubscription;
 use Mundipagg\Core\Recurrence\Aggregates\Repetition;
 use Mundipagg\Core\Recurrence\Interfaces\ProductSubscriptionInterface;
 use Mundipagg\Core\Recurrence\Services\ProductSubscriptionService;
-use Mundipagg\Core\Recurrence\ValueObjects\DiscountValueObject;
 use MundiPagg\MundiPagg\Api\ProductSubscriptionApiInterface;
 use \Magento\Framework\Webapi\Rest\Request;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
@@ -26,6 +26,7 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
         $this->request = $request;
         Magento2CoreSetup::bootstrap();
         $this->i18n = new LocalizationService();
+        $this->moneyService = new MoneyService();
     }
 
     /**
@@ -44,16 +45,16 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
             $this->setCustomOption($productSubscription);
 
         } catch (\Exception $exception) {
-            return json_encode([
+            return [
                 'code' => 404,
                 'message' => $exception->getMessage()
-            ]);
+            ];
         }
 
-        return json_encode([
+        return [
             'code' => 200,
             'message' => 'Product subscription saved'
-        ]);
+        ];
     }
 
     protected function setCustomOption(ProductSubscription $productSubscription)
@@ -147,34 +148,18 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
         $intervalType = $this->i18n->getDashboard(
             $repetition->getIntervalTypeLabel()
         );
-        $discount = $this->getDiscountFormatted($repetition);
 
-        $discountLabel = " - $discount de desconto";
-        $intervalLabel = "De $intervalCount em $intervalCount $intervalType";
+        $totalAmount = $this->moneyService->centsToFloat(
+            $repetition->getRecurrencePrice()
+        );
 
-        if (empty($repetition->getDiscountValue())) {
+        $discountLabel = " - (Total: R$ {$totalAmount})";
+        // @todo create dictionary
+        $intervalLabel = "De {$intervalCount} em {$intervalCount} {$intervalType}";
+
+        if (empty($repetition->getRecurrencePrice())) {
             return $intervalLabel;
         }
         return $intervalLabel . $discountLabel;
-    }
-
-    protected function getDiscountFormatted(Repetition $repetition)
-    {
-        $discountValue = $repetition->getDiscountValue();
-        $discountType = $repetition->getDiscountType();
-        $symbols = $repetition->getDiscountTypeSymbols();
-        $flat = DiscountValueObject::DISCOUNT_TYPE_FLAT;
-
-        if ($repetition->getDiscount()->getDiscountType() == $flat) {
-            return implode(" ", [
-                $symbols[$discountType],
-                $discountValue
-            ]);
-        }
-
-        return implode("", [
-            $discountValue,
-            $symbols[$discountType]
-        ]);
     }
 }
