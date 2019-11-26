@@ -10,9 +10,10 @@ interface ProductSubscriptionApiInterface
      * Save product subscription
      *
      * @param ProductSubscriptionInterface $productSubscription
-     * @return mixed
+     * @param int $id
+     * @return \Mundipagg\Core\Recurrence\Interfaces\ProductSubscriptionInterface|array
      */
-    public function save(ProductSubscriptionInterface $productSubscription);
+    public function save(ProductSubscriptionInterface $productSubscription, $id = null);
 
     /**
      * List product subscription
@@ -26,7 +27,7 @@ interface ProductSubscriptionApiInterface
      *
      * @param int $id
      * @param ProductSubscriptionInterface $productSubscription
-     * @return mixed
+     * @return \Mundipagg\Core\Recurrence\Interfaces\ProductSubscriptionInterface|array
      */
     public function update($id, ProductSubscriptionInterface $productSubscription);
 

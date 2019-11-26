@@ -38,11 +38,16 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
      * Returns greeting message to user
      *
      * @param ProductSubscriptionInterface $productSubscription
-     * @return mixed
+     * @param int $id
+     * @return \Mundipagg\Core\Recurrence\Interfaces\ProductSubscriptionInterface|array
      */
-    public function save(ProductSubscriptionInterface $productSubscription)
+    public function save(ProductSubscriptionInterface $productSubscription, $id = null)
     {
         try {
+            if (!empty($id)) {
+                $productSubscription->setId($id);
+            }
+
             $productSubscription = $this->productSubscriptionService
                     ->saveProductSubscription($productSubscription);
 
@@ -55,10 +60,69 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
             ];
         }
 
-        return [
-            'code' => 200,
-            'message' => 'Product subscription saved'
-        ];
+        return $productSubscription;
+    }
+
+    /**
+     * List products subscription
+     *
+     * @return \Mundipagg\Core\Recurrence\Interfaces\ProductSubscriptionInterface[]|array
+     */
+    public function list()
+    {
+        $products = $this->productSubscriptionService->findAll();
+        if (empty($products)) {
+            return "Subscription Products not found";
+        }
+
+        return $products;
+    }
+
+    /**
+     * Get a product subscription
+     *
+     * @param int $id
+     * @return \Mundipagg\Core\Recurrence\Interfaces\ProductSubscriptionInterface|null
+     */
+    public function getProductSubscription($id)
+    {
+        $product = $this->productSubscriptionService->findById($id);
+        if (empty($product)) {
+            return "Subscription Product not found";
+        }
+
+        return $product;
+    }
+
+    /**
+     * Update product subscription
+     *
+     * @param int $id
+     * @param ProductSubscriptionInterface $productSubscription
+     * @return \Mundipagg\Core\Recurrence\Interfaces\ProductSubscriptionInterface|array
+     */
+    public function update($id, ProductSubscriptionInterface $productSubscription)
+    {
+        return $this->save($productSubscription, $id);
+    }
+
+    /**
+     * Delete product subscription
+     *
+     * @param int $id
+     * @return mixed
+     */
+    public function delete($id)
+    {
+        try{
+            $this->productSubscriptionService->delete($id);
+        } catch (\Exception $exception) {
+            return [
+                $exception->getMessage()
+            ];
+        }
+
+        return "Subscription Product deleted with success";
     }
 
     protected function setCustomOption(ProductSubscription $productSubscription)
@@ -167,65 +231,4 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
         return $intervalLabel . $discountLabel;
     }
 
-    /**
-     * List products subscription
-     *
-     * @return \Mundipagg\Core\Recurrence\Interfaces\ProductSubscriptionInterface[]|array
-     */
-    public function list()
-    {
-        $products = $this->productSubscriptionService->findAll();
-        if (empty($products)) {
-            return "Subscription Products not found";
-        }
-
-        return $products;
-    }
-
-    /**
-     * Get a product subscription
-     *
-     * @param int $id
-     * @return \Mundipagg\Core\Recurrence\Interfaces\ProductSubscriptionInterface|null
-     */
-    public function getProductSubscription($id)
-    {
-        $product = $this->productSubscriptionService->findById($id);
-        if (empty($product)) {
-            return "Subscription Product not found";
-        }
-
-        return $product;
-    }
-
-    /**
-     * Update product subscription
-     *
-     * @param int $id
-     * @param ProductSubscriptionInterface $productSubscription
-     * @return array
-     */
-    public function update($id, ProductSubscriptionInterface $productSubscription)
-    {
-        // TODO: Implement update() method.
-    }
-
-    /**
-     * Delete product subscription
-     *
-     * @param int $id
-     * @return mixed
-     */
-    public function delete($id)
-    {
-        try{
-            $this->productSubscriptionService->delete($id);
-        } catch (\Exception $exception) {
-            return [
-                $exception->getMessage()
-            ];
-        }
-
-        return "Subscription Product deleted with success";
-    }
 }
