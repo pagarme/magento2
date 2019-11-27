@@ -1,0 +1,69 @@
+<?php
+/**
+ * Phtml List Subscription
+ *
+ * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
+ * @copyright   2019 MundiPagg (http://www.mundipagg.com)
+ * @license     http://www.mundipagg.com Copyright
+ *
+ * @link        http://www.mundipagg.com
+ */
+
+$i = 0;
+
+use Mundipagg\Core\Kernel\Aggregates\Transaction;
+use MundiPagg\MundiPagg\Block\Customer\Invoice;
+
+/* @var Invoice $block */
+?>
+<div>
+    <table class="table">
+
+        <thead>
+        <tr>
+            <th><?= __('Id') ?></th>
+            <th><?= __('Amount') ?></th>
+            <th><?= __('Paid amount') ?></th>
+            <th><?= __('Canceled amount') ?></th>
+            <th><?= __('Refunded amount') ?></th>
+            <th><?= __('Status') ?></th>
+            <th><?= __('Payement method') ?></th>
+            <th><?= __('Boleto') ?></th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($block->getAllChargesByCodeOrder() as $item) : ?>
+            <?php $i++; ?>
+            <?php
+                $status = $item->getStatus()->getStatus();
+                $paymentMethod = $item->getPaymentMethod()->getPaymentMethod();
+
+            $numberFormatter = new NumberFormatter('pt-BR', NumberFormatter::CURRENCY);
+                ?>
+            <tr>
+                <td><?= $i ?></td>
+                <td><?= $numberFormatter->format(($item->getAmount()) / 100); ?></td>
+                <td><?= $numberFormatter->format(($item->getPaidAmount()) / 100); ?></td>
+                <td><?= $numberFormatter->format(($item->getCanceledAmount()) / 100) ?></td>
+                <td><?= $numberFormatter->format(($item->getRefundedAmount()) / 100) ?></td>
+                <td><?= __($status) ?></td>
+                <td><?= __($paymentMethod) ?></td>
+                <td>
+                    <?php
+                    $lastTransactions = $item->getTransactions();
+                    array_walk_recursive($lastTransactions, function (Transaction $transaction) {
+                        if ($transaction->getBoletoUrl() == "") {
+                           return;
+                        }
+                        ?>
+                        <button onclick="location.href = '<?= $transaction->getBoletoUrl() ?>';"
+                                id="details">
+                            <?= __("download") ?>
+                        </button>
+                    <?php }); ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>

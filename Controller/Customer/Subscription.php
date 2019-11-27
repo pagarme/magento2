@@ -4,28 +4,32 @@ namespace MundiPagg\MundiPagg\Controller\Customer;
 
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
-use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\View\Result\PageFactory;
 use Magento\Customer\Model\Session;
 
-class Subscribe extends Action
+class Subscription extends Action
 {
-    protected $jsonFactory;
-
+    /**
+     * @var PageFactory
+     */
     protected $pageFactory;
 
+    /**
+     * @var
+     */
     protected $context;
 
+    /**
+     * @var Session
+     */
     protected $customerSession;
 
     public function __construct(
         Context $context,
-        JsonFactory $jsonFactory,
         PageFactory $pageFactory,
         Session $customerSession
     ) {
         parent::__construct($context);
-        $this->jsonFactory = $jsonFactory;
         $this->pageFactory = $pageFactory;
         $this->customerSession = $customerSession;
     }
