@@ -32,6 +32,7 @@ $i = 0;
             <?php
                 $url = $this->getBaseUrl() . 'mundipagg/customer/invoice/?code='. $item->getCode();
                 $status = $item->getStatus()->getStatus();
+                $recurrenceType = $item->getRecurrenceType();
                 $intervalType = $item->getIntervalType()->getIntervalType();
             ?>
             <tr>
@@ -39,7 +40,7 @@ $i = 0;
                 <td><?= $item->getCode() ?></td>
                 <td><?= __($status) ?></td>
                 <td><?= $item->getInstallments() ?></td>
-                <td><?= $item->getRecurrenceType() ?></td>
+                <td><?= __($recurrenceType) ?></td>
                 <td><?= __($intervalType) ?></td>
                 <td><?= $item->getIntervalType()->getIntervalCount() ?></td>
                 <td>
