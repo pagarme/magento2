@@ -4,55 +4,125 @@ namespace MundiPagg\MundiPagg\Model\Api;
 
 use Magento\Framework\App\ObjectManager;
 use Mundipagg\Core\Kernel\Services\LocalizationService;
+use Mundipagg\Core\Kernel\Services\MoneyService;
 use Mundipagg\Core\Recurrence\Aggregates\ProductSubscription;
 use Mundipagg\Core\Recurrence\Aggregates\Repetition;
+use Mundipagg\Core\Recurrence\Interfaces\ProductSubscriptionInterface;
 use Mundipagg\Core\Recurrence\Services\ProductSubscriptionService;
-use Mundipagg\Core\Recurrence\ValueObjects\DiscountValueObject;
-use MundiPagg\MundiPagg\Api\ProductSubscriptionInterface;
+use MundiPagg\MundiPagg\Api\ProductSubscriptionApiInterface;
 use \Magento\Framework\Webapi\Rest\Request;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 
-class ProductsSubscription implements ProductSubscriptionInterface
+class ProductsSubscription implements ProductSubscriptionApiInterface
 {
 
     /**
      * @var Request
      */
     protected $request;
+    /**
+     * @var ProductSubscriptionService
+     */
+    protected $productSubscriptionService;
 
     public function __construct(Request $request)
     {
         $this->request = $request;
         Magento2CoreSetup::bootstrap();
         $this->i18n = new LocalizationService();
+        $this->moneyService = new MoneyService();
+        $this->productSubscriptionService = new ProductSubscriptionService();
     }
+
     /**
      * Returns greeting message to user
      *
-     * @param mixed $data
-     * @return mixed
+     * @param ProductSubscriptionInterface $productSubscription
+     * @param int $id
+     * @return \Mundipagg\Core\Recurrence\Interfaces\ProductSubscriptionInterface|array
      */
-    public function saveProductSubscription()
+    public function save(ProductSubscriptionInterface $productSubscription, $id = null)
     {
-        $post = $this->request->getBodyParams();
-        parse_str($post[0], $params);
+        try {
+            if (!empty($id)) {
+                $productSubscription->setId($id);
+            }
 
-        if (empty($params)) {
-            return json_encode([
+            $productSubscription = $this->productSubscriptionService
+                    ->saveProductSubscription($productSubscription);
+
+            $this->setCustomOption($productSubscription);
+
+        } catch (\Exception $exception) {
+            return [
                 'code' => 404,
-                'message' => 'Error on save product subscription'
-            ]);
+                'message' => $exception->getMessage()
+            ];
         }
 
-        $productSubscriptionService = new ProductSubscriptionService();
-        $productSubscription =
-            $productSubscriptionService->saveProductSubscription($params['form']);
-        $this->setCustomOption($productSubscription);
+        return $productSubscription;
+    }
 
-        return json_encode([
-            'code' => 200,
-            'message' => 'Product subscription saved'
-        ]);
+    /**
+     * List products subscription
+     *
+     * @return \Mundipagg\Core\Recurrence\Interfaces\ProductSubscriptionInterface[]|array
+     */
+    public function list()
+    {
+        $products = $this->productSubscriptionService->findAll();
+        if (empty($products)) {
+            return "Subscription Products not found";
+        }
+
+        return $products;
+    }
+
+    /**
+     * Get a product subscription
+     *
+     * @param int $id
+     * @return \Mundipagg\Core\Recurrence\Interfaces\ProductSubscriptionInterface|null
+     */
+    public function getProductSubscription($id)
+    {
+        $product = $this->productSubscriptionService->findById($id);
+        if (empty($product)) {
+            return "Subscription Product not found";
+        }
+
+        return $product;
+    }
+
+    /**
+     * Update product subscription
+     *
+     * @param int $id
+     * @param ProductSubscriptionInterface $productSubscription
+     * @return \Mundipagg\Core\Recurrence\Interfaces\ProductSubscriptionInterface|array
+     */
+    public function update($id, ProductSubscriptionInterface $productSubscription)
+    {
+        return $this->save($productSubscription, $id);
+    }
+
+    /**
+     * Delete product subscription
+     *
+     * @param int $id
+     * @return mixed
+     */
+    public function delete($id)
+    {
+        try{
+            $this->productSubscriptionService->delete($id);
+        } catch (\Exception $exception) {
+            return [
+                $exception->getMessage()
+            ];
+        }
+
+        return "Subscription Product deleted with success";
     }
 
     protected function setCustomOption(ProductSubscription $productSubscription)
@@ -146,34 +216,19 @@ class ProductsSubscription implements ProductSubscriptionInterface
         $intervalType = $this->i18n->getDashboard(
             $repetition->getIntervalTypeLabel()
         );
-        $discount = $this->getDiscountFormatted($repetition);
 
-        $discountLabel = " - $discount de desconto";
-        $intervalLabel = "De $intervalCount em $intervalCount $intervalType";
+        $totalAmount = $this->moneyService->centsToFloat(
+            $repetition->getRecurrencePrice()
+        );
 
-        if (empty($repetition->getDiscountValue())) {
+        $discountLabel = " - (Total: R$ {$totalAmount})";
+        // @todo create dictionary
+        $intervalLabel = "De {$intervalCount} em {$intervalCount} {$intervalType}";
+
+        if (empty($repetition->getRecurrencePrice())) {
             return $intervalLabel;
         }
         return $intervalLabel . $discountLabel;
     }
 
-    protected function getDiscountFormatted(Repetition $repetition)
-    {
-        $discountValue = $repetition->getDiscountValue();
-        $discountType = $repetition->getDiscountType();
-        $symbols = $repetition->getDiscountTypeSymbols();
-        $flat = DiscountValueObject::DISCOUNT_TYPE_FLAT;
-
-        if ($repetition->getDiscount()->getDiscountType() == $flat) {
-            return implode(" ", [
-                $symbols[$discountType],
-                $discountValue
-            ]);
-        }
-
-        return implode("", [
-            $discountValue,
-            $symbols[$discountType]
-        ]);
-    }
 }

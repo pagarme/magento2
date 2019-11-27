@@ -39,7 +39,7 @@ final class Magento2DatabaseDecorator extends AbstractDatabaseDecorator
             AbstractDatabaseDecorator::TABLE_RECURRENCE_SUB_PRODUCTS=>
                 $this->db->getTableName('mundipagg_module_core_recurrence_sub_products'),
 
-            AbstractDatabaseDecorator::TABLE_RECURRENCE_SUB_PRODUCTS_SUBSCRIPTION_REPETITION =>
+            AbstractDatabaseDecorator::TABLE_RECURRENCE_SUBSCRIPTION_REPETITIONS =>
                 $this->db->getTableName('mundipagg_module_core_recurrence_subscription_repetitions')
         ];
     }
