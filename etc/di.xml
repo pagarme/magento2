@@ -44,6 +44,10 @@
         </arguments>
     </type>
 
+    <type name="Magento\Checkout\Model\Cart">
+        <plugin name="prevent_add_to" type="MundiPagg\MundiPagg\Model\CartConflict"/>
+    </type>
+
     <type name="MundiPagg\MundiPagg\Model\InstallmentsByBrandAndAmountManagement">
         <arguments>
             <argument name="builder" xsi:type="object">MundiPagg\MundiPagg\Model\Installments\BuilderByBrandAndAmount</argument>
