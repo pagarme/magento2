@@ -7,6 +7,7 @@ use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use Magento\Framework\View\Element\UiComponentFactory;
 use Magento\Ui\Component\Listing\Columns\Column;
 use Mundipagg\Core\Kernel\Services\LocalizationService;
+use Mundipagg\Core\Kernel\Services\MoneyService;
 use Mundipagg\Core\Recurrence\Aggregates\Repetition;
 use Mundipagg\Core\Recurrence\Services\ProductSubscriptionService;
 use Mundipagg\Core\Recurrence\ValueObjects\DiscountValueObject;
@@ -26,6 +27,7 @@ class RepetitionsColumn extends Column
         array $data = []
     ) {
         $this->i18n = new LocalizationService();
+        $this->moneyService = new MoneyService();
         parent::__construct($context, $uiComponentFactory, $components, $data);
     }
 
@@ -52,36 +54,19 @@ class RepetitionsColumn extends Column
             $value =
                 $repetition->getIntervalCount() .
                 " " .
-                $repetition->getIntervalType();
+                $repetition->getInterval();
 
-            if ($repetition->getDiscountValue() > 0) {
-                $value .= " - discount: " . $this->getDiscountFormatted($repetition);
+            if ($repetition->getRecurrencePrice() > 0) {
+                $totalAmount = $this->moneyService->centsToFloat(
+                    $repetition->getRecurrencePrice()
+                );
+
+                $value .= " - (Total: R$ {$totalAmount})";
             }
 
             $repetitions[] = $value;
         }
 
         return implode(' | ', $repetitions);
-    }
-
-    /** Copy Paste, should change to a presentation classe maybe */
-    protected function getDiscountFormatted(Repetition $repetition)
-    {
-        $discountValue = $repetition->getDiscountValue();
-        $discountType = $repetition->getDiscountType();
-        $symbols = $repetition->getDiscountTypeSymbols();
-        $flat = DiscountValueObject::DISCOUNT_TYPE_FLAT;
-
-        if ($repetition->getDiscount()->getDiscountType() == $flat) {
-            return implode(" ", [
-                $symbols[$discountType],
-                $discountValue
-            ]);
-        }
-
-        return implode("", [
-            $discountValue,
-            $symbols[$discountType]
-        ]);
     }
 }
