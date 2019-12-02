@@ -19,8 +19,19 @@ define([
     'Magento_Checkout/js/model/full-screen-loader',
     'MundiPagg_MundiPagg/js/view/payment/method-renderer/creditcard',
     'MundiPagg_MundiPagg/js/view/payment/method-renderer/billet_creditcard'
-], function ($, quote, urlManager, errorProcessor, messageContainer, storage, getPaymentInformationAction, totals, $t,
-             fullScreenLoader, creditCard, billetCard
+], function (
+    $,
+    quote,
+    urlManager,
+    errorProcessor,
+    messageContainer,
+    storage,
+    getPaymentInformationAction,
+    totals,
+    $t,
+    fullScreenLoader,
+    creditCard,
+    billetCard
 ) {
     'use strict';
 
