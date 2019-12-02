@@ -139,6 +139,7 @@ define(
                     },
                     write: function (value) {
                         if (value != 'null') {
+                            totalQuote = (quote.getTotals()().grand_total);
                             value = this.formatPrice(value);
                             value = value.replace(/[^,\d]/g, "");
                             value = value.replace(",", ".");
