@@ -18,9 +18,10 @@ define([
     'Magento_Checkout/js/action/get-payment-information',
     'Magento_Checkout/js/model/totals',
     'Magento_Checkout/js/model/full-screen-loader',
-    'MundiPagg_MundiPagg/js/view/payment/method-renderer/creditcard'
+    'MundiPagg_MundiPagg/js/view/payment/method-renderer/creditcard',
+    'MundiPagg_MundiPagg/js/view/payment/method-renderer/billet_creditcard'
 ], function (ko, $, quote, urlManager, errorProcessor, messageContainer, storage, $t, getPaymentInformationAction,
-             totals, fullScreenLoader, credit
+             totals, fullScreenLoader, creditCard, billetCard
 ) {
     'use strict';
 
@@ -52,10 +53,12 @@ define([
                     'message': message
                 });
 
-                card = new credit();
-                card.onInstallmentItemChange();
-                card.getCcInstallments();
+                var creditCardObject = new creditCard();
+                creditCardObject.onInstallmentItemChange();
+                creditCardObject.getCcInstallments();
 
+                var billetCardObject = new billetCard();
+                billetCardObject.bindCreditCardBilletAmountBcc();
             }
         }).fail(function (response) {
             fullScreenLoader.stopLoader();
