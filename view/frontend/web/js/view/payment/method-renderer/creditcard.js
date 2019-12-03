@@ -208,7 +208,7 @@ define(
                 }
 
                 var self = this;
-                var address = this.quoteBilling;
+                var address = quote.billingAddress();
 
                 if(typeof address.street == "undefined"){
                     this.messageContainer.addErrorMessage({

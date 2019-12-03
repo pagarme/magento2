@@ -502,7 +502,7 @@ define(
                 }
 
                 var self = this;
-                var address = this.quoteBilling;
+                var address = quote.billingAddress();
 
                 var dataJson = {
                     "type": "card",
