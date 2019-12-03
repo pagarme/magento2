@@ -922,7 +922,7 @@ class InstallSchema implements InstallSchemaInterface
                     Table::TYPE_INTEGER,
                     15,
                     [
-                        'nullable' => false
+                        'nullable' => true
                     ],
                     'Recurrence product price'
                 )

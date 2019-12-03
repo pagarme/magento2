@@ -22,6 +22,8 @@ use Mundipagg\Core\Kernel\Abstractions\AbstractPlatformOrderDecorator;
 use Mundipagg\Core\Kernel\Interfaces\PlatformOrderInterface;
 use Mundipagg\Core\Kernel\Services\OrderLogService;
 use Mundipagg\Core\Kernel\Services\OrderService;
+use Mundipagg\Core\Recurrence\Services\RecurrenceService;
+use Mundipagg\Core\Recurrence\Services\SubscriptionService;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 use MundiPagg\MundiPagg\Model\Ui\CreditCard\ConfigProvider;
 use MundiPagg\MundiPagg\Model\Ui\TwoCreditCard\ConfigProvider as TwoCreditCardConfigProvider;
@@ -104,7 +106,6 @@ class InitializeCommand implements CommandInterface
         $quote = $orderDecorator->getQuote();
 
         try {
-
             $quoteSuccess = $quote->getCustomerNote();
             if ($quoteSuccess == 'mundipagg-processing') {
                 $log->orderInfo(
@@ -122,8 +123,11 @@ class InitializeCommand implements CommandInterface
                 "Changing status quote to processing."
             );
 
-            $orderService = new OrderService();
-            $orderService->createOrderAtMundipagg($orderDecorator);
+            /*$orderService = new OrderService();
+            $orderService->createOrderAtMundipagg($orderDecorator);*/
+
+            $subscriptionService = new SubscriptionService();
+            $subscriptionService->createSubscriptionAtMundipagg($orderDecorator);
 
             $orderDecorator->save();
 
