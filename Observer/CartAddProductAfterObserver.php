@@ -4,6 +4,7 @@ namespace MundiPagg\MundiPagg\Observer;
 
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
+use Mundipagg\Core\Kernel\Services\MoneyService;
 use Mundipagg\Core\Recurrence\Services\ProductSubscriptionService;
 use Mundipagg\Core\Recurrence\ValueObjects\DiscountValueObject;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
@@ -15,11 +16,16 @@ class CartAddProductAfterObserver implements ObserverInterface
      * @var RecurrenceProductHelper
      */
     protected $recurrenceProductHelper;
+    /**
+     * @var MoneyService
+     */
+    protected $moneyService;
 
     public function __construct(RecurrenceProductHelper $recurrenceProductHelper)
     {
         Magento2CoreSetup::bootstrap();
         $this->recurrenceProductHelper = $recurrenceProductHelper;
+        $this->moneyService = new MoneyService();
     }
 
     public function execute(Observer $observer)
@@ -36,7 +42,7 @@ class CartAddProductAfterObserver implements ObserverInterface
             return;
         }
 
-        $specialPrice = $this->getSpecialPrice($item);
+        $specialPrice = $this->getPriceFromRepetition($item);
 
         if ($specialPrice > 0) {
             $item->setCustomPrice($specialPrice);
@@ -45,35 +51,18 @@ class CartAddProductAfterObserver implements ObserverInterface
         }
     }
 
-    public function getSpecialPrice($item)
-    {
-        $discountObject = $this->getDiscountFromRepetition($item);
-        if (!$discountObject) {
-            return null;
-        }
-
-        $product = $item->getProduct();
-        $price = $product->getFinalPrice();
-
-        $flat = DiscountValueObject::DISCOUNT_TYPE_FLAT;
-        if ($discountObject->getDiscountType() == $flat) {
-            return $price - $discountObject->getDiscountValue();
-        }
-
-        $percentDiscount = $discountObject->getDiscountValue() / 100;
-        return $price - ($price * $percentDiscount);
-    }
-
-    public function getDiscountFromRepetition($item)
+    public function getPriceFromRepetition($item)
     {
         $repetition = $this->recurrenceProductHelper
             ->getRepetitionSelected($item);
 
         if (!empty($repetition)) {
-            return $repetition->getDiscount();
+            return $this->moneyService->centsToFloat(
+                $repetition->getRecurrencePrice()
+            );
         }
 
-        return null;
+        return 0;
     }
 
     public function getSubscriptionProduct($item)

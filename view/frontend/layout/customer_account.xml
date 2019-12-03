@@ -14,6 +14,12 @@
 	                <argument name="label" xsi:type="string" translate="true">My Cards</argument>
 	            </arguments>
 	        </block>
+			<block class="Magento\Framework\View\Element\Html\Link\Current" name="customer-account-navigation-subscribe">
+				<arguments>
+					<argument name="path" xsi:type="string">mundipagg/customer/subscription</argument>
+					<argument name="label" xsi:type="string" translate="false">Subscription</argument>
+				</arguments>
+			</block>
 	    </referenceBlock>
 	</body>
 </page>
