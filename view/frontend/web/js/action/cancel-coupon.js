@@ -33,7 +33,7 @@ define([
     fullScreenLoader,
     creditCard,
     billetCard,
-    twoCard
+    twoCards
 ) {
     'use strict';
 
@@ -69,9 +69,9 @@ define([
             var billetCardObject = new billetCard();
             billetCardObject.bindCreditCardBilletAmountBcc();
 
-            var twoCardObject = new twoCard();
-            twoCardObject.bindFirstCreditCardAmount();
-            twoCardObject.bindSecondCreditCardAmount();
+            var twoCardsObject = new twoCards();
+            twoCardsObject.bindFirstCreditCardAmount();
+            twoCardsObject.bindSecondCreditCardAmount();
 
         }).fail(function (response) {
             totals.isLoading(false);
