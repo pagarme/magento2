@@ -19,7 +19,8 @@ define([
     'Magento_Checkout/js/model/totals',
     'Magento_Checkout/js/model/full-screen-loader',
     'MundiPagg_MundiPagg/js/view/payment/method-renderer/creditcard',
-    'MundiPagg_MundiPagg/js/view/payment/method-renderer/billet_creditcard'
+    'MundiPagg_MundiPagg/js/view/payment/method-renderer/billet_creditcard',
+    'MundiPagg_MundiPagg/js/view/payment/method-renderer/two_creditcard'
 ], function (
     ko,
     $,
@@ -33,7 +34,8 @@ define([
     totals,
     fullScreenLoader,
     creditCard,
-    billetCard
+    billetCard,
+    twoCard
 ) {
     'use strict';
 
@@ -71,6 +73,10 @@ define([
 
                 var billetCardObject = new billetCard();
                 billetCardObject.bindCreditCardBilletAmountBcc();
+
+                var twoCardObject = new twoCard();
+                twoCardObject.bindFirstCreditCardAmount();
+                twoCardObject.bindSecondCreditCardAmount();
             }
         }).fail(function (response) {
             fullScreenLoader.stopLoader();
