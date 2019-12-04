@@ -12,10 +12,11 @@ use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 use Mundipagg\Core\Recurrence\Aggregates\Repetition;
 use Magento\Catalog\Model\Product\Interceptor;
 use Magento\Framework\DataObject;
+use MundiPagg\MundiPagg\Helper\RecurrenceProductHelper;
 
 class CartConflict
 {
-    const KEY_REPETITION = 141;
+    const KEY_REPETITION = 1;
 
     /**
      * @var RepetitionRepository
@@ -42,13 +43,38 @@ class CartConflict
         Interceptor $productInfo,
         array $requestInfo = null
     ) {
+        //pra funcionar
+        return [$productInfo, $requestInfo];
+
+        $optionsList = $productInfo->getOptions();
+
+
+        foreach ($optionsList as $index0 => $option) {
+            if($option->getSku() != 'recurrence'){
+                continue;
+            }
+
+            $valueList = $option->getValues();
+
+            foreach ($valueList as $index => $value) {
+                foreach ($requestInfo['options'] as $index2 => $optionNivel) {
+                   if (($value->getData()['option_type_id'] == $optionNivel) && ($value->getData()['option_id'] == $index2)) {
+                       $azsxdc = $value->getData();
+                    }
+                }
+            }
+        }
+
+        die('develpment');
+
+
         if ($this->checkIsProductNormal($productInfo->getId(), $requestInfo)) {
             return [$productInfo, $requestInfo];
         }
 
         /* @var Repetition $repetitionRequestObject */
         $repetitionRequestObject = $this->repetitionRepository->find(
-            $requestInfo['super_attribute'][self::KEY_REPETITION]
+            $requestInfo['options'][self::KEY_REPETITION]
         );
 
         /* @var Item[] $itemQuoteList */
@@ -56,7 +82,7 @@ class CartConflict
         foreach ($itemQuoteList as $item) {
             /* @var DataObject $buyRequest */
             $buyRequest = $item->getBuyRequest();
-            $repetitionId = $buyRequest['super_attribute'][self::KEY_REPETITION];
+            $repetitionId = $buyRequest['options'][self::KEY_REPETITION];
 
             /* @var Repetition $repetition */
             $repetitionObject = $this->repetitionRepository->find($repetitionId);
@@ -84,7 +110,7 @@ class CartConflict
             return true;
         }
 
-        if (!isset($requestInfo['super_attribute'][self::KEY_REPETITION])) {
+        if (!isset($requestInfo['options'][self::KEY_REPETITION])) {
             return true;
         }
 
