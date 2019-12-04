@@ -87,22 +87,18 @@ define([
             twoCardsObject.bindInstallmentsByBlurSecond();
 
             if (wasValidCreditCard) {
-                console.log('foi cancel');
                 window.checkoutConfig.payment.mundipagg_creditcard.brandIsValid = true;
             }
 
             if (wasValidBilletCreditCard) {
-                console.log('foi cancel billetcredit');
                 window.checkoutConfig.payment.mundipagg_billet_creditcard.brandIsValid = true;
             }
 
             if (wasValidTwoCreditCardFirst) {
-                console.log('foi cancel two one');
                 window.checkoutConfig.payment.mundipagg_two_creditcard.brandFirstCardIsValid = true;
             }
 
             if (wasValidTwoCreditCardSecond) {
-                console.log('foi cancel two two');
                 window.checkoutConfig.payment.mundipagg_two_creditcard.brandSecondCardIsValid = true;
             }
 
