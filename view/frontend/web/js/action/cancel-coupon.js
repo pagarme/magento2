@@ -62,16 +62,49 @@ define([
                 'message': message
             });
 
+            var wasValidCreditCard = window.checkoutConfig.payment.mundipagg_creditcard.brandIsValid;
+            var wasValidBilletCreditCard = window.checkoutConfig.payment.mundipagg_billet_creditcard.brandIsValid;
+            var wasValidTwoCreditCardFirst = window.checkoutConfig.payment.mundipagg_two_creditcard.brandFirstCardIsValid;
+            var wasValidTwoCreditCardSecond = window.checkoutConfig.payment.mundipagg_two_creditcard.brandSecondCardIsValid;
+
             var creditCardObject = new creditCard();
             creditCardObject.onInstallmentItemChange();
             creditCardObject.getCcInstallments();
 
+            document.getElementsByName('payment[cc_billet_amount]')[0].value = '';
+            document.getElementsByName('payment[cc_cc_amount]')[0].value = '';
+
             var billetCardObject = new billetCard();
             billetCardObject.bindCreditCardBilletAmountBcc();
+
+            document.getElementsByName('payment[first-card-amount]')[0].value = '';
+            document.getElementsByName('payment[second-card-amount]')[0].value = '';
 
             var twoCardsObject = new twoCards();
             twoCardsObject.bindFirstCreditCardAmount();
             twoCardsObject.bindSecondCreditCardAmount();
+            twoCardsObject.bindInstallmentsByBlurFirst();
+            twoCardsObject.bindInstallmentsByBlurSecond();
+
+            if (wasValidCreditCard) {
+                console.log('foi cancel');
+                window.checkoutConfig.payment.mundipagg_creditcard.brandIsValid = true;
+            }
+
+            if (wasValidBilletCreditCard) {
+                console.log('foi cancel billetcredit');
+                window.checkoutConfig.payment.mundipagg_billet_creditcard.brandIsValid = true;
+            }
+
+            if (wasValidTwoCreditCardFirst) {
+                console.log('foi cancel two one');
+                window.checkoutConfig.payment.mundipagg_two_creditcard.brandFirstCardIsValid = true;
+            }
+
+            if (wasValidTwoCreditCardSecond) {
+                console.log('foi cancel two two');
+                window.checkoutConfig.payment.mundipagg_two_creditcard.brandSecondCardIsValid = true;
+            }
 
         }).fail(function (response) {
             totals.isLoading(false);
