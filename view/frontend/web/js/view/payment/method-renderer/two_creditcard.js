@@ -124,7 +124,7 @@ define(
                     self.creditCardTypeFirst(newValue);
 
                     var amountFirst = self.firstCreditCardAmount() != '' ? self.firstCreditCardAmount() : 0;
-                    fullScreenLoader.startLoader();
+
                     var currentAmount = jQuery("select[name='payment[cc_installments_first]']").attr('amount');
                     var currentBrand = jQuery("select[name='payment[cc_installments_first]']").attr('brand');
 
@@ -160,7 +160,6 @@ define(
                     self.creditCardTypeSecond(newValue);
 
                     var amountSecond = self.secondCreditCardAmount() != '' ? self.secondCreditCardAmount() : 0;
-                    fullScreenLoader.startLoader();
 
                     var currentAmount = jQuery("select[name='payment[cc_installments_second]']").attr('amount');
                     var currentBrand = jQuery("select[name='payment[cc_installments_second]']").attr('brand');
