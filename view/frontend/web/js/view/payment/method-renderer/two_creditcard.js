@@ -124,7 +124,7 @@ define(
                     self.creditCardTypeFirst(newValue);
 
                     var amountFirst = self.firstCreditCardAmount() != '' ? self.firstCreditCardAmount() : 0;
-                    fullScreenLoader.startLoader();
+
                     var currentAmount = jQuery("select[name='payment[cc_installments_first]']").attr('amount');
                     var currentBrand = jQuery("select[name='payment[cc_installments_first]']").attr('brand');
 
@@ -160,7 +160,6 @@ define(
                     self.creditCardTypeSecond(newValue);
 
                     var amountSecond = self.secondCreditCardAmount() != '' ? self.secondCreditCardAmount() : 0;
-                    fullScreenLoader.startLoader();
 
                     var currentAmount = jQuery("select[name='payment[cc_installments_second]']").attr('amount');
                     var currentBrand = jQuery("select[name='payment[cc_installments_second]']").attr('brand');
@@ -268,6 +267,7 @@ define(
                     write: function (value) {
                         if (value != 'null') {
                             value = this.formatPrice(value);
+                            var totalQuote = quote.getTotals()().grand_total;
                             value = value.replace(/[^,\d]/g, "");
                             value = value.replace(",", ".");
                             this.firstCreditCardAmount(value);
@@ -289,6 +289,7 @@ define(
                     },
                     write: function (value) {
                         if (value != 'null') {
+                            var totalQuote = quote.getTotals()().grand_total;
                             value = this.formatPrice(value);
                             value = value.replace(/[^,\d]/g, "");
                             value = value.replace(",", ".");
@@ -727,7 +728,7 @@ define(
 
             createAndSendTokenCreditCardFirst: function (data, event) {
                 var self = this;
-                var address = this.quoteBilling;
+                var address = quote.billingAddress();
 
                 var firstBrandIsValid = window.checkoutConfig.payment.mundipagg_two_creditcard.brandFirstCardIsValid;
 
@@ -843,7 +844,7 @@ define(
 
             createAndSendTokenCreditCard: function (data, event) {
                 var self = this;
-                var address = this.quoteBilling;
+                var address = quote.billingAddress();
 
                 var firstBrandIsValid = window.checkoutConfig.payment.mundipagg_two_creditcard.brandFirstCardIsValid;
                 var secondBrandIsValid = window.checkoutConfig.payment.mundipagg_two_creditcard.brandSecondCardIsValid;
@@ -996,7 +997,7 @@ define(
                 }
 
                 var self = this;
-                var address = this.quoteBilling;
+                var address = quote.billingAddress();
 
                 if(typeof address.street == "undefined" || address.street.lenght < 3){
                     this.messageContainer.addErrorMessage({
