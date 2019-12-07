@@ -32,6 +32,7 @@ class InstallSchema implements InstallSchemaInterface
         $this->installSubscriptionRepetitions($setup);
         $this->installRecurrenceSubscription($setup);
         $this->installRecurrenceCharge($setup);
+        $this->installSubProducts($setup);
 
         $setup->endSetup();
     }
