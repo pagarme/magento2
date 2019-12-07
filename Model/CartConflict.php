@@ -5,23 +5,28 @@ namespace MundiPagg\MundiPagg\Model;
 use Magento\Checkout\Model\Cart;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Quote\Model\Quote\Item;
+use Mundipagg\Core\Kernel\Abstractions\AbstractModuleCoreSetup as MPSetup;
 use Mundipagg\Core\Recurrence\Aggregates\ProductSubscription;
 use Mundipagg\Core\Recurrence\Repositories\RepetitionRepository;
 use Mundipagg\Core\Recurrence\Services\RecurrenceService;
+use Mundipagg\Core\Recurrence\Services\RepetitionService;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 use Mundipagg\Core\Recurrence\Aggregates\Repetition;
 use Magento\Catalog\Model\Product\Interceptor;
-use Magento\Framework\DataObject;
 use MundiPagg\MundiPagg\Helper\RecurrenceProductHelper;
+use Mundipagg\Core\Kernel\Abstractions\AbstractEntity;
+use Magento\Catalog\Model\Product\Option;
+use Magento\Catalog\Api\Data\ProductCustomOptionValuesInterface;
+use Magento\Catalog\Model\Product\Option\Value;
+use Mundipagg\Core\Recurrence\Services\ProductSubscriptionService;
+use Mundipagg\Core\Recurrence\Services\RulesCheckout;
 
 class CartConflict
 {
-    const KEY_REPETITION = 1;
-
     /**
-     * @var RepetitionRepository
+     * @var RepetitionService
      */
-    private $repetitionRepository;
+    private $repetitionService;
 
     /**
      * @var RecurrenceService
@@ -29,13 +34,31 @@ class CartConflict
     private $recurrenceService;
 
     /**
+     * @var RecurrenceProductHelper
+     */
+    private $recurrenceProductHelper;
+
+    /**
+     * @var RulesCheckout
+     */
+    private $rulesCheckout;
+
+    /**
+     * @var ProductSubscriptionService
+     */
+    private $productSubscriptionService;
+
+    /**
      * CartConflict constructor.
      */
     public function __construct()
     {
         Magento2CoreSetup::bootstrap();
-        $this->repetitionRepository = new RepetitionRepository();
+        $this->repetitionService = new RepetitionService();
         $this->recurrenceService = new RecurrenceService();
+        $this->recurrenceProductHelper = new RecurrenceProductHelper();
+        $this->rulesCheckout = new RulesCheckout();
+        $this->productSubscriptionService = new ProductSubscriptionService();
     }
 
     public function beforeAddProduct(
@@ -43,51 +66,52 @@ class CartConflict
         Interceptor $productInfo,
         array $requestInfo = null
     ) {
-        //pra funcionar
-        return [$productInfo, $requestInfo];
-
-        $optionsList = $productInfo->getOptions();
-
-
-        foreach ($optionsList as $index0 => $option) {
-            if($option->getSku() != 'recurrence'){
-                continue;
-            }
-
-            $valueList = $option->getValues();
-
-            foreach ($valueList as $index => $value) {
-                foreach ($requestInfo['options'] as $index2 => $optionNivel) {
-                   if (($value->getData()['option_type_id'] == $optionNivel) && ($value->getData()['option_id'] == $index2)) {
-                       $azsxdc = $value->getData();
-                    }
-                }
-            }
-        }
-
-        die('develpment');
-
-
-        if ($this->checkIsProductNormal($productInfo->getId(), $requestInfo)) {
+        $normalProduct = $this->checkIsNormalProduct($requestInfo);
+        if ($normalProduct) {
             return [$productInfo, $requestInfo];
         }
 
-        /* @var Repetition $repetitionRequestObject */
-        $repetitionRequestObject = $this->repetitionRepository->find(
-            $requestInfo['options'][self::KEY_REPETITION]
+        $repetitionSelected = $this->getOptionRecurrenceSelected(
+            $productInfo->getOptions(),
+            $requestInfo['options']
+        );
+
+        if (is_null($repetitionSelected)) {
+            return [$productInfo, $requestInfo];
+        }
+
+        $productSubscriptionSelected = $this->productSubscriptionService->findById(
+            $repetitionSelected->getSubscriptionId()
         );
 
         /* @var Item[] $itemQuoteList */
         $itemQuoteList = $cart->getQuote()->getAllVisibleItems();
         foreach ($itemQuoteList as $item) {
-            /* @var DataObject $buyRequest */
-            $buyRequest = $item->getBuyRequest();
-            $repetitionId = $buyRequest['options'][self::KEY_REPETITION];
+            $repetitionInCart = $this->recurrenceProductHelper->getRepetitionSelected(
+                $item
+            );
 
-            /* @var Repetition $repetition */
-            $repetitionObject = $this->repetitionRepository->find($repetitionId);
-            if (!$repetitionObject->checkRepetitionIsEquals($repetitionRequestObject)) {
-                throw new LocalizedException(__("Intervalos diferentes"));
+            if (is_null($repetitionInCart)) {
+                continue;
+            }
+
+            $productSubscriptionInCart = $this->productSubscriptionService->findById(
+                $repetitionInCart->getSubscriptionId()
+            );
+
+            $passRules = $this->rulesCheckout->runRulesCheckoutSubscription(
+                $productSubscriptionInCart,
+                $productSubscriptionSelected,
+                $repetitionInCart,
+                $repetitionSelected
+            );
+
+            if(!$passRules) {
+                $messageConflictRecurrence = MPSetup::getModuleConfiguration()
+                    ->getRecurrenceConfig()
+                    ->getCheckoutConflictMessage();
+
+                throw new LocalizedException(__($messageConflictRecurrence));
             }
         }
 
@@ -95,25 +119,49 @@ class CartConflict
     }
 
     /**
-     * @param int $productId
-     * @param $requestInfo
+     * @param array $requestInfo
      * @return bool
      */
-    private function checkIsProductNormal($productId, $requestInfo)
+    public function checkIsNormalProduct(array $requestInfo)
     {
-        /* @var ProductSubscription $recurrenceObject */
-        $recurrenceObject = $this->recurrenceService->getRecurrenceProductByProductId(
-            $productId
-        );
-
-        if (is_null($recurrenceObject)) {
+        if (!isset($requestInfo['options'])) {
             return true;
         }
-
-        if (!isset($requestInfo['options'][self::KEY_REPETITION])) {
-            return true;
-        }
-
         return false;
+    }
+
+    /**
+     * @param Option[] $optionsList
+     * @param array $optionsSelected
+     * @return Repetition|null
+     */
+    public function getOptionRecurrenceSelected(array $optionsList, array $optionsSelected)
+    {
+        foreach ($optionsList as $option) {
+            if ($option->getSku() != 'recurrence') {
+                continue;
+            }
+
+            /* @var Value[]|ProductCustomOptionValuesInterface[] $valueList */
+            $valueList = $option->getValues();
+
+            $productOptionValue = null;
+            foreach ($valueList as $value) {
+                foreach ($optionsSelected as $optionId => $optionTypeId) {
+                    if (($value->getOptionTypeId() == $optionTypeId) &&
+                        ($value->getData()['option_id'] == $optionId)) {
+                        $productOptionValue = $value;
+                    }
+                }
+            }
+        }
+
+        if (is_null($productOptionValue)) {
+            return null;
+        }
+
+        return $this->repetitionService->getRepetitionById(
+            $productOptionValue->getSortOrder()
+        );
     }
 }
