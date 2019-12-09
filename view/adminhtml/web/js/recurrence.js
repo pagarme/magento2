@@ -52,8 +52,16 @@ require([
 
         $("#form-product").submit(formSubmit);
         $("#credit-card").on('change', toogleInstallments);
+        $('.recurrence_price').on('keyup', formatPriceValue);
 
     });
+
+    function formatPriceValue(e) {
+        var value = $(this).val();
+        value = value.replace(/[^0-9]/g, '');
+        value = (value / 100).toFixed(2);
+        $(this).val(value.toString().replace('.',","));
+    }
 
     function toogleInstallments(e) {
         if ($(this).prop('checked')) {
@@ -219,14 +227,16 @@ require([
         var type = $("#recurrence-type").val();
 
         var lastColumn = quantityColumn;
+        var nameCycleInput = "form[items][" + index + "][cycles]";
         if (type == 'subscription') {
+            nameCycleInput = "form[cycles]";
             lastColumn = priceColumn;
         }
 
         var tr = $('<tr>').append(
             $('<td>').html("<img src='" + data.image + "' width='70px' height='70px'>"),
             $('<td>').text(data.name),
-            $('<td>').html("<input type='number' name='form[items][" + index + "][cycles]' value='" + cycles + "' step='1' min='0'/>"),
+            $('<td>').html("<input type='number' name='" + nameCycleInput + "' value='" + cycles + "' step='1' min='0'/>"),
             $('<td>').html(lastColumn + inputsHidden),
         );
 
@@ -251,17 +261,17 @@ require([
     }
 
     function loadProduct(product) {
-        $("#credit-card").prop('checked', parseInt(product.creditCard));
-        $("#boleto").prop('checked', parseInt(product.boleto));
+        $("#credit-card").prop('checked', product.creditCard);
+        $("#boleto").prop('checked', product.boleto);
         $("#interval").val(product.interval);
         $("#interval_count").val(product.interval_count);
         $("#product_id").val(product.productId);
 
-        if (parseInt(product.creditCard)) {
-            $("#allow_installments").prop('checked', parseInt(product.allowInstallments));
+        if (product.creditCard) {
+            $("#allow_installments").prop('checked', product.allowInstallments);
             $("#allow_installments_div").show();
         }
-        $("#sell_as_normal_product").prop('checked', parseInt(product.sellAsNormalProduct));
+        $("#sell_as_normal_product").prop('checked', product.sellAsNormalProduct);
 
         updateTableProduct($("#add-product"));
         fillRepetitionTable(product.repetitions);
@@ -274,10 +284,13 @@ require([
 
         for (var index in reptitions) {
             var count = parseInt(index) + 1;
+            var recurrencePrice = reptitions[index].recurrencePrice;
+            recurrencePrice = (recurrencePrice / 100).toFixed(2);
+            recurrencePrice = recurrencePrice.toString().replace('.',',');
+
             $("#interval_count_" + count).val(reptitions[index].intervalCount);
-            $("#interval_" + count).val(reptitions[index].intervalType);
-            $("#discount_value_" + count).val(reptitions[index].discountValue);
-            $("#discount_type_" + count).val(reptitions[index].discountType);
+            $("#interval_" + count).val(reptitions[index].interval);
+            $("#recurrence_price_" + count).val(recurrencePrice);
             $("#repetition_id_" + count).val(reptitions[index].id);
         }
     }

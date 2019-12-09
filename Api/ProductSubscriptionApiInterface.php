@@ -16,6 +16,15 @@ interface ProductSubscriptionApiInterface
     public function save(ProductSubscriptionInterface $productSubscription, $id = null);
 
     /**
+     * Save product subscription
+     *
+     * @param array $form
+     * @param int $id
+     * @return \Mundipagg\Core\Recurrence\Interfaces\ProductSubscriptionInterface|array
+     */
+    public function saveFormData();
+
+    /**
      * List product subscription
      *
      * @return \Mundipagg\Core\Recurrence\Interfaces\ProductSubscriptionInterface[]
