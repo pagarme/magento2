@@ -173,7 +173,9 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
     {
         $options = [
             'boletoEnabled' => 'active',
-            'boletoInstructions' => 'instructions'
+            'boletoInstructions' => 'instructions',
+            'boletoDueDays' => 'expiration_days',
+            'boletoBankCode' => 'types'
         ];
         $section = 'payment/mundipagg_billet/';
         $dataObj = self::fillDataObj($storeConfig, $options, $dataObj, $section);

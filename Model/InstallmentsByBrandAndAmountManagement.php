@@ -16,6 +16,7 @@ use Mundipagg\Core\Kernel\Services\MoneyService;
 use Mundipagg\Core\Kernel\ValueObjects\CardBrand;
 use Mundipagg\Core\Recurrence\Aggregates\Plan;
 use Mundipagg\Core\Recurrence\Services\RecurrenceService;
+use Mundipagg\Core\Recurrence\ValueObjects\IntervalValueObject;
 use MundiPagg\MundiPagg\Api\InstallmentsByBrandAndAmountManagementInterface;
 use Magento\Checkout\Model\Session;
 use MundiPagg\MundiPagg\Helper\RecurrenceProductHelper;
@@ -146,7 +147,10 @@ class InstallmentsByBrandAndAmountManagement
         $repetition = $this->recurrenceProductHelper->getRepetitionSelected($item);
 
         if (!empty($repetition)) {
-            return $repetition->getInterval();
+            $intervalType = $repetition->getInterval();
+            $intervalCount = $repetition->getIntervalCount();
+
+            return IntervalValueObject::$intervalType($intervalCount);
         }
 
         return null;
