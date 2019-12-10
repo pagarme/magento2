@@ -138,7 +138,7 @@ class PaymentMethodAvailable implements ObserverInterface
             }
 
             if (
-                !empty($this->recurrenceProductHelper->getRepetitionSelected($item))
+                !empty($this->recurrenceProductHelper->getSelectedRepetition($item))
             ) {
                 return $recurrenceProduct;
             }

@@ -11,7 +11,6 @@
 
 namespace MundiPagg\MundiPagg\Gateway\Transaction\Base\Command;
 
-
 use Magento\Payment\Gateway\Helper\SubjectReader;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Api\Data\OrderInterface;
@@ -29,6 +28,7 @@ use MundiPagg\MundiPagg\Model\Ui\CreditCard\ConfigProvider;
 use MundiPagg\MundiPagg\Model\Ui\TwoCreditCard\ConfigProvider as TwoCreditCardConfigProvider;
 use Magento\Framework\Phrase;
 use Magento\Framework\Webapi\Exception as M2WebApiException;
+use MundiPagg\MundiPagg\Helper\RecurrenceProductHelper;
 
 class InitializeCommand implements CommandInterface
 {
@@ -91,6 +91,8 @@ class InitializeCommand implements CommandInterface
     private function doCoreDetour($payment)
     {
         $order =  $payment->getOrder();
+        $items = $payment->getOrder()->getItems();
+
         $log = new OrderLogService();
 
         Magento2CoreSetup::bootstrap();

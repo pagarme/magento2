@@ -144,7 +144,7 @@ class InstallmentsByBrandAndAmountManagement
             return $recurrenceEntity->getInterval();
         }
 
-        $repetition = $this->recurrenceProductHelper->getRepetitionSelected($item);
+        $repetition = $this->recurrenceProductHelper->getSelectedRepetition($item);
 
         if (!empty($repetition)) {
             $intervalType = $repetition->getInterval();

@@ -32,6 +32,7 @@ use Mundipagg\Core\Payment\Repositories\SavedCardRepository;
 use Mundipagg\Core\Payment\ValueObjects\CustomerPhones;
 use Mundipagg\Core\Payment\ValueObjects\CustomerType;
 use Mundipagg\Core\Payment\ValueObjects\Phone;
+use MundiPagg\MundiPagg\Helper\RecurrenceProductHelper;
 use MundiPagg\MundiPagg\Model\Cards;
 use MundiPagg\MundiPagg\Model\CardsRepository;
 use Mundipagg\Core\Kernel\Services\LocalizationService;
@@ -469,6 +470,11 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
                 $quoteItem->getName() . ' : ' .
                 $quoteItem->getDescription()
             );
+
+            $helper = new RecurrenceProductHelper();
+            $selectedRepetition = $helper->getSelectedRepetition($quoteItem);
+            $item->setSelectedOption($selectedRepetition);
+
             $items[] = $item;
         }
         return $items;
