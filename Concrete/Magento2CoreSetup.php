@@ -109,9 +109,6 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
 
     public function loadModuleConfigurationFromPlatform()
     {
-        $storeId = self::getCurrentStoreId();
-        $scope = ScopeInterface::SCOPE_STORE;
-
         $objectManager = ObjectManager::getInstance();
         $storeConfig = $objectManager->get(Magento2StoreConfig::class);
         $configData = new \stdClass;
@@ -259,8 +256,14 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
 
     static private function fillDataObj($storeConfig, $options, $dataObj, $section)
     {
-        $storeId = self::getCurrentStoreId();
+        $objectManager = ObjectManager::getInstance();
+        $config = $objectManager->get(Magento2ModelConfig::class);
+
         $scope = ScopeInterface::SCOPE_STORE;
+        $storeId = $config->getStore();
+        if (!$config->getStore()) {
+            $storeId = 1;
+        }
 
         foreach ($options as $key => $option) {
             $value = $storeConfig->getValue($section . $option, $scope, $storeId);
@@ -281,9 +284,18 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
 
     static private function getBrandConfig($storeConfig)
     {
+        $objectManager = ObjectManager::getInstance();
+        $config = $objectManager->get(Magento2ModelConfig::class);
+
+        $storeId = $config->getStore();
+        if (!$config->getStore()) {
+            $storeId = 1;
+        }
+        $scope = ScopeInterface::SCOPE_STORE;
+
         $brands = array_merge([''],explode(
             ',',
-            $storeConfig->getValue('payment/mundipagg_creditcard/cctypes')
+            $storeConfig->getValue('payment/mundipagg_creditcard/cctypes', $scope, $storeId)
         ));
 
         $cardConfigs = [];
@@ -303,18 +315,18 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
                 $brandMethod = 'nobrand';
             }
 
-            $max = $storeConfig->getValue('payment/mundipagg_creditcard/installments_number' . $brand);
+            $max = $storeConfig->getValue('payment/mundipagg_creditcard/installments_number' . $brand, $scope, $storeId);
             if (empty($max)) {
                 $brand = '';
-                $max = $storeConfig->getValue('payment/mundipagg_creditcard/installments_number' . $brand);
+                $max = $storeConfig->getValue('payment/mundipagg_creditcard/installments_number' . $brand, $scope, $storeId);
             }
 
-            $minValue =  $storeConfig->getValue('payment/mundipagg_creditcard/installment_min_amount' . $brand);
-            $initial =  $storeConfig->getValue('payment/mundipagg_creditcard/installments_interest_rate_initial' . $brand);
-            $incremental =  $storeConfig->getValue('payment/mundipagg_creditcard/installments_interest_rate_incremental'. $brand);
-            $maxWithout =  $storeConfig->getValue('payment/mundipagg_creditcard/installments_max_without_interest' . $brand);
+            $minValue =  $storeConfig->getValue('payment/mundipagg_creditcard/installment_min_amount' . $brand, $scope, $storeId);
+            $initial =  $storeConfig->getValue('payment/mundipagg_creditcard/installments_interest_rate_initial' . $brand, $scope, $storeId);
+            $incremental =  $storeConfig->getValue('payment/mundipagg_creditcard/installments_interest_rate_incremental'. $brand, $scope, $storeId);
+            $maxWithout =  $storeConfig->getValue('payment/mundipagg_creditcard/installments_max_without_interest' . $brand, $scope, $storeId);
 
-            $interestByBrand =  $storeConfig->getValue('payment/mundipagg_creditcard/installments_interest_by_issuer' . $brand);
+            $interestByBrand =  $storeConfig->getValue('payment/mundipagg_creditcard/installments_interest_by_issuer' . $brand, $scope, $storeId);
             if (empty($interestByBrand)) {
                 $initial = 0;
                 $incremental = 0;
