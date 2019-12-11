@@ -231,4 +231,60 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
         return $intervalLabel . $discountLabel;
     }
 
+    /**
+     * Save product subscription
+     *
+     * @param array $form
+     * @param int $id
+     * @return \Mundipagg\Core\Recurrence\Interfaces\ProductSubscriptionInterface|array
+     */
+    public function saveFormData()
+    {
+        $post = $this->request->getBodyParams();
+        parse_str($post[0], $params);
+
+        $form = $this->gerFormattedForm($params['form']);
+
+        if (empty($form)) {
+            return json_encode([
+                'code' => 404,
+                'message' => 'Error on save product subscription'
+            ]);
+        }
+
+        $productSubscriptionService = new ProductSubscriptionService();
+        $productSubscription =
+            $productSubscriptionService->saveFormProductSubscription($form);
+        $this->setCustomOption($productSubscription);
+
+        return json_encode([
+            'code' => 200,
+            'message' => 'Product subscription saved'
+        ]);
+    }
+
+    public function gerFormattedForm($form)
+    {
+        if (isset($form['credit_card'])) {
+            $form['credit_card'] = (bool) $form['credit_card'];
+        }
+
+        if (isset($form['boleto'])) {
+            $form['boleto'] = (bool)$form['boleto'];
+        }
+
+        if (isset($form['sell_as_normal_product'])) {
+            $form['sell_as_normal_product'] = (bool)$form['sell_as_normal_product'];
+        }
+
+        if (isset($form['allow_installments'])) {
+            $form['allow_installments'] = (bool)$form['allow_installments'];
+        }
+
+        foreach($form['repetitions'] as &$repetition) {
+            $repetition['recurrence_price'] = str_replace([',', '.'], '', $repetition['recurrence_price']);
+        }
+
+        return $form;
+    }
 }

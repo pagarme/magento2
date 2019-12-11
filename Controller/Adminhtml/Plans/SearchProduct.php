@@ -10,6 +10,7 @@ use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\View\Result\PageFactory;
 use Mundipagg\Core\Kernel\Services\MoneyService;
 use Mundipagg\Core\Recurrence\Aggregates\Plan;
+use Mundipagg\Core\Recurrence\Aggregates\ProductSubscription;
 use Mundipagg\Core\Recurrence\Services\PlanService;
 use Mundipagg\Core\Recurrence\Services\ProductSubscriptionService;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
@@ -175,7 +176,6 @@ class SearchProduct extends Action
 
         if ($subProductRecurrence !== null) {
             $product['cycles'] = $subProductRecurrence->getCycles();
-            $product['quantity'] = $subProductRecurrence->getQuantity();
             $product['id'] = $subProductRecurrence->getId();
         }
 
@@ -201,6 +201,10 @@ class SearchProduct extends Action
 
         $recurrenceService = $this->getRecurrenceService($recurrenceType);
         $recurrenceEntity = $recurrenceService->findById($recurrenceProductId);
+
+        if ($recurrenceEntity->getRecurrenceType() == ProductSubscription::RECURRENCE_TYPE) {
+            return $recurrenceEntity;
+        }
 
         foreach ($recurrenceEntity->getItems() as $item) {
             if ($item->getProductId() == $productId) {
