@@ -130,12 +130,14 @@ class InitializeCommand implements CommandInterface
             return $orderDecorator;
         } catch (\Exception $e) {
 
-            $quote->setCustomerNote('mundipagg-failed');
+            $quote->setCustomerNote('');
             $quote->save();
 
+            $message = "Order failed, changing status quote to failed. \n";
+            $message .= "Error message: " . $e->getMessage();
             $log->orderInfo(
                 $orderDecorator->getCode(),
-                "Order failed, changing status quote to failed."
+                $message
             );
 
             throw new M2WebApiException(
