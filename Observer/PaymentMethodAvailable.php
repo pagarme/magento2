@@ -50,11 +50,11 @@ class PaymentMethodAvailable implements ObserverInterface
             return;
         }
 
-        $recurrenceProduct = $this->getRecurrenceProduct($quote);
+        $recurrenceProducts = $this->getRecurrenceProducts($quote);
 
         $mundipaggPaymentsMethods = $this->getAvailableConfigMethods();
         $methodsAvailable = $this->getAvailableRecurrenceMethods(
-            $recurrenceProduct,
+            $recurrenceProducts,
             $mundipaggPaymentsMethods
         );
 
@@ -65,11 +65,11 @@ class PaymentMethodAvailable implements ObserverInterface
     }
 
     public function getAvailableRecurrenceMethods(
-        $recurrenceProduct,
+        $recurrenceProducts,
         $mundipaggPaymentsMethods
     )
     {
-        if (empty($recurrenceProduct)) {
+        if (empty($recurrenceProducts)) {
             return $mundipaggPaymentsMethods;
         }
 
@@ -78,12 +78,15 @@ class PaymentMethodAvailable implements ObserverInterface
         unset($flip["mundipagg_billet_creditcard"]);
         unset($flip["mundipagg_two_creditcard"]);
 
-        if (!$recurrenceProduct->getCreditCard()) {
-            unset($flip["mundipagg_creditcard"]);
-        }
+        foreach ($recurrenceProducts as $recurrenceProduct) {
 
-        if (!$recurrenceProduct->getBoleto()) {
-            unset($flip["mundipagg_billet"]);
+            if (!$recurrenceProduct->getCreditCard()) {
+                unset($flip["mundipagg_creditcard"]);
+            }
+
+            if (!$recurrenceProduct->getBoleto()) {
+                unset($flip["mundipagg_billet"]);
+            }
         }
 
         $mundipaggPaymentsMethods = array_flip($flip);
@@ -116,12 +119,14 @@ class PaymentMethodAvailable implements ObserverInterface
 
     /**
      * @param $quote
-     * @return RecurrenceEntityInterface|null
+     * @return RecurrenceEntityInterface[]|null
      */
-    public function getRecurrenceProduct($quote)
+    public function getRecurrenceProducts($quote)
     {
         $items = $quote->getItems();
         $recurrenceService = new RecurrenceService();
+
+        $recurrenceProducts = [];
 
         foreach ($items as $item) {
             $productId = $item->getProductId();
@@ -134,15 +139,15 @@ class PaymentMethodAvailable implements ObserverInterface
             }
 
             if ($recurrenceProduct->getRecurrenceType() == Plan::RECURRENCE_TYPE) {
-                return $recurrenceProduct;
+                $recurrenceProducts[] =  $recurrenceProduct;
             }
 
             if (
                 !empty($this->recurrenceProductHelper->getRepetitionSelected($item))
             ) {
-                return $recurrenceProduct;
+                $recurrenceProducts[] =  $recurrenceProduct;
             }
         }
-        return null;
+        return $recurrenceProducts;
     }
 }
