@@ -24,6 +24,7 @@ use Mundipagg\Core\Kernel\Services\OrderService;
 use Mundipagg\Core\Recurrence\Services\RecurrenceService;
 use Mundipagg\Core\Recurrence\Services\SubscriptionService;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use MundiPagg\MundiPagg\Concrete\Magento2PlatformPaymentMethodDecorator;
 use MundiPagg\MundiPagg\Model\Ui\CreditCard\ConfigProvider;
 use MundiPagg\MundiPagg\Model\Ui\TwoCreditCard\ConfigProvider as TwoCreditCardConfigProvider;
 use Magento\Framework\Phrase;
@@ -101,9 +102,18 @@ class InitializeCommand implements CommandInterface
             MPSetup::CONCRETE_PLATFORM_ORDER_DECORATOR_CLASS
         );
 
+        $platformPaymentMethodDecoratorClass = MPSetup::get(
+            MPSetup::CONCRETE_PLATFORM_PAYMENT_METHOD_DECORATOR_CLASS
+        );
+
         /** @var PlatformOrderInterface $orderDecorator */
         $orderDecorator = new $platformOrderDecoratorClass();
         $orderDecorator->setPlatformOrder($order);
+
+        $paymentMethodDecorator = new $platformPaymentMethodDecoratorClass();
+        $paymentMethodDecorator->setPaymentMethod($orderDecorator);
+
+        $orderDecorator->setPaymentMethod($paymentMethodDecorator->getPaymentMethod());
 
         $quote = $orderDecorator->getQuote();
 
