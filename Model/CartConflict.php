@@ -19,7 +19,7 @@ use Magento\Catalog\Model\Product\Option;
 use Magento\Catalog\Api\Data\ProductCustomOptionValuesInterface;
 use Magento\Catalog\Model\Product\Option\Value;
 use Mundipagg\Core\Recurrence\Services\ProductSubscriptionService;
-use Mundipagg\Core\Recurrence\Services\RulesCheckout;
+use Mundipagg\Core\Recurrence\Services\RulesCheckoutService;
 
 class CartConflict
 {
@@ -39,9 +39,9 @@ class CartConflict
     private $recurrenceProductHelper;
 
     /**
-     * @var RulesCheckout
+     * @var RulesCheckoutService
      */
-    private $rulesCheckout;
+    private $rulesCheckoutService;
 
     /**
      * @var ProductSubscriptionService
@@ -57,7 +57,7 @@ class CartConflict
         $this->repetitionService = new RepetitionService();
         $this->recurrenceService = new RecurrenceService();
         $this->recurrenceProductHelper = new RecurrenceProductHelper();
-        $this->rulesCheckout = new RulesCheckout();
+        $this->rulesCheckoutService = new RulesCheckoutService();
         $this->productSubscriptionService = new ProductSubscriptionService();
     }
 
@@ -99,7 +99,7 @@ class CartConflict
                 $repetitionInCart->getSubscriptionId()
             );
 
-            $passRules = $this->rulesCheckout->runRulesCheckoutSubscription(
+            $passRules = $this->rulesCheckoutService->runRulesCheckoutSubscription(
                 $productSubscriptionInCart,
                 $productSubscriptionSelected,
                 $repetitionInCart,
