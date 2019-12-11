@@ -137,6 +137,7 @@ class CartConflict
      */
     public function getOptionRecurrenceSelected(array $optionsList, array $optionsSelected)
     {
+        $productOptionValue = null;
         foreach ($optionsList as $option) {
             if ($option->getSku() != 'recurrence') {
                 continue;
@@ -144,16 +145,7 @@ class CartConflict
 
             /* @var Value[]|ProductCustomOptionValuesInterface[] $valueList */
             $valueList = $option->getValues();
-
-            $productOptionValue = null;
-            foreach ($valueList as $value) {
-                foreach ($optionsSelected as $optionId => $optionTypeId) {
-                    if (($value->getOptionTypeId() == $optionTypeId) &&
-                        ($value->getData()['option_id'] == $optionId)) {
-                        $productOptionValue = $value;
-                    }
-                }
-            }
+            $productOptionValue = $this->getOptionsValues($valueList, $optionsSelected);
         }
 
         if (is_null($productOptionValue)) {
@@ -163,5 +155,41 @@ class CartConflict
         return $this->repetitionService->getRepetitionById(
             $productOptionValue->getSortOrder()
         );
+    }
+
+    /**
+     * @param Value[] $valueList
+     * @param array $optionsSelected
+     * @return Value|null
+     */
+    private function getOptionsValues(array $valueList, array $optionsSelected)
+    {
+        $optionValueSelected = null;
+        foreach ($valueList as $value) {
+            $optionValueSelected = $this->getOptionValueSelected($value, $optionsSelected);
+            if (!is_null($optionValueSelected)) {
+                return $optionValueSelected;
+            }
+        }
+
+        return $optionValueSelected;
+    }
+
+    /**
+     * @param Value $value
+     * @param array $optionsSelected
+     * @return Value|null
+     */
+    private function getOptionValueSelected(Value $value, array $optionsSelected)
+    {
+        $optionValueSelected = null;
+        foreach ($optionsSelected as $optionId => $optionTypeId) {
+            if (($value->getOptionTypeId() == $optionTypeId) &&
+                ($value->getData()['option_id'] == $optionId)) {
+                $optionValueSelected = $value;
+            }
+        }
+
+        return $optionValueSelected;
     }
 }
