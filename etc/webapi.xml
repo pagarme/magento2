@@ -89,4 +89,11 @@
         </resources>
     </route>
 
+    <route url="/V1/mundipagg/subscription" method="GET">
+        <service class="MundiPagg\MundiPagg\Api\SubscriptionApiInterface" method="list"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+
 </routes>
