@@ -96,8 +96,15 @@
         </resources>
     </route>
 
-    <route url="/V1/mundipagg/subscription" method="GET">
+    <route url="/V1/mundipagg/recurrence/subscription" method="GET">
         <service class="MundiPagg\MundiPagg\Api\SubscriptionApiInterface" method="list"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+
+    <route url="/V1/mundipagg/recurrence/subscription/cancel/:id" method="POST">
+        <service class="MundiPagg\MundiPagg\Api\SubscriptionApiInterface" method="cancel"/>
         <resources>
             <resource ref="anonymous" />
         </resources>
