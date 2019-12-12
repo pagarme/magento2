@@ -111,7 +111,7 @@
 
 
 
-    <!-- Subscriptions -->
+    <!-- Recurrence Product -->
     <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
         <arguments>
             <argument name="collections" xsi:type="array">
@@ -125,6 +125,22 @@
             <argument name="resourceModel" xsi:type="string">MundiPagg\MundiPagg\Model\ResourceModel\ProductsSubscription</argument>
         </arguments>
     </virtualType>
+
+    <!-- Subscriptions -->
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="mundipagg_mundipagg_subscriptions_listing_data_source" xsi:type="string">MundiPagg\MundiPagg\Model\ResourceModel\Subscriptions\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="MundiPagg\MundiPagg\Model\ResourceModel\Subscriptions\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">mundipagg_module_core_recurrence_subscription</argument>
+            <argument name="resourceModel" xsi:type="string">MundiPagg\MundiPagg\Model\ResourceModel\Subscriptions</argument>
+        </arguments>
+    </virtualType>
+
 
 
 
