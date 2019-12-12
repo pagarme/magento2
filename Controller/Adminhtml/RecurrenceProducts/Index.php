@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Controller\Adminhtml\Subscriptions;
+namespace MundiPagg\MundiPagg\Controller\Adminhtml\RecurrenceProducts;
 
 use Magento\Backend\App\Action;
 

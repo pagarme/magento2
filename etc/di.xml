@@ -115,7 +115,7 @@
     <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
         <arguments>
             <argument name="collections" xsi:type="array">
-                <item name="mundipagg_mundipagg_subscriptions_listing_data_source" xsi:type="string">MundiPagg\MundiPagg\Model\ResourceModel\ProductsSubscription\Grid\Collection</item>
+                <item name="mundipagg_mundipagg_recurrenceproducts_listing_data_source" xsi:type="string">MundiPagg\MundiPagg\Model\ResourceModel\ProductsSubscription\Grid\Collection</item>
             </argument>
         </arguments>
     </type>

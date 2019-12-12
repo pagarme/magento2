@@ -47,7 +47,7 @@ class Actions extends Column
     {
         if (isset($dataSource['data']['items'])) {
             foreach ($dataSource['data']['items'] as &$item) {
-                $type = array_key_exists('plan_id', $item) ? "plans" : "subscriptions";
+                $type = array_key_exists('plan_id', $item) ? "plans" : "recurrenceproducts";
                 $name = $this->getData('name');
                 if (isset($item['id'])) {
                     $actions = $this->getActions($name, $type, $item);
