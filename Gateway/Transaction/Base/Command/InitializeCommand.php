@@ -135,11 +135,17 @@ class InitializeCommand implements CommandInterface
                 "Changing status quote to processing."
             );
 
-            /*$orderService = new OrderService();
-            $orderService->createOrderAtMundipagg($orderDecorator);*/
-
             $subscriptionService = new SubscriptionService();
-            $subscriptionService->createSubscriptionAtMundipagg($orderDecorator);
+            $isSubscription = $subscriptionService->isSubscription($orderDecorator);
+
+            if ($isSubscription) {
+                $subscriptionService->createSubscriptionAtMundipagg($orderDecorator);
+            }
+
+            if (!$isSubscription) {
+                $orderService = new OrderService();
+                $orderService->createOrderAtMundipagg($orderDecorator);
+            }
 
             $orderDecorator->save();
 

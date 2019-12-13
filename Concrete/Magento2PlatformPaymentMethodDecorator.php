@@ -21,11 +21,11 @@ class Magento2PlatformPaymentMethodDecorator implements PlatformPaymentMethodInt
             return $this->paymentMethod = $paymentMethod;
         }
 
-        if (!method_exists($this, $paymentMethod[1])) {
+        if (!method_exists($this, end($paymentMethod))) {
             throw new \Exception('Payment method not found');
         }
 
-        $this->paymentMethod = $this->{$paymentMethod[1]}();
+        $this->paymentMethod = $this->{end($paymentMethod)}();
     }
 
     public function getPaymentMethod()

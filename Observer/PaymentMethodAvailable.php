@@ -51,8 +51,16 @@ class PaymentMethodAvailable implements ObserverInterface
         }
 
         $recurrenceProduct = $this->getRecurrenceProduct($quote);
+        if ($recurrenceProduct) {
+            $this->switchPaymentMethodsForRecurrence($observer, $recurrenceProduct);
+        }
+    }
 
+    private function switchPaymentMethodsForRecurrence($observer, $recurrenceProduct)
+    {
         $mundipaggPaymentsMethods = $this->getAvailableConfigMethods();
+        $currentMethod = $observer->getEvent()->getMethodInstance()->getCode();
+
         $methodsAvailable = $this->getAvailableRecurrenceMethods(
             $recurrenceProduct,
             $mundipaggPaymentsMethods
