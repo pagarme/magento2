@@ -16,5 +16,4 @@ class Subscriptions extends AbstractDb
     {
         $this->_init('mundipagg_module_core_recurrence_subscription', 'id');
     }
-
 }
