@@ -2,27 +2,39 @@
 
 namespace MundiPagg\MundiPagg\Model\ResourceModel\Subscriptions;
 
-use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
+use Magento\Framework\Data\Collection\Db\FetchStrategyInterface as FetchStrategy;
+use Magento\Framework\Data\Collection\EntityFactoryInterface as EntityFactory;
+use Magento\Framework\Event\ManagerInterface as EventManager;
+use Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult;
+use Psr\Log\LoggerInterface as Logger;
 
-class Collection extends AbstractCollection
+class Collection extends SearchResult
 {
-    protected $_idFieldName = 'id';
-
-    /**
-     * Define resource model
-     *
-     * @return void
-     */
-    protected function _construct()
-    {
-        $this->_init(
-            'MundiPagg\MundiPagg\Model\Subscriptions',
-            'MundiPagg\MundiPagg\Model\ResourceModel\Subscriptions'
+    public function __construct(
+        EntityFactory $entityFactory,
+        Logger $logger,
+        FetchStrategy $fetchStrategy,
+        EventManager $eventManager,
+        $mainTable,
+        $resourceModel,
+        $identifierName = null,
+        $connectionName = null
+    ) {
+        parent::__construct($entityFactory,
+            $logger,
+            $fetchStrategy,
+            $eventManager,
+            $mainTable,
+            $resourceModel,
+            $identifierName,
+            $connectionName
         );
+
+        $this->request = $request;
     }
 
-//    protected function _renderFiltersBefore() {
-//        $this->getSelect()->where('main_table.status = 1');
-//        parent::_renderFiltersBefore();
-//    }
+    protected function _renderFiltersBefore()
+    {
+        parent::_renderFiltersBefore();
+    }
 }
