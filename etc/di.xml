@@ -134,12 +134,28 @@
             </argument>
         </arguments>
     </type>
-    <virtualType name="MundiPagg\MundiPagg\Model\ResourceModel\Subscriptions\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+    <virtualType name="MundiPagg\MundiPagg\Model\ResourceModel\Subscriptions\Grid\Collection" type="MundiPagg\MundiPagg\Model\ResourceModel\Subscriptions\Collection">
         <arguments>
             <argument name="mainTable" xsi:type="string">mundipagg_module_core_recurrence_subscription</argument>
             <argument name="resourceModel" xsi:type="string">MundiPagg\MundiPagg\Model\ResourceModel\Subscriptions</argument>
         </arguments>
     </virtualType>
+
+    <!-- Invoices -->
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="mundipagg_mundipagg_invoices_listing_data_source" xsi:type="string">MundiPagg\MundiPagg\Model\ResourceModel\Invoices\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="MundiPagg\MundiPagg\Model\ResourceModel\Invoices\Grid\Collection" type="MundiPagg\MundiPagg\Model\ResourceModel\Invoices\Collection">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">mundipagg_module_core_recurrence_charge</argument>
+            <argument name="resourceModel" xsi:type="string">MundiPagg\MundiPagg\Model\ResourceModel\Invoices</argument>
+        </arguments>
+    </virtualType>
+
 
 
 
