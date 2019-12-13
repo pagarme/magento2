@@ -61,7 +61,7 @@
 				</item>
 			</argument>
 		</column>
-		<column name="status">
+		<column name="status" class="MundiPagg\MundiPagg\Ui\Component\Listing\Column\Translate">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
 					<item name="filter" xsi:type="string">text</item>
@@ -77,7 +77,7 @@
 				</item>
 			</argument>
 		</column>
-		<column name="payment_method" class="MundiPagg\MundiPagg\Ui\Component\Recurrence\Column\PaymentMethodColumn">
+		<column name="payment_method" class="MundiPagg\MundiPagg\Ui\Component\Listing\Column\Translate">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
 					<item name="filter" xsi:type="string">text</item>
@@ -109,7 +109,7 @@
 				</item>
 			</argument>
 		</column>
-		<actionsColumn name="actions" class="MundiPagg\MundiPagg\Ui\Component\Column\Actions">
+		<actionsColumn name="actions" class="MundiPagg\MundiPagg\Ui\Component\Column\Subscriptions\Actions">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
 					<item name="indexField" xsi:type="string">id</item>
