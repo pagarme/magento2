@@ -11,12 +11,13 @@ use Magento\Framework\UrlInterface;
 class Actions extends Column
 {
     /** Url path */
-    const URL_PATH_EDIT = 'mundipagg_mundipagg/*/index';
-    const URL_PATH_DELETE = 'mundipagg_mundipagg/*/index';
+    const URL_PATH_EDIT = 'mundipagg_mundipagg/invoices/index';
+    const URL_PATH_DELETE = 'mundipagg_mundipagg/subscriptions/delete';
     /** @var UrlBuilder */
     protected $actionUrlBuilder;
     /** @var UrlInterface */
     protected $urlBuilder;
+
     /**
      * @param ContextInterface $context
      * @param UiComponentFactory $uiComponentFactory
@@ -32,11 +33,13 @@ class Actions extends Column
         UrlInterface $urlBuilder,
         array $components = [],
         array $data = []
-    ) {
+    )
+    {
         $this->urlBuilder = $urlBuilder;
         $this->actionUrlBuilder = $actionUrlBuilder;
         parent::__construct($context, $uiComponentFactory, $components, $data);
     }
+
     /**
      * Prepare Data Source
      *
@@ -47,42 +50,39 @@ class Actions extends Column
     {
         if (isset($dataSource['data']['items'])) {
             foreach ($dataSource['data']['items'] as &$item) {
-                $type = array_key_exists('plan_id', $item) ? "invoices" : "recurrenceproducts";
                 $name = $this->getData('name');
-                if (isset($item['id'])) {
-                    $actions = $this->getActions($name, $type, $item);
-                    $item = array_merge($item, $actions);
-                }
+                $actions = $this->getActions($name, $item);
+                $item = array_merge($item, $actions);
+
             }
         }
         return $dataSource;
     }
 
-    protected function getActions($name, $type, $item)
+    protected function getActions($name, $item)
     {
         $actions[$name]['edit'] = [
-            'href' => $this->getUrlMundipagg($type, $item, self::URL_PATH_EDIT),
-            'label' => __('Edit')
+            'href' => $this->getUrlMundipagg($item, self::URL_PATH_EDIT),
+            'label' => __('Invoices')
         ];
 
-        if ($type !== 'plans') {
-            $actions[$name]['delete'] = [
-                'href' => $this->getUrlMundipagg($type, $item, self::URL_PATH_DELETE),
-                'label' => __('Delete'),
-                'confirm' => [
-                    'title' => __('Confirm action'),
-                    'message' => __('Are you sure you want to delete this item?')
-                ]
-            ];
-        }
+
+        $actions[$name]['delete'] = [
+            'href' => $this->getUrlMundipagg($item, self::URL_PATH_DELETE),
+            'label' => __('Disable'),
+            'confirm' => [
+                'title' => __('Confirm action'),
+                'message' => __('Are you sure you want to disabled this item?')
+            ]
+        ];
+
 
         return $actions;
     }
 
-    protected function getUrlMundipagg($type, $item, $path)
+    protected function getUrlMundipagg($item, $path)
     {
-        $path = str_replace("*", $type, $path);
-        $url = $this->urlBuilder->getUrl($path, ['id' => $item['code']]);
-        return $url."?code={$item['code']}";
+        $url = $this->urlBuilder->getUrl($path);
+        return $url . "?code={$item['code']}";
     }
 }

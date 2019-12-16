@@ -4,7 +4,7 @@ namespace MundiPagg\MundiPagg\Controller\Adminhtml\Invoices;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
-use Magento\Framework\View\Result\PageFactor;
+use Magento\Framework\View\Result\PageFactory;
 
 class Index extends Action
 {

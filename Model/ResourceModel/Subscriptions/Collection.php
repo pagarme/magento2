@@ -29,8 +29,6 @@ class Collection extends SearchResult
             $identifierName,
             $connectionName
         );
-
-        $this->request = $request;
     }
 
     protected function _renderFiltersBefore()
