@@ -12,11 +12,10 @@ use Mundipagg\Core\Recurrence\Services\ProductSubscriptionService;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 use MundiPagg\MundiPagg\Model\ProductsSubscriptionFactory;
 use Magento\Framework\HTTP\ZendClientFactory;
+use Mundipagg\Core\Recurrence\Services\SubscriptionService;
 
 class Delete extends Action
 {
-    const URL = '/rest/default/V1/mundipagg/subscription/cancel';
-
     protected $resultPageFactory;
 
     /**
@@ -24,7 +23,15 @@ class Delete extends Action
      */
     protected $coreRegistry;
 
+    /**
+     * @var Factory
+     */
     protected $messageFactory;
+
+    /**
+     * @var SubscriptionService
+     */
+    protected $subscriptionService;
 
     /**
      * Constructor
@@ -42,6 +49,7 @@ class Delete extends Action
         $this->resultPageFactory = $resultPageFactory;
         $this->coreRegistry = $coreRegistry;
         $this->messageFactory = $messageFactory;
+        $this->subscriptionService = new SubscriptionService();
         Magento2CoreSetup::bootstrap();
 
         parent::__construct($context);
@@ -56,20 +64,14 @@ class Delete extends Action
     {
         $id = $this->getRequest()->getParam('id');
 
-        $httpClient = new ZendClientFactory();
-        $apiCaller = $httpClient->create();
-        $apiCaller->setUri(self::URL . '/' . $id);
-        $apiCaller->setMethod(\Zend_Http_Client::GET);
-        $apiCaller->setHeaders([
-            'Content-Type: application/json'
-        ]);
-
         $message = $this->messageFactory->create(
             MessageInterface::TYPE_ERROR,
             _("Subscription ERROR.")
         );
 
-        if ($apiCaller->request()->getStatus() == 200) {
+        $subscription = $this->subscriptionService->cancel($id);
+
+        if ($subscription['code'] == 200) {
             $message = $this->messageFactory->create(
                 MessageInterface::TYPE_SUCCESS,
                 _("Subscription deleted.")
