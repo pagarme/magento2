@@ -33,8 +33,7 @@ class Actions extends Column
         UrlInterface $urlBuilder,
         array $components = [],
         array $data = []
-    )
-    {
+    ) {
         $this->urlBuilder = $urlBuilder;
         $this->actionUrlBuilder = $actionUrlBuilder;
         parent::__construct($context, $uiComponentFactory, $components, $data);
@@ -68,7 +67,7 @@ class Actions extends Column
 
 
         $actions[$name]['delete'] = [
-            'href' => $this->getUrlMundipagg($item, self::URL_PATH_DELETE),
+            'href' => $this->getUrlMundipaggDelete($item, self::URL_PATH_DELETE),
             'label' => __('Disable'),
             'confirm' => [
                 'title' => __('Confirm action'),
@@ -80,9 +79,14 @@ class Actions extends Column
         return $actions;
     }
 
-    protected function getUrlMundipagg($item, $path)
+    protected function getUrlMundipaggEdit($item, $path)
     {
         $url = $this->urlBuilder->getUrl($path);
         return $url . "?code={$item['code']}";
+    }
+
+    protected function getUrlMundipaggDelete($item, $path)
+    {
+        return $this->urlBuilder->getUrl($path, ['id' => $item['id']]);
     }
 }
