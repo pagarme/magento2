@@ -38,9 +38,7 @@ class Subscription implements SubscriptionApiInterface
     public function list()
     {
         $result = $this->subscriptionService->listAll();
-        $teste = json_decode(json_encode($result));
-//        return $result;
-        return ["moises"];
+        return json_decode(json_encode($result), true);
     }
 
     /**
