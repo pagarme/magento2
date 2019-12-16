@@ -61,7 +61,7 @@ class Actions extends Column
     protected function getActions($name, $item)
     {
         $actions[$name]['edit'] = [
-            'href' => $this->getUrlMundipagg($item, self::URL_PATH_EDIT),
+            'href' => $this->getUrlMundipaggEdit($item, self::URL_PATH_EDIT),
             'label' => __('Invoices')
         ];
 

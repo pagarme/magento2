@@ -18,8 +18,8 @@ class Collection extends SearchResult
         Logger $logger,
         FetchStrategy $fetchStrategy,
         EventManager $eventManager,
-        $mainTable = 'quote',
-        $resourceModel = 'Magento\Quote\Model\ResourceModel\Quote',
+        $mainTable,
+        $resourceModel,
         $identifierName = null,
         $connectionName = null,
         Http $request
