@@ -44,7 +44,7 @@ class ProductSubscriptionHelper extends AbstractHelper
             ]
         ];
 
-        $intervalType = $repetition->getIntervalType();
+        $intervalType = $repetition->getInterval();
         $intervalCount = $repetition->getIntervalCount();
 
         if (isset($dictionary[$intervalType][$intervalCount])) {
