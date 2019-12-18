@@ -1,10 +1,8 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Controller\Adminhtml\Subscriptions;
+namespace MundiPagg\MundiPagg\Controller\Adminhtml\RecurrenceProducts;
 
 use Magento\Backend\App\Action;
-use Magento\Backend\App\Action\Context;
-use Magento\Framework\View\Result\PageFactory;
 
 class Index extends Action
 {
@@ -13,12 +11,12 @@ class Index extends Action
     /**
      * Constructor
      *
-     * @param Context $context
-     * @param PageFactory $resultPageFactory
+     * @param \Magento\Backend\App\Action\Context $context
+     * @param \Magento\Framework\View\Result\PageFactory $resultPageFactory
      */
     public function __construct(
-        Context $context,
-        PageFactory $resultPageFactory
+        \Magento\Backend\App\Action\Context $context,
+        \Magento\Framework\View\Result\PageFactory $resultPageFactory
     ) {
         $this->resultPageFactory = $resultPageFactory;
         parent::__construct($context);
@@ -32,7 +30,7 @@ class Index extends Action
     public function execute()
     {
         $resultPage = $this->resultPageFactory->create();
-        $resultPage->getConfig()->getTitle()->prepend(__("Subscriptions"));
+        $resultPage->getConfig()->getTitle()->prepend(__("Recurrence Products"));
         
         return $resultPage;
     }

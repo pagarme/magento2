@@ -8,6 +8,7 @@
 		<add action="adminhtml/system_config/edit/section/payment" id="MundiPagg::mundipagg_mundipagg_payment_methods" module="MundiPagg_MundiPagg" parent="MundiPagg::mundipagg_mundipagg_label" resource="Magento_Config::config" sortOrder="1" title="Payment Methods"/>
 
 		<add id="MundiPagg::mundipagg_mundipagg_recurrence" module="MundiPagg_MundiPagg" parent="MundiPagg::top_level" resource="Magento_Config::config" sortOrder="30" title="Recurrence"/>
-		<add action="mundipagg_mundipagg/subscriptions/index" id="MundiPagg::mundipagg_mundipagg_subscriptions_index" module="MundiPagg_MundiPagg" parent="MundiPagg::mundipagg_mundipagg_recurrence" resource="Magento_Config::config" sortOrder="1" title="Recurrence Products"/>
+		<add action="mundipagg_mundipagg/recurrenceproducts/index" id="MundiPagg::mundipagg_mundipagg_recurrenceproducts_index" module="MundiPagg_MundiPagg" parent="MundiPagg::mundipagg_mundipagg_recurrence" resource="Magento_Config::config" sortOrder="1" title="Recurrence Products"/>
+		<add action="mundipagg_mundipagg/subscriptions/index" id="MundiPagg::mundipagg_mundipagg_subscriptions_index" module="MundiPagg_MundiPagg" parent="MundiPagg::mundipagg_mundipagg_recurrence" resource="Magento_Config::config" sortOrder="1" title="Subscriptions"/>
 	</menu>
 </config>
