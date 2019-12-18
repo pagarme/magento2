@@ -104,10 +104,11 @@ require([
 
     function toogleSaveButton()
     {
-        var disabled = $("#save-button").attr('disabled');
+        var disabled = $("#save-button").prop('disabled');
         if (disabled) {
             $("#save-button").attr('disabled', false);
             $("#save-button span").html("Save");
+            return;
         }
         $("#save-button").attr('disabled', true);
         $("#save-button span").html("Saving");
