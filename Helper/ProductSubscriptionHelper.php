@@ -28,10 +28,30 @@ class ProductSubscriptionHelper extends AbstractHelper
     public function tryFindDictionaryEventCustomOptionsProductSubscription(
         Repetition $repetition
     ) {
-        $intervalCount = $repetition->getIntervalCount();
-        $intervalType = $this->i18n->getDashboard($repetition->getIntervalTypeLabel());
+        $dictionary = [
+            'month' => [
+                1 => 'monthly',
+                2 => 'bimonthly',
+                3 => 'quarterly',
+                6 => 'semiannual'
+            ],
+            'year' => [
+                1 => 'yearly',
+                2 => 'biennial'
+            ],
+            'week' => [
+                1 => 'weekly'
+            ]
+        ];
 
-        $intervalLabel = "De {$intervalCount} em {$intervalCount} {$intervalType}";
-        return $this->i18n->getDashboard($intervalLabel);
+        $intervalType = $repetition->getInterval();
+        $intervalCount = $repetition->getIntervalCount();
+
+        if (isset($dictionary[$intervalType][$intervalCount])) {
+            return $this->i18n->getDashboard($dictionary[$intervalType][$intervalCount]);
+        }
+
+        $intervalType = $this->i18n->getDashboard($repetition->getIntervalTypeLabel());
+        return "De {$intervalCount} em {$intervalCount} {$intervalType}";
     }
 }

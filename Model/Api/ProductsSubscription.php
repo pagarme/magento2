@@ -244,27 +244,35 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
      */
     public function saveFormData()
     {
-        $post = $this->request->getBodyParams();
-        parse_str($post[0], $params);
+        try {
+            $post = $this->request->getBodyParams();
+            parse_str($post[0], $params);
 
-        $form = $this->gerFormattedForm($params['form']);
+            $form = $this->gerFormattedForm($params['form']);
 
-        if (empty($form)) {
+            if (empty($form)) {
+                return json_encode([
+                    'code' => 404,
+                    'message' => 'Error on save product subscription'
+                ]);
+            }
+
+            $productSubscriptionService = new ProductSubscriptionService();
+            $productSubscription =
+                $productSubscriptionService->saveFormProductSubscription($form);
+            $this->setCustomOption($productSubscription);
+
+            return json_encode([
+                'code' => 200,
+                'message' => 'Product subscription saved'
+            ]);
+
+        } catch (\Exception $exception) {
             return json_encode([
                 'code' => 404,
-                'message' => 'Error on save product subscription'
+                'message' => $exception->getMessage()
             ]);
         }
-
-        $productSubscriptionService = new ProductSubscriptionService();
-        $productSubscription =
-            $productSubscriptionService->saveFormProductSubscription($form);
-        $this->setCustomOption($productSubscription);
-
-        return json_encode([
-            'code' => 200,
-            'message' => 'Product subscription saved'
-        ]);
     }
 
     public function gerFormattedForm($form)
