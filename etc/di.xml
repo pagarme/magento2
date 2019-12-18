@@ -111,11 +111,11 @@
 
 
 
-    <!-- Subscriptions -->
+    <!-- Recurrence Product -->
     <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
         <arguments>
             <argument name="collections" xsi:type="array">
-                <item name="mundipagg_mundipagg_subscriptions_listing_data_source" xsi:type="string">MundiPagg\MundiPagg\Model\ResourceModel\ProductsSubscription\Grid\Collection</item>
+                <item name="mundipagg_mundipagg_recurrenceproducts_listing_data_source" xsi:type="string">MundiPagg\MundiPagg\Model\ResourceModel\ProductsSubscription\Grid\Collection</item>
             </argument>
         </arguments>
     </type>
@@ -125,6 +125,38 @@
             <argument name="resourceModel" xsi:type="string">MundiPagg\MundiPagg\Model\ResourceModel\ProductsSubscription</argument>
         </arguments>
     </virtualType>
+
+    <!-- Subscriptions -->
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="mundipagg_mundipagg_subscriptions_listing_data_source" xsi:type="string">MundiPagg\MundiPagg\Model\ResourceModel\Subscriptions\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="MundiPagg\MundiPagg\Model\ResourceModel\Subscriptions\Grid\Collection" type="MundiPagg\MundiPagg\Model\ResourceModel\Subscriptions\Collection">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">mundipagg_module_core_recurrence_subscription</argument>
+            <argument name="resourceModel" xsi:type="string">MundiPagg\MundiPagg\Model\ResourceModel\Subscriptions</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Invoices -->
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="mundipagg_mundipagg_invoices_listing_data_source" xsi:type="string">MundiPagg\MundiPagg\Model\ResourceModel\Invoices\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="MundiPagg\MundiPagg\Model\ResourceModel\Invoices\Grid\Collection" type="MundiPagg\MundiPagg\Model\ResourceModel\Invoices\Collection">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">mundipagg_module_core_recurrence_charge</argument>
+            <argument name="resourceModel" xsi:type="string">MundiPagg\MundiPagg\Model\ResourceModel\Invoices</argument>
+        </arguments>
+    </virtualType>
+
+
 
 
 
@@ -474,5 +506,6 @@
     <preference for="Mundipagg\Core\Recurrence\Interfaces\ProductSubscriptionInterface" type="Mundipagg\Core\Recurrence\Aggregates\ProductSubscription" />
     <preference for="Mundipagg\Core\Recurrence\Interfaces\RepetitionInterface" type="Mundipagg\Core\Recurrence\Aggregates\Repetition" />
     <preference for="MundiPagg\MundiPagg\Api\ProductSubscriptionApiInterface" type="MundiPagg\MundiPagg\Model\Api\ProductsSubscription" />
+    <preference for="MundiPagg\MundiPagg\Api\SubscriptionApiInterface" type="MundiPagg\MundiPagg\Model\Api\Subscription" />
 
 </config>

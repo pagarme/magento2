@@ -12,6 +12,7 @@ use Mundipagg\Core\Recurrence\Aggregates\Repetition;
 use Mundipagg\Core\Recurrence\Services\ProductSubscriptionService;
 use Mundipagg\Core\Recurrence\ValueObjects\DiscountValueObject;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use MundiPagg\MundiPagg\Helper\ProductSubscriptionHelper;
 
 class RepetitionsColumn extends Column
 {
@@ -19,6 +20,11 @@ class RepetitionsColumn extends Column
      * @var LocalizationService
      */
     protected $i18n;
+
+    /**
+     * @var ProductSubscriptionHelper
+     */
+    protected $productSubscriptionHelper;
 
     public function __construct(
         ContextInterface $context,
@@ -28,6 +34,7 @@ class RepetitionsColumn extends Column
     ) {
         $this->i18n = new LocalizationService();
         $this->moneyService = new MoneyService();
+        $this->productSubscriptionHelper = new ProductSubscriptionHelper();
         parent::__construct($context, $uiComponentFactory, $components, $data);
     }
 
@@ -51,10 +58,8 @@ class RepetitionsColumn extends Column
         $productSubscription = $productSubscriptionService->findById($id);
         $repetitions = [];
         foreach ($productSubscription->getRepetitions() as $repetition) {
-            $value =
-                $repetition->getIntervalCount() .
-                " " .
-                $repetition->getInterval();
+            $value = $this->productSubscriptionHelper
+                ->tryFindDictionaryEventCustomOptionsProductSubscription($repetition);
 
             if ($repetition->getRecurrencePrice() > 0) {
                 $totalAmount = $this->moneyService->centsToFloat(

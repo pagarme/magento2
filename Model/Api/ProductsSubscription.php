@@ -10,8 +10,9 @@ use Mundipagg\Core\Recurrence\Aggregates\Repetition;
 use Mundipagg\Core\Recurrence\Interfaces\ProductSubscriptionInterface;
 use Mundipagg\Core\Recurrence\Services\ProductSubscriptionService;
 use MundiPagg\MundiPagg\Api\ProductSubscriptionApiInterface;
-use \Magento\Framework\Webapi\Rest\Request;
+use Magento\Framework\Webapi\Rest\Request;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use MundiPagg\MundiPagg\Helper\ProductSubscriptionHelper;
 
 class ProductsSubscription implements ProductSubscriptionApiInterface
 {
@@ -25,6 +26,11 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
      */
     protected $productSubscriptionService;
 
+    /**
+     * @var ProductSubscriptionHelper
+     */
+    protected $productSubscriptionHelper;
+
     public function __construct(Request $request)
     {
         $this->request = $request;
@@ -32,6 +38,7 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
         $this->i18n = new LocalizationService();
         $this->moneyService = new MoneyService();
         $this->productSubscriptionService = new ProductSubscriptionService();
+        $this->productSubscriptionHelper = new ProductSubscriptionHelper();
     }
 
     /**
@@ -212,22 +219,19 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
 
     protected function getCycleTitle(Repetition $repetition)
     {
-        $intervalCount = $repetition->getIntervalCount();
-        $intervalType = $this->i18n->getDashboard(
-            $repetition->getIntervalTypeLabel()
-        );
-
         $totalAmount = $this->moneyService->centsToFloat(
             $repetition->getRecurrencePrice()
         );
 
         $discountLabel = " - (Total: R$ {$totalAmount})";
-        // @todo create dictionary
-        $intervalLabel = "De {$intervalCount} em {$intervalCount} {$intervalType}";
+
+        $intervalLabel = $this->productSubscriptionHelper
+            ->tryFindDictionaryEventCustomOptionsProductSubscription($repetition);
 
         if (empty($repetition->getRecurrencePrice())) {
             return $intervalLabel;
         }
+
         return $intervalLabel . $discountLabel;
     }
 
@@ -240,27 +244,35 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
      */
     public function saveFormData()
     {
-        $post = $this->request->getBodyParams();
-        parse_str($post[0], $params);
+        try {
+            $post = $this->request->getBodyParams();
+            parse_str($post[0], $params);
 
-        $form = $this->gerFormattedForm($params['form']);
+            $form = $this->gerFormattedForm($params['form']);
 
-        if (empty($form)) {
+            if (empty($form)) {
+                return json_encode([
+                    'code' => 404,
+                    'message' => 'Error on save product subscription'
+                ]);
+            }
+
+            $productSubscriptionService = new ProductSubscriptionService();
+            $productSubscription =
+                $productSubscriptionService->saveFormProductSubscription($form);
+            $this->setCustomOption($productSubscription);
+
+            return json_encode([
+                'code' => 200,
+                'message' => 'Product subscription saved'
+            ]);
+
+        } catch (\Exception $exception) {
             return json_encode([
                 'code' => 404,
-                'message' => 'Error on save product subscription'
+                'message' => $exception->getMessage()
             ]);
         }
-
-        $productSubscriptionService = new ProductSubscriptionService();
-        $productSubscription =
-            $productSubscriptionService->saveFormProductSubscription($form);
-        $this->setCustomOption($productSubscription);
-
-        return json_encode([
-            'code' => 200,
-            'message' => 'Product subscription saved'
-        ]);
     }
 
     public function gerFormattedForm($form)

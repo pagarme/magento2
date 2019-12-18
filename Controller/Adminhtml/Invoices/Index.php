@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Controller\Adminhtml\Subscriptions;
+namespace MundiPagg\MundiPagg\Controller\Adminhtml\Invoices;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
@@ -20,8 +20,8 @@ class Index extends Action
         Context $context,
         PageFactory $resultPageFactory
     ) {
-        $this->resultPageFactory = $resultPageFactory;
         parent::__construct($context);
+        $this->resultPageFactory = $resultPageFactory;
     }
 
     /**
@@ -32,7 +32,7 @@ class Index extends Action
     public function execute()
     {
         $resultPage = $this->resultPageFactory->create();
-        $resultPage->getConfig()->getTitle()->prepend(__("Subscriptions"));
+        $resultPage->getConfig()->getTitle()->prepend(__("Invoices"));
         
         return $resultPage;
     }
