@@ -53,7 +53,7 @@ class Create extends Action
                 $this->_redirect('mundipagg_mundipagg/plans/index');
                 return;
             }
-            $this->coreRegistry->register('product_data', $planData);
+            $this->coreRegistry->register('product_data', json_encode($planData));
         }
 
         $this->coreRegistry->register('recurrence_type', Plan::RECURRENCE_TYPE);

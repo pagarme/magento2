@@ -264,9 +264,13 @@ require([
     function loadProduct(product) {
         $("#credit-card").prop('checked', product.creditCard);
         $("#boleto").prop('checked', product.boleto);
-        $("#interval").val(product.interval);
-        $("#interval_count").val(product.interval_count);
+        $("#interval_type").val(product.intervalType);
+        $("#interval_count").val(product.intervalCount);
         $("#product_id").val(product.productId);
+        $("#plan-id").val(product.mundipaggId);
+        $("#status").val(product.status);
+        $("#trial_period_days").val(product.trialPeriodDays);
+
 
         if (product.creditCard) {
             $("#allow_installments").prop('checked', product.allowInstallments);

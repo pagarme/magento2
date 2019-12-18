@@ -28,20 +28,21 @@ class ProductsPlan implements ProductPlanInterface
      * @param mixed $data
      * @return mixed
      */
-    public function saveProductPlan()
+    public function saveFormData()
     {
         $post = $this->request->getBodyParams();
         parse_str($post[0], $params);
 
-        if (empty($params)) {
+        $form = $this->gerFormattedForm($params['form']);
+
+        if (empty($form)) {
             return json_encode([
                 'code' => 404,
                 'message' => 'Erro ao tentar criar um produto do tipo plano'
             ]);
         }
 
-        $params['form']['items'] = $this->getSubProductsFromPlatform($params);
-        if (!$params['form']['items']) {
+        if (!$form['items']) {
             return json_encode([
                 'code' => 404,
                 'message' => 'Please add subproducts before product saving'
@@ -50,7 +51,7 @@ class ProductsPlan implements ProductPlanInterface
 
         try {
             $planService = new PlanService();
-            $planService->create($params['form']);
+            $planService->save($form);
         } catch (\Exception $exception) {
             return json_encode([
                 'code' => 404,
@@ -64,32 +65,24 @@ class ProductsPlan implements ProductPlanInterface
         ]);
     }
 
-    public function editProductPlan()
+    public function gerFormattedForm($form)
     {
-        $post = $this->request->getBodyParams();
-    }
-
-    private function getSubProductsFromPlatform($params)
-    {
-        if (empty($params['form']['items'])) {
-            return null;
+        if (isset($form['credit_card'])) {
+            $form['credit_card'] = (bool) $form['credit_card'];
         }
 
-        $objectManager = ObjectManager::getInstance();
-        $subProducts = [];
-
-        foreach ($params['form']['items'] as $item) {
-            $product =
-                $objectManager
-                    ->create('Magento\Catalog\Model\Product')
-                    ->load($item['product_id']);
-
-            $platformProduct = new Magento2PlatformProductDecorator($product);
-            $item['description'] = $product->getDescription();
-
-            $subProducts[] = $item;
+        if (isset($form['boleto'])) {
+            $form['boleto'] = (bool)$form['boleto'];
         }
 
-        return $subProducts;
+        if (isset($form['sell_as_normal_product'])) {
+            $form['sell_as_normal_product'] = (bool)$form['sell_as_normal_product'];
+        }
+
+        if (isset($form['installments'])) {
+            $form['installments'] = (bool)$form['installments'];
+        }
+
+        return $form;
     }
 }

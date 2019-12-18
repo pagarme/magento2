@@ -33,6 +33,7 @@ class InstallSchema implements InstallSchemaInterface
         $this->installRecurrenceSubscription($setup);
         $this->installRecurrenceCharge($setup);
         $this->installSubProducts($setup);
+        $this->installProductsPlan($setup);
 
         $setup->endSetup();
     }
@@ -654,6 +655,15 @@ class InstallSchema implements InstallSchemaInterface
                         'nullable' => false
                     ],
                     "Active, inactive ou deleted"
+                )
+                ->addColumn(
+                    'trial_period_days',
+                    Table::TYPE_TEXT,
+                    11,
+                    [
+                        'nullable' => true
+                    ],
+                    "Trial period in days"
                 )
                 ->addColumn(
                     'created_at',
