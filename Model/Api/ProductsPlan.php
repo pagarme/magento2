@@ -9,8 +9,10 @@ use Mundipagg\Core\Recurrence\Services\PlanService;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 use MundiPagg\MundiPagg\Concrete\Magento2PlatformProductDecorator;
 use Magento\Framework\App\ObjectManager;
+use MundiPagg\MundiPagg\Api\ProductPlanApiInterface;
+use MundiPagg\MundiPagg\Helper\ProductHelper;
 
-class ProductsPlan implements ProductPlanInterface
+class ProductsPlan implements ProductPlanApiInterface
 {
     /**
      * @var Request
@@ -91,5 +93,39 @@ class ProductsPlan implements ProductPlanInterface
         }
 
         return $subProducts;
+    }
+
+    public function save(\Mundipagg\Core\Recurrence\Interfaces\ProductPlanInterface $productPlan, $id = null)
+    {
+
+        $productHelper = new ProductHelper();
+        $productHelper->getProductList();
+      //  $x = $productPlan->getProductId();
+        // TODO: Implement save() method.
+    }
+
+    public function saveFormData()
+    {
+        // TODO: Implement saveFormData() method.
+    }
+
+    public function list()
+    {
+        // TODO: Implement list() method.
+    }
+
+    public function update($id, \Mundipagg\Core\Recurrence\Interfaces\ProductPlanInterface $productSubscription)
+    {
+        // TODO: Implement update() method.
+    }
+
+    public function getProductSubscription($id)
+    {
+        // TODO: Implement getProductSubscription() method.
+    }
+
+    public function delete($id)
+    {
+        // TODO: Implement delete() method.
     }
 }

@@ -5,6 +5,7 @@ namespace MundiPagg\MundiPagg\Helper;
 use Magento\Catalog\Helper\Image;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\UrlInterface;
+use MundiPagg\MundiPagg\Concrete\Magento2PlatformProductDecorator;
 
 class ProductHelper
 {
@@ -23,5 +24,28 @@ class ProductHelper
         }
 
         return $imageUrl;
+    }
+
+    /**
+     * @param int[] $productIdList
+     * @return array|null
+     */
+    public function getProductList(array $productIdList)
+    {
+        $objectManager = ObjectManager::getInstance();
+
+        $productList = [];
+        foreach ($productIdList as $productId) {
+            $product =
+                $objectManager
+                    ->create('Magento\Catalog\Model\Product')
+                    ->load($productId);
+
+            $platformProduct = new Magento2PlatformProductDecorator($product);
+
+            $productList[] = $product;
+        }
+
+        return $productList;
     }
 }
