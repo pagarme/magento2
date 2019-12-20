@@ -58,7 +58,8 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
             $productSubscription = $this->productSubscriptionService
                     ->saveProductSubscription($productSubscription);
 
-            $this->setCustomOption($productSubscription);
+            $this->productSubscriptionHelper
+                ->setCustomOption($productSubscription);
 
         } catch (\Exception $exception) {
             return [
@@ -122,6 +123,8 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
     public function delete($id)
     {
         try{
+            $productSubscription = $this->productSubscriptionService->findById($id);
+            $this->productSubscriptionHelper->deleteRecurrenceCustomOption($productSubscription);
             $this->productSubscriptionService->delete($id);
         } catch (\Exception $exception) {
             return [
@@ -130,109 +133,6 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
         }
 
         return "Subscription Product deleted with success";
-    }
-
-    protected function setCustomOption(ProductSubscription $productSubscription)
-    {
-        $objectManager = ObjectManager::getInstance();
-
-        $productId = $productSubscription->getProductId();
-        $product = $objectManager->get('Magento\Catalog\Model\Product')
-            ->load($productId);
-
-        $values = $this->getValuesFromRepetitions($productSubscription);
-
-        $customOption = $objectManager->create(
-            'Magento\Catalog\Api\Data\ProductCustomOptionInterface'
-        );
-
-        $customOption->setTitle('Cycles')
-            ->setType('radio')
-            ->setIsRequire(true)
-            ->setSortOrder(100)
-            ->setPrice(0)
-            ->setPriceType('fixed')
-            ->setValues($values)
-            ->setMaxCharacters(50)
-            ->setSku("recurrence")
-            ->setProductSku($product->getSku());
-
-        $customOptions = $this->addCustomOptionOnArray($customOption, $product);
-
-        $product->setHasOptions(1);
-        $product->setCanSaveCustomOptions(true);
-        $product->setOptions($customOptions)->save();
-    }
-
-    protected function addCustomOptionOnArray($customOption, $product)
-    {
-        $options = $product->getOptions();
-
-        if (empty($options)) {
-            return [$customOption];
-        }
-
-        $customOptions = [];
-        $hasRecurrenceOption = false;
-        foreach ($options as $option) {
-            if ($option->getSku() !== "recurrence") {
-                $customOptions[] = $option;
-                continue;
-            }
-            $customOptions[] = $customOption;
-            $hasRecurrenceOption = true;
-        }
-
-        if (!$hasRecurrenceOption) {
-            $customOptions[] = $customOption;
-        }
-        return $customOptions;
-    }
-
-    protected function getValuesFromRepetitions(ProductSubscription $productSubscription)
-    {
-        $values = [];
-
-        $sellAsNormalProduct = [
-            "title" => "Compra Única",
-            "price" => 0,
-            "price_type"  => "fixed",
-            "sort_order"  => "0"
-        ];
-
-        if (!empty($productSubscription->getSellAsNormalProduct())) {
-            $values[] = $sellAsNormalProduct;
-        }
-
-        $repetitions = $productSubscription->getRepetitions();
-        foreach ($repetitions as $repetition) {
-            $values[] = [
-                "title" => $this->getCycleTitle($repetition),
-                "price" => 0,
-                "price_type"  => "fixed",
-                "sort_order"  => $repetition->getId()
-            ];
-        }
-
-        return $values;
-    }
-
-    protected function getCycleTitle(Repetition $repetition)
-    {
-        $totalAmount = $this->moneyService->centsToFloat(
-            $repetition->getRecurrencePrice()
-        );
-
-        $discountLabel = " - (Total: R$ {$totalAmount})";
-
-        $intervalLabel = $this->productSubscriptionHelper
-            ->tryFindDictionaryEventCustomOptionsProductSubscription($repetition);
-
-        if (empty($repetition->getRecurrencePrice())) {
-            return $intervalLabel;
-        }
-
-        return $intervalLabel . $discountLabel;
     }
 
     /**
@@ -260,7 +160,9 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
             $productSubscriptionService = new ProductSubscriptionService();
             $productSubscription =
                 $productSubscriptionService->saveFormProductSubscription($form);
-            $this->setCustomOption($productSubscription);
+
+            $this->productSubscriptionHelper
+                ->setCustomOption($productSubscription);
 
             return json_encode([
                 'code' => 200,
