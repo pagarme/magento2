@@ -36,6 +36,8 @@ use MundiPagg\MundiPagg\Model\Cards;
 use MundiPagg\MundiPagg\Model\CardsRepository;
 use Mundipagg\Core\Kernel\Services\LocalizationService;
 use Mundipagg\Core\Kernel\Services\LogService;
+use Magento\Sales\Model\Order\Email\Sender\OrderCommentSender;
+use Magento\Sales\Model\ResourceModel\Order\Status\Collection;
 
 class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 {
@@ -108,13 +110,56 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             $this->orderFactory->loadByIncrementId($incrementId);
     }
 
-    protected function addMPHistoryComment($message)
+    /**
+     * @param string $message
+     * @return bool
+     */
+    public function sendEmail($message)
+    {
+        $objectManager = ObjectManager::getInstance();
+
+        /* @var OrderCommentSender $orderCommentSender */
+        $orderCommentSender = $objectManager->create(OrderCommentSender::class);
+
+        return $orderCommentSender->send($this->platformOrder, true, $message);
+    }
+
+    /**
+     * @param OrderStatus $orderStatus
+     * @return string
+     */
+    public function getStatusLabel(OrderStatus $orderStatus)
+    {
+        $objectManager = ObjectManager::getInstance();
+
+        /* @var Collection $statusCollection */
+        $statusCollection = $objectManager->create(Collection::class);
+
+        $optionsStatusArray = $statusCollection->toOptionArray();
+
+        foreach ($optionsStatusArray as $optionStatus) {
+            if ($optionStatus['value'] == $orderStatus->getStatus()) {
+                return $optionStatus['label'];
+            }
+        }
+
+        return $statusCode;
+    }
+
+    /**
+     * @param $message
+     * @param bool $sendCustomerNotified
+     */
+    protected function addMPHistoryComment($message, $sendCustomerNotified = false)
     {
         $historyMethod = 'addCommentToStatusHistory';
         if (!method_exists($this->platformOrder, $historyMethod)) {
             $historyMethod = 'addStatusHistoryComment';
         }
-        $this->platformOrder->$historyMethod($message);
+
+        $this->platformOrder->$historyMethod($message)
+            ->setIsCustomerNotified($sendCustomerNotified)
+            ->save();
     }
 
     public function setIsCustomerNotified()
