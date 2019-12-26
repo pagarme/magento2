@@ -49,18 +49,12 @@ use MundiPagg\MundiPagg\Block\Customer\Invoice;
                 <td><?= __($status) ?></td>
                 <td><?= __($paymentMethod) ?></td>
                 <td>
-                    <?php
-                    $lastTransactions = $item->getTransactions();
-                    array_walk_recursive($lastTransactions, function (Transaction $transaction) {
-                        if ($transaction->getBoletoUrl() == "") {
-                           return;
-                        }
-                        ?>
-                        <button onclick="location.href = '<?= $transaction->getBoletoUrl() ?>';"
+                    <?php if ($item->getBoletoUrl() !== ""):?>
+                        <button onclick="location.href = '<?= $item->getBoletoUrl() ?>';"
                                 id="details">
                             <?= __("download") ?>
                         </button>
-                    <?php }); ?>
+                    <?php endif;?>
                 </td>
             </tr>
         <?php endforeach; ?>

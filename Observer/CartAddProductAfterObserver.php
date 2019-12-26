@@ -56,7 +56,7 @@ class CartAddProductAfterObserver implements ObserverInterface
         $repetition = $this->recurrenceProductHelper
             ->getSelectedRepetition($item);
 
-        if (!empty($repetition)) {
+        if (!empty($repetition) && $repetition->getRecurrencePrice() > 0) {
             return $this->moneyService->centsToFloat(
                 $repetition->getRecurrencePrice()
             );

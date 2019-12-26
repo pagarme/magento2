@@ -17,9 +17,9 @@ define([
     'Magento_Checkout/js/model/totals',
     'mage/translate',
     'Magento_Checkout/js/model/full-screen-loader',
-    'MundiPagg_MundiPagg/js/view/payment/method-renderer/creditcard',
-    'MundiPagg_MundiPagg/js/view/payment/method-renderer/billet_creditcard',
-    'MundiPagg_MundiPagg/js/view/payment/method-renderer/two_creditcard'
+    'MundiPagg_MundiPagg/js/view/payment/creditcard',
+    'MundiPagg_MundiPagg/js/view/payment/boletocreditcard',
+    'MundiPagg_MundiPagg/js/view/payment/twocreditcards'
 ], function (
     $,
     quote,
