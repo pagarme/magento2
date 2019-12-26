@@ -1,20 +1,7 @@
 <?php
-/**
- * Phtml List Subscription
- *
- * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
- * @copyright   2019 MundiPagg (http://www.mundipagg.com)
- * @license     http://www.mundipagg.com Copyright
- *
- * @link        http://www.mundipagg.com
- */
 
 $i = 0;
 
-use Mundipagg\Core\Kernel\Aggregates\Transaction;
-use MundiPagg\MundiPagg\Block\Customer\Invoice;
-
-/* @var Invoice $block */
 ?>
 <div>
     <table class="table">
@@ -38,8 +25,8 @@ use MundiPagg\MundiPagg\Block\Customer\Invoice;
                 $status = $item->getStatus()->getStatus();
                 $paymentMethod = $item->getPaymentMethod()->getPaymentMethod();
 
-            $numberFormatter = new NumberFormatter('pt-BR', NumberFormatter::CURRENCY);
-                ?>
+                $numberFormatter = new NumberFormatter('pt-BR', NumberFormatter::CURRENCY);
+            ?>
             <tr>
                 <td><?= $i ?></td>
                 <td><?= $numberFormatter->format(($item->getAmount()) / 100); ?></td>
@@ -49,7 +36,7 @@ use MundiPagg\MundiPagg\Block\Customer\Invoice;
                 <td><?= __($status) ?></td>
                 <td><?= __($paymentMethod) ?></td>
                 <td>
-                    <?php if ($item->getBoletoUrl() !== ""):?>
+                    <?php if (!empty($item->getBoletoUrl())):?>
                         <button onclick="location.href = '<?= $item->getBoletoUrl() ?>';"
                                 id="details">
                             <?= __("download") ?>
