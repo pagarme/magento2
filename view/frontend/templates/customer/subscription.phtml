@@ -30,7 +30,7 @@ $i = 0;
         <?php foreach ($block->getAllSubscriptionRecurrenceCoreByCustomerId() as $item) : ?>
             <?php $i++; ?>
             <?php
-                $url = $this->getBaseUrl() . 'mundipagg/customer/invoice/?code='. $item->getCode();
+                $url = $this->getBaseUrl() . 'mundipagg/customer/invoice/?code='. $item->getMundipaggId()->getValue();
                 $status = $item->getStatus()->getStatus();
                 $recurrenceType = $item->getRecurrenceType();
                 $intervalType = $item->getIntervalType();

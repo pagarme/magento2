@@ -1077,7 +1077,22 @@ class InstallSchema implements InstallSchemaInterface
                         'nullable' => true
                     ],
                     "Api's id"
-                );
+                )
+                ->addColumn(
+                    'created_at',
+                    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
+                    null,
+                    ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT],
+                    'Created At'
+                )
+                ->addColumn(
+                    'updated_at',
+                    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
+                    null,
+                    ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT_UPDATE],
+                    'Updated At'
+                )
+                ->setOption('charset', 'utf8');
 
             $installer->getConnection()->createTable($configTable);
         }
@@ -1241,6 +1256,20 @@ class InstallSchema implements InstallSchemaInterface
                     null,
                     ['nullable' => false],
                     'Cycle End'
+                )
+                ->addColumn(
+                    'created_at',
+                    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
+                    null,
+                    ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT],
+                    'Created At'
+                )
+                ->addColumn(
+                    'updated_at',
+                    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
+                    null,
+                    ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT_UPDATE],
+                    'Updated At'
                 )
                 ->setOption('charset', 'utf8');
 
