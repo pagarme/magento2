@@ -87,7 +87,7 @@ class CartConflict
         /* @var Item[] $itemQuoteList */
         $itemQuoteList = $cart->getQuote()->getAllVisibleItems();
         foreach ($itemQuoteList as $item) {
-            $repetitionInCart = $this->recurrenceProductHelper->getRepetitionSelected(
+            $repetitionInCart = $this->recurrenceProductHelper->getSelectedRepetition(
                 $item
             );
 

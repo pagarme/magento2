@@ -50,9 +50,17 @@ class PaymentMethodAvailable implements ObserverInterface
             return;
         }
 
-        $recurrenceProducts = $this->getRecurrenceProducts($quote);
+        $recurrenceProduct = $this->getRecurrenceProduct($quote);
+        if ($recurrenceProduct) {
+            $this->switchPaymentMethodsForRecurrence($observer, $recurrenceProduct);
+        }
+    }
 
+    private function switchPaymentMethodsForRecurrence($observer, $recurrenceProducts)
+    {
         $mundipaggPaymentsMethods = $this->getAvailableConfigMethods();
+        $currentMethod = $observer->getEvent()->getMethodInstance()->getCode();
+
         $methodsAvailable = $this->getAvailableRecurrenceMethods(
             $recurrenceProducts,
             $mundipaggPaymentsMethods
@@ -143,7 +151,7 @@ class PaymentMethodAvailable implements ObserverInterface
             }
 
             if (
-                !empty($this->recurrenceProductHelper->getRepetitionSelected($item))
+                !empty($this->recurrenceProductHelper->getSelectedRepetition($item))
             ) {
                 $recurrenceProducts[] =  $recurrenceProduct;
             }

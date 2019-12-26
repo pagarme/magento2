@@ -20,7 +20,7 @@ class RecurrenceProductHelper extends AbstractHelper
         $this->repetitionRepository = new RepetitionRepository();
     }
 
-    public function getRepetitionSelected($item)
+    public function getSelectedRepetition($item)
     {
         $productOptions = $item->getProduct()
             ->getTypeInstance(true)
