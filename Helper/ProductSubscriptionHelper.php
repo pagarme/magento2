@@ -165,11 +165,11 @@ class ProductSubscriptionHelper extends AbstractHelper
         return $values;
     }
 
-    protected function getCycleTitle(Repetition $repetition)
+    public function getCycleTitle(Repetition $repetition)
     {
         $intervalLabel = $this->tryFindDictionaryEventCustomOptionsProductSubscription($repetition);
 
-        if (empty($repetition->getRecurrencePrice())) {
+        if ($repetition->getRecurrencePrice() <= 0) {
             return $intervalLabel;
         }
 

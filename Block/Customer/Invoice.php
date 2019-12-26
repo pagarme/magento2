@@ -76,6 +76,16 @@ class Invoice extends Template
         return $this->chargeRepository->findByCode($codeOrder);
     }
 
+    public function getSubscriptionPaymentMethod()
+    {
+        $codeOrder = $this->coreRegistry->registry('code');
+        $subscription = $this->subscriptionRepository->findByCode($codeOrder);
+        if (!$subscription) {
+            return null;
+        }
+        return $subscription->getPaymentMethod();
+    }
+
     /**
      * @param string $codeOrder
      * @throws InvalidParamException

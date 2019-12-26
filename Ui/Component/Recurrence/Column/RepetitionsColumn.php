@@ -58,18 +58,8 @@ class RepetitionsColumn extends Column
         $productSubscription = $productSubscriptionService->findById($id);
         $repetitions = [];
         foreach ($productSubscription->getRepetitions() as $repetition) {
-            $value = $this->productSubscriptionHelper
-                ->tryFindDictionaryEventCustomOptionsProductSubscription($repetition);
-
-            if ($repetition->getRecurrencePrice() > 0) {
-                $totalAmount = $this->moneyService->centsToFloat(
-                    $repetition->getRecurrencePrice()
-                );
-
-                $value .= " - (Total: R$ {$totalAmount})";
-            }
-
-            $repetitions[] = $value;
+            $repetitions[] = $this->productSubscriptionHelper
+            ->getCycleTitle($repetition);
         }
 
         return implode(' | ', $repetitions);

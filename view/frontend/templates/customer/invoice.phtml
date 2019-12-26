@@ -15,7 +15,9 @@ $i = 0;
             <th><?= __('Refunded amount') ?></th>
             <th><?= __('Status') ?></th>
             <th><?= __('Payement method') ?></th>
+            <?php if ($block->getSubscriptionPaymentMethod() == 'boleto') :?>
             <th><?= __('Boleto') ?></th>
+            <?php endif;?>
         </tr>
         </thead>
         <tbody>
@@ -35,14 +37,16 @@ $i = 0;
                 <td><?= $numberFormatter->format(($item->getRefundedAmount()) / 100) ?></td>
                 <td><?= __($status) ?></td>
                 <td><?= __($paymentMethod) ?></td>
-                <td>
-                    <?php if (!empty($item->getBoletoUrl())):?>
-                        <button onclick="location.href = '<?= $item->getBoletoUrl() ?>';"
-                                id="details">
-                            <?= __("download") ?>
-                        </button>
-                    <?php endif;?>
-                </td>
+                <?php if ($block->getSubscriptionPaymentMethod() == 'boleto') :?>
+                    <td>
+                        <?php if (!empty($item->getBoletoUrl())):?>
+                            <button onclick="location.href = '<?= $item->getBoletoUrl() ?>';"
+                                    id="details">
+                                <?= __("download") ?>
+                            </button>
+                        <?php endif;?>
+                    </td>
+                <?php endif;?>
             </tr>
         <?php endforeach; ?>
         </tbody>
