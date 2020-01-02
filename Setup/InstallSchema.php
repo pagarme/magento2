@@ -981,12 +981,12 @@ class InstallSchema implements InstallSchemaInterface
                 )
                 ->addColumn(
                     'customer_id',
-                    Table::TYPE_INTEGER,
+                    Table::TYPE_TEXT,
                     null,
                     [
                         'nullable' => false
                     ],
-                    'Customer session id'
+                    'Customer id'
                 )
                 ->addColumn(
                     'mundipagg_id',
@@ -1035,7 +1035,7 @@ class InstallSchema implements InstallSchemaInterface
                         'unsigned' => true,
                         'nullable' => false,
                     ],
-                    'Method payment'
+                    'Payment method'
                 )
                 ->setOption('charset', 'utf8')
                 ->addColumn(
@@ -1046,7 +1046,7 @@ class InstallSchema implements InstallSchemaInterface
                         'unsigned' => true,
                         'nullable' => false,
                     ],
-                    'Type recurrence can use. plan or not'
+                    'recurrence or plan'
                 )
                 ->setOption('charset', 'utf8')
                 ->addColumn(
@@ -1057,7 +1057,7 @@ class InstallSchema implements InstallSchemaInterface
                         'unsigned' => true,
                         'nullable' => false,
                     ],
-                    'Interval Type can be. day, month, week and year'
+                    'Available values: day, month, week or year'
                 )
                 ->setOption('charset', 'utf8')
                 ->addColumn(
@@ -1229,7 +1229,7 @@ class InstallSchema implements InstallSchemaInterface
                         'unsigned' => true,
                         'nullable' => false,
                     ],
-                    'Method payment'
+                    'Payment method'
                 )
                 ->setOption('charset', 'utf8')
                 ->addColumn(
@@ -1240,7 +1240,7 @@ class InstallSchema implements InstallSchemaInterface
                         'unsigned' => true,
                         'nullable' => false,
                     ],
-                    'Method payment'
+                    "Boleto's link"
                 )
                 ->setOption('charset', 'utf8')
                 ->addColumn(
