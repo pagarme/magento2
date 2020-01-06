@@ -19,6 +19,7 @@ interface ConfigInterface
     const PATH_PUBLIC_KEY          = 'mundipagg_mundipagg/global/public_key';
     const PATH_SECRET_KEY          = 'mundipagg_mundipagg/global/secret_key';
     const PATH_TEST_MODE           = 'mundipagg_mundipagg/global/test_mode';
+    const PATH_SEND_EMAIL          = 'mundipagg_mundipagg/global/sendmail';
     const PATH_CUSTOMER_STREET     = 'payment/mundipagg_customer_address/street_attribute';
     const PATH_CUSTOMER_NUMBER     = 'payment/mundipagg_customer_address/number_attribute';
     const PATH_CUSTOMER_COMPLEMENT = 'payment/mundipagg_customer_address/complement_attribute';
@@ -63,4 +64,9 @@ interface ConfigInterface
      * @return string
      */
     public function getCustomerAddressDistrict();
+
+    /**
+     * @return bool
+     */
+    public function isSendEmail();
 }

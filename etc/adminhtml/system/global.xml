@@ -48,5 +48,12 @@
 				<field id="test_mode">1</field>
 			</depends>
 		</field>
+
+		<field id="active" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="50" translate="label" type="select">
+			<label>Send Mail Change Order Status</label>
+			<comment>Send e-mail every time when a order change status - (just Mundipagg status).</comment>
+			<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+			<config_path>mundipagg_mundipagg/global/sendmail</config_path>
+		</field>
 	</group>
 </include>

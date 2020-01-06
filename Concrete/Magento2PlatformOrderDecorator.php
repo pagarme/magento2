@@ -32,6 +32,7 @@ use Mundipagg\Core\Payment\Repositories\SavedCardRepository;
 use Mundipagg\Core\Payment\ValueObjects\CustomerPhones;
 use Mundipagg\Core\Payment\ValueObjects\CustomerType;
 use Mundipagg\Core\Payment\ValueObjects\Phone;
+use MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\Config;
 use MundiPagg\MundiPagg\Model\Cards;
 use MundiPagg\MundiPagg\Model\CardsRepository;
 use Mundipagg\Core\Kernel\Services\LocalizationService;
@@ -43,6 +44,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 {
     /** @var Order */
     protected $platformOrder;
+
     /**
      * @var Order
      */
@@ -50,10 +52,19 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
     private $quote;
     private $i18n;
 
+    /**
+     * @var Config
+     */
+    private $config;
+
     public function __construct()
     {
         $this->i18n = new LocalizationService();
         $objectManager = ObjectManager::getInstance();
+
+        $config = $objectManager->get('Magento\Framework\App\Config\ScopeConfigInterface');
+        $this->config = new Config($config);
+
         $this->orderFactory = $objectManager->get('Magento\Sales\Model\Order');
         parent::__construct();
     }
@@ -69,8 +80,8 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 
     public function setStateAfterLog(OrderState $state)
     {
-       $stringState = $state->getState();
-       $this->platformOrder->setState($stringState);
+        $stringState = $state->getState();
+        $this->platformOrder->setState($stringState);
     }
 
 
@@ -118,10 +129,20 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
     {
         $objectManager = ObjectManager::getInstance();
 
+        $sendConfigGlobalEmail = $this->config->isSendEmail();
+
+        if (!$sendConfigGlobalEmail) {
+            return false;
+        }
+
         /* @var OrderCommentSender $orderCommentSender */
         $orderCommentSender = $objectManager->create(OrderCommentSender::class);
 
-        return $orderCommentSender->send($this->platformOrder, true, $message);
+        return $orderCommentSender->send(
+            $this->platformOrder,
+            true,
+            $message
+        );
     }
 
     /**
