@@ -11,6 +11,7 @@ use MundiPagg\MundiPagg\Concrete\Magento2PlatformProductDecorator;
 use Magento\Framework\App\ObjectManager;
 use MundiPagg\MundiPagg\Api\ProductPlanApiInterface;
 use MundiPagg\MundiPagg\Helper\ProductHelper;
+use Mundipagg\Core\Recurrence\Aggregates\SubProduct;
 
 class ProductsPlan implements ProductPlanApiInterface
 {
@@ -97,9 +98,47 @@ class ProductsPlan implements ProductPlanApiInterface
 
     public function save(\Mundipagg\Core\Recurrence\Interfaces\ProductPlanInterface $productPlan, $id = null)
     {
+        /**
+         * @var SubProduct[] $subProductList
+         */
+        $subProductList = $productPlan->getItems();
+        $objectManager = ObjectManager::getInstance();
+        $product =
+            $objectManager
+                ->create('Magento\Catalog\Model\Product')
+                ->load(2053);
+
+      //  $product1 = $product;
+        $typeInstance = $objectManager->get('Magento\Bundle\Model\Product\Type');
+        $selections = $typeInstance->getSelectionsCollection(
+            $typeInstance->getOptionsIds($product),
+            $product
+        );
+
+        foreach ($selections as $index => $selection) {
+            
+        }
+
+
+
+
+        $subProductIdList = array_map(function(SubProduct $subProduct) {
+          return $subProduct->getProductId();
+        }, $subProductList);
+
 
         $productHelper = new ProductHelper();
-        $productHelper->getProductList();
+        $rr = $productHelper->getProductList($subProductIdList);
+
+
+      //  $this->createPlanAtMundipagg($plan);
+       // $planRepository->save($plan);
+
+        $planService = new PlanService();
+        $planService->create($params['form']);
+
+       // $planService->createPlanAtMundipagg($productPlan);
+
       //  $x = $productPlan->getProductId();
         // TODO: Implement save() method.
     }

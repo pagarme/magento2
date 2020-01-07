@@ -42,7 +42,6 @@ class ProductHelper
                     ->load($productId);
 
             $platformProduct = new Magento2PlatformProductDecorator($product);
-
             $productList[] = $product;
         }
 

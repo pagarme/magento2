@@ -3,7 +3,6 @@
 namespace MundiPagg\MundiPagg\Helper;
 
 use Magento\Framework\App\Helper\AbstractHelper;
-use Magento\Framework\App\ObjectManager;
 use Mundipagg\Core\Kernel\Services\LocalizationService;
 use Mundipagg\Core\Recurrence\Aggregates\Repetition;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
