@@ -5,18 +5,19 @@ namespace MundiPagg\MundiPagg\Api;
 interface InvoiceApiInterface
 {
     /**
-     * List invoice
+     * Get invoice
      *
+     * @param string $id
      * @return mixed
      */
-    public function list($id);
-
+    public function getByInvoiceId($id);
 
     /**
      * Cancel invoice
      *
-     * @param int $id
+     * @param string $id
      * @return mixed
      */
-    public function cancel($id);
+    public function cancelByInvoiceId($id);
+
 }

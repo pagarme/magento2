@@ -118,14 +118,14 @@
     </route>
 
     <route url="/V1/mundipagg/recurrence/invoice/:id" method="GET">
-        <service class="MundiPagg\MundiPagg\Api\InvoiceApiInterface" method="list"/>
+        <service class="MundiPagg\MundiPagg\Api\InvoiceApiInterface" method="getByInvoiceId"/>
         <resources>
             <resource ref="anonymous" />
         </resources>
     </route>
 
     <route url="/V1/mundipagg/recurrence/invoice/cancel/:id" method="POST">
-        <service class="MundiPagg\MundiPagg\Api\InvoiceApiInterface" method="cancel"/>
+        <service class="MundiPagg\MundiPagg\Api\InvoiceApiInterface" method="cancelByInvoiceId"/>
         <resources>
             <resource ref="anonymous" />
         </resources>
