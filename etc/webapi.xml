@@ -117,4 +117,17 @@
         </resources>
     </route>
 
+    <route url="/V1/mundipagg/recurrence/invoice/:id" method="GET">
+        <service class="MundiPagg\MundiPagg\Api\InvoiceApiInterface" method="list"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+
+    <route url="/V1/mundipagg/recurrence/invoice/cancel/:id" method="POST">
+        <service class="MundiPagg\MundiPagg\Api\InvoiceApiInterface" method="cancel"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
 </routes>
