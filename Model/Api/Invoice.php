@@ -26,9 +26,6 @@ class Invoice implements InvoiceApiInterface
         $this->request = $request;
         Magento2CoreSetup::bootstrap();
         $this->invoiceService = new InvoiceService();
-
-        /*$this->i18n = new LocalizationService();
-        $this->moneyService = new MoneyService();*/
     }
 
     /**
