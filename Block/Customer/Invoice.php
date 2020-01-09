@@ -74,10 +74,10 @@ class Invoice extends Template
      */
     public function getAllChargesByCodeOrder()
     {
-        $codeOrder = $this->coreRegistry->registry('code');
+        $orderCode = $this->coreRegistry->registry('code');
         $subscriptionId =
             new SubscriptionId(
-                $codeOrder
+                $orderCode
             );
 
         return $this->chargeRepository->findBySubscriptionId($subscriptionId);
