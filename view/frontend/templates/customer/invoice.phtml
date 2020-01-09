@@ -39,8 +39,8 @@ $i = 0;
                 <td><?= __($paymentMethod) ?></td>
                 <?php if ($block->getSubscriptionPaymentMethod() == 'boleto') :?>
                     <td>
-                        <?php if (!empty($item->getBoletoUrl())):?>
-                            <button onclick="location.href = '<?= $item->getBoletoUrl() ?>';"
+                        <?php if (!empty($item->getBoletoLink())):?>
+                            <button onclick="location.href = '<?= $item->getBoletoLink() ?>';"
                                     id="details">
                                 <?= __("download") ?>
                             </button>

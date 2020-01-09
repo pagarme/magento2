@@ -39,7 +39,7 @@ class Collection extends SearchResult
 
     protected function _renderFiltersBefore()
     {
-        $code = $this->request->getParam('code');
+        $subscriptionId = $this->request->getParam('subscription_id');
 
         $joinTable = $this->getTable('mundipagg_module_core_transaction');
 
@@ -66,7 +66,7 @@ class Collection extends SearchResult
                     'tran_card_data' => new \Zend_Db_Expr('GROUP_CONCAT(mundipagg_module_core_transaction.card_data SEPARATOR "---")')
                 ]
             )
-            ->where("main_table.code = ?", $code)
+            ->where("main_table.subscription_id = ?", $subscriptionId)
             ->group('main_table.id');
 
         parent::_renderFiltersBefore();
