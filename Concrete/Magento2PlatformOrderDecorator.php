@@ -52,18 +52,10 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
     private $quote;
     private $i18n;
 
-    /**
-     * @var Config
-     */
-    private $config;
-
     public function __construct()
     {
         $this->i18n = new LocalizationService();
         $objectManager = ObjectManager::getInstance();
-
-        $config = $objectManager->get('Magento\Framework\App\Config\ScopeConfigInterface');
-        $this->config = new Config($config);
 
         $this->orderFactory = $objectManager->get('Magento\Sales\Model\Order');
         parent::__construct();
@@ -129,7 +121,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
     {
         $objectManager = ObjectManager::getInstance();
 
-        $sendConfigGlobalEmail = $this->config->isSendEmail();
+        $sendConfigGlobalEmail = MPSetup::getModuleConfiguration()->isSendMailEnabled();
 
         if (!$sendConfigGlobalEmail) {
             return false;
