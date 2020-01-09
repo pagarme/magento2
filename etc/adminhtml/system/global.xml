@@ -50,8 +50,8 @@
 		</field>
 
 		<field id="active" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="50" translate="label" type="select">
-			<label>Send Mail Change Order Status</label>
-			<comment><![CDATA[Send e-mail every time when a order change status - (just Mundipagg status). <p><strong style="color:red">Warning!</strong> If enabled, make sure you have set up your mail server correctly, otherwise you will run the risk of slowdowns and crashes.</p>]]></comment>
+			<label>Send order status changes by e-mail</label>
+			<comment><![CDATA[Send an e-mail every time when an order status is changed by a Mundipagg's webhook. <p><strong style='color:red'>Warning!</strong> Make sure you have set up your mail server correctly before enable it, otherwise you will run the risk of slowdowns and crashes of your platform.</p>]]></comment>
 			<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
 			<config_path>mundipagg_mundipagg/global/sendmail</config_path>
 		</field>
