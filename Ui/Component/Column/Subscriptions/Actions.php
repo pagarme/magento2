@@ -65,15 +65,16 @@ class Actions extends Column
             'label' => __('Invoices')
         ];
 
-
-        $actions[$name]['delete'] = [
-            'href' => $this->getUrlMundipaggDelete($item, self::URL_PATH_DELETE),
-            'label' => __('Disable'),
-            'confirm' => [
-                'title' => __('Confirm action'),
-                'message' => __('Are you sure you want to disabled this item?')
-            ]
-        ];
+        if ($item['status']->getText() != 'canceled') {
+            $actions[$name]['delete'] = [
+                'href' => $this->getUrlMundipaggDelete($item, self::URL_PATH_DELETE),
+                'label' => __('Disable'),
+                'confirm' => [
+                    'title' => __('Confirm action'),
+                    'message' => __('Are you sure you want to disabled this item?')
+                ]
+            ];
+        }
 
 
         return $actions;
@@ -82,7 +83,7 @@ class Actions extends Column
     protected function getUrlMundipaggEdit($item, $path)
     {
         $url = $this->urlBuilder->getUrl($path);
-        return $url . "?code={$item['code']}";
+        return $url . "?subscription_id={$item['mundipagg_id']}";
     }
 
     protected function getUrlMundipaggDelete($item, $path)
