@@ -164,7 +164,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             }
         }
 
-        return $statusCode;
+        return $orderStatus->getStatus();
     }
 
     /**
