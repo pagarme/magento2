@@ -32,15 +32,19 @@ use Mundipagg\Core\Payment\Repositories\SavedCardRepository;
 use Mundipagg\Core\Payment\ValueObjects\CustomerPhones;
 use Mundipagg\Core\Payment\ValueObjects\CustomerType;
 use Mundipagg\Core\Payment\ValueObjects\Phone;
+use MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\Config;
 use MundiPagg\MundiPagg\Model\Cards;
 use MundiPagg\MundiPagg\Model\CardsRepository;
 use Mundipagg\Core\Kernel\Services\LocalizationService;
 use Mundipagg\Core\Kernel\Services\LogService;
+use Magento\Sales\Model\Order\Email\Sender\OrderCommentSender;
+use Magento\Sales\Model\ResourceModel\Order\Status\Collection;
 
 class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 {
     /** @var Order */
     protected $platformOrder;
+
     /**
      * @var Order
      */
@@ -52,6 +56,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
     {
         $this->i18n = new LocalizationService();
         $objectManager = ObjectManager::getInstance();
+
         $this->orderFactory = $objectManager->get('Magento\Sales\Model\Order');
         parent::__construct();
     }
@@ -67,8 +72,8 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 
     public function setStateAfterLog(OrderState $state)
     {
-       $stringState = $state->getState();
-       $this->platformOrder->setState($stringState);
+        $stringState = $state->getState();
+        $this->platformOrder->setState($stringState);
     }
 
 
@@ -108,13 +113,66 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             $this->orderFactory->loadByIncrementId($incrementId);
     }
 
-    protected function addMPHistoryComment($message)
+    /**
+     * @param string $message
+     * @return bool
+     */
+    public function sendEmail($message)
+    {
+        $objectManager = ObjectManager::getInstance();
+
+        $sendConfigGlobalEmail = MPSetup::getModuleConfiguration()->isSendMailEnabled();
+
+        if (!$sendConfigGlobalEmail) {
+            return false;
+        }
+
+        /* @var OrderCommentSender $orderCommentSender */
+        $orderCommentSender = $objectManager->create(OrderCommentSender::class);
+
+        return $orderCommentSender->send(
+            $this->platformOrder,
+            true,
+            $message
+        );
+    }
+
+    /**
+     * @param OrderStatus $orderStatus
+     * @return string
+     */
+    public function getStatusLabel(OrderStatus $orderStatus)
+    {
+        $objectManager = ObjectManager::getInstance();
+
+        /* @var Collection $statusCollection */
+        $statusCollection = $objectManager->create(Collection::class);
+
+        $optionsStatusArray = $statusCollection->toOptionArray();
+
+        foreach ($optionsStatusArray as $optionStatus) {
+            if ($optionStatus['value'] == $orderStatus->getStatus()) {
+                return $optionStatus['label'];
+            }
+        }
+
+        return $orderStatus->getStatus();
+    }
+
+    /**
+     * @param $message
+     * @param bool $sendCustomerNotified
+     */
+    protected function addMPHistoryComment($message, $sendCustomerNotified = false)
     {
         $historyMethod = 'addCommentToStatusHistory';
         if (!method_exists($this->platformOrder, $historyMethod)) {
             $historyMethod = 'addStatusHistoryComment';
         }
-        $this->platformOrder->$historyMethod($message);
+
+        $this->platformOrder->$historyMethod($message)
+            ->setIsCustomerNotified($sendCustomerNotified)
+            ->save();
     }
 
     public function setIsCustomerNotified()
