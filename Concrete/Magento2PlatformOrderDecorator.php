@@ -161,9 +161,9 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 
     /**
      * @param $message
-     * @param bool $sendCustomerNotified
+     * @param bool $notifyCustomer
      */
-    protected function addMPHistoryComment($message, $sendCustomerNotified = false)
+    protected function addMPHistoryComment($message, $notifyCustomer = false)
     {
         $historyMethod = 'addCommentToStatusHistory';
         if (!method_exists($this->platformOrder, $historyMethod)) {
@@ -171,7 +171,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         }
 
         $this->platformOrder->$historyMethod($message)
-            ->setIsCustomerNotified($sendCustomerNotified)
+            ->setIsCustomerNotified($notifyCustomer)
             ->save();
     }
 
