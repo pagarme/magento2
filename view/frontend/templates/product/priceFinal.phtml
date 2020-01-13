@@ -26,7 +26,7 @@ $schema = ($block->getZone() == 'item_view') ? true : false;
     <?php
     $priceRecurrence = \MundiPagg\MundiPagg\Plugin\Princing\Render\FinalPricePlugin::getPriceRecurrence($productId);
     if(!is_null($priceRecurrence)) {
-        echo "<b>A partir de {$priceRecurrence} por mês ou </b>";
+        echo "<b>".__('From %1 per month or ', $priceRecurrence)."</b>";
     }
     ?>
 </span>
@@ -43,7 +43,7 @@ $schema = ($block->getZone() == 'item_view') ? true : false;
             <?php
                 $installments = \MundiPagg\MundiPagg\Plugin\Princing\Render\FinalPricePlugin::getMaxInstallments();
                 if (!is_null($installments)) {
-                    echo "em até {$installments}x";
+                    echo __('until %1x', $installments);
                 }
             ?>
         </span>
@@ -68,7 +68,7 @@ $schema = ($block->getZone() == 'item_view') ? true : false;
         <?php
             $installments = \MundiPagg\MundiPagg\Plugin\Princing\Render\FinalPricePlugin::getMaxInstallments();
             if (!is_null($installments)) {
-                echo "em até {$installments}x";
+                echo __('until %1x', $installments);
             }
         ?>
     </span>
