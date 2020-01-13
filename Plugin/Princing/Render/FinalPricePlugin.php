@@ -29,11 +29,15 @@ class FinalPricePlugin
      */
     public function beforeSetTemplate(FinalPriceBox $subject, $template)
     {
-        $a = 1;
-        if (MPSetup::getModuleConfiguration()->isEnabled()) {
-            return ['MundiPagg_MundiPagg::product/priceFinal.phtml'];    
+        $moduleEnabled = MPSetup::getModuleConfiguration()->isEnabled();
+        $showCurrencyWidget = MPSetup::getModuleConfiguration()
+            ->getRecurrenceConfig()
+            ->isShowRecurrenceCurrencyWidget();
+
+        if ($moduleEnabled && $showCurrencyWidget) {
+            return ['MundiPagg_MundiPagg::product/priceFinal.phtml'];
         }
-        
+
         return [$template];
     }
 
@@ -70,10 +74,10 @@ class FinalPricePlugin
         }
 
         $objectManager = ObjectManager::getInstance();
-        $product = $objectManager->create('Magento\Catalog\Model\Product')
+        $product = $objectManager->create(Product::class)
             ->load($productId);
 
-        $currency = self::getMostLowPriceRecurrence($productSubscription, $product);
+        $currency = self::getLowPriceRecurrence($productSubscription, $product);
 
         $numberFormatter = new \NumberFormatter(
             'pt-BR',
@@ -88,7 +92,7 @@ class FinalPricePlugin
      * @param ProductInterceptor $product
      * @return float
      */
-    private static function getMostLowPriceRecurrence(
+    private static function getLowPriceRecurrence(
         ProductSubscription $productSubscription,
         ProductInterceptor $product
     ) {
