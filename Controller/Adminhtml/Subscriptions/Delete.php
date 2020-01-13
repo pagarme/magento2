@@ -46,11 +46,11 @@ class Delete extends Action
         Registry $coreRegistry,
         Factory $messageFactory
     ) {
+        Magento2CoreSetup::bootstrap();
         $this->resultPageFactory = $resultPageFactory;
         $this->coreRegistry = $coreRegistry;
         $this->messageFactory = $messageFactory;
         $this->subscriptionService = new SubscriptionService();
-        Magento2CoreSetup::bootstrap();
 
         parent::__construct($context);
     }
