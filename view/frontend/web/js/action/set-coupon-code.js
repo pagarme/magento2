@@ -18,9 +18,9 @@ define([
     'Magento_Checkout/js/action/get-payment-information',
     'Magento_Checkout/js/model/totals',
     'Magento_Checkout/js/model/full-screen-loader',
-    'MundiPagg_MundiPagg/js/view/payment/method-renderer/creditcard',
-    'MundiPagg_MundiPagg/js/view/payment/method-renderer/billet_creditcard',
-    'MundiPagg_MundiPagg/js/view/payment/method-renderer/two_creditcard',
+    'MundiPagg_MundiPagg/js/view/payment/creditcard',
+    'MundiPagg_MundiPagg/js/view/payment/boletocreditcard',
+    'MundiPagg_MundiPagg/js/view/payment/twocreditcards',
     'MundiPagg_MundiPagg/js/model/credit-card-validation/credit-card-number-validator'
 ], function (
     ko,

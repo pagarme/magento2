@@ -65,16 +65,14 @@ class Actions extends Column
             'label' => __('Edit')
         ];
 
-        if ($type !== 'plans') {
-            $actions[$name]['delete'] = [
-                'href' => $this->getUrlMundipagg($type, $item, self::URL_PATH_DELETE),
-                'label' => __('Delete'),
-                'confirm' => [
-                    'title' => __('Confirm action'),
-                    'message' => __('Are you sure you want to delete this item?')
-                ]
-            ];
-        }
+        $actions[$name]['delete'] = [
+            'href' => $this->getUrlMundipagg($type, $item, self::URL_PATH_DELETE),
+            'label' => __('Delete'),
+            'confirm' => [
+                'title' => __('Confirm action'),
+                'message' => __('Are you sure you want to delete this item?')
+            ]
+        ];
 
         return $actions;
     }

@@ -1,15 +1,15 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Controller\Adminhtml\RecurrenceProducts;
+namespace MundiPagg\MundiPagg\Controller\Adminhtml\Plans;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\Message\Factory;
 use Magento\Framework\Registry;
 use Magento\Framework\View\Result\PageFactory;
+use Mundipagg\Core\Recurrence\Services\PlanService;
 use Mundipagg\Core\Recurrence\Services\ProductSubscriptionService;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
-use MundiPagg\MundiPagg\Helper\ProductSubscriptionHelper;
 use MundiPagg\MundiPagg\Model\ProductsSubscriptionFactory;
 
 class Delete extends Action
@@ -40,8 +40,6 @@ class Delete extends Action
         $this->messageFactory = $messageFactory;
         Magento2CoreSetup::bootstrap();
 
-        $this->productSubscriptionHelper = new ProductSubscriptionHelper();
-
         parent::__construct($context);
     }
 
@@ -49,31 +47,30 @@ class Delete extends Action
      * Index action
      *
      * @return \Magento\Framework\Controller\ResultInterface
+     * @throws \Exception
      */
     public function execute()
     {
         $productId = (int)$this->getRequest()->getParam('id');
         if ($productId) {
 
-            $productSubscriptionService = new ProductSubscriptionService();
-            $productData = $productSubscriptionService->findById($productId);
+            $planService = new PlanService();
+            $productData = $planService->findById($productId);
 
             if (!$productData || !$productData->getId()) {
-                $message = $this->messageFactory->create('error', __('Product subscription not exist.'));
+                $message = $this->messageFactory->create('error', __('Plan not exist.'));
                 $this->messageManager->addErrorMessage($message);
-                $this->_redirect('mundipagg_mundipagg/recurrenceproducts/index');
+                $this->_redirect('mundipagg_mundipagg/plans/index');
                 return;
             }
         }
 
-        $this->productSubscriptionHelper->deleteRecurrenceCustomOption($productData);
+        $planService->delete($productId);
 
-        $productSubscriptionService->delete($productId);
-
-        $message = $this->messageFactory->create('success', _("Product subscription deleted."));
+        $message = $this->messageFactory->create('success', _("Plan deleted."));
         $this->messageManager->addMessage($message);
 
-        $this->_redirect('mundipagg_mundipagg/recurrenceproducts/index');
+        $this->_redirect('mundipagg_mundipagg/plans/index');
         return;
     }
 }

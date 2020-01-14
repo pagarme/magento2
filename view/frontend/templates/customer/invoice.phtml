@@ -1,20 +1,7 @@
 <?php
-/**
- * Phtml List Subscription
- *
- * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
- * @copyright   2019 MundiPagg (http://www.mundipagg.com)
- * @license     http://www.mundipagg.com Copyright
- *
- * @link        http://www.mundipagg.com
- */
 
 $i = 0;
 
-use Mundipagg\Core\Kernel\Aggregates\Transaction;
-use MundiPagg\MundiPagg\Block\Customer\Invoice;
-
-/* @var Invoice $block */
 ?>
 <div>
     <table class="table">
@@ -28,7 +15,9 @@ use MundiPagg\MundiPagg\Block\Customer\Invoice;
             <th><?= __('Refunded amount') ?></th>
             <th><?= __('Status') ?></th>
             <th><?= __('Payement method') ?></th>
+            <?php if ($block->getSubscriptionPaymentMethod() == 'boleto') :?>
             <th><?= __('Boleto') ?></th>
+            <?php endif;?>
         </tr>
         </thead>
         <tbody>
@@ -38,8 +27,8 @@ use MundiPagg\MundiPagg\Block\Customer\Invoice;
                 $status = $item->getStatus()->getStatus();
                 $paymentMethod = $item->getPaymentMethod()->getPaymentMethod();
 
-            $numberFormatter = new NumberFormatter('pt-BR', NumberFormatter::CURRENCY);
-                ?>
+                $numberFormatter = new NumberFormatter('pt-BR', NumberFormatter::CURRENCY);
+            ?>
             <tr>
                 <td><?= $i ?></td>
                 <td><?= $numberFormatter->format(($item->getAmount()) / 100); ?></td>
@@ -48,20 +37,16 @@ use MundiPagg\MundiPagg\Block\Customer\Invoice;
                 <td><?= $numberFormatter->format(($item->getRefundedAmount()) / 100) ?></td>
                 <td><?= __($status) ?></td>
                 <td><?= __($paymentMethod) ?></td>
-                <td>
-                    <?php
-                    $lastTransactions = $item->getTransactions();
-                    array_walk_recursive($lastTransactions, function (Transaction $transaction) {
-                        if ($transaction->getBoletoUrl() == "") {
-                           return;
-                        }
-                        ?>
-                        <button onclick="location.href = '<?= $transaction->getBoletoUrl() ?>';"
-                                id="details">
-                            <?= __("download") ?>
-                        </button>
-                    <?php }); ?>
-                </td>
+                <?php if ($block->getSubscriptionPaymentMethod() == 'boleto') :?>
+                    <td>
+                        <?php if (!empty($item->getBoletoLink())):?>
+                            <button onclick="location.href = '<?= $item->getBoletoLink() ?>';"
+                                    id="details">
+                                <?= __("download") ?>
+                            </button>
+                        <?php endif;?>
+                    </td>
+                <?php endif;?>
             </tr>
         <?php endforeach; ?>
         </tbody>

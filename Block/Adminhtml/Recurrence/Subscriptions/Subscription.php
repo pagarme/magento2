@@ -7,7 +7,6 @@ use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
 use Magento\Framework\Registry;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
-use Mundipagg\Core\Recurrence\ValueObjects\DiscountValueObject;
 use Mundipagg\Core\Recurrence\ValueObjects\IntervalValueObject;
 
 class Subscription extends Template
@@ -16,10 +15,6 @@ class Subscription extends Template
      * @var CollectionFactory
      */
     private $productCollectionFactory;
-    /**
-     * @var ProductHelper
-     */
-    private $productHelper;
     /**
      * @var Registry
      */
@@ -98,10 +93,6 @@ class Subscription extends Template
             'interval_type' => [
                 IntervalValueObject::INTERVAL_TYPE_MONTH => __('month'),
                 IntervalValueObject::INTERVAL_TYPE_YEAR => __('year')
-            ],
-            'discount' => [
-                DiscountValueObject::DISCOUNT_TYPE_PERCENT => __('percentage'),
-                DiscountValueObject::DISCOUNT_TYPE_FLAT => __('real')
             ]
         ];
     }

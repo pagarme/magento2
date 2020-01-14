@@ -16,6 +16,7 @@ use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
 use Magento\Framework\Registry;
 use Magento\Customer\Model\Session;
+use Mundipagg\Core\Kernel\ValueObjects\Id\SubscriptionId;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 use Mundipagg\Core\Recurrence\Repositories\SubscriptionRepository;
 use Mundipagg\Core\Kernel\Exceptions\InvalidParamException;
@@ -49,6 +50,7 @@ class Invoice extends Template
      * Link constructor.
      * @param Context $context
      * @param CheckoutSession $checkoutSession
+     * @throws InvalidParamException
      */
     public function __construct(
         Context $context,
@@ -72,8 +74,25 @@ class Invoice extends Template
      */
     public function getAllChargesByCodeOrder()
     {
+        $orderCode = $this->coreRegistry->registry('code');
+        $subscriptionId =
+            new SubscriptionId(
+                $orderCode
+            );
+
+        return $this->chargeRepository->findBySubscriptionId($subscriptionId);
+    }
+
+    public function getSubscriptionPaymentMethod()
+    {
         $codeOrder = $this->coreRegistry->registry('code');
-        return $this->chargeRepository->findByCode($codeOrder);
+
+        $mundipaggId = new SubscriptionId($codeOrder);
+        $subscription = $this->subscriptionRepository->findByMundipaggId($mundipaggId);
+        if (!$subscription) {
+            return null;
+        }
+        return $subscription->getPaymentMethod();
     }
 
     /**
@@ -89,7 +108,7 @@ class Invoice extends Template
         /* @var string[] $listSubscriptionCode */
         $listSubscriptionCode = [];
         foreach ($subscriptionList as $subscription) {
-            $listSubscriptionCode[] = $subscription->getCode();
+            $listSubscriptionCode[] = $subscription->getMundipaggId()->getValue();
         }
 
         if (!in_array($codeOrder, $listSubscriptionCode)) {

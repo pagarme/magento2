@@ -30,10 +30,10 @@ $i = 0;
         <?php foreach ($block->getAllSubscriptionRecurrenceCoreByCustomerId() as $item) : ?>
             <?php $i++; ?>
             <?php
-                $url = $this->getBaseUrl() . 'mundipagg/customer/invoice/?code='. $item->getCode();
+                $url = $this->getBaseUrl() . 'mundipagg/customer/invoice/?code='. $item->getMundipaggId()->getValue();
                 $status = $item->getStatus()->getStatus();
                 $recurrenceType = $item->getRecurrenceType();
-                $intervalType = $item->getIntervalType()->getIntervalType();
+                $intervalType = $item->getIntervalType();
             ?>
             <tr>
                 <td><?= $i ?></td>
@@ -42,7 +42,7 @@ $i = 0;
                 <td><?= $item->getInstallments() ?></td>
                 <td><?= __($recurrenceType) ?></td>
                 <td><?= __($intervalType) ?></td>
-                <td><?= $item->getIntervalType()->getIntervalCount() ?></td>
+                <td><?= $item->getIntervalCount() ?></td>
                 <td>
                     <button onclick="location.href = '<?= $url ?>';" id="details">
                         <?= __("View Details") ?>

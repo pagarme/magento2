@@ -9,7 +9,6 @@ use Mundipagg\Core\Recurrence\Services\RecurrenceService;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 use MundiPagg\MundiPagg\Helper\RecurrenceProductHelper;
 
-
 class PaymentMethodAvailable implements ObserverInterface
 {
     /**
@@ -37,22 +36,35 @@ class PaymentMethodAvailable implements ObserverInterface
     public function execute(Observer $observer)
     {
         $quote = $observer->getQuote();
-        $currentMethod = $observer->getEvent()->getMethodInstance()->getCode();
-        $isMundipaggMethod = strpos($currentMethod, "mundipagg");
 
-        if(!$quote || $isMundipaggMethod === false) {
+        if (!$quote) {
             return;
         }
 
-        if (!$this->mundipaggConfig->isEnabled()) {
-            $checkResult = $observer->getEvent()->getResult();
-            $checkResult->setData('is_available', false);
-            return;
+        $recurrenceProduct = $this->getRecurrenceProducts($quote);
+        if (!empty($recurrenceProduct)) {
+
+            $currentMethod = $observer->getEvent()->getMethodInstance()->getCode();
+            $isMundipaggMethod = strpos($currentMethod, "mundipagg");
+
+            if (
+                !$this->mundipaggConfig->isEnabled() ||
+                $isMundipaggMethod === false
+            ) {
+                $checkResult = $observer->getEvent()->getResult();
+                $checkResult->setData('is_available', false);
+                return;
+            }
+
+            $this->switchPaymentMethodsForRecurrence($observer, $recurrenceProduct);
         }
+    }
 
-        $recurrenceProducts = $this->getRecurrenceProducts($quote);
-
+    private function switchPaymentMethodsForRecurrence($observer, $recurrenceProducts)
+    {
         $mundipaggPaymentsMethods = $this->getAvailableConfigMethods();
+        $currentMethod = $observer->getEvent()->getMethodInstance()->getCode();
+
         $methodsAvailable = $this->getAvailableRecurrenceMethods(
             $recurrenceProducts,
             $mundipaggPaymentsMethods
@@ -143,7 +155,7 @@ class PaymentMethodAvailable implements ObserverInterface
             }
 
             if (
-                !empty($this->recurrenceProductHelper->getRepetitionSelected($item))
+                !empty($this->recurrenceProductHelper->getSelectedRepetition($item))
             ) {
                 $recurrenceProducts[] =  $recurrenceProduct;
             }

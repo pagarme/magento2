@@ -6,15 +6,12 @@ use Magento\Checkout\Model\Cart;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Quote\Model\Quote\Item;
 use Mundipagg\Core\Kernel\Abstractions\AbstractModuleCoreSetup as MPSetup;
-use Mundipagg\Core\Recurrence\Aggregates\ProductSubscription;
-use Mundipagg\Core\Recurrence\Repositories\RepetitionRepository;
 use Mundipagg\Core\Recurrence\Services\RecurrenceService;
 use Mundipagg\Core\Recurrence\Services\RepetitionService;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 use Mundipagg\Core\Recurrence\Aggregates\Repetition;
 use Magento\Catalog\Model\Product\Interceptor;
 use MundiPagg\MundiPagg\Helper\RecurrenceProductHelper;
-use Mundipagg\Core\Kernel\Abstractions\AbstractEntity;
 use Magento\Catalog\Model\Product\Option;
 use Magento\Catalog\Api\Data\ProductCustomOptionValuesInterface;
 use Magento\Catalog\Model\Product\Option\Value;
@@ -64,7 +61,7 @@ class CartConflict
     public function beforeAddProduct(
         Cart $cart,
         Interceptor $productInfo,
-        array $requestInfo = null
+        $requestInfo = null
     ) {
         $normalProduct = $this->checkIsNormalProduct($requestInfo);
         if ($normalProduct) {
@@ -87,7 +84,7 @@ class CartConflict
         /* @var Item[] $itemQuoteList */
         $itemQuoteList = $cart->getQuote()->getAllVisibleItems();
         foreach ($itemQuoteList as $item) {
-            $repetitionInCart = $this->recurrenceProductHelper->getRepetitionSelected(
+            $repetitionInCart = $this->recurrenceProductHelper->getSelectedRepetition(
                 $item
             );
 
@@ -122,7 +119,7 @@ class CartConflict
      * @param array $requestInfo
      * @return bool
      */
-    public function checkIsNormalProduct(array $requestInfo)
+    public function checkIsNormalProduct($requestInfo)
     {
         if (!isset($requestInfo['options'])) {
             return true;

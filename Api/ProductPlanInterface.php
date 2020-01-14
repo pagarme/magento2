@@ -10,5 +10,5 @@ interface ProductPlanInterface
      * @param mixed $data
      * @return mixed
      */
-    public function saveProductPlan();
+    public function saveFormData();
 }

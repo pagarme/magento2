@@ -18,7 +18,10 @@ use Magento\Sales\Api\Data\OrderInterface as Order;
 use Magento\Sales\Api\Data\OrderPaymentInterface as Payment;
 use Mundipagg\Core\Kernel\Repositories\OrderRepository;
 use Mundipagg\Core\Kernel\ValueObjects\Id\OrderId;
+use Mundipagg\Core\Kernel\ValueObjects\Id\SubscriptionId;
+use Mundipagg\Core\Recurrence\Repositories\SubscriptionRepository;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use Mundipagg\Core\Recurrence\Repositories\ChargeRepository as SubscriptionChargeRepository;
 
 class Billet extends Template
 {
@@ -74,11 +77,23 @@ class Billet extends Template
         if (strpos($method, "mundipagg_billet") === false) {
             return;
         }
+        $info = $this->getPayment();
 
         $boletoUrl = $this->getPayment()->getAdditionalInformation('billet_url');
 
         Magento2CoreSetup::bootstrap();
-        $info = $this->getPayment();
+        $boletoUrl = $this->getBoletoFromLinkFromOrder($info);
+
+        if (!$boletoUrl) {
+            $boletoUrl = $this->getBoletoLinkFromSubscription($info);
+        }
+
+        return $boletoUrl;
+    }
+
+    private function getBoletoLinkFromOrder($info)
+    {
+
         $lastTransId = $info->getLastTransId();
         $orderId = substr($lastTransId, 0, 19);
 
@@ -97,5 +112,23 @@ class Billet extends Template
         }
 
         return $boletoUrl;
+    }
+
+    private function getBoletoLinkFromSubscription($info)
+    {
+        $subscriptionRepository = new SubscriptionRepository();
+        $subscription = $subscriptionRepository->findByCode($info->getOrder()->getIncrementId());
+
+        $chargeRepository = new SubscriptionChargeRepository();
+        $subscriptionId =
+            new SubscriptionId(
+                $subscription->getMundipaggId()->getValue()
+            );
+
+        $charge = $chargeRepository->findBySubscriptionId($subscriptionId);
+
+        if (!empty($charge[0])) {
+            return $charge[0]->getBoletoLink();
+        }
     }
 }

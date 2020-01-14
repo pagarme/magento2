@@ -11,7 +11,6 @@
 
 namespace MundiPagg\MundiPagg\Gateway\Transaction\Base\Command;
 
-
 use Magento\Payment\Gateway\Helper\SubjectReader;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Api\Data\OrderInterface;
@@ -22,11 +21,15 @@ use Mundipagg\Core\Kernel\Abstractions\AbstractPlatformOrderDecorator;
 use Mundipagg\Core\Kernel\Interfaces\PlatformOrderInterface;
 use Mundipagg\Core\Kernel\Services\OrderLogService;
 use Mundipagg\Core\Kernel\Services\OrderService;
+use Mundipagg\Core\Recurrence\Services\RecurrenceService;
+use Mundipagg\Core\Recurrence\Services\SubscriptionService;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use MundiPagg\MundiPagg\Concrete\Magento2PlatformPaymentMethodDecorator;
 use MundiPagg\MundiPagg\Model\Ui\CreditCard\ConfigProvider;
 use MundiPagg\MundiPagg\Model\Ui\TwoCreditCard\ConfigProvider as TwoCreditCardConfigProvider;
 use Magento\Framework\Phrase;
 use Magento\Framework\Webapi\Exception as M2WebApiException;
+use MundiPagg\MundiPagg\Helper\RecurrenceProductHelper;
 
 class InitializeCommand implements CommandInterface
 {
@@ -89,6 +92,8 @@ class InitializeCommand implements CommandInterface
     private function doCoreDetour($payment)
     {
         $order =  $payment->getOrder();
+        $items = $payment->getOrder()->getItems();
+
         $log = new OrderLogService();
 
         Magento2CoreSetup::bootstrap();
@@ -97,14 +102,22 @@ class InitializeCommand implements CommandInterface
             MPSetup::CONCRETE_PLATFORM_ORDER_DECORATOR_CLASS
         );
 
+        $platformPaymentMethodDecoratorClass = MPSetup::get(
+            MPSetup::CONCRETE_PLATFORM_PAYMENT_METHOD_DECORATOR_CLASS
+        );
+
         /** @var PlatformOrderInterface $orderDecorator */
         $orderDecorator = new $platformOrderDecoratorClass();
         $orderDecorator->setPlatformOrder($order);
 
+        $paymentMethodDecorator = new $platformPaymentMethodDecoratorClass();
+        $paymentMethodDecorator->setPaymentMethod($orderDecorator);
+
+        $orderDecorator->setPaymentMethod($paymentMethodDecorator->getPaymentMethod());
+
         $quote = $orderDecorator->getQuote();
 
         try {
-
             $quoteSuccess = $quote->getCustomerNote();
             if ($quoteSuccess == 'mundipagg-processing') {
                 $log->orderInfo(
@@ -122,20 +135,31 @@ class InitializeCommand implements CommandInterface
                 "Changing status quote to processing."
             );
 
-            $orderService = new OrderService();
-            $orderService->createOrderAtMundipagg($orderDecorator);
+            $subscriptionService = new SubscriptionService();
+            $isSubscription = $subscriptionService->isSubscription($orderDecorator);
+
+            if ($isSubscription) {
+                $subscriptionService->createSubscriptionAtMundipagg($orderDecorator);
+            }
+
+            if (!$isSubscription) {
+                $orderService = new OrderService();
+                $orderService->createOrderAtMundipagg($orderDecorator);
+            }
 
             $orderDecorator->save();
 
             return $orderDecorator;
         } catch (\Exception $e) {
 
-            $quote->setCustomerNote('mundipagg-failed');
+            $quote->setCustomerNote('');
             $quote->save();
 
+            $message = "Order failed, changing status quote to failed. \n";
+            $message .= "Error message: " . $e->getMessage();
             $log->orderInfo(
                 $orderDecorator->getCode(),
-                "Order failed, changing status quote to failed."
+                $message
             );
 
             throw new M2WebApiException(

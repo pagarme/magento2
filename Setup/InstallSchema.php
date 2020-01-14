@@ -33,6 +33,7 @@ class InstallSchema implements InstallSchemaInterface
         $this->installRecurrenceSubscription($setup);
         $this->installRecurrenceCharge($setup);
         $this->installSubProducts($setup);
+        $this->installProductsPlan($setup);
 
         $setup->endSetup();
     }
@@ -656,6 +657,15 @@ class InstallSchema implements InstallSchemaInterface
                     "Active, inactive ou deleted"
                 )
                 ->addColumn(
+                    'trial_period_days',
+                    Table::TYPE_TEXT,
+                    11,
+                    [
+                        'nullable' => true
+                    ],
+                    "Trial period in days"
+                )
+                ->addColumn(
                     'created_at',
                     \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
                     null,
@@ -923,7 +933,7 @@ class InstallSchema implements InstallSchemaInterface
                     Table::TYPE_INTEGER,
                     15,
                     [
-                        'nullable' => false
+                        'nullable' => true
                     ],
                     'Recurrence product price'
                 )
@@ -971,12 +981,12 @@ class InstallSchema implements InstallSchemaInterface
                 )
                 ->addColumn(
                     'customer_id',
-                    Table::TYPE_INTEGER,
+                    Table::TYPE_TEXT,
                     null,
                     [
                         'nullable' => false
                     ],
-                    'Customer session id'
+                    'Customer id'
                 )
                 ->addColumn(
                     'mundipagg_id',
@@ -1025,7 +1035,7 @@ class InstallSchema implements InstallSchemaInterface
                         'unsigned' => true,
                         'nullable' => false,
                     ],
-                    'Method payment'
+                    'Payment method'
                 )
                 ->setOption('charset', 'utf8')
                 ->addColumn(
@@ -1036,7 +1046,7 @@ class InstallSchema implements InstallSchemaInterface
                         'unsigned' => true,
                         'nullable' => false,
                     ],
-                    'Type recurrence can use. plan or not'
+                    'recurrence or plan'
                 )
                 ->setOption('charset', 'utf8')
                 ->addColumn(
@@ -1047,7 +1057,7 @@ class InstallSchema implements InstallSchemaInterface
                         'unsigned' => true,
                         'nullable' => false,
                     ],
-                    'Interval Type can be. day, month, week and year'
+                    'Available values: day, month, week or year'
                 )
                 ->setOption('charset', 'utf8')
                 ->addColumn(
@@ -1067,7 +1077,22 @@ class InstallSchema implements InstallSchemaInterface
                         'nullable' => true
                     ],
                     "Api's id"
-                );
+                )
+                ->addColumn(
+                    'created_at',
+                    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
+                    null,
+                    ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT],
+                    'Created At'
+                )
+                ->addColumn(
+                    'updated_at',
+                    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
+                    null,
+                    ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT_UPDATE],
+                    'Updated At'
+                )
+                ->setOption('charset', 'utf8');
 
             $installer->getConnection()->createTable($configTable);
         }
@@ -1204,7 +1229,7 @@ class InstallSchema implements InstallSchemaInterface
                         'unsigned' => true,
                         'nullable' => false,
                     ],
-                    'Method payment'
+                    'Payment method'
                 )
                 ->setOption('charset', 'utf8')
                 ->addColumn(
@@ -1215,7 +1240,7 @@ class InstallSchema implements InstallSchemaInterface
                         'unsigned' => true,
                         'nullable' => false,
                     ],
-                    'Method payment'
+                    "Boleto's link"
                 )
                 ->setOption('charset', 'utf8')
                 ->addColumn(
@@ -1231,6 +1256,20 @@ class InstallSchema implements InstallSchemaInterface
                     null,
                     ['nullable' => false],
                     'Cycle End'
+                )
+                ->addColumn(
+                    'created_at',
+                    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
+                    null,
+                    ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT],
+                    'Created At'
+                )
+                ->addColumn(
+                    'updated_at',
+                    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
+                    null,
+                    ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT_UPDATE],
+                    'Updated At'
                 )
                 ->setOption('charset', 'utf8');
 

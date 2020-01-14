@@ -34,6 +34,7 @@ PaymentMethodController.prototype.creditcardInit = function () {
     this.hideCardAmount(this.formObject);
     this.fillFormText(this.formObject);
     this.fillSavedCreditCardsSelect(this.formObject);
+    this.fillBrandList();
     this.fillInstallments(this.formObject);
 
     if (!this.platformConfig.isMultibuyerEnabled) {

@@ -32,7 +32,7 @@
 						<item name="indexField" xsi:type="string">id</item>
 					</item>
 					<item name="filter_url_params" xsi:type="array">
-						<item name="code" xsi:type="string">*</item>
+						<item name="subscription_id" xsi:type="string">*</item>
 					</item>
 				</item>
 			</argument>
