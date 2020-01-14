@@ -102,5 +102,12 @@
 				</item>
 			</argument>
 		</column>
+		<actionsColumn name="actions" class="MundiPagg\MundiPagg\Ui\Component\Column\Invoices\Actions">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="indexField" xsi:type="string">id</item>
+				</item>
+			</argument>
+		</actionsColumn>
 	</columns>
 </listing>
