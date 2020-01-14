@@ -50,7 +50,10 @@ class FinalPricePlugin
 
         $installment = null;
         foreach ($list‌cardConfig as $cardConfig) {
-            if ($cardConfig->getBrand()->getName() != 'noBrand' || !$cardConfig->isEnabled()) {
+            if (
+                $cardConfig->getBrand()->getName() != 'noBrand' ||
+                !$cardConfig->isEnabled()
+            ) {
                 continue;
             }
 
