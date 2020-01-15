@@ -12,37 +12,46 @@
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
 
     <route url="/V1/mundipagg/creditcard/installments" method="POST">
-        <service class="MundiPagg\MundiPagg\Api\InstallmentsManagementInterface" method="getInstallments"/>
+        <service class="MundiPagg\MundiPagg\Api\InstallmentsManagementInterface"
+                 method="getInstallments"/>
         <resources>
-            <resource ref="anonymous" />
+            <resource ref="anonymous"/>
         </resources>
     </route>
 
     <route url="/V1/mundipagg/customer/create" method="POST">
-        <service class="MundiPagg\MundiPagg\Api\CustomerCreateManagementInterface" method="createCustomer"/>
+        <service
+                class="MundiPagg\MundiPagg\Api\CustomerCreateManagementInterface"
+                method="createCustomer"/>
         <resources>
-            <resource ref="anonymous" />
+            <resource ref="anonymous"/>
         </resources>
     </route>
 
     <route url="/V1/mundipagg/webhook" method="POST">
-        <service class="MundiPagg\MundiPagg\Api\WebhookManagementInterface" method="save"/>
+        <service class="MundiPagg\MundiPagg\Api\WebhookManagementInterface"
+                 method="save"/>
         <resources>
-            <resource ref="anonymous" />
+            <resource ref="anonymous"/>
         </resources>
     </route>
 
     <route url="/V1/mundipagg/installments/brand/:brand" method="GET">
-        <service class="MundiPagg\MundiPagg\Api\InstallmentsByBrandManagementInterface" method="getInstallmentsByBrand"/>
+        <service
+                class="MundiPagg\MundiPagg\Api\InstallmentsByBrandManagementInterface"
+                method="getInstallmentsByBrand"/>
         <resources>
-            <resource ref="anonymous" />
+            <resource ref="anonymous"/>
         </resources>
     </route>
 
-    <route url="/V1/mundipagg/installments/brandbyamount/:brand/:amount" method="GET">
-        <service class="MundiPagg\MundiPagg\Api\InstallmentsByBrandAndAmountManagementInterface" method="getInstallmentsByBrandAndAmount"/>
+    <route url="/V1/mundipagg/installments/brandbyamount/:brand/:amount"
+           method="GET">
+        <service
+                class="MundiPagg\MundiPagg\Api\InstallmentsByBrandAndAmountManagementInterface"
+                method="getInstallmentsByBrandAndAmount"/>
         <resources>
-            <resource ref="anonymous" />
+            <resource ref="anonymous"/>
         </resources>
     </route>
 
@@ -50,106 +59,120 @@
         <service class="MundiPagg\MundiPagg\Api\MaintenanceInterface"
                  method="index"/>
         <resources>
-            <resource ref="anonymous" />
+            <resource ref="anonymous"/>
         </resources>
     </route>
 
     <!-- Recurrence Apis -->
 
     <route url="/V1/mundipagg/recurrence/product/formData" method="POST">
-        <service class="MundiPagg\MundiPagg\Api\ProductSubscriptionApiInterface" method="saveFormData"/>
+        <service class="MundiPagg\MundiPagg\Api\ProductSubscriptionApiInterface"
+                 method="saveFormData"/>
         <resources>
-            <resource ref="anonymous" />
+            <resource ref="anonymous"/>
         </resources>
     </route>
 
     <route url="/V1/mundipagg/recurrence/plan/product/formData" method="POST">
-        <service class="MundiPagg\MundiPagg\Api\ProductPlanInterface" method="saveFormData"/>
+        <service class="MundiPagg\MundiPagg\Api\ProductPlanInterface"
+                 method="saveFormData"/>
         <resources>
-            <resource ref="anonymous" />
+            <resource ref="anonymous"/>
         </resources>
     </route>
 
     <route url="/V1/mundipagg/recurrence/product" method="POST">
-        <service class="MundiPagg\MundiPagg\Api\ProductSubscriptionApiInterface" method="save"/>
+        <service class="MundiPagg\MundiPagg\Api\ProductSubscriptionApiInterface"
+                 method="save"/>
         <resources>
-            <resource ref="Magento_Catalog::products" />
+            <resource ref="Magento_Catalog::products"/>
         </resources>
     </route>
 
     <route url="/V1/mundipagg/recurrence/product" method="GET">
-        <service class="MundiPagg\MundiPagg\Api\ProductSubscriptionApiInterface" method="list"/>
+        <service class="MundiPagg\MundiPagg\Api\ProductSubscriptionApiInterface"
+                 method="list"/>
         <resources>
-            <resource ref="Magento_Catalog::products" />
+            <resource ref="Magento_Catalog::products"/>
         </resources>
     </route>
     <route url="/V1/mundipagg/recurrence/product/:id" method="GET">
-        <service class="MundiPagg\MundiPagg\Api\ProductSubscriptionApiInterface" method="getProductSubscription"/>
+        <service class="MundiPagg\MundiPagg\Api\ProductSubscriptionApiInterface"
+                 method="getProductSubscription"/>
         <resources>
-            <resource ref="Magento_Catalog::products" />
+            <resource ref="Magento_Catalog::products"/>
         </resources>
     </route>
 
     <route url="/V1/mundipagg/recurrence/product/:id" method="PUT">
-        <service class="MundiPagg\MundiPagg\Api\ProductSubscriptionApiInterface" method="update"/>
+        <service class="MundiPagg\MundiPagg\Api\ProductSubscriptionApiInterface"
+                 method="update"/>
         <resources>
-            <resource ref="Magento_Catalog::products" />
+            <resource ref="Magento_Catalog::products"/>
         </resources>
     </route>
 
     <route url="/V1/mundipagg/recurrence/product/:id" method="DELETE">
-        <service class="MundiPagg\MundiPagg\Api\ProductSubscriptionApiInterface" method="delete"/>
+        <service class="MundiPagg\MundiPagg\Api\ProductSubscriptionApiInterface"
+                 method="delete"/>
         <resources>
-            <resource ref="Magento_Catalog::products" />
+            <resource ref="Magento_Catalog::products"/>
         </resources>
     </route>
 
     <route url="/V1/mundipagg/recurrence/subscription" method="GET">
-        <service class="MundiPagg\MundiPagg\Api\SubscriptionApiInterface" method="list"/>
+        <service class="MundiPagg\MundiPagg\Api\SubscriptionApiInterface"
+                 method="list"/>
         <resources>
-            <resource ref="Magento_Sales::sales" />
+            <resource ref="Magento_Sales::sales"/>
         </resources>
     </route>
 
     <route url="/V1/mundipagg/recurrence/subscription/cancel/:id" method="POST">
-        <service class="MundiPagg\MundiPagg\Api\SubscriptionApiInterface" method="cancel"/>
+        <service class="MundiPagg\MundiPagg\Api\SubscriptionApiInterface"
+                 method="cancel"/>
         <resources>
-            <resource ref="Magento_Sales::sales" />
+            <resource ref="Magento_Sales::sales"/>
         </resources>
     </route>
 
     <route url="/V1/mundipagg/recurrence/plan/product" method="POST">
-        <service class="MundiPagg\MundiPagg\Api\ProductPlanApiInterface" method="save"/>
+        <service class="MundiPagg\MundiPagg\Api\ProductPlanApiInterface"
+                 method="save"/>
         <resources>
-            <resource ref="anonymous" />
+            <resource ref="Magento_Catalog::products"/>
         </resources>
     </route>
 
     <route url="/V1/mundipagg/recurrence/plan/product/:id" method="PUT">
-        <service class="MundiPagg\MundiPagg\Api\ProductPlanApiInterface" method="update"/>
+        <service class="MundiPagg\MundiPagg\Api\ProductPlanApiInterface"
+                 method="update"/>
         <resources>
-            <resource ref="anonymous" />
+            <resource ref="Magento_Catalog::products"/>
         </resources>
     </route>
 
     <route url="/V1/mundipagg/recurrence/plan/product" method="GET">
-        <service class="MundiPagg\MundiPagg\Api\ProductPlanApiInterface" method="list"/>
+        <service class="MundiPagg\MundiPagg\Api\ProductPlanApiInterface"
+                 method="list"/>
         <resources>
-            <resource ref="anonymous" />
+            <resource ref="Magento_Catalog::products"/>
         </resources>
     </route>
 
     <route url="/V1/mundipagg/recurrence/plan/product/:id" method="GET">
-        <service class="MundiPagg\MundiPagg\Api\ProductPlanApiInterface" method="find"/>
+        <service class="MundiPagg\MundiPagg\Api\ProductPlanApiInterface"
+                 method="find"/>
         <resources>
-            <resource ref="anonymous" />
+            <resource ref="Magento_Catalog::products"/>
         </resources>
     </route>
 
     <route url="/V1/mundipagg/recurrence/plan/product/:id" method="DELETE">
-        <service class="MundiPagg\MundiPagg\Api\ProductPlanApiInterface" method="delete"/>
+        <service class="MundiPagg\MundiPagg\Api\ProductPlanApiInterface"
+                 method="delete"/>
         <resources>
-            <resource ref="anonymous" />
+            <resource ref="Magento_Catalog::products"/>
         </resources>
     </route>
 
