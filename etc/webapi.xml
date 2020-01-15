@@ -125,4 +125,33 @@
         </resources>
     </route>
 
+    <route url="/V1/mundipagg/recurrence/plan/product/:id" method="PUT">
+        <service class="MundiPagg\MundiPagg\Api\ProductPlanApiInterface" method="update"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+
+    <route url="/V1/mundipagg/recurrence/plan/product" method="GET">
+        <service class="MundiPagg\MundiPagg\Api\ProductPlanApiInterface" method="list"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+
+    <route url="/V1/mundipagg/recurrence/plan/product/:id" method="GET">
+        <service class="MundiPagg\MundiPagg\Api\ProductPlanApiInterface" method="find"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+
+    <route url="/V1/mundipagg/recurrence/plan/product/:id" method="DELETE">
+        <service class="MundiPagg\MundiPagg\Api\ProductPlanApiInterface" method="delete"/>
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
+
+
 </routes>
