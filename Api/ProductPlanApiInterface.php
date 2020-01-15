@@ -7,16 +7,16 @@ use Mundipagg\Core\Recurrence\Interfaces\ProductPlanInterface;
 interface ProductPlanApiInterface
 {
     /**
-     * Save product subscription
+     * Save product plan
      *
      * @param ProductPlanInterface $productPlan
      * @param int $id
-     * @return ProductPlanInterface|array
+     * @return \Mundipagg\Core\Recurrence\Interfaces\ProductPlanInterface|array
      */
     public function save(ProductPlanInterface $productPlan, $id = null);
 
     /**
-     * Save product subscription
+     * Save product plan
      *
      * @param array $form
      * @param int $id
@@ -25,34 +25,34 @@ interface ProductPlanApiInterface
     public function saveFormData();
 
     /**
-     * List product subscription
+     * List product plan
      *
-     * @return ProductPlanInterface[]
+     * @return \Mundipagg\Core\Recurrence\Interfaces\ProductPlanInterface[]|array
      */
     public function list();
 
     /**
-     * Update product subscription
+     * Update product plan
      *
      * @param int $id
-     * @param ProductPlanInterface $productSubscription
-     * @return ProductPlanInterface|array
+     * @param ProductPlanInterface $productPlan
+     * @return \Mundipagg\Core\Recurrence\Interfaces\ProductPlanInterface|array
      */
-    public function update($id, ProductPlanInterface $productSubscription);
+    public function update($id, ProductPlanInterface $productPlan);
 
     /**
-     * Get a product subscription
+     * Get a product plan
      *
      * @param int $id
-     * @return ProductPlanInterface
+     * @return \Mundipagg\Core\Recurrence\Interfaces\ProductPlanInterface|array
      */
-    public function getProductSubscription($id);
+    public function find($id);
 
     /**
-     * Delete product subscription
+     * Delete product plan
      *
      * @param int $id
-     * @return mixed
+     * @return \Mundipagg\Core\Recurrence\Interfaces\ProductPlanInterface|array
      */
     public function delete($id);
 
