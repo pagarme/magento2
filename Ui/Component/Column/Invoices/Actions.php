@@ -63,21 +63,23 @@ class Actions extends Column
 
     protected function getActions($name, $item)
     {
+        if ($item['status']->getText() != 'canceled') {
+            $actions[$name]['delete'] = [
+                'href' => $this->getUrlMundipaggDelete($item, self::URL_PATH_DELETE),
+                'label' => __('Cancel'),
+                'confirm' => [
+                    'title' => __('Confirm action'),
+                    'message' => __('Are you sure you want to cancel this item?')
+                ]
+            ];
+            return $actions;
+        }
+
         $actions[$name]['noaction'] = [
             'label' => '---',
             'href' => '#'
         ];
 
-        if ($item['status']->getText() != 'canceled') {
-            $actions[$name]['delete'] = [
-                'href' => $this->getUrlMundipaggDelete($item, self::URL_PATH_DELETE),
-                'label' => __('Disable'),
-                'confirm' => [
-                    'title' => __('Confirm action'),
-                    'message' => __('Are you sure you want to disabled this item?')
-                ]
-            ];
-        }
         return $actions;
     }
 
