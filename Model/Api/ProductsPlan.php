@@ -3,15 +3,20 @@
 namespace MundiPagg\MundiPagg\Model\Api;
 
 use Magento\TestFramework\Event\Magento;
-use MundiPagg\MundiPagg\Api\ProductPlanInterface;
+use Magento\Framework\App\ObjectManager;
+use Magento\Framework\Webapi\Exception as MagentoException;
 use Magento\Framework\Webapi\Rest\Request;
+use Mundipagg\Core\Kernel\Services\MoneyService;
+use Mundipagg\Core\Recurrence\ValueObjects\PricingSchemeValueObject as PricingScheme;
 use Mundipagg\Core\Recurrence\Services\PlanService;
+use Mundipagg\Core\Recurrence\Aggregates\Plan;
+use Mundipagg\Core\Recurrence\Interfaces\ProductPlanInterface;
+use Mundipagg\Core\Recurrence\Factories\PlanFactory;
+use MundiPagg\MundiPagg\Api\ProductPlanApiInterface;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 use MundiPagg\MundiPagg\Concrete\Magento2PlatformProductDecorator;
-use Magento\Framework\App\ObjectManager;
-use MundiPagg\MundiPagg\Api\ProductPlanApiInterface;
 use MundiPagg\MundiPagg\Helper\ProductHelper;
-use Mundipagg\Core\Recurrence\Aggregates\SubProduct;
+use MundiPagg\MundiPagg\Helper\ProductPlanHelper;
 
 class ProductsPlan implements ProductPlanApiInterface
 {
@@ -20,9 +25,15 @@ class ProductsPlan implements ProductPlanApiInterface
      */
     protected $request;
 
+    /**
+     * @var PlanService
+     */
+    private $planService;
+
     public function __construct(Request $request)
     {
         $this->request = $request;
+        $this->planService = new PlanService();
         Magento2CoreSetup::bootstrap();
     }
     /**
@@ -37,6 +48,7 @@ class ProductsPlan implements ProductPlanApiInterface
         parse_str($post[0], $params);
 
         $form = $this->gerFormattedForm($params['form']);
+        $form['status'] = 'ACTIVE';
 
         if (empty($form)) {
             return json_encode([
@@ -54,7 +66,9 @@ class ProductsPlan implements ProductPlanApiInterface
 
         try {
             $planService = new PlanService();
-            $planService->save($form);
+            $planObject = (new PlanFactory())->createFromPostData($form);
+
+            $planService->save($planObject);
         } catch (\Exception $exception) {
             return json_encode([
                 'code' => 404,
@@ -89,75 +103,130 @@ class ProductsPlan implements ProductPlanApiInterface
         return $form;
     }
 
-    public function save(\Mundipagg\Core\Recurrence\Interfaces\ProductPlanInterface $productPlan, $id = null)
+    /**
+     * Save product subscription
+     *
+     * @param ProductPlanInterface $productPlan
+     * @param int $id
+     * @return ProductPlanInterface
+     */
+    public function save(ProductPlanInterface $productPlan, $id = null)
     {
-        /**
-         * @var SubProduct[] $subProductList
-         */
-        $subProductList = $productPlan->getItems();
-        $objectManager = ObjectManager::getInstance();
-        $product =
-            $objectManager
-                ->create('Magento\Catalog\Model\Product')
-                ->load(2053);
+        try {
+            ProductPlanHelper::mapperProductPlan($productPlan);
+            $productPlan->setStatus('ACTIVE');
 
-      //  $product1 = $product;
-        $typeInstance = $objectManager->get('Magento\Bundle\Model\Product\Type');
-        $selections = $typeInstance->getSelectionsCollection(
-            $typeInstance->getOptionsIds($product),
-            $product
-        );
-
-        foreach ($selections as $index => $selection) {
-            
+            $this->planService->save($productPlan);
+        } catch (\Exception $exception) {
+            throw new MagentoException(
+                __($exception->getMessage()),
+                0,
+                $exception->getCode()
+            );
         }
 
-
-
-
-        $subProductIdList = array_map(function(SubProduct $subProduct) {
-          return $subProduct->getProductId();
-        }, $subProductList);
-
-
-        $productHelper = new ProductHelper();
-        $rr = $productHelper->getProductList($subProductIdList);
-
-
-      //  $this->createPlanAtMundipagg($plan);
-       // $planRepository->save($plan);
-
-        $planService = new PlanService();
-        $planService->create($params['form']);
-
-       // $planService->createPlanAtMundipagg($productPlan);
-
-      //  $x = $productPlan->getProductId();
-        // TODO: Implement save() method.
+        return $productPlan;
     }
 
-    public function saveFormData()
-    {
-        // TODO: Implement saveFormData() method.
-    }
-
+    /**
+     * @return ProductPlanInterface[]
+     */
     public function list()
     {
-        // TODO: Implement list() method.
+        try {
+            $products = $this->planService->findAll();
+
+            if (empty($products)) {
+                throw new \Exception('List Product plan not found', 404);
+            }
+
+            return $products;
+        } catch (\Exception $exception) {
+            throw new MagentoException(
+                __($exception->getMessage()),
+                0,
+                $exception->getCode()
+            );
+        }
     }
 
-    public function update($id, \Mundipagg\Core\Recurrence\Interfaces\ProductPlanInterface $productSubscription)
+    /**
+     * @param int $id
+     * @param ProductPlanInterface $productPlan
+     * @return ProductPlanInterface
+     */
+    public function update($id, ProductPlanInterface $productPlan)
     {
-        // TODO: Implement update() method.
+        try {
+            $productPlan->setStatus('ACTIVE');
+            $productPlan->setId($id);
+
+            $planOriginal = $this->planService->findById($id);
+
+            if (empty($planOriginal)) {
+                throw new \Exception('Plan not found', 404);
+            }
+
+            ProductPlanHelper::mapperProductPlanUpdate($planOriginal, $productPlan);
+
+            $this->planService->save($planOriginal);
+        } catch (\Exception $exception) {
+            throw new MagentoException(
+                __($exception->getMessage()),
+                0,
+                $exception->getCode()
+            );
+        }
+
+        return $planOriginal;
     }
 
-    public function getProductSubscription($id)
+    /**
+     * @param int $id
+     * @return ProductPlanInterface
+     * @throws \Exception
+     */
+    public function find($id)
     {
-        // TODO: Implement getProductSubscription() method.
+        try {
+            $plan = $this->planService->findById($id);
+
+            if (empty($plan)) {
+                throw new \Exception('Product plan not found', 400);
+            }
+
+            return $plan;
+        } catch (\Exception $exception) {
+            throw new MagentoException(
+                __($exception->getMessage()),
+                0,
+                $exception->getCode()
+            );
+        }
     }
 
+    /**
+     * @param int $id
+     * @return Plan
+     */
     public function delete($id)
     {
-        // TODO: Implement delete() method.
+        try {
+            $productData = $this->planService->findById($id);
+
+            if (!$productData || !$productData->getId()) {
+                throw new \Exception('Product plan not found', 404);
+            }
+
+            $this->planService->delete($id);
+
+            return $productData;
+        } catch (\Exception $exception) {
+            throw new MagentoException(
+                __($exception->getMessage()),
+                0,
+                $exception->getCode()
+            );
+        }
     }
 }
