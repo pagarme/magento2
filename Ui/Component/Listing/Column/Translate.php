@@ -26,6 +26,15 @@ class Translate extends Column
         $fieldName = $this->getData('name');
         foreach ($dataSource['data']['items'] as &$item) {
             $item[$fieldName] = __($item[$fieldName]);
+
+            if ($fieldName != 'installments') {
+                continue;
+            }
+            $item[$fieldName] = __('No');
+
+            if ($item[$fieldName]) {
+                $item[$fieldName] = __('Yes');
+            }
         }
 
         return $dataSource;

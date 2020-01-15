@@ -51,7 +51,10 @@ class Actions extends Column
             foreach ($dataSource['data']['items'] as &$item) {
                 $name = $this->getData('name');
                 $actions = $this->getActions($name, $item);
-                $item = array_merge($item, $actions);
+
+                if ($actions) {
+                    $item = array_merge($item, $actions);
+                }
 
             }
         }
@@ -60,6 +63,10 @@ class Actions extends Column
 
     protected function getActions($name, $item)
     {
+        $actions[$name]['noaction'] = [
+            'label' => '---',
+            'href' => '#'
+        ];
 
         if ($item['status']->getText() != 'canceled') {
             $actions[$name]['delete'] = [
@@ -71,7 +78,6 @@ class Actions extends Column
                 ]
             ];
         }
-
         return $actions;
     }
 
