@@ -435,7 +435,8 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
     {
         $options = [
             'enabled' => 'active',
-            'checkoutConflictMessage' => 'conflict_message'
+            'checkoutConflictMessage' => 'conflict_message',
+            'showRecurrenceCurrencyWidget' => 'show_recurrence_currency_widget'
         ];
 
         $section = 'mundipagg_mundipagg/recurrence/';
