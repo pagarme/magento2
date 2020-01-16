@@ -9,7 +9,6 @@ use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 
 class Invoice implements InvoiceApiInterface
 {
-
     /**
      * @var Request
      */

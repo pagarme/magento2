@@ -509,4 +509,7 @@
     <preference for="MundiPagg\MundiPagg\Api\SubscriptionApiInterface" type="MundiPagg\MundiPagg\Model\Api\Subscription" />
     <preference for="MundiPagg\MundiPagg\Api\InvoiceApiInterface" type="MundiPagg\MundiPagg\Model\Api\Invoice" />
 
+    <preference for="MundiPagg\MundiPagg\Api\ProductPlanApiInterface" type="MundiPagg\MundiPagg\Model\Api\ProductsPlan" />
+    <preference for="Mundipagg\Core\Recurrence\Interfaces\ProductPlanInterface" type="Mundipagg\Core\Recurrence\Aggregates\Plan" />
+
 </config>
