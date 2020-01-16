@@ -9,7 +9,13 @@
 			<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
 			<config_path>mundipagg_mundipagg/recurrence/active</config_path>
 		</field>
-		<field id="conflict_message" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="textarea">
+		<field id="show_recurrence_currency_widget" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="21" translate="label" type="select">
+			<label>Show Recurrence Currency Widget</label>
+			<comment />
+			<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+			<config_path>mundipagg_mundipagg/recurrence/show_recurrence_currency_widget</config_path>
+		</field>
+		<field id="conflict_message" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="22" translate="label" type="textarea">
 			<label>Conflict checkout Message</label>
 			<comment />
 			<config_path>mundipagg_mundipagg/recurrence/conflict_message</config_path>
