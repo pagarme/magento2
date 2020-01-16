@@ -48,7 +48,25 @@
 				</item>
 			</argument>
 		</column>
-		<column name="amount" class="MundiPagg\MundiPagg\Ui\Component\Listing\Column\BrazilCurrency">>
+		<column name="invoice_id">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="filter" xsi:type="string">textRange</item>
+					<item name="sorting" xsi:type="string">asc</item>
+					<item name="label" xsi:type="string" translate="true">Invoice Id</item>
+				</item>
+			</argument>
+		</column>
+		<column name="payment_method" class="MundiPagg\MundiPagg\Ui\Component\Listing\Column\Translate">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="filter" xsi:type="string">textRange</item>
+					<item name="sorting" xsi:type="string">asc</item>
+					<item name="label" xsi:type="string" translate="true">Payment Method</item>
+				</item>
+			</argument>
+		</column>
+		<column name="amount" class="MundiPagg\MundiPagg\Ui\Component\Listing\Column\BrazilCurrency">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
 					<item name="filter" xsi:type="string">textRange</item>
@@ -57,7 +75,7 @@
 				</item>
 			</argument>
 		</column>
-		<column name="paid_amount" class="MundiPagg\MundiPagg\Ui\Component\Listing\Column\BrazilCurrency">>
+		<column name="paid_amount" class="MundiPagg\MundiPagg\Ui\Component\Listing\Column\BrazilCurrency">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
 					<item name="filter" xsi:type="string">textRange</item>
@@ -66,7 +84,7 @@
 				</item>
 			</argument>
 		</column>
-		<column name="canceled_amount" class="MundiPagg\MundiPagg\Ui\Component\Listing\Column\BrazilCurrency">>
+		<column name="canceled_amount" class="MundiPagg\MundiPagg\Ui\Component\Listing\Column\BrazilCurrency">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
 					<item name="filter" xsi:type="string">textRange</item>
@@ -75,7 +93,7 @@
 				</item>
 			</argument>
 		</column>
-		<column name="refunded_amount" class="MundiPagg\MundiPagg\Ui\Component\Listing\Column\BrazilCurrency">>
+		<column name="refunded_amount" class="MundiPagg\MundiPagg\Ui\Component\Listing\Column\BrazilCurrency">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
 					<item name="filter" xsi:type="string">textRange</item>
@@ -93,7 +111,7 @@
 				</item>
 			</argument>
 		</column>
-		<column name="tran_boleto_url">
+		<column name="tran_boleto_url" class="MundiPagg\MundiPagg\Ui\Component\Column\Invoices\Boleto">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
 					<item name="filter" xsi:type="string">textRange</item>
@@ -102,5 +120,12 @@
 				</item>
 			</argument>
 		</column>
+		<actionsColumn name="actions" class="MundiPagg\MundiPagg\Ui\Component\Column\Invoices\Actions">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="indexField" xsi:type="string">id</item>
+				</item>
+			</argument>
+		</actionsColumn>
 	</columns>
 </listing>
