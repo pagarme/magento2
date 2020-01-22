@@ -8,6 +8,7 @@ use Mundipagg\Core\Kernel\Services\MoneyService;
 use Mundipagg\Core\Recurrence\Aggregates\ProductSubscription;
 use Mundipagg\Core\Recurrence\Aggregates\Repetition;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use Magento\Framework\App\ObjectManager;
 
 class ProductSubscriptionHelper extends AbstractHelper
 {
