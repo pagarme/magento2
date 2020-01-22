@@ -510,9 +510,20 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 
             $productType = $quoteItem->getProductType();
 
-            if ($price === null || $productType == 'bundle') {
+            if ($price === null) {
                 continue;
             }
+
+            /**
+             * Bundle product
+             */
+            if (
+                !empty($quoteItem->getParentItemId()) &&
+                $quoteItem->getProductType() === 'simple'
+            ) {
+                continue;
+            }
+
             $item = new Item;
             $item->setAmount(
                 $moneyService->floatToCents($price)
