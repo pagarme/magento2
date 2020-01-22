@@ -89,4 +89,18 @@ class Config extends AbstractConfig implements ConfigInterface
     {
         return $this->getConfig(static::PATH_CUSTOMER_DISTRICT);
     }
+
+    /**
+     * @return bool
+     */
+    public function isSendEmail()
+    {
+        $sendEmail = $this->getConfig(static::PATH_SEND_EMAIL);
+
+        if ($sendEmail == '1') {
+            return true;
+        }
+
+        return false;
+    }
 }

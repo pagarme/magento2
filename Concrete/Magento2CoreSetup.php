@@ -230,7 +230,8 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
     {
         $options = [
             'enabled' => 'active',
-            'testMode' => 'test_mode'
+            'testMode' => 'test_mode',
+            'sendMail' => 'sendmail'
         ];
 
         $section = 'mundipagg_mundipagg/global/';

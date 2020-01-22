@@ -288,3 +288,5 @@
 "Create Plan"
 "until %1x"
 "From %1 per month or "
+"Send order status changes by e-mail", "Send order status changes by e-mail"
+"Send an e-mail every time when an order status is changed by a Mundipagg's webhook. <p><strong style='color:red'>Warning!</strong> Make sure you have set up your mail server correctly before enable it, otherwise you will run the risk of slowdowns and crashes of your platform.</p>", "Send an e-mail every time when an order status is changed by a Mundipagg's webhook. <p><strong style='color:red'>Warning!</strong> Make sure you have set up your mail server correctly before enable it, otherwise you will run the risk of slowdowns and crashes of your platform.</p>"
