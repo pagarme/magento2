@@ -164,8 +164,8 @@ $quantityOptionCicle = 4;
                                                     <td>
                                                         <select class="admin__control-select" name="form[repetitions][<?php echo $i ?>][interval]" id="interval_<?php echo $i ?>">
                                                             <option value="">Select Type</option>
-                                                            <?php foreach ($cicleSelectOption['interval_type'] as $intervalType) : ?>
-                                                                <option><?= $intervalType ?></option>
+                                                            <?php foreach ($cicleSelectOption['interval_type'] as $key => $intervalType) : ?>
+                                                                <option value="<?= $key ?>"><?= $intervalType ?></option>
                                                             <?php endforeach; ?>
                                                         </select>
                                                     </td>
