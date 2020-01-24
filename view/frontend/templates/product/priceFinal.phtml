@@ -22,14 +22,7 @@ $finalPriceModel = $block->getPriceType('final_price');
 $idSuffix = $block->getIdSuffix() ? $block->getIdSuffix() : '';
 $schema = ($block->getZone() == 'item_view') ? true : false;
 ?>
-<span style="white-space: nowrap;">
-    <?php
-    $priceRecurrence = \MundiPagg\MundiPagg\Plugin\Princing\Render\FinalPricePlugin::getPriceRecurrence($productId);
-    if(!is_null($priceRecurrence)) {
-        echo "<b>".__('From %1 per month or ', $priceRecurrence)."</b>";
-    }
-    ?>
-</span>
+
 <?php if ($block->hasSpecialPrice()) : ?>
     <span class="special-price">
         <?php /* @escapeNotVerified */ echo $block->renderAmount($finalPriceModel->getAmount(), [
@@ -39,14 +32,6 @@ $schema = ($block->getZone() == 'item_view') ? true : false;
             'include_container' => true,
             'schema' => $schema
         ]); ?>
-        <span class="price">
-            <?php
-                $installments = \MundiPagg\MundiPagg\Plugin\Princing\Render\FinalPricePlugin::getMaxInstallments();
-                if (!is_null($installments)) {
-                    echo __('until %1x', $installments);
-                }
-            ?>
-        </span>
     </span>
     <span class="old-price">
         <?php /* @escapeNotVerified */ echo $block->renderAmount($priceModel->getAmount(), [
@@ -64,14 +49,6 @@ $schema = ($block->getZone() == 'item_view') ? true : false;
         'include_container' => true,
         'schema' => $schema
     ]); ?>
-    <span class="price">
-        <?php
-            $installments = \MundiPagg\MundiPagg\Plugin\Princing\Render\FinalPricePlugin::getMaxInstallments();
-            if (!is_null($installments)) {
-                echo __('until %1x', $installments);
-            }
-        ?>
-    </span>
 <?php endif; ?>
 
 <?php if ($block->showMinimalPrice()) : ?>
@@ -85,3 +62,11 @@ $schema = ($block->getZone() == 'item_view') ? true : false;
         </span>
     <?php endif?>
 <?php endif; ?>
+<div>
+    <?php
+        $priceRecurrence = \MundiPagg\MundiPagg\Plugin\Princing\Render\FinalPricePlugin::getPriceRecurrence($productId);
+        if(!is_null($priceRecurrence)) {
+            echo "<b>".__('Or %1 per month', $priceRecurrence)."</b>";
+        }
+    ?>
+</div>
