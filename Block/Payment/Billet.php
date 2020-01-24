@@ -82,7 +82,7 @@ class Billet extends Template
         $boletoUrl = $this->getPayment()->getAdditionalInformation('billet_url');
 
         Magento2CoreSetup::bootstrap();
-        $boletoUrl = $this->getBoletoFromLinkFromOrder($info);
+        $boletoUrl = $this->getBoletoLinkFromOrder($info);
 
         if (!$boletoUrl) {
             $boletoUrl = $this->getBoletoLinkFromSubscription($info);
@@ -93,9 +93,12 @@ class Billet extends Template
 
     private function getBoletoLinkFromOrder($info)
     {
-
         $lastTransId = $info->getLastTransId();
         $orderId = substr($lastTransId, 0, 19);
+
+        if (!$orderId) {
+            return null;
+        }
 
         $orderRepository = new OrderRepository();
         $order = $orderRepository->findByMundipaggId(new OrderId($orderId));
@@ -119,6 +122,10 @@ class Billet extends Template
         $subscriptionRepository = new SubscriptionRepository();
         $subscription = $subscriptionRepository->findByCode($info->getOrder()->getIncrementId());
 
+        if (!$subscription) {
+            return null;
+        }
+
         $chargeRepository = new SubscriptionChargeRepository();
         $subscriptionId =
             new SubscriptionId(
@@ -128,7 +135,9 @@ class Billet extends Template
         $charge = $chargeRepository->findBySubscriptionId($subscriptionId);
 
         if (!empty($charge[0])) {
-            return $charge[0]->getBoletoLink();
+            return $charge[0]->getBoletoUrl();
         }
+
+        return null;
     }
 }

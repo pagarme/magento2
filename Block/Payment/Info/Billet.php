@@ -56,7 +56,7 @@ class Billet extends Info
         Magento2CoreSetup::bootstrap();
         $info = $this->getInfo();
 
-        $boletoUrl = $this->getBoletoFromLinkFromOrder($info);
+        $boletoUrl = $this->getBoletoLinkFromOrder($info);
 
         if (!$boletoUrl) {
             $boletoUrl = $this->getBoletoLinkFromSubscription($info);
@@ -69,6 +69,10 @@ class Billet extends Info
     {
         $lastTransId = $info->getLastTransId();
         $orderId = substr($lastTransId, 0, 19);
+
+        if (!$orderId) {
+            return null;
+        }
 
         $orderRepository = new OrderRepository();
         $order = $orderRepository->findByMundipaggId(new OrderId($orderId));
@@ -91,6 +95,10 @@ class Billet extends Info
     {
         $subscriptionRepository = new SubscriptionRepository();
         $subscription = $subscriptionRepository->findByCode($info->getOrder()->getIncrementId());
+
+        if (!$subscription) {
+            return null;
+        }
 
         $chargeRepository = new SubscriptionChargeRepository();
         $subscriptionId =
