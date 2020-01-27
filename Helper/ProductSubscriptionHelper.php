@@ -165,9 +165,16 @@ class ProductSubscriptionHelper extends AbstractHelper
         return $values;
     }
 
+    /**
+     * @param Repetition $repetition
+     * @return string
+     * @throws \Mundipagg\Core\Kernel\Exceptions\InvalidParamException
+     */
     public function getCycleTitle(Repetition $repetition)
     {
-        $intervalLabel = $this->tryFindDictionaryEventCustomOptionsProductSubscription($repetition);
+        $intervalLabel = $this->tryFindDictionaryEventCustomOptionsProductSubscription(
+            $repetition
+        );
 
         if ($repetition->getRecurrencePrice() <= 0) {
             return $intervalLabel;
@@ -177,6 +184,13 @@ class ProductSubscriptionHelper extends AbstractHelper
             $repetition->getRecurrencePrice()
         );
 
-        return $intervalLabel . " - (Total: R$ {$totalAmount})";
+        $numberFormatter = new \NumberFormatter(
+            'pt-BR',
+            \NumberFormatter::CURRENCY
+        );
+
+        $totalAmount = $numberFormatter->format($totalAmount);
+
+        return $intervalLabel . " - ({$totalAmount})";
     }
 }
