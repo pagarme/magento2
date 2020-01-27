@@ -77,7 +77,11 @@ define(
 
                 var baseUrl = platFormConfig.payment.ccform.base_url;
 
-                if (quote.billingAddress().vatId == "") {
+                if (
+                    quote.billingAddress() &&
+                    typeof quote.billingAddress() != "undefined" &&
+                    quote.billingAddress().vatId == ""
+                ) {
                     quote.billingAddress().vatId = platFormConfig.customerData.taxvat
                 }
 
