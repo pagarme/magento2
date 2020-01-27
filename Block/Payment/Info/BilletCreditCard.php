@@ -15,6 +15,9 @@ use Magento\Payment\Block\Info\Cc;
 
 use Mundipagg\Core\Kernel\Repositories\OrderRepository;
 use Mundipagg\Core\Kernel\ValueObjects\Id\OrderId;
+use Mundipagg\Core\Kernel\ValueObjects\Id\SubscriptionId;
+use Mundipagg\Core\Recurrence\Repositories\ChargeRepository as SubscriptionChargeRepository;
+use Mundipagg\Core\Recurrence\Repositories\SubscriptionRepository;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 
 class BilletCreditCard extends Cc
@@ -77,7 +80,11 @@ class BilletCreditCard extends Cc
             return;
         }
 
-        $boletoUrl = $this->getInfo()->getAdditionalInformation('billet_url');
+        $boletoUrl = $this->getBoletoLinkFromOrder($info);
+
+        if (!$boletoUrl) {
+            $boletoUrl = $this->getBoletoLinkFromSubscription($info);
+        }
 
         Magento2CoreSetup::bootstrap();
         $info = $this->getInfo();
@@ -114,5 +121,53 @@ class BilletCreditCard extends Cc
     public function getBilletAmount()
     {
         return $this->getInfo()->getAdditionalInformation('cc_billet_amount');
+    }
+
+    private function getBoletoLinkFromOrder($info)
+    {
+        $lastTransId = $info->getLastTransId();
+        $orderId = substr($lastTransId, 0, 19);
+
+        if (!$orderId) {
+            return null;
+        }
+
+        $orderRepository = new OrderRepository();
+        $order = $orderRepository->findByMundipaggId(new OrderId($orderId));
+
+        if ($order !== null) {
+            $charges = $order->getCharges();
+            foreach ($charges as $charge) {
+                $transaction = $charge->getLastTransaction();
+                $savedBoletoUrl = $transaction->getBoletoUrl();
+                if ($savedBoletoUrl !== null) {
+                    $boletoUrl = $savedBoletoUrl;
+                }
+            }
+        }
+
+        return $boletoUrl;
+    }
+
+    private function getBoletoLinkFromSubscription($info)
+    {
+        $subscriptionRepository = new SubscriptionRepository();
+        $subscription = $subscriptionRepository->findByCode($info->getOrder()->getIncrementId());
+
+        if (!$subscription) {
+            return null;
+        }
+
+        $chargeRepository = new SubscriptionChargeRepository();
+        $subscriptionId =
+            new SubscriptionId(
+                $subscription->getMundipaggId()->getValue()
+            );
+
+        $charge = $chargeRepository->findBySubscriptionId($subscriptionId);
+
+        if (!empty($charge[0])) {
+            return $charge[0]->getBoletoLink();
+        }
     }
 }
