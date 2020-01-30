@@ -175,7 +175,6 @@ class SearchProduct extends Action
         );
 
         if ($subProductRecurrence !== null) {
-            $product['cycles'] = $subProductRecurrence->getCycles();
             $product['id'] = $subProductRecurrence->getId();
         }
 

@@ -228,18 +228,19 @@ require([
         var type = $("#recurrence-type").val();
 
         var lastColumn = quantityColumn;
-        var nameCycleInput = "form[items][" + index + "][cycles]";
         if (type == 'subscription') {
-            nameCycleInput = "form[cycles]";
             lastColumn = priceColumn;
         }
-
         var tr = $('<tr>').append(
             $('<td>').html("<img src='" + data.image + "' width='70px' height='70px'>"),
             $('<td>').text(data.name),
-            $('<td>').html("<input type='number' name='" + nameCycleInput + "' value='" + cycles + "' step='1' min='0'/>"),
             $('<td>').html(lastColumn + inputsHidden),
         );
+
+        var cycleColumn = "<input type='number' name='form[items][" + index + "][cycles]' value='" + cycles + "' step='1' min='0'/>";
+        if (type !== 'subscription') {
+            tr.append($('<td>').html(cycleColumn))
+        }
 
         var table = $('#table-products tbody');
         table.append(tr);
@@ -296,6 +297,7 @@ require([
             $("#interval_count_" + count).val(reptitions[index].intervalCount);
             $("#interval_" + count).val(reptitions[index].interval);
             $("#recurrence_price_" + count).val(recurrencePrice);
+            $("#cycles_" + count).val(reptitions[index].cycles || 0);
             $("#repetition_id_" + count).val(reptitions[index].id);
         }
     }
