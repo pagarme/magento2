@@ -843,15 +843,6 @@ class InstallSchema implements InstallSchemaInterface
                     "Allow sell as normal product"
                 )
                 ->addColumn(
-                    'cycles',
-                    Table::TYPE_INTEGER,
-                    11,
-                    [
-                        'nullable' => true
-                    ],
-                    "Cycles"
-                )
-                ->addColumn(
                     'billing_type',
                     Table::TYPE_TEXT,
                     11,
@@ -936,6 +927,15 @@ class InstallSchema implements InstallSchemaInterface
                         'nullable' => true
                     ],
                     'Recurrence product price'
+                )
+                ->addColumn(
+                    'cycles',
+                    Table::TYPE_INTEGER,
+                    15,
+                    [
+                        'nullable' => true
+                    ],
+                    'Cycles'
                 )
                 ->addColumn(
                     'created_at',

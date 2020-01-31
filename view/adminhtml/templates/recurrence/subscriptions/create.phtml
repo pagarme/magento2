@@ -78,12 +78,7 @@ $quantityOptionCicle = 4;
                                                 <tr>
                                                     <th></th>
                                                     <th><?php echo __('Name') ?></th>
-                                                    <th><?php echo __('Cycle') ?></th>
-                                                    <?php if($block->getRecurrenceType() !== "subscription"):?>
-                                                        <th><?php echo __('Quantity') ?></th>
-                                                    <?php else:?>
-                                                        <th><?php echo __('Original Price') ?></th>
-                                                    <?php endif;?>
+                                                    <th><?php echo __('Original Price') ?></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -150,6 +145,7 @@ $quantityOptionCicle = 4;
                                                 <th><?php echo __('Interval') ?></th>
                                                 <th><?php echo __('Type') ?></th>
                                                 <th><?php echo __('Recurrence Price') ?></th>
+                                                <th><?php echo __('Cycles') ?></th>
                                             </tr>
                                             <?php for ($i = 1; $i <= $quantityOptionCicle; $i++) : ?>
                                                 <tr>
@@ -171,6 +167,10 @@ $quantityOptionCicle = 4;
                                                     </td>
                                                     <td>
                                                         <input type="text" class="recurrence_price ui-autocomplete-input" name="form[repetitions][<?php echo $i ?>][recurrence_price]" id="recurrence_price_<?php echo $i ?>" value="0,00">
+                                                    </td>
+
+                                                    <td>
+                                                        <input type="text" class="cycles ui-autocomplete-input" name="form[repetitions][<?php echo $i ?>][cycles]" id="cycles_<?php echo $i ?>" value="0">
                                                     </td>
                                                     <input type="hidden" id="repetition_id_<?php echo $i ?>" name="form[repetitions][<?php echo $i ?>][id]"/>
                                                 </tr>
