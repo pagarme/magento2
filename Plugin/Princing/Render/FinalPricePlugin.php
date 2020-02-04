@@ -14,6 +14,7 @@ use Magento\Catalog\Model\Product\Interceptor as ProductInterceptor;
 
 class FinalPricePlugin
 {
+    const INTERVAL_YEAR = 'year';
     /**
      * FinalPricePlugin constructor.
      */
@@ -104,7 +105,12 @@ class FinalPricePlugin
             $recurrencePrice = $repetition->getRecurrencePrice();
 
             if ($recurrencePrice == 0) {
-                $recurrencePrice = $product->getPrice();
+                $recurrencePrice = ($product->getPrice() * 100);
+            }
+
+            if ($repetition->getInterval() == self::INTERVAL_YEAR) {
+                $prices[] = ($recurrencePrice / (12 * $repetition->getIntervalCount()));
+                continue;
             }
 
             $prices[] = ($recurrencePrice / $repetition->getIntervalCount());
