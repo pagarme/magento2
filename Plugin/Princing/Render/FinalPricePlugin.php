@@ -11,10 +11,10 @@ use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 use MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\Config;
 use Magento\Catalog\Pricing\Render\FinalPriceBox;
 use Magento\Catalog\Model\Product\Interceptor as ProductInterceptor;
+use Mundipagg\Core\Recurrence\Aggregates\Repetition;
 
 class FinalPricePlugin
 {
-    const INTERVAL_YEAR = 'year';
     /**
      * FinalPricePlugin constructor.
      */
@@ -108,7 +108,7 @@ class FinalPricePlugin
                 $recurrencePrice = ($product->getPrice() * 100);
             }
 
-            if ($repetition->getInterval() == self::INTERVAL_YEAR) {
+            if ($repetition->getInterval() == Repetition::INTERVAL_YEAR) {
                 $prices[] = ($recurrencePrice / (12 * $repetition->getIntervalCount()));
                 continue;
             }
