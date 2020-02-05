@@ -29,6 +29,14 @@ class OrderCancelAfter implements ObserverInterface
             return $this;
         }
 
+        $event = $observer->getEvent();
+        $order = $event->getOrder();
+        $payment = $order->getPayment();
+
+        if (!in_array($payment->getMethod(), $this->mundipaggMethods())) {
+            return $this;
+        }
+
         try {
             Magento2CoreSetup::bootstrap();
 
@@ -156,5 +164,15 @@ class OrderCancelAfter implements ObserverInterface
         $log->orderException($e, $orderId);
 
         throw $e;
+    }
+
+    private function mundipaggMethods()
+    {
+        return [
+          'mundipagg_creditcard',
+          'mundipagg_billet',
+          'mundipagg_two_creditcard',
+          'mundipagg_billet_creditcard',
+        ];
     }
 }
