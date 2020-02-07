@@ -139,14 +139,14 @@
     <route url="/V1/mundipagg/recurrence/invoice/:id" method="GET">
         <service class="MundiPagg\MundiPagg\Api\InvoiceApiInterface" method="getByInvoiceId"/>
         <resources>
-            <resource ref="anonymous" />
+            <resource ref="Magento_Sales::sales" />
         </resources>
     </route>
 
     <route url="/V1/mundipagg/recurrence/invoice/cancel/:id" method="POST">
         <service class="MundiPagg\MundiPagg\Api\InvoiceApiInterface" method="cancelByInvoiceId"/>
         <resources>
-            <resource ref="anonymous" />
+            <resource ref="Magento_Sales::sales" />
         </resources>
     </route>
 

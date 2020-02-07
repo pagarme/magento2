@@ -66,6 +66,11 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
                 'code' => 404,
                 'message' => $exception->getMessage()
             ];
+        } catch (\Throwable $exception) {
+            return [
+                'code' => 404,
+                'message' => $exception->getMessage()
+            ];
         }
 
         return $productSubscription;
@@ -130,6 +135,10 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
             return [
                 $exception->getMessage()
             ];
+        } catch (\Throwable $exception) {
+            return [
+                $exception->getMessage()
+            ];
         }
 
         return "Subscription Product deleted with success";
@@ -170,6 +179,11 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
             ]);
 
         } catch (\Exception $exception) {
+            return json_encode([
+                'code' => 404,
+                'message' => $exception->getMessage()
+            ]);
+        } catch (\Throwable $exception) {
             return json_encode([
                 'code' => 404,
                 'message' => $exception->getMessage()
