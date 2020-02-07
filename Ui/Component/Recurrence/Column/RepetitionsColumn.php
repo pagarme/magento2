@@ -10,6 +10,7 @@ use Mundipagg\Core\Kernel\Services\LocalizationService;
 use Mundipagg\Core\Kernel\Services\MoneyService;
 use Mundipagg\Core\Recurrence\Aggregates\Repetition;
 use Mundipagg\Core\Recurrence\Services\ProductSubscriptionService;
+use Mundipagg\Core\Recurrence\Services\RepetitionService;
 use Mundipagg\Core\Recurrence\ValueObjects\DiscountValueObject;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 use MundiPagg\MundiPagg\Helper\ProductSubscriptionHelper;
@@ -32,6 +33,7 @@ class RepetitionsColumn extends Column
         array $components = [],
         array $data = []
     ) {
+        Magento2CoreSetup::bootstrap();
         $this->i18n = new LocalizationService();
         $this->moneyService = new MoneyService();
         $this->productSubscriptionHelper = new ProductSubscriptionHelper();
@@ -55,11 +57,13 @@ class RepetitionsColumn extends Column
     {
         $id = $item['id'];
         $productSubscriptionService = new ProductSubscriptionService();
+        $repetitionSevice = new RepetitionService();
+
         $productSubscription = $productSubscriptionService->findById($id);
         $repetitions = [];
+
         foreach ($productSubscription->getRepetitions() as $repetition) {
-            $repetitions[] = $this->productSubscriptionHelper
-            ->getCycleTitle($repetition);
+            $repetitions[] = $repetitionSevice->getCycleTitle($repetition);
         }
 
         return implode(' | ', $repetitions);

@@ -7,6 +7,7 @@ use Mundipagg\Core\Kernel\Services\LocalizationService;
 use Mundipagg\Core\Kernel\Services\MoneyService;
 use Mundipagg\Core\Recurrence\Aggregates\ProductSubscription;
 use Mundipagg\Core\Recurrence\Aggregates\Repetition;
+use Mundipagg\Core\Recurrence\Services\RepetitionService;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 use Magento\Framework\App\ObjectManager;
 
@@ -22,40 +23,6 @@ class ProductSubscriptionHelper extends AbstractHelper
         Magento2CoreSetup::bootstrap();
         $this->i18n = new LocalizationService();
         $this->moneyService = new MoneyService();
-    }
-
-    /**
-     * @param Repetition $repetition
-     * @return string
-     */
-    public function tryFindDictionaryEventCustomOptionsProductSubscription(
-        Repetition $repetition
-    ) {
-        $dictionary = [
-            'month' => [
-                1 => 'monthly',
-                2 => 'bimonthly',
-                3 => 'quarterly',
-                6 => 'semiannual'
-            ],
-            'year' => [
-                1 => 'yearly',
-                2 => 'biennial'
-            ],
-            'week' => [
-                1 => 'weekly'
-            ]
-        ];
-
-        $intervalType = $repetition->getInterval();
-        $intervalCount = $repetition->getIntervalCount();
-
-        if (isset($dictionary[$intervalType][$intervalCount])) {
-            return $this->i18n->getDashboard($dictionary[$intervalType][$intervalCount]);
-        }
-
-        $intervalType = $this->i18n->getDashboard($repetition->getIntervalTypeLabel());
-        return "De {$intervalCount} em {$intervalCount} {$intervalType}";
     }
 
     public function deleteRecurrenceCustomOption(ProductSubscription $productSubscription)
@@ -152,10 +119,12 @@ class ProductSubscriptionHelper extends AbstractHelper
             $values[] = $sellAsNormalProduct;
         }
 
+        $repetitionService = new RepetitionService();
+
         $repetitions = $productSubscription->getRepetitions();
         foreach ($repetitions as $repetition) {
             $values[] = [
-                "title" => $this->getCycleTitle($repetition),
+                "title" => $repetitionService->getCycleTitle($repetition),
                 "price" => 0,
                 "price_type"  => "fixed",
                 "sort_order"  => $repetition->getId()
@@ -163,34 +132,5 @@ class ProductSubscriptionHelper extends AbstractHelper
         }
 
         return $values;
-    }
-
-    /**
-     * @param Repetition $repetition
-     * @return string
-     * @throws \Mundipagg\Core\Kernel\Exceptions\InvalidParamException
-     */
-    public function getCycleTitle(Repetition $repetition)
-    {
-        $intervalLabel = $this->tryFindDictionaryEventCustomOptionsProductSubscription(
-            $repetition
-        );
-
-        if ($repetition->getRecurrencePrice() <= 0) {
-            return $intervalLabel;
-        }
-
-        $totalAmount = $this->moneyService->centsToFloat(
-            $repetition->getRecurrencePrice()
-        );
-
-        $numberFormatter = new \NumberFormatter(
-            'pt-BR',
-            \NumberFormatter::CURRENCY
-        );
-
-        $totalAmount = $numberFormatter->format($totalAmount);
-
-        return $intervalLabel . " - ({$totalAmount})";
     }
 }
