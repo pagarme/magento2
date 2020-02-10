@@ -436,8 +436,20 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
     {
         $options = [
             'enabled' => 'active',
-            'checkoutConflictMessage' => 'conflict_message',
-            'showRecurrenceCurrencyWidget' => 'show_recurrence_currency_widget'
+
+            'showRecurrenceCurrencyWidget' => 'show_recurrence_currency_widget',
+
+            'purchaseRecurrenceProductWithNormalProduct'
+                => 'purchase_recurrence_product_with_normal_product',
+
+            'conflictMessageRecurrenceProductWithNormalProduct'
+                => 'conflict_recurrence_product_with_normal_product',
+
+            'purchaseRecurrenceProductWithRecurrenceProduct'
+                => 'purchase_recurrence_product_with_recurrence_product',
+
+            'conflictMessageRecurrenceProductWithRecurrenceProduct'
+                => 'conflict_recurrence_product_with_recurrence_product',
         ];
 
         $section = 'mundipagg_mundipagg/recurrence/';

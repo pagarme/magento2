@@ -15,10 +15,29 @@
 			<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
 			<config_path>mundipagg_mundipagg/recurrence/show_recurrence_currency_widget</config_path>
 		</field>
-		<field id="conflict_message" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="22" translate="label" type="textarea">
+
+		<field id="purchase_recurrence_product_with_normal_product" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="22" translate="label" type="select">
+			<label>Purchase of recurrence product with simple product</label>
+			<comment>Allow to purchase recurrence products with simple products on the same shopping cart</comment>
+			<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+			<config_path>mundipagg_mundipagg/recurrence/purchase_recurrence_product_with_normal_product</config_path>
+		</field>
+		<field id="conflict_recurrence_product_with_normal_product" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="23" translate="label" type="textarea">
 			<label>Conflict checkout Message</label>
 			<comment />
-			<config_path>mundipagg_mundipagg/recurrence/conflict_message</config_path>
+			<config_path>mundipagg_mundipagg/recurrence/conflict_recurrence_product_with_normal_product</config_path>
+		</field>
+
+		<field id="purchase_recurrence_product_with_recurrence_product" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="24" translate="label" type="select">
+			<label>Purchase of recurrence product with recurrence product</label>
+			<comment>Allow to purchase more than one recurrence product on the same shopping cart</comment>
+			<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+			<config_path>mundipagg_mundipagg/recurrence/purchase_recurrence_product_with_recurrence_product</config_path>
+		</field>
+		<field id="conflict_recurrence_product_with_recurrence_product" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="25" translate="label" type="textarea">
+			<label>Conflict checkout Message</label>
+			<comment />
+			<config_path>mundipagg_mundipagg/recurrence/conflict_recurrence_product_with_recurrence_product</config_path>
 		</field>
 	</group>
 </include>
