@@ -3,8 +3,14 @@
 namespace MundiPagg\MundiPagg\Model\Cart;
 
 use Magento\Checkout\Model\Cart;
+use Mundipagg\Core\Kernel\Abstractions\AbstractModuleCoreSetup as MPSetup;
 use Mundipagg\Core\Recurrence\Services\RecurrenceService;
 use Mundipagg\Core\Recurrence\Services\RepetitionService;
+use Mundipagg\Core\Recurrence\Services\Rules\CompatibleRecurrenceProducts;
+use Mundipagg\Core\Recurrence\Services\Rules\CurrentProduct;
+use Mundipagg\Core\Recurrence\Services\Rules\MoreThanOneRecurrenceProduct;
+use Mundipagg\Core\Recurrence\Services\Rules\NormalWithRecurrenceProduct;
+use Mundipagg\Core\Recurrence\Services\Rules\ProductListInCart;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 use Mundipagg\Core\Recurrence\Aggregates\Repetition;
 use Magento\Catalog\Model\Product\Interceptor;
@@ -13,9 +19,7 @@ use Magento\Catalog\Model\Product\Option;
 use Magento\Catalog\Api\Data\ProductCustomOptionValuesInterface;
 use Magento\Catalog\Model\Product\Option\Value;
 use Mundipagg\Core\Recurrence\Services\ProductSubscriptionService;
-use MundiPagg\MundiPagg\Model\Cart\Rules\CompatibleRecurrenceProducts;
-use MundiPagg\MundiPagg\Model\Cart\Rules\MoreThanOneRecurrenceProduct;
-use MundiPagg\MundiPagg\Model\Cart\Rules\NormalWithRecurrenceProduct;
+use Magento\Framework\Exception\LocalizedException;
 
 class CartConflict
 {
@@ -73,6 +77,11 @@ class CartConflict
         $cartRules = $this->getRules();
         foreach ($cartRules as $rule) {
             $rule->run($currentProduct, $productListInCart);
+
+            $error = $rule->getError();
+            if (!empty($error)) {
+                throw new LocalizedException(__($error));
+            }
         }
 
         return [$productInfo, $requestInfo];
@@ -80,9 +89,12 @@ class CartConflict
 
     protected function getRules()
     {
+        $recurrenceConfiguration = MPSetup::getModuleConfiguration()
+            ->getRecurrenceConfig();
+
         return [
-            new NormalWithRecurrenceProduct(),
-            new MoreThanOneRecurrenceProduct(),
+            new NormalWithRecurrenceProduct($recurrenceConfiguration),
+            new MoreThanOneRecurrenceProduct($recurrenceConfiguration),
             new CompatibleRecurrenceProducts()
         ];
     }
