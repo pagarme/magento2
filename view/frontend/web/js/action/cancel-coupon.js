@@ -62,11 +62,6 @@ define([
                 'message': message
             });
 
-            var wasValidCreditCard = window.checkoutConfig.payment.mundipagg_creditcard.brandIsValid;
-            var wasValidBilletCreditCard = window.checkoutConfig.payment.mundipagg_billet_creditcard.brandIsValid;
-            var wasValidTwoCreditCardFirst = window.checkoutConfig.payment.mundipagg_two_creditcard.brandFirstCardIsValid;
-            var wasValidTwoCreditCardSecond = window.checkoutConfig.payment.mundipagg_two_creditcard.brandSecondCardIsValid;
-
             setTimeout(() => {
                 new creditCard();
                 new billetCard();
