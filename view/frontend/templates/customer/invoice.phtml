@@ -16,7 +16,7 @@ $i = 0;
             <th><?= __('Status') ?></th>
             <th><?= __('Payement method') ?></th>
             <?php if ($block->getSubscriptionPaymentMethod() == 'boleto') :?>
-            <th><?= __('Boleto') ?></th>
+                <th><?= __('Boleto') ?></th>
             <?php endif;?>
         </tr>
         </thead>
@@ -40,7 +40,7 @@ $i = 0;
                 <?php if ($block->getSubscriptionPaymentMethod() == 'boleto') :?>
                     <td>
                         <?php if (!empty($item->getBoletoLink())):?>
-                            <button onclick="location.href = '<?= $item->getBoletoLink() ?>';"
+                            <button target="_blank" onclick="location.href = '<?= $item->getBoletoLink() ?>';"
                                     id="details">
                                 <?= __("download") ?>
                             </button>
