@@ -47,6 +47,7 @@ class TotalCyclesByProduct extends Column
 
     private function getTotalCycles($item)
     {
+        $recurrenceProductHelper = new RecurrenceProductHelper();
         $magentoOrder =
             $this->objectManager
                 ->get('Magento\Sales\Model\Order')
@@ -56,40 +57,11 @@ class TotalCyclesByProduct extends Column
         $cycles = [];
 
         foreach ($products as $product) {
-            $cycles[] = $this->getSelectedCycle($product);
+            $cycles[] =
+                $recurrenceProductHelper
+                    ->getSelectedRepetitionByProduct($product);
         }
 
-        return $this->returnHighestCycle($cycles);
-    }
-
-    private function returnHighestCycle(array $cycles)
-    {
-        arsort($cycles);
-        return array_shift($cycles);
-    }
-
-    private function getSelectedCycle($product)
-    {
-        $repetitionRepository = new RepetitionRepository();
-        $options = $product->getProductOptions();
-
-        foreach ($options['options'] as $option) {
-            $productOption = $this->objectManager
-                ->get('Magento\Catalog\Model\Product\Option')
-                ->load($option['option_id']);
-
-            if (
-                !empty($productOption) &&
-                $productOption->getSku() === "recurrence"
-            ) {
-                $optionValue = $this->objectManager
-                    ->get('Magento\Catalog\Model\Product\Option\Value')
-                    ->load($option['option_value']);
-
-                $sortOrder = $optionValue->getSortOrder();
-                $selectedRepetition = $repetitionRepository->find($sortOrder);
-                return $selectedRepetition->getCycles();
-            }
-        }
+        return $recurrenceProductHelper->returnHighestCycle($cycles);
     }
 }
