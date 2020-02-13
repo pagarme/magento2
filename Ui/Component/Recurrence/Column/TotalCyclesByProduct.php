@@ -10,9 +10,11 @@ use Magento\Ui\Component\Listing\Columns\Column;
 use Mundipagg\Core\Kernel\ValueObjects\Id\CustomerId;
 use Mundipagg\Core\Payment\Repositories\CustomerRepository;
 use Mundipagg\Core\Recurrence\Aggregates\Repetition;
+use Mundipagg\Core\Recurrence\Repositories\RepetitionRepository;
 use Mundipagg\Core\Recurrence\Services\RepetitionService;
 use Mundipagg\Core\Recurrence\ValueObjects\IntervalValueObject;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use MundiPagg\MundiPagg\Helper\RecurrenceProductHelper;
 
 class TotalCyclesByProduct extends Column
 {
@@ -51,20 +53,43 @@ class TotalCyclesByProduct extends Column
                 ->loadByIncrementId($item['code']);
         $products = $magentoOrder->getAllItems();
 
+        $cycles = [];
+
         foreach ($products as $product) {
-            $cycle = $this->getProductCycle($product);
+            $cycles[] = $this->getSelectedCycle($product);
+        }
+
+        return $this->returnHighestCycle($cycles);
+    }
+
+    private function returnHighestCycle(array $cycles)
+    {
+        arsort($cycles);
+        return array_shift($cycles);
+    }
+
+    private function getSelectedCycle($product)
+    {
+        $repetitionRepository = new RepetitionRepository();
+        $options = $product->getProductOptions();
+
+        foreach ($options['options'] as $option) {
+            $productOption = $this->objectManager
+                ->get('Magento\Catalog\Model\Product\Option')
+                ->load($option['option_id']);
+
+            if (
+                !empty($productOption) &&
+                $productOption->getSku() === "recurrence"
+            ) {
+                $optionValue = $this->objectManager
+                    ->get('Magento\Catalog\Model\Product\Option\Value')
+                    ->load($option['option_value']);
+
+                $sortOrder = $optionValue->getSortOrder();
+                $selectedRepetition = $repetitionRepository->find($sortOrder);
+                return $selectedRepetition->getCycles();
+            }
         }
     }
-
-    private function getProductCycle($product)
-    {
-        $option0 = $product->getProductOption();
-        $option = $product->getProductOptions();
-        $options = $option['options'][0];
-        $optionTypeId = $options['option_id'];
-        //$optionId Pegar o option id através do option type id na tabela option type value
-
-        return $option;
-    }
-
 }
