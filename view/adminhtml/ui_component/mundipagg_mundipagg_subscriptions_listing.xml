@@ -105,7 +105,6 @@
 				</item>
 			</argument>
 		</column>
-
 		<column name="created_at" class="MundiPagg\MundiPagg\Ui\Component\Recurrence\Column\CreatedAt">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
@@ -120,7 +119,20 @@
 				</item>
 			</argument>
 		</column>
-
+		<column name="total_cycles_by_product" class="MundiPagg\MundiPagg\Ui\Component\Recurrence\Column\TotalCyclesByProduct">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="filter" xsi:type="string">text</item>
+					<item name="editor" xsi:type="array">
+						<item name="editorType" xsi:type="string">text</item>
+						<item name="validation" xsi:type="array">
+							<item name="required-entry" xsi:type="boolean">true</item>
+						</item>
+					</item>
+					<item name="label" xsi:type="string" translate="true">Total cycle counting of a product</item>
+				</item>
+			</argument>
+		</column>
 		<actionsColumn name="actions" class="MundiPagg\MundiPagg\Ui\Component\Column\Subscriptions\Actions">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">

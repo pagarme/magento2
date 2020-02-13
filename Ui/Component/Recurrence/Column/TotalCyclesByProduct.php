@@ -14,8 +14,10 @@ use Mundipagg\Core\Recurrence\Services\RepetitionService;
 use Mundipagg\Core\Recurrence\ValueObjects\IntervalValueObject;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 
-class CustomerName extends Column
+class TotalCyclesByProduct extends Column
 {
+    private $objectManager;
+
     public function __construct(
         ContextInterface $context,
         UiComponentFactory $uiComponentFactory,
@@ -23,6 +25,7 @@ class CustomerName extends Column
         array $data = []
     ) {
         parent::__construct($context, $uiComponentFactory, $components, $data);
+        $this->objectManager = ObjectManager::getInstance();
         Magento2CoreSetup::bootstrap();
     }
 
@@ -34,21 +37,34 @@ class CustomerName extends Column
 
         $fieldName = $this->getData('name');
         foreach ($dataSource['data']['items'] as &$item) {
-
-            $customerRepository = new CustomerRepository();
-            $customerId = new CustomerId($item['customer_id']);
-
-            $mundipaggCustomer =
-                $customerRepository->findByMundipaggId($customerId);
-            $magentoCustomerId = $mundipaggCustomer->getCode();
-
-            $objectManager = ObjectManager::getInstance();
-            $customer = $objectManager->get(
-                'Magento\Customer\Model\Customer')->load($magentoCustomerId
-            );
-            $item[$fieldName] = $customer->getName();
+            $item[$fieldName] = $this->getTotalCycles($item);
         }
 
         return $dataSource;
     }
+
+    private function getTotalCycles($item)
+    {
+        $magentoOrder =
+            $this->objectManager
+                ->get('Magento\Sales\Model\Order')
+                ->loadByIncrementId($item['code']);
+        $products = $magentoOrder->getAllItems();
+
+        foreach ($products as $product) {
+            $cycle = $this->getProductCycle($product);
+        }
+    }
+
+    private function getProductCycle($product)
+    {
+        $option0 = $product->getProductOption();
+        $option = $product->getProductOptions();
+        $options = $option['options'][0];
+        $optionTypeId = $options['option_id'];
+        //$optionId Pegar o option id através do option type id na tabela option type value
+
+        return $option;
+    }
+
 }
