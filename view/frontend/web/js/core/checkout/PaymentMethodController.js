@@ -25,6 +25,7 @@ PaymentMethodController.prototype.creditcardInit = function () {
     if (!this.formObject) {
         return;
     }
+
     this.model = new CreditCardModel(
         this.formObject,
         this.platformConfig.publicKey
@@ -40,6 +41,7 @@ PaymentMethodController.prototype.creditcardInit = function () {
     if (!this.platformConfig.isMultibuyerEnabled) {
         this.removeMultibuyerForm(this.formObject);
     }
+
     if (this.platformConfig.isMultibuyerEnabled) {
         this.fillMultibuyerStateSelect(this.formObject);
         this.addShowMultibuyerListener(this.formObject);
@@ -168,7 +170,7 @@ PaymentMethodController.prototype.addInputAmountBalanceListener = function(formO
     formObject.inputAmount.on('keyup', function(){
         element = jQuery(this);
 
-        var orderAmount = paymentMethodController.platformConfig.orderAmount;
+        var orderAmount = platformConfig.orderAmount;
         orderAmount = orderAmount.replace(/[^0-9]/g, '');
         orderAmount = Number(orderAmount);
 
@@ -251,6 +253,11 @@ PaymentMethodController.prototype.addSavedCreditCardsListener = function(formObj
     var paymentMethodController = this;
     var selector = formObject.savedCreditCardSelect.selector;
     var brand = jQuery(selector + ' option:selected').attr('brand');
+
+    if (brand == undefined) {
+        brand = formObject.creditCardBrand.val();
+    }
+
     var formObject = formObject;
     formObject.creditCardBrand.val(brand);
 
@@ -367,12 +374,12 @@ PaymentMethodController.prototype.fillInstallments = function (form) {
     var amount = form.inputAmount.val();
     if (typeof selectedBrand == "undefined") {
         selectedBrand = 'default';
-
     }
+
     if (typeof amount == "undefined") {
         amount = 0;
-
     }
+
     formHandler.updateInstallmentSelect(defaulOption, form.creditCardInstallments);
     form.creditCardInstallments.prop('disabled', true);
 
@@ -380,14 +387,19 @@ PaymentMethodController.prototype.fillInstallments = function (form) {
         this.platformConfig.urls.installments + '/' +
         selectedBrand + '/' +
         amount;
+
     jQuery.ajax({
         url: installmentsUrl,
         method: 'GET',
         cache: true
     }).done(function(data) {
         formHandler = new FormHandler();
+
         formHandler.updateInstallmentSelect(data, form.creditCardInstallments);
         form.creditCardInstallments.prop('disabled', false);
+
+        formHandler.init(form);
+        formHandler.switchBrand(selectedBrand);
     });
 };
 
@@ -410,6 +422,7 @@ PaymentMethodController.prototype.fillCardAmount = function (formObject, count) 
 };
 
 PaymentMethodController.prototype.setBin = function (binObj, creditCardNumberElement, formObject) {
+
     var bin = binObj;
     var cardNumber = bin.formatNumber(creditCardNumberElement.val());
 
@@ -478,6 +491,11 @@ PaymentMethodController.prototype.fillSavedCreditCardsSelect = function (formObj
 
         selector = formObject.savedCreditCardSelect.selector;
         var brand = jQuery(selector + ' option:selected').attr('brand');
+
+        if (brand == undefined) {
+            brand = formObject.creditCardBrand.val();
+        }
+
         formObject.creditCardBrand.val(brand);
 
         if (
