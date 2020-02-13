@@ -45,7 +45,7 @@
     </type>
 
     <type name="Magento\Checkout\Model\Cart">
-        <plugin name="prevent_add_to" type="MundiPagg\MundiPagg\Model\CartConflict"/>
+        <plugin name="prevent_add_to" type="MundiPagg\MundiPagg\Model\Cart\CartConflict"/>
     </type>
 
     <type name="MundiPagg\MundiPagg\Model\InstallmentsByBrandAndAmountManagement">

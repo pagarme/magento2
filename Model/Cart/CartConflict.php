@@ -1,13 +1,16 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Model;
+namespace MundiPagg\MundiPagg\Model\Cart;
 
 use Magento\Checkout\Model\Cart;
-use Magento\Framework\Exception\LocalizedException;
-use Magento\Quote\Model\Quote\Item;
 use Mundipagg\Core\Kernel\Abstractions\AbstractModuleCoreSetup as MPSetup;
 use Mundipagg\Core\Recurrence\Services\RecurrenceService;
 use Mundipagg\Core\Recurrence\Services\RepetitionService;
+use Mundipagg\Core\Recurrence\Services\CartRules\CompatibleRecurrenceProducts;
+use Mundipagg\Core\Recurrence\Services\CartRules\CurrentProduct;
+use Mundipagg\Core\Recurrence\Services\CartRules\MoreThanOneRecurrenceProduct;
+use Mundipagg\Core\Recurrence\Services\CartRules\NormalWithRecurrenceProduct;
+use Mundipagg\Core\Recurrence\Services\CartRules\ProductListInCart;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 use Mundipagg\Core\Recurrence\Aggregates\Repetition;
 use Magento\Catalog\Model\Product\Interceptor;
@@ -16,7 +19,7 @@ use Magento\Catalog\Model\Product\Option;
 use Magento\Catalog\Api\Data\ProductCustomOptionValuesInterface;
 use Magento\Catalog\Model\Product\Option\Value;
 use Mundipagg\Core\Recurrence\Services\ProductSubscriptionService;
-use Mundipagg\Core\Recurrence\Services\RulesCheckoutService;
+use Magento\Framework\Exception\LocalizedException;
 
 class CartConflict
 {
@@ -36,11 +39,6 @@ class CartConflict
     private $recurrenceProductHelper;
 
     /**
-     * @var RulesCheckoutService
-     */
-    private $rulesCheckoutService;
-
-    /**
      * @var ProductSubscriptionService
      */
     private $productSubscriptionService;
@@ -54,7 +52,6 @@ class CartConflict
         $this->repetitionService = new RepetitionService();
         $this->recurrenceService = new RecurrenceService();
         $this->recurrenceProductHelper = new RecurrenceProductHelper();
-        $this->rulesCheckoutService = new RulesCheckoutService();
         $this->productSubscriptionService = new ProductSubscriptionService();
     }
 
@@ -63,9 +60,56 @@ class CartConflict
         Interceptor $productInfo,
         $requestInfo = null
     ) {
-        $normalProduct = $this->checkIsNormalProduct($requestInfo);
-        if ($normalProduct) {
+
+        $currentProduct = $this->buildCurrentProduct(
+            $productInfo,
+            $requestInfo
+        );
+        $productListInCart = $this->buildProductListInCart($cart);
+
+        if (
+            empty($productListInCart->getNormalProducts()) &&
+            empty($productListInCart->getRecurrenceProducts())
+        ) {
             return [$productInfo, $requestInfo];
+        }
+
+        $cartRules = $this->getRules();
+        foreach ($cartRules as $rule) {
+            $rule->run($currentProduct, $productListInCart);
+
+            $error = $rule->getError();
+            if (!empty($error)) {
+                throw new LocalizedException(__($error));
+            }
+        }
+
+        return [$productInfo, $requestInfo];
+    }
+
+    protected function getRules()
+    {
+        $recurrenceConfiguration = MPSetup::getModuleConfiguration()
+            ->getRecurrenceConfig();
+
+        return [
+            new NormalWithRecurrenceProduct($recurrenceConfiguration),
+            new MoreThanOneRecurrenceProduct($recurrenceConfiguration),
+            new CompatibleRecurrenceProducts()
+        ];
+    }
+
+    protected function buildCurrentProduct(
+        Interceptor $productInfo,
+        $requestInfo = null
+    ) {
+
+        $currentProduct = new CurrentProduct();
+
+        $isNormalProduct = $this->checkIsNormalProduct($requestInfo);
+        if ($isNormalProduct) {
+            $currentProduct->setIsNormalProduct($isNormalProduct);
+            return $currentProduct;
         }
 
         $repetitionSelected = $this->getOptionRecurrenceSelected(
@@ -73,46 +117,53 @@ class CartConflict
             $requestInfo['options']
         );
 
-        if (is_null($repetitionSelected)) {
-            return [$productInfo, $requestInfo];
+        if (!$repetitionSelected) {
+            $currentProduct->setIsNormalProduct(true);
+            return $currentProduct;
         }
 
-        $productSubscriptionSelected = $this->productSubscriptionService->findById(
-            $repetitionSelected->getSubscriptionId()
-        );
+        $currentProduct->setRepetitionSelected($repetitionSelected);
 
-        /* @var Item[] $itemQuoteList */
-        $itemQuoteList = $cart->getQuote()->getAllVisibleItems();
-        foreach ($itemQuoteList as $item) {
-            $repetitionInCart = $this->recurrenceProductHelper->getSelectedRepetition(
-                $item
+        $productSubscriptionSelected =
+            $this->productSubscriptionService->findById(
+                $repetitionSelected->getSubscriptionId()
             );
 
+        $currentProduct->setProductSubscriptionSelected(
+            $productSubscriptionSelected
+        );
+
+        return $currentProduct;
+    }
+
+    protected function buildProductListInCart(Cart $cart) {
+
+        $productList = new ProductListInCart();
+
+        $itemQuoteList = $cart->getQuote()->getAllVisibleItems();
+        foreach ($itemQuoteList as $item) {
+
+            $repetitionInCart =
+                $this->recurrenceProductHelper->getSelectedRepetition(
+                    $item
+                );
+
             if (is_null($repetitionInCart)) {
+                $productList->addNormalProducts($item);
                 continue;
             }
 
-            $productSubscriptionInCart = $this->productSubscriptionService->findById(
-                $repetitionInCart->getSubscriptionId()
-            );
+            $productSubscriptionInCart =
+                $this->productSubscriptionService->findById(
+                    $repetitionInCart->getSubscriptionId()
+                );
 
-            $passRules = $this->rulesCheckoutService->runRulesCheckoutSubscription(
-                $productSubscriptionInCart,
-                $productSubscriptionSelected,
-                $repetitionInCart,
-                $repetitionSelected
-            );
-
-            if(!$passRules) {
-                $messageConflictRecurrence = MPSetup::getModuleConfiguration()
-                    ->getRecurrenceConfig()
-                    ->getCheckoutConflictMessage();
-
-                throw new LocalizedException(__($messageConflictRecurrence));
-            }
+            $productList->setRepetition($repetitionInCart);
+            $productList->setRecurrenceProduct($productSubscriptionInCart);
+            $productList->addRecurrenceProduct($productSubscriptionInCart);
         }
 
-        return [$productInfo, $requestInfo];
+        return $productList;
     }
 
     /**
