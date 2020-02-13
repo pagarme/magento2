@@ -38,7 +38,8 @@ require([
                 $(this).autocomplete('option', 'source', arraySearch);
 
                 if (arraySearch.length == 0) {
-                    showErrorMessage('Nenhum produto do tipo bundle encontrado');
+                    var message = 'Nenhum produto encontrado com nome: ' + currentValue;
+                    showErrorMessage(message);
                 }
             }
         });
