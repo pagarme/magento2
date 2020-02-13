@@ -19,6 +19,7 @@ $i = 0;
         <tr>
             <th><?= __('Id') ?></th>
             <th><?= __('Order') ?></th>
+            <th><?= __('Total cycle counting of a product') ?></th>
             <th><?= __('Status') ?></th>
         </tr>
         </thead>
@@ -33,6 +34,7 @@ $i = 0;
             <tr>
                 <td><?= $i ?></td>
                 <td><?= $item->getCode() ?></td>
+                <td><?= $block->getHighestProductCycle($item) ?></td>
                 <td><?= __($status) ?></td>
                 <td>
                     <button onclick="location.href = '<?= $url ?>';" id="details">
