@@ -42,12 +42,4 @@ class Interval extends Column
 
         return $dataSource;
     }
-
-    public function getValueFormatted($item)
-    {
-        $objectManager = ObjectManager::getInstance();
-
-        $product = $objectManager->get('Magento\Catalog\Model\Product')->load($item['product_id']);
-        return $product->getName();
-    }
 }

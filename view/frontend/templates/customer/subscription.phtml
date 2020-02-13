@@ -20,7 +20,9 @@ $i = 0;
             <th><?= __('Id') ?></th>
             <th><?= __('Order') ?></th>
             <th><?= __('Total cycle counting of a product') ?></th>
+            <th><?= __('Interval') ?></th>
             <th><?= __('Status') ?></th>
+            <th><?= __('Subscription created at') ?></th>
         </tr>
         </thead>
         <tbody>
@@ -35,7 +37,9 @@ $i = 0;
                 <td><?= $i ?></td>
                 <td><?= $item->getCode() ?></td>
                 <td><?= $block->getHighestProductCycle($item) ?></td>
+                <td><?= $block->getInterval($item) ?></td>
                 <td><?= __($status) ?></td>
+                <td><?= $block->getSubscriptionCreatedDate($item)  ?></td>
                 <td>
                     <button onclick="location.href = '<?= $url ?>';" id="details">
                         <?= __("View Details") ?>
