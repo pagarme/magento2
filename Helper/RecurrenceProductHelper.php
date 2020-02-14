@@ -53,6 +53,10 @@ class RecurrenceProductHelper extends AbstractHelper
         $options = $product->getProductOptions();
         $optionValue = $this->getOptionValue($options);
 
+        if (empty($optionValue)) {
+            return null;
+        }
+
         $sortOrder = $optionValue->getSortOrder();
         $selectedRepetition = $this->repetitionRepository->find($sortOrder);
         return $selectedRepetition->getCycles();
@@ -66,6 +70,9 @@ class RecurrenceProductHelper extends AbstractHelper
 
     public function getOptionValue($productOptions)
     {
+        if (empty($productOptions['options'])) {
+            return null;
+        }
         $optionValue = null;
 
         foreach ($productOptions['options'] as $option) {
