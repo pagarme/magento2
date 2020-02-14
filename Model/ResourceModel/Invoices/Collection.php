@@ -20,8 +20,6 @@ class Collection extends SearchResult
         EventManager $eventManager,
         $mainTable,
         $resourceModel,
-        $identifierName = null,
-        $connectionName = null,
         Http $request
     ) {
         $this->request = $request;
@@ -31,9 +29,7 @@ class Collection extends SearchResult
             $fetchStrategy,
             $eventManager,
             $mainTable,
-            $resourceModel,
-            $identifierName,
-            $connectionName
+            $resourceModel
         );
     }
 

@@ -16,18 +16,14 @@ class Collection extends SearchResult
         FetchStrategy $fetchStrategy,
         EventManager $eventManager,
         $mainTable,
-        $resourceModel,
-        $identifierName = null,
-        $connectionName = null
+        $resourceModel
     ) {
         parent::__construct($entityFactory,
             $logger,
             $fetchStrategy,
             $eventManager,
             $mainTable,
-            $resourceModel,
-            $identifierName,
-            $connectionName
+            $resourceModel
         );
     }
 
