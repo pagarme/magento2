@@ -62,7 +62,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
             $setup = $this->addCardDataToTransactionTable($setup);
         }
 
-        if ($version == "2.0.0-beta") {
+        if (version_compare($version, "1.8.15", ">")) {
             $setup = $installSchema->installProductsSubscription($setup);
             $setup = $installSchema->installSubscriptionRepetitions($setup);
             $setup = $installSchema->installRecurrenceSubscription($setup);
