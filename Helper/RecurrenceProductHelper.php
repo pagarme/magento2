@@ -13,11 +13,13 @@ class RecurrenceProductHelper extends AbstractHelper
      * @var RepetitionRepository
      */
     protected $repetitionRepository;
+    protected $objectManager;
 
     public function __construct()
     {
         Magento2CoreSetup::bootstrap();
         $this->repetitionRepository = new RepetitionRepository();
+        $this->objectManager = ObjectManager::getInstance();
     }
 
     public function getSelectedRepetition($item)
@@ -46,13 +48,28 @@ class RecurrenceProductHelper extends AbstractHelper
         return null;
     }
 
+    public function getSelectedRepetitionByProduct($product)
+    {
+        $options = $product->getProductOptions();
+        $optionValue = $this->getOptionValue($options);
+
+        $sortOrder = $optionValue->getSortOrder();
+        $selectedRepetition = $this->repetitionRepository->find($sortOrder);
+        return $selectedRepetition->getCycles();
+    }
+
+    public function returnHighestCycle(array $cycles)
+    {
+        arsort($cycles);
+        return array_shift($cycles);
+    }
+
     public function getOptionValue($productOptions)
     {
         $optionValue = null;
 
         foreach ($productOptions['options'] as $option) {
-            $objectManager = ObjectManager::getInstance();
-            $productOption = $objectManager
+            $productOption = $this->objectManager
                 ->get('Magento\Catalog\Model\Product\Option')
                 ->load($option['option_id']);
 
@@ -60,7 +77,7 @@ class RecurrenceProductHelper extends AbstractHelper
                 !empty($productOption) &&
                 $productOption->getSku() === "recurrence"
             ) {
-                $optionValue = $objectManager
+                $optionValue = $this->objectManager
                     ->get('Magento\Catalog\Model\Product\Option\Value')
                     ->load($option['option_value']);
             }
