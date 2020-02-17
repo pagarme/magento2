@@ -41,6 +41,36 @@ composer update
 ./bin/magento setup:di:compile
 ```
 
+
+## Installation Beta - Recurrence
+
+This version has the implementation of recurrence, but remembering that it is still in the experimental stage.
+
+
+**Steps**
+
+If you have an old version of the module
+`composer remove mundipagg/mundipagg-magento2-module`
+
+As a precaution, clear the composer cache:
+`composer clearcache`
+
+Install the beta version:
+`composer require 'mundipagg/mundipagg-magento2-module:2.*@beta' -vvv`
+
+Then type the following commands from your Magento root:
+
+```
+./bin/magento setup:upgrade
+./bin/magento setup:di:compile
+```
+
+In the future, should any updates occur:
+`composer update`
+
+
+
+
 ## Requirements
 * PHP >= 5.6
 * Magento >= 2.1
