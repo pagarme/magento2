@@ -42,7 +42,7 @@ composer update
 ```
 
 
-## Installation With Recurrence(Beta)
+## Installation with recurrence (Beta)
 
 This version has the implementation of recurrence, but remembering that it is still in the experimental stage.
 
