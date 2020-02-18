@@ -47,13 +47,16 @@ class ProductSubscriptionHelper extends AbstractHelper
         $product->setOptions($customOptions)->save();
     }
 
+    /**
+     * @param ProductSubscription $productSubscription
+     * @throws \Exception
+     */
     public function setCustomOption(ProductSubscription $productSubscription)
     {
         $objectManager = ObjectManager::getInstance();
 
         $productId = $productSubscription->getProductId();
-        $product = $objectManager->get('Magento\Catalog\Model\Product')
-            ->load($productId);
+        $product = $this->getProductPlataform($productId);
 
         $values = $this->getValuesFromRepetitions($productSubscription);
 
@@ -132,5 +135,24 @@ class ProductSubscriptionHelper extends AbstractHelper
         }
 
         return $values;
+    }
+
+    /**
+     * @param int $productId
+     * @return \Magento\Catalog\Model\Product
+     * @throws \Exception
+     */
+    public function getProductPlataform($productId)
+    {
+        $objectManager = ObjectManager::getInstance();
+
+        $product = $objectManager->get('Magento\Catalog\Model\Product')
+            ->load($productId);
+
+        if ($product->getId() === null) {
+            throw new \Exception('product not found', 404);
+        }
+
+        return $product;
     }
 }

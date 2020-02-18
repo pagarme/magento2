@@ -55,6 +55,10 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
                 $productSubscription->setId($id);
             }
 
+            $this->productSubscriptionHelper->getProductPlataform(
+                $productSubscription->getProductId()
+            );
+
             $productSubscription = $this->productSubscriptionService
                     ->saveProductSubscription($productSubscription);
 
