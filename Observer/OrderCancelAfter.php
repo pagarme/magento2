@@ -22,6 +22,7 @@ class OrderCancelAfter implements ObserverInterface
     /**
      * @param EventObserver $observer
      * @return void
+     * @throws M2WebApiException
      */
     public function execute(EventObserver $observer)
     {
@@ -30,7 +31,12 @@ class OrderCancelAfter implements ObserverInterface
         }
 
         $event = $observer->getEvent();
+
         $order = $event->getOrder();
+        if (empty($order)) {
+            return $this;
+        }
+
         $payment = $order->getPayment();
 
         if (!in_array($payment->getMethod(), $this->mundipaggMethods())) {

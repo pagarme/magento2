@@ -1,13 +1,13 @@
 {
     "name": "mundipagg/mundipagg-magento2-module",
     "license": "MIT",
-    "version": "1.8.17",
+    "version": "1.8.18",
     "type": "magento2-module",
     "description": "Magento 2 Module Mundipagg",
     "require": {
         "php": ">=5.6.0",
         "mundipagg/mundiapi": "^3.0",
-        "mundipagg/ecommerce-module-core": "1.12.1"
+        "mundipagg/ecommerce-module-core": "1.12.2"
     },
     "require-dev": {
         "phpunit/phpunit": "4.1.0",
