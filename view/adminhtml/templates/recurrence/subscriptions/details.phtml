@@ -1,0 +1,189 @@
+<section class="admin__page-section order-view-account-information">
+    <div class="admin__page-section-title">
+        <span class="title"><?= __('Subscription data') ?></span>
+    </div>
+    <div class="admin__page-section-content">
+        <div class="admin__page-section-item order-information">
+            <div class="admin__page-section-item-title">
+                <span class="title"><?= __('Order') ?> # 000000060</span>
+            </div>
+            <div class="admin__page-section-item-content">
+                <table class="admin__table-secondary order-information-table">
+                    <tbody>
+                        <tr>
+                            <th><?= __('Subscription created at') ?></th>
+                            <td>26 de fev de 2020 17:50:13</td>
+                        </tr>
+                        <tr>
+                            <th><?= __('Subscription disabled at') ?></th>
+                            <td>26 de fev de 2020 17:50:13</td>
+                        </tr>
+                        <tr>
+                            <th><?= __('Subscription status') ?></th>
+                            <td><span id="order_status">Processing</span></td>
+                        </tr>
+                        <tr>
+                            <th><?= __('Payment method') ?></th>
+                            <td><span id="order_status">credit_card</span></td>
+                        </tr>
+
+                        <tr>
+                            <th><?= __('Interval') ?></th>
+                            <td><span id="order_status"><?= __('Monthly') ?></span></td>
+                        </tr>
+                        <tr>
+                            <th><?= __('Total cycle counting of a product') ?></th>
+                            <td><span id="order_status">12</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="admin__page-section-item order-account-information">
+            <div class="admin__page-section-item-title">
+                <span class="title">Customer Information</span>
+            </div>
+            <div class="admin__page-section-item-content">
+                <table class="admin__table-secondary order-account-information-table">
+                    <tbody>
+                    <tr>
+                        <th><?= __('Mundipagg ID') ?></th>
+                        <td>
+                            <span>cus_sdki3inf04md2x</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Customer Name</th>
+                        <td>
+                            <span>Teste Teste</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Email</th>
+                        <td>teste@teste.com</td>
+                    </tr>
+                    <tr>
+                        <th><?= __('Document') ?></th>
+                        <td>18171691730</td>
+                    </tr>
+                    </tbody></table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="admin__page-section order-addresses">
+    <div class="admin__page-section-title">
+        <span class="title"><?= __('Items Ordered') ?></span>
+    </div>
+    <table class="data-grid" data-role="grid">
+        <thead>
+        <tr>
+            <th class="data-grid-th">
+                <span class="data-grid-cell-content">ID</span>
+            </th>
+            <th class="data-grid-th">
+                <span class="data-grid-cell-content"><?= __('Product Name') ?></span>
+            </th>
+            <th class="data-grid-th">
+                <span class="data-grid-cell-content"><?= __('Selected Option') ?></span>
+            <th class="data-grid-th">
+                <span class="data-grid-cell-content"><?= __('Invoiced Price') ?></span>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="data-row">
+            <td>
+                <div class="data-grid-cell-content">1</div>
+            </td>
+            <td>
+                <div class="data-grid-cell-content">Nome do produto</div>
+            </td>
+            <td>
+                <div class="data-grid-cell-content">Mensal (R$100,00)</div>
+            </td>
+            <td>
+                <div class="data-grid-cell-content">R$100,00</div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+
+<section class="admin__page-section order-addresses">
+    <div class="admin__page-section-title">
+        <span class="title"><?= __('Invoices') ?></span>
+    </div>
+    <table class="data-grid" data-role="grid">
+        <thead>
+            <tr>
+                <th class="data-grid-th">
+                    <span class="data-grid-cell-content" >ID</span>
+                </th>
+                <th class="data-grid-th">
+                    <span class="data-grid-cell-content" >Invoice Id</span>
+                </th>
+                <th class="data-grid-th" >
+                    <span class="data-grid-cell-content" >Método de pagamento</span>
+                </th>
+                <th class="data-grid-th">
+                    <span class="data-grid-cell-content" >Valor</span>
+                </th>
+                <th class="data-grid-th">
+                    <span class="data-grid-cell-content" >Valor pago</span>
+                </th>
+                <th class="data-grid-th">
+                    <span class="data-grid-cell-content" >Valor cancelado</span>
+                </th>
+                <th class="data-grid-th">
+                    <span class="data-grid-cell-content" >Valor estornado</span>
+                </th>
+                <th class="data-grid-th">
+                    <span class="data-grid-cell-content" >Status</span>
+                </th>
+                <th class="data-grid-th" >
+                    <span class="data-grid-cell-content" >Boleto</span>
+                </th>
+                <th class="data-grid-th" >
+                    <span class="data-grid-cell-content" ><?= __('Actions') ?></span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+        <tr class="data-row" data-bind="css: {'_odd-row': $index % 2}" data-repeat-index="0">
+            <td>
+                <div class="data-grid-cell-content">1</div>
+            </td>
+            <td class="">
+                <div class="data-grid-cell-content">in_xdlzJ6eSlcVp62j7</div>
+            </td>
+            <td>
+                <div class="data-grid-cell-content">Cartão de crédito</div>
+            </td>
+            <td>
+                <div class="data-grid-cell-content">R$&nbsp;85,00</div>
+            </td>
+            <td>
+                <div class="data-grid-cell-content">R$&nbsp;85,00</div>
+            </td>
+            <td>
+                <div class="data-grid-cell-content">R$&nbsp;0,00</div>
+            </td>
+            <td>
+                <div class="data-grid-cell-content">R$&nbsp;0,00</div>
+            </td>
+            <td>
+                <div class="data-grid-cell-content">pago</div>
+            </td>
+            <td>
+                <div class="data-grid-cell-content"> --- </div>
+            </td>
+            <td>
+                <div class="data-grid-cell-content"><a title="<?= __('Cancel') ?>" href="#" target="_blank"><?= __('Cancel') ?></a></div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</section>

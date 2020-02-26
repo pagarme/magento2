@@ -96,4 +96,11 @@ class Subscription extends Template
             ]
         ];
     }
+
+    public function getSubscriptionDetails()
+    {
+
+
+        $this->_redirect('mundipagg_mundipagg/recurrenceproducts/index');
+    }
 }
