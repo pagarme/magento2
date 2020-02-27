@@ -5,6 +5,7 @@ namespace MundiPagg\MundiPagg\Helper;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\ObjectManager;
 use Mundipagg\Core\Recurrence\Repositories\RepetitionRepository;
+use Mundipagg\Core\Recurrence\Services\RecurrenceService;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 
 class RecurrenceProductHelper extends AbstractHelper
@@ -91,5 +92,20 @@ class RecurrenceProductHelper extends AbstractHelper
 
         }
         return $optionValue;
+    }
+
+    public function getRecurrenceType($item)
+    {
+        $product = $item->getProduct();
+        $recurrenceService = new RecurrenceService();
+        $coreProduct = $recurrenceService->getRecurrenceProductByProductId(
+            $product->getId()
+        );
+
+        if (!$coreProduct) {
+            return null;
+        }
+
+        return $coreProduct->getRecurrenceType();
     }
 }
