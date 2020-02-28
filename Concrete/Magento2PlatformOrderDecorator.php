@@ -478,14 +478,14 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $cleanDocument = preg_replace(
             '/\D/',
             '',
-            $quote->getCustomerTaxvat()
+            $guestAddress->getVatId()
         );
         
         if (empty($cleanDocument)) {
             $cleanDocument = preg_replace(
                 '/\D/',
                 '',
-                $guestAddress->getVatId()
+                $quote->getCustomerTaxvat()
             );
         }
 
