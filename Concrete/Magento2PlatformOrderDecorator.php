@@ -480,6 +480,14 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             '',
             $guestAddress->getVatId()
         );
+        
+        if (empty($cleanDocument)) {
+            $cleanDocument = preg_replace(
+                '/\D/',
+                '',
+                $quote->getCustomerTaxvat()
+            );
+        }
 
         $customer->setDocument($cleanDocument);
         $customer->setType(CustomerType::individual());
