@@ -4,7 +4,13 @@ namespace MundiPagg\MundiPagg\Helper;
 
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\ObjectManager;
+use Mundipagg\Core\Kernel\Abstractions\AbstractModuleCoreSetup as MPSetup;
+use Mundipagg\Core\Kernel\Interfaces\PlatformOrderInterface;
 use Mundipagg\Core\Recurrence\Repositories\RepetitionRepository;
+use Mundipagg\Core\Recurrence\Services\PlanService;
+use Mundipagg\Core\Recurrence\Services\RecurrenceService;
+use Mundipagg\Core\Recurrence\Services\SubscriptionService;
+use Mundipagg\Core\Recurrence\ValueObjects\PlanId;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 
 class RecurrenceProductHelper extends AbstractHelper
@@ -20,6 +26,44 @@ class RecurrenceProductHelper extends AbstractHelper
         Magento2CoreSetup::bootstrap();
         $this->repetitionRepository = new RepetitionRepository();
         $this->objectManager = ObjectManager::getInstance();
+    }
+
+    public function getHighestProductCycle($code, $planId = null)
+    {
+        if (!empty($planId)) {
+            return $this->getTotalCyclesFromPlan($planId);
+        }
+        return $this->getTotalCyclesFromProductRecurrence($code);
+    }
+
+    public function getTotalCyclesFromPlan($planID)
+    {
+        $planService = new PlanService();
+        $plan = $planService->findByMundipaggId(new PlanId($planID));
+        $cycles = [];
+        $items = $plan->getItems();
+        foreach ($items as $item) {
+            $cycles[] = $item->getCycles();
+        }
+
+        return $this->returnHighestCycle($cycles);
+    }
+
+    public function getTotalCyclesFromProductRecurrence($code)
+    {
+        $magentoOrder =
+            $this->objectManager
+                ->get('Magento\Sales\Model\Order')
+                ->loadByIncrementId($code);
+        $products = $magentoOrder->getAllItems();
+
+        $cycles = [];
+        foreach ($products as $product) {
+            $cycles[] =
+                $this->getSelectedRepetitionByProduct($product);
+        }
+
+        return $this->returnHighestCycle($cycles);
     }
 
     public function getSelectedRepetition($item)
@@ -64,8 +108,7 @@ class RecurrenceProductHelper extends AbstractHelper
 
     public function returnHighestCycle(array $cycles)
     {
-        arsort($cycles);
-        return array_shift($cycles);
+        return max($cycles);
     }
 
     public function getOptionValue($productOptions)

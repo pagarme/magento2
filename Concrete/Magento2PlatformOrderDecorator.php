@@ -32,6 +32,8 @@ use Mundipagg\Core\Payment\Repositories\SavedCardRepository;
 use Mundipagg\Core\Payment\ValueObjects\CustomerPhones;
 use Mundipagg\Core\Payment\ValueObjects\CustomerType;
 use Mundipagg\Core\Payment\ValueObjects\Phone;
+use Mundipagg\Core\Recurrence\Aggregates\Plan;
+use Mundipagg\Core\Recurrence\Services\RecurrenceService;
 use MundiPagg\MundiPagg\Helper\RecurrenceProductHelper;
 use MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\Config;
 use MundiPagg\MundiPagg\Model\Cards;
@@ -517,8 +519,6 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             $price = $quoteItem->getPrice();
             $price = $price > 0 ? $price : "0.01";
 
-            $productType = $quoteItem->getProductType();
-
             if ($price === null) {
                 continue;
             }
@@ -552,9 +552,40 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             $selectedRepetition = $helper->getSelectedRepetition($quoteItem);
             $item->setSelectedOption($selectedRepetition);
 
+            $this->setRecurrenceInfo($item, $quoteItem);
+
             $items[] = $item;
         }
         return $items;
+    }
+
+    public function setRecurrenceInfo($item, $quoteItem)
+    {
+        $recurrenceService = $this->getRecurrenceService();
+        $productId = $quoteItem->getProduct()->getId();
+
+        $coreProduct =
+            $recurrenceService->getRecurrenceProductByProductId(
+                $productId
+            );
+
+        if (!$coreProduct) {
+            return null;
+        }
+
+        $type = $coreProduct->getRecurrenceType();
+        $item->setType($type);
+
+        if ($type == Plan::RECURRENCE_TYPE) {
+            $item->setMundipaggId($coreProduct->getMundipaggId());
+        }
+
+        return $item;
+    }
+
+    public function getRecurrenceService()
+    {
+        return new RecurrenceService();
     }
 
     public function getQuote()
