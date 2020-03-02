@@ -13,7 +13,6 @@ use Mundipagg\Core\Recurrence\Repositories\SubscriptionRepository;
 use Mundipagg\Core\Recurrence\Services\RepetitionService;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 use MundiPagg\MundiPagg\Helper\RecurrenceProductHelper;
-use MundiPagg\MundiPagg\Ui\Component\Recurrence\Column\TotalCyclesByProduct;
 
 class Subscription extends Template
 {
@@ -28,11 +27,16 @@ class Subscription extends Template
     protected $subscriptionRepository;
 
     protected $objectManager;
+    /**
+     * @var RecurrenceProductHelper
+     */
+    private $recurrenceProductHelper;
 
     /**
      * Link constructor.
      * @param Context $context
      * @param CheckoutSession $checkoutSession
+     * @throws \Exception
      */
     public function __construct(
         Context $context,
@@ -44,6 +48,7 @@ class Subscription extends Template
         $this->customerSession = $customerSession;
         $this->subscriptionRepository = new SubscriptionRepository();
         $this->objectManager = ObjectManager::getInstance();
+        $this->recurrenceProductHelper = new RecurrenceProductHelper();
     }
 
     /**
@@ -59,22 +64,12 @@ class Subscription extends Template
 
     public function getHighestProductCycle($subscription)
     {
-        $recurrenceProductHelper = new RecurrenceProductHelper();
-        $magentoOrder =
-            $this->objectManager
-                ->get('Magento\Sales\Model\Order')
-                ->loadByIncrementId($subscription->getCode());
-        $products = $magentoOrder->getAllItems();
+        return $this->recurrenceProductHelper
+            ->getHighestProductCycle(
+                $subscription->getCode(),
+                $subscription->getPlanIdValue()
+            );
 
-        $cycles = [];
-
-        foreach ($products as $product) {
-            $cycles[] =
-                $recurrenceProductHelper
-                    ->getSelectedRepetitionByProduct($product);
-        }
-
-        return $recurrenceProductHelper->returnHighestCycle($cycles);
     }
 
     public function getInterval($subscription)
