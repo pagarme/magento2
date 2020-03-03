@@ -45,7 +45,7 @@ class TotalCyclesByProduct extends Column
         return $dataSource;
     }
 
-    private function getTotalCycles($item)
+    public function getTotalCycles($item)
     {
         $recurrenceProductHelper = new RecurrenceProductHelper();
         $magentoOrder =

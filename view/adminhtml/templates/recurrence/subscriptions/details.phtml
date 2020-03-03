@@ -42,7 +42,7 @@
                         </tr>
                         <tr>
                             <th><?= __('Total cycle counting of a product') ?></th>
-                            <td><span>!!!</span></td>
+                            <td><span><?= $this->getTotalCycles($subscription->getCode()) ?></span></td>
                         </tr>
                     </tbody>
                 </table>
@@ -99,6 +99,9 @@
                 <span class="data-grid-cell-content"><?= __('Selected Option') ?></span>
             </th>
             <th class="data-grid-th">
+                <span class="data-grid-cell-content"><?= __('Cycles') ?></span>
+            </th>
+            <th class="data-grid-th">
                 <span class="data-grid-cell-content"><?= __('Quantity') ?></span>
             </th>
         </tr>
@@ -116,6 +119,9 @@
                         <div class="data-grid-cell-content">
                             <?= $this->getProductOptions($product); ?>
                         </div>
+                    </td>
+                    <td>
+                        <div class="data-grid-cell-content"><?= $this->getProductCycles($product); ?></div>
                     </td>
                     <td>
                         <div class="data-grid-cell-content">
@@ -143,25 +149,25 @@
                     <span class="data-grid-cell-content" >Invoice Id</span>
                 </th>
                 <th class="data-grid-th" >
-                    <span class="data-grid-cell-content" >Método de pagamento</span>
+                    <span class="data-grid-cell-content" ><?= __('Payment Method') ?></span>
                 </th>
                 <th class="data-grid-th">
-                    <span class="data-grid-cell-content" >Valor</span>
+                    <span class="data-grid-cell-content" ><?= __('Grand Total') ?></span>
                 </th>
                 <th class="data-grid-th">
-                    <span class="data-grid-cell-content" >Valor pago</span>
+                    <span class="data-grid-cell-content" ><?= __('Paid amount') ?></span>
                 </th>
                 <th class="data-grid-th">
-                    <span class="data-grid-cell-content" >Valor cancelado</span>
+                    <span class="data-grid-cell-content" ><?= __('Canceled amount') ?></span>
                 </th>
                 <th class="data-grid-th">
-                    <span class="data-grid-cell-content" >Valor estornado</span>
+                    <span class="data-grid-cell-content" ><?= __('Refunded amount') ?></span>
                 </th>
                 <th class="data-grid-th">
-                    <span class="data-grid-cell-content" >Status</span>
+                    <span class="data-grid-cell-content" ><?= __('Status') ?></span>
                 </th>
                 <th class="data-grid-th" >
-                    <span class="data-grid-cell-content" >Boleto</span>
+                    <span class="data-grid-cell-content" ><?= __('Boleto') ?></span>
                 </th>
                 <th class="data-grid-th" >
                     <span class="data-grid-cell-content" ><?= __('Actions') ?></span>
@@ -171,36 +177,56 @@
         <tbody>
         <?php foreach ($subscription->getCharges() as $charge):
             ?>
-            <tr class="data-row" data-bind="css: {'_odd-row': $index % 2}" data-repeat-index="0">
+            <tr class="data-row" data-repeat-index="0">
                 <td>
                     <div class="data-grid-cell-content"><?= $charge->getId(); ?></div>
                 </td>
                 <td class="">
-                    <div class="data-grid-cell-content"><?= $charge->getMundipaggId()->getValue(); ?></div>
+                    <div class="data-grid-cell-content"><?= $charge->getInvoiceId()->getValue(); ?></div>
                 </td>
                 <td>
-                    <div class="data-grid-cell-content"><?= $charge->getPaymentMethod()->getPaymentMethod(); ?></div>
+                    <div class="data-grid-cell-content"><?= __($charge->getPaymentMethod()->getPaymentMethod()); ?></div>
                 </td>
                 <td>
-                    <div class="data-grid-cell-content"><?= $charge->getAmount(); ?></div>
+                    <div class="data-grid-cell-content"><?= $this->centsToFloat($charge->getAmount()); ?></div>
                 </td>
                 <td>
-                    <div class="data-grid-cell-content"><?= $charge->getPaidAmount(); ?></div>
+                    <div class="data-grid-cell-content"><?= $this->centsToFloat($charge->getPaidAmount()); ?></div>
                 </td>
                 <td>
-                    <div class="data-grid-cell-content"><?= $charge->getCanceledAmount(); ?></div>
+                    <div class="data-grid-cell-content"><?= $this->centsToFloat($charge->getCanceledAmount()); ?></div>
                 </td>
                 <td>
-                    <div class="data-grid-cell-content"><?= $charge->getRefundedAmount(); ?></div>
+                    <div class="data-grid-cell-content"><?= $this->centsToFloat($charge->getRefundedAmount()); ?></div>
                 </td>
                 <td>
-                    <div class="data-grid-cell-content"><?= $charge->getStatus()->getStatus(); ?></div>
+                    <div class="data-grid-cell-content"><?= __($charge->getStatus()->getStatus()); ?></div>
                 </td>
                 <td>
-                    <div class="data-grid-cell-content"> <?= $charge->getBoletoUrl(); ?> </div>
+                    <?php
+                        $cancelUrl = $charge->getBoletoUrl();
+                        if (strlen($cancelUrl) > 0) {
+                    ?>
+                        <div class="data-grid-cell-content"> <?= $cancelUrl; ?> </div>
+                    <?php
+                        } else {
+                            echo '---';
+                        }
+                    ?>
                 </td>
                 <td>
-                    <div class="data-grid-cell-content"><a title="<?= __('Cancel') ?>" href="#" target="_blank"><?= __('Cancel') ?></a></div>
+                    <div class="data-grid-cell-content">
+                        <?php
+                            $cancelUrl = $this->getCancelUrl($charge->getInvoiceId()->getValue());
+                            if ($charge->getStatus()->getStatus() !== 'canceled') {
+                        ?>
+                            <a onclick="return confirm('<?= __('Are you sure you want to delete this item?') ?>')" title="<?= __('Cancel') ?>" href="<?php echo $cancelUrl ?>"><?= __('Cancel') ?></a>
+                        <?php
+                            } else {
+                                echo '---';
+                            }
+                        ?>
+                    </div>
                 </td>
             </tr>
         <?php endforeach; ?>

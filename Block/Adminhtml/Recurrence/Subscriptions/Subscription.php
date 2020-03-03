@@ -4,20 +4,29 @@ namespace MundiPagg\MundiPagg\Block\Adminhtml\Recurrence\Subscriptions;
 
 use Magento\Catalog\Api\ProductRepositoryInterfaceFactory;
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
+use Magento\Cms\Block\Adminhtml\Page\Grid\Renderer\Action\UrlBuilder;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Registry;
+use Magento\Framework\UrlInterface;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
+use Magento\Framework\View\Element\UiComponent\ContextInterface;
+use Magento\Framework\View\Element\UiComponentFactory;
 use Mundipagg\Core\Kernel\Services\MoneyService;
 use Mundipagg\Core\Kernel\ValueObjects\Id\SubscriptionId;
 use Mundipagg\Core\Recurrence\Repositories\ChargeRepository;
 use Mundipagg\Core\Recurrence\Services\SubscriptionService;
 use Mundipagg\Core\Recurrence\ValueObjects\IntervalValueObject;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use MundiPagg\MundiPagg\Helper\RecurrenceProductHelper;
+use MundiPagg\MundiPagg\Ui\Component\Column\Invoices\Actions;
+use MundiPagg\MundiPagg\Ui\Component\Recurrence\Column\TotalCyclesByProduct;
 
 class Subscription extends Template
 {
     const INACTIVE_STATUS = 'INACTIVE';
+    const CANCELED_STATUS = 'CANCELED';
+    const URL_PATH_DELETE = 'mundipagg_mundipagg/invoices/delete';
 
     private $objectManager;
 
@@ -122,6 +131,22 @@ class Subscription extends Template
         }
     }
 
+    public function getTotalCycles($orderId)
+    {
+        $recurrenceProductHelper = new RecurrenceProductHelper();
+        $products = $this->getProducts($orderId);
+
+        $cycles = [];
+
+        foreach ($products as $product) {
+            $cycles[] =
+                $recurrenceProductHelper
+                    ->getSelectedRepetitionByProduct($product);
+        }
+
+        return $recurrenceProductHelper->returnHighestCycle($cycles);
+    }
+
     public function getDisabledStatusName()
     {
         return self::INACTIVE_STATUS;
@@ -129,8 +154,7 @@ class Subscription extends Template
 
     public function getProducts($orderId)
     {
-        $magentoOrder =
-            $this->objectManager
+        $magentoOrder = $this->objectManager
                 ->get('Magento\Sales\Model\Order')
                 ->loadByIncrementId($orderId);
         return $magentoOrder->getAllItems();
@@ -149,5 +173,25 @@ class Subscription extends Template
 
             return $productOptions['options'][0]['value'];
         }
+    }
+
+    public function getCancelUrl($invoiceId)
+    {
+        $url = $this->_urlBuilder->getUrl(self::URL_PATH_DELETE);
+        $url .= "?id={$invoiceId}";
+
+        return $url;
+    }
+
+    public function centsToFloat($amountInCents)
+    {
+        $moneyService = new MoneyService();
+        return number_format($moneyService->centsToFloat($amountInCents), '2', ',', '.');
+    }
+
+    public function getProductCycles($product)
+    {
+        $recurrenceProductHelper = new RecurrenceProductHelper();
+        return $recurrenceProductHelper->getSelectedRepetitionByProduct($product);
     }
 }
