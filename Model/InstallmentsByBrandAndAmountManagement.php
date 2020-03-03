@@ -141,7 +141,10 @@ class InstallmentsByBrandAndAmountManagement
         }
 
         if ($recurrenceEntity->getRecurrenceType() == Plan::RECURRENCE_TYPE) {
-            return $recurrenceEntity->getInterval();
+            $intervalType = $recurrenceEntity->getIntervalType();
+            $intervalCount = $recurrenceEntity->getIntervalCount();
+
+            return IntervalValueObject::$intervalType($intervalCount);
         }
 
         $repetition = $this->recurrenceProductHelper->getSelectedRepetition($item);
