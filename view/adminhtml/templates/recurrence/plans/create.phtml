@@ -129,7 +129,6 @@
                                     </label>
                                     <div class="admin__field-control">
                                         <select class="admin__control-select" name="form[interval_type]" id="interval_type">
-                                            <option data-title="Week" value="week"><?php echo __('Week') ?></option>
                                             <option data-title="Month" value="month"><?php echo __('Month') ?></option>
                                             <option data-title="Year" value="year"><?php echo __('Year') ?></option>
                                         </select>
@@ -146,15 +145,6 @@
                                             <option value="<?php echo $i?>"><?php echo $i?></option>
                                             <?php endfor;?>
                                         </select>
-                                    </div>
-                                </div>
-
-                                <div class="admin__field admin__field-small">
-                                    <label class="admin__field-label">
-                                        <span><?php echo __('Trial Days') ?></span>
-                                    </label>
-                                    <div class="admin__field-control">
-                                        <input class="admin__control-text" type="text" name="form[trial_period_days]" id="trial_period_days" maxlength="255">
                                     </div>
                                 </div>
                             </fieldset>
