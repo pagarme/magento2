@@ -44,24 +44,4 @@ class TotalCyclesByProduct extends Column
 
         return $dataSource;
     }
-
-    public function getTotalCycles($item)
-    {
-        $recurrenceProductHelper = new RecurrenceProductHelper();
-        $magentoOrder =
-            $this->objectManager
-                ->get('Magento\Sales\Model\Order')
-                ->loadByIncrementId($item['code']);
-        $products = $magentoOrder->getAllItems();
-
-        $cycles = [];
-
-        foreach ($products as $product) {
-            $cycles[] =
-                $recurrenceProductHelper
-                    ->getSelectedRepetitionByProduct($product);
-        }
-
-        return $recurrenceProductHelper->returnHighestCycle($cycles);
-    }
 }

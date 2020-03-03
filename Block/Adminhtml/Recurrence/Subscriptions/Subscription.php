@@ -134,17 +134,7 @@ class Subscription extends Template
     public function getTotalCycles($orderId)
     {
         $recurrenceProductHelper = new RecurrenceProductHelper();
-        $products = $this->getProducts($orderId);
-
-        $cycles = [];
-
-        foreach ($products as $product) {
-            $cycles[] =
-                $recurrenceProductHelper
-                    ->getSelectedRepetitionByProduct($product);
-        }
-
-        return $recurrenceProductHelper->returnHighestCycle($cycles);
+        return $recurrenceProductHelper->getHighestProductCycle($orderId);
     }
 
     public function getDisabledStatusName()
