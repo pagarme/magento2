@@ -67,7 +67,7 @@
 				</item>
 			</argument>
 		</column>
-		<column name="interval_type">
+		<column name="interval_type" class="MundiPagg\MundiPagg\Ui\Component\Recurrence\Column\Interval">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
 					<item name="filter" xsi:type="string">text</item>
@@ -77,21 +77,7 @@
 							<item name="required-entry" xsi:type="boolean">true</item>
 						</item>
 					</item>
-					<item name="label" xsi:type="string" translate="true">Interval Type</item>
-				</item>
-			</argument>
-		</column>
-		<column name="trial_period_days">
-			<argument name="data" xsi:type="array">
-				<item name="config" xsi:type="array">
-					<item name="filter" xsi:type="string">text</item>
-					<item name="editor" xsi:type="array">
-						<item name="editorType" xsi:type="string">text</item>
-						<item name="validation" xsi:type="array">
-							<item name="required-entry" xsi:type="boolean">true</item>
-						</item>
-					</item>
-					<item name="label" xsi:type="string" translate="true">Período de teste</item>
+					<item name="label" xsi:type="string" translate="true">Interval</item>
 				</item>
 			</argument>
 		</column>
@@ -99,20 +85,6 @@
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
 					<item name="label" translate="true" xsi:type="string">Payment Method</item>
-				</item>
-			</argument>
-		</column>
-		<column name="interval_count">
-			<argument name="data" xsi:type="array">
-				<item name="config" xsi:type="array">
-					<item name="filter" xsi:type="string">text</item>
-					<item name="editor" xsi:type="array">
-						<item name="editorType" xsi:type="string">text</item>
-						<item name="validation" xsi:type="array">
-							<item name="required-entry" xsi:type="boolean">true</item>
-						</item>
-					</item>
-					<item name="label" xsi:type="string" translate="true">Interval Count</item>
 				</item>
 			</argument>
 		</column>
@@ -130,7 +102,7 @@
 				</item>
 			</argument>
 		</column>
-		<column name="product_id">
+		<column name="billing_type">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
 					<item name="filter" xsi:type="string">text</item>
@@ -140,7 +112,7 @@
 							<item name="required-entry" xsi:type="boolean">true</item>
 						</item>
 					</item>
-					<item name="label" xsi:type="string" translate="true">Product ID</item>
+					<item name="label" xsi:type="string" translate="true">Billing Type</item>
 				</item>
 			</argument>
 		</column>

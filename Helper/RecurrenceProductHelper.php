@@ -41,6 +41,11 @@ class RecurrenceProductHelper extends AbstractHelper
         $planService = new PlanService();
         $plan = $planService->findByMundipaggId(new PlanId($planID));
         $cycles = [];
+
+        if (empty($plan)) {
+            return;
+        }
+
         $items = $plan->getItems();
         foreach ($items as $item) {
             $cycles[] = $item->getCycles();
