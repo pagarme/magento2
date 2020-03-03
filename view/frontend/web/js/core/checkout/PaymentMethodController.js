@@ -361,6 +361,10 @@ PaymentMethodController.prototype.sumInterests = function(interest, selectName) 
 PaymentMethodController.prototype.fillInstallments = function (form) {
     var _self = this;
 
+    if (form.creditCardBrand == undefined) {
+        return;
+    }
+
     formHandler = new FormHandler();
 
     var defaulOption = [{
