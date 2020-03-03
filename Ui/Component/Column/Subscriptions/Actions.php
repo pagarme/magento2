@@ -13,6 +13,7 @@ class Actions extends Column
     /** Url path */
     const URL_PATH_EDIT = 'mundipagg_mundipagg/invoices/index';
     const URL_PATH_DELETE = 'mundipagg_mundipagg/subscriptions/delete';
+    const URL_PATH_DETAILS = 'mundipagg_mundipagg/subscriptions/details';
     /** @var UrlBuilder */
     protected $actionUrlBuilder;
     /** @var UrlInterface */
@@ -64,6 +65,10 @@ class Actions extends Column
             'href' => $this->getUrlMundipaggEdit($item, self::URL_PATH_EDIT),
             'label' => __('Invoices')
         ];
+        $actions[$name]['details'] = [
+            'href' => $this->getUrlMundipaggEdit($item, self::URL_PATH_DETAILS),
+            'label' => __('Subscription details')
+        ];
 
         if ($item['status']->getText() != 'canceled') {
             $actions[$name]['delete'] = [
@@ -81,6 +86,12 @@ class Actions extends Column
     }
 
     protected function getUrlMundipaggEdit($item, $path)
+    {
+        $url = $this->urlBuilder->getUrl($path);
+        return $url . "?subscription_id={$item['mundipagg_id']}";
+    }
+
+    protected function getUrlMundipaggDetails($item, $path)
     {
         $url = $this->urlBuilder->getUrl($path);
         return $url . "?subscription_id={$item['mundipagg_id']}";
