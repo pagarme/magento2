@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2017 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <group id="mundipagg_mundipagg_transaction_voucher_providers" translate="label comment" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="90">
+    	<label>Brands</label>
+	    <field id="vouchertypes" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="multiselect">
+	        <label>Brands</label>
+	        <comment />
+	        <source_model>MundiPagg\MundiPagg\Model\Source\Vouchertype</source_model>
+	        <config_path>payment/mundipagg_voucher/vouchertypes</config_path>
+	    </field>
+	</group>
+</include>

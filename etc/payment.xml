@@ -80,6 +80,9 @@
         <type id="Cabal" order="19">
             <label>Cabal</label>
         </type>
+        <type id="Sodexo" order="20">
+            <label>Sodexo</label>
+        </type>
 
         <!-- Billet -->
         <type id="Itau" order="28">
