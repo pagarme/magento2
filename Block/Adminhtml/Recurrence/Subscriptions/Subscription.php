@@ -25,8 +25,9 @@ use MundiPagg\MundiPagg\Ui\Component\Recurrence\Column\TotalCyclesByProduct;
 class Subscription extends Template
 {
     const INACTIVE_STATUS = 'INACTIVE';
-    const CANCELED_STATUS = 'CANCELED';
+    const CANCELED_STATUS = 'canceled';
     const URL_PATH_DELETE = 'mundipagg_mundipagg/invoices/delete';
+    const URL_PATH_CANCEL_SUBSCRIPTION = 'mundipagg_mundipagg/subscriptions/delete/id';
 
     private $objectManager;
 
@@ -139,7 +140,7 @@ class Subscription extends Template
 
     public function getDisabledStatusName()
     {
-        return self::INACTIVE_STATUS;
+        return self::CANCELED_STATUS;
     }
 
     public function getProducts($orderId)
@@ -165,14 +166,6 @@ class Subscription extends Template
         }
     }
 
-    public function getCancelUrl($invoiceId)
-    {
-        $url = $this->_urlBuilder->getUrl(self::URL_PATH_DELETE);
-        $url .= "?id={$invoiceId}";
-
-        return $url;
-    }
-
     public function centsToFloat($amountInCents)
     {
         $moneyService = new MoneyService();
@@ -183,5 +176,21 @@ class Subscription extends Template
     {
         $recurrenceProductHelper = new RecurrenceProductHelper();
         return $recurrenceProductHelper->getSelectedRepetitionByProduct($product);
+    }
+
+    public function getCancelInvoiceUrl($invoiceId)
+    {
+        $url = $this->_urlBuilder->getUrl(self::URL_PATH_DELETE);
+        $url .= "?id={$invoiceId}";
+
+        return $url;
+    }
+
+    public function getCancelSubscriptionUrl($subscriptionId)
+    {
+        $url = self::URL_PATH_CANCEL_SUBSCRIPTION .
+            "/{$subscriptionId}";
+
+        return $this->_urlBuilder->getUrl($url);
     }
 }

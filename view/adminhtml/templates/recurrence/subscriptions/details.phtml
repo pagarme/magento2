@@ -1,13 +1,35 @@
 <?php $subscription = $this->getSubscriptionDetails(); ?>
 
 <section class="admin__page-section order-view-account-information">
+
+    <?php if ($subscription->getStatus()->getStatus() != $this->getDisabledStatusName()) { ?>
+        <div class="page-main-actions">
+            <div class="page-actions" data-ui-id="page-actions-toolbar-content-header">
+                <div class="page-actions-inner" data-title="#000002010">
+                    <div class="page-actions-buttons">
+                        <button id="order_reorder" type="button" class="action-default" onclick="return cancelConfirm()" >
+                            <span><?= __('Cancel subscription'); ?></span>
+                        </button>
+                    </div>
+                    <script>
+                        function cancelConfirm() {
+                            var confirmation = confirm('<?= __('Are you sure you want to delete this item?') ?>');
+                            if (confirmation) {
+                                setLocation('<?php echo $this->getCancelSubscriptionUrl($subscription->getId()); ?>');
+                            }
+                        }
+                    </script>
+                </div>
+            </div>
+        </div>
+    <?php } ?>
     <div class="admin__page-section-title">
         <span class="title"><?= __('Subscription data') ?></span>
     </div>
     <div class="admin__page-section-content">
         <div class="admin__page-section-item order-information">
             <div class="admin__page-section-item-title">
-                <span class="title"><?= __('Order') ?> # <?= $subscription->getCode(); ?></span>
+                <span class="title"><?= __('Order reference') ?> # <?= $subscription->getCode(); ?></span>
             </div>
             <div class="admin__page-section-item-content">
                 <table class="admin__table-secondary order-information-table">
@@ -16,18 +38,26 @@
                             <th><?= __('Subscription created at') ?></th>
                             <td><?= $subscription->getCreatedAt(); ?></td>
                         </tr>
-                        <?php if ( $subscription->getStatus() === $this->getDisabledStatusName()) { ?>
+                        <?php if ($subscription->getStatus()->getStatus() === $this->getDisabledStatusName()) { ?>
                             <tr>
                                 <th><?= __('Subscription disabled at') ?></th>
                                 <td><?= $subscription->getUpdatedAt(); ?></td>
                             </tr>
                         <?php } ?>
                         <tr>
-                            <th><?= __('Subscription status') ?></th>
+                            <th><?= __('Order status') ?></th>
                             <td>
                                 <span id="order_status">
                                     <?= $subscription->getPlatformOrder()->getStatus(); ?>
                                     (<?= $subscription->getPlatformOrder()->getState()->getState(); ?>)
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><?= __('Subscription status') ?></th>
+                            <td>
+                                <span>
+                                    <?= $subscription->getStatus()->getStatus(); ?>
                                 </span>
                             </td>
                         </tr>
@@ -217,7 +247,7 @@
                 <td>
                     <div class="data-grid-cell-content">
                         <?php
-                            $cancelUrl = $this->getCancelUrl($charge->getInvoiceId()->getValue());
+                            $cancelUrl = $this->getCancelInvoiceUrl($charge->getInvoiceId()->getValue());
                             if ($charge->getStatus()->getStatus() !== 'canceled') {
                         ?>
                             <a onclick="return confirm('<?= __('Are you sure you want to delete this item?') ?>')" title="<?= __('Cancel') ?>" href="<?php echo $cancelUrl ?>"><?= __('Cancel') ?></a>
