@@ -68,7 +68,7 @@
 
                         <tr>
                             <th><?= __('Interval') ?></th>
-                            <td><span><?= $subscription->getIntervalType(); ?></span></td>
+                            <td><span><?= __(ucfirst($subscription->getIntervalType())); ?></span></td>
                         </tr>
                         <tr>
                             <th><?= __('Total cycle counting of a product') ?></th>
