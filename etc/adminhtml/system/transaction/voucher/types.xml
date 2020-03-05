@@ -12,7 +12,7 @@
 	        <label>Brands</label>
 	        <comment />
 	        <source_model>MundiPagg\MundiPagg\Model\Source\Vouchertype</source_model>
-	        <config_path>payment/mundipagg_voucher/vouchertypes</config_path>
+	        <config_path>payment/mundipagg_voucher/cctypes</config_path>
 	    </field>
 	</group>
 </include>
