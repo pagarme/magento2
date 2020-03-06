@@ -51,6 +51,38 @@ PaymentMethodController.prototype.creditcardInit = function () {
     this.modelToken = new CreditCardToken(this.formObject);
 };
 
+PaymentMethodController.prototype.voucherInit = function () {
+    this.platformConfig = PlatformConfig.bind(this.platformConfig);
+    this.formObject = FormObject.voucherInit(this.platformConfig.isMultibuyerEnabled);
+
+    if (!this.formObject) {
+        return;
+    }
+
+    this.model = new VoucherModel(
+        this.formObject,
+        this.platformConfig.publicKey
+    );
+
+    this.fillCardAmount(this.formObject, 1);
+    this.hideCardAmount(this.formObject);
+    this.fillFormText(this.formObject);
+    this.fillSavedCreditCardsSelect(this.formObject);
+    this.fillBrandList('mundipagg_voucher');
+
+    if (!this.platformConfig.isMultibuyerEnabled) {
+        this.removeMultibuyerForm(this.formObject);
+    }
+
+    if (this.platformConfig.isMultibuyerEnabled) {
+        this.fillMultibuyerStateSelect(this.formObject);
+        this.addShowMultibuyerListener(this.formObject);
+    }
+
+    this.addCreditCardListeners(this.formObject);
+    this.modelToken = new CreditCardToken(this.formObject);
+};
+
 PaymentMethodController.prototype.twocreditcardsInit = function () {
     this.platformConfig = PlatformConfig.bind(this.platformConfig);
     this.formObject = FormObject.twoCreditCardsInit(this.platformConfig.isMultibuyerEnabled);
@@ -403,10 +435,14 @@ PaymentMethodController.prototype.fillInstallments = function (form) {
     });
 };
 
-PaymentMethodController.prototype.fillBrandList = function () {
+PaymentMethodController.prototype.fillBrandList = function (method) {
+    if (method == undefined) {
+        method = 'mundipagg_creditcard';
+    }
     formHandler = new FormHandler();
     formHandler.fillBrandList(
-        this.platformConfig.avaliableBrands
+        this.platformConfig.avaliableBrands[method],
+        method
     );
 };
 

@@ -42,7 +42,12 @@ FormHandler.prototype.updateInstallmentSelect = function (installmentsObj, eleme
     element.html(content);
 };
 
-FormHandler.prototype.fillBrandList = function (brandsObject) {
+FormHandler.prototype.fillBrandList = function (brandsObject, method) {
+
+    var selector = '.credit-card-types';
+    if (method !== 'mundipagg_creditcard') {
+        selector = "#" + method + "-form " + selector;
+    }
 
     var html = '';
 
@@ -59,7 +64,7 @@ FormHandler.prototype.fillBrandList = function (brandsObject) {
             "</li>";
     }
 
-    jQuery('.credit-card-types').each(function () {
+    jQuery(selector).each(function () {
       jQuery(this).html(html);
     });
 };

@@ -14,6 +14,9 @@
         <method name="mundipagg_two_creditcard">
             <allow_multiple_address>1</allow_multiple_address>
         </method>
+        <method name="mundipagg_voucher">
+            <allow_multiple_address>1</allow_multiple_address>
+        </method>
         <method name='mundipagg_customer_address'>
             <allow_multiple_address>0</allow_multiple_address>
         </method>

@@ -139,6 +139,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
     {
         $options = [
             'enabled' => 'active',
+            'title' => 'title',
             'cardOperation' => 'payment_action',
             'cardStatementDescriptor' => 'soft_description',
             'saveCards' => 'enabled_saved_cards'
