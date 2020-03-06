@@ -92,7 +92,6 @@ class InitializeCommand implements CommandInterface
     private function doCoreDetour($payment)
     {
         $order =  $payment->getOrder();
-        $items = $payment->getOrder()->getItems();
 
         $log = new OrderLogService();
 
