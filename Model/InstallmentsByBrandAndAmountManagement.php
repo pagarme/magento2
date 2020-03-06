@@ -108,6 +108,11 @@ class InstallmentsByBrandAndAmountManagement
     public function getInstallmentsByRecurrence($quote, $installments)
     {
         $items = $quote->getItems();
+
+        if (!$items) {
+            return;
+        }
+
         $interval = null;
         $recurrenceProduct = null;
         $recurrenceService = new RecurrenceService();
