@@ -1,16 +1,6 @@
 <?php
-/**
- * Class CreditCardDataAssignObserver
- *
- * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
- * @copyright   2017 MundiPagg (http://www.mundipagg.com)
- * @license     http://www.mundipagg.com Copyright
- *
- * @link        http://www.mundipagg.com
- */
 
 namespace MundiPagg\MundiPagg\Observer;
-
 
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\DataObject;
@@ -71,7 +61,7 @@ class VoucherDataAssignObserver extends AbstractDataAssignObserver
                 'cc_owner' => $card->getCardHolderName(),
                 'cc_last_4' => (string) $card->getLastFourNumbers()
             ]);
-        }else{
+        } else {
             $info->setAdditionalInformation('cc_saved_card', $additionalData->getCcSavedCard());
             $info->setAdditionalInformation('cc_type', $additionalData->getCcType());
             $info->setAdditionalInformation('cc_last_4', substr($additionalData->getCcLast4(),-4));

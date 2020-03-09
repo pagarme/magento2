@@ -2,7 +2,6 @@
 
 namespace MundiPagg\MundiPagg\Model\Ui\Voucher;
 
-
 use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Customer\Model\Session;
 use Mundipagg\Core\Kernel\ValueObjects\Configuration\VoucherConfig;

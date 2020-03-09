@@ -34,10 +34,6 @@ define(
                 creditCardType: '',
             },
 
-            getInstallmentsByBrand: function (brand, success) {
-
-            },
-
             getCode: function() {
                 return "mundipagg_voucher";
             },
@@ -110,20 +106,6 @@ define(
                     '" alt="' + $t('Card Verification Number Visual Reference') +
                     '" title="' + $t('Card Verification Number Visual Reference') +
                     '" />';
-            },
-
-            /**
-             * Get list of available credit card types values
-             * @returns {Object}
-             */
-            getAvailableTypesValues: function () {
-                /*var types = window.checkoutConfig.payment.ccform.availableTypes[this.getCode()];
-                return _.map(types, function (value, key) {
-                    return {
-                        'value': key,
-                        'type': value
-                    };
-                });*/
             },
 
             /**
