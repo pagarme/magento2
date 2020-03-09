@@ -158,7 +158,6 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
 
         $dataObj->voucherConfig->cardOperation = $operation;
         $dataObj->voucherConfig->cardConfigs = self::getBrandConfig($storeConfig, $section);
-
     }
 
     static private function fillWithCardConfig(&$dataObj, $storeConfig)

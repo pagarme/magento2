@@ -713,16 +713,12 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $payment
     )
     {
-        $moneyService = new MoneyService();
         $identifier = null;
         $customerId = null;
         $brand = null;
-        try {
-            $brand = strtolower($additionalInformation['cc_type']);
-        }
-        catch (\Throwable $e)
-        {
 
+        if (isset($additionalInformation['cc_token_credit_card'])) {
+            $brand = strtolower($additionalInformation['cc_type']);
         }
 
         if (isset($additionalInformation['cc_token_credit_card'])) {

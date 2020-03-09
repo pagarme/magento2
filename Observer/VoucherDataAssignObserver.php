@@ -45,47 +45,51 @@ class VoucherDataAssignObserver extends AbstractDataAssignObserver
         }
 
         $info->setAdditionalInformation('cc_saved_card', '0');
+        $info->setAdditionalInformation('cc_installments', 1);
+        $this->setMultiBuyer($info, $additionalData);
 
         if ($additionalData->getCcSavedCard()) {
-            $cardId = $additionalData->getCcSavedCard();
-            $card = $this->cardsRepository->getById($cardId);
-
-            $info->setAdditionalInformation('cc_saved_card', $additionalData->getCcSavedCard());
-            $info->setAdditionalInformation('cc_type', $card->getBrand());
-            $info->setAdditionalInformation(
-                'cc_last_4',
-                (string) $card->getLastFourNumbers()
-            );
-            $info->addData([
-                'cc_type' => $card->getBrand(),
-                'cc_owner' => $card->getCardHolderName(),
-                'cc_last_4' => (string) $card->getLastFourNumbers()
-            ]);
-        } else {
-            $info->setAdditionalInformation('cc_saved_card', $additionalData->getCcSavedCard());
-            $info->setAdditionalInformation('cc_type', $additionalData->getCcType());
-            $info->setAdditionalInformation('cc_last_4', substr($additionalData->getCcLast4(),-4));
-            $info->setAdditionalInformation('cc_token_credit_card', $additionalData->getCcTokenCreditCard());
-            $info->addData([
-                'cc_type' => $additionalData->getCcType(),
-                'cc_owner' => $additionalData->getCcOwner(),
-                'cc_last_4' => $additionalData->getCcLast4(),
-                'cc_exp_month' => $additionalData->getCcExpMonth(),
-                'cc_exp_year' => $additionalData->getCcExpYear(),
-                'cc_token_credit_card' => $additionalData->getCcTokenCreditCard(),
-            ]);
-
-            $info->setAdditionalInformation('cc_savecard', $additionalData->getCcSavecard());
+            $this->setSavedCardAdditionalData($info, $additionalData);
+            return $this;
         }
 
-        $this->setMultiBuyer($info, $additionalData);
-        $info->setAdditionalInformation('cc_installments', 1);
-
-        if ($additionalData->getCcInstallments()) {
-            $info->setAdditionalInformation('cc_installments', (int) $additionalData->getCcInstallments());
-        }
-
+        $this->setNewCardAdditionalData($info, $additionalData);
         return $this;
+    }
+
+    protected function setNewCardAdditionalData($info, $additionalData)
+    {
+        $info->setAdditionalInformation('cc_saved_card', $additionalData->getCcSavedCard());
+        $info->setAdditionalInformation('cc_type', $additionalData->getCcType());
+        $info->setAdditionalInformation('cc_last_4', substr($additionalData->getCcLast4(),-4));
+        $info->setAdditionalInformation('cc_token_credit_card', $additionalData->getCcTokenCreditCard());
+        $info->addData([
+            'cc_type' => $additionalData->getCcType(),
+            'cc_owner' => $additionalData->getCcOwner(),
+            'cc_last_4' => $additionalData->getCcLast4(),
+            'cc_exp_month' => $additionalData->getCcExpMonth(),
+            'cc_exp_year' => $additionalData->getCcExpYear(),
+            'cc_token_credit_card' => $additionalData->getCcTokenCreditCard(),
+        ]);
+
+        $info->setAdditionalInformation('cc_savecard', $additionalData->getCcSavecard());
+    }
+    protected function setSavedCardAdditionalData($info, $additionalData)
+    {
+        $cardId = $additionalData->getCcSavedCard();
+        $card = $this->cardsRepository->getById($cardId);
+
+        $info->setAdditionalInformation('cc_saved_card', $additionalData->getCcSavedCard());
+        $info->setAdditionalInformation('cc_type', $card->getBrand());
+        $info->setAdditionalInformation(
+            'cc_last_4',
+            (string) $card->getLastFourNumbers()
+        );
+        $info->addData([
+            'cc_type' => $card->getBrand(),
+            'cc_owner' => $card->getCardHolderName(),
+            'cc_last_4' => (string) $card->getLastFourNumbers()
+        ]);
     }
 
     /**
