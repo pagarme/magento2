@@ -23,6 +23,10 @@ define(
                 component: 'MundiPagg_MundiPagg/js/view/payment/creditcard'
             },
             {
+                type: 'mundipagg_voucher',
+                component: 'MundiPagg_MundiPagg/js/view/payment/voucher'
+            },
+            {
                 type: 'mundipagg_billet',
                 component: 'MundiPagg_MundiPagg/js/view/payment/boleto'
             },

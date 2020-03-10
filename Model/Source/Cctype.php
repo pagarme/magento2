@@ -20,26 +20,18 @@ class Cctype extends \Magento\Payment\Model\Source\Cctype
     public function getAllowedTypes()
     {
         return [
-			'Visa',
-			'Mastercard',
-			'Amex',
-			'Hipercard',
-			'Diners',
-			'Elo',
-			'Discover',
-			'Aura',
-			'JCB',
-			'Credz',
-			'SodexoAlimentacao',
-			'SodexoCultura',
-			'SodexoGift',
-			'SodexoPremium',
-			'SodexoRefeicao',
-			'SodexoCombustivel',
-			'VR',
-			'Alelo',
-			'Banese',
-			'Cabal',
+            'Visa',
+            'Mastercard',
+            'Amex',
+            'Hipercard',
+            'Diners',
+            'Elo',
+            'Discover',
+            'Aura',
+            'JCB',
+            'Credz',
+            'Banese',
+            'Cabal'
         ];
     }
 }

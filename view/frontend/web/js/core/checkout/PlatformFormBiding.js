@@ -53,18 +53,33 @@ PlatformConfig.bind = function (platformConfig) {
 };
 
 PlatformConfig.getAvaliableBrands = function (data) {
-    var avaliableBrands = [];
-    var payment = data.payment.ccform.availableTypes.mundipagg_creditcard;
-    var brands = Object.keys(payment);
+    var CCBrands = [];
+    var VoucherBrands = [];
+
+    var objCreditCardBrands = data.payment.ccform.availableTypes.mundipagg_creditcard;
+    var brands = Object.keys(objCreditCardBrands);
 
     for (var i = 0, len = brands.length; i < len; i++) {
-        avaliableBrands[i] = {
+        CCBrands[i] = {
             'title': brands[i],
             'image': data.payment.ccform.icons[brands[i]].url
         };
     }
 
-    return avaliableBrands;
+    var objVoucherBrands = data.payment.ccform.availableTypes.mundipagg_voucher;
+    var brands = Object.keys(objVoucherBrands);
+
+    for (var i = 0, len = brands.length; i < len; i++) {
+        VoucherBrands[i] = {
+            'title': brands[i],
+            'image': data.payment.ccform.icons[brands[i]].url
+        };
+    }
+
+    return {
+        'mundipagg_creditcard': CCBrands,
+        'mundipagg_voucher': VoucherBrands
+    };
 }
 
 FormObject.creditCardInit = function (isMultibuyerEnabled) {
@@ -113,6 +128,58 @@ FormObject.creditCardInit = function (isMultibuyerEnabled) {
     }
 
     this.FormObject = creditCardForm;
+    this.FormObject.numberOfPaymentForms = 1;
+    this.FormObject.multibuyer = multibuyerForm;
+
+    return this.FormObject;
+};
+
+FormObject.voucherInit = function (isMultibuyerEnabled) {
+
+    this.FormObject = {};
+
+    var containerSelector = '#mundipagg_voucher-form';
+
+    if (typeof jQuery(containerSelector).html() == 'undefined') {
+        this.FormObject = null;
+        return;
+    }
+
+    var voucherForm = {
+        'containerSelector' : containerSelector,
+        "creditCardNumber" : jQuery(containerSelector + " .cc_number"),
+        "creditCardHolderName" : jQuery(containerSelector + " .cc_owner"),
+        "creditCardExpMonth" : jQuery(containerSelector + " .cc_exp_month"),
+        "creditCardExpYear" : jQuery(containerSelector + " .cc_exp_year"),
+        "creditCardCvv" : jQuery(containerSelector + " .cc_cid"),
+        "creditCardInstallments" : jQuery(containerSelector + " .cc_installments"),
+        "creditCardBrand" : jQuery(containerSelector + " .cc_type"),
+        "creditCardToken" : jQuery(containerSelector + " .cc_token"),
+        "inputAmount" : jQuery(containerSelector + " .cc_amount"),
+        "savedCreditCardSelect" : jQuery(containerSelector + " .cc_saved_creditcards"),
+        "saveThisCard" : jQuery(containerSelector + " .save_this_card")
+    };
+
+    if (isMultibuyerEnabled) {
+        var multibuyerForm = {
+            "showMultibuyer" : jQuery(containerSelector + " .show_multibuyer"),
+            "firstname" : jQuery(containerSelector + " .multibuyer_firstname"),
+            "lastname" : jQuery(containerSelector + " .multibuyer_lastname"),
+            "email" : jQuery(containerSelector + " .multibuyer_email"),
+            "zipcode" : jQuery(containerSelector + " .multibuyer_zipcode"),
+            "document" : jQuery(containerSelector + " .multibuyer_document"),
+            "street" : jQuery(containerSelector + " .multibuyer_street"),
+            "number" : jQuery(containerSelector + " .multibuyer_number"),
+            "complement" : jQuery(containerSelector + " .multibuyer_complement"),
+            "neighborhood" : jQuery(containerSelector + " .multibuyer_neighborhood"),
+            "city" : jQuery(containerSelector + " .multibuyer_city"),
+            "state" : jQuery(containerSelector + " .multibuyer_state"),
+            "homePhone" : jQuery(containerSelector + " .multibuyer_home_phone"),
+            "mobilePhone" : jQuery(containerSelector + " .multibuyer_mobile_phone")
+        }
+    }
+
+    this.FormObject = voucherForm;
     this.FormObject.numberOfPaymentForms = 1;
     this.FormObject.multibuyer = multibuyerForm;
 
