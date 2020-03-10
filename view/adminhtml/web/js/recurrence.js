@@ -220,9 +220,10 @@ require([
         var inputsHidden = "<input type='hidden' name='form[items][" + index + "][product_id]' value='" + data.code + "'/>" +
             "<input type='hidden' name='form[items][" + index + "][name]' value='" + data.name + "'/>" +
             "<input type='hidden' name='form[items][" + index + "][price]' value='" + data.price + "'/>" +
+            "<input type='hidden' name='form[items][" + index + "][quantity]' value='" + quantity + "'/>" +
             "<input type='hidden' name='form[items][" + index + "][id]' value='" + id + "'/>";
 
-        var quantityColumn = "<input type='number' name='form[items][" + index + "][quantity]' value='" + quantity + "' step='1' min='1'/>";
+        var quantityColumn = "<input type='number' disabled name='form[items][" + index + "][quantity]' value='" + quantity + "'/>";
         var priceColumn = "<input type='number' disabled value='" + (data.price / 100).toFixed(2) + "' />" +
             "<input type='hidden' name='form[items][" + index + "][quantity]' value='" + quantity + "'/>";
 
