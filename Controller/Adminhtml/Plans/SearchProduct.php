@@ -124,6 +124,7 @@ class SearchProduct extends Action
                 "price" => $moneyService->floatToCents(
                     $bundle->getSelectionPriceValue()
                 ),
+                "quantity" => (int) $bundle->getSelectionQty()
             ];
 
             $subProductRecurrence = $this->getProductRecurrence(
