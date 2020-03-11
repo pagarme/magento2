@@ -137,6 +137,7 @@ class SearchProduct extends Action
                 $product['cycles'] = $subProductRecurrence->getCycles();
                 $product['quantity'] = $subProductRecurrence->getQuantity();
                 $product['id'] = $subProductRecurrence->getId();
+                $product['mundipagg_id'] = $subProductRecurrence->getMundipaggId();
             }
 
             $bundleProducts[] = $product;
