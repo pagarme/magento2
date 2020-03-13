@@ -323,6 +323,47 @@
         </arguments>
     </virtualType>
 
+    <!-- Voucher -->
+    <virtualType name="MundiPaggVoucherRemoteMethodAdapter" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">MundiPagg\MundiPagg\Model\Ui\Voucher\ConfigProvider::CODE</argument>
+            <argument name="valueHandlerPool" xsi:type="object">MundiPaggVoucherValueHandlerPool</argument>
+            <argument name="commandPool" xsi:type="object">MundiPaggVoucherCommandPool</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">MundiPagg\MundiPagg\Block\Payment\Info\Voucher</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggVoucherValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">MundiPaggVoucherConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggVoucherConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">MundiPaggVoucherConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggVoucherConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">MundiPagg\MundiPagg\Model\Ui\Voucher\ConfigProvider::CODE</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggVoucherCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="initialize" xsi:type="string">MundiPagg\MundiPagg\Gateway\Transaction\Base\Command\InitializeCommand</item>
+                <item name="authorize" xsi:type="string">MundiPaggCreditCardAuthorizeCommand</item>
+                <item name="capture" xsi:type="string">MundiPaggCreditCardCaptureCommand</item>
+                <item name="refund" xsi:type="string">MundiPaggCreditCardRefundCommand</item>
+            </argument>
+        </arguments>
+    </virtualType>
 
     <!-- CreditCard -->
 

@@ -44,6 +44,9 @@
                                                                         <item name="mundipagg_two_creditcard" xsi:type="array">
                                                                             <!-- <item name="isBillingAddressRequired" xsi:type="boolean">true</item> -->
                                                                         </item>
+                                                                        <item name="mundipagg_voucher" xsi:type="array">
+                                                                            <!-- <item name="isBillingAddressRequired" xsi:type="boolean">true</item> -->
+                                                                        </item>
                                                                     </item>
                                                                 </item>
                                                             </item>

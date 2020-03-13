@@ -121,6 +121,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         self::fillWithBoletoConfig($configData, $storeConfig);
         self::fillWithBoletoCreditCardConfig($configData, $storeConfig);
         self::fillWithTwoCreditCardsConfig($configData, $storeConfig);
+        self::fillWithVoucherConfig($configData, $storeConfig);
         self::fillWithAddressConfig($configData, $storeConfig);
         self::fillWithMultiBuyerConfig($configData, $storeConfig);
         self::fillWithRecurrenceConfig($configData, $storeConfig);
@@ -132,6 +133,31 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         );
 
         self::$moduleConfig = $config;
+    }
+
+    static private function fillWithVoucherConfig(&$dataObj, $storeConfig)
+    {
+        $options = [
+            'enabled' => 'active',
+            'title' => 'title',
+            'cardOperation' => 'payment_action',
+            'cardStatementDescriptor' => 'soft_description',
+            'saveCards' => 'enabled_saved_cards'
+        ];
+
+        $section = 'payment/mundipagg_voucher/';
+
+        $voucherObject = new \stdClass();
+
+        $dataObj->voucherConfig = self::fillDataObj($storeConfig, $options, $voucherObject, $section);
+
+        $operation = Configuration::CARD_OPERATION_AUTH_ONLY;
+        if ($dataObj->voucherConfig->cardOperation === 'authorize_capture') {
+            $operation  = Configuration::CARD_OPERATION_AUTH_AND_CAPTURE;
+        }
+
+        $dataObj->voucherConfig->cardOperation = $operation;
+        $dataObj->voucherConfig->cardConfigs = self::getBrandConfig($storeConfig, $section);
     }
 
     static private function fillWithCardConfig(&$dataObj, $storeConfig)
@@ -163,7 +189,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
                 $dataObj->antifraudMinAmount * 1
             );
 
-        $dataObj->cardConfigs = self::getBrandConfig($storeConfig);
+        $dataObj->cardConfigs = self::getBrandConfig($storeConfig, $section);
 
         return $dataObj;
     }
@@ -287,7 +313,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         return $dataObj;
     }
 
-    static private function getBrandConfig($storeConfig)
+    static private function getBrandConfig($storeConfig, $section)
     {
         $objectManager = ObjectManager::getInstance();
         $config = $objectManager->get(Magento2ModelConfig::class);
@@ -300,7 +326,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
 
         $brands = array_merge([''],explode(
             ',',
-            $storeConfig->getValue('payment/mundipagg_creditcard/cctypes', $scope, $storeId)
+            $storeConfig->getValue($section .  'cctypes', $scope, $storeId)
         ));
 
         $cardConfigs = [];
@@ -320,18 +346,18 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
                 $brandMethod = 'nobrand';
             }
 
-            $max = $storeConfig->getValue('payment/mundipagg_creditcard/installments_number' . $brand, $scope, $storeId);
+            $max = $storeConfig->getValue($section . 'installments_number' . $brand, $scope, $storeId);
             if (empty($max)) {
                 $brand = '';
-                $max = $storeConfig->getValue('payment/mundipagg_creditcard/installments_number' . $brand, $scope, $storeId);
+                $max = $storeConfig->getValue($section . 'installments_number' . $brand, $scope, $storeId);
             }
 
-            $minValue =  $storeConfig->getValue('payment/mundipagg_creditcard/installment_min_amount' . $brand, $scope, $storeId);
-            $initial =  $storeConfig->getValue('payment/mundipagg_creditcard/installments_interest_rate_initial' . $brand, $scope, $storeId);
-            $incremental =  $storeConfig->getValue('payment/mundipagg_creditcard/installments_interest_rate_incremental'. $brand, $scope, $storeId);
-            $maxWithout =  $storeConfig->getValue('payment/mundipagg_creditcard/installments_max_without_interest' . $brand, $scope, $storeId);
+            $minValue =  $storeConfig->getValue($section . 'installment_min_amount' . $brand, $scope, $storeId);
+            $initial =  $storeConfig->getValue($section . 'installments_interest_rate_initial' . $brand, $scope, $storeId);
+            $incremental =  $storeConfig->getValue($section . 'installments_interest_rate_incremental'. $brand, $scope, $storeId);
+            $maxWithout =  $storeConfig->getValue($section . 'installments_max_without_interest' . $brand, $scope, $storeId);
 
-            $interestByBrand =  $storeConfig->getValue('payment/mundipagg_creditcard/installments_interest_by_issuer' . $brand, $scope, $storeId);
+            $interestByBrand =  $storeConfig->getValue($section . 'installments_interest_by_issuer' . $brand, $scope, $storeId);
             if (empty($interestByBrand)) {
                 $initial = 0;
                 $incremental = 0;
@@ -341,8 +367,8 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
             $cardConfigs[] = new CardConfig(
                 true,
                 CardBrand::$brandMethod(),
-                $max,
-                $maxWithout,
+                ($max !== null ? $max : 1),
+                ($maxWithout !== null ? $maxWithout : 1),
                 $initial,
                 $incremental,
                 ($minValue !== null ? $minValue : 0) * 100

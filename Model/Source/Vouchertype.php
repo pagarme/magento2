@@ -12,7 +12,7 @@ namespace MundiPagg\MundiPagg\Model\Source;
  * @link        http://www.mundipagg.com
  */
 
-class Dctype extends \Magento\Payment\Model\Source\Cctype
+class Vouchertype extends \Magento\Payment\Model\Source\Cctype
 {
     /**
      * @return array
@@ -20,12 +20,9 @@ class Dctype extends \Magento\Payment\Model\Source\Cctype
     public function getAllowedTypes()
     {
         return [
-            'Simulado',
-            'Cielo-Visa',
-            'Cielo-Master',
-            'Cielo-Elo',
-            'Redecard-Visa',
-            'Redecard-Master'
+            'VR',
+            'Alelo',
+            'Sodexo'
         ];
     }
 }
