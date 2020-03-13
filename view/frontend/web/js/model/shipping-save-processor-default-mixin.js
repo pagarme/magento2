@@ -12,7 +12,6 @@ define([
     'use strict';
 
     return function (defaultJS) {
-
         defaultJS.saveShippingInformation = wrapper.wrapSuper(defaultJS.saveShippingInformation, function (hash) {
 
             var observerMutation = new MutationObserver((mutationsList, observer) => {

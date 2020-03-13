@@ -89,6 +89,7 @@ FormObject.creditCardInit = function (isMultibuyerEnabled) {
         "creditCardBrand" : jQuery(containerSelector + " .cc_type"),
         "creditCardToken" : jQuery(containerSelector + " .cc_token"),
         "inputAmount" : jQuery(containerSelector + " .cc_amount"),
+        "inputAmountContainer" : jQuery(containerSelector + " .amount-container"),
         "savedCreditCardSelect" : jQuery(containerSelector + " .cc_saved_creditcards"),
         "saveThisCard" : jQuery(containerSelector + " .save_this_card")
     };
@@ -157,6 +158,7 @@ FormObject.boletoInit = function (isMultibuyerEnabled) {
     var boletoElements = {
         'containerSelector' : containerSelector,
         "inputAmount" : jQuery(containerSelector + " .cc_amount"),
+        "inputAmountContainer" : jQuery(containerSelector + " .amount-container")
     };
 
     if (isMultibuyerEnabled) {
@@ -199,6 +201,7 @@ FormObject.boletoCreditCardInit = function (isMultibuyerEnabled) {
     var boletoElements = {
         'containerSelector' : containerBoletoSelector,
         "inputAmount" : jQuery(containerBoletoSelector + " .cc_amount"),
+        "inputAmountContainer" : jQuery(containerBoletoSelector + " .amount-container"),
     };
 
     var cardsElements = {
@@ -212,6 +215,7 @@ FormObject.boletoCreditCardInit = function (isMultibuyerEnabled) {
         "creditCardBrand" : jQuery(containerCreditCardSelector + " .cc_type"),
         "creditCardToken" : jQuery(containerCreditCardSelector + " .cc_token"),
         "inputAmount" : jQuery(containerCreditCardSelector + " .cc_amount"),
+        "inputAmountContainer" : jQuery(containerCreditCardSelector + " .amount-container"),
         "savedCreditCardSelect" : jQuery(containerCreditCardSelector + " .cc_saved_creditcards"),
         "saveThisCard" : jQuery(containerCreditCardSelector + " .save_this_card")
     };
@@ -268,6 +272,7 @@ FormObject.fillTwoCreditCardsElements = function (containerSelector, elementId, 
         "creditCardBrand" : jQuery(containerSelector + " .cc_type"),
         "creditCardToken" : jQuery(containerSelector + " .cc_token"),
         "inputAmount" : jQuery(containerSelector + " .cc_amount"),
+        "inputAmountContainer" : jQuery(containerSelector + " .amount-container"),
         "savedCreditCardSelect" : jQuery(containerSelector + " .cc_saved_creditcards"),
         "saveThisCard" : jQuery(containerSelector + " .save_this_card")
     };
