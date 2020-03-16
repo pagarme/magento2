@@ -71,6 +71,10 @@ class UpgradeSchema implements UpgradeSchemaInterface
             $setup = $installSchema->installProductsPlan($setup);
         }
 
+        if (version_compare($version, "2.0.2-beta", ">=")) {
+            $setup = $this->addMundipaggIdToSubProductsTable($setup);
+        }
+
         $setup->endSetup();
     }
 
@@ -349,6 +353,27 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 'length' => 600,
                 'nullable' => true,
                 'comment' => 'Card data'
+            ]
+        );
+
+        return $setup;
+    }
+
+    protected function addMundipaggIdToSubProductsTable($setup)
+    {
+        $installer = $setup;
+
+        $connection = $installer->getConnection();
+        $tableName = $installer->getTable('mundipagg_module_core_recurrence_sub_products');
+
+        $connection->addColumn(
+            $tableName,
+            'mundipagg_id',
+            [
+                'type' => Table::TYPE_TEXT,
+                'length' => 21,
+                'nullable' => true,
+                'comment' => 'Mundipagg Id'
             ]
         );
 

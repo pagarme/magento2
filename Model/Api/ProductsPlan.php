@@ -2,20 +2,14 @@
 
 namespace MundiPagg\MundiPagg\Model\Api;
 
-use Magento\TestFramework\Event\Magento;
-use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Webapi\Exception as MagentoException;
 use Magento\Framework\Webapi\Rest\Request;
-use Mundipagg\Core\Kernel\Services\MoneyService;
-use Mundipagg\Core\Recurrence\ValueObjects\PricingSchemeValueObject as PricingScheme;
 use Mundipagg\Core\Recurrence\Services\PlanService;
 use Mundipagg\Core\Recurrence\Aggregates\Plan;
 use Mundipagg\Core\Recurrence\Interfaces\ProductPlanInterface;
 use Mundipagg\Core\Recurrence\Factories\PlanFactory;
 use MundiPagg\MundiPagg\Api\ProductPlanApiInterface;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
-use MundiPagg\MundiPagg\Concrete\Magento2PlatformProductDecorator;
-use MundiPagg\MundiPagg\Helper\ProductHelper;
 use MundiPagg\MundiPagg\Helper\ProductPlanHelper;
 
 class ProductsPlan implements ProductPlanApiInterface
@@ -36,10 +30,10 @@ class ProductsPlan implements ProductPlanApiInterface
         $this->planService = new PlanService();
         Magento2CoreSetup::bootstrap();
     }
+
     /**
      * Returns greeting message to user
      *
-     * @param mixed $data
      * @return mixed
      */
     public function saveFormData()
@@ -109,12 +103,14 @@ class ProductsPlan implements ProductPlanApiInterface
      * @param ProductPlanInterface $productPlan
      * @param int $id
      * @return ProductPlanInterface
+     * @throws MagentoException
      */
     public function save(ProductPlanInterface $productPlan, $id = null)
     {
         try {
             ProductPlanHelper::mapperProductPlan($productPlan);
             $productPlan->setStatus('ACTIVE');
+            $productPlan->setBillingType('PREPAID');
 
             $this->planService->save($productPlan);
         } catch (\Exception $exception) {
@@ -130,6 +126,7 @@ class ProductsPlan implements ProductPlanApiInterface
 
     /**
      * @return ProductPlanInterface[]
+     * @throws MagentoException
      */
     public function list()
     {
@@ -154,13 +151,11 @@ class ProductsPlan implements ProductPlanApiInterface
      * @param int $id
      * @param ProductPlanInterface $productPlan
      * @return ProductPlanInterface
+     * @throws MagentoException
      */
     public function update($id, ProductPlanInterface $productPlan)
     {
         try {
-            $productPlan->setStatus('ACTIVE');
-            $productPlan->setId($id);
-
             $planOriginal = $this->planService->findById($id);
 
             if (empty($planOriginal)) {
@@ -169,7 +164,7 @@ class ProductsPlan implements ProductPlanApiInterface
 
             ProductPlanHelper::mapperProductPlanUpdate($planOriginal, $productPlan);
 
-            $this->planService->save($planOriginal);
+            $this->planService->save($productPlan);
         } catch (\Exception $exception) {
             throw new MagentoException(
                 __($exception->getMessage()),
@@ -208,6 +203,7 @@ class ProductsPlan implements ProductPlanApiInterface
     /**
      * @param int $id
      * @return Plan
+     * @throws MagentoException
      */
     public function delete($id)
     {

@@ -49,4 +49,9 @@
         <observer name="add_cart_product"
                   instance="MundiPagg\MundiPagg\Observer\CartAddProductAfterObserver" />
     </event>
+
+    <event name="controller_action_catalog_product_save_entity_after">
+        <observer name="update_product_plan"
+                  instance="MundiPagg\MundiPagg\Observer\UpdateProductPlanObserver" />
+    </event>
 </config>
