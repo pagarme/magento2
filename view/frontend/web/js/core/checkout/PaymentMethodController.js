@@ -118,6 +118,7 @@ PaymentMethodController.prototype.twocreditcardsInit = function () {
 
             this.addCreditCardListeners(this.formObject[i]);
             this.addInputAmountBalanceListener(this.formObject[i], i);
+
         }
     }
 
@@ -160,7 +161,7 @@ PaymentMethodController.prototype.boletoCreditcardInit = function () {
                 this.fillMultibuyerStateSelect(this.formObject[i]);
                 this.addShowMultibuyerListener(this.formObject[i]);
             }
-
+            this.formObject[i].inputAmountContainer.show();
             this.addInputAmountBalanceListener(this.formObject[i], i);
         }
 
