@@ -110,6 +110,7 @@ class ProductsPlan implements ProductPlanApiInterface
         try {
             ProductPlanHelper::mapperProductPlan($productPlan);
             $productPlan->setStatus('ACTIVE');
+            $productPlan->setBillingType('PREPAID');
 
             $this->planService->save($productPlan);
         } catch (\Exception $exception) {
