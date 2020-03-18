@@ -25,7 +25,7 @@ define(
             },
             {
                 type: "mundipagg_voucher",
-                component: 'MundiPagg_MundiPagg/js/view/payment/voucher"
+                component: "MundiPagg_MundiPagg/js/view/payment/voucher"
             },
             {
                 type: "mundipagg_billet",
