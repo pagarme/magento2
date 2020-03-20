@@ -4,6 +4,7 @@ namespace MundiPagg\MundiPagg\Model\Cart;
 
 use Magento\Checkout\Model\Cart;
 use Magento\Framework\Exception\LocalizedException;
+use Mundipagg\Core\Kernel\Services\LocalizationService;
 use Mundipagg\Core\Recurrence\Interfaces\ProductPlanInterface;
 use Mundipagg\Core\Recurrence\Services\CartRules\CurrentProduct;
 use Mundipagg\Core\Recurrence\Services\RecurrenceService;
@@ -78,7 +79,9 @@ class CartConflict
             );
 
             if (($productPlan !== null) && ($dataQty[$item->getItemId()]['qty'] > 1)) {
-                throw new LocalizedException(__('Must be has one product plan on cart'));
+                $i18n = new LocalizationService();
+                $message = $i18n->getDashboard('Must be has one product plan on cart');
+                throw new LocalizedException(__($message));
             }
         }
     }
