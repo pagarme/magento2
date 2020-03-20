@@ -103,8 +103,8 @@ class CartConflict
         }
 
         if (
-            !empty($productListInCart->getNormalProducts()) &&
-            !empty($productListInCart->getRecurrenceProducts())
+            $currentProduct->getProductSubscriptionSelected() !== null ||
+            $currentProduct->isNormalProduct()
         ) {
             $this->rulesCartRun->runRulesProductSubscription(
                 $currentProduct,
