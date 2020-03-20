@@ -80,7 +80,10 @@ class CartConflict
 
             if (($productPlan !== null) && ($dataQty[$item->getItemId()]['qty'] > 1)) {
                 $i18n = new LocalizationService();
-                $message = $i18n->getDashboard('Must be has one product plan on cart');
+                $message = $i18n->getDashboard(
+                    'You must have only one product plan in the cart'
+                );
+
                 throw new LocalizedException(__($message));
             }
         }
