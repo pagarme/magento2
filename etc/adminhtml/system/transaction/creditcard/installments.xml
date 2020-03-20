@@ -91,14 +91,6 @@
 	    <include path="MundiPagg_MundiPagg::system/transaction/creditcard/installments/aura.xml"/>
 	    <include path="MundiPagg_MundiPagg::system/transaction/creditcard/installments/jcb.xml"/>
 	    <include path="MundiPagg_MundiPagg::system/transaction/creditcard/installments/credz.xml"/>
-	    <include path="MundiPagg_MundiPagg::system/transaction/creditcard/installments/sodexoalimentacao.xml"/>
-	    <include path="MundiPagg_MundiPagg::system/transaction/creditcard/installments/sodexocultura.xml"/>
-	    <include path="MundiPagg_MundiPagg::system/transaction/creditcard/installments/sodexogift.xml"/>
-	    <include path="MundiPagg_MundiPagg::system/transaction/creditcard/installments/sodexopremium.xml"/>
-	    <include path="MundiPagg_MundiPagg::system/transaction/creditcard/installments/sodexorefeicao.xml"/>
-	    <include path="MundiPagg_MundiPagg::system/transaction/creditcard/installments/sodexocombustivel.xml"/>
-	    <include path="MundiPagg_MundiPagg::system/transaction/creditcard/installments/vr.xml"/>
-	    <include path="MundiPagg_MundiPagg::system/transaction/creditcard/installments/alelo.xml"/>
 	    <include path="MundiPagg_MundiPagg::system/transaction/creditcard/installments/banese.xml"/>
 	    <include path="MundiPagg_MundiPagg::system/transaction/creditcard/installments/cabal.xml"/>
 	</group>
