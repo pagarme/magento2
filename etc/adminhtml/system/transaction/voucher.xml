@@ -23,12 +23,12 @@
             <config_path>payment/mundipagg_voucher/soft_description</config_path>
             <comment>Max size 22.</comment>
         </field>
-        <field id="payment_action" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="40" translate="label" type="select">
-            <label>Payment Action</label>
-            <comment />
-            <source_model>MundiPagg\MundiPagg\Model\Source\PaymentAction</source_model>
-            <config_path>payment/mundipagg_voucher/payment_action</config_path>
-        </field>
+<!--        <field id="payment_action" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="40" translate="label" type="select">-->
+<!--            <label>Payment Action</label>-->
+<!--            <comment />-->
+<!--            <source_model>MundiPagg\MundiPagg\Model\Source\PaymentAction</source_model>-->
+<!--            <config_path>payment/mundipagg_voucher/payment_action</config_path>-->
+<!--        </field>-->
         <field id="sort_order" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="70" translate="label" type="text">
             <label>Sort Order</label>
             <comment />
