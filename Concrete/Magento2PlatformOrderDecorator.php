@@ -575,10 +575,15 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         }
 
         $type = $coreProduct->getRecurrenceType();
-        $item->setType($type);
 
         if ($type == Plan::RECURRENCE_TYPE) {
             $item->setMundipaggId($coreProduct->getMundipaggId());
+            $item->setType($type);
+            return $item;
+        }
+
+        if (!empty($item->getSelectedOption())) {
+            $item->setType($type);
         }
 
         return $item;

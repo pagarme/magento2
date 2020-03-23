@@ -67,7 +67,11 @@ define(
             },
 
             getData: function () {
-                var paymentModel = window.MundiPaggCore.paymentMethod[this.getModel()].model;
+                var paymentMethod = window.MundiPaggCore.paymentMethod[this.getModel()];
+                if (paymentMethod == undefined) {
+                    return paymentMethod;
+                }
+                var paymentModel = paymentMethod.model;
                 return paymentModel.getData();
             },
 
