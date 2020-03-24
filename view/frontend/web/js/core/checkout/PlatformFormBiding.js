@@ -57,23 +57,27 @@ PlatformConfig.getAvaliableBrands = function (data) {
     var VoucherBrands = [];
 
     var objCreditCardBrands = data.payment.ccform.availableTypes.mundipagg_creditcard;
-    var brands = Object.keys(objCreditCardBrands);
+    if (objCreditCardBrands !== undefined) {
+        var brands = Object.keys(objCreditCardBrands);
 
-    for (var i = 0, len = brands.length; i < len; i++) {
-        CCBrands[i] = {
-            'title': brands[i],
-            'image': data.payment.ccform.icons[brands[i]].url
-        };
+        for (var i = 0, len = brands.length; i < len; i++) {
+            CCBrands[i] = {
+                'title': brands[i],
+                'image': data.payment.ccform.icons[brands[i]].url
+            };
+        }
     }
 
     var objVoucherBrands = data.payment.ccform.availableTypes.mundipagg_voucher;
-    var brands = Object.keys(objVoucherBrands);
+    if (objVoucherBrands !== undefined) {
+        var brands = Object.keys(objVoucherBrands);
 
-    for (var i = 0, len = brands.length; i < len; i++) {
-        VoucherBrands[i] = {
-            'title': brands[i],
-            'image': data.payment.ccform.icons[brands[i]].url
-        };
+        for (var i = 0, len = brands.length; i < len; i++) {
+            VoucherBrands[i] = {
+                'title': brands[i],
+                'image': data.payment.ccform.icons[brands[i]].url
+            };
+        }
     }
 
     return {
