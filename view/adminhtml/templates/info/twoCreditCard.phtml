@@ -30,10 +30,20 @@ $lastTransactions =  $this->getTransactionInfo();
     <span><b><?php echo __('Installments'); ?>: </b><?php echo $this->getInstallmentsFirstCard(); ?></span>
     <br/>
     <span><b><?php echo __('Amount'); ?>: </b><?php echo $this->getFirstCardAmount(); ?></span>
-    <br/>
-    <span><b><?= __('NSU'); ?>: </b><?= $lastTransactions['card1']->getAcquirerNsu() ?></span>
-    <br/>
-    <span><b><?= __('TID'); ?>: </b><?= $lastTransactions['card1']->getAcquirerTid() ?></span>
+
+    <?php if ($lastTransactions['card1']['authorized'] ==! null) {?>
+        <br/>
+        <span><b><?= __('NSU'); ?>: </b><?= $lastTransactions['card1']['authorized'] ?></span>
+        <br/>
+    <?php } ?>
+
+    <?php if ($lastTransactions['card1']['captured'] ==! null) {?>
+        <br/>
+        <span><b><?= __('NSU from capture'); ?>: </b><?= $lastTransactions['card1']['captured'] ?></span>
+        <br/>
+    <?php } ?>
+
+    <span><b><?= __('TID'); ?>: </b><?= $lastTransactions['card1']['tid'] ?></span>
     <br/>
     <br/>
     <span style="font-size: initial;"><b><?php echo __('Second Card'); ?></b></span>
@@ -45,10 +55,20 @@ $lastTransactions =  $this->getTransactionInfo();
     <span><b><?php echo __('Installments'); ?>: </b><?php echo $this->getInstallmentsSecondCard(); ?></span>
     <br/>
     <span><b><?php echo __('Amount'); ?>: </b><?php echo $this->getSecondCardAmount(); ?></span>
-    <br/>
-    <span><b><?= __('NSU'); ?>: </b><?= $lastTransactions['card2']->getAcquirerNsu() ?></span>
-    <br/>
-    <span><b><?= __('TID'); ?>: </b><?= $lastTransactions['card2']->getAcquirerTid() ?></span>
+
+    <?php if ($lastTransactions['card2']['authorized'] ==! null) {?>
+        <br/>
+        <span><b><?= __('NSU'); ?>: </b><?= $lastTransactions['card2']['authorized'] ?></span>
+        <br/>
+    <?php } ?>
+
+    <?php if ($lastTransactions['card2']['captured'] ==! null) {?>
+        <br/>
+        <span><b><?= __('NSU from capture'); ?>: </b><?= $lastTransactions['card2']['captured'] ?></span>
+        <br/>
+    <?php } ?>
+
+    <span><b><?= __('TID'); ?>: </b><?= $lastTransactions['card2']['tid'] ?></span>
     <br/>
 
 <?php endif ?>

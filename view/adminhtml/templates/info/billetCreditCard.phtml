@@ -4,7 +4,6 @@
  * @var \Mundipagg\Core\Kernel\Aggregates\Transaction $lastTransaction
  */
 $lastTransactions = $this->getTransactionInfo();
-$postDataCreditCard = (json_decode($lastTransactions['creditCard']->getPostData()->tran_data, true));
 $postDataBillet = (json_decode($lastTransactions['billet']->getPostData()->tran_data, true));
 ?>
 <?php if ($this->getCcType()): ?>
@@ -23,9 +22,17 @@ $postDataBillet = (json_decode($lastTransactions['billet']->getPostData()->tran_
     <br/>
     <span><b><?php echo __('Installments'); ?>: </b><?php echo $this->getInstallments(); ?></span>
     <br/>
-    <span><b><?= __('NSU'); ?>: </b><?= $lastTransactions['creditCard']->getAcquirerNsu() ?></span>
-    <br/>
-    <span><b><?= __('TID'); ?>: </b><?= $lastTransactions['creditCard']->getAcquirerTid() ?></span>
+
+    <?php if ($lastTransactions['creditCard']['authorized'] ==! null) {?>
+        <span><b><?= __('NSU'); ?>: </b><?= $lastTransactions['creditCard']['authorized'] ?></span>
+        <br/>
+    <?php } ?>
+
+    <?php if ($lastTransactions['creditCard']['captured'] ==! null) {?>
+        <span><b><?= __('NSU from capture'); ?>: </b><?= $lastTransactions['creditCard']['captured'] ?></span>
+        <br/>
+    <?php } ?>
+    <span><b><?= __('TID'); ?>: </b><?= $lastTransactions['creditCard']['tid'] ?></span>
 <?php endif ?>
 
     <br/>

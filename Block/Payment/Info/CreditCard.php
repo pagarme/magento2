@@ -72,6 +72,14 @@ class CreditCard extends Cc
          * @var \Mundipagg\Core\Kernel\Aggregates\Order orderObject
          */
         $orderObject = $orderService->getOrderByMundiPaggId(new OrderId($orderId));
-        return $orderObject->getCharges()[0]->getLastTransaction();
+
+        return array_merge(
+            $orderObject->getCharges()[0]->getAcquirerTidCapturedAndAutorize(),
+            [
+                'tid' => $orderObject->getCharges()[0]
+                    ->getLastTransaction()
+                    ->getAcquirerTid()
+            ]
+        );
     }
 }

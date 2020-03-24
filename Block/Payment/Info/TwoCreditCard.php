@@ -99,8 +99,21 @@ class TwoCreditCard extends Cc
         $orderObject = $orderService->getOrderByMundiPaggId(new OrderId($orderId));
 
         return [
-            'card1' => $orderObject->getCharges()[0]->getLastTransaction(),
-            'card2' => $orderObject->getCharges()[1]->getLastTransaction()
+            'card1' => array_merge(
+                $orderObject->getCharges()[0]->getAcquirerTidCapturedAndAutorize(),
+                [
+                    'tid' => $orderObject->getCharges()[0]
+                        ->getLastTransaction()
+                        ->getAcquirerTid()]
+            ),
+            'card2' => array_merge(
+                $orderObject->getCharges()[1]->getAcquirerTidCapturedAndAutorize(),
+                [
+                    'tid' => $orderObject->getCharges()[1]
+                    ->getLastTransaction()
+                    ->getAcquirerTid()
+                ]
+            )
         ];
     }
 }

@@ -16,7 +16,12 @@
     <br/>
     <span><b><?php echo __('Installments'); ?>: </b><?php echo $this->getInstallments(); ?></span>
     <br/>
-    <span><b><?= __('NSU'); ?>: </b><?= $lastTransaction->getAcquirerNsu() ?></span>
+    <span><b><?= __('NSU'); ?>: </b><?= $lastTransaction['authorized'] ?></span>
     <br/>
-    <span><b><?= __('TID'); ?>: </b><?= $lastTransaction->getAcquirerTid() ?></span>
+    <?php if ($lastTransaction['captured'] ==! null) {?>
+        <span><b><?= __('NSU from capture'); ?>: </b><?= $lastTransaction['captured'] ?></span>
+        <br/>
+    <?php } ?>
+
+    <span><b><?= __('TID'); ?>: </b><?= $lastTransaction['tid'] ?></span>
 <?php endif ?>

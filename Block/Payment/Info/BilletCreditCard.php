@@ -192,7 +192,16 @@ class BilletCreditCard extends Cc
         $transactionList = [];
         foreach ([$lastTransaction, $secondLastTransaction] as $index => $item) {
             if ($item->getAcquirerNsu() != 0) {
-                $transactionList['creditCard'] = $item;
+                $transactionList['creditCard'] =
+                    array_merge(
+                        $orderObject->getCharges()[0]->getAcquirerTidCapturedAndAutorize(),
+                        [
+                            'tid' => $orderObject->getCharges()[0]
+                            ->getLastTransaction()
+                            ->getAcquirerTid()
+                        ]
+                );
+
                 continue;
             }
 
