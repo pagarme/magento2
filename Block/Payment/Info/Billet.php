@@ -15,6 +15,7 @@ namespace MundiPagg\MundiPagg\Block\Payment\Info;
 use Magento\Payment\Block\Info;
 use Magento\Framework\DataObject;
 use Mundipagg\Core\Kernel\Repositories\OrderRepository;
+use Mundipagg\Core\Kernel\Services\OrderService;
 use Mundipagg\Core\Kernel\ValueObjects\Id\OrderId;
 use Mundipagg\Core\Kernel\ValueObjects\Id\SubscriptionId;
 use Mundipagg\Core\Recurrence\Repositories\ChargeRepository as SubscriptionChargeRepository;
@@ -116,5 +117,25 @@ class Billet extends Info
     public function getTitle()
     {
         return $this->getInfo()->getAdditionalInformation('method_title');
+    }
+
+    /**
+     * @return mixed
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Mundipagg\Core\Kernel\Exceptions\InvalidParamException
+     */
+    public function getInfoTransactions()
+    {
+        Magento2CoreSetup::bootstrap();
+        $orderService = new OrderService();
+
+        $orderId = $this->getInfo()->getLastTransId();
+        $orderId = explode('-', $orderId)[0];
+
+        /**
+         * @var \Mundipagg\Core\Kernel\Aggregates\Order orderObject
+         */
+        $orderObject = $orderService->getOrderByMundiPaggId(new OrderId($orderId));
+        return $orderObject->getCharges()[0]->getLastTransaction();
     }
 }
