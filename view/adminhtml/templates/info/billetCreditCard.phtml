@@ -1,3 +1,11 @@
+<?php
+/**
+ * @var \Mundipagg\Core\Kernel\Aggregates\Transaction $lastTransaction
+ */
+$lastTransactions = $this->getInfoTransactions();
+$postDataCreditCard = (json_decode($lastTransactions['creditCard']->getPostData()->tran_data, true));
+$postDataBillet = (json_decode($lastTransactions['billet']->getPostData()->tran_data, true));
+?>
 <?php if ($this->getCcType()): ?>
     <span><?php echo __($this->getTitle()); ?></span>
     <br/>
@@ -6,24 +14,38 @@
         <span><?php echo __('Credit Card'); ?></span>
     </strong>
     <br/>
-    <span><b><?php echo __('Amount') ?>: </b><?php echo 'R$ ' . number_format($this->getCcAmountWithTax(),2,',', '.'); ?></span>
+    <span><b><?php echo __('Amount') ?>: </b><?php echo 'R$ ' . number_format($this->getCcAmountWithTax(), 2, ',', '.'); ?></span>
     <br/>
     <span><b><?php echo __('Brand'); ?>: </b><?php echo $this->getCcBrand(); ?></span>
     <br/>
     <span><b><?php echo __('Number'); ?>: </b><?php echo $this->getCardLast4(); ?></span>
     <br/>
     <span><b><?php echo __('Installments'); ?>: </b><?php echo $this->getInstallments(); ?></span>
-
+    <br/>
+    <span><b><?= __('NSU'); ?>: </b><?= $lastTransactions['creditCard']->getAcquirerNsu() ?></span>
+    <br/>
+    <span><b><?= __('TID'); ?>: </b><?= $lastTransactions['creditCard']->getAcquirerTid() ?></span>
 <?php endif ?>
 
-<?php if ($this->getBilletUrl() && $this->getInfo()->getOrder()->getState() == 'pending_payment'): ?>
-    <hr />
+    <br/>
+    <br/>
     <strong class="box-title">
         <span><?php echo __('Billet'); ?></span>
     </strong>
+
+<?php if ($postDataBillet !== null && isset($postDataBillet['nosso_numero'])) { ?>
     <br/>
-    <span><b><?php echo __('Amount') ?>: </b><?php echo 'R$ ' . number_format($this->getBilletAmount(),2,',', '.'); ?></span>
+    <span>
+        <b><?= __('Our Number'); ?>: </b><?= $postDataBillet['nosso_numero'] ?>
+    </span>
     <br/>
     <br/>
-    <a class="action tocart primary" href="<?php echo $this->getBilletUrl() ?>" target="_blank"><?php echo __('Print Billet') ?></a>
+<?php } ?>
+
+<?php if ($this->getBilletUrl() && $this->getInfo()->getOrder()->getState() == 'pending_payment'): ?>
+    <span><b><?php echo __('Amount') ?>: </b><?php echo 'R$ ' . number_format($this->getBilletAmount(), 2, ',', '.'); ?></span>
+    <br/>
+    <br/>
+    <a class="action tocart primary" href="<?php echo $this->getBilletUrl() ?>"
+       target="_blank"><?php echo __('Print Billet') ?></a>
 <?php endif ?>

@@ -10,6 +10,13 @@
  */
 
 ?>
+
+<?php
+/**
+ * @var \Mundipagg\Core\Kernel\Aggregates\Transaction $lastTransaction
+ */
+$lastTransactions =  $this->getInfoTransactions();
+?>
 <?php if ($this->getCcTypeFirst() && $this->getCcTypeSecond()): ?>
     <span><?php echo __($this->getTitle()); ?></span>
     <br/>
@@ -24,6 +31,10 @@
     <br/>
     <span><b><?php echo __('Amount'); ?>: </b><?php echo $this->getFirstCardAmount(); ?></span>
     <br/>
+    <span><b><?= __('NSU'); ?>: </b><?= $lastTransactions['card1']->getAcquirerNsu() ?></span>
+    <br/>
+    <span><b><?= __('TID'); ?>: </b><?= $lastTransactions['card1']->getAcquirerTid() ?></span>
+    <br/>
     <br/>
     <span style="font-size: initial;"><b><?php echo __('Second Card'); ?></b></span>
     <br/>
@@ -34,5 +45,10 @@
     <span><b><?php echo __('Installments'); ?>: </b><?php echo $this->getInstallmentsSecondCard(); ?></span>
     <br/>
     <span><b><?php echo __('Amount'); ?>: </b><?php echo $this->getSecondCardAmount(); ?></span>
+    <br/>
+    <span><b><?= __('NSU'); ?>: </b><?= $lastTransactions['card2']->getAcquirerNsu() ?></span>
+    <br/>
+    <span><b><?= __('TID'); ?>: </b><?= $lastTransactions['card2']->getAcquirerTid() ?></span>
+    <br/>
 
 <?php endif ?>
