@@ -85,7 +85,7 @@ class TwoCreditCard extends Cc
         return '**** **** **** ' . $this->getInfo()->getAdditionalInformation('cc_last_4_second');
     }
 
-    public function getInfoTransactions()
+    public function getTransactionInfo()
     {
         Magento2CoreSetup::bootstrap();
         $orderService = new OrderService();

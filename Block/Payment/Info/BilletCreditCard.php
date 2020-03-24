@@ -173,7 +173,7 @@ class BilletCreditCard extends Cc
         }
     }
 
-    public function getInfoTransactions()
+    public function getTransactionInfo()
     {
         Magento2CoreSetup::bootstrap();
         $orderService = new OrderService();

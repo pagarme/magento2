@@ -60,7 +60,7 @@ class CreditCard extends Cc
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Mundipagg\Core\Kernel\Exceptions\InvalidParamException
      */
-    public function getInfoTransactions()
+    public function getTransactionInfo()
     {
         Magento2CoreSetup::bootstrap();
         $orderService = new OrderService();

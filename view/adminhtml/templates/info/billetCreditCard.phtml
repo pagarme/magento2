@@ -1,8 +1,9 @@
 <?php
+/* @var \MundiPagg\MundiPagg\Block\Payment\Info\Billet $this */
 /**
  * @var \Mundipagg\Core\Kernel\Aggregates\Transaction $lastTransaction
  */
-$lastTransactions = $this->getInfoTransactions();
+$lastTransactions = $this->getTransactionInfo();
 $postDataCreditCard = (json_decode($lastTransactions['creditCard']->getPostData()->tran_data, true));
 $postDataBillet = (json_decode($lastTransactions['billet']->getPostData()->tran_data, true));
 ?>
