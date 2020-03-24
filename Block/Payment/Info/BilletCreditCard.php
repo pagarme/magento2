@@ -14,6 +14,7 @@ namespace MundiPagg\MundiPagg\Block\Payment\Info;
 use Magento\Payment\Block\Info\Cc;
 
 use Mundipagg\Core\Kernel\Repositories\OrderRepository;
+use Mundipagg\Core\Kernel\Services\OrderService;
 use Mundipagg\Core\Kernel\ValueObjects\Id\OrderId;
 use Mundipagg\Core\Kernel\ValueObjects\Id\SubscriptionId;
 use Mundipagg\Core\Recurrence\Repositories\ChargeRepository as SubscriptionChargeRepository;
@@ -80,6 +81,7 @@ class BilletCreditCard extends Cc
             return;
         }
 
+        $info = $this->getInfo();
         $boletoUrl = $this->getBoletoLinkFromOrder($info);
 
         if (!$boletoUrl) {
@@ -87,7 +89,7 @@ class BilletCreditCard extends Cc
         }
 
         Magento2CoreSetup::bootstrap();
-        $info = $this->getInfo();
+        
         $lastTransId = $info->getLastTransId();
         $orderId = substr($lastTransId, 0, 19);
 
@@ -169,5 +171,34 @@ class BilletCreditCard extends Cc
         if (!empty($charge[0])) {
             return $charge[0]->getBoletoLink();
         }
+    }
+
+    public function getInfoTransactions()
+    {
+        Magento2CoreSetup::bootstrap();
+        $orderService = new OrderService();
+
+        $orderId = $this->getInfo()->getLastTransId();
+        $orderId = explode('-', $orderId)[0];
+
+        /**
+         * @var \Mundipagg\Core\Kernel\Aggregates\Order orderObject
+         */
+        $orderObject = $orderService->getOrderByMundiPaggId(new OrderId($orderId));
+
+        $lastTransaction = $orderObject->getCharges()[0]->getLastTransaction();
+        $secondLastTransaction = $orderObject->getCharges()[1]->getLastTransaction();
+
+        $transactionList = [];
+        foreach ([$lastTransaction, $secondLastTransaction] as $index => $item) {
+            if ($item->getAcquirerNsu() != 0) {
+                $transactionList['creditCard'] = $item;
+                continue;
+            }
+
+            $transactionList['billet'] = $item;
+        }
+
+        return $transactionList;
     }
 }
