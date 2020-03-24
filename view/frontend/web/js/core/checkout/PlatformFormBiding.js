@@ -53,16 +53,22 @@ PlatformConfig.bind = function (platformConfig) {
 };
 
 PlatformConfig.getAvaliableBrands = function (data) {
+    creditCardBrands = null;
+    voucherBrands = null;
 
-    creditCardBrands = this.getBrands(
-        data,
-        data.payment.ccform.availableTypes.mundipagg_creditcard
-    )
+    if (data.payment.ccform.availableTypes.mundipagg_creditcard) {
+        creditCardBrands = this.getBrands(
+            data,
+            data.payment.ccform.availableTypes.mundipagg_creditcard
+        )
+    }
 
-    voucherBrands = this.getBrands(
-        data,
-        data.payment.ccform.availableTypes.mundipagg_voucher
-    )
+    if (data.payment.ccform.availableTypes.mundipagg_voucher != undefined) {
+        voucherBrands = this.getBrands(
+            data,
+            data.payment.ccform.availableTypes.mundipagg_voucher
+        )
+    }
 
     return {
         'mundipagg_creditcard': creditCardBrands,
@@ -73,10 +79,10 @@ PlatformConfig.getAvaliableBrands = function (data) {
 PlatformConfig.getBrands = function (data, paymentMethodBrands) {
     var availableBrands = [];
 
-    if (paymentMethodBrands !== undefined) {
-        var brands = Object.keys(paymentMethodBrands);
+    var brands = Object.keys(paymentMethodBrands);
 
-        for (var i = 0, len = brands.length; i < len; i++) {
+    for (var i = 0, len = brands.length; i < len; i++) {
+        if (data.payment.ccform.icons[brands[i]] != undefined) {
             availableBrands[i] = {
                 'title': brands[i],
                 'image': data.payment.ccform.icons[brands[i]].url.split()[0]
