@@ -71,7 +71,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
             $setup = $installSchema->installProductsPlan($setup);
         }
 
-        if (version_compare($version, "2.0.2-beta", ">=")) {
+        if (version_compare($version, "2.0.1-beta", ">=")) {
             $setup = $this->addMundipaggIdToSubProductsTable($setup);
             $setup = $this->addTransactionDataToTransactionTable($setup);
         }
