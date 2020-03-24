@@ -82,12 +82,19 @@ PlatformConfig.getBrands = function (data, paymentMethodBrands) {
     var brands = Object.keys(paymentMethodBrands);
 
     for (var i = 0, len = brands.length; i < len; i++) {
-        if (data.payment.ccform.icons[brands[i]] != undefined) {
-            availableBrands[i] = {
-                'title': brands[i],
-                'image': data.payment.ccform.icons[brands[i]].url.split()[0]
-            };
+        if (data.payment.ccform.icons[brands[i]] == undefined) {
+            continue;
         }
+        brandData = data.payment.ccform.icons[brands[i]];
+
+        if (brandData.url == undefined) {
+            continue
+        }
+
+        availableBrands[i] = {
+            'title': brands[i],
+            'image': brandData.url.split()[0]
+        };
     }
 
     return availableBrands;
