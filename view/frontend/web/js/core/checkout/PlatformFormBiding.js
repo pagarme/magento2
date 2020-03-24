@@ -62,7 +62,7 @@ PlatformConfig.getAvaliableBrands = function (data) {
     for (var i = 0, len = brands.length; i < len; i++) {
         CCBrands[i] = {
             'title': brands[i],
-            'image': data.payment.ccform.icons[brands[i]].url
+            'image': data.payment.ccform.icons[brands[i]].url.split()[0]
         };
     }
 
@@ -72,7 +72,7 @@ PlatformConfig.getAvaliableBrands = function (data) {
     for (var i = 0, len = brands.length; i < len; i++) {
         VoucherBrands[i] = {
             'title': brands[i],
-            'image': data.payment.ccform.icons[brands[i]].url
+            'image': data.payment.ccform.icons[brands[i]].url.split()[0]
         };
     }
 
