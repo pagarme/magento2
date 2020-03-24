@@ -25,6 +25,13 @@ $postData = (json_decode($lastTransaction->getPostData()->tran_data, true));
         <b><?= __('Our Number'); ?>: </b><?= $postData['nosso_numero'] ?>
     </span>
     <br/>
+<?php } ?>
+
+<?php if($postData !== null && isset($postData['document_number'])) { ?>
+    <span>
+        <b><?= __('Document Number'); ?>: </b><?= $postData['document_number'] ?>
+    </span>
+    <br/>
     <br/>
 <?php } ?>
 

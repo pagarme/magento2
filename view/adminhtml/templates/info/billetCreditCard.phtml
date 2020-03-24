@@ -47,6 +47,13 @@ $postDataBillet = (json_decode($lastTransactions['billet']->getPostData()->tran_
         <b><?= __('Our Number'); ?>: </b><?= $postDataBillet['nosso_numero'] ?>
     </span>
     <br/>
+<?php } ?>
+<?php if ($postDataBillet !== null && isset($postDataBillet['document_number'])) { ?>
+    <br/>
+    <span>
+        <b><?= __('Document Number'); ?>: </b><?= $postDataBillet['document_number'] ?>
+    </span>
+    <br/>
     <br/>
 <?php } ?>
 
