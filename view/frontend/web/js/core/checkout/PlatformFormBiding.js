@@ -61,9 +61,13 @@ PlatformConfig.getAvaliableBrands = function (data) {
         var brands = Object.keys(objCreditCardBrands);
 
         for (var i = 0, len = brands.length; i < len; i++) {
+            url = data.payment.ccform.icons[brands[i]].url
+            imageUrl = url.split();
+
+
             CCBrands[i] = {
                 'title': brands[i],
-                'image': data.payment.ccform.icons[brands[i]].url
+                'image': imageUrl[0]
             };
         }
     }
@@ -73,9 +77,11 @@ PlatformConfig.getAvaliableBrands = function (data) {
         var brands = Object.keys(objVoucherBrands);
 
         for (var i = 0, len = brands.length; i < len; i++) {
+            url = data.payment.ccform.icons[brands[i]].url
+            imageUrl = url.split();
             VoucherBrands[i] = {
                 'title': brands[i],
-                'image': data.payment.ccform.icons[brands[i]].url
+                'image': imageUrl[0]
             };
         }
     }
