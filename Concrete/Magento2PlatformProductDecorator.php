@@ -1,13 +1,14 @@
 <?php
 namespace MundiPagg\MundiPagg\Concrete;
 
+use Magento\Framework\App\ObjectManager;
 use Mundipagg\Core\Kernel\Interfaces\PlatformProductInterface;
 
 class Magento2PlatformProductDecorator implements PlatformProductInterface
 {
     private $platformProduct;
 
-    public function __construct($platformProduct)
+    public function __construct($platformProduct = null)
     {
         $this->platformProduct = $platformProduct;
     }
@@ -45,5 +46,16 @@ class Magento2PlatformProductDecorator implements PlatformProductInterface
     public function getPrice()
     {
         return $this->platformProduct->getPrice();
+    }
+
+    public function loadByEntityId($entityId)
+    {
+        $objectManager = ObjectManager::getInstance();
+        $product =
+            $objectManager
+                ->create('Magento\Catalog\Model\Product')
+                ->load($entityId);
+
+        $this->platformProduct = $product;
     }
 }

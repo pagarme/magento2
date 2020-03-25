@@ -72,7 +72,9 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
             AbstractModuleCoreSetup::CONCRETE_DATA_SERVICE =>
                 Magento2DataService::class,
             AbstractModuleCoreSetup::CONCRETE_PLATFORM_PAYMENT_METHOD_DECORATOR_CLASS =>
-                Magento2PlatformPaymentMethodDecorator::class
+                Magento2PlatformPaymentMethodDecorator::class,
+            AbstractModuleCoreSetup::CONCRETE_PRODUCT_DECORATOR_CLASS =>
+                Magento2PlatformProductDecorator::class
         ];
     }
 
