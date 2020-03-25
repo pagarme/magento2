@@ -62,8 +62,8 @@ PlatformConfig.getAvaliableBrands = function (data) {
 
         for (var i = 0, len = brands.length; i < len; i++) {
             url = data.payment.ccform.icons[brands[i]].url
-            imageUrl = url.split();
-
+            fixArray = [];
+            imageUrl = fixArray.concat(url);
 
             CCBrands[i] = {
                 'title': brands[i],
@@ -78,7 +78,8 @@ PlatformConfig.getAvaliableBrands = function (data) {
 
         for (var i = 0, len = brands.length; i < len; i++) {
             url = data.payment.ccform.icons[brands[i]].url
-            imageUrl = url.split();
+            fixArray = [];
+            imageUrl = fixArray.concat(url);
             VoucherBrands[i] = {
                 'title': brands[i],
                 'image': imageUrl[0]
