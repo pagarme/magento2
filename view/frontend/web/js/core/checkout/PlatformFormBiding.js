@@ -53,22 +53,15 @@ PlatformConfig.bind = function (platformConfig) {
 };
 
 PlatformConfig.getAvaliableBrands = function (data) {
-    creditCardBrands = null;
-    voucherBrands = null;
+    creditCardBrands = this.getBrands(
+        data,
+        data.payment.ccform.availableTypes.mundipagg_creditcard
+    )
 
-    if (data.payment.ccform.availableTypes.mundipagg_creditcard) {
-        creditCardBrands = this.getBrands(
-            data,
-            data.payment.ccform.availableTypes.mundipagg_creditcard
-        )
-    }
-
-    if (data.payment.ccform.availableTypes.mundipagg_voucher != undefined) {
-        voucherBrands = this.getBrands(
-            data,
-            data.payment.ccform.availableTypes.mundipagg_voucher
-        )
-    }
+    voucherBrands = this.getBrands(
+        data,
+        data.payment.ccform.availableTypes.mundipagg_voucher
+    )
 
     return {
         'mundipagg_creditcard': creditCardBrands,
@@ -77,20 +70,24 @@ PlatformConfig.getAvaliableBrands = function (data) {
 }
 
 PlatformConfig.getBrands = function (data, paymentMethodBrands) {
-    var cardBrands = [];
+    var availableBrands = [];
 
     if (paymentMethodBrands !== undefined) {
         var brands = Object.keys(paymentMethodBrands);
 
         for (var i = 0, len = brands.length; i < len; i++) {
-            cardBrands[i] = {
+            url = data.payment.ccform.icons[brands[i]].url
+            fixArray = [];
+            imageUrl = fixArray.concat(url);
+
+            availableBrands[i] = {
                 'title': brands[i],
-                'image': data.payment.ccform.icons[brands[i]].url.split()[0]
+                'image': imageUrl[0]
+
             };
         }
     }
-
-    return cardBrands;
+    return availableBrands;
 }
 
 FormObject.creditCardInit = function (isMultibuyerEnabled) {

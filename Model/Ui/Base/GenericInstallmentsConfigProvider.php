@@ -58,6 +58,11 @@ abstract class GenericInstallmentsConfigProvider implements ConfigProviderInterf
                             'width' => 46,
                             'url' => $this->_assetRepo->getUrl("MundiPagg_MundiPagg::images/cc/Visa.png")
                         ],
+                        'Elo' => [
+                            'height' => 30,
+                            'width' => 46,
+                            'url' => $this->_assetRepo->getUrl("MundiPagg_MundiPagg::images/cc/Elo.png")
+                        ],
                         'Discover' => [
                             'height' => 30,
                             'width' => 46,
