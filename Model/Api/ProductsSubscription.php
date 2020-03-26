@@ -7,12 +7,12 @@ use Mundipagg\Core\Kernel\Services\LocalizationService;
 use Mundipagg\Core\Kernel\Services\MoneyService;
 use Mundipagg\Core\Recurrence\Aggregates\ProductSubscription;
 use Mundipagg\Core\Recurrence\Aggregates\Repetition;
-use Mundipagg\Core\Recurrence\Interfaces\ProductSubscriptionInterface;
 use Mundipagg\Core\Recurrence\Services\ProductSubscriptionService;
 use MundiPagg\MundiPagg\Api\ProductSubscriptionApiInterface;
 use Magento\Framework\Webapi\Rest\Request;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 use MundiPagg\MundiPagg\Helper\ProductSubscriptionHelper;
+use MundiPagg\MundiPagg\Api\ProductSubscriptionInterfaceApi;
 
 class ProductsSubscription implements ProductSubscriptionApiInterface
 {
@@ -46,9 +46,9 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
      *
      * @param ProductSubscriptionInterface $productSubscription
      * @param int $id
-     * @return \Mundipagg\Core\Recurrence\Interfaces\ProductSubscriptionInterface|array
+     * @return ProductSubscriptionInterfaceApi|array
      */
-    public function save(ProductSubscriptionInterface $productSubscription, $id = null)
+    public function save(ProductSubscriptionInterfaceApi $productSubscription, $id = null)
     {
         try {
             if (!empty($id)) {
@@ -83,7 +83,7 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
     /**
      * List products subscription
      *
-     * @return \Mundipagg\Core\Recurrence\Interfaces\ProductSubscriptionInterface[]|array
+     * @return ProductSubscriptionInterfaceApi[]|array
      */
     public function list()
     {
@@ -99,7 +99,7 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
      * Get a product subscription
      *
      * @param int $id
-     * @return \Mundipagg\Core\Recurrence\Interfaces\ProductSubscriptionInterface|null
+     * @return ProductSubscriptionInterfaceApi|null
      */
     public function getProductSubscription($id)
     {
@@ -116,9 +116,9 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
      *
      * @param int $id
      * @param ProductSubscriptionInterface $productSubscription
-     * @return \Mundipagg\Core\Recurrence\Interfaces\ProductSubscriptionInterface|array
+     * @return ProductSubscriptionInterfaceApi|array
      */
-    public function update($id, ProductSubscriptionInterface $productSubscription)
+    public function update($id, ProductSubscriptionInterfaceApi $productSubscription)
     {
         return $this->save($productSubscription, $id);
     }
@@ -153,7 +153,7 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
      *
      * @param array $form
      * @param int $id
-     * @return \Mundipagg\Core\Recurrence\Interfaces\ProductSubscriptionInterface|array
+     * @return ProductSubscriptionInterfaceApi|array
      */
     public function saveFormData()
     {

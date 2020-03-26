@@ -3,31 +3,32 @@
 namespace MundiPagg\MundiPagg\Api;
 
 use Mundipagg\Core\Recurrence\Interfaces\ProductPlanInterface;
+use MundiPagg\MundiPagg\Api\ProductPlanInterfaceApi;
 
 interface ProductPlanApiInterface
 {
     /**
      * Save product plan
      *
-     * @param ProductPlanInterface $productPlan
+     * @param \MundiPagg\MundiPagg\Api\ProductPlanInterfaceApi $productPlan
      * @param int $id
-     * @return \Mundipagg\Core\Recurrence\Interfaces\ProductPlanInterface|array
+     * @return \MundiPagg\MundiPagg\Api\ProductPlanInterfaceApi|array
      */
-    public function save(ProductPlanInterface $productPlan, $id = null);
+    public function save(\MundiPagg\MundiPagg\Api\ProductPlanInterfaceApi $productPlan, $id = null);
 
     /**
      * Save product plan
      *
      * @param array $form
      * @param int $id
-     * @return ProductPlanInterface|array
+     * @return \MundiPagg\MundiPagg\Api\ProductPlanInterfaceApi|array
      */
     public function saveFormData();
 
     /**
      * List product plan
      *
-     * @return \Mundipagg\Core\Recurrence\Interfaces\ProductPlanInterface[]|array
+     * @return \MundiPagg\MundiPagg\Api\ProductPlanInterfaceApi[]|array
      */
     public function list();
 
@@ -35,16 +36,16 @@ interface ProductPlanApiInterface
      * Update product plan
      *
      * @param int $id
-     * @param ProductPlanInterface $productPlan
-     * @return \Mundipagg\Core\Recurrence\Interfaces\ProductPlanInterface|array
+     * @param \MundiPagg\MundiPagg\Api\ProductPlanInterfaceApi $productPlan
+     * @return \MundiPagg\MundiPagg\Api\ProductPlanInterfaceApi|array
      */
-    public function update($id, ProductPlanInterface $productPlan);
+    public function update($id, \MundiPagg\MundiPagg\Api\ProductPlanInterfaceApi $productPlan);
 
     /**
      * Get a product plan
      *
      * @param int $id
-     * @return \Mundipagg\Core\Recurrence\Interfaces\ProductPlanInterface|array
+     * @return \MundiPagg\MundiPagg\Api\ProductPlanInterfaceApi|array
      */
     public function find($id);
 
@@ -52,7 +53,7 @@ interface ProductPlanApiInterface
      * Delete product plan
      *
      * @param int $id
-     * @return \Mundipagg\Core\Recurrence\Interfaces\ProductPlanInterface|array
+     * @return \MundiPagg\MundiPagg\Api\ProductPlanInterfaceApi|array
      */
     public function delete($id);
 

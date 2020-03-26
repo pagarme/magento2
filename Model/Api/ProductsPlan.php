@@ -11,6 +11,7 @@ use Mundipagg\Core\Recurrence\Factories\PlanFactory;
 use MundiPagg\MundiPagg\Api\ProductPlanApiInterface;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 use MundiPagg\MundiPagg\Helper\ProductPlanHelper;
+use MundiPagg\MundiPagg\Api\ProductPlanInterfaceApi;
 
 class ProductsPlan implements ProductPlanApiInterface
 {
@@ -100,12 +101,12 @@ class ProductsPlan implements ProductPlanApiInterface
     /**
      * Save product subscription
      *
-     * @param ProductPlanInterface $productPlan
+     * @param ProductPlanInterfaceApi $productPlan
      * @param int $id
-     * @return ProductPlanInterface
+     * @return ProductPlanInterfaceApi
      * @throws MagentoException
      */
-    public function save(ProductPlanInterface $productPlan, $id = null)
+    public function save(ProductPlanInterfaceApi $productPlan, $id = null)
     {
         try {
             ProductPlanHelper::mapperProductPlan($productPlan);
@@ -125,7 +126,7 @@ class ProductsPlan implements ProductPlanApiInterface
     }
 
     /**
-     * @return ProductPlanInterface[]
+     * @return ProductPlanInterfaceApi[]
      * @throws MagentoException
      */
     public function list()
@@ -149,11 +150,11 @@ class ProductsPlan implements ProductPlanApiInterface
 
     /**
      * @param int $id
-     * @param ProductPlanInterface $productPlan
-     * @return ProductPlanInterface
+     * @param ProductPlanInterfaceApi $productPlan
+     * @return ProductPlanInterfaceApi
      * @throws MagentoException
      */
-    public function update($id, ProductPlanInterface $productPlan)
+    public function update($id, ProductPlanInterfaceApi $productPlan)
     {
         try {
             $planOriginal = $this->planService->findById($id);
@@ -178,7 +179,7 @@ class ProductsPlan implements ProductPlanApiInterface
 
     /**
      * @param int $id
-     * @return ProductPlanInterface
+     * @return ProductPlanInterfaceApi
      * @throws \Exception
      */
     public function find($id)
