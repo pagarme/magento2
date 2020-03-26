@@ -53,37 +53,41 @@ PlatformConfig.bind = function (platformConfig) {
 };
 
 PlatformConfig.getAvaliableBrands = function (data) {
-    var CCBrands = [];
-    var VoucherBrands = [];
+    creditCardBrands = this.getBrands(
+        data,
+        data.payment.ccform.availableTypes.mundipagg_creditcard
+    )
 
-    var objCreditCardBrands = data.payment.ccform.availableTypes.mundipagg_creditcard;
-    if (objCreditCardBrands !== undefined) {
-        var brands = Object.keys(objCreditCardBrands);
-
-        for (var i = 0, len = brands.length; i < len; i++) {
-            CCBrands[i] = {
-                'title': brands[i],
-                'image': data.payment.ccform.icons[brands[i]].url
-            };
-        }
-    }
-
-    var objVoucherBrands = data.payment.ccform.availableTypes.mundipagg_voucher;
-    if (objVoucherBrands !== undefined) {
-        var brands = Object.keys(objVoucherBrands);
-
-        for (var i = 0, len = brands.length; i < len; i++) {
-            VoucherBrands[i] = {
-                'title': brands[i],
-                'image': data.payment.ccform.icons[brands[i]].url
-            };
-        }
-    }
+    voucherBrands = this.getBrands(
+        data,
+        data.payment.ccform.availableTypes.mundipagg_voucher
+    )
 
     return {
-        'mundipagg_creditcard': CCBrands,
-        'mundipagg_voucher': VoucherBrands
+        'mundipagg_creditcard': creditCardBrands,
+        'mundipagg_voucher': voucherBrands
     };
+}
+
+PlatformConfig.getBrands = function (data, paymentMethodBrands) {
+    var availableBrands = [];
+
+    if (paymentMethodBrands !== undefined) {
+        var brands = Object.keys(paymentMethodBrands);
+
+        for (var i = 0, len = brands.length; i < len; i++) {
+            url = data.payment.ccform.icons[brands[i]].url
+            fixArray = [];
+            imageUrl = fixArray.concat(url);
+
+            availableBrands[i] = {
+                'title': brands[i],
+                'image': imageUrl[0]
+
+            };
+        }
+    }
+    return availableBrands;
 }
 
 FormObject.creditCardInit = function (isMultibuyerEnabled) {
