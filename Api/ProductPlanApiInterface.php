@@ -14,7 +14,7 @@ interface ProductPlanApiInterface
      * @param int $id
      * @return \MundiPagg\MundiPagg\Api\ProductPlanInterfaceApi|array
      */
-    public function save(\MundiPagg\MundiPagg\Api\ProductPlanInterfaceApi $productPlan, $id = null);
+    public function save($productPlan, $id = null);
 
     /**
      * Save product plan
@@ -39,7 +39,7 @@ interface ProductPlanApiInterface
      * @param \MundiPagg\MundiPagg\Api\ProductPlanInterfaceApi $productPlan
      * @return \MundiPagg\MundiPagg\Api\ProductPlanInterfaceApi|array
      */
-    public function update($id, \MundiPagg\MundiPagg\Api\ProductPlanInterfaceApi $productPlan);
+    public function update($id, $productPlan);
 
     /**
      * Get a product plan

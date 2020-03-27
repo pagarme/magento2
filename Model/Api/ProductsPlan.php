@@ -100,13 +100,11 @@ class ProductsPlan implements ProductPlanApiInterface
 
     /**
      * Save product subscription
-     *
-     * @param ProductPlanInterfaceApi $productPlan
      * @param int $id
      * @return ProductPlanInterfaceApi
      * @throws MagentoException
      */
-    public function save(ProductPlanInterfaceApi $productPlan, $id = null)
+    public function save($productPlan, $id = null)
     {
         try {
             ProductPlanHelper::mapperProductPlan($productPlan);
@@ -154,7 +152,7 @@ class ProductsPlan implements ProductPlanApiInterface
      * @return ProductPlanInterfaceApi
      * @throws MagentoException
      */
-    public function update($id, ProductPlanInterfaceApi $productPlan)
+    public function update($id, $productPlan)
     {
         try {
             $planOriginal = $this->planService->findById($id);
