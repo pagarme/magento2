@@ -21,6 +21,8 @@ class InstallSchema implements InstallSchemaInterface
         $installer = $setup;
         $installer->startSetup();
 
+        $version = $context->getVersion();
+
         $this->installConfig($setup);
         $this->installWebhook($setup);
         $this->installOrder($setup);
@@ -28,12 +30,12 @@ class InstallSchema implements InstallSchemaInterface
         $this->installTransaction($setup);
         $this->installSavedCard($setup);
         $this->installCustomer($setup);
-        $this->installProductsSubscription($setup);
-        $this->installSubscriptionRepetitions($setup);
-        $this->installRecurrenceSubscription($setup);
-        $this->installRecurrenceCharge($setup);
-        $this->installSubProducts($setup);
-        $this->installProductsPlan($setup);
+//        $this->installProductsSubscription($setup);
+//        $this->installSubscriptionRepetitions($setup);
+//        $this->installRecurrenceSubscription($setup);
+//        $this->installRecurrenceCharge($setup);
+//        $this->installSubProducts($setup);
+//        $this->installProductsPlan($setup);
 
         $setup->endSetup();
     }

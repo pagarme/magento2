@@ -62,7 +62,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
             $setup = $this->addCardDataToTransactionTable($setup);
         }
 
-        if (version_compare($version, "2.0.0-beta", ">=")) {
+        if (version_compare($version, "2.0.0-beta", "<")) {
             $setup = $installSchema->installProductsSubscription($setup);
             $setup = $installSchema->installSubscriptionRepetitions($setup);
             $setup = $installSchema->installRecurrenceSubscription($setup);
@@ -71,11 +71,11 @@ class UpgradeSchema implements UpgradeSchemaInterface
             $setup = $installSchema->installProductsPlan($setup);
         }
 
-        if (version_compare($version, "2.0.1-beta", ">=")) {
+        if (version_compare($version, "2.0.1-beta", "<")) {
             $setup = $this->addMundipaggIdToSubProductsTable($setup);
         }
 
-        if (version_compare($version, "2.0.2-beta", ">=")) {
+        if (version_compare($version, "2.0.2-beta", "<")) {
             $setup = $this->addTransactionDataToTransactionTable($setup);
         }
 
