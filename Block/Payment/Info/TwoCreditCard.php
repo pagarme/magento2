@@ -12,6 +12,9 @@
 namespace MundiPagg\MundiPagg\Block\Payment\Info;
 
 use Magento\Payment\Block\Info\Cc;
+use Mundipagg\Core\Kernel\Services\OrderService;
+use Mundipagg\Core\Kernel\ValueObjects\Id\OrderId;
+use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 
 class TwoCreditCard extends Cc
 {
@@ -80,5 +83,37 @@ class TwoCreditCard extends Cc
     public function getSecondCardLast4()
     {
         return '**** **** **** ' . $this->getInfo()->getAdditionalInformation('cc_last_4_second');
+    }
+
+    public function getTransactionInfo()
+    {
+        Magento2CoreSetup::bootstrap();
+        $orderService = new OrderService();
+
+        $orderId = $this->getInfo()->getLastTransId();
+        $orderId = explode('-', $orderId)[0];
+
+        /**
+         * @var \Mundipagg\Core\Kernel\Aggregates\Order orderObject
+         */
+        $orderObject = $orderService->getOrderByMundiPaggId(new OrderId($orderId));
+
+        return [
+            'card1' => array_merge(
+                $orderObject->getCharges()[0]->getAcquirerTidCapturedAndAutorize(),
+                [
+                    'tid' => $orderObject->getCharges()[0]
+                        ->getLastTransaction()
+                        ->getAcquirerTid()]
+            ),
+            'card2' => array_merge(
+                $orderObject->getCharges()[1]->getAcquirerTidCapturedAndAutorize(),
+                [
+                    'tid' => $orderObject->getCharges()[1]
+                    ->getLastTransaction()
+                    ->getAcquirerTid()
+                ]
+            )
+        ];
     }
 }

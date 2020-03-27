@@ -75,6 +75,10 @@ class UpgradeSchema implements UpgradeSchemaInterface
             $setup = $this->addMundipaggIdToSubProductsTable($setup);
         }
 
+        if (version_compare($version, "2.0.2-beta", ">=")) {
+            $setup = $this->addTransactionDataToTransactionTable($setup);
+        }
+
         $setup->endSetup();
     }
 
@@ -380,4 +384,24 @@ class UpgradeSchema implements UpgradeSchemaInterface
         return $setup;
     }
 
+    protected function addTransactionDataToTransactionTable($setup)
+    {
+        $installer = $setup;
+
+        $connection = $installer->getConnection();
+        $tableName = $installer->getTable('mundipagg_module_core_transaction');
+
+        $connection->addColumn(
+            $tableName,
+            'transaction_data',
+            [
+                'type' => Table::TYPE_TEXT,
+                null,
+                'nullable' => true,
+                'comment' => 'Transaction Data'
+            ]
+        );
+
+        return $setup;
+    }
 }
