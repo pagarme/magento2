@@ -41,8 +41,8 @@
 		</field>
 
 		<field id="decrease_stock" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="26" translate="label" type="select">
-			<label>Enable to decrease stock in every cycle</label>
-			<comment>With this option enabled, the module will decrease the product stock in every recurrence cycle</comment>
+			<label>Enable to decrease product stock with each cycle</label>
+			<comment>With this option enabled, the module will decrease product stock with each recurrence cycle</comment>
 			<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
 			<config_path>mundipagg_mundipagg/recurrence/decrease_stock</config_path>
 		</field>
