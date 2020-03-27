@@ -478,6 +478,9 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
 
             'conflictMessageRecurrenceProductWithRecurrenceProduct'
                 => 'conflict_recurrence_product_with_recurrence_product',
+
+            'decreaseStock'
+                => 'decrease_stock',
         ];
 
         $section = 'mundipagg_mundipagg/recurrence/';
