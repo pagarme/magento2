@@ -558,12 +558,6 @@
     <!-- Recurrence -->
 
 
-
-
-
-
-
-    <preference for="Mundipagg\Core\Recurrence\Interfaces\ProductSubscriptionInterface" type="Mundipagg\Core\Recurrence\Aggregates\ProductSubscription" />
     <preference for="Mundipagg\Core\Recurrence\Interfaces\RepetitionInterface" type="Mundipagg\Core\Recurrence\Aggregates\Repetition" />
     <preference for="MundiPagg\MundiPagg\Api\ProductSubscriptionApiInterface" type="MundiPagg\MundiPagg\Model\Api\ProductsSubscription" />
     <preference for="MundiPagg\MundiPagg\Api\SubscriptionApiInterface" type="MundiPagg\MundiPagg\Model\Api\Subscription" />
@@ -571,6 +565,9 @@
 
     <preference for="MundiPagg\MundiPagg\Api\ProductPlanApiInterface" type="MundiPagg\MundiPagg\Model\Api\ProductsPlan" />
     <preference for="Mundipagg\Core\Recurrence\Interfaces\ProductPlanInterface" type="Mundipagg\Core\Recurrence\Aggregates\Plan" />
-    <preference for="MundiPagg\MundiPagg\Api\ProductPlanInterfaceApi" type="Mundipagg\Core\Recurrence\Aggregates\Plan" />
 
+    <preference for="MundiPagg\MundiPagg\Api\ObjectMapper\ProductPlan\ProductPlanInterfaceApi" type="Mundipagg\Core\Recurrence\Aggregates\Plan" />
+    <preference for="MundiPagg\MundiPagg\Api\ObjectMapper\ProductPlan\SubProduct" type="Mundipagg\Core\Recurrence\Aggregates\SubProduct" />
+
+    <preference for="Mundipagg\Core\Recurrence\Interfaces\ProductSubscriptionInterfaceApi" type="Mundipagg\Core\Recurrence\Aggregates\ProductSubscription" />
 </config>

@@ -11,7 +11,7 @@ use Mundipagg\Core\Recurrence\Factories\PlanFactory;
 use MundiPagg\MundiPagg\Api\ProductPlanApiInterface;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 use MundiPagg\MundiPagg\Helper\ProductPlanHelper;
-use MundiPagg\MundiPagg\Api\ProductPlanInterfaceApi;
+use MundiPagg\MundiPagg\Api\ObjectMapper\ProductPlan\ProductPlanInterfaceApi;
 
 class ProductsPlan implements ProductPlanApiInterface
 {

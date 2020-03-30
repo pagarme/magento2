@@ -4,7 +4,7 @@
 namespace MundiPagg\MundiPagg\Api;
 
 
-interface ProductSubscriptionInterfaceApi extends ProductSubscriptionApiInterface
+interface ProductSubscriptionInterfaceApi extends \Mundipagg\Core\Recurrence\Interfaces\ProductSubscriptionInterface
 {
 
 }
