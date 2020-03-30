@@ -15,13 +15,14 @@
     <span><b><?php echo __('Number'); ?>: </b><?php echo $this->getCardLast4(); ?></span>
     <br/>
     <span><b><?php echo __('Installments'); ?>: </b><?php echo $this->getInstallments(); ?></span>
-    <br/>
-    <span><b><?= __('NSU'); ?>: </b><?= $lastTransaction['authorized'] ?></span>
+    <?php if ($lastTransaction['authorized'] ==! null) {?>
+        <br/>
+        <span><b><?= __('NSU'); ?>: </b><?= $lastTransaction['authorized'] ?></span>
+    <?php } ?>
     <br/>
     <?php if ($lastTransaction['captured'] ==! null) {?>
         <span><b><?= __('NSU from capture'); ?>: </b><?= $lastTransaction['captured'] ?></span>
         <br/>
     <?php } ?>
-
     <span><b><?= __('TID'); ?>: </b><?= $lastTransaction['tid'] ?></span>
 <?php endif ?>
