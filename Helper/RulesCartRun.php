@@ -49,6 +49,7 @@ class RulesCartRun
     ) {
         foreach ($this->getRulesProductPlan() as $rule) {
             $rule->run($currentProduct, $productListInCart);
+
             if (!empty($rule->getError())) {
                 throw new LocalizedException(__($rule->getError()));
             }
