@@ -197,15 +197,15 @@ PaymentMethodController.prototype.addCreditCardListeners = function (formObject)
     }
 };
 
+PaymentMethodController.prototype.addListenerUpdateAmount = function () {
+    var observerMutation = new MutationObserver(function (mutationsList, observer) {
 
-PaymentMethodController.prototype.addListenerUpdateAmount = _ => {
-    var observerMutation = new MutationObserver((mutationsList, observer) => {
-
-        setTimeout(_ => {
-            ['twocreditcards', 'boletoCreditcard', 'voucher'].forEach(paymentMethodName => {
-                var initPaymentMethod = new PaymentMethodController(paymentMethodName, platFormConfig);
+        var paymentMethodName = ['twocreditcards', 'boletoCreditcard', 'voucher'];
+        setTimeout(function () {
+            for (var i = 0; i < paymentMethodName.length; i++) {
+                var initPaymentMethod = new PaymentMethodController(paymentMethodName[i], platFormConfig);
                 initPaymentMethod.init();
-            })
+            }
         }, 800);
 
         var initCreditCard = new PaymentMethodController('creditcard', platFormConfig);
