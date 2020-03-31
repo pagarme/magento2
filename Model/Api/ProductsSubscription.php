@@ -12,7 +12,7 @@ use MundiPagg\MundiPagg\Api\ProductSubscriptionApiInterface;
 use Magento\Framework\Webapi\Rest\Request;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 use MundiPagg\MundiPagg\Helper\ProductSubscriptionHelper;
-use MundiPagg\MundiPagg\Api\ProductSubscriptionInterfaceApi;
+use MundiPagg\MundiPagg\Api\ObjectMapper\ProductSubscription\ProductSubscriptionMapperInterface;
 
 class ProductsSubscription implements ProductSubscriptionApiInterface
 {
@@ -46,9 +46,9 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
      *
      * @param ProductSubscriptionInterface $productSubscription
      * @param int $id
-     * @return ProductSubscriptionInterfaceApi|array
+     * @return ProductSubscriptionMapperInterface|array
      */
-    public function save(ProductSubscriptionInterfaceApi $productSubscription, $id = null)
+    public function save($productSubscription, $id = null)
     {
         try {
             if (!empty($id)) {
@@ -83,7 +83,7 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
     /**
      * List products subscription
      *
-     * @return ProductSubscriptionInterfaceApi[]|array
+     * @return ProductSubscriptionMapperInterface[]|array
      */
     public function list()
     {
@@ -99,7 +99,7 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
      * Get a product subscription
      *
      * @param int $id
-     * @return ProductSubscriptionInterfaceApi|null
+     * @return ProductSubscriptionMapperInterface|null
      */
     public function getProductSubscription($id)
     {
@@ -116,9 +116,9 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
      *
      * @param int $id
      * @param ProductSubscriptionInterface $productSubscription
-     * @return ProductSubscriptionInterfaceApi|array
+     * @return ProductSubscriptionMapperInterface|array
      */
-    public function update($id, ProductSubscriptionInterfaceApi $productSubscription)
+    public function update($id, $productSubscription)
     {
         return $this->save($productSubscription, $id);
     }
@@ -153,7 +153,7 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
      *
      * @param array $form
      * @param int $id
-     * @return ProductSubscriptionInterfaceApi|array
+     * @return ProductSubscriptionMapperInterface|array
      */
     public function saveFormData()
     {
