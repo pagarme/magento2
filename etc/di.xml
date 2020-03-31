@@ -550,7 +550,6 @@
 
     <!-- Recurrence -->
 
-
     <preference for="Mundipagg\Core\Recurrence\Interfaces\RepetitionInterface" type="Mundipagg\Core\Recurrence\Aggregates\Repetition" />
     <preference for="MundiPagg\MundiPagg\Api\ProductSubscriptionApiInterface" type="MundiPagg\MundiPagg\Model\Api\ProductsSubscription" />
     <preference for="MundiPagg\MundiPagg\Api\SubscriptionApiInterface" type="MundiPagg\MundiPagg\Model\Api\Subscription" />

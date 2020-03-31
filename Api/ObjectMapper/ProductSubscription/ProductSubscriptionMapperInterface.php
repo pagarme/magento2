@@ -1,8 +1,6 @@
 <?php
 
-
 namespace MundiPagg\MundiPagg\Api\ObjectMapper\ProductSubscription;
-
 
 interface ProductSubscriptionMapperInterface extends \Mundipagg\Core\Recurrence\Interfaces\ProductSubscriptionInterface
 {
