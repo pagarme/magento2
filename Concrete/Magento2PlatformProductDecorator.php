@@ -58,4 +58,22 @@ class Magento2PlatformProductDecorator implements PlatformProductInterface
 
         $this->platformProduct = $product;
     }
+
+    public function decreaseStock($quantity)
+    {
+        $quantityAndStock = $this->platformProduct->getQuantityAndStockStatus();
+        $stock = $quantityAndStock['qty'];
+        $isInStock = $quantityAndStock['is_in_stock'];
+
+        $newStockQty = $stock - $quantity;
+
+        if ($newStockQty <= 0) {
+            $newStockQty = 0;
+            $isInStock = false;
+        }
+
+        $this->platformProduct->setStockData(['qty' => $newStockQty, 'is_in_stock' => $isInStock]);
+        $this->platformProduct->setQuantityAndStockStatus(['qty' => $newStockQty, 'is_in_stock' => $isInStock]);
+        $this->platformProduct->save();
+     }
 }
