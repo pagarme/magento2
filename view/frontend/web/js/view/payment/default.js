@@ -130,6 +130,11 @@ define(
              * Select current payment token
              */
             selectPaymentMethod: function() {
+                var data = this.getData();
+                if (data == undefined) {
+                    var platFormConfig = window.MundiPaggCore.platFormConfig;
+                    window.MundiPaggCore.init(this.getModel(), platFormConfig);
+                }
                 selectPaymentMethodAction(this.getData());
                 checkoutData.setSelectedPaymentMethod(this.item.method);
                 return true;

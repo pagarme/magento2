@@ -29,29 +29,11 @@
 <!--            <source_model>MundiPagg\MundiPagg\Model\Source\PaymentAction</source_model>-->
 <!--            <config_path>payment/mundipagg_voucher/payment_action</config_path>-->
 <!--        </field>-->
-        <field id="order_status" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
-            <label>New Order Status</label>
-            <source_model>Magento\Sales\Model\Config\Source\Order\Status\Processing</source_model>
-            <config_path>payment/mundipagg_voucher/order_status</config_path>
-        </field>
-        <field id="reject_order_status" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
-            <label>Reject Order Status</label>
-            <source_model>MundiPagg\MundiPagg\Model\Source\Status\Review</source_model>
-            <config_path>payment/mundipagg_voucher/reject_order_status</config_path>
-        </field>
-
-        <field id="review_order_status" translate="label" type="select" sortOrder="61" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
-            <label>Review Order Status</label>
-            <source_model>MundiPagg\MundiPagg\Model\Source\Status\Review</source_model>
-            <config_path>payment/mundipagg_voucher/review_order_status</config_path>
-        </field>
-
         <field id="sort_order" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="70" translate="label" type="text">
             <label>Sort Order</label>
             <comment />
             <config_path>payment/mundipagg_voucher/sort_order</config_path>
         </field>
-
 <!--        <field id="enabled_saved_cards" showInDefault="1" showInStore="1"-->
 <!--               showInWebsite="1"-->
 <!--               sortOrder="71" translate="label" type="select">-->
@@ -60,7 +42,6 @@
 <!--            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>-->
 <!--            <config_path>payment/mundipagg_voucher/enabled_saved_cards</config_path>-->
 <!--        </field>-->
-
 	    <include path="MundiPagg_MundiPagg::system/transaction/voucher/types.xml"/>
     </group>
 </include>

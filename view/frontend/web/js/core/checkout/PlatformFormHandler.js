@@ -43,7 +43,6 @@ FormHandler.prototype.updateInstallmentSelect = function (installmentsObj, eleme
 };
 
 FormHandler.prototype.fillBrandList = function (brandsObject, formObject) {
-
     var html = '';
 
     for (var i = 0, len = brandsObject.length; i < len; i++) {
