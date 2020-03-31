@@ -548,13 +548,6 @@
         <plugin name="Mundipagg_Mundipagg_change_template" type="MundiPagg\MundiPagg\Plugin\Princing\Render\FinalPricePlugin" />
     </type>
 
-
-<!--    <type name="Magento\Framework\Webapi\Rest\Response\Renderer\Json">-->
-<!--        <plugin name="Mundipagg_Mundipagg_renderer_json_plugin" type="MundiPagg\MundiPagg\Plugin\Webapi\RestResponse\JsonPlugin" sortOrder="100" disabled="false" />-->
-<!--    </type>-->
-
-<!--    <preference for="Magento\Framework\Pricing\Render\RendererPool" type="MundiPagg\MundiPagg\Pricing\Render\RendererPool" />-->
-
     <!-- Recurrence -->
 
 
