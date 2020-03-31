@@ -59,6 +59,13 @@ class ProductPlanHelper
             $subProduct->setRecurrenceType('plan');
             $subProduct->setName($product->getName());
 
+            if (!isset($selectedProducts[$subProduct->getProductId()])) {
+                throw new \Exception(
+                    "Product id: {$subProduct->getProductId()}. It's not correct"
+                    , 404
+                );
+            }
+
             $price = $selectedProducts[$subProduct->getProductId()]['price'];
             $quantity = $selectedProducts[$subProduct->getProductId()]['quantity'];
 
