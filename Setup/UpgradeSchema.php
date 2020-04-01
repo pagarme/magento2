@@ -79,6 +79,10 @@ class UpgradeSchema implements UpgradeSchemaInterface
             $setup = $this->addTransactionDataToTransactionTable($setup);
         }
 
+        if (version_compare($version, "2.1.0-beta", "<")) {
+            $setup = $installSchema->installSubscriptionItems($setup);
+        }
+
         $setup->endSetup();
     }
 
