@@ -1,6 +1,6 @@
 <?php
 /**
- * Class billet
+ * Class TwoCreditCard
  *
  * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
  * @copyright   2017 MundiPagg (http://www.mundipagg.com)
@@ -9,6 +9,13 @@
  * @link        http://www.mundipagg.com
  */
 
+?>
+<?php
+/* @var \MundiPagg\MundiPagg\Block\Payment\Info\CreditCard $this */;
+/**
+ * @var \Mundipagg\Core\Kernel\Aggregates\Transaction $lastTransaction
+ */
+$lastTransactions =  $this->getTransactionInfo();
 ?>
 <?php if ($this->getCcTypeFirst() && $this->getCcTypeSecond()): ?>
     <span><?php echo __($this->getTitle()); ?></span>
@@ -23,6 +30,20 @@
     <span><b><?php echo __('Installments'); ?>: </b><?php echo $this->getInstallmentsFirstCard(); ?></span>
     <br/>
     <span><b><?php echo __('Amount'); ?>: </b><?php echo $this->getFirstCardAmount(); ?></span>
+
+    <?php if ($lastTransactions['card1']['authorized'] ==! null) {?>
+        <br/>
+        <span><b><?= __('NSU'); ?>: </b><?= $lastTransactions['card1']['authorized'] ?></span>
+        <br/>
+    <?php } ?>
+
+    <?php if ($lastTransactions['card1']['captured'] ==! null) {?>
+        <br/>
+        <span><b><?= __('NSU from capture'); ?>: </b><?= $lastTransactions['card1']['captured'] ?></span>
+        <br/>
+    <?php } ?>
+
+    <span><b><?= __('TID'); ?>: </b><?= $lastTransactions['card1']['tid'] ?></span>
     <br/>
     <br/>
     <span style="font-size: initial;"><b><?php echo __('Second Card'); ?></b></span>
@@ -34,5 +55,20 @@
     <span><b><?php echo __('Installments'); ?>: </b><?php echo $this->getInstallmentsSecondCard(); ?></span>
     <br/>
     <span><b><?php echo __('Amount'); ?>: </b><?php echo $this->getSecondCardAmount(); ?></span>
+
+    <?php if ($lastTransactions['card2']['authorized'] ==! null) {?>
+        <br/>
+        <span><b><?= __('NSU'); ?>: </b><?= $lastTransactions['card2']['authorized'] ?></span>
+        <br/>
+    <?php } ?>
+
+    <?php if ($lastTransactions['card2']['captured'] ==! null) {?>
+        <br/>
+        <span><b><?= __('NSU from capture'); ?>: </b><?= $lastTransactions['card2']['captured'] ?></span>
+        <br/>
+    <?php } ?>
+
+    <span><b><?= __('TID'); ?>: </b><?= $lastTransactions['card2']['tid'] ?></span>
+    <br/>
 
 <?php endif ?>
