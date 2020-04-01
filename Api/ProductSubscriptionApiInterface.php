@@ -2,32 +2,32 @@
 
 namespace MundiPagg\MundiPagg\Api;
 
-use \Mundipagg\Core\Recurrence\Interfaces\ProductSubscriptionInterface;
+use MundiPagg\MundiPagg\Api\ObjectMapper\ProductSubscription\ProductSubscriptionMapperInterface;
 
 interface ProductSubscriptionApiInterface
 {
     /**
      * Save product subscription
      *
-     * @param ProductSubscriptionInterface $productSubscription
+     * @param \MundiPagg\MundiPagg\Api\ObjectMapper\ProductSubscription\ProductSubscriptionMapperInterface $productSubscription
      * @param int $id
-     * @return \Mundipagg\Core\Recurrence\Interfaces\ProductSubscriptionInterface|array
+     * @return \MundiPagg\MundiPagg\Api\ObjectMapper\ProductSubscription\ProductSubscriptionMapperInterface|array
      */
-    public function save(ProductSubscriptionInterface $productSubscription, $id = null);
+    public function save($productSubscription, $id = null);
 
     /**
      * Save product subscription
      *
      * @param array $form
      * @param int $id
-     * @return \Mundipagg\Core\Recurrence\Interfaces\ProductSubscriptionInterface|array
+     * @return \MundiPagg\MundiPagg\Api\ObjectMapper\ProductSubscription\ProductSubscriptionMapperInterface|array
      */
     public function saveFormData();
 
     /**
      * List product subscription
      *
-     * @return \Mundipagg\Core\Recurrence\Interfaces\ProductSubscriptionInterface[]
+     * @return \MundiPagg\MundiPagg\Api\ObjectMapper\ProductSubscription\ProductSubscriptionMapperInterface[]
      */
     public function list();
 
@@ -35,16 +35,16 @@ interface ProductSubscriptionApiInterface
      * Update product subscription
      *
      * @param int $id
-     * @param ProductSubscriptionInterface $productSubscription
-     * @return \Mundipagg\Core\Recurrence\Interfaces\ProductSubscriptionInterface|array
+     * @param \MundiPagg\MundiPagg\Api\ObjectMapper\ProductSubscription\ProductSubscriptionMapperInterface $productSubscription
+     * @return \MundiPagg\MundiPagg\Api\ObjectMapper\ProductSubscription\ProductSubscriptionMapperInterface|array
      */
-    public function update($id, ProductSubscriptionInterface $productSubscription);
+    public function update($id, $productSubscription);
 
     /**
      * Get a product subscription
      *
      * @param int $id
-     * @return \Mundipagg\Core\Recurrence\Interfaces\ProductSubscriptionInterface
+     * @return \MundiPagg\MundiPagg\Api\ObjectMapper\ProductSubscription\ProductSubscriptionMapperInterface
      */
     public function getProductSubscription($id);
 
