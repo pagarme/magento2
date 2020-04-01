@@ -549,6 +549,8 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
                 $quoteItem->getDescription()
             );
 
+            $item->setName($quoteItem->getName());
+
             $helper = new RecurrenceProductHelper();
             $selectedRepetition = $helper->getSelectedRepetition($quoteItem);
             $item->setSelectedOption($selectedRepetition);
