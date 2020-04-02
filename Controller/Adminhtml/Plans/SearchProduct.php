@@ -117,7 +117,7 @@ class SearchProduct extends Action
         foreach ($selections as $bundle) {
             $product = [
                 "code" => $bundle->getEntityId(),
-                "name" => $bundle->getName(),
+                "name" => $this->getFormattedName($bundle->getName()),
                 "image" => $this->productHelper->getProductImage(
                     $bundle->getEntityId()
                 ),
@@ -150,6 +150,14 @@ class SearchProduct extends Action
         ];
 
         return $bundleProducts;
+    }
+
+    public function getFormattedName($name)
+    {
+        if (preg_match('/[^a-zA-Z0-9 ]+/i', $name)) {
+            $name = preg_replace('/[^a-zA-Z0-9 ]+/i', '', $name);
+        }
+        return $name;
     }
 
     public function getProductSubscriptionArray(

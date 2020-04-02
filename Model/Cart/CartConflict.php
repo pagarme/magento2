@@ -101,22 +101,15 @@ class CartConflict
 
         $productListInCart = $this->buildProductListInCart($cart);
 
-        if (
-            $currentProduct->getProductPlanSelected() !== null ||
-            $currentProduct->isNormalProduct()
-        ) {
-            $this->rulesCartRun->runRulesProductPlan($currentProduct, $productListInCart);
-        }
+        $this->rulesCartRun->runRulesProductPlan(
+            $currentProduct,
+            $productListInCart
+        );
 
-        if (
-            $currentProduct->getProductSubscriptionSelected() !== null ||
-            $currentProduct->isNormalProduct()
-        ) {
-            $this->rulesCartRun->runRulesProductSubscription(
-                $currentProduct,
-                $productListInCart
-            );
-        }
+        $this->rulesCartRun->runRulesProductSubscription(
+            $currentProduct,
+            $productListInCart
+        );
 
         return [$productInfo, $requestInfo];
     }

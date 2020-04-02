@@ -102,7 +102,7 @@ class RecurrenceProductHelper extends AbstractHelper
         $options = $product->getProductOptions();
         $optionValue = $this->getOptionValue($options);
 
-        if (empty($optionValue)) {
+        if (empty($optionValue) || empty($optionValue->getSortOrder())) {
             return null;
         }
 

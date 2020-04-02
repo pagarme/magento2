@@ -104,7 +104,10 @@ class Subscription extends Template
 
     public function getFormattedName($name)
     {
-        return str_replace("'", "", $name);
+        if (preg_match('/[^a-zA-Z0-9 ]+/i', $name)) {
+            $name = preg_replace('/[^a-zA-Z0-9 ]+/i', '', $name);
+        }
+        return $name;
     }
     /**
      * @return array

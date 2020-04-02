@@ -180,6 +180,7 @@ PaymentMethodController.prototype.boletoCreditcardInit = function () {
     );
 }
 
+var timesRunObserver = 1;
 PaymentMethodController.prototype.addCreditCardListeners = function (formObject) {
     if (!formObject) {
         return;
@@ -189,7 +190,37 @@ PaymentMethodController.prototype.addCreditCardListeners = function (formObject)
     this.addCreditCardInstallmentsListener(formObject);
     this.addCreditCardHolderNameListener(formObject);
     this.addSavedCreditCardsListener(formObject);
+
+    if (timesRunObserver <= 1) {
+        timesRunObserver++;
+        this.addListenerUpdateAmount();
+    }
 };
+
+PaymentMethodController.prototype.addListenerUpdateAmount = function () {
+    var observerMutation = new MutationObserver(function (mutationsList, observer) {
+
+        var paymentMethodName = ['twocreditcards', 'boletoCreditcard', 'voucher'];
+        setTimeout(function () {
+            for (var i = 0; i < paymentMethodName.length; i++) {
+                var initPaymentMethod = new PaymentMethodController(paymentMethodName[i], platFormConfig);
+                initPaymentMethod.init();
+            }
+        }, 800);
+
+        var initCreditCard = new PaymentMethodController('creditcard', platFormConfig);
+        initCreditCard.init();
+    });
+
+    observerMutation.observe(
+        document.getElementById('opc-sidebar'),
+        {
+            attributes: false,
+            childList: true,
+            subtree: true
+        }
+    );
+}
 
 PaymentMethodController.prototype.addInputAmountBalanceListener = function(formObject, id) {
     var paymentMethodController = this;
@@ -205,7 +236,8 @@ PaymentMethodController.prototype.addInputAmountBalanceListener = function(formO
     formObject.inputAmount.on('keyup', function(){
         element = jQuery(this);
 
-        var orderAmount = platformConfig.orderAmount;
+        var orginalValue = platFormConfig.updateTotals.getTotals()().grand_total
+        var orderAmount = (orginalValue).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
         orderAmount = orderAmount.replace(/[^0-9]/g, '');
         orderAmount = Number(orderAmount);
 
@@ -466,7 +498,7 @@ PaymentMethodController.prototype.fillBrandList = function (formObject, method) 
 };
 
 PaymentMethodController.prototype.fillCardAmount = function (formObject, count) {
-    var orderAmount = this.platformConfig.orderAmount / count;
+    var orderAmount = platFormConfig.updateTotals.getTotals()().grand_total / count;
 
     var amount = orderAmount.toFixed(this.platformConfig.currency.precision);
     var separator = ".";

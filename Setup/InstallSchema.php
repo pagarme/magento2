@@ -1279,4 +1279,85 @@ class InstallSchema implements InstallSchemaInterface
         }
         return $installer;
     }
+
+    public function installSubscriptionItems(SchemaSetupInterface $installer)
+    {
+        $tableName = $installer->getTable(
+            'mundipagg_module_core_recurrence_subscription_items'
+        );
+
+        if (!$installer->getConnection()->isTableExists($tableName)) {
+            $configTable = $installer->getConnection()
+                ->newTable($tableName)
+                ->addColumn(
+                    'id',
+                    Table::TYPE_INTEGER,
+                    null,
+                    [
+                        'identity' => true,
+                        'unsigned' => true,
+                        'nullable' => false,
+                        'primary' => true
+                    ],
+                    'ID'
+                )
+                ->addColumn(
+                    'mundipagg_id',
+                    Table::TYPE_TEXT,
+                    null,
+                    [
+                        'nullable' => false
+                    ],
+                    'format: si_xxxxxxxxxxxxxxxx'
+                )
+                ->setOption('charset', 'utf8')
+                ->addColumn(
+                    'subscription_id',
+                    Table::TYPE_TEXT,
+                    null,
+                    [
+                        'nullable' => false
+                    ],
+                    'format: sub_xxxxxxxxxxxxxxxx'
+                )
+                ->setOption('charset', 'utf8')
+                ->addColumn(
+                    'code',
+                    Table::TYPE_TEXT,
+                    100,
+                    [
+                        'nullable' => false,
+                    ],
+                    'Product code on platform'
+                )
+                ->addColumn(
+                    'quantity',
+                    Table::TYPE_INTEGER,
+                    null,
+                    [
+                        'unsigned' => true,
+                        'nullable' => false,
+                    ],
+                    'Quantity'
+                )
+                ->addColumn(
+                    'created_at',
+                    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
+                    null,
+                    ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT],
+                    'Created At'
+                )
+                ->addColumn(
+                    'updated_at',
+                    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
+                    null,
+                    ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT_UPDATE],
+                    'Updated At'
+                )
+                ->setOption('charset', 'utf8');
+
+            $installer->getConnection()->createTable($configTable);
+        }
+        return $installer;
+    }
 }
