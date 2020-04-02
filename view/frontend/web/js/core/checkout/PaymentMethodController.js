@@ -190,10 +190,22 @@ PaymentMethodController.prototype.addCreditCardListeners = function (formObject)
     this.addCreditCardInstallmentsListener(formObject);
     this.addCreditCardHolderNameListener(formObject);
     this.addSavedCreditCardsListener(formObject);
+    this.removeSavedCards(formObject);
 
     if (timesRunObserver <= 1) {
         timesRunObserver++;
         this.addListenerUpdateAmount();
+    }
+};
+
+PaymentMethodController.prototype.removeSavedCards = function (formObject) {
+    if (checkoutConfig.payment.mundipagg_creditcard.enabled_saved_cards) {
+        return;
+    }
+
+    var savedCardsElements = document.getElementsByClassName('saved-card');
+    for (var i = 0; i < savedCardsElements.length; i++) {
+        savedCardsElements[i].remove();
     }
 };
 
