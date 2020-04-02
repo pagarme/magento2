@@ -189,7 +189,7 @@ PaymentMethodController.prototype.addCreditCardListeners = function (formObject)
     this.addCreditCardInstallmentsListener(formObject);
     this.addCreditCardHolderNameListener(formObject);
     this.addSavedCreditCardsListener(formObject);
-    this.addCreditCardSavedEnabled(formObject);
+    this.removeSavedCards(formObject);
 
     if (timesRunObserver <= 1) {
         timesRunObserver++;
@@ -197,7 +197,7 @@ PaymentMethodController.prototype.addCreditCardListeners = function (formObject)
     }
 };
 
-PaymentMethodController.prototype.addCreditCardSavedEnabled = function (formObject) {
+PaymentMethodController.prototype.removeSavedCards = function (formObject) {
     if (checkoutConfig.payment.mundipagg_creditcard.enabled_saved_cards) {
         return;
     }
