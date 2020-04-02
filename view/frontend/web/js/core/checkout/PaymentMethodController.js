@@ -202,10 +202,9 @@ PaymentMethodController.prototype.removeSavedCards = function (formObject) {
         return;
     }
 
-    var savedCardsElements = document.getElementsByClassName('saved-card');
-    for (var i = 0; i < savedCardsElements.length; i++) {
-        savedCardsElements[i].remove();
-    }
+    jQuery(".saved-card").each(function (){
+        jQuery(this).remove();
+    });
 };
 
 PaymentMethodController.prototype.addListenerUpdateAmount = function () {
