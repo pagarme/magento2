@@ -68,12 +68,12 @@ class FinalPricePlugin
      * @param int $productId
      * @return false|string|null
      */
-    public static function getPriceRecurrence($productId)
+    public static function getRecurrencePrice($productId)
     {
-        $productSubscriptionService = new ProductSubscriptionService();
-        $productSubscription = $productSubscriptionService->findByProductId($productId);
+        $subscriptionProductService = new ProductSubscriptionService();
+        $subscriptionProduct = $subscriptionProductService->findByProductId($productId);
 
-        if (is_null($productSubscription)) {
+        if (is_null($subscriptionProduct)) {
             return null;
         }
 
@@ -81,7 +81,7 @@ class FinalPricePlugin
         $product = $objectManager->create(Product::class)
             ->load($productId);
 
-        $currency = self::getLowPriceRecurrence($productSubscription, $product);
+        $currency = self::getLowPriceRecurrence($subscriptionProduct, $product);
 
         $numberFormatter = new \NumberFormatter(
             'pt-BR',
@@ -92,16 +92,16 @@ class FinalPricePlugin
     }
 
     /**
-     * @param ProductSubscription $productSubscription
+     * @param ProductSubscription $subscriptionProduct
      * @param ProductInterceptor $product
      * @return float
      */
     private static function getLowPriceRecurrence(
-        ProductSubscription $productSubscription,
+        ProductSubscription $subscriptionProduct,
         ProductInterceptor $product
     ) {
         $prices = [];
-        foreach ($productSubscription->getRepetitions() as $repetition) {
+        foreach ($subscriptionProduct->getRepetitions() as $repetition) {
             $recurrencePrice = $repetition->getRecurrencePrice();
 
             if ($recurrencePrice == 0) {
