@@ -12,6 +12,12 @@ class Magento2PlatformPaymentMethodDecorator implements PlatformPaymentMethodInt
 
     private $paymentMethod;
 
+    /**
+     * @param $platformOrder
+     * @return array
+     * @uses Magento2PlatformPaymentMethodDecorator::billet()
+     * @throws \Exception
+     */
     public function setPaymentMethod($platformOrder)
     {
         $platformOrder = $platformOrder->getPlatformOrder();
@@ -39,6 +45,9 @@ class Magento2PlatformPaymentMethodDecorator implements PlatformPaymentMethodInt
         return self::CREDIT_CARD;
     }
 
+    /**
+     * @return string
+     */
     private function billet()
     {
         return self::BOLETO;
