@@ -15,7 +15,6 @@ class Magento2PlatformPaymentMethodDecorator implements PlatformPaymentMethodInt
     /**
      * @param $platformOrder
      * @return array
-     * @uses Magento2PlatformPaymentMethodDecorator::billet()
      * @throws \Exception
      */
     public function setPaymentMethod($platformOrder)
@@ -47,6 +46,7 @@ class Magento2PlatformPaymentMethodDecorator implements PlatformPaymentMethodInt
 
     /**
      * @return string
+     * @uses Magento2PlatformPaymentMethodDecorator::setPaymentMethod()
      */
     private function billet()
     {
