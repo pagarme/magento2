@@ -81,14 +81,16 @@ class FinalPricePlugin
         $product = $objectManager->create(Product::class)
             ->load($productId);
 
-        $currency = self::getLowPriceRecurrence($subscriptionProduct, $product);
+        $currency = self::getLowestRecurrencePrice($subscriptionProduct, $product);
 
         $numberFormatter = new \NumberFormatter(
             'pt-BR',
             \NumberFormatter::CURRENCY
         );
 
-        return $numberFormatter->format($currency);
+        $currency['price'] = $numberFormatter->format($currency['price']);
+
+        return $currency;
     }
 
     /**
@@ -96,7 +98,7 @@ class FinalPricePlugin
      * @param ProductInterceptor $product
      * @return float
      */
-    private static function getLowPriceRecurrence(
+    private static function getLowestRecurrencePrice(
         ProductSubscription $subscriptionProduct,
         ProductInterceptor $product
     ) {
@@ -112,10 +114,16 @@ class FinalPricePlugin
                 $prices[] = ($recurrencePrice / (12 * $repetition->getIntervalCount()));
                 continue;
             }
-
-            $prices[] = ($recurrencePrice / $repetition->getIntervalCount());
+            $price = $recurrencePrice / $repetition->getIntervalCount() / 100;
+            $prices[$price] = [
+                'price' => $price,
+                'interval' => $repetition->getInterval(),
+                'intervalCount' => $repetition->getIntervalCount()
+            ];
         }
 
-        return min($prices) / 100;
+        ksort($prices);
+
+        return reset($prices);
     }
 }

@@ -64,9 +64,9 @@ $schema = ($block->getZone() == 'item_view') ? true : false;
 <?php endif; ?>
 <div>
     <?php
-        $priceRecurrence = \MundiPagg\MundiPagg\Plugin\Princing\Render\FinalPricePlugin::getRecurrencePrice($productId);
-        if(!is_null($priceRecurrence)) {
-            echo "<b>".__('Or %1 per month', $priceRecurrence)."</b>";
+        $recurrencePrice = \MundiPagg\MundiPagg\Plugin\Princing\Render\FinalPricePlugin::getRecurrencePrice($productId);
+        if(!is_null($recurrencePrice)) {
+            echo "<b>". __('Or %1 per', $recurrencePrice['price']) . ' ' . __($recurrencePrice['interval']) . "</b>";
         }
     ?>
 </div>
