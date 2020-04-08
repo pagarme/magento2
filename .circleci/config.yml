@@ -99,6 +99,11 @@ jobs:
             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento cache:flush"
             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento setup:di:compile"
       - run:
+          name: Test Swagger
+          command: |
+            response=$(curl -s -o /dev/null -I -w "%{http_code}" http://127.0.0.1/rest/all/schema?services=all)
+            if [ "$response" = '200' ]; then echo 'Swagger Ok'; else echo 'Swagger invalid'; exit 1; fi
+      - run:
           name: Clear useless files
           command: |
             pwd
