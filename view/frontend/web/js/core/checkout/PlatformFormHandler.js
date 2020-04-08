@@ -69,10 +69,6 @@ FormHandler.prototype.removeInstallmentsSelect = function () {
     jQuery(this.formObject.containerSelector).find('.installments').remove();
 }
 
-FormHandler.prototype.removeSavedCardsSelect = function (form) {
-    jQuery(this.formObject.containerSelector).find('.choice').remove();
-}
-
 FormHandler.prototype.fillExpirationYearSelect = function (formText) {
 
     var html = '';

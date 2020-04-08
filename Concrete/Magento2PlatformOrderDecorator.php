@@ -724,7 +724,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $customerId = null;
         $brand = null;
 
-        if (isset($additionalInformation['cc_token_credit_card'])) {
+        if (isset($additionalInformation['cc_type'])) {
             $brand = strtolower($additionalInformation['cc_type']);
         }
 
