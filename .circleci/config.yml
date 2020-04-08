@@ -101,7 +101,7 @@ jobs:
       - run:
           name: Test Swagger
           command: |
-            response=$(curl -s -o /dev/null -I -w "%{http_code}" http://127.0.0.1/rest/all/schema?services=all)
+            response=$(curl -s -o /dev/null -I -w "%{http_code}" http://stg-magento2.mundipagg.com/rest/all/schema?services=all)
             if [ "$response" = '200' ]; then echo 'Swagger Ok'; else echo 'Swagger invalid'; exit 1; fi
       - run:
           name: Clear useless files
