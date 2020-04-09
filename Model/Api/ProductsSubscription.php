@@ -16,11 +16,11 @@ use MundiPagg\MundiPagg\Api\ObjectMapper\ProductSubscription\ProductSubscription
 
 class ProductsSubscription implements ProductSubscriptionApiInterface
 {
-
     /**
      * @var Request
      */
     protected $request;
+
     /**
      * @var ProductSubscriptionService
      */
@@ -52,6 +52,11 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
     {
         try {
             if (!empty($id)) {
+                $product = $this->productSubscriptionService->findById($id);
+                if (empty($product)) {
+                    return "Subscription Product not found";
+                }
+
                 $productSubscription->setId($id);
             }
 
@@ -60,7 +65,7 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
             );
 
             $productSubscription = $this->productSubscriptionService
-                    ->saveProductSubscription($productSubscription);
+                ->saveProductSubscription($productSubscription);
 
             $this->productSubscriptionHelper
                 ->setCustomOption($productSubscription);
@@ -131,18 +136,22 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
      */
     public function delete($id)
     {
-        try{
+        try {
             $productSubscription = $this->productSubscriptionService->findById($id);
-            $this->productSubscriptionHelper->deleteRecurrenceCustomOption($productSubscription);
+
+            if ($productSubscription === null) {
+                return "Subscription Product not found";
+            }
+
+            $this->productSubscriptionHelper->deleteRecurrenceCustomOption(
+                $productSubscription
+            );
+
             $this->productSubscriptionService->delete($id);
         } catch (\Exception $exception) {
-            return [
-                $exception->getMessage()
-            ];
+            return [$exception->getMessage()];
         } catch (\Throwable $exception) {
-            return [
-                $exception->getMessage()
-            ];
+            return [$exception->getMessage()];
         }
 
         return "Subscription Product deleted with success";
@@ -198,7 +207,7 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
     public function gerFormattedForm($form)
     {
         if (isset($form['credit_card'])) {
-            $form['credit_card'] = (bool) $form['credit_card'];
+            $form['credit_card'] = (bool)$form['credit_card'];
         }
 
         if (isset($form['boleto'])) {
@@ -213,8 +222,12 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
             $form['allow_installments'] = (bool)$form['allow_installments'];
         }
 
-        foreach($form['repetitions'] as &$repetition) {
-            $repetition['recurrence_price'] = str_replace([',', '.'], '', $repetition['recurrence_price']);
+        foreach ($form['repetitions'] as &$repetition) {
+            $repetition['recurrence_price'] = str_replace(
+                [',', '.'],
+                '',
+                $repetition['recurrence_price']
+            );
         }
 
         return $form;
