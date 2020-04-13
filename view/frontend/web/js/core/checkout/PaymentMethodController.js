@@ -67,9 +67,13 @@ PaymentMethodController.prototype.voucherInit = function () {
     this.fillCardAmount(this.formObject, 1);
     this.hideCardAmount(this.formObject);
     this.fillFormText(this.formObject);
-    this.fillSavedCreditCardsSelect(this.formObject);
     this.fillBrandList(this.formObject, "mundipagg_voucher");
     this.removeInstallmentsSelect(this.formObject);
+
+
+    this.removeSavedCardsSelect(this.formObject);
+    jQuery(this.formObject.containerSelector).find('.saved').remove();
+
 
     if (!this.platformConfig.isMultibuyerEnabled) {
         this.removeMultibuyerForm(this.formObject);
@@ -139,6 +143,13 @@ PaymentMethodController.prototype.boletoInit = function () {
         this.addShowMultibuyerListener(this.formObject);
     }
 };
+
+PaymentMethodController.prototype.removeSavedCardsSelect = function (formObject) {
+    var formHandler = new FormHandler();
+    formHandler.init(formObject);
+    formHandler.removeSavedCardsSelect(formObject);
+}
+
 
 PaymentMethodController.prototype.boletoCreditcardInit = function () {
     this.platformConfig = PlatformConfig.bind(this.platformConfig);
