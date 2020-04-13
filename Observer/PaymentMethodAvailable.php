@@ -140,6 +140,10 @@ class PaymentMethodAvailable implements ObserverInterface
 
         $recurrenceProducts = [];
 
+        if (!is_array($items)) {
+            return $recurrenceProducts;
+        }
+
         foreach ($items as $item) {
             $productId = $item->getProductId();
 
