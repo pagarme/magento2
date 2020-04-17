@@ -132,6 +132,31 @@
                 <can_initialize>1</can_initialize>
                 <allow_multiple_address>0</allow_multiple_address>
             </mundipagg_voucher>
+            <mundipagg_debit>
+                <active>1</active>
+                <model>MundiPaggDebitRemoteMethodAdapter</model>
+                <order_status>pending_payment</order_status>
+                <payment_action>authorize_capture</payment_action>
+                <title>MundiPagg Debit</title>
+                <can_authorize>1</can_authorize>
+                <can_capture_partial>1</can_capture_partial>
+                <can_capture>1</can_capture>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <can_use_checkout>1</can_use_checkout>
+                <cctypes>VI,MC</cctypes>
+                <is_gateway>1</is_gateway>
+                <sort_order>1</sort_order>
+                <installments_active>0</installments_active>
+                <installments_interest_by_issuer>0</installments_interest_by_issuer>
+                <installments_number>1</installments_number>
+                <installments_is_with_interest>0</installments_is_with_interest>
+                <installment_min_amount>0</installment_min_amount>
+                <installments_interest_rate>0</installments_interest_rate>
+                <installments_max_without_interest>0</installments_max_without_interest>
+                <can_initialize>1</can_initialize>
+                <allow_multiple_address>0</allow_multiple_address>
+            </mundipagg_debit>
         </payment>
     </default>
 </config>

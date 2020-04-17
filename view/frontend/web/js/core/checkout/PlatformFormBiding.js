@@ -63,9 +63,15 @@ PlatformConfig.getAvaliableBrands = function (data) {
         data.payment.ccform.availableTypes.mundipagg_voucher
     )
 
+    debitBrands = this.getBrands(
+        data,
+        data.payment.ccform.availableTypes.mundipagg_debit
+    )
+
     return {
         'mundipagg_creditcard': creditCardBrands,
-        'mundipagg_voucher': voucherBrands
+        'mundipagg_voucher': voucherBrands,
+        'mundipagg_debit': debitBrands
     };
 }
 
@@ -189,6 +195,58 @@ FormObject.voucherInit = function (isMultibuyerEnabled) {
     }
 
     this.FormObject = voucherForm;
+    this.FormObject.numberOfPaymentForms = 1;
+    this.FormObject.multibuyer = multibuyerForm;
+
+    return this.FormObject;
+};
+
+FormObject.debitInit = function (isMultibuyerEnabled) {
+
+    this.FormObject = {};
+
+    var containerSelector = '#mundipagg_debit-form';
+
+    if (typeof jQuery(containerSelector).html() == 'undefined') {
+        this.FormObject = null;
+        return;
+    }
+
+    var debitForm = {
+        'containerSelector' : containerSelector,
+        "creditCardNumber" : jQuery(containerSelector + " .cc_number"),
+        "creditCardHolderName" : jQuery(containerSelector + " .cc_owner"),
+        "creditCardExpMonth" : jQuery(containerSelector + " .cc_exp_month"),
+        "creditCardExpYear" : jQuery(containerSelector + " .cc_exp_year"),
+        "creditCardCvv" : jQuery(containerSelector + " .cc_cid"),
+        "creditCardInstallments" : jQuery(containerSelector + " .cc_installments"),
+        "creditCardBrand" : jQuery(containerSelector + " .cc_type"),
+        "creditCardToken" : jQuery(containerSelector + " .cc_token"),
+        "inputAmount" : jQuery(containerSelector + " .cc_amount"),
+        "savedCreditCardSelect" : jQuery(containerSelector + " .cc_saved_creditcards"),
+        "saveThisCard" : jQuery(containerSelector + " .save_this_card")
+    };
+
+    if (isMultibuyerEnabled) {
+        var multibuyerForm = {
+            "showMultibuyer" : jQuery(containerSelector + " .show_multibuyer"),
+            "firstname" : jQuery(containerSelector + " .multibuyer_firstname"),
+            "lastname" : jQuery(containerSelector + " .multibuyer_lastname"),
+            "email" : jQuery(containerSelector + " .multibuyer_email"),
+            "zipcode" : jQuery(containerSelector + " .multibuyer_zipcode"),
+            "document" : jQuery(containerSelector + " .multibuyer_document"),
+            "street" : jQuery(containerSelector + " .multibuyer_street"),
+            "number" : jQuery(containerSelector + " .multibuyer_number"),
+            "complement" : jQuery(containerSelector + " .multibuyer_complement"),
+            "neighborhood" : jQuery(containerSelector + " .multibuyer_neighborhood"),
+            "city" : jQuery(containerSelector + " .multibuyer_city"),
+            "state" : jQuery(containerSelector + " .multibuyer_state"),
+            "homePhone" : jQuery(containerSelector + " .multibuyer_home_phone"),
+            "mobilePhone" : jQuery(containerSelector + " .multibuyer_mobile_phone")
+        }
+    }
+
+    this.FormObject = debitForm;
     this.FormObject.numberOfPaymentForms = 1;
     this.FormObject.multibuyer = multibuyerForm;
 
