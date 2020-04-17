@@ -431,20 +431,20 @@ PlatformConfig.getSavedCreditCards = function (platFormConfig) {
 
     if (
         platFormConfig.payment.mundipagg_creditcard.enabled_saved_cards &&
-        typeof(platFormConfig.payment.mundipagg_creditcard.cards != 'undefined')
+        typeof(platFormConfig.payment.mundipagg_creditcard.cards != "undefined")
     ) {
         creditCard = platFormConfig.payment.mundipagg_creditcard.cards;
     }
 
     if (
         platFormConfig.payment.mundipagg_voucher.enabled_saved_cards &&
-        typeof(platFormConfig.payment.mundipagg_voucher.cards != 'undefined')
+        typeof(platFormConfig.payment.mundipagg_voucher.cards != "undefined")
     ) {
         voucherCard = platFormConfig.payment.mundipagg_voucher.cards;
     }
 
     return {
-        'mundipagg_creditcard': creditCard,
-        'mundipagg_voucher': voucherCard
+        "mundipagg_creditcard": creditCard,
+        "mundipagg_voucher": voucherCard
     };
 };
