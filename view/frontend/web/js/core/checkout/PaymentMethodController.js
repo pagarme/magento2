@@ -173,6 +173,11 @@ PaymentMethodController.prototype.boletoInit = function () {
 
     this.model = new BoletoModel(this.formObject);
     this.hideCardAmount(this.formObject);
+
+    if (!this.platformConfig.isMultibuyerEnabled) {
+        this.removeMultibuyerForm(this.formObject);
+    }
+
     if (this.platformConfig.isMultibuyerEnabled) {
         this.fillMultibuyerStateSelect(this.formObject);
         this.addShowMultibuyerListener(this.formObject);
@@ -637,7 +642,8 @@ PaymentMethodController.prototype.fillSavedCreditCardsSelect = function (formObj
 
         if (
             typeof formObject.multibuyer != 'undefined' &&
-            typeof formObject.multibuyer.showMultibuyer != 'undefined'
+            typeof formObject.multibuyer.showMultibuyer != 'undefined' &&
+            formObject.savedCreditCardSelect[0].length > 0
         ) {
             formObject.multibuyer.showMultibuyer.parent().hide();
         }
