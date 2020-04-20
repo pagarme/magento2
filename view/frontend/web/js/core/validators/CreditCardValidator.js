@@ -67,7 +67,6 @@ CreditCardValidator.prototype.validateNewCard = function () {
 }
 
 CreditCardValidator.prototype.isInputInvalidBrandAvailable = function (element) {
-
     var parentsElements = element.parent().parent();
 
     var brands = [];
