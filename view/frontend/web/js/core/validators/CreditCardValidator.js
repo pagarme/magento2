@@ -77,12 +77,12 @@ CreditCardValidator.prototype.isInputInvalidBrandAvailable = function (element) 
 
     if (!brands.includes(this.formObject.creditCardBrand.val().toUpperCase())) {
         parentsElements.addClass("_error");
-        parentsElements.find('.field-error').show();
+        parentsElements.find(".field-error").show();
         return true;
     }
 
-    parentsElements.removeClass('_error');
-    parentsElements.find('.field-error').hide();
+    parentsElements.removeClass("_error");
+    parentsElements.find(".field-error").hide();
     return false;
 }
 
