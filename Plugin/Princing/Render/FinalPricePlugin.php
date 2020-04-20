@@ -111,7 +111,12 @@ class FinalPricePlugin
             }
 
             if ($repetition->getInterval() == Repetition::INTERVAL_YEAR) {
-                $prices[] = ($recurrencePrice / (12 * $repetition->getIntervalCount()));
+                $price = $recurrencePrice / (12 * $repetition->getIntervalCount());
+                $prices[$price] = [
+                    'price' => $price,
+                    'interval' => $repetition->getInterval(),
+                    'intervalCount' => $repetition->getIntervalCount()
+                ];
                 continue;
             }
             $price = $recurrencePrice / $repetition->getIntervalCount() / 100;
@@ -121,7 +126,6 @@ class FinalPricePlugin
                 'intervalCount' => $repetition->getIntervalCount()
             ];
         }
-
         ksort($prices);
 
         return reset($prices);
