@@ -117,7 +117,7 @@ FormHandler.prototype.fillSavedCreditCardsSelect = function (platformConfig, for
     var cards = platformConfig.savedAllCards[formObject.savedCardSelectUsed]
 
     var brands = [];
-    platformConfig.avaliableBrands[formObject.savedCardSelectUsed].forEach((item, key) => {
+    platformConfig.avaliableBrands[formObject.savedCardSelectUsed].forEach(function (item) {
         brands.push(item.title);
     })
 
