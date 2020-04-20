@@ -38,27 +38,7 @@ final class ConfigProvider implements ConfigProviderInterface
         $this->setCustomerSession($customerSession);
         $this->cardsFactory = $cardsFactory;
     }
-
-    private function getCardsPlataform()
-    {
-        $cards = [];
-        $idCustomer = $this->getCustomerSession()->getCustomer()->getId();
-
-        $cardsCollection = $this->cardsFactory->create()
-            ->getCollection()
-            ->addFieldToFilter('customer_id', ['eq' => $idCustomer]);
-
-        foreach ($cardsCollection as $card) {
-            $cards[] = [
-                'id' => $card->getId(),
-                'last_four_numbers' => $card->getLastFourNumbers(),
-                'brand' => $card->getBrand()
-            ];
-        }
-
-        return $cards;
-    }
-
+    
     private function getCardsCore()
     {
         $cards = [];
@@ -96,10 +76,7 @@ final class ConfigProvider implements ConfigProviderInterface
         $cards = [];
 
         if ($this->getCustomerSession()->isLoggedIn()) {
-            $cardsPlataform = $this->getCardsPlataform();
-            $cardsCore = $this->getCardsCore();
-
-            $cards = array_merge($cardsPlataform, $cardsCore);
+            $cards = $this->getCardsCore();
         }
 
         if (!empty($cards)) {
