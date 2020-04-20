@@ -18,23 +18,6 @@
             <label>Title</label>
             <config_path>payment/mundipagg_two_creditcard/title</config_path>
         </field>
-        <field id="order_status" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
-            <label>New Order Status</label>
-            <source_model>Magento\Sales\Model\Config\Source\Order\Status\Processing</source_model>
-            <config_path>payment/mundipagg_two_creditcard/order_status</config_path>
-        </field>
-        <field id="reject_order_status" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
-            <label>Reject Order Status</label>
-            <source_model>MundiPagg\MundiPagg\Model\Source\Status\Review</source_model>
-            <config_path>payment/mundipagg_two_creditcard/reject_order_status</config_path>
-        </field>
-
-        <field id="review_order_status" translate="label" type="select" sortOrder="61" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
-            <label>Review Order Status</label>
-            <source_model>MundiPagg\MundiPagg\Model\Source\Status\Review</source_model>
-            <config_path>payment/mundipagg_two_creditcard/review_order_status</config_path>
-        </field>
-
         <field id="sort_order" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="70" translate="label" type="text">
             <label>Sort Order</label>
             <comment />
