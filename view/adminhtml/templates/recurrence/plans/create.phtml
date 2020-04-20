@@ -58,9 +58,13 @@
                                             <div class="admin__field-tooltip" style="margin-top: -1px">
                                                 <a class="admin__field-tooltip-action action-help" target="_blank" title="
 <?php echo __('Add a product with the following characteristics to create a plan product:') ?>
+
 <?php echo __('- No main price') ?>
+
 <?php echo __('- Dynamic price: no') ?>
+
 <?php echo __('- Subproducts') ?>
+
 <?php echo __('See the documentation on https://github.com/mundipagg/magento2/wiki/Plan-products') ?>
                                                 " ></a>
 
@@ -141,6 +145,7 @@
                                     </label>
                                     <div class="admin__field-control">
                                         <select class="admin__control-select" name="form[interval_type]" id="interval_type">
+                                            <option data-title="Week" value="week"><?php echo __('Week') ?></option>
                                             <option data-title="Month" value="month"><?php echo __('Month') ?></option>
                                             <option data-title="Year" value="year"><?php echo __('Year') ?></option>
                                         </select>
