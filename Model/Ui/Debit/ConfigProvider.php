@@ -36,7 +36,6 @@ final class ConfigProvider implements ConfigProviderInterface
 
     public function getConfig()
     {
-
         return [
             'payment' => [
                 self::CODE =>[
