@@ -700,7 +700,6 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $paymentData[$creditCardDataIndex][] = $newPaymentData;
     }
 
-
     private function extractBasePaymentData($additionalInformation)
     {
         $moneyService = new MoneyService();
@@ -710,10 +709,10 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 
         try {
             $brand = strtolower($additionalInformation['cc_type']);
-        }
-        catch (\Throwable $e)
-        {
-
+        } catch (\Exception $e) {
+            // do nothing
+        } catch (\Throwable $e) {
+            // do nothing
         }
 
         if (isset($additionalInformation['cc_token_credit_card'])) {
