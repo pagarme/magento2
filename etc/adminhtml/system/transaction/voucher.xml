@@ -42,6 +42,15 @@
 <!--            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>-->
 <!--            <config_path>payment/mundipagg_voucher/enabled_saved_cards</config_path>-->
 <!--        </field>-->
-	    <include path="MundiPagg_MundiPagg::system/transaction/voucher/types.xml"/>
+        <field id="enabled_voucher_saved_cards" showInDefault="1" showInStore="1"
+               showInWebsite="1"
+               sortOrder="71" translate="label" type="select">
+            <label>Enable Saved Voucher-Cards</label>
+            <comment />
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>payment/mundipagg_voucher/enabled_saved_cards</config_path>
+        </field>
+
+        <include path="MundiPagg_MundiPagg::system/transaction/voucher/types.xml"/>
     </group>
 </include>

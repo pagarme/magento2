@@ -68,12 +68,12 @@ class FinalPricePlugin
      * @param int $productId
      * @return false|string|null
      */
-    public static function getPriceRecurrence($productId)
+    public static function getRecurrencePrice($productId)
     {
-        $productSubscriptionService = new ProductSubscriptionService();
-        $productSubscription = $productSubscriptionService->findByProductId($productId);
+        $subscriptionProductService = new ProductSubscriptionService();
+        $subscriptionProduct = $subscriptionProductService->findByProductId($productId);
 
-        if (is_null($productSubscription)) {
+        if (is_null($subscriptionProduct)) {
             return null;
         }
 
@@ -81,41 +81,49 @@ class FinalPricePlugin
         $product = $objectManager->create(Product::class)
             ->load($productId);
 
-        $currency = self::getLowPriceRecurrence($productSubscription, $product);
+        $currency = self::getLowestRecurrencePrice($subscriptionProduct, $product);
 
         $numberFormatter = new \NumberFormatter(
             'pt-BR',
             \NumberFormatter::CURRENCY
         );
 
-        return $numberFormatter->format($currency);
+        $currency['price'] = $numberFormatter->format($currency['price']);
+
+        return $currency;
     }
 
     /**
-     * @param ProductSubscription $productSubscription
+     * @param ProductSubscription $subscriptionProduct
      * @param ProductInterceptor $product
      * @return float
      */
-    private static function getLowPriceRecurrence(
-        ProductSubscription $productSubscription,
+    private static function getLowestRecurrencePrice(
+        ProductSubscription $subscriptionProduct,
         ProductInterceptor $product
     ) {
         $prices = [];
-        foreach ($productSubscription->getRepetitions() as $repetition) {
+        foreach ($subscriptionProduct->getRepetitions() as $repetition) {
             $recurrencePrice = $repetition->getRecurrencePrice();
 
             if ($recurrencePrice == 0) {
                 $recurrencePrice = ($product->getPrice() * 100);
             }
 
+            $price = $recurrencePrice / $repetition->getIntervalCount() / 100;
+
             if ($repetition->getInterval() == Repetition::INTERVAL_YEAR) {
-                $prices[] = ($recurrencePrice / (12 * $repetition->getIntervalCount()));
-                continue;
+                $price = $recurrencePrice / (12 * $repetition->getIntervalCount());
             }
 
-            $prices[] = ($recurrencePrice / $repetition->getIntervalCount());
+            $prices[$price] = [
+                'price' => $price,
+                'interval' => $repetition->getInterval(),
+                'intervalCount' => $repetition->getIntervalCount()
+            ];
         }
+        ksort($prices);
 
-        return min($prices) / 100;
+        return reset($prices);
     }
 }
