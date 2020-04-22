@@ -51,7 +51,8 @@ CreditCardValidator.prototype.validateNewCard = function () {
         this.isInputInvalid(formObject.creditCardHolderName),
         this.isInputInvalid(formObject.creditCardCvv),
         this.isInputExpirationInvalid(formObject),
-        this.isInputInstallmentInvalid(formObject.creditCardInstallments)
+        this.isInputInstallmentInvalid(formObject.creditCardInstallments),
+        this.isInputInvalidBrandAvailable(formObject.creditCardBrand)
     );
 
     var hasInputInvalid = inputsInvalid.filter(function (item) {
@@ -63,6 +64,25 @@ CreditCardValidator.prototype.validateNewCard = function () {
     }
 
     return true;
+}
+
+CreditCardValidator.prototype.isInputInvalidBrandAvailable = function (element) {
+    var parentsElements = element.parent().parent();
+
+    var brands = [];
+    platformConfig.avaliableBrands[this.formObject.savedCardSelectUsed].forEach(function (item) {
+        brands.push(item.title.toUpperCase());
+    });
+
+    if (!brands.includes(this.formObject.creditCardBrand.val().toUpperCase())) {
+        parentsElements.addClass("_error");
+        parentsElements.find(".field-error").show();
+        return true;
+    }
+
+    parentsElements.removeClass("_error");
+    parentsElements.find(".field-error").hide();
+    return false;
 }
 
 CreditCardValidator.prototype.isInputInvalid = function (element, message = "") {

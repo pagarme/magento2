@@ -23,7 +23,7 @@ PlatformConfig.bind = function (platformConfig) {
     }
 
     avaliableBrands = this.getAvaliableBrands(platformConfig);
-    savedCreditCards = this.getSavedCreditCards(platformConfig);
+    savedAllCards = this.getSavedCreditCards(platformConfig);
 
     loader = {
         start: platformConfig.loader.startLoader,
@@ -42,7 +42,7 @@ PlatformConfig.bind = function (platformConfig) {
         loader: loader,
         addresses: platformConfig.addresses,
         updateTotals: platformConfig.updateTotals,
-        savedCreditCards: savedCreditCards,
+        savedAllCards: savedAllCards,
         region_states: platformConfig.region_states,
         isMultibuyerEnabled: platformConfig.is_multi_buyer_enabled
     };
@@ -145,6 +145,7 @@ FormObject.creditCardInit = function (isMultibuyerEnabled) {
     this.FormObject = creditCardForm;
     this.FormObject.numberOfPaymentForms = 1;
     this.FormObject.multibuyer = multibuyerForm;
+    this.FormObject.savedCardSelectUsed = 'mundipagg_creditcard';
 
     return this.FormObject;
 };
@@ -197,6 +198,7 @@ FormObject.voucherInit = function (isMultibuyerEnabled) {
     this.FormObject = voucherForm;
     this.FormObject.numberOfPaymentForms = 1;
     this.FormObject.multibuyer = multibuyerForm;
+    this.FormObject.savedCardSelectUsed = 'mundipagg_voucher';
 
     return this.FormObject;
 };
@@ -365,6 +367,7 @@ FormObject.boletoCreditCardInit = function (isMultibuyerEnabled) {
     }
 
     this.FormObject.numberOfPaymentForms = 2;
+    this.FormObject[1].savedCardSelectUsed = 'mundipagg_creditcard';
 
     return this.FormObject;
 }
@@ -446,6 +449,7 @@ FormObject.fillTwoCreditCardsElements = function (containerSelector, elementId, 
         );
 
     this.FormObject[elementId].containerSelector = containerSelector;
+    this.FormObject[elementId].savedCardSelectUsed = 'mundipagg_creditcard';
 
     return this.FormObject;
 };
@@ -484,13 +488,25 @@ FormObject.renameTwoCreditCardsElements = function (elements, elementId) {
 };
 
 PlatformConfig.getSavedCreditCards = function (platFormConfig) {
+    var creditCard = null;
+    var voucherCard = null;
+
     if (
         platFormConfig.payment.mundipagg_creditcard.enabled_saved_cards &&
-        typeof(platFormConfig.payment.mundipagg_creditcard.cards != 'undefined')
+        typeof(platFormConfig.payment.mundipagg_creditcard.cards != "undefined")
     ) {
-        cards = platFormConfig.payment.mundipagg_creditcard.cards;
-        return cards;
+        creditCard = platFormConfig.payment.mundipagg_creditcard.cards;
     }
 
-    return null;
+    if (
+        platFormConfig.payment.mundipagg_voucher.enabled_saved_cards &&
+        typeof(platFormConfig.payment.mundipagg_voucher.cards != "undefined")
+    ) {
+        voucherCard = platFormConfig.payment.mundipagg_voucher.cards;
+    }
+
+    return {
+        "mundipagg_creditcard": creditCard,
+        "mundipagg_voucher": voucherCard
+    };
 };

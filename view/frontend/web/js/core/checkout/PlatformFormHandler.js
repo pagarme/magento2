@@ -114,13 +114,25 @@ FormHandler.prototype.fillExpirationMonthSelect = function (formText) {
 
 FormHandler.prototype.fillSavedCreditCardsSelect = function (platformConfig, formObject) {
     var html = '';
-    var cards = platformConfig.savedCreditCards;
+    var cards = platformConfig.savedAllCards[formObject.savedCardSelectUsed]
+
+    var brands = [];
+    platformConfig.avaliableBrands[formObject.savedCardSelectUsed].forEach(function (item) {
+        brands.push(item.title);
+    })
 
     if (cards) {
         var cardKeys = Object.keys(cards);
         var len = cardKeys.length;
 
         for (var i = 0; i < len; i++) {
+
+            var hasBrand = brands.includes(cards[i].brand);
+
+            if (!hasBrand) {
+                continue;
+            }
+
             html +=
                 "<option value='" +
                     cards[i].id +
@@ -138,7 +150,8 @@ FormHandler.prototype.fillSavedCreditCardsSelect = function (platformConfig, for
 
     if (html.length > 0) {
         jQuery(formObject.containerSelector + ' .new').hide();
-        jQuery('.saved').show();
+        jQuery(formObject.containerSelector).find('.saved').show();
+
         html += "<option value='new'>Preencher dados</option>";
         jQuery(formObject.savedCreditCardSelect).html(html);
     }
