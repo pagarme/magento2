@@ -127,9 +127,9 @@ FormHandler.prototype.fillSavedCreditCardsSelect = function (platformConfig, for
 
         for (var i = 0; i < len; i++) {
 
-            var has = brands.includes(cards[i].brand);
+            var hasBrand = brands.includes(cards[i].brand);
 
-            if (!has) {
+            if (!hasBrand) {
                 continue;
             }
 

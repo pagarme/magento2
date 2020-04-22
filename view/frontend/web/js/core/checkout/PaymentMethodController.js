@@ -84,6 +84,41 @@ PaymentMethodController.prototype.voucherInit = function () {
     this.modelToken = new CreditCardToken(this.formObject);
 };
 
+PaymentMethodController.prototype.debitInit = function () {
+    this.platformConfig = PlatformConfig.bind(this.platformConfig);
+    this.formObject = FormObject.debitInit(this.platformConfig.isMultibuyerEnabled);
+
+    if (!this.formObject) {
+        return;
+    }
+
+    this.model = new DebitModel(
+        this.formObject,
+        this.platformConfig.publicKey
+    );
+
+    this.fillCardAmount(this.formObject, 1);
+    this.hideCardAmount(this.formObject);
+    this.fillFormText(this.formObject);
+    this.fillBrandList(this.formObject, "mundipagg_debit");
+    this.removeInstallmentsSelect(this.formObject);
+
+    this.removeSavedCardsSelect(this.formObject);
+    jQuery(this.formObject.containerSelector).find('.saved').remove();
+
+    if (!this.platformConfig.isMultibuyerEnabled) {
+        this.removeMultibuyerForm(this.formObject);
+    }
+
+    if (this.platformConfig.isMultibuyerEnabled) {
+        this.fillMultibuyerStateSelect(this.formObject);
+        this.addShowMultibuyerListener(this.formObject);
+    }
+
+    this.addCreditCardListeners(this.formObject);
+    this.modelToken = new CreditCardToken(this.formObject);
+}
+
 PaymentMethodController.prototype.twocreditcardsInit = function () {
     this.platformConfig = PlatformConfig.bind(this.platformConfig);
     this.formObject = FormObject.twoCreditCardsInit(this.platformConfig.isMultibuyerEnabled);
@@ -134,6 +169,11 @@ PaymentMethodController.prototype.boletoInit = function () {
 
     this.model = new BoletoModel(this.formObject);
     this.hideCardAmount(this.formObject);
+
+    if (!this.platformConfig.isMultibuyerEnabled) {
+        this.removeMultibuyerForm(this.formObject);
+    }
+
     if (this.platformConfig.isMultibuyerEnabled) {
         this.fillMultibuyerStateSelect(this.formObject);
         this.addShowMultibuyerListener(this.formObject);
@@ -603,7 +643,8 @@ PaymentMethodController.prototype.fillSavedCreditCardsSelect = function (formObj
 
         if (
             typeof formObject.multibuyer != 'undefined' &&
-            typeof formObject.multibuyer.showMultibuyer != 'undefined'
+            typeof formObject.multibuyer.showMultibuyer != 'undefined' &&
+            formObject.savedCreditCardSelect[0].length > 0
         ) {
             formObject.multibuyer.showMultibuyer.parent().hide();
         }
