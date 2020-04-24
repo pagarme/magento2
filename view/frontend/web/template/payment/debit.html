@@ -1,0 +1,4 @@
+<fieldset data-bind="attr: { class: 'fieldset payment items ccard ' + getCode(), id: 'payment_form_' + getCode() }">
+    <!-- ko template: getForm() --><!-- /ko -->
+</fieldset>
+<div afterRender="initPaymentMethod()"></div>

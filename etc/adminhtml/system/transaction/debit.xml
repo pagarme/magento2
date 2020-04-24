@@ -7,7 +7,7 @@
 -->
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
     <group id="mundipagg_debit" translate="label comment" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="20">
-        <label>Debit</label>
+        <label>Debit Card</label>
         <field id="active" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label" type="select">
             <label>Enabled</label>
             <comment />

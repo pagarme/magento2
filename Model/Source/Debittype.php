@@ -22,16 +22,7 @@ class Debittype extends \Magento\Payment\Model\Source\Cctype
         return [
             'Visa',
             'Mastercard',
-            'Amex',
-            'Hipercard',
-            'Diners',
-            'Elo',
-            'Discover',
-            'Aura',
-            'JCB',
-            'Credz',
-            'Banese',
-            'Cabal'
+            'Elo'
         ];
     }
 }

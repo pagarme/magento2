@@ -47,6 +47,14 @@
         </arguments>
     </virtualType>
 
+    <virtualType name="MundiPaggDebitUiConfigProvider" type="Magento\Payment\Model\CcGenericConfigProvider">
+        <arguments>
+            <argument name="methodCodes" xsi:type="array">
+                <item name="mundipagg_debit" xsi:type="const">MundiPagg\MundiPagg\Model\Ui\Debit\ConfigProvider::CODE</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
     <type name="Magento\Checkout\Model\CompositeConfigProvider">
         <arguments>
             <argument name="configProviders" xsi:type="array">
@@ -61,6 +69,9 @@
 
                 <item name="mundipagg_voucher_config_provider" xsi:type="object">MundiPaggVoucherUiConfigProvider</item>
                 <item name="mundipagg_voucher_config_provider_unique" xsi:type="object">MundiPagg\MundiPagg\Model\Ui\Voucher\ConfigProvider</item>
+
+                <item name="mundipagg_debit_config_provider" xsi:type="object">MundiPaggDebitUiConfigProvider</item>
+                <item name="mundipagg_debit_config_provider_unique" xsi:type="object">MundiPagg\MundiPagg\Model\Ui\Debit\ConfigProvider</item>
 
                 <item name="generic_config_provider" xsi:type="object">Magento\Payment\Model\CcGenericConfigProvider</item>
                 <item name="installments_creditcard" xsi:type="object">MundiPaggCreditCardInstallmentsUiConfigProvider</item>

@@ -6,6 +6,9 @@
     <event name="payment_method_assign_data_mundipagg_voucher">
         <observer name="mundipagg_payment_method_assign_data_mundipagg_voucher" instance="MundiPagg\MundiPagg\Observer\VoucherDataAssignObserver" />
     </event>
+    <event name="payment_method_assign_data_mundipagg_debit">
+        <observer name="mundipagg_payment_method_assign_data_mundipagg_debit" instance="MundiPagg\MundiPagg\Observer\DebitDataAssignObserver" />
+    </event>
     <event name="payment_method_assign_data_mundipagg_billet_creditcard">
         <observer name="mundipagg_payment_method_assign_data_mundipagg_billet_creditcard" instance="MundiPagg\MundiPagg\Observer\BilletCreditCardDataAssignObserver" />
     </event>
