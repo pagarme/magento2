@@ -139,7 +139,6 @@ PaymentMethodController.prototype.twocreditcardsInit = function () {
             this.fillBrandList(this.formObject[i]);
             this.fillSavedCreditCardsSelect(this.formObject[i]);
             this.fillInstallments(this.formObject[i]);
-            this.fillSavedCreditCardsSelect(this.formObject[i]);
 
             if (!this.platformConfig.isMultibuyerEnabled) {
                 this.removeMultibuyerForm(this.formObject[i]);
