@@ -82,6 +82,8 @@ PaymentMethodController.prototype.voucherInit = function () {
 
     this.addCreditCardListeners(this.formObject);
     this.modelToken = new CreditCardToken(this.formObject);
+
+    document.querySelector(this.formObject.containerSelector).querySelector('.saved-card').remove();
 };
 
 PaymentMethodController.prototype.twocreditcardsInit = function () {
