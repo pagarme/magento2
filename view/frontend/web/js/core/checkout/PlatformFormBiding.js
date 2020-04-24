@@ -236,6 +236,7 @@ FormObject.debitInit = function (isMultibuyerEnabled) {
     this.FormObject = debitForm;
     this.FormObject.numberOfPaymentForms = 1;
     this.FormObject.multibuyer = multibuyerForm;
+    this.FormObject.savedCardSelectUsed = 'mundipagg_debit';
 
     return this.FormObject;
 };
