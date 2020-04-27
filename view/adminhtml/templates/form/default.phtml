@@ -1,0 +1,57 @@
+<?php
+
+$code = $block->escapeHtml($block->getMethodCode());
+
+?>
+<fieldset
+    class="admin__fieldset payment-method"
+    id="payment_form_<?= $code ?>"
+    style="display:none"
+>
+    <h1>Form Default</h1>
+    <fieldset class="admin__fieldset payment-method" id="payment_form_braintree" style="">
+        <div class="admin__field _required">
+            <label class="label admin__field-label">
+                <span>Credit Card Number</span>
+            </label>
+            <div class="admin__field-control control">
+                <div id="braintree_cc_number" class="admin__control-text hosted-control">
+                    <span class="icon-type"></span>
+                </div>
+                <div class="hosted-error">Please, enter valid Credit Card Number</div>
+            </div>
+        </div>
+
+        <div class="admin__field _required">
+            <label class="label admin__field-label">
+                <span>Expiration Date</span>
+            </label>
+            <div class="admin__field-control control">
+                <div class="hosted-date-wrap">
+                    <div id="braintree_cc_exp_month" class="admin__control-text hosted-control hosted-date"></div>
+
+                    <div id="braintree_cc_exp_year" class="admin__control-text hosted-control hosted-date"></div>
+
+                    <div class="hosted-error">Please, enter valid Expiration Date</div>
+                </div>
+            </div>
+        </div>
+        <div class="admin__field _required">
+            <label class="label admin__field-label">
+                <span>Card Verification Number</span>
+            </label>
+            <div class="admin__field-control control">
+                <div id="braintree_cc_cid" class="admin__control-text hosted-control hosted-cid"></div>
+
+                <div class="hosted-error">CVV</div>
+            </div>
+        </div>
+
+        <div class="field-tooltip-content">
+            <input type="checkbox" id="braintree_vault" name="payment[is_active_payment_token_enabler]" class="admin__control-checkbox">
+            <label class="label admin__field-label" for="braintree_vault">
+                <span>Save for later use.</span>
+            </label>
+        </div>
+    </fieldset>
+</fieldset>

@@ -6,12 +6,22 @@
  */
 -->
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
-<body>
-    <referenceBlock name="order_create_billing_form">
-        <action method="setMethodFormTemplate">
-            <argument name="method" xsi:type="string">mundipagg_billet</argument>
-            <argument name="template" translate="true" xsi:type="string">MundiPagg_MundiPagg::form/cc.phtml</argument>
-        </action>
-    </referenceBlock>
-</body>
+    <head>
+        <script src="MundiPagg_MundiPagg::js/payment.js"/>
+    </head>
+    <body>
+        <referenceBlock name="order_create_billing_form">
+            <action method="setMethodFormTemplate">
+                <argument name="method" xsi:type="string">mundipagg_creditcard</argument>
+                <argument name="template" translate="true" xsi:type="string">MundiPagg_MundiPagg::form/default.phtml</argument>
+            </action>
+            <referenceBlock name="content">
+                <block name="mundipagg_payment_script"
+                       as="mundipagg_payment_script"
+                       template="MundiPagg_MundiPagg::payment/script.phtml"
+                       class="Mundipagg\Block\Payment"
+                       after="billing_method"/>
+            </referenceBlock>
+        </referenceBlock>
+    </body>
 </page>

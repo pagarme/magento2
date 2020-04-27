@@ -568,6 +568,6 @@
 
 
     <!-- Admin checkout -->
-    <!--=preference for="Magento\Payment\Block\Form" type="MundiPagg\MundiPagg\Block\Form"/-->
+    <!--preference for="Magento\Payment\Block\Form" type="MundiPagg\MundiPagg\Block\Form"/-->
 
 </config>
