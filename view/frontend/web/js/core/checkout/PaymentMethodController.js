@@ -104,9 +104,10 @@ PaymentMethodController.prototype.debitInit = function () {
     this.fillFormText(this.formObject);
     this.fillBrandList(this.formObject, "mundipagg_debit");
     this.removeInstallmentsSelect(this.formObject);
+    this.fillSavedCreditCardsSelect(this.formObject);
 
-    this.removeSavedCardsSelect(this.formObject);
-    jQuery(this.formObject.containerSelector).find('.saved').remove();
+   // this.removeSavedCardsSelect(this.formObject);
+    //jQuery(this.formObject.containerSelector).find('.saved').remove();
 
     if (!this.platformConfig.isMultibuyerEnabled) {
         this.removeMultibuyerForm(this.formObject);
