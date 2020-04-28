@@ -33,7 +33,7 @@ PaymentMethodController.prototype.creditcardInit = function () {
 
     this.fillCardAmount(this.formObject, 1);
     this.hideCardAmount(this.formObject);
-    this.fillFormText(this.formObject);
+    this.fillFormText(this.formObject, 'mundipagg_creditcard');
     this.fillSavedCreditCardsSelect(this.formObject);
     this.fillBrandList(this.formObject);
     this.fillInstallments(this.formObject);
@@ -66,7 +66,7 @@ PaymentMethodController.prototype.voucherInit = function () {
 
     this.fillCardAmount(this.formObject, 1);
     this.hideCardAmount(this.formObject);
-    this.fillFormText(this.formObject);
+    this.fillFormText(this.formObject, 'mundipagg_voucher');
     this.fillBrandList(this.formObject, "mundipagg_voucher");
     this.removeInstallmentsSelect(this.formObject);
     this.fillSavedCreditCardsSelect(this.formObject);
@@ -101,7 +101,7 @@ PaymentMethodController.prototype.debitInit = function () {
 
     this.fillCardAmount(this.formObject, 1);
     this.hideCardAmount(this.formObject);
-    this.fillFormText(this.formObject);
+    this.fillFormText(this.formObject, 'mundipagg_debit');
     this.fillBrandList(this.formObject, "mundipagg_debit");
     this.removeInstallmentsSelect(this.formObject);
 
@@ -136,7 +136,7 @@ PaymentMethodController.prototype.twocreditcardsInit = function () {
     if (typeof this.formObject[1] !== "undefined") {
 
         for (var i = 0, len = this.formObject.numberOfPaymentForms; i < len; i++) {
-            this.fillFormText(this.formObject[i]);
+            this.fillFormText(this.formObject[i], 'mundipagg_two_creditcard');
             this.fillCardAmount(this.formObject[i], 2);
             this.fillBrandList(this.formObject[i]);
             this.fillSavedCreditCardsSelect(this.formObject[i]);
@@ -212,9 +212,9 @@ PaymentMethodController.prototype.boletoCreditcardInit = function () {
             this.addInputAmountBalanceListener(this.formObject[i], i);
         }
 
-        this.fillFormText(this.formObject[1]);
+        this.fillFormText(this.formObject[1], 'mundipagg_billet_creditcard');
         this.fillBrandList(this.formObject[1]);
-        this.fillFormText(this.formObject[1]);
+        this.fillFormText(this.formObject[1], 'mundipagg_billet_creditcard');
         this.fillSavedCreditCardsSelect(this.formObject[1]);
         this.fillInstallments(this.formObject[1]);
         this.addCreditCardListeners(this.formObject[1]);
@@ -614,13 +614,13 @@ PaymentMethodController.prototype.hideCardAmount = function (formObject) {
     formHandler.hideInputAmount(formObject);
 };
 
-PaymentMethodController.prototype.fillFormText = function (formObject) {
+PaymentMethodController.prototype.fillFormText = function (formObject, method = null) {
     formText = this.platformConfig.text;
 
     formHandler = new FormHandler();
     formHandler.init(formObject);
-    formHandler.fillExpirationYearSelect(formText);
-    formHandler.fillExpirationMonthSelect(formText);
+    formHandler.fillExpirationYearSelect(formText, method);
+    formHandler.fillExpirationMonthSelect(formText, method);
     //@Todo add other texts
 };
 
