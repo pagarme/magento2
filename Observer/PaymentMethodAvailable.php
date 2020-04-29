@@ -22,7 +22,7 @@ class PaymentMethodAvailable implements ObserverInterface
 
     public function __construct(
         RecurrenceProductHelper $recurrenceProductHelper
-    ){
+    ) {
         Magento2CoreSetup::bootstrap();
         $this->recurrenceProductHelper = $recurrenceProductHelper;
         $this->mundipaggConfig = Magento2CoreSetup::getModuleConfiguration();
@@ -58,8 +58,33 @@ class PaymentMethodAvailable implements ObserverInterface
 
             $this->switchPaymentMethodsForRecurrence($observer, $recurrenceProduct);
         }
+
+        if (!$this->mundipaggConfig->isEnabled()) {
+            $this->disableMundipaggPaymentMethods($observer);
+        }
+
+        return;
     }
 
+    /**
+     * @param Observer $observer
+     */
+    private function disableMundipaggPaymentMethods(Observer $observer)
+    {
+        $currentMethod = $observer->getEvent()->getMethodInstance()->getCode();
+
+        $paymentMethodAvaliable = $this->getAvailableConfigMethods();
+
+        if (in_array($currentMethod, array_flip($paymentMethodAvaliable))) {
+            $checkResult = $observer->getEvent()->getResult();
+            $checkResult->setData('is_available', false);
+        }
+    }
+
+    /**
+     * @param $observer
+     * @param $recurrenceProducts
+     */
     private function switchPaymentMethodsForRecurrence($observer, $recurrenceProducts)
     {
         $mundipaggPaymentsMethods = $this->getAvailableConfigMethods();
@@ -76,11 +101,15 @@ class PaymentMethodAvailable implements ObserverInterface
         }
     }
 
+    /**
+     * @param $recurrenceProducts
+     * @param $mundipaggPaymentsMethods
+     * @return array
+     */
     public function getAvailableRecurrenceMethods(
         $recurrenceProducts,
         $mundipaggPaymentsMethods
-    )
-    {
+    ) {
         if (empty($recurrenceProducts)) {
             return $mundipaggPaymentsMethods;
         }
@@ -89,6 +118,8 @@ class PaymentMethodAvailable implements ObserverInterface
 
         unset($flip["mundipagg_billet_creditcard"]);
         unset($flip["mundipagg_two_creditcard"]);
+        unset($flip["mundipagg_voucher"]);
+        unset($flip["mundipagg_debit"]);
 
         foreach ($recurrenceProducts as $recurrenceProduct) {
 
@@ -106,6 +137,9 @@ class PaymentMethodAvailable implements ObserverInterface
         return $mundipaggPaymentsMethods;
     }
 
+    /**
+     * @return array
+     */
     public function getAvailableConfigMethods()
     {
         $paymentMethods = [];
@@ -124,6 +158,14 @@ class PaymentMethodAvailable implements ObserverInterface
 
         if ($this->mundipaggConfig->isTwoCreditCardsEnabled()) {
             $paymentMethods[] = "mundipagg_two_creditcard";
+        }
+
+        if ($this->mundipaggConfig->getVoucherConfig()->isEnabled()) {
+            $paymentMethods[] = "mundipagg_two_creditcard";
+        }
+
+        if ($this->mundipaggConfig->getDebitConfig()->isEnabled()) {
+            $paymentMethods[] = "mundipagg_debit";
         }
 
         return $paymentMethods;
@@ -155,13 +197,13 @@ class PaymentMethodAvailable implements ObserverInterface
             }
 
             if ($recurrenceProduct->getRecurrenceType() == Plan::RECURRENCE_TYPE) {
-                $recurrenceProducts[] =  $recurrenceProduct;
+                $recurrenceProducts[] = $recurrenceProduct;
             }
 
             if (
-                !empty($this->recurrenceProductHelper->getSelectedRepetition($item))
+            !empty($this->recurrenceProductHelper->getSelectedRepetition($item))
             ) {
-                $recurrenceProducts[] =  $recurrenceProduct;
+                $recurrenceProducts[] = $recurrenceProduct;
             }
         }
         return $recurrenceProducts;
