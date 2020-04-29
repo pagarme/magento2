@@ -114,27 +114,27 @@ class PaymentMethodAvailable implements ObserverInterface
             return $mundipaggPaymentsMethods;
         }
 
-        $flip = array_flip($mundipaggPaymentsMethods);
+        $mundipaggPaymentsMethodsFlip = array_flip($mundipaggPaymentsMethods);
 
-        unset($flip["mundipagg_billet_creditcard"]);
-        unset($flip["mundipagg_two_creditcard"]);
-        unset($flip["mundipagg_voucher"]);
-        unset($flip["mundipagg_debit"]);
-
+        $methodsAvailable = [];
         foreach ($recurrenceProducts as $recurrenceProduct) {
 
-            if (!$recurrenceProduct->getCreditCard()) {
-                unset($flip["mundipagg_creditcard"]);
+            if (
+                $recurrenceProduct->getCreditCard() &&
+                in_array('mundipagg_creditcard', $mundipaggPaymentsMethodsFlip)
+            ) {
+                $methodsAvailable[] = 'mundipagg_creditcard';
             }
 
-            if (!$recurrenceProduct->getBoleto()) {
-                unset($flip["mundipagg_billet"]);
+            if (
+                $recurrenceProduct->getBoleto() &&
+                in_array('mundipagg_billet', $mundipaggPaymentsMethodsFlip)
+            ) {
+                $methodsAvailable[] = 'mundipagg_billet';
             }
         }
 
-        $mundipaggPaymentsMethods = array_flip($flip);
-
-        return $mundipaggPaymentsMethods;
+        return $methodsAvailable;
     }
 
     /**
