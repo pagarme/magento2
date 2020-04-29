@@ -161,7 +161,7 @@ class PaymentMethodAvailable implements ObserverInterface
         }
 
         if ($this->mundipaggConfig->getVoucherConfig()->isEnabled()) {
-            $paymentMethods[] = "mundipagg_two_creditcard";
+            $paymentMethods[] = "mundipagg_voucher";
         }
 
         if ($this->mundipaggConfig->getDebitConfig()->isEnabled()) {
