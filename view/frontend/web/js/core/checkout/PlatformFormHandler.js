@@ -73,10 +73,10 @@ FormHandler.prototype.removeSavedCardsSelect = function (form) {
     jQuery(this.formObject.containerSelector).find('.choice').remove();
 }
 
-FormHandler.prototype.fillExpirationYearSelect = function (formText) {
+FormHandler.prototype.fillExpirationYearSelect = function (formText, method) {
 
     var html = '';
-    var years = Object.keys(formText.years);
+    var years = Object.keys(formText.years[method]);
     var len = years.length;
 
     for (var i = 0; i < len; i++) {
@@ -92,10 +92,10 @@ FormHandler.prototype.fillExpirationYearSelect = function (formText) {
     jQuery(this.formObject.creditCardExpYear).html(html);
 };
 
-FormHandler.prototype.fillExpirationMonthSelect = function (formText) {
+FormHandler.prototype.fillExpirationMonthSelect = function (formText, method) {
 
     var html = '';
-    var months = formText.months;
+    var months = formText.months[method];
     var monthKeys = Object.keys(months);
     var len = monthKeys.length;
 

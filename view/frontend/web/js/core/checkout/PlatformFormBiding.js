@@ -18,8 +18,8 @@ PlatformConfig.bind = function (platformConfig) {
     };
 
     text = {
-        months: platformConfig.payment.ccform.months.mundipagg_creditcard,
-        years: platformConfig.payment.ccform.years.mundipagg_creditcard
+        months: platformConfig.payment.ccform.months,
+        years: platformConfig.payment.ccform.years
     }
 
     avaliableBrands = this.getAvaliableBrands(platformConfig);
