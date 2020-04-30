@@ -75,7 +75,7 @@ class PaymentMethodAvailable implements ObserverInterface
 
         $paymentMethodAvaliable = $this->getAvailableConfigMethods();
 
-        if (in_array($currentMethod, array_flip($paymentMethodAvaliable))) {
+        if (in_array($currentMethod, ($paymentMethodAvaliable))) {
             $checkResult = $observer->getEvent()->getResult();
             $checkResult->setData('is_available', false);
         }
