@@ -212,7 +212,6 @@ PaymentMethodController.prototype.boletoCreditcardInit = function () {
             this.addInputAmountBalanceListener(this.formObject[i], i);
         }
 
-        this.fillFormText(this.formObject[1], 'mundipagg_billet_creditcard');
         this.fillBrandList(this.formObject[1]);
         this.fillFormText(this.formObject[1], 'mundipagg_billet_creditcard');
         this.fillSavedCreditCardsSelect(this.formObject[1]);
