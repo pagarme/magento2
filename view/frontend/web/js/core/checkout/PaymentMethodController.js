@@ -35,7 +35,7 @@ PaymentMethodController.prototype.creditcardInit = function () {
     this.hideCardAmount(this.formObject);
     this.fillFormText(this.formObject, 'mundipagg_creditcard');
     this.fillSavedCreditCardsSelect(this.formObject);
-    this.fillBrandList(this.formObject);
+    this.fillBrandList(this.formObject, 'mundipagg_creditcard');
     this.fillInstallments(this.formObject);
 
     if (!this.platformConfig.isMultibuyerEnabled) {
@@ -136,7 +136,7 @@ PaymentMethodController.prototype.twocreditcardsInit = function () {
         for (var i = 0, len = this.formObject.numberOfPaymentForms; i < len; i++) {
             this.fillFormText(this.formObject[i], 'mundipagg_two_creditcard');
             this.fillCardAmount(this.formObject[i], 2);
-            this.fillBrandList(this.formObject[i]);
+            this.fillBrandList(this.formObject[i], 'mundipagg_two_creditcard');
             this.fillSavedCreditCardsSelect(this.formObject[i]);
             this.fillInstallments(this.formObject[i]);
 
@@ -210,7 +210,7 @@ PaymentMethodController.prototype.boletoCreditcardInit = function () {
             this.addInputAmountBalanceListener(this.formObject[i], i);
         }
 
-        this.fillBrandList(this.formObject[1]);
+        this.fillBrandList(this.formObject[1], 'mundipagg_billet_creditcard');
         this.fillFormText(this.formObject[1], 'mundipagg_billet_creditcard');
         this.fillSavedCreditCardsSelect(this.formObject[1]);
         this.fillInstallments(this.formObject[1]);
