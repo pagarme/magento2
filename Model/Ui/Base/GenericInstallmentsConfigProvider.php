@@ -83,6 +83,11 @@ abstract class GenericInstallmentsConfigProvider implements ConfigProviderInterf
                             'width' => 46,
                             'url' => $this->_assetRepo->getUrl("MundiPagg_MundiPagg::images/cc/Hipercard.png")
                         ],
+                        'HiperCard' => [
+                            'height' => 30,
+                            'width' => 46,
+                            'url' => $this->_assetRepo->getUrl("MundiPagg_MundiPagg::images/cc/Hipercard.png")
+                        ],
                         'Mastercard' => [
                             'height' => 30,
                             'width' => 46,
