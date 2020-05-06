@@ -70,7 +70,7 @@ CreditCardValidator.prototype.isInputInvalidBrandAvailable = function (element) 
     var parentsElements = element.parent().parent();
 
     var brands = [];
-    platformConfig.avaliableBrands[this.formObject.savedCardSelectUsed].forEach(function (item) {
+    PlatformConfig.PlatformConfig.avaliableBrands[this.formObject.savedCardSelectUsed].forEach(function (item) {
         brands.push(item.title.toUpperCase());
     });
 
