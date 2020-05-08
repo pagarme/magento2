@@ -744,6 +744,10 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             isset($additionalInformation['cc_savecard']) &&
             $additionalInformation['cc_savecard'] === '1';
 
+        if (isset($additionalInformation['cc_cvv_card']) && !empty($additionalInformation['cc_cvv_card'])) {
+            $newPaymentData->cvvCard = $additionalInformation['cc_cvv_card'];
+        }
+
         $amount = $this->getGrandTotal() - $this->getBaseTaxAmount();
         $amount = number_format($amount, 2, '.', '');
         $amount = str_replace('.','', $amount);
