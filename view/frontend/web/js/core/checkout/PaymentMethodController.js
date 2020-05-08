@@ -70,6 +70,7 @@ PaymentMethodController.prototype.voucherInit = function () {
     this.fillBrandList(this.formObject, "mundipagg_voucher");
     this.removeInstallmentsSelect(this.formObject);
     this.fillSavedCreditCardsSelect(this.formObject);
+    this.showCvvCard(this.formObject);
 
     if (!this.platformConfig.isMultibuyerEnabled) {
         this.removeMultibuyerForm(this.formObject);
@@ -414,6 +415,10 @@ PaymentMethodController.prototype.addSavedCreditCardsListener = function(formObj
         ) {
             formObject.multibuyer.showMultibuyer.parent().hide();
         }
+
+        if (formObject.containerSelector == "#mundipagg_voucher-form") {
+            paymentMethodController.showCvvCard(formObject);
+        }
     });
 };
 
@@ -489,6 +494,14 @@ PaymentMethodController.prototype.removeInstallmentsSelect = function (formObjec
     var formHandler = new FormHandler();
     formHandler.init(formObject);
     formHandler.removeInstallmentsSelect(formObject);
+}
+
+PaymentMethodController.prototype.showCvvCard = function (formObject) {
+    var cvvElement = document.querySelector(formObject.containerSelector + " .cvv");
+
+    if (cvvElement != undefined) {
+        cvvElement.style.display = "";
+    }
 }
 
 PaymentMethodController.prototype.fillInstallments = function (form) {
