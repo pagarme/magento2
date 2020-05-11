@@ -104,8 +104,12 @@ final class ConfigProvider implements ConfigProviderInterface
                     'active' => $this->getBilletCreditCardConfig()->getActive(),
                     'title' => $this->getBilletCreditCardConfig()->getTitle(),
                     'is_saved_card' => $is_saved_card,
+                    'enabled_saved_cards' => MPSetup::getModuleConfiguration()->isSaveCards(),
                     'cards' => $cards,
-                    'selected_card' => $selectedCard
+                    'selected_card' => $selectedCard,
+                    'size_credit_card' => '18',
+                    'number_credit_card' => 'null',
+                    'data_credit_card' => ''
                 ]
             ]
         ];
@@ -119,7 +123,7 @@ final class ConfigProvider implements ConfigProviderInterface
         $listCardConfig = MPSetup::getModuleConfiguration()->getCardConfigs();
 
         $brands = [];
-        foreach ($listCardConfig as $index => $cardConfig) {
+        foreach ($listCardConfig as $cardConfig) {
             if (!$cardConfig->isEnabled()) {
                 continue;
             }

@@ -35,6 +35,7 @@ define(
         "MundiPagg_MundiPagg/js/core/validators/CreditCardValidator",
         "MundiPagg_MundiPagg/js/core/validators/CustomerValidator",
         "MundiPagg_MundiPagg/js/core/validators/MultibuyerValidator",
+        "MundiPagg_MundiPagg/js/core/validators/VoucherCardValidator",
     ],
     function(
         Component,

@@ -34,14 +34,14 @@
             <comment />
             <config_path>payment/mundipagg_voucher/sort_order</config_path>
         </field>
-<!--        <field id="enabled_saved_cards" showInDefault="1" showInStore="1"-->
-<!--               showInWebsite="1"-->
-<!--               sortOrder="71" translate="label" type="select">-->
-<!--            <label>Enable Saved Vouchers</label>-->
-<!--            <comment />-->
-<!--            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>-->
-<!--            <config_path>payment/mundipagg_voucher/enabled_saved_cards</config_path>-->
-<!--        </field>-->
+        <field id="enabled_saved_cards" showInDefault="1" showInStore="1"
+               showInWebsite="1"
+               sortOrder="71" translate="label" type="select">
+            <label>Enable Saved Vouchers</label>
+            <comment />
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>payment/mundipagg_voucher/enabled_saved_cards</config_path>
+        </field>
 <!--        <field id="enabled_voucher_saved_cards" showInDefault="1" showInStore="1"-->
 <!--               showInWebsite="1"-->
 <!--               sortOrder="71" translate="label" type="select">-->
