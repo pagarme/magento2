@@ -502,7 +502,10 @@ FormObject.renameTwoCreditCardsElements = function (elements, elementId) {
 
 PlatformConfig.getSavedCreditCards = function (platFormConfig) {
     var creditCard = null;
+    var twoCreditCard = null;
+    var billetCreditCard = null;
     var voucherCard = null;
+    var debitCard = null;
 
     if (
         platFormConfig.payment.mundipagg_creditcard.enabled_saved_cards &&
@@ -518,8 +521,32 @@ PlatformConfig.getSavedCreditCards = function (platFormConfig) {
         voucherCard = platFormConfig.payment.mundipagg_voucher.cards;
     }
 
+    if (
+        platFormConfig.payment.mundipagg_two_creditcard.enabled_saved_cards &&
+        typeof(platFormConfig.payment.mundipagg_two_creditcard.cards != "undefined")
+    ) {
+        twoCreditCard = platFormConfig.payment.mundipagg_two_creditcard.cards;
+    }
+
+    if (
+        platFormConfig.payment.mundipagg_billet_creditcard.enabled_saved_cards &&
+        typeof(platFormConfig.payment.mundipagg_billet_creditcard.cards != "undefined")
+    ) {
+        billetCreditCard = platFormConfig.payment.mundipagg_billet_creditcard.cards;
+    }
+  
+    if (
+        platFormConfig.payment.mundipagg_debit.enabled_saved_cards &&
+        typeof(platFormConfig.payment.mundipagg_debit.cards != "undefined")
+    ) {
+        debitCard = platFormConfig.payment.mundipagg_debit.cards;
+    }
+
     return {
         "mundipagg_creditcard": creditCard,
-        "mundipagg_voucher": voucherCard
+        "mundipagg_two_creditcard": twoCreditCard,
+        "mundipagg_billet_creditcard": billetCreditCard,        
+        "mundipagg_voucher": voucherCard,
+        "mundipagg_debit": debitCard
     };
 };

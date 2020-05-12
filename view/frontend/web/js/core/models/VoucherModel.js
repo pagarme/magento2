@@ -44,7 +44,10 @@ VoucherModel.prototype.validate = function () {
     var multibuyerValidator = new MultibuyerValidator(this.formObject);
     var isMultibuyerValid = multibuyerValidator.validate();
 
-    if (isCreditCardValid && isMultibuyerValid) {
+    var voucherCardValidator = new VoucherCardValidator(this.formObject);
+    var isVoucherCardValid = voucherCardValidator.validate();
+
+    if (isCreditCardValid && isMultibuyerValid && isVoucherCardValid) {
         return true;
     }
 
@@ -94,7 +97,8 @@ VoucherModel.prototype.fillData = function() {
             'cc_saved_card': formObject.savedCreditCardSelect.val(),
             'cc_installments': formObject.creditCardInstallments.val(),
             'cc_token_credit_card': formObject.creditCardToken.val(),
-            'cc_card_tax_amount' : formObject.creditCardInstallments.find(':selected').attr('interest')
+            'cc_card_tax_amount' : formObject.creditCardInstallments.find(':selected').attr('interest'),
+            'cc_cvv_card': formObject.creditCardCvv.val()
         }
     };
 };

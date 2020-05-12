@@ -79,6 +79,7 @@ class VoucherDataAssignObserver extends AbstractDataAssignObserver
         $cardId = $additionalData->getCcSavedCard();
         $card = $this->cardsRepository->getById($cardId);
 
+        $info->setAdditionalInformation('cc_cvv_card', $additionalData->getData('cc_cvv_card'));
         $info->setAdditionalInformation('cc_saved_card', $additionalData->getCcSavedCard());
         $info->setAdditionalInformation('cc_type', $card->getBrand());
         $info->setAdditionalInformation(
