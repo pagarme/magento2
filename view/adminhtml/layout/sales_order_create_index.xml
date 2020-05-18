@@ -13,15 +13,8 @@
         <referenceBlock name="order_create_billing_form">
             <action method="setMethodFormTemplate">
                 <argument name="method" xsi:type="string">mundipagg_creditcard</argument>
-                <argument name="template" translate="true" xsi:type="string">MundiPagg_MundiPagg::form/default.phtml</argument>
+                <argument name="template" translate="true" xsi:type="string">MundiPagg_MundiPagg::form/creditcard.phtml</argument>
             </action>
-            <referenceBlock name="content">
-                <block name="mundipagg_payment_script"
-                       as="mundipagg_payment_script"
-                       template="MundiPagg_MundiPagg::payment/script.phtml"
-                       class="Mundipagg\Block\Payment"
-                       after="billing_method"/>
-            </referenceBlock>
         </referenceBlock>
     </body>
 </page>

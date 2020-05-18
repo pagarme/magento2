@@ -10,7 +10,7 @@
         <referenceBlock name="order.create.billing.method.form">
             <action method="setMethodFormTemplate">
                 <argument name="method" xsi:type="string">mundipagg_creditcard</argument>
-                <argument name="template" translate="true" xsi:type="string">MundiPagg_MundiPagg::form/default.phtml</argument>
+                <argument name="template" translate="true" xsi:type="string">MundiPagg_MundiPagg::form/creditcard.phtml</argument>
             </action>
         </referenceBlock>
     </body>

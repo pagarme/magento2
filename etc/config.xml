@@ -83,7 +83,6 @@
                 <installments_max_without_interest>6</installments_max_without_interest>
                 <can_initialize>1</can_initialize>
                 <allow_multiple_address>0</allow_multiple_address>
-                <can_use_internal>1</can_use_internal>
             </mundipagg_billet_creditcard>
             <mundipagg_two_creditcard>
                 <active>1</active>
@@ -109,7 +108,6 @@
                 <installments_max_without_interest>6</installments_max_without_interest>
                 <can_initialize>1</can_initialize>
                 <allow_multiple_address>0</allow_multiple_address>
-                <can_use_internal>1</can_use_internal>
             </mundipagg_two_creditcard>
             <mundipagg_voucher>
                 <active>1</active>
@@ -135,7 +133,6 @@
                 <installments_max_without_interest>0</installments_max_without_interest>
                 <can_initialize>1</can_initialize>
                 <allow_multiple_address>0</allow_multiple_address>
-                <can_use_internal>1</can_use_internal>
             </mundipagg_voucher>
         </payment>
     </default>

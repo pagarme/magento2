@@ -1,0 +1,146 @@
+<?php
+
+$code = $block->escapeHtml($block->getMethodCode());
+
+$helper = $this->helper('\MundiPagg\MundiPagg\Helper\Adminhtml\CheckoutHelper');
+$brandsAvailables = $helper->getBrandsAvailables($code);
+$publicKey = $helper->getPublicKey();
+
+
+$quote = $tmpBlock->getQuote();
+$baseGrandTotal = $quote->getBaseGrandTotal();
+
+
+
+// Pegar os installments pelo code
+// criar select dos installments
+// ver um jeito de pegar se ja tiver sido selecionado o installments e o valor nao tiver sido alterado
+// se ja tiver um installment valido selecionar
+// se nao tiver reseta o select
+
+?>
+        <fieldset class="admin__fieldset payment-method" id="payment_form_<?= $code ?>" style="display:none">
+            <h3>Mundipagg Credit Card</h3>
+            <input type="hidden" value="<?= $publicKey?>" class="public_key">
+            <input type="hidden" name="payment[cc_token_credit_card]" class="input-text cc_token" value="">
+            <div class="admin__field _required installments">
+                <label class="label admin__field-label">
+                    <span>Brands</span>
+                </label>
+                <div class="admin__field-control control installments">
+                    <div class="control">
+                        <select name="payment[cc_type]"
+                                style="width: 335px;"
+                                class="select select-type cc_type"
+                        >
+                            <option>Select a brand</option>
+                            <?php foreach ($brandsAvailables as $brand) :?>
+                            <option value="<?= $brand?>"><?= $brand?></option>
+                            <?php endforeach;?>
+                        </select>
+                    </div>
+                </div>
+                <div class="field-error" style="display: none">
+                    <span ><!-- ko i18n: 'This is a required field'--><!-- /ko --></span>
+                </div>
+            </div>
+            <div class="admin__field _required">
+                <label class="label admin__field-label">
+                    <span>Credit Card Number</span>
+                </label>
+                <div class="admin__field-control control">
+                    <input id="mundipagg_cc_number"  name="payment[cc_number]" class="hosted-control cc_number" />
+                    <div class="hosted-error">Please, enter valid Credit Card Number</div>
+                </div>
+            </div>
+            <div class="admin__field _required">
+                <label class="label admin__field-label">
+                    <span>Credit Card Name</span>
+                </label>
+                <div class="admin__field-control control">
+                    <input id="mundipagg_cc_name" name="payment[cc_owner]" class="hosted-control cc_owner" />
+                    <div class="hosted-error">Please, enter valid Credit Card Name</div>
+                </div>
+            </div>
+
+            <div class="admin__field _required">
+                <label class="label admin__field-label">
+                    <span>Expiration Date</span>
+                </label>
+                <div class="admin__field-control control">
+                    <div class="hosted-date-wrap">
+                        <input id="mundipagg_cc_exp_month"  name="payment[cc_exp_month]"class="hosted-control hosted-date cc_exp_month"/>
+
+                        <input id="mundipagg_cc_exp_year" name="payment[cc_exp_year]"  class="hosted-control hosted-date cc_exp_year"/>
+
+                        <div class="hosted-error">Please, enter valid Expiration Date</div>
+                    </div>
+                </div>
+            </div>
+            <div class="admin__field _required">
+                <label class="label admin__field-label">
+                    <span>Card Verification Number</span>
+                </label>
+                <div class="admin__field-control control">
+                    <input id="mundipagg_cc_cid" name="payment[cc_cid]" class="hosted-control hosted-cid cc_cid"/>
+
+                    <div class="hosted-error">CVV</div>
+                </div>
+            </div>
+
+            <div class="admin__field _required installments">
+                <label class="label admin__field-label">
+                    <span>Installments</span>
+                </label>
+                <div class="admin__field-control control installments">
+                    <div class="control">
+                        <select name="payment[cc_installments]"
+                                style="width: 335px;"
+                                class="select select-installments cc_installments"
+                        >
+                            <option value="">Fill a credit card number</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="field-error" style="display: none">
+                    <span ><!-- ko i18n: 'This is a required field'--><!-- /ko --></span>
+                </div>
+            </div>
+
+            <div class="field-tooltip-content">
+                <input type="checkbox" id="mundipagg_vault" name="payment[is_active_payment_token_enabler]" class="admin__control-checkbox">
+                <label class="label admin__field-label" for="mundipagg_vault">
+                    <span>Save for later use.</span>
+                </label>
+            </div>
+        </fieldset>
+
+<script>
+    require([
+        "jquery",
+        'MundiPagg_MundiPagg/js/mundipagg',
+        'MundiPagg_MundiPagg/js/core/models/creditCardModel',
+        "jquery/ui"
+    ], function (
+        $,
+        MundipaggBootstrap,
+        CreditCardModel
+    ) {
+        'use strict';
+
+        $(document).ready(function(){
+            var code = "<?= $code ?>";
+            var brandsAvailables = <?= json_encode($brandsAvailables) ?>;
+
+            window.MundipaggBootstrap = MundipaggBootstrap;
+
+            var config = {
+                isMultibuyerEnabled: false,
+                order : window.order,
+                brandsAvailables
+            };
+
+            CreditCardModel.init(code, config);
+        });
+    });
+</script>
