@@ -6,23 +6,22 @@ $helper = $this->helper('\MundiPagg\MundiPagg\Helper\Adminhtml\CheckoutHelper');
 $brandsAvailables = $helper->getBrandsAvailables($code);
 $publicKey = $helper->getPublicKey();
 
-
 $quote = $tmpBlock->getQuote();
-$baseGrandTotal = $quote->getBaseGrandTotal();
+$baseGrandTotal = $helper->formatGrandTotal($quote->getBaseGrandTotal());
 
+$months = $helper->getMonths();
+$years = $helper->getYears();
 
-
-// Pegar os installments pelo code
-// criar select dos installments
-// ver um jeito de pegar se ja tiver sido selecionado o installments e o valor nao tiver sido alterado
-// se ja tiver um installment valido selecionar
-// se nao tiver reseta o select
+$installmentUrl = $helper->getInstallmentsUrl($block->getBaseUrl());
 
 ?>
         <fieldset class="admin__fieldset payment-method" id="payment_form_<?= $code ?>" style="display:none">
             <h3>Mundipagg Credit Card</h3>
             <input type="hidden" value="<?= $publicKey?>" class="public_key">
             <input type="hidden" name="payment[cc_token_credit_card]" class="input-text cc_token" value="">
+            <input type="hidden" class="cc_amount" name="payment[cc_amount]" value="<?= $baseGrandTotal ?>"/>
+            <input type="hidden" class="cc_amount_without_tax" value="<?= $baseGrandTotal ?>"/>
+            <input type="hidden" class="" name="payment[order_type]" value="admin"/>
             <div class="admin__field _required installments">
                 <label class="label admin__field-label">
                     <span>Brands</span>
@@ -33,15 +32,15 @@ $baseGrandTotal = $quote->getBaseGrandTotal();
                                 style="width: 335px;"
                                 class="select select-type cc_type"
                         >
-                            <option>Select a brand</option>
+                            <option value="">Select a brand</option>
                             <?php foreach ($brandsAvailables as $brand) :?>
                             <option value="<?= $brand?>"><?= $brand?></option>
                             <?php endforeach;?>
                         </select>
                     </div>
-                </div>
-                <div class="field-error" style="display: none">
-                    <span ><!-- ko i18n: 'This is a required field'--><!-- /ko --></span>
+                    <div class="hosted-error" >
+                        <span >This is a required field</span>
+                    </div>
                 </div>
             </div>
             <div class="admin__field _required">
@@ -49,7 +48,7 @@ $baseGrandTotal = $quote->getBaseGrandTotal();
                     <span>Credit Card Number</span>
                 </label>
                 <div class="admin__field-control control">
-                    <input id="mundipagg_cc_number"  name="payment[cc_number]" class="hosted-control cc_number" />
+                    <input id="mundipagg_cc_number"  name="payment[cc_number]" style="width: 335px;" class="hosted-control cc_number" />
                     <div class="hosted-error">Please, enter valid Credit Card Number</div>
                 </div>
             </div>
@@ -58,7 +57,7 @@ $baseGrandTotal = $quote->getBaseGrandTotal();
                     <span>Credit Card Name</span>
                 </label>
                 <div class="admin__field-control control">
-                    <input id="mundipagg_cc_name" name="payment[cc_owner]" class="hosted-control cc_owner" />
+                    <input id="mundipagg_cc_name" name="payment[cc_owner]" style="width: 335px;" class="hosted-control cc_owner" />
                     <div class="hosted-error">Please, enter valid Credit Card Name</div>
                 </div>
             </div>
@@ -69,20 +68,33 @@ $baseGrandTotal = $quote->getBaseGrandTotal();
                 </label>
                 <div class="admin__field-control control">
                     <div class="hosted-date-wrap">
-                        <input id="mundipagg_cc_exp_month"  name="payment[cc_exp_month]"class="hosted-control hosted-date cc_exp_month"/>
+                        <select name="payment[cc_exp_month]"
+                                style="width: 170px;"
+                                class="select select-type cc_exp_month"
+                        >
+                            <?php foreach ($months as $index => $month) :?>
+                                <option value="<?= $index?>"><?= $index ." - " .$month?></option>
+                            <?php endforeach;?>
+                        </select>
 
-                        <input id="mundipagg_cc_exp_year" name="payment[cc_exp_year]"  class="hosted-control hosted-date cc_exp_year"/>
-
+                        <select name="payment[cc_exp_year]"
+                                style="width: 90px;"
+                                class="select select-type cc_exp_year"
+                        >
+                            <?php foreach ($years as  $year) :?>
+                                <option value="<?= $year?>"><?= $year?></option>
+                            <?php endforeach;?>
+                        </select>
                         <div class="hosted-error">Please, enter valid Expiration Date</div>
                     </div>
                 </div>
             </div>
             <div class="admin__field _required">
                 <label class="label admin__field-label">
-                    <span>Card Verification Number</span>
+                    <span>CVV</span>
                 </label>
                 <div class="admin__field-control control">
-                    <input id="mundipagg_cc_cid" name="payment[cc_cid]" class="hosted-control hosted-cid cc_cid"/>
+                    <input id="mundipagg_cc_cid" type="number" name="payment[cc_cid]" class="hosted-control hosted-cid cc_cid"/>
 
                     <div class="hosted-error">CVV</div>
                 </div>
@@ -98,7 +110,7 @@ $baseGrandTotal = $quote->getBaseGrandTotal();
                                 style="width: 335px;"
                                 class="select select-installments cc_installments"
                         >
-                            <option value="">Fill a credit card number</option>
+                            <option value="">Select a brand</option>
                         </select>
                     </div>
                 </div>
@@ -106,38 +118,28 @@ $baseGrandTotal = $quote->getBaseGrandTotal();
                     <span ><!-- ko i18n: 'This is a required field'--><!-- /ko --></span>
                 </div>
             </div>
-
-            <div class="field-tooltip-content">
-                <input type="checkbox" id="mundipagg_vault" name="payment[is_active_payment_token_enabler]" class="admin__control-checkbox">
-                <label class="label admin__field-label" for="mundipagg_vault">
-                    <span>Save for later use.</span>
-                </label>
-            </div>
         </fieldset>
 
 <script>
     require([
         "jquery",
-        'MundiPagg_MundiPagg/js/mundipagg',
         'MundiPagg_MundiPagg/js/core/models/creditCardModel',
         "jquery/ui"
     ], function (
         $,
-        MundipaggBootstrap,
         CreditCardModel
     ) {
         'use strict';
 
         $(document).ready(function(){
             var code = "<?= $code ?>";
-            var brandsAvailables = <?= json_encode($brandsAvailables) ?>;
-
-            window.MundipaggBootstrap = MundipaggBootstrap;
+            var installmenUrl = "<?= $installmentUrl ?>";
 
             var config = {
                 isMultibuyerEnabled: false,
                 order : window.order,
-                brandsAvailables
+                payment : window.payment,
+                installmenUrl: installmenUrl
             };
 
             CreditCardModel.init(code, config);

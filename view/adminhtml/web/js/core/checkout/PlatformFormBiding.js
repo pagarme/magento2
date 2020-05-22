@@ -6,59 +6,6 @@ define([
 ], function ($, Class, alert, PlatformFormBiding) {
 
     var FormObject = {};
-    var PlatformConfig = {};
-
-    PlatformConfig.bind = function (platformConfig) {
-        grandTotal = parseFloat(platformConfig.grand_total);
-
-        publicKey = platformConfig.payment.ccform.pk_token;
-
-        urls = {
-            base: platformConfig.base_url,
-            installments: platformConfig.moduleUrls.installments
-        };
-
-        currency = {
-            code: platformConfig.quoteData.base_currency_code,
-            decimalSeparator: platformConfig.basePriceFormat.decimalSymbol,
-            precision: platformConfig.basePriceFormat.precision
-        };
-
-        text = {
-            months: platformConfig.payment.ccform.months.mundipagg_creditcard,
-            years: platformConfig.payment.ccform.years.mundipagg_creditcard
-        }
-
-        avaliableBrands = this.getAvaliableBrands(platformConfig);
-        savedCreditCards = this.getSavedCreditCards(platformConfig);
-
-        loader = {
-            start: platformConfig.loader.startLoader,
-            stop: platformConfig.loader.stopLoader
-        };
-        totals = platformConfig.totalsData;
-
-        var config = {
-            avaliableBrands: avaliableBrands,
-            orderAmount: grandTotal.toFixed(platformConfig.basePriceFormat.precision),
-            urls: urls,
-            currency: currency,
-            text: text,
-            publicKey: publicKey,
-            totals: totals,
-            loader: loader,
-            addresses: platformConfig.addresses,
-            updateTotals: platformConfig.updateTotals,
-            savedCreditCards: savedCreditCards,
-            region_states: platformConfig.region_states,
-            isMultibuyerEnabled: platformConfig.is_multi_buyer_enabled
-        };
-
-        this.PlatformConfig = config;
-
-        return this.PlatformConfig;
-    };
-
 
     FormObject.creditcardInit = function (isMultibuyerEnabled) {
 
@@ -82,6 +29,7 @@ define([
             "creditCardBrand": jQuery(containerSelector + " .cc_type"),
             "creditCardToken": jQuery(containerSelector + " .cc_token"),
             "inputAmount": jQuery(containerSelector + " .cc_amount"),
+            "inputAmountWithoutTax": jQuery(containerSelector + " .cc_amount_without_tax"),
             "inputAmountContainer": jQuery(containerSelector + " .amount-container"),
             "savedCreditCardSelect": jQuery(containerSelector + " .cc_saved_creditcards"),
             "saveThisCard": jQuery(containerSelector + " .save_this_card"),
@@ -113,9 +61,6 @@ define([
         return creditCardForm;
     };
 
-    return {
-        PlatformConfig,
-        FormObject
-    };
+    return FormObject;
 
 })

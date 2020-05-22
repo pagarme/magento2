@@ -4,12 +4,14 @@ define([
     'Magento_Ui/js/modal/alert',
     'MundiPagg_MundiPagg/js/core/checkout/PlatformFormBiding',
     'MundiPagg_MundiPagg/js/core/checkout/CreditCardToken',
+    'MundiPagg_MundiPagg/js/core/checkout/Listeners',
 ], function (
     $,
     Class,
     alert,
     PlatformFormBiding,
-    CreditCardToken
+    CreditCardToken,
+    Listeners
 ) {
 
     var CreditCardModel = {
@@ -17,29 +19,46 @@ define([
         method: 'creditcard',
         PlatformFormBiding: PlatformFormBiding,
         CreditCardToken,
+        Listeners,
         errors: []
     }
 
     CreditCardModel.init = function (code, config) {
         var method = code.split("_")[1];
         var paymentMethodInit = method + "Init";
-        this.formObject = this.PlatformFormBiding.FormObject[paymentMethodInit](false);
+        this.formObject = this.PlatformFormBiding[paymentMethodInit](false);
         this.publicKey = this.formObject.publicKey.val();
 
-        var order = config.order;
-        var submitFunction = order.submit;
-        var paymentMethod = order.paymentMethod;
-        order.submit = this.placeOrder.bind(this, submitFunction, order);
+        this.bindPlaceOrder(config.order);
+        window.MundipaggAdmin.bindSwitchPaymentMethod(
+            config.payment,
+            this.formObject.inputAmountWithoutTax.val()
+        );
+        this.addListeners(config);
 
         window.MundipaggAdmin[method[1]] = this;
     }
 
+    CreditCardModel.bindPlaceOrder = function(order) {
+        var submitFunction = order.submit;
+        order.submit = this.placeOrder.bind(this, submitFunction, order);
+    }
+
+    CreditCardModel.addListeners = function(config) {
+        Listeners.addCreditCardNumberListener(this.formObject);
+        Listeners.addCreditCardHolderNameListener(this.formObject);
+        Listeners.addCreditCardBrandListener(this.formObject, config.installmenUrl);
+        Listeners.addCreditCardInstallmentsListener(this.formObject);
+    }
 
     CreditCardModel.placeOrder = function (placeOrderFunction, order) {
         this.placeOrderFunction = placeOrderFunction;
         var _self = this;
 
-        if (_self.method !== order.paymentMethod.split("_")[1]) {
+        if (
+            typeof order.paymentMethod == "undefined" ||
+            _self.method !== order.paymentMethod.split("_")[1]
+        ) {
             return _self.placeOrderFunction();
         }
 
@@ -123,7 +142,6 @@ define([
             }
         };
     };
-
 
     CreditCardModel.getLastFourNumbers = function() {
         var number = this.formObject.creditCardNumber.val();
