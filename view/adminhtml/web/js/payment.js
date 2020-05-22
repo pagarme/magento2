@@ -17,16 +17,6 @@ require([
         window.MundipaggAdmin[method[1]].placeOrder(submitFunction)
     }
 
-    MundipaggAdmin.switchPaymentMethod = function (originalFunction, amount) {
-        MundipaggAdmin.updateTotals('remove-tax', 0, amount);
-        originalFunction();
-    }
-
-    MundipaggAdmin.bindSwitchPaymentMethod = function (payment, amount) {
-        var switchFunction = payment.switchMethod;
-        payment.switchMethod = this.switchPaymentMethod.bind(this, switchFunction, amount);
-    }
-
     MundipaggAdmin.updateTotals = function (action, interest, amount) {
         var amountFormatted = "R$" + this.formatMoney(amount);
         jQuery(".mundipagg-tax").remove()

@@ -30,14 +30,20 @@ define([
         this.publicKey = this.formObject.publicKey.val();
 
         this.bindPlaceOrder(config.order);
-        window.MundipaggAdmin.bindSwitchPaymentMethod(
-            config.payment,
-            this.formObject.inputAmountWithoutTax.val()
-        );
+        this.listenPaymentChange();
         this.addListeners(config);
 
         window.MundipaggAdmin[method[1]] = this;
     }
+
+    CreditCardModel.listenPaymentChange = function () {
+        var _self = this;
+
+        jQuery("#order-billing_method_form input.admin__control-radio").on('click', function(e){
+            var amount = _self.formObject.inputAmountWithoutTax.val();
+            MundipaggAdmin.updateTotals('remove-tax', 0, amount);
+        });
+    };
 
     CreditCardModel.bindPlaceOrder = function(order) {
         var submitFunction = order.submit;
