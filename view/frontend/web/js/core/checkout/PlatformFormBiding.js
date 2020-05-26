@@ -18,12 +18,12 @@ PlatformConfig.bind = function (platformConfig) {
     };
 
     text = {
-        months: platformConfig.payment.ccform.months.mundipagg_creditcard,
-        years: platformConfig.payment.ccform.years.mundipagg_creditcard
+        months: platformConfig.payment.ccform.months,
+        years: platformConfig.payment.ccform.years
     }
 
     avaliableBrands = this.getAvaliableBrands(platformConfig);
-    savedCreditCards = this.getSavedCreditCards(platformConfig);
+    savedAllCards = this.getSavedCreditCards(platformConfig);
 
     loader = {
         start: platformConfig.loader.startLoader,
@@ -42,7 +42,7 @@ PlatformConfig.bind = function (platformConfig) {
         loader: loader,
         addresses: platformConfig.addresses,
         updateTotals: platformConfig.updateTotals,
-        savedCreditCards: savedCreditCards,
+        savedAllCards: savedAllCards,
         region_states: platformConfig.region_states,
         isMultibuyerEnabled: platformConfig.is_multi_buyer_enabled
     };
@@ -56,16 +56,34 @@ PlatformConfig.getAvaliableBrands = function (data) {
     creditCardBrands = this.getBrands(
         data,
         data.payment.ccform.availableTypes.mundipagg_creditcard
-    )
+    );
 
     voucherBrands = this.getBrands(
         data,
         data.payment.ccform.availableTypes.mundipagg_voucher
-    )
+    );
+
+    debitBrands = this.getBrands(
+        data,
+        data.payment.ccform.availableTypes.mundipagg_debit
+    );
+
+    twoCreditcardBrands = this.getBrands(
+        data,
+        data.payment.ccform.availableTypes.mundipagg_two_creditcard
+    );
+
+    billetCreditcardBrands = this.getBrands(
+        data,
+        data.payment.ccform.availableTypes.mundipagg_billet_creditcard
+    );
 
     return {
         'mundipagg_creditcard': creditCardBrands,
-        'mundipagg_voucher': voucherBrands
+        'mundipagg_voucher': voucherBrands,
+        'mundipagg_debit': debitBrands,
+        'mundipagg_two_creditcard': twoCreditcardBrands,
+        'mundipagg_billet_creditcard': billetCreditcardBrands
     };
 }
 
@@ -139,6 +157,7 @@ FormObject.creditCardInit = function (isMultibuyerEnabled) {
     this.FormObject = creditCardForm;
     this.FormObject.numberOfPaymentForms = 1;
     this.FormObject.multibuyer = multibuyerForm;
+    this.FormObject.savedCardSelectUsed = 'mundipagg_creditcard';
 
     return this.FormObject;
 };
@@ -191,9 +210,67 @@ FormObject.voucherInit = function (isMultibuyerEnabled) {
     this.FormObject = voucherForm;
     this.FormObject.numberOfPaymentForms = 1;
     this.FormObject.multibuyer = multibuyerForm;
+    this.FormObject.savedCardSelectUsed = 'mundipagg_voucher';
 
     return this.FormObject;
 };
+
+FormObject.debitInit = function (isMultibuyerEnabled) {
+
+    this.FormObject = {};
+
+    var containerSelector = '#mundipagg_debit-form';
+
+    if (typeof jQuery(containerSelector).html() == 'undefined') {
+        this.FormObject = null;
+        return;
+    }
+
+    var debitForm = {
+        'containerSelector' : containerSelector,
+        "creditCardNumber" : jQuery(containerSelector + " .cc_number"),
+        "creditCardHolderName" : jQuery(containerSelector + " .cc_owner"),
+        "creditCardExpMonth" : jQuery(containerSelector + " .cc_exp_month"),
+        "creditCardExpYear" : jQuery(containerSelector + " .cc_exp_year"),
+        "creditCardCvv" : jQuery(containerSelector + " .cc_cid"),
+        "creditCardInstallments" : jQuery(containerSelector + " .cc_installments"),
+        "creditCardBrand" : jQuery(containerSelector + " .cc_type"),
+        "creditCardToken" : jQuery(containerSelector + " .cc_token"),
+        "inputAmount" : jQuery(containerSelector + " .cc_amount"),
+        "savedCreditCardSelect" : jQuery(containerSelector + " .cc_saved_creditcards"),
+        "saveThisCard" : jQuery(containerSelector + " .save_this_card")
+    };
+
+    if (isMultibuyerEnabled) {
+        var multibuyerForm = this.getMultibuyerForm(containerSelector)
+    }
+
+    this.FormObject = debitForm;
+    this.FormObject.numberOfPaymentForms = 1;
+    this.FormObject.multibuyer = multibuyerForm;
+    this.FormObject.savedCardSelectUsed = 'mundipagg_debit';
+
+    return this.FormObject;
+};
+
+FormObject.getMultibuyerForm = function (containerSelector) {
+    return {
+        "showMultibuyer" : jQuery(containerSelector + " .show_multibuyer"),
+        "firstname" : jQuery(containerSelector + " .multibuyer_firstname"),
+        "lastname" : jQuery(containerSelector + " .multibuyer_lastname"),
+        "email" : jQuery(containerSelector + " .multibuyer_email"),
+        "zipcode" : jQuery(containerSelector + " .multibuyer_zipcode"),
+        "document" : jQuery(containerSelector + " .multibuyer_document"),
+        "street" : jQuery(containerSelector + " .multibuyer_street"),
+        "number" : jQuery(containerSelector + " .multibuyer_number"),
+        "complement" : jQuery(containerSelector + " .multibuyer_complement"),
+        "neighborhood" : jQuery(containerSelector + " .multibuyer_neighborhood"),
+        "city" : jQuery(containerSelector + " .multibuyer_city"),
+        "state" : jQuery(containerSelector + " .multibuyer_state"),
+        "homePhone" : jQuery(containerSelector + " .multibuyer_home_phone"),
+        "mobilePhone" : jQuery(containerSelector + " .multibuyer_mobile_phone")
+    }
+}
 
 FormObject.twoCreditCardsInit = function (isMultibuyerEnabled) {
 
@@ -303,6 +380,7 @@ FormObject.boletoCreditCardInit = function (isMultibuyerEnabled) {
     }
 
     this.FormObject.numberOfPaymentForms = 2;
+    this.FormObject[1].savedCardSelectUsed = 'mundipagg_billet_creditcard';
 
     return this.FormObject;
 }
@@ -384,6 +462,7 @@ FormObject.fillTwoCreditCardsElements = function (containerSelector, elementId, 
         );
 
     this.FormObject[elementId].containerSelector = containerSelector;
+    this.FormObject[elementId].savedCardSelectUsed = 'mundipagg_two_creditcard';
 
     return this.FormObject;
 };
@@ -422,13 +501,52 @@ FormObject.renameTwoCreditCardsElements = function (elements, elementId) {
 };
 
 PlatformConfig.getSavedCreditCards = function (platFormConfig) {
+    var creditCard = null;
+    var twoCreditCard = null;
+    var billetCreditCard = null;
+    var voucherCard = null;
+    var debitCard = null;
+
     if (
         platFormConfig.payment.mundipagg_creditcard.enabled_saved_cards &&
-        typeof(platFormConfig.payment.mundipagg_creditcard.cards != 'undefined')
+        typeof(platFormConfig.payment.mundipagg_creditcard.cards != "undefined")
     ) {
-        cards = platFormConfig.payment.mundipagg_creditcard.cards;
-        return cards;
+        creditCard = platFormConfig.payment.mundipagg_creditcard.cards;
     }
 
-    return null;
+    if (
+        platFormConfig.payment.mundipagg_voucher.enabled_saved_cards &&
+        typeof(platFormConfig.payment.mundipagg_voucher.cards != "undefined")
+    ) {
+        voucherCard = platFormConfig.payment.mundipagg_voucher.cards;
+    }
+
+    if (
+        platFormConfig.payment.mundipagg_two_creditcard.enabled_saved_cards &&
+        typeof(platFormConfig.payment.mundipagg_two_creditcard.cards != "undefined")
+    ) {
+        twoCreditCard = platFormConfig.payment.mundipagg_two_creditcard.cards;
+    }
+
+    if (
+        platFormConfig.payment.mundipagg_billet_creditcard.enabled_saved_cards &&
+        typeof(platFormConfig.payment.mundipagg_billet_creditcard.cards != "undefined")
+    ) {
+        billetCreditCard = platFormConfig.payment.mundipagg_billet_creditcard.cards;
+    }
+  
+    if (
+        platFormConfig.payment.mundipagg_debit.enabled_saved_cards &&
+        typeof(platFormConfig.payment.mundipagg_debit.cards != "undefined")
+    ) {
+        debitCard = platFormConfig.payment.mundipagg_debit.cards;
+    }
+
+    return {
+        "mundipagg_creditcard": creditCard,
+        "mundipagg_two_creditcard": twoCreditCard,
+        "mundipagg_billet_creditcard": billetCreditCard,        
+        "mundipagg_voucher": voucherCard,
+        "mundipagg_debit": debitCard
+    };
 };

@@ -1,20 +1,19 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Model\Ui\Voucher;
+namespace MundiPagg\MundiPagg\Model\Ui\Debit;
 
 use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Customer\Model\Session;
-use Mundipagg\Core\Kernel\ValueObjects\Configuration\VoucherConfig;
+use Mundipagg\Core\Kernel\ValueObjects\Configuration\DebitConfig;
 use Mundipagg\Core\Payment\Repositories\CustomerRepository;
 use Mundipagg\Core\Payment\Repositories\SavedCardRepository;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup as MPSetup;
-use MundiPagg\MundiPagg\Model\CardsFactory;
 
 final class ConfigProvider implements ConfigProviderInterface
 {
-    const CODE = 'mundipagg_voucher';
+    const CODE = 'mundipagg_debit';
 
-    protected $voucherConfig;
+    protected $debitConfig;
 
     protected $customerSession;
 
@@ -26,19 +25,17 @@ final class ConfigProvider implements ConfigProviderInterface
      * @throws \Exception
      */
     public function __construct(
-        Session $customerSession,
-        CardsFactory $cardsFactory
-    ) {
+        Session $customerSession
+    )
+    {
         MPSetup::bootstrap();
         $moduleConfig = MPSetup::getModuleConfiguration();
-        if (!empty($moduleConfig->getVoucherConfig())) {
-            $this->setVoucherConfig($moduleConfig->getVoucherConfig());
+        if (!empty($moduleConfig->getDebitConfig())) {
+            $this->setDebitConfig($moduleConfig->getDebitConfig());
         }
-
         $this->setCustomerSession($customerSession);
-        $this->cardsFactory = $cardsFactory;
     }
-    
+
     private function getCardsCore()
     {
         $cards = [];
@@ -86,13 +83,13 @@ final class ConfigProvider implements ConfigProviderInterface
 
         return [
             'payment' => [
-                self::CODE => [
-                    'active' => $this->getVoucherConfig()->isEnabled(),
-                    'title' => $this->getVoucherConfig()->getTitle(),
+                self::CODE =>[
+                    'active' => $this->getDebitConfig()->isEnabled(),
+                    'title' => $this->getDebitConfig()->getTitle(),
                     'size_credit_card' => '18',
                     'number_credit_card' => 'null',
                     'data_credit_card' => '',
-                    'enabled_saved_cards' => $this->getVoucherConfig()->isSaveCards(),
+                    'enabled_saved_cards' => $this->getDebitConfig()->isSaveCards(),
                     'is_saved_card' => $isSavedCard,
                     'cards' => $cards,
                     'selected_card' => $selectedCard,
@@ -102,20 +99,20 @@ final class ConfigProvider implements ConfigProviderInterface
     }
 
     /**
-     * @return VoucherConfig
+     * @return DebitConfig
      */
-    protected function getVoucherConfig()
+    protected function getDebitConfig()
     {
-        return $this->voucherConfig;
+        return $this->debitConfig;
     }
 
     /**
-     * @param VoucherConfig $voucherConfig
+     * @param DebitConfig $debitConfig
      * @return $this
      */
-    protected function setVoucherConfig(VoucherConfig $voucherConfig)
+    protected function setDebitConfig(DebitConfig $debitConfig)
     {
-        $this->voucherConfig = $voucherConfig;
+        $this->debitConfig = $debitConfig;
         return $this;
     }
 
@@ -135,6 +132,7 @@ final class ConfigProvider implements ConfigProviderInterface
     public function setCustomerSession($customerSession)
     {
         $this->customerSession = $customerSession;
+
         return $this;
     }
 }

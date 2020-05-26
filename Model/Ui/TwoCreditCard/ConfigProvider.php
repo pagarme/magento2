@@ -14,6 +14,7 @@ namespace MundiPagg\MundiPagg\Model\Ui\TwoCreditCard;
 
 use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Customer\Model\Session;
+use Mundipagg\Core\Kernel\Abstractions\AbstractModuleCoreSetup as MPSetup;
 use Mundipagg\Core\Payment\Repositories\CustomerRepository;
 use Mundipagg\Core\Payment\Repositories\SavedCardRepository;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
@@ -56,7 +57,7 @@ final class ConfigProvider implements ConfigProviderInterface
             $idCustomer = $this->getCustomerSession()->getCustomer()->getId();
 
             $model = $this->getCardsFactory();
-            $cardsCollection = $model->getCollection()->addFieldToFilter('customer_id',array('eq' => $idCustomer));
+            $cardsCollection = $model->getCollection()->addFieldToFilter('customer_id', array('eq' => $idCustomer));
 
             foreach ($cardsCollection as $card) {
                 $is_saved_card = 1;
@@ -91,17 +92,51 @@ final class ConfigProvider implements ConfigProviderInterface
                 }
             }
         }
+
         return [
             'payment' => [
-                self::CODE =>[
+                'ccform' => [
+                    'availableTypes' =>
+                        [
+                            self::CODE => $this->getCreditCardsBrands()
+                        ],
+                ],
+                self::CODE => [
                     'active' => $this->getCreditCardConfig()->getActive(),
                     'title' => $this->getCreditCardConfig()->getTitle(),
                     'is_saved_card' => $is_saved_card,
+                    'enabled_saved_cards' => MPSetup::getModuleConfiguration()->isSaveCards(),
                     'cards' => $cards,
-                    'selected_card' => $selectedCard
+                    'selected_card' => $selectedCard,
+                    'size_credit_card' => '18',
+                    'number_credit_card' => 'null',
+                    'data_credit_card' => ''
                 ]
             ]
         ];
+    }
+
+    /**
+     * @return array
+     */
+    private function getCreditCardsBrands()
+    {
+        $listCardConfig = MPSetup::getModuleConfiguration()->getCardConfigs();
+
+        $brands = [];
+        foreach ($listCardConfig as $cardConfig) {
+            if (!$cardConfig->isEnabled()) {
+                continue;
+            }
+
+            if ($cardConfig->getBrand()->getName() == 'noBrand') {
+                continue;
+            }
+
+            $brands[$cardConfig->getBrand()->getName()] = $cardConfig->getBrand()->getName();
+        }
+
+        return $brands;
     }
 
     /**

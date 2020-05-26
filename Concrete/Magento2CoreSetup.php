@@ -124,6 +124,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         self::fillWithBoletoCreditCardConfig($configData, $storeConfig);
         self::fillWithTwoCreditCardsConfig($configData, $storeConfig);
         self::fillWithVoucherConfig($configData, $storeConfig);
+        self::fillWithDebitConfig($configData, $storeConfig);
         self::fillWithAddressConfig($configData, $storeConfig);
         self::fillWithMultiBuyerConfig($configData, $storeConfig);
         self::fillWithRecurrenceConfig($configData, $storeConfig);
@@ -160,6 +161,25 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
 
         $dataObj->voucherConfig->cardOperation = $operation;
         $dataObj->voucherConfig->cardConfigs = self::getBrandConfig($storeConfig, $section);
+    }
+
+    static private function fillWithDebitConfig(&$dataObj, $storeConfig)
+    {
+        $options = [
+            'enabled' => 'active',
+            'title' => 'title',
+            'cardOperation' => 'payment_action',
+            'cardStatementDescriptor' => 'soft_description',
+            'saveCards' => 'enabled_saved_cards'
+        ];
+
+        $section = 'payment/mundipagg_debit/';
+
+        $debitObject = new \stdClass();
+
+        $dataObj->debitConfig = self::fillDataObj($storeConfig, $options, $debitObject, $section);
+        $dataObj->debitConfig->cardOperation = Configuration::CARD_OPERATION_AUTH_AND_CAPTURE;
+        $dataObj->debitConfig->cardConfigs = self::getBrandConfig($storeConfig, $section);
     }
 
     static private function fillWithCardConfig(&$dataObj, $storeConfig)

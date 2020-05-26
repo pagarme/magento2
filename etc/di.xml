@@ -365,6 +365,46 @@
         </arguments>
     </virtualType>
 
+    <!-- Debit -->
+    <virtualType name="MundiPaggDebitRemoteMethodAdapter" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">MundiPagg\MundiPagg\Model\Ui\Debit\ConfigProvider::CODE</argument>
+            <argument name="valueHandlerPool" xsi:type="object">MundiPaggDebitValueHandlerPool</argument>
+            <argument name="commandPool" xsi:type="object">MundiPaggDebitCommandPool</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">MundiPagg\MundiPagg\Block\Payment\Info\Debit</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggDebitValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">MundiPaggDebitConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggDebitConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">MundiPaggDebitConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggDebitConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">MundiPagg\MundiPagg\Model\Ui\Debit\ConfigProvider::CODE</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggDebitCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="initialize" xsi:type="string">MundiPagg\MundiPagg\Gateway\Transaction\Base\Command\InitializeCommand</item>
+                <item name="capture" xsi:type="string">MundiPaggCreditCardCaptureCommand</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
     <!-- CreditCard -->
 
     <virtualType name="MundiPaggCreditCardsRemoteMethodAdapter" type="Magento\Payment\Model\Method\Adapter">

@@ -13,7 +13,7 @@ use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 use MundiPagg\MundiPagg\Model\Cards;
 use MundiPagg\MundiPagg\Model\CardsRepository;
 
-class VoucherDataAssignObserver extends AbstractDataAssignObserver
+class DebitDataAssignObserver extends AbstractDataAssignObserver
 {
     private $cardsRepository;
 
@@ -79,7 +79,6 @@ class VoucherDataAssignObserver extends AbstractDataAssignObserver
         $cardId = $additionalData->getCcSavedCard();
         $card = $this->cardsRepository->getById($cardId);
 
-        $info->setAdditionalInformation('cc_cvv_card', $additionalData->getData('cc_cvv_card'));
         $info->setAdditionalInformation('cc_saved_card', $additionalData->getCcSavedCard());
         $info->setAdditionalInformation('cc_type', $card->getBrand());
         $info->setAdditionalInformation(

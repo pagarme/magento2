@@ -19,12 +19,14 @@ use Mundipagg\Core\Kernel\ValueObjects\Id\CustomerId;
 use Mundipagg\Core\Kernel\ValueObjects\Id\OrderId;
 use Mundipagg\Core\Kernel\ValueObjects\OrderState;
 use Mundipagg\Core\Kernel\ValueObjects\OrderStatus;
+use Mundipagg\Core\Kernel\ValueObjects\PaymentMethod;
 use Mundipagg\Core\Payment\Aggregates\Address;
 use Mundipagg\Core\Payment\Aggregates\Customer;
 use Mundipagg\Core\Payment\Aggregates\Item;
 use Mundipagg\Core\Payment\Aggregates\Payments\AbstractCreditCardPayment;
 use Mundipagg\Core\Payment\Aggregates\Payments\AbstractPayment;
 use Mundipagg\Core\Payment\Aggregates\Payments\BoletoPayment;
+use Mundipagg\Core\Payment\Aggregates\Payments\NewDebitCardPayment;
 use Mundipagg\Core\Payment\Aggregates\Payments\NewVoucherPayment;
 use Mundipagg\Core\Payment\Aggregates\Shipping;
 use Mundipagg\Core\Payment\Factories\PaymentFactory;
@@ -651,60 +653,9 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $payment
     )
     {
-        $moneyService = new MoneyService();
-        $identifier = null;
-        $customerId = null;
-        $brand = null;
-        try {
-            $brand = strtolower($additionalInformation['cc_type']);
-        }
-        catch (\Throwable $e)
-        {
-
-        }
-
-        if (isset($additionalInformation['cc_token_credit_card'])) {
-            $identifier = $additionalInformation['cc_token_credit_card'];
-        }
-        if (
-            !empty($additionalInformation['cc_saved_card']) &&
-            $additionalInformation['cc_saved_card'] !== null
-        ) {
-            $identifier = null;
-        }
-
-        if ($identifier === null) {
-            $objectManager = ObjectManager::getInstance();
-            $cardRepo = $objectManager->get(CardsRepository::class);
-            $cardId = $additionalInformation['cc_saved_card'];
-            $card = $cardRepo->getById($cardId);
-
-            $identifier = $card->getCardToken();
-            $customerId = $card->getCardId();
-        }
-
-        $newPaymentData = new \stdClass();
-        $newPaymentData->customerId = $customerId;
-        $newPaymentData->brand = $brand;
-        $newPaymentData->identifier = $identifier;
-        $newPaymentData->installments = $additionalInformation['cc_installments'];
-        $newPaymentData->saveOnSuccess =
-            isset($additionalInformation['cc_savecard']) &&
-            $additionalInformation['cc_savecard'] === '1';
-
-        $amount = $this->getGrandTotal() - $this->getBaseTaxAmount();
-        $amount = number_format($amount, 2, '.', '');
-        $amount = str_replace('.','', $amount);
-        $amount = str_replace(',','', $amount);
-
-        $newPaymentData->amount = $amount;
-
-        if ($additionalInformation['cc_buyer_checkbox']) {
-            $newPaymentData->customer = $this->extractMultibuyerData(
-                'cc',
-                $additionalInformation
-            );
-        }
+        $newPaymentData =  $this->extractBasePaymentData(
+            $additionalInformation
+        );
 
         $creditCardDataIndex = AbstractCreditCardPayment::getBaseCode();
         if (!isset($paymentData[$creditCardDataIndex])) {
@@ -720,12 +671,48 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $payment
     )
     {
+        $newPaymentData =  $this->extractBasePaymentData(
+            $additionalInformation
+        );
+
+        $creditCardDataIndex = NewVoucherPayment::getBaseCode();
+        if (!isset($paymentData[$creditCardDataIndex])) {
+            $paymentData[$creditCardDataIndex] = [];
+        }
+        $paymentData[$creditCardDataIndex][] = $newPaymentData;
+    }
+
+    private function extractPaymentDataFromMundipaggDebit
+    (
+        $additionalInformation,
+        &$paymentData,
+        $payment
+    )
+    {
+        $newPaymentData =  $this->extractBasePaymentData(
+            $additionalInformation
+        );
+
+        $creditCardDataIndex = NewDebitCardPayment::getBaseCode();
+        if (!isset($paymentData[$creditCardDataIndex])) {
+            $paymentData[$creditCardDataIndex] = [];
+        }
+        $paymentData[$creditCardDataIndex][] = $newPaymentData;
+    }
+
+    private function extractBasePaymentData($additionalInformation)
+    {
+        $moneyService = new MoneyService();
         $identifier = null;
         $customerId = null;
         $brand = null;
 
-        if (isset($additionalInformation['cc_type'])) {
+        try {
             $brand = strtolower($additionalInformation['cc_type']);
+        } catch (\Exception $e) {
+            // do nothing
+        } catch (\Throwable $e) {
+            // do nothing
         }
 
         if (isset($additionalInformation['cc_token_credit_card'])) {
@@ -757,6 +744,10 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             isset($additionalInformation['cc_savecard']) &&
             $additionalInformation['cc_savecard'] === '1';
 
+        if (isset($additionalInformation['cc_cvv_card']) && !empty($additionalInformation['cc_cvv_card'])) {
+            $newPaymentData->cvvCard = $additionalInformation['cc_cvv_card'];
+        }
+
         $amount = $this->getGrandTotal() - $this->getBaseTaxAmount();
         $amount = number_format($amount, 2, '.', '');
         $amount = str_replace('.','', $amount);
@@ -771,11 +762,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             );
         }
 
-        $creditCardDataIndex = NewVoucherPayment::getBaseCode();
-        if (!isset($paymentData[$creditCardDataIndex])) {
-            $paymentData[$creditCardDataIndex] = [];
-        }
-        $paymentData[$creditCardDataIndex][] = $newPaymentData;
+        return $newPaymentData;
     }
 
     private function extractPaymentDataFromMundipaggTwoCreditCard

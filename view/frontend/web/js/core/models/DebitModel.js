@@ -1,10 +1,10 @@
-var VoucherModel = function (formObject, publicKey) {
+var DebitModel = function (formObject, publicKey) {
     this.formObject = formObject;
     this.publicKey = publicKey;
     this.errors = [];
 };
 
-VoucherModel.prototype.placeOrder = function (placeOrderObject) {
+DebitModel.prototype.placeOrder = function (placeOrderObject) {
     this.placeOrderObject = placeOrderObject;
     var _self = this;
 
@@ -30,13 +30,13 @@ VoucherModel.prototype.placeOrder = function (placeOrderObject) {
     );
 };
 
-VoucherModel.prototype.addErrors = function (error) {
+DebitModel.prototype.addErrors = function (error) {
     this.errors.push({
         message: error
     })
 }
 
-VoucherModel.prototype.validate = function () {
+DebitModel.prototype.validate = function () {
 
     var creditCardValidator = new CreditCardValidator(this.formObject);
     var isCreditCardValid = creditCardValidator.validate();
@@ -44,24 +44,21 @@ VoucherModel.prototype.validate = function () {
     var multibuyerValidator = new MultibuyerValidator(this.formObject);
     var isMultibuyerValid = multibuyerValidator.validate();
 
-    var voucherCardValidator = new VoucherCardValidator(this.formObject);
-    var isVoucherCardValid = voucherCardValidator.validate();
-
-    if (isCreditCardValid && isMultibuyerValid && isVoucherCardValid) {
+    if (isCreditCardValid && isMultibuyerValid) {
         return true;
     }
 
     return false;
 };
 
-VoucherModel.prototype.getCreditCardToken = function (success, error) {
+DebitModel.prototype.getCreditCardToken = function (success, error) {
     var modelToken = new CreditCardToken(this.formObject);
     modelToken.getToken(this.publicKey)
         .done(success)
         .fail(error);
 };
 
-VoucherModel.prototype.getData = function () {
+DebitModel.prototype.getData = function () {
     saveThiscard = 0;
     var formObject = this.formObject;
 
@@ -82,11 +79,11 @@ VoucherModel.prototype.getData = function () {
     return data;
 };
 
-VoucherModel.prototype.fillData = function() {
+DebitModel.prototype.fillData = function() {
     var formObject = this.formObject;
 
     return {
-        'method': "mundipagg_voucher",
+        'method': "mundipagg_debit",
         'additional_data': {
             'cc_type': formObject.creditCardBrand.val(),
             'cc_last_4': this.getLastFourNumbers(),
@@ -97,13 +94,12 @@ VoucherModel.prototype.fillData = function() {
             'cc_saved_card': formObject.savedCreditCardSelect.val(),
             'cc_installments': formObject.creditCardInstallments.val(),
             'cc_token_credit_card': formObject.creditCardToken.val(),
-            'cc_card_tax_amount' : formObject.creditCardInstallments.find(':selected').attr('interest'),
-            'cc_cvv_card': formObject.creditCardCvv.val()
+            'cc_card_tax_amount' : formObject.creditCardInstallments.find(':selected').attr('interest')
         }
     };
 };
 
-VoucherModel.prototype.fillMultibuyerData = function(data) {
+DebitModel.prototype.fillMultibuyerData = function(data) {
     multibuyer = this.formObject.multibuyer;
     fullname = multibuyer.firstname.val() + ' ' + multibuyer.lastname.val();
 
@@ -124,7 +120,7 @@ VoucherModel.prototype.fillMultibuyerData = function(data) {
     return data;
 };
 
-VoucherModel.prototype.getLastFourNumbers = function() {
+DebitModel.prototype.getLastFourNumbers = function() {
     var number = this.formObject.creditCardNumber.val();
     if (number !== undefined) {
         return number.slice(-4);
