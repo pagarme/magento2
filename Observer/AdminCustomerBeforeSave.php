@@ -11,17 +11,24 @@ use MundiPagg\MundiPagg\Concrete\Magento2PlatformCustomerDecorator;
 use MundiPagg\MundiPagg\Helper\CustomerUpdateMundipaggHelper;
 use MundiPagg\MundiPagg\Model\MundiPaggConfigProvider;
 use Magento\Framework\App\ObjectManager;
+use Magento\Framework\Exception\InputException;
 
 class AdminCustomerBeforeSave implements ObserverInterface
 {
+    /**
+     * @var CustomerUpdateMundipaggHelper
+     */
     protected $customerUpdateMundipaggHelper;
 
     /**
-     * AdminCustomerSaveAfter constructor.
+     * AdminCustomerBeforeSave constructor.
+     * @param CustomerUpdateMundipaggHelper $customerUpdateMundipaggHelper
+     * @throws \Exception
      */
     public function __construct(
         CustomerUpdateMundipaggHelper $customerUpdateMundipaggHelper
-    ) {
+    )
+    {
         $this->customerUpdateMundipaggHelper = $customerUpdateMundipaggHelper;
         Magento2CoreSetup::bootstrap();
     }
@@ -37,10 +44,7 @@ class AdminCustomerBeforeSave implements ObserverInterface
         }
 
         $event = $observer->getEvent();
-
-        $platformCustomer = new Magento2PlatformCustomerDecorator(
-            $event->getCustomer()
-        );
+        $platformCustomer = new Magento2PlatformCustomerDecorator($event->getCustomer());
 
         $customerService = new CustomerService();
         try {
@@ -48,18 +52,27 @@ class AdminCustomerBeforeSave implements ObserverInterface
         } catch (\Exception $exception) {
             $log = new LogService('CustomerService');
             $log->info($exception->getMessage());
-            $log->info(print_r($exception->errors, true));
 
             if ($exception->getCode() == 404) {
-                $log->info("Deleting customer {$platformCustomer->getCode()} on core table");
+                $log->info(
+                    "Deleting customer {$platformCustomer->getCode()} on core table"
+                );
+
                 $customerService->deleteCustomerOnPlatform($platformCustomer);
             }
+
+            throw new InputException(__($exception->getMessage()));
         }
     }
 
+    /**
+     * @return string
+     */
     public function moduleIsEnable()
     {
         $objectManager = ObjectManager::getInstance();
+
+        /* @var MundiPaggConfigProvider $mundipaggProvider */
         $mundipaggProvider = $objectManager->get(MundiPaggConfigProvider::class);
 
         return $mundipaggProvider->getModuleStatus();
