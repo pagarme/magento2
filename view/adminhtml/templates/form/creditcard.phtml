@@ -21,7 +21,6 @@ $installmentUrl = $helper->getInstallmentsUrl($block->getBaseUrl());
             <input type="hidden" name="payment[cc_token_credit_card]" class="input-text cc_token" value="">
             <input type="hidden" class="cc_amount" name="payment[cc_amount]" value="<?= $baseGrandTotal ?>"/>
             <input type="hidden" class="cc_amount_without_tax" value="<?= $baseGrandTotal ?>"/>
-            <input type="hidden" class="" name="payment[order_type]" value="admin"/>
             <div class="admin__field _required installments">
                 <label class="label admin__field-label">
                     <span>Brands</span>
@@ -37,9 +36,7 @@ $installmentUrl = $helper->getInstallmentsUrl($block->getBaseUrl());
                             <option value="<?= $brand?>"><?= $brand?></option>
                             <?php endforeach;?>
                         </select>
-                    </div>
-                    <div class="hosted-error" >
-                        <span >This is a required field</span>
+                        <div class="hosted-error" >Please, select a brand</div>
                     </div>
                 </div>
             </div>
@@ -96,7 +93,7 @@ $installmentUrl = $helper->getInstallmentsUrl($block->getBaseUrl());
                 <div class="admin__field-control control">
                     <input id="mundipagg_cc_cid" type="number" name="payment[cc_cid]" class="hosted-control hosted-cid cc_cid"/>
 
-                    <div class="hosted-error">CVV</div>
+                    <div class="hosted-error">This field is required</div>
                 </div>
             </div>
 
@@ -112,10 +109,8 @@ $installmentUrl = $helper->getInstallmentsUrl($block->getBaseUrl());
                         >
                             <option value="">Select a brand</option>
                         </select>
+                        <div class="hosted-error">This field is required</div>
                     </div>
-                </div>
-                <div class="field-error" style="display: none">
-                    <span ><!-- ko i18n: 'This is a required field'--><!-- /ko --></span>
                 </div>
             </div>
         </fieldset>

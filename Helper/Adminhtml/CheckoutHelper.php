@@ -84,13 +84,7 @@ class CheckoutHelper extends AbstractHelper
 
     public function formatGrandTotal($granTotal)
     {
-        $moneyService = new MoneyService();
-
-        $cents = explode(".", $granTotal);
-        if (isset($cents[1]) && strlen($cents[1]) > 2) {
-            $granTotal = $cents[0] . substr($cents[1], 0, 2);
-        }
-        $newTotal = $moneyService->removeSeparators($granTotal);
-        return $moneyService->centsToFloat($newTotal);
+        $number = number_format((float)$granTotal, 2, '.', '');
+        return $number;
     }
 }

@@ -16,6 +16,8 @@ use Magento\Framework\DataObject;
 use Magento\Framework\Event\Observer;
 use Magento\Quote\Api\Data\PaymentInterface;
 use Magento\Framework\Event\ObserverInterface;
+use Mundipagg\Core\Kernel\Services\InstallmentService;
+use Mundipagg\Core\Kernel\ValueObjects\CardBrand;
 use MundiPagg\MundiPagg\Api\InstallmentsByBrandManagementInterface;
 use MundiPagg\MundiPagg\Api\InstallmentsByBrandAndAmountManagementInterface;
 
@@ -49,7 +51,8 @@ class CreditCardOrderPlaceBeforeObserver implements ObserverInterface
         if($payment->getMethod() == 'mundipagg_creditcard'){
             $tax = $this->getTaxOrder(
                 $payment->getAdditionalInformation('cc_installments'),
-                $payment->getAdditionalInformation('cc_type')
+                $payment->getAdditionalInformation('cc_type'),
+                $order
             );
         }
 
@@ -58,9 +61,6 @@ class CreditCardOrderPlaceBeforeObserver implements ObserverInterface
         }
 
         if($payment->getMethod() == 'mundipagg_two_creditcard'){
-//            $firstTax = $this->getTaxOrderByAmount($payment->getAdditionalInformation('cc_installments_first'), $payment->getAdditionalInformation('cc_type_first'), $payment->getAdditionalInformation('cc_first_card_amount'));
-//            $secondTax = $this->getTaxOrderByAmount($payment->getAdditionalInformation('cc_installments_second'), $payment->getAdditionalInformation('cc_type_second'), $payment->getAdditionalInformation('cc_second_card_amount'));
-
             $tax = $payment->getAdditionalInformation('cc_second_card_tax_amount') + $payment->getAdditionalInformation('cc_first_card_tax_amount');
         }
 
@@ -71,14 +71,26 @@ class CreditCardOrderPlaceBeforeObserver implements ObserverInterface
         return $this;
     }
 
-    protected function getTaxOrder($installments, $type = null)
+    protected function getTaxOrder($installments, $type = null, $order)
     {
-        $returnInstallments = $this->getInstallmentsInterface()->getInstallmentsByBrand($type);
+        $installmentService = new InstallmentService();
+
+        $brand = CardBrand::$type();
+
+        $grandTotal = number_format((float)$order->getGrandTotal(), 2, '.', '');
+        $returnInstallments = $installmentService->getInstallmentsFor(
+            null,
+            $brand,
+            $grandTotal * 100
+        );
+
         $result = 0;
 
         foreach ($returnInstallments as $installment) {
-            if ($installment['id'] == $installments) {
-                $result = $installment['interest'];
+            if ($installment->getTimes() == $installments) {
+                $result =
+                    ($installment->getTotal() - $installment->getBaseTotal());
+                $result = $result / 100;
                 break;
             }
         }

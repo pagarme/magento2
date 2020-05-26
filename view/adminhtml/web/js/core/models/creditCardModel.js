@@ -5,13 +5,15 @@ define([
     'MundiPagg_MundiPagg/js/core/checkout/PlatformFormBiding',
     'MundiPagg_MundiPagg/js/core/checkout/CreditCardToken',
     'MundiPagg_MundiPagg/js/core/checkout/Listeners',
+    'MundiPagg_MundiPagg/js/core/checkout/CreditCardValidator',
 ], function (
     $,
     Class,
     alert,
     PlatformFormBiding,
     CreditCardToken,
-    Listeners
+    Listeners,
+    CreditCardValidator
 ) {
 
     var CreditCardModel = {
@@ -20,6 +22,7 @@ define([
         PlatformFormBiding: PlatformFormBiding,
         CreditCardToken,
         Listeners,
+        CreditCardValidator,
         errors: []
     }
 
@@ -68,6 +71,10 @@ define([
             return _self.placeOrderFunction();
         }
 
+        if (!this.validate()) {
+            return;
+        }
+
         this.getCreditCardToken(
             function (data) {
                 _self.formObject.creditCardToken.val(data.id);
@@ -80,21 +87,11 @@ define([
         );
     };
 
-    CreditCardModel.addErrors = function (error) {
-        this.errors.push({
-            message: error
-        })
-    }
-
     CreditCardModel.validate = function () {
 
-        var creditCardValidator = new CreditCardValidator(this.formObject);
-        var isCreditCardValid = creditCardValidator.validate();
+        var isCreditCardValid = CreditCardValidator.validate(this.formObject);
 
-        var multibuyerValidator = new MultibuyerValidator(this.formObject);
-        var isMultibuyerValid = multibuyerValidator.validate();
-
-        if (isCreditCardValid && isMultibuyerValid) {
+        if (isCreditCardValid) {
             return true;
         }
 
