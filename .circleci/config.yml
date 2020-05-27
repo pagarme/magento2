@@ -62,9 +62,20 @@ jobs:
               echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list && \
               apt-get -y update && apt-get -y install google-chrome-unstable"
               
-            docker exec --detach newimage google-chrome-unstable --disable-gpu --no-sandbox --headless --remote-debugging-address=127.0.0.1 --remote-debugging-port=9222 --disable-extensions   
-            docker exec -it newimage sh -c "git clone https://github.com/mundipagg/ecommerce-test-package.git /behat-test"
-            docker exec -it newimage sh -c "cd /behat-test && composer install"
+              
+              
+              
+              docker exec -it newimage sh -c "git clone https://github.com/mundipagg/ecommerce-test-package.git /behat-test"
+              
+              docker exec -it newimage sh -c "cd /behat-test && rm -rf composer.lock"
+              
+              docker exec -it newimage sh -c "cd /behat-test && composer install"
+              
+              docker exec --detach newimage google-chrome-unstable --disable-gpu --no-sandbox --headless --remote-debugging-address=127.0.0.1 --remote-debugging-port=9222 --disable-extensions -user-data-dir=/tmp/test
+
+              docker exec -it newimage bash -c "cd /behat-test && printf 'BASE_URL=\"https://stg-magento2.mundipagg.com/\"' > .env"
+          
+              docker exec -it citeste sh -c "cd /behat-test && vendor/bin/behat --profile magento2"            
             
       - run:
           name: Activate and setup Plugin
