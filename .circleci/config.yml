@@ -60,7 +60,9 @@ jobs:
             docker exec -i newimage sh -c \
               "wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
               echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list && \
-              apt-get -y update && apt-get -y install google-chrome-unstable && google-chrome-unstable --help"
+              apt-get -y update && apt-get -y install google-chrome-unstable"
+            
+            docker exec -it newimage php --version             
               
             docker exec -it newimage google-chrome-unstable --help           
             docker exec --detach newimage google-chrome-unstable --no-sandbox --remote-debugging-address=127.0.0.1 --remote-debugging-port=9222 --headless --disable-gpu
