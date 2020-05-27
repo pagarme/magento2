@@ -66,7 +66,7 @@ jobs:
               
             docker exec -it newimage sh -c "cd /behat-test && rm -rf composer.lock"
              
-            docker exec -it newimage sh -c "cd /behat-test && composer install"
+            docker exec -it newimage sh -c "cd /behat-test && composer install --prefer-dist"
               
             docker exec --detach newimage google-chrome-unstable --disable-gpu --no-sandbox --headless --remote-debugging-address=127.0.0.1 --remote-debugging-port=9222 --disable-extensions -user-data-dir=/tmp/test
 
