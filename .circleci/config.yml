@@ -61,6 +61,8 @@ jobs:
               "wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
               echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list && \
               apt-get -y update && apt-get -y install google-chrome-unstable"
+              
+            docker exec --detach newimage google-chrome-unstable --disable-gpu --no-sandbox --headless --remote-debugging-address=127.0.0.1 --remote-debugging-port=9222 --disable-extensions   
       - run:
           name: Activate and setup Plugin
           command: |
