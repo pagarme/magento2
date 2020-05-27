@@ -60,10 +60,7 @@ jobs:
             docker exec -i newimage sh -c \
               "wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
               echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list && \
-              apt-get -y update && apt-get -y install google-chrome-unstable && google-chrome-unstable --help"
-            
-
-
+              apt-get -y update && apt-get -y install google-chrome-unstable"
       - run:
           name: Activate and setup Plugin
           command: |
@@ -100,9 +97,6 @@ jobs:
 
             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento cache:flush"
             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento setup:di:compile"
-          
-            
-            
       - run:
           name: Clear useless files
           command: |
