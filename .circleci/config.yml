@@ -62,8 +62,7 @@ jobs:
               echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list && \
               apt-get -y update && apt-get -y install google-chrome-unstable"
               
-            docker exec -it newimage google-chrome-unstable --help
-            docker exec --detach newimage google-chrome-unstable --help
+            docker exec -it newimage google-chrome-unstable --help           
             docker exec --detach newimage google-chrome-unstable --no-sandbox --remote-debugging-address=127.0.0.1 --remote-debugging-port=9222 --headless --disable-gpu
             
             docker exec -it newimage sh -c "git clone git@github.com:mundipagg/ecommerce-test-package.git /test-behat && cd /test-behat && composer install"
@@ -105,12 +104,7 @@ jobs:
 
             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento cache:flush"
             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento setup:di:compile"
-            
-            docker exec -it newimage sh -c "google-chrome-unstable --help"
-            docker exec -it newimage sh -c "google-chrome-unstable --no-sandbox --remote-debugging-address=127.0.0.1 --remote-debugging-port=9222 --headless --disable-gpu"
-            
-            docker exec -it newimage sh -c "git clone git@github.com:mundipagg/ecommerce-test-package.git /test-behat && cd /test-behat && composer install"
-            docker exec -it newimage sh -c "cd /test-behat && vendor/bin/behat --profile=magento2"
+          
             
             
       - run:
