@@ -22,7 +22,6 @@
                 <sort_order>1</sort_order>
                 <can_initialize>1</can_initialize>
                 <expiration_days>5</expiration_days>
-                <can_use_internal>1</can_use_internal>
             </mundipagg_billet>
 
             <mundipagg_creditcard>
@@ -50,7 +49,6 @@
                 <installments_max_without_interest>6</installments_max_without_interest>
                 <can_initialize>1</can_initialize>
                 <allow_multiple_address>0</allow_multiple_address>
-                <can_use_internal>1</can_use_internal>
             </mundipagg_creditcard>
             <mundipagg_billet_creditcard>
                 <active>1</active>
@@ -64,7 +62,7 @@
                 <can_refund>1</can_refund>
                 <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_use_checkout>1</can_use_checkout>
-                <can_use_internal>1</can_use_internal>
+                <can_use_internal>0</can_use_internal>
                 <cctypes>NoBrand</cctypes>
                 <is_gateway>1</is_gateway>
                 <sort_order>1</sort_order>
@@ -90,7 +88,7 @@
                 <can_refund>1</can_refund>
                 <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_use_checkout>1</can_use_checkout>
-                <can_use_internal>1</can_use_internal>
+                <can_use_internal>0</can_use_internal>
                 <cctypes>NoBrand</cctypes>
                 <is_gateway>1</is_gateway>
                 <sort_order>1</sort_order>
@@ -116,7 +114,7 @@
                 <can_refund>1</can_refund>
                 <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_use_checkout>1</can_use_checkout>
-                <can_use_internal>1</can_use_internal>
+                <can_use_internal>0</can_use_internal>
                 <cctypes>Alelo,Sodexo</cctypes>
                 <is_gateway>1</is_gateway>
                 <sort_order>1</sort_order>
