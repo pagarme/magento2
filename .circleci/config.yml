@@ -37,6 +37,9 @@ jobs:
       - attach_workspace:
           at: /
       - run:
+          name: Test PHP
+          command: php -v    
+      - run:
           name: Copy CI files to root
           command: |
              cd /app
