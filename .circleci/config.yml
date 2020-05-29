@@ -37,9 +37,6 @@ jobs:
       - attach_workspace:
           at: /
       - run:
-          name: Test PHP
-          command: php -v    
-      - run:
           name: Copy CI files to root
           command: |
              cd /app
@@ -111,7 +108,7 @@ jobs:
               
             docker exec --detach newimage google-chrome-unstable --disable-gpu --no-sandbox --headless --remote-debugging-address=127.0.0.1 --remote-debugging-port=9222 --disable-extensions -user-data-dir=/tmp/test
 
-            docker exec -it newimage bash -c "cd /behat-test && printf 'BASE_URL=\"https://localhost/\"' > .env"
+            docker exec -it newimage bash -c "cd /behat-test && printf 'BASE_URL=\"http://localhost/\"' > .env"
           
             docker exec -it newimage sh -c "cd /behat-test && vendor/bin/behat --profile magento2"                                   
       - run:
