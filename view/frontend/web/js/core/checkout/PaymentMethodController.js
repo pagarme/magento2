@@ -625,10 +625,13 @@ PaymentMethodController.prototype.hideCardAmount = function (formObject) {
 PaymentMethodController.prototype.fillFormText = function (formObject, method = null) {
     formText = this.platformConfig.text;
 
+    var creditCardExpYear = formObject.creditCardExpYear.val();
+    var creditCardExpMonth = formObject.creditCardExpMonth.val()
+
     formHandler = new FormHandler();
     formHandler.init(formObject);
-    formHandler.fillExpirationYearSelect(formText, method);
-    formHandler.fillExpirationMonthSelect(formText, method);
+    formHandler.fillExpirationYearSelect(formText, method, creditCardExpYear);
+    formHandler.fillExpirationMonthSelect(formText, method, creditCardExpMonth);
     //@Todo add other texts
 };
 
