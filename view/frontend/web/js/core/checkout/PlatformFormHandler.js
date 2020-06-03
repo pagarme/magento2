@@ -73,7 +73,7 @@ FormHandler.prototype.removeSavedCardsSelect = function (form) {
     jQuery(this.formObject.containerSelector).find('.choice').remove();
 }
 
-FormHandler.prototype.fillExpirationYearSelect = function (formText, method) {
+FormHandler.prototype.fillExpirationYearSelect = function (formText, method, value = null) {
 
     var html = '';
     var years = Object.keys(formText.years[method]);
@@ -82,17 +82,21 @@ FormHandler.prototype.fillExpirationYearSelect = function (formText, method) {
     for (var i = 0; i < len; i++) {
         html +=
             "<option value='" +
-                years[i] +
+            years[i] +
             "'>" +
-                years[i] +
+            years[i] +
             "</option>"
         ;
     }
 
     jQuery(this.formObject.creditCardExpYear).html(html);
+
+    if (value != null) {
+        this.formObject.creditCardExpYear.val(value);
+    }
 };
 
-FormHandler.prototype.fillExpirationMonthSelect = function (formText, method) {
+FormHandler.prototype.fillExpirationMonthSelect = function (formText, method, value = null) {
 
     var html = '';
     var months = formText.months[method];
@@ -102,14 +106,18 @@ FormHandler.prototype.fillExpirationMonthSelect = function (formText, method) {
     for (var i = 0; i < len; i++) {
         html +=
             "<option value='" +
-                monthKeys[i] +
+            monthKeys[i] +
             "'>" +
-                months[i + 1] +
+            months[i + 1] +
             "</option>"
         ;
     }
 
     jQuery(this.formObject.creditCardExpMonth).html(html);
+
+    if (value != null) {
+        this.formObject.creditCardExpMonth.val(value);
+    }
 };
 
 FormHandler.prototype.fillSavedCreditCardsSelect = function (platformConfig, formObject) {

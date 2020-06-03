@@ -111,8 +111,7 @@ jobs:
             docker exec -it newimage bash -c "cd /behat-test && printf 'BASE_URL=\"http://localhost/\"' > .env"
           
             docker exec -it newimage sh -c "cd /behat-test && vendor/bin/behat --profile magento2" 
-            
-            docker exec -it newimage sh -c "if [ -d /behat-test/failureScreenshots ]; then echo 'Behat fail'; exit 1; else echo 'Behat OK'; fi" 
+                       
       - run:
           name: Clear useless files
           command: |
