@@ -26,7 +26,7 @@ FormHandler.prototype.switchBrand = function (brand) {
     this.formObject.creditCardNumber.change();
 };
 
-FormHandler.prototype.updateInstallmentSelect = function (installmentsObj, element) {
+FormHandler.prototype.updateInstallmentSelect = function (installmentsObj, element, installmentSelected = null) {
     var content = "";
     for (var i = 0, len = installmentsObj.length; i < len; i++) {
         content +=
@@ -40,6 +40,13 @@ FormHandler.prototype.updateInstallmentSelect = function (installmentsObj, eleme
     }
 
     element.html(content);
+
+    for (var i = 0; i < element[0].length; i++) {
+        var option = element[0].options[i];
+        if (option.value == installmentSelected) {
+            element.val(installmentSelected);
+        }
+    }
 };
 
 FormHandler.prototype.fillBrandList = function (brandsObject, formObject) {
