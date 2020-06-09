@@ -163,7 +163,7 @@ FormHandler.prototype.fillSavedCreditCardsSelect = function (platformConfig, for
         }
     }
 
-    if (html.length > 0) {
+    if (html.length > 0 && formObject.savedCreditCardSelect.val() != "new") {
         jQuery(formObject.containerSelector + ' .new').hide();
         jQuery(formObject.containerSelector).find('.saved').show();
 
