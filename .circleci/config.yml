@@ -101,6 +101,8 @@ jobs:
             docker exec -it newimage sh -c "git clone https://github.com/mundipagg/ecommerce-test-package.git --branch develop /behat-test"
               
             docker exec -it newimage sh -c "cd /behat-test && rm -rf composer.lock && rm -rf failureScreenshots"
+            
+            docker exec -it newimage sh -c "mkdir failureScreenshots && chmod ugo+rwx failureScreenshots"
                                     
             docker exec -it newimage sh -c "composer config -g github-oauth.github.com ${GIT_HUB_AUTH}"
              
