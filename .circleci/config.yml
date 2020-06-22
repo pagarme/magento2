@@ -110,9 +110,10 @@ jobs:
 
             docker exec -it newimage bash -c "cd /behat-test && printf 'BASE_URL=\"http://localhost/\"' > .env"
           
-            docker exec -it newimage sh -c "cd /behat-test && vendor/bin/behat --profile magento2" 
+            docker exec -it newimage sh -c "cd /behat-test && vendor/bin/behat --profile magento2"     
       - store_artifacts:
-          path: /behat-test/failureScreenshots              
+          path: /behat-test/failureScreenshots
+          destination: failureScreenshots     
       - run:
           name: Clear useless files
           command: |
