@@ -98,7 +98,7 @@ jobs:
               echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list && \
               apt-get -y update && apt-get -y install google-chrome-unstable"
             
-            docker exec -it newimage sh -c "git clone https://github.com/mundipagg/ecommerce-test-package.git /behat-test"
+            docker exec -it newimage sh -c "git clone https://github.com/mundipagg/ecommerce-test-package.git --branch develop /behat-test"
               
             docker exec -it newimage sh -c "cd /behat-test && rm -rf composer.lock && rm -rf failureScreenshots"
                                     
