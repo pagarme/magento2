@@ -114,6 +114,9 @@ jobs:
       - store_artifacts:
           path: /behat-test/failureScreenshots
           destination: failureScreenshots     
+      - store_artifacts:
+          path: /behat-test
+          destination: fail         
       - run:
           name: Clear useless files
           command: |
