@@ -115,9 +115,10 @@ jobs:
             docker exec -it newimage sh -c "cd /behat-test && vendor/bin/behat --profile magento2"     
       - run:
           name: Creating Dummy Artifacts
-          command: |           
+          command: | 
+            ls /behat-test/failureScreenshots;
             mkdir /tmp/artifacts;    
-            mv /behat-test/failureScreenshots /tmp/artifacts
+            cp -r /behat-test/failureScreenshots /tmp/artifacts
       - store_artifacts:
           path: /tmp/artifacts
       - run:
