@@ -15,8 +15,7 @@ $years = $helper->getYears();
 $installmentUrl = $helper->getInstallmentsUrl($block->getBaseUrl());
 
 ?>
-        <fieldset class="admin__fieldset payment-method" id="payment_form_<?= $code ?>" style="display:none">
-            <h3>Mundipagg Credit Card</h3>
+        <fieldset class="admin__fieldset payment-method" id="payment_form_<?= $code ?>" style="display:none; margin-top:15px;">
             <input type="hidden" value="<?= $publicKey?>" class="public_key">
             <input type="hidden" name="payment[cc_token_credit_card]" class="input-text cc_token" value="">
             <input type="hidden" class="cc_amount" name="payment[cc_amount]" value="<?= $baseGrandTotal ?>"/>
@@ -91,9 +90,9 @@ $installmentUrl = $helper->getInstallmentsUrl($block->getBaseUrl());
                     <span>CVV</span>
                 </label>
                 <div class="admin__field-control control">
-                    <input id="mundipagg_cc_cid" type="number" name="payment[cc_cid]" class="hosted-control hosted-cid cc_cid"/>
+                    <input id="mundipagg_cc_cid" type="number" min="0" name="payment[cc_cid]" class="hosted-control hosted-cid cc_cid"/>
 
-                    <div class="hosted-error">This field is required</div>
+                    <div class="hosted-error">The field cvv must be a minimum length of 3 and a maximum length of 4.</div>
                 </div>
             </div>
 
