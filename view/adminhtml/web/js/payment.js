@@ -2,7 +2,7 @@ require([
     "jquery",
     "jquery/ui",
 ], function ($) {
-    'use strict';
+    "use strict";
 
     var MundipaggAdmin = {};
 
@@ -15,12 +15,12 @@ require([
 
         var submitFunction = order.submit;
         window.MundipaggAdmin[method[1]].placeOrder(submitFunction)
-    }
+    };
 
     MundipaggAdmin.updateTotals = function (action, interest, amount) {
         var amountFormatted = "R$" + this.formatMoney(amount);
         jQuery(".mundipagg-tax").remove()
-        if (action == 'remove-tax') {
+        if (action === "remove-tax") {
             jQuery("#order-totals table tr:last .price").html(amountFormatted);
             return;
         }
@@ -50,5 +50,5 @@ require([
         '</tr>';
     }
 
-    window.MundipaggAdmin = MundipaggAdmin
+    window.MundipaggAdmin = MundipaggAdmin;
 });

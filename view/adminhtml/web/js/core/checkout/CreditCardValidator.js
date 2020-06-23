@@ -1,10 +1,10 @@
 define([
-    'jquery',
-    'uiComponent',
+    "jquery",
+    "uiComponent",
 ], function ($, Class) {
     
     var CreditCardValidator = {
-    }
+    };
 
     CreditCardValidator.validate = function (formObject) {
         return this.validateNewCard(formObject);
@@ -15,7 +15,7 @@ define([
         var inputsInvalid = [];
         var formObject = this.formObject;
 
-        if (formObject.savedCreditCardSelect.val() == "") {
+        if (formObject.savedCreditCardSelect.val() === "") {
             inputsInvalid.push(
                 this.isInputInvalid(formObject.savedCreditCardSelect)
             );
@@ -62,34 +62,34 @@ define([
     CreditCardValidator.isCvvInvalid = function (element, message = "") {
 
         if (
-            element.val() == "" ||
+            element.val() === "" ||
             element.val().length < 3 ||
             element.val().length > 4
         ) {
-            element.parent().find('.hosted-error')
-                .css('opacity', '1')
-                .css('color', 'red');
+            element.parent().find(".hosted-error")
+                .css("opacity", "1")
+                .css("color", "red");
             return true;
         }
 
-        element.parent().find('.hosted-error')
-            .css('opacity', '0')
-            .css('color', 'red');
+        element.parent().find(".hosted-error")
+            .css("opacity", "0")
+            .css("color", "red");
         return false;
     }
 
     CreditCardValidator.isInputInvalid = function (element, message = "") {
 
-        if (element.val() == "") {
-            element.parent().find('.hosted-error')
-                .css('opacity', '1')
-                .css('color', 'red');
+        if (element.val() === "") {
+            element.parent().find(".hosted-error")
+                .css("opacity", "1")
+                .css("color", "red");
             return true;
         }
 
-        element.parent().find('.hosted-error')
-            .css('opacity', '0')
-            .css('color', 'red');
+        element.parent().find(".hosted-error")
+            .css("opacity", "0")
+            .css("color", "red");
         return false;
     }
 
@@ -101,29 +101,29 @@ define([
         var dateNow = new Date();
 
         if (cardDate < dateNow) {
-            cardExpirationYear.parent().find('.hosted-error')
-                .css('opacity', '1')
-                .css('color', 'red');
+            cardExpirationYear.parent().find(".hosted-error")
+                .css("opacity", "1")
+                .css("color", "red");
             return true;
         }
 
-        cardExpirationYear.parent().find('.hosted-error')
-            .css('opacity', '0')
-            .css('color', 'red');
+        cardExpirationYear.parent().find(".hosted-error")
+            .css("opacity", "0")
+            .css("color", "red");
         return false;
     }
 
     CreditCardValidator.isInputInstallmentInvalid = function (element) {
         if (element.val() == "") {
-            element.parent().find('.hosted-error')
-                .css('opacity', '1')
-                .css('color', 'red');
+            element.parent().find(".hosted-error")
+                .css("opacity", "1")
+                .css("color", "red");
             return true;
         }
 
-        element.parent().find('.hosted-error')
-            .css('opacity', '0')
-            .css('color', 'red');
+        element.parent().find(".hosted-error")
+            .css("opacity", "0")
+            .css("color", "red");
         return false;
     }
 

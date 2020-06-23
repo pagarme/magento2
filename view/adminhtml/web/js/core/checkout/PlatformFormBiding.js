@@ -1,8 +1,8 @@
 define([
-    'jquery',
-    'uiComponent',
-    'Magento_Ui/js/modal/alert',
-    'MundiPagg_MundiPagg/js/core/checkout/PlatformFormBiding',
+    "jquery",
+    "uiComponent",
+    "Magento_Ui/js/modal/alert",
+    "MundiPagg_MundiPagg/js/core/checkout/PlatformFormBiding",
 ], function ($, Class, alert, PlatformFormBiding) {
 
     var FormObject = {};
@@ -11,15 +11,15 @@ define([
 
         var creditCardForm = {};
 
-        var containerSelector = '#payment_form_mundipagg_creditcard';
+        var containerSelector = "#payment_form_mundipagg_creditcard";
 
-        if (typeof jQuery(containerSelector).html() == 'undefined') {
+        if (typeof jQuery(containerSelector).html() == "undefined") {
             this.creditCardForm = null;
             return;
         }
 
         creditCardForm = {
-            'containerSelector': containerSelector,
+            "containerSelector": containerSelector,
             "creditCardNumber": jQuery(containerSelector + " .cc_number"),
             "creditCardHolderName": jQuery(containerSelector + " .cc_owner"),
             "creditCardExpMonth": jQuery(containerSelector + " .cc_exp_month"),
@@ -52,15 +52,15 @@ define([
                 "state": jQuery(containerSelector + " .multibuyer_state"),
                 "homePhone": jQuery(containerSelector + " .multibuyer_home_phone"),
                 "mobilePhone": jQuery(containerSelector + " .multibuyer_mobile_phone")
-            }
+            };
+            creditCardForm.multibuyer = multibuyerForm;
         }
 
         creditCardForm.numberOfPaymentForms = 1;
-        creditCardForm.multibuyer = multibuyerForm;
 
         return creditCardForm;
     };
 
     return FormObject;
 
-})
+});

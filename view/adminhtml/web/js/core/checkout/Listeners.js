@@ -1,10 +1,9 @@
 define([
-    'jquery',
-    'uiComponent',
-    'Magento_Ui/js/modal/alert',
-    'MundiPagg_MundiPagg/js/core/checkout/PlatformFormBiding',
+    "jquery",
+    "uiComponent",
+    "Magento_Ui/js/modal/alert",
+    "MundiPagg_MundiPagg/js/core/checkout/PlatformFormBiding",
 ], function ($, Class, alert, PlatformFormBiding) {
-    
     
     var Listeners = {};
     
@@ -12,12 +11,12 @@ define([
 
         var listeners = this;
 
-        formObject.creditCardNumber.on('keydown', function () {
-            element = jQuery(this);
+        formObject.creditCardNumber.on("keydown", function () {
+            var element = jQuery(this);
             listeners.limitCharacters(element, 19);
         });
 
-        formObject.creditCardNumber.on('keyup', function () {
+        formObject.creditCardNumber.on("keyup", function () {
             var element = jQuery(this);
             listeners.clearLetters(element);
         });
@@ -25,15 +24,15 @@ define([
 
     Listeners.addCreditCardBrandListener = function (formObject, installmenUrl) {
         var _self = this;
-        if (formObject.creditCardBrand == undefined) {
+        if (formObject.creditCardBrand === undefined) {
             return;
         }
-        var amount = formObject.inputAmountWithoutTax.val()
-        window.MundipaggAdmin.updateTotals('remove-tax', 0, amount);
+        var amount = formObject.inputAmountWithoutTax.val();
+        window.MundipaggAdmin.updateTotals("remove-tax", 0, amount);
 
-        formObject.creditCardBrand.on('change', function() {
+        formObject.creditCardBrand.on("change", function() {
             var value = jQuery(this).val();
-            if (value != "" && value != 'undefined') {
+            if (value != "" && value != "undefined") {
                 _self.fillInstallments(formObject, installmenUrl);
             }
         });
@@ -42,22 +41,22 @@ define([
     Listeners.addCreditCardInstallmentsListener = function(formObject) {
         var _self = this;
 
-        if (formObject.creditCardInstallments == undefined) {
+        if (formObject.creditCardInstallments === undefined) {
             return;
         }
 
-        formObject.creditCardInstallments.on('change', function() {
+        formObject.creditCardInstallments.on("change", function() {
             var value = jQuery(this).val();
-            if (value != "" && value != 'undefined') {
-                var interest = jQuery(this).find(':selected').attr("interest");
+            if (value != "" && value != "undefined") {
+                var interest = jQuery(this).find(":selected").attr("interest");
                 _self.updateAmount(formObject, interest);
             }
         });
-    }
+    };
     
     Listeners.addCreditCardHolderNameListener = function(formObject) {
         var listeners = this;
-        formObject.creditCardHolderName.on('keyup', function () {
+        formObject.creditCardHolderName.on("keyup", function () {
             var element = jQuery(this);
             listeners.clearNumbers(element);
         });
@@ -66,21 +65,21 @@ define([
     Listeners.fillInstallments = function (form, installmenUrl) {
         var _self = this;
 
-        if (form.creditCardBrand == undefined) {
+        if (form.creditCardBrand === undefined) {
             return;
         }
 
         var defaulOption = [{
-            'id' : 0,
-            'interest' : 0,
-            'label' : 'Carregando...',
-            'value': ''
+            "id" : 0,
+            "interest" : 0,
+            "label" : "Carregando...",
+            "value": ""
         }];
         var selectedBrand = form.creditCardBrand.val();
 
         var amount = form.inputAmountWithoutTax.val();
-        if (typeof selectedBrand == "undefined" || selectedBrand == "") {
-            selectedBrand = 'default';
+        if (typeof selectedBrand === "undefined" || selectedBrand === "") {
+            selectedBrand = "default";
         }
 
         if (typeof amount == "undefined") {
@@ -88,20 +87,20 @@ define([
         }
 
         _self.updateInstallmentSelect(defaulOption, form.creditCardInstallments);
-        form.creditCardInstallments.prop('disabled', true);
+        form.creditCardInstallments.prop("disabled", true);
 
         var finalInstallmentsUrl =
-            installmenUrl + '/' +
-            selectedBrand + '/' +
+            installmenUrl + "/" +
+            selectedBrand + "/" +
             amount;
 
         jQuery.ajax({
             url: finalInstallmentsUrl,
-            method: 'GET',
+            method: "GET",
             cache: true
         }).done(function(data) {
             _self.updateInstallmentSelect(data, form.creditCardInstallments);
-            form.creditCardInstallments.prop('disabled', false);
+            form.creditCardInstallments.prop("disabled", false);
             _self.updateAmount(form,0);
         });
     };
@@ -114,13 +113,13 @@ define([
         total = total.toFixed(2);
         if (newInterest > 0) {
             formObject.inputAmount.val(total);
-            window.MundipaggAdmin.updateTotals('add-tax', newInterest, total);
+            window.MundipaggAdmin.updateTotals("add-tax", newInterest, total);
             return;
 
         }
         total = parseFloat(amountWithoutTax).toFixed(2);
         formObject.inputAmount.val(amountWithoutTax);
-        window.MundipaggAdmin.updateTotals('remove-tax', 0, total);
+        window.MundipaggAdmin.updateTotals("remove-tax", 0, total);
     };
 
     Listeners.updateInstallmentSelect = function (installmentsObj, element) {
@@ -142,20 +141,20 @@ define([
     Listeners.limitCharacters = function (element, limit) {
         var val = element.val();
 
-        if (val != "" && val.length > limit) {
+        if (val !== "" && val.length > limit) {
             element.val(val.substring(0, limit));
         }
     };
 
     Listeners.clearLetters = function (element) {
         var val = element.val();
-        var newVal = val.replace(/[^0-9]+/g, '');
+        var newVal = val.replace(/[^0-9]+/g, "");
         element.val(newVal);
     };
 
     Listeners.clearNumbers = function (element) {
         var val = element.val();
-        var newVal = val.replace(/[0-9]+/g, '');
+        var newVal = val.replace(/[0-9]+/g, "");
         element.val(newVal);
     };
     

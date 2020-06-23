@@ -1,11 +1,11 @@
 define([
-    'jquery',
-    'uiComponent',
-    'Magento_Ui/js/modal/alert',
-    'MundiPagg_MundiPagg/js/core/checkout/PlatformFormBiding',
+    "jquery",
+    "uiComponent",
+    "Magento_Ui/js/modal/alert",
+    "MundiPagg_MundiPagg/js/core/checkout/PlatformFormBiding",
 ], function ($, Class, alert, PlatformFormBiding) {
     var CreditCardToken = function (formObject) {
-        this.formObject = formObject
+        this.formObject = formObject;
     };
 
     CreditCardToken.prototype.getDataToGenerateToken = function () {
@@ -24,9 +24,9 @@ define([
     CreditCardToken.prototype.getToken = function (pkKey) {
         var data = this.getDataToGenerateToken();
         return jQuery.ajax({
-            type: 'POST',
-            dataType: 'json',
-            url: 'https://api.mundipagg.com/core/v1/tokens?appId=' + pkKey,
+            type: "POST",
+            dataType: "json",
+            url: "https://api.mundipagg.com/core/v1/tokens?appId=" + pkKey,
             async: false,
             cache: true,
             data
@@ -34,4 +34,4 @@ define([
     }
 
     return CreditCardToken;
-})
+});

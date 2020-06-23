@@ -1,11 +1,11 @@
 define([
-    'jquery',
-    'uiComponent',
-    'Magento_Ui/js/modal/alert',
-    'MundiPagg_MundiPagg/js/core/checkout/PlatformFormBiding',
-    'MundiPagg_MundiPagg/js/core/checkout/CreditCardToken',
-    'MundiPagg_MundiPagg/js/core/checkout/Listeners',
-    'MundiPagg_MundiPagg/js/core/checkout/CreditCardValidator',
+    "jquery",
+    "uiComponent",
+    "Magento_Ui/js/modal/alert",
+    "MundiPagg_MundiPagg/js/core/checkout/PlatformFormBiding",
+    "MundiPagg_MundiPagg/js/core/checkout/CreditCardToken",
+    "MundiPagg_MundiPagg/js/core/checkout/Listeners",
+    "MundiPagg_MundiPagg/js/core/checkout/CreditCardValidator",
 ], function (
     $,
     Class,
@@ -18,13 +18,13 @@ define([
 
     var CreditCardModel = {
         formObject: {},
-        method: 'creditcard',
+        method: "creditcard",
         PlatformFormBiding: PlatformFormBiding,
         CreditCardToken,
         Listeners,
         CreditCardValidator,
         errors: []
-    }
+    };
 
     CreditCardModel.init = function (code, config) {
         var method = code.split("_")[1];
@@ -37,14 +37,14 @@ define([
         this.addListeners(config);
 
         window.MundipaggAdmin[method[1]] = this;
-    }
+    };
 
     CreditCardModel.listenPaymentChange = function () {
         var _self = this;
 
-        jQuery("#order-billing_method_form input.admin__control-radio").on('click', function(e){
+        jQuery("#order-billing_method_form input.admin__control-radio").on("click", function(e){
             var amount = _self.formObject.inputAmountWithoutTax.val();
-            MundipaggAdmin.updateTotals('remove-tax', 0, amount);
+            MundipaggAdmin.updateTotals("remove-tax", 0, amount);
         });
     };
 
@@ -106,18 +106,18 @@ define([
     };
 
     CreditCardModel.getData = function () {
-        saveThiscard = 0;
+        var saveThiscard = 0;
         var formObject = this.formObject;
 
         if (formObject.saveThisCard.prop( "checked" )) {
             saveThiscard = 1;
         }
 
-        data = this.fillData();
+        var data = this.fillData();
         data.additional_data.cc_buyer_checkbox = false;
 
         if (
-            typeof formObject.multibuyer != 'undefined' &&
+            typeof formObject.multibuyer !== "undefined" &&
             formObject.multibuyer.showMultibuyer.prop( "checked" ) == true
         ) {
             data = this.fillMultibuyerData(data);
@@ -128,20 +128,20 @@ define([
 
     CreditCardModel.fillData = function() {
         var formObject = this.formObject;
-
+        var saveThiscard = false;
         return {
-            'method': "mundipagg_creditcard",
-            'additional_data': {
-                'cc_type': formObject.creditCardBrand.val(),
-                'cc_last_4': this.getLastFourNumbers(),
-                'cc_exp_year': formObject.creditCardExpYear.val(),
-                'cc_exp_month': formObject.creditCardExpMonth.val(),
-                'cc_owner': formObject.creditCardHolderName.val(),
-                'cc_savecard': saveThiscard,
-                'cc_saved_card': formObject.savedCreditCardSelect.val(),
-                'cc_installments': formObject.creditCardInstallments.val(),
-                'cc_token_credit_card': formObject.creditCardToken.val(),
-                'cc_card_tax_amount' : formObject.creditCardInstallments.find(':selected').attr('interest')
+            "method": "mundipagg_creditcard",
+            "additional_data": {
+                "cc_type": formObject.creditCardBrand.val(),
+                "cc_last_4": this.getLastFourNumbers(),
+                "cc_exp_year": formObject.creditCardExpYear.val(),
+                "cc_exp_month": formObject.creditCardExpMonth.val(),
+                "cc_owner": formObject.creditCardHolderName.val(),
+                "cc_savecard": saveThiscard,
+                "cc_saved_card": formObject.savedCreditCardSelect.val(),
+                "cc_installments": formObject.creditCardInstallments.val(),
+                "cc_token_credit_card": formObject.creditCardToken.val(),
+                "cc_card_tax_amount" : formObject.creditCardInstallments.find(":selected").attr("interest")
             }
         };
     };
@@ -155,4 +155,4 @@ define([
     };
 
     return CreditCardModel;
-})
+});
