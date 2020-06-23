@@ -8,7 +8,7 @@ define([
 
     CreditCardValidator.validate = function (formObject) {
         return this.validateNewCard(formObject);
-    }
+    };
 
     CreditCardValidator.validateSavedCard = function () {
 
@@ -34,7 +34,7 @@ define([
         }
 
         return true;
-    }
+    };
 
     CreditCardValidator.validateNewCard = function (formObject) {
         var inputsInvalid = [];
@@ -57,7 +57,7 @@ define([
         }
 
         return true;
-    }
+    };
 
     CreditCardValidator.isCvvInvalid = function (element, message = "") {
 
@@ -76,7 +76,7 @@ define([
             .css("opacity", "0")
             .css("color", "red");
         return false;
-    }
+    };
 
     CreditCardValidator.isInputInvalid = function (element, message = "") {
 
@@ -91,7 +91,7 @@ define([
             .css("opacity", "0")
             .css("color", "red");
         return false;
-    }
+    };
 
     CreditCardValidator.isInputExpirationInvalid = function (formObject) {
         var cardExpirationMonth = formObject.creditCardExpMonth;
@@ -111,10 +111,10 @@ define([
             .css("opacity", "0")
             .css("color", "red");
         return false;
-    }
+    };
 
     CreditCardValidator.isInputInstallmentInvalid = function (element) {
-        if (element.val() == "") {
+        if (element.val() === "") {
             element.parent().find(".hosted-error")
                 .css("opacity", "1")
                 .css("color", "red");
@@ -125,7 +125,7 @@ define([
             .css("opacity", "0")
             .css("color", "red");
         return false;
-    }
+    };
 
     return CreditCardValidator;
 });

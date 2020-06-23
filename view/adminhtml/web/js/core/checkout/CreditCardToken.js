@@ -19,7 +19,7 @@ define([
                 cvv: this.formObject.creditCardCvv.val()
             }
         };
-    }
+    };
 
     CreditCardToken.prototype.getToken = function (pkKey) {
         var data = this.getDataToGenerateToken();
@@ -31,7 +31,7 @@ define([
             cache: true,
             data
         });
-    }
+    };
 
     return CreditCardToken;
 });

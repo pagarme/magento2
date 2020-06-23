@@ -8,7 +8,6 @@ define([
     var Listeners = {};
     
     Listeners.addCreditCardNumberListener = function (formObject) {
-
         var listeners = this;
 
         formObject.creditCardNumber.on("keydown", function () {
@@ -32,7 +31,7 @@ define([
 
         formObject.creditCardBrand.on("change", function() {
             var value = jQuery(this).val();
-            if (value != "" && value != "undefined") {
+            if (value !== "" && value !== "undefined") {
                 _self.fillInstallments(formObject, installmenUrl);
             }
         });
@@ -60,7 +59,7 @@ define([
             var element = jQuery(this);
             listeners.clearNumbers(element);
         });
-    }
+    };
 
     Listeners.fillInstallments = function (form, installmenUrl) {
         var _self = this;
@@ -82,7 +81,7 @@ define([
             selectedBrand = "default";
         }
 
-        if (typeof amount == "undefined") {
+        if (typeof amount === "undefined") {
             amount = 0;
         }
 

@@ -19,7 +19,7 @@ define([
     var CreditCardModel = {
         formObject: {},
         method: "creditcard",
-        PlatformFormBiding: PlatformFormBiding,
+        PlatformFormBiding,
         CreditCardToken,
         Listeners,
         CreditCardValidator,
@@ -51,21 +51,21 @@ define([
     CreditCardModel.bindPlaceOrder = function(order) {
         var submitFunction = order.submit;
         order.submit = this.placeOrder.bind(this, submitFunction, order);
-    }
+    };
 
     CreditCardModel.addListeners = function(config) {
         Listeners.addCreditCardNumberListener(this.formObject);
         Listeners.addCreditCardHolderNameListener(this.formObject);
         Listeners.addCreditCardBrandListener(this.formObject, config.installmenUrl);
         Listeners.addCreditCardInstallmentsListener(this.formObject);
-    }
+    };
 
     CreditCardModel.placeOrder = function (placeOrderFunction, order) {
         this.placeOrderFunction = placeOrderFunction;
         var _self = this;
 
         if (
-            typeof order.paymentMethod == "undefined" ||
+            typeof order.paymentMethod === "undefined" ||
             _self.method !== order.paymentMethod.split("_")[1]
         ) {
             return _self.placeOrderFunction();
@@ -118,7 +118,7 @@ define([
 
         if (
             typeof formObject.multibuyer !== "undefined" &&
-            formObject.multibuyer.showMultibuyer.prop( "checked" ) == true
+            formObject.multibuyer.showMultibuyer.prop( "checked" ) === true
         ) {
             data = this.fillMultibuyerData(data);
         }

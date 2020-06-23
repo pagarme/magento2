@@ -13,13 +13,13 @@ define([
 
         var containerSelector = "#payment_form_mundipagg_creditcard";
 
-        if (typeof jQuery(containerSelector).html() == "undefined") {
+        if (typeof jQuery(containerSelector).html() === "undefined") {
             this.creditCardForm = null;
             return;
         }
 
         creditCardForm = {
-            "containerSelector": containerSelector,
+            containerSelector,
             "creditCardNumber": jQuery(containerSelector + " .cc_number"),
             "creditCardHolderName": jQuery(containerSelector + " .cc_owner"),
             "creditCardExpMonth": jQuery(containerSelector + " .cc_exp_month"),
