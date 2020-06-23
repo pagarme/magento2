@@ -337,6 +337,7 @@ PaymentMethodController.prototype.addCreditCardNumberListener = function(formObj
 
     var paymentMethodController = this;
 
+    formObject.creditCardNumber.unbind();
     formObject.creditCardNumber.on('keydown', function () {
         element = jQuery(this);
         paymentMethodController.limitCharacters(element, 19);
@@ -509,14 +510,10 @@ PaymentMethodController.prototype.fillInstallments = function (form) {
         return;
     }
 
+    var installmentSelected = form.creditCardInstallments.val();
+
     formHandler = new FormHandler();
 
-    var defaulOption = [{
-        'id' : 0,
-        'interest' : 0,
-        'label' : 'Carregando...',
-        'value': ''
-    }];
     var selectedBrand = form.creditCardBrand.val();
 
     var amount = form.inputAmount.val();
@@ -528,7 +525,6 @@ PaymentMethodController.prototype.fillInstallments = function (form) {
         amount = 0;
     }
 
-    formHandler.updateInstallmentSelect(defaulOption, form.creditCardInstallments);
     form.creditCardInstallments.prop('disabled', true);
 
     var installmentsUrl =
@@ -543,7 +539,7 @@ PaymentMethodController.prototype.fillInstallments = function (form) {
     }).done(function(data) {
         formHandler = new FormHandler();
 
-        formHandler.updateInstallmentSelect(data, form.creditCardInstallments);
+        formHandler.updateInstallmentSelect(data, form.creditCardInstallments, installmentSelected);
         form.creditCardInstallments.prop('disabled', false);
 
         formHandler.init(form);
@@ -625,10 +621,13 @@ PaymentMethodController.prototype.hideCardAmount = function (formObject) {
 PaymentMethodController.prototype.fillFormText = function (formObject, method = null) {
     formText = this.platformConfig.text;
 
+    var creditCardExpYear = formObject.creditCardExpYear.val();
+    var creditCardExpMonth = formObject.creditCardExpMonth.val()
+
     formHandler = new FormHandler();
     formHandler.init(formObject);
-    formHandler.fillExpirationYearSelect(formText, method);
-    formHandler.fillExpirationMonthSelect(formText, method);
+    formHandler.fillExpirationYearSelect(formText, method, creditCardExpYear);
+    formHandler.fillExpirationMonthSelect(formText, method, creditCardExpMonth);
     //@Todo add other texts
 };
 
