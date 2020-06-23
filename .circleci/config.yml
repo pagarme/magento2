@@ -116,11 +116,9 @@ jobs:
       - run:
           name: Creating Dummy Artifacts
           command: | 
-            ls /behat-test/failureScreenshots;
-            mkdir /tmp/artifacts;    
-            cp -r /behat-test/failureScreenshots /tmp/artifacts
+            ls;
       - store_artifacts:
-          path: /tmp/artifacts
+          path: /behat-test/failureScreenshots
       - run:
           name: Clear useless files
           command: |
