@@ -112,13 +112,7 @@ jobs:
 
             docker exec -it newimage bash -c "cd /behat-test && printf 'BASE_URL=\"http://localhost/\"' > .env"
           
-            docker exec -it newimage sh -c "cd /behat-test && vendor/bin/behat --profile magento2"     
-      - run:
-          name: Creating Dummy Artifacts
-          command: | 
-            ls;
-      - store_artifacts:
-          path: /behat-test/failureScreenshots
+            docker exec -it newimage sh -c "cd /behat-test && vendor/bin/behat --profile magento2"         
       - run:
           name: Clear useless files
           command: |
