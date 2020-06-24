@@ -78,8 +78,7 @@ jobs:
             "INSERT INTO magento2.core_config_data VALUES (null, 'default', 0, 'customer/address/taxvat_show', 1);"
 
             docker exec -it newimage mysql magento2 -e \
-              "update magento2.core_config_data set value = '1' \
-              where path like 'customer/create_account/vat_frontend_visibility';"
+            "INSERT INTO magento2.core_config_data VALUES (null, 'default', 0, 'customer/create_account/vat_frontend_visibility', 1);"
 
             docker exec -it newimage mysql magento2 -e \
               "INSERT INTO magento2.core_config_data (scope, scope_id, path, value) VALUES \

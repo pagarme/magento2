@@ -33,11 +33,14 @@
         <div class="actions-toolbar">
             <div class="primary">
 
-                <button id="" class="action primary checkout"
+                <button class="action primary checkout"
                         type="submit"
                         data-bind="
                         click: beforeplaceOrder,
-                        attr: {title: $t('Place Order')}
+                        attr: {
+                            title: $t('Place Order'),
+                            id: getCode() + '-submit'
+                            }
                         ">
                     <span data-bind="i18n: 'Place Order'"></span>
                 </button>

@@ -62,7 +62,7 @@
                 <can_refund>1</can_refund>
                 <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_use_checkout>1</can_use_checkout>
-                <can_use_internal>1</can_use_internal>
+                <can_use_internal>0</can_use_internal>
                 <cctypes>NoBrand</cctypes>
                 <is_gateway>1</is_gateway>
                 <sort_order>1</sort_order>
@@ -88,7 +88,7 @@
                 <can_refund>1</can_refund>
                 <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_use_checkout>1</can_use_checkout>
-                <can_use_internal>1</can_use_internal>
+                <can_use_internal>0</can_use_internal>
                 <cctypes>NoBrand</cctypes>
                 <is_gateway>1</is_gateway>
                 <sort_order>1</sort_order>
@@ -114,7 +114,7 @@
                 <can_refund>1</can_refund>
                 <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <can_use_checkout>1</can_use_checkout>
-                <can_use_internal>1</can_use_internal>
+                <can_use_internal>0</can_use_internal>
                 <cctypes>Alelo,Sodexo</cctypes>
                 <is_gateway>1</is_gateway>
                 <sort_order>1</sort_order>

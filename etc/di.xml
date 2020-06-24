@@ -603,4 +603,11 @@
 
     <preference for="MundiPagg\MundiPagg\Api\ObjectMapper\ProductSubscription\ProductSubscriptionMapperInterface" type="Mundipagg\Core\Recurrence\Aggregates\ProductSubscription" />
     <preference for="MundiPagg\MundiPagg\Api\ObjectMapper\ProductSubscription\RepetitionInterface" type="Mundipagg\Core\Recurrence\Aggregates\Repetition" />
+
+    <preference for="MundiPagg\MundiPagg\Api\ObjectMapper\ProductSubscription\RepetitionInterface" type="Mundipagg\Core\Recurrence\Aggregates\Repetition" />
+
+
+    <!-- Admin checkout -->
+    <!--preference for="Magento\Payment\Block\Form" type="MundiPagg\MundiPagg\Block\Form"/-->
+
 </config>
