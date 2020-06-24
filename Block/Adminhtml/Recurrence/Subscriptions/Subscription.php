@@ -90,7 +90,7 @@ class Subscription extends Template
         $products = [];
         $collection = $this->productCollectionFactory->create();
         $collection->addAttributeToSelect(array('name', 'description'))
-            ->addAttributeToFilter('type_id', 'simple');
+            ->addAttributeToFilter('type_id', ['simple', 'virtual']);
 
         foreach ($collection as $product) {
             $products[$product->getEntityId()] = [
