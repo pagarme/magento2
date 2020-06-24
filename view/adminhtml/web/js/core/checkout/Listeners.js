@@ -23,7 +23,7 @@ define([
 
     Listeners.addCreditCardBrandListener = function (formObject, installmenUrl) {
         var _self = this;
-        if (formObject.creditCardBrand === undefined) {
+        if (typeof formObject.creditCardBrand === "undefined") {
             return;
         }
         var amount = formObject.inputAmountWithoutTax.val();
@@ -40,13 +40,13 @@ define([
     Listeners.addCreditCardInstallmentsListener = function(formObject) {
         var _self = this;
 
-        if (formObject.creditCardInstallments === undefined) {
+        if (typeof formObject.creditCardInstallments === "undefined") {
             return;
         }
 
         formObject.creditCardInstallments.on("change", function() {
             var value = jQuery(this).val();
-            if (value != "" && value != "undefined") {
+            if (value !== "" && value !== "undefined") {
                 var interest = jQuery(this).find(":selected").attr("interest");
                 _self.updateAmount(formObject, interest);
             }
@@ -64,7 +64,7 @@ define([
     Listeners.fillInstallments = function (form, installmenUrl) {
         var _self = this;
 
-        if (form.creditCardBrand === undefined) {
+        if (typeof form.creditCardBrand === "undefined") {
             return;
         }
 

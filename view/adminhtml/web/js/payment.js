@@ -40,7 +40,7 @@ require([
         }
 
         return tmp;
-    }
+    };
 
     MundipaggAdmin.getTaxHtml = function (interest) {
         return "<tr id=\"mundipagg-tax\" class=\"row-totals mundipagg-tax\">" +
@@ -49,7 +49,7 @@ require([
         "   <span class=\"price\">" + interest + "</span>"+
         "</td>" +
         "</tr>";
-    }
+    };
 
     window.MundipaggAdmin = MundipaggAdmin;
 });

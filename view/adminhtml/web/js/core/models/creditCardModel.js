@@ -148,7 +148,7 @@ define([
 
     CreditCardModel.getLastFourNumbers = function() {
         var number = this.formObject.creditCardNumber.val();
-        if (number !== undefined) {
+        if (typeof number !== "undefined") {
             return number.slice(-4);
         }
         return "";
