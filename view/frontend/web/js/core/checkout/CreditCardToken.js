@@ -1,5 +1,6 @@
-var CreditCardToken = function (formObject) {
-    this.formObject = formObject
+var CreditCardToken = function (formObject, documentNumber = null) {
+    this.formObject = formObject;
+    this.documentNumber = documentNumber;
 };
 
 CreditCardToken.prototype.getDataToGenerateToken = function () {
@@ -10,7 +11,8 @@ CreditCardToken.prototype.getDataToGenerateToken = function () {
             number: this.formObject.creditCardNumber.val(),
             exp_month: this.formObject.creditCardExpMonth.val(),
             exp_year: this.formObject.creditCardExpYear.val(),
-            cvv: this.formObject.creditCardCvv.val()
+            cvv: this.formObject.creditCardCvv.val(),
+            holder_document: this.documentNumber
         }
     };
 }
