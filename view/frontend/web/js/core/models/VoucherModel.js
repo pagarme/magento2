@@ -55,7 +55,13 @@ VoucherModel.prototype.validate = function () {
 };
 
 VoucherModel.prototype.getCreditCardToken = function (success, error) {
-    var modelToken = new CreditCardToken(this.formObject);
+
+    var documentNumber = platFormConfig.addresses.billingAddress.vatId;
+    if (documentNumber == undefined) {
+        documentNumber = platFormConfig.customerData.taxvat;
+    }
+
+    var modelToken = new CreditCardToken(this.formObject, documentNumber);
     modelToken.getToken(this.publicKey)
         .done(success)
         .fail(error);
