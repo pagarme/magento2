@@ -402,6 +402,10 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $addresses = $quoteCustomer->getAddresses();
         $address = end($addresses);
 
+        if (!$address) {
+            $address = $quote->getBillingAddress();
+        }
+
         $customerRepository =
             ObjectManager::getInstance()->get(CustomerRepository::class);
         $savedCustomer = $customerRepository->getById($quoteCustomer->getId());
