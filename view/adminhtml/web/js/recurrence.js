@@ -5,7 +5,6 @@ require([
     'use strict';
 
     $(document).ready(function(){
-
         $("#allow_installments_div").hide();
         var editProduct = $("#edit-product").val();
         if (editProduct.length > 0) {

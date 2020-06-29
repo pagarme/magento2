@@ -78,8 +78,7 @@ jobs:
             "INSERT INTO magento2.core_config_data VALUES (null, 'default', 0, 'customer/address/taxvat_show', 1);"
 
             docker exec -it newimage mysql magento2 -e \
-              "update magento2.core_config_data set value = '1' \
-              where path like 'customer/create_account/vat_frontend_visibility';"
+            "INSERT INTO magento2.core_config_data VALUES (null, 'default', 0, 'customer/create_account/vat_frontend_visibility', 1);"
 
             docker exec -it newimage mysql magento2 -e \
               "INSERT INTO magento2.core_config_data (scope, scope_id, path, value) VALUES \
@@ -98,20 +97,21 @@ jobs:
               echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list && \
               apt-get -y update && apt-get -y install google-chrome-unstable"
             
-            docker exec -it newimage sh -c "git clone https://github.com/mundipagg/ecommerce-test-package.git /behat-test"
+            docker exec -it newimage sh -c "git clone https://github.com/mundipagg/ecommerce-test-package.git --branch develop /behat-test"
               
             docker exec -it newimage sh -c "cd /behat-test && rm -rf composer.lock && rm -rf failureScreenshots"
+            
+            docker exec -it newimage sh -c "mkdir failureScreenshots && chmod ugo+rwx failureScreenshots"
                                     
             docker exec -it newimage sh -c "composer config -g github-oauth.github.com ${GIT_HUB_AUTH}"
              
             docker exec -it newimage sh -c "cd /behat-test && composer install --prefer-dist"
-              
-            docker exec --detach newimage google-chrome-unstable --disable-gpu --no-sandbox --headless --remote-debugging-address=127.0.0.1 --remote-debugging-port=9222 --disable-extensions -user-data-dir=/tmp/test
+                          
+            docker exec --detach newimage google-chrome-unstable --disable-gpu --no-sandbox --headless --remote-debugging-address=127.0.0.1 --remote-debugging-port=9222 --disable-extensions -user-data-dir=/tmp/test 
 
             docker exec -it newimage bash -c "cd /behat-test && printf 'BASE_URL=\"http://localhost/\"' > .env"
           
-            docker exec -it newimage sh -c "cd /behat-test && vendor/bin/behat --profile magento2" 
-                       
+            docker exec -it newimage sh -c "cd /behat-test && vendor/bin/behat --profile magento2"         
       - run:
           name: Clear useless files
           command: |
