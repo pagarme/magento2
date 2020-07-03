@@ -11,7 +11,7 @@ CustomerValidator.prototype.validate = function () {
         return;
     }
 
-    if (address.vatId <= 0) {
+    if (address.vatId <= 0 && address.vatId != null) {
         this.errors.push("Customer document is a required field");
     }
 
