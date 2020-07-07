@@ -21,6 +21,9 @@
 
 <div class="field type new">
     <div class="control">
+        <div class="nobrand field-error" style="display: none">
+            <span><!-- ko i18n: 'No brand set'--><!-- /ko --></span>
+        </div>
         <ul class="credit-card-types"></ul>
         <input type="hidden"
                name="payment[cc_type]"
@@ -29,7 +32,6 @@
                >
         <input type="hidden" name="payment[cc_token]" class="input-text cc_token" value="">
     </div>
-
     <div class="field-error" style="display: none">
         <span><!-- ko i18n: 'Invalid credit card brand'--><!-- /ko --></span>
     </div>
