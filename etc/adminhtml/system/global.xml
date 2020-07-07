@@ -22,6 +22,7 @@
 		</field>
 		<field id="secret_key" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="30" translate="label" type="text">
 			<label>Secret Key</label>
+			<backend_model>MundiPagg\MundiPagg\Model\Validation\GenericValidation</backend_model>
 			<comment>Secret key for First Authentication MundiPagg.Contact MundiPagg to get your own Secret Key.</comment>
 			<config_path>mundipagg_mundipagg/global/secret_key</config_path>
 			<depends>
@@ -30,6 +31,7 @@
 		</field>
 		<field id="public_key" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="40" translate="label" type="text">
 			<label>Public key</label>
+			<backend_model>MundiPagg\MundiPagg\Model\Validation\GenericValidation</backend_model>
 			<comment>Public key for Double Authentication MundiPagg. Contact MundiPagg to get your own Public key.</comment>
 			<config_path>mundipagg_mundipagg/global/public_key</config_path>
 			<depends>
@@ -39,6 +41,7 @@
 
 		<field id="secret_key_test" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="30" translate="label" type="text">
 			<label>Secret Key Test</label>
+			<backend_model>MundiPagg\MundiPagg\Model\Validation\GenericValidation</backend_model>
 			<comment>Secret key Test for First Authentication MundiPagg.Contact MundiPagg to get your own Secret Key Test.</comment>
 			<config_path>mundipagg_mundipagg/global/secret_key_test</config_path>
 			<depends>
@@ -47,6 +50,7 @@
 		</field>
 		<field id="public_key_test" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="40" translate="label" type="text">
 			<label>Public key Test</label>
+			<backend_model>MundiPagg\MundiPagg\Model\Validation\GenericValidation</backend_model>
 			<comment>Public key Test for Double Authentication MundiPagg. Contact MundiPagg to get your own Public key Test.</comment>
 			<config_path>mundipagg_mundipagg/global/public_key_test</config_path>
 			<depends>

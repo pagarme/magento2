@@ -13,11 +13,13 @@
 		<label>Installments Diners</label>
 	    <field id="installments_number_diners" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
 	        <label>Number Diners</label>
+			<backend_model>MundiPagg\MundiPagg\Model\Validation\GenericValidation</backend_model>
 	        <comment />
 	        <config_path>payment/mundipagg_creditcard/installments_number_diners</config_path>
 	    </field>
 	    <field id="installment_min_amount_diners" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
 	        <label>Min Amount Diners</label>
+			<backend_model>MundiPagg\MundiPagg\Model\Validation\GenericValidation</backend_model>
 	        <comment />
 	        <config_path>payment/mundipagg_creditcard/installment_min_amount_diners</config_path>
 	    </field>
@@ -29,6 +31,7 @@
 	    </field>
 	    <field id="installments_interest_rate_initial_diners" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
 	        <label>Interest Rate Initial (%) Diners</label>
+			<backend_model>MundiPagg\MundiPagg\Model\Validation\GenericValidation</backend_model>
 	        <comment />
 	        <config_path>payment/mundipagg_creditcard/installments_interest_rate_initial_diners</config_path>
             <depends>
@@ -37,6 +40,7 @@
 	    </field>
 	    <field id="installments_interest_rate_incremental_diners" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
 	        <label>Interest Rate Incremental (%) Diners</label>
+			<backend_model>MundiPagg\MundiPagg\Model\Validation\GenericValidation</backend_model>
 	        <comment />
 	        <config_path>payment/mundipagg_creditcard/installments_interest_rate_incremental_diners</config_path>
             <depends>
@@ -45,6 +49,7 @@
 	    </field>
 	    <field id="installments_max_without_interest_diners" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
 	        <label>Max Without Interest Diners</label>
+			<backend_model>MundiPagg\MundiPagg\Model\Validation\GenericValidation</backend_model>
 	        <comment />
 	        <config_path>payment/mundipagg_creditcard/installments_max_without_interest_diners</config_path>
             <depends>
