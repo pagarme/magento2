@@ -21,6 +21,8 @@ use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 use MundiPagg\MundiPagg\Helper\RecurrenceProductHelper;
 use MundiPagg\MundiPagg\Ui\Component\Column\Invoices\Actions;
 use MundiPagg\MundiPagg\Ui\Component\Recurrence\Column\TotalCyclesByProduct;
+use Magento\Catalog\Model\ResourceModel\Product\Collection as ProductCollection;
+use Magento\Catalog\Model\Product\Interceptor as ProductInterceptor;
 
 class Subscription extends Template
 {
@@ -88,9 +90,13 @@ class Subscription extends Template
     public function getBundleProducts()
     {
         $products = [];
+
+        /**
+         * @var  ProductCollection|ProductInterceptor[] $collection
+         */
         $collection = $this->productCollectionFactory->create();
         $collection->addAttributeToSelect(array('name', 'description'))
-            ->addAttributeToFilter('type_id', ['simple', 'virtual']);
+            ->addAttributeToFilter('type_id', ['simple', 'virtual', 'downloadable']);
 
         foreach ($collection as $product) {
             $products[$product->getEntityId()] = [
