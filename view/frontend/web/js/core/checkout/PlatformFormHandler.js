@@ -65,6 +65,10 @@ FormHandler.prototype.fillBrandList = function (brandsObject, formObject) {
             "</li>";
     }
 
+    if (html == '') {
+        jQuery(formObject.containerSelector).find(".nobrand").show();
+    }
+
     jQuery(formObject.containerSelector + ' .credit-card-types').html(html);
 };
 
