@@ -15,6 +15,7 @@ use Magento\Payment\Block\Info\Cc;
 use Mundipagg\Core\Kernel\Services\OrderService;
 use Mundipagg\Core\Kernel\ValueObjects\Id\OrderId;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use MundiPagg\MundiPagg\Concrete\Magento2PlatformOrderDecorator;
 
 class TwoCreditCard extends Cc
 {
@@ -90,13 +91,21 @@ class TwoCreditCard extends Cc
         Magento2CoreSetup::bootstrap();
         $orderService = new OrderService();
 
-        $orderId = $this->getInfo()->getLastTransId();
-        $orderId = explode('-', $orderId)[0];
+        $orderEntityId = $this->getInfo()->getOrder()->getId();
+
+        $platformOrder = new Magento2PlatformOrderDecorator();
+        $platformOrder->loadByIncrementId((int)$orderEntityId);
+
+        $orderMundipaggId = $platformOrder->getMundipaggId();
+
+        if ($orderMundipaggId === null){
+            return [];
+        }
 
         /**
          * @var \Mundipagg\Core\Kernel\Aggregates\Order orderObject
          */
-        $orderObject = $orderService->getOrderByMundiPaggId(new OrderId($orderId));
+        $orderObject = $orderService->getOrderByMundiPaggId(new OrderId($orderMundipaggId));
 
         return [
             'card1' => array_merge(
