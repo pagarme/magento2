@@ -15,6 +15,7 @@ use Mundipagg\Core\Kernel\Abstractions\AbstractModuleCoreSetup as MPSetup;
 use Mundipagg\Core\Kernel\Abstractions\AbstractPlatformOrderDecorator;
 use Mundipagg\Core\Kernel\Interfaces\PlatformInvoiceInterface;
 use Mundipagg\Core\Kernel\Services\MoneyService;
+use Mundipagg\Core\Kernel\Services\OrderService;
 use Mundipagg\Core\Kernel\ValueObjects\Id\CustomerId;
 use Mundipagg\Core\Kernel\ValueObjects\Id\OrderId;
 use Mundipagg\Core\Kernel\ValueObjects\OrderState;
@@ -58,12 +59,18 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
     private $quote;
     private $i18n;
 
+    /**
+     * @var OrderService
+     */
+    private $orderService;
+
     public function __construct()
     {
         $this->i18n = new LocalizationService();
         $objectManager = ObjectManager::getInstance();
 
         $this->orderFactory = $objectManager->get('Magento\Sales\Model\Order');
+        $this->orderService = new OrderService();
         parent::__construct();
     }
 
@@ -297,17 +304,31 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         return $invoiceCollection;
     }
 
-    /** @return OrderId */
+    /**
+     * @return OrderId|null
+     */
     public function getMundipaggId()
     {
-        $orderId = $this->platformOrder->getPayment()->getLastTransId();
+        $orderId = null;
 
-        if (empty($orderId)) {
-            return null;
+        if ($this->platformOrder->getPayment() != null) {
+            $orderId = $this->platformOrder->getPayment()->getLastTransId();
         }
-        $orderId = substr($orderId, 0 , 19);
 
-        return new OrderId($orderId);
+        if (!empty($orderId)) {
+            $orderId = substr($orderId, 0 , 19);
+            return new OrderId($orderId);
+        }
+
+        $orderCore = $this->orderService->getOrderByPlatformId(
+            $this->platformOrder->getIncrementId()
+        );
+
+        if ($orderCore == null) {
+            return $orderId;
+        }
+
+        return $orderCore->getMundipaggId();
     }
 
     public function getHistoryCommentCollection()

@@ -21,6 +21,7 @@ use Mundipagg\Core\Kernel\ValueObjects\Id\SubscriptionId;
 use Mundipagg\Core\Recurrence\Repositories\ChargeRepository as SubscriptionChargeRepository;
 use Mundipagg\Core\Recurrence\Repositories\SubscriptionRepository;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use MundiPagg\MundiPagg\Concrete\Magento2PlatformOrderDecorator;
 
 class Billet extends Info
 {
@@ -129,13 +130,21 @@ class Billet extends Info
         Magento2CoreSetup::bootstrap();
         $orderService = new OrderService();
 
-        $orderId = $this->getInfo()->getLastTransId();
-        $orderId = explode('-', $orderId)[0];
+        $orderEntityId = $this->getInfo()->getOrder()->getId();
+
+        $platformOrder = new Magento2PlatformOrderDecorator();
+        $platformOrder->loadByIncrementId((int)$orderEntityId);
+
+        $orderMundipaggId = $platformOrder->getMundipaggId();
+
+        if ($orderMundipaggId === null){
+            return [];
+        }
 
         /**
          * @var \Mundipagg\Core\Kernel\Aggregates\Order orderObject
          */
-        $orderObject = $orderService->getOrderByMundiPaggId(new OrderId($orderId));
+        $orderObject = $orderService->getOrderByMundiPaggId(new OrderId($orderMundipaggId));
         return $orderObject->getCharges()[0]->getLastTransaction();
     }
 }

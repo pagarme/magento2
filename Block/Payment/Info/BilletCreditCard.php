@@ -20,6 +20,7 @@ use Mundipagg\Core\Kernel\ValueObjects\Id\SubscriptionId;
 use Mundipagg\Core\Recurrence\Repositories\ChargeRepository as SubscriptionChargeRepository;
 use Mundipagg\Core\Recurrence\Repositories\SubscriptionRepository;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use MundiPagg\MundiPagg\Concrete\Magento2PlatformOrderDecorator;
 
 class BilletCreditCard extends Cc
 {
@@ -178,13 +179,20 @@ class BilletCreditCard extends Cc
         Magento2CoreSetup::bootstrap();
         $orderService = new OrderService();
 
-        $orderId = $this->getInfo()->getLastTransId();
-        $orderId = explode('-', $orderId)[0];
+        $orderEntityId = $this->getInfo()->getOrder()->getIncrementId();
+
+        $platformOrder = new Magento2PlatformOrderDecorator();
+        $platformOrder->loadByIncrementId($orderEntityId);
+
+        $orderMundipaggId = $platformOrder->getMundipaggId();
+        if ($orderMundipaggId === null){
+            return [];
+        }
 
         /**
          * @var \Mundipagg\Core\Kernel\Aggregates\Order orderObject
          */
-        $orderObject = $orderService->getOrderByMundiPaggId(new OrderId($orderId));
+        $orderObject = $orderService->getOrderByMundiPaggId(new OrderId($orderMundipaggId));
 
         $lastTransaction = $orderObject->getCharges()[0]->getLastTransaction();
         $secondLastTransaction = $orderObject->getCharges()[1]->getLastTransaction();
