@@ -415,3 +415,4 @@
 "See the documentation on https://github.com/mundipagg/magento2/wiki/Plan-products", "Veja a documentação em https://github.com/mundipagg/magento2/wiki/Plan-products"
 "Module Version", "Versão do Módulo"
 "No brands available", "Nenhuma bandeira configurada"
+"From the moment this option is enabled, all orders will be created, regardless of whether they are successful or not.", "A partir do momento que essa opção for habilitada todos os pedidos serão criados, independente de serem sucesso ou não."
