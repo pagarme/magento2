@@ -97,6 +97,7 @@ class TwoCreditCard extends Cc
         $platformOrder->loadByIncrementId($orderEntityId);
 
         $orderMundipaggId = $platformOrder->getMundipaggId();
+
         if ($orderMundipaggId === null) {
             return [];
         }
