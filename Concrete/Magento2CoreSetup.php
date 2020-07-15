@@ -111,10 +111,17 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         return $store->getLocaleCode();
     }
 
-    public function loadModuleConfigurationFromPlatform()
+    /**
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface|null $storeConfig
+     */
+    public function loadModuleConfigurationFromPlatform($storeConfig = null)
     {
         $objectManager = ObjectManager::getInstance();
-        $storeConfig = $objectManager->get(Magento2StoreConfig::class);
+
+        if ($storeConfig == null) {
+            $storeConfig = $objectManager->get(Magento2StoreConfig::class);
+        }
+
         $configData = new \stdClass;
 
         self::fillWithGeneralConfig($configData, $storeConfig);

@@ -23,12 +23,12 @@ $postDataBillet = (json_decode($lastTransactions['billet']->getPostData()->tran_
     <span><b><?php echo __('Installments'); ?>: </b><?php echo $this->getInstallments(); ?></span>
     <br/>
 
-    <?php if ($lastTransactions['creditCard']['authorized'] ==! null) {?>
+    <?php if (!empty($lastTransactions['creditCard']['authorized'])) {?>
         <span><b><?= __('NSU'); ?>: </b><?= $lastTransactions['creditCard']['authorized'] ?></span>
         <br/>
     <?php } ?>
 
-    <?php if ($lastTransactions['creditCard']['captured'] ==! null) {?>
+    <?php if (!empty($lastTransactions['creditCard']['captured'])) {?>
         <span><b><?= __('NSU from capture'); ?>: </b><?= $lastTransactions['creditCard']['captured'] ?></span>
         <br/>
     <?php } ?>
