@@ -6,9 +6,12 @@ use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Mundipagg\Core\Kernel\Services\MoneyService;
 use Mundipagg\Core\Recurrence\Services\ProductSubscriptionService;
-use Mundipagg\Core\Recurrence\ValueObjects\DiscountValueObject;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 use MundiPagg\MundiPagg\Helper\RecurrenceProductHelper;
+use Mundipagg\Core\Kernel\Aggregates\Configuration;
+use Magento\Quote\Model\Quote\Item;
+use Mundipagg\Core\Kernel\Exceptions\InvalidParamException;
+use Mundipagg\Core\Recurrence\Aggregates\ProductSubscription;
 
 class CartAddProductAfterObserver implements ObserverInterface
 {
@@ -16,21 +19,39 @@ class CartAddProductAfterObserver implements ObserverInterface
      * @var RecurrenceProductHelper
      */
     protected $recurrenceProductHelper;
+
     /**
      * @var MoneyService
      */
     protected $moneyService;
+
+    /**
+     * @var Configuration
+     */
+    protected $mundipaggConfig;
 
     public function __construct(RecurrenceProductHelper $recurrenceProductHelper)
     {
         Magento2CoreSetup::bootstrap();
         $this->recurrenceProductHelper = $recurrenceProductHelper;
         $this->moneyService = new MoneyService();
+        $this->mundipaggConfig = Magento2CoreSetup::getModuleConfiguration();
     }
 
+    /**
+     * @param Observer $observer
+     * @throws InvalidParamException
+     */
     public function execute(Observer $observer)
     {
-        /* @var $item Mage_Sales_Model_Quote_Item */
+        if (
+            !$this->mundipaggConfig->isEnabled() ||
+            !$this->mundipaggConfig->getRecurrenceConfig()->isEnabled()
+        ) {
+            return;
+        }
+
+        /* @var Item $item */
         $item = $observer->getQuoteItem();
         if ($item->getParentItem()) {
             $item = $item->getParentItem();
@@ -51,7 +72,12 @@ class CartAddProductAfterObserver implements ObserverInterface
         }
     }
 
-    public function getPriceFromRepetition($item)
+    /**
+     * @param Item $item
+     * @return float|int
+     * @throws InvalidParamException
+     */
+    public function getPriceFromRepetition(Item $item)
     {
         $repetition = $this->recurrenceProductHelper
             ->getSelectedRepetition($item);
@@ -65,12 +91,19 @@ class CartAddProductAfterObserver implements ObserverInterface
         return 0;
     }
 
-    public function getSubscriptionProduct($item)
+    /**
+     * @param Item $item
+     * @return ProductSubscription|null
+     */
+    public function getSubscriptionProduct(Item $item)
     {
         $productId = $item->getProductId();
         $productSubscriptionService = new ProductSubscriptionService();
-        $productSubscription =
-            $productSubscriptionService->findByProductId($productId);
+
+        /**
+         * @var ProductSubscription $productSubscription
+         */
+        $productSubscription = $productSubscriptionService->findByProductId($productId);
 
         if ($productSubscription) {
             return $productSubscription;
