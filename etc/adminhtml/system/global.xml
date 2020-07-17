@@ -58,6 +58,13 @@
 			</depends>
 		</field>
 
+		<field id="create_order" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="50" translate="label" type="select">
+			<label>Always creates order</label>
+			<comment><![CDATA[Create Magento's order even with failed payments]]></comment>
+			<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+			<config_path>mundipagg_mundipagg/global/create_order</config_path>
+		</field>
+
 		<field id="active_send_email" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="50" translate="label" type="select">
 			<label>Send order status changes by e-mail</label>
 			<comment><![CDATA[Send an e-mail every time when an order status is changed by a Mundipagg's webhook. <p><strong style='color:red'>Warning!</strong> Make sure you have set up your mail server correctly before enable it, otherwise you will run the risk of slowdowns and crashes of your platform.</p>]]></comment>

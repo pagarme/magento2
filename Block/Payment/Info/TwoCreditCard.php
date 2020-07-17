@@ -58,7 +58,7 @@ class TwoCreditCard extends Cc
 
     public function getFirstCardAmount()
     {
-        return (float) $this->getInfo()->getAdditionalInformation('cc_first_card_amount') + (float) $this->getInfo()->getAdditionalInformation('cc_first_card_tax_amount');
+        return (float)$this->getInfo()->getAdditionalInformation('cc_first_card_amount') + (float)$this->getInfo()->getAdditionalInformation('cc_first_card_tax_amount');
     }
 
     public function getFirstCardLast4()
@@ -78,7 +78,7 @@ class TwoCreditCard extends Cc
 
     public function getSecondCardAmount()
     {
-        return (float) $this->getInfo()->getAdditionalInformation('cc_second_card_amount') + (float) $this->getInfo()->getAdditionalInformation('cc_second_card_tax_amount');
+        return (float)$this->getInfo()->getAdditionalInformation('cc_second_card_amount') + (float)$this->getInfo()->getAdditionalInformation('cc_second_card_tax_amount');
     }
 
     public function getSecondCardLast4()
@@ -97,7 +97,8 @@ class TwoCreditCard extends Cc
         $platformOrder->loadByIncrementId($orderEntityId);
 
         $orderMundipaggId = $platformOrder->getMundipaggId();
-        if ($orderMundipaggId === null){
+
+        if ($orderMundipaggId === null) {
             return [];
         }
 
@@ -118,8 +119,8 @@ class TwoCreditCard extends Cc
                 $orderObject->getCharges()[1]->getAcquirerTidCapturedAndAutorize(),
                 [
                     'tid' => $orderObject->getCharges()[1]
-                    ->getLastTransaction()
-                    ->getAcquirerTid()
+                        ->getLastTransaction()
+                        ->getAcquirerTid()
                 ]
             )
         ];
