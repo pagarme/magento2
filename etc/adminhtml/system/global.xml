@@ -60,7 +60,7 @@
 
 		<field id="create_order" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="50" translate="label" type="select">
 			<label>Always creates order</label>
-			<comment><![CDATA[From the moment this option is enabled, all orders will be created, regardless of whether they are successful or not.]]></comment>
+			<comment><![CDATA[Create Magento's order even with failed payments]]></comment>
 			<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
 			<config_path>mundipagg_mundipagg/global/create_order</config_path>
 		</field>

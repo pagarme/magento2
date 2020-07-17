@@ -276,4 +276,4 @@
 "Card Number", "Card Number"
 "Module Version", "Module Version"
 "No brands available", "No brands available"
-"From the moment this option is enabled, all orders will be created, regardless of whether they are successful or not.", "From the moment this option is enabled, all orders will be created, regardless of whether they are successful or not."
+"Create Magento's order even with failed payments", "Create Magento's order even with failed payments"
