@@ -188,6 +188,16 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             ->save();
     }
 
+    /**
+     * @param $name
+     * @param $value
+     * @return void
+     */
+    public function setAdditionalInformation($name, $value)
+    {
+        $this->platformOrder->getPayment()->setAdditionalInformation($name, $value);
+    }
+
     public function setIsCustomerNotified()
     {
         // TODO: Implement setIsCustomerNotified() method.
