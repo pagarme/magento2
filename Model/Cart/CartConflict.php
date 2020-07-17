@@ -24,6 +24,7 @@ use Mundipagg\Core\Recurrence\Services\PlanService;
 use Mundipagg\Core\Recurrence\Services\CartRules\JustProductPlanInCart;
 use Mundipagg\Core\Recurrence\Services\CartRules\JustSelfProductPlanInCart;
 use MundiPagg\MundiPagg\Helper\RulesCartRun;
+use Mundipagg\Core\Kernel\Aggregates\Configuration;
 
 class CartConflict
 {
@@ -53,7 +54,13 @@ class CartConflict
     private $planService;
 
     /**
+     * @var Configuration
+     */
+    private $mundipaggConfig;
+
+    /**
      * CartConflict constructor.
+     * @throws \Exception
      */
     public function __construct()
     {
@@ -64,10 +71,23 @@ class CartConflict
         $this->productSubscriptionService = new ProductSubscriptionService();
         $this->planService = new PlanService();
         $this->rulesCartRun = new RulesCartRun();
+        $this->mundipaggConfig = Magento2CoreSetup::getModuleConfiguration();
     }
 
+    /**
+     * @param Cart $cart
+     * @param $dataQty
+     * @throws LocalizedException
+     */
     public function beforeUpdateItems(Cart $cart, $dataQty)
     {
+        if (
+            !$this->mundipaggConfig->isEnabled() ||
+            !$this->mundipaggConfig->getRecurrenceConfig()->isEnabled()
+        ) {
+            return;
+        }
+
         $items = $cart->getQuote()->getAllVisibleItems();
         foreach ($items as $item) {
             if (!isset($dataQty[$item->getItemId()]['qty'])) {
@@ -89,11 +109,25 @@ class CartConflict
         }
     }
 
+    /**
+     * @param Cart $cart
+     * @param Interceptor $productInfo
+     * @param mixed|null $requestInfo
+     * @return array
+     * @throws LocalizedException
+     */
     public function beforeAddProduct(
         Cart $cart,
         Interceptor $productInfo,
         $requestInfo = null
     ) {
+        if (
+            !$this->mundipaggConfig->isEnabled() ||
+            !$this->mundipaggConfig->getRecurrenceConfig()->isEnabled()
+        ) {
+            return [$productInfo, $requestInfo];
+        }
+
         $currentProduct = $this->buildCurrentProduct(
             $productInfo,
             $requestInfo
@@ -116,7 +150,7 @@ class CartConflict
 
     /**
      * @param Interceptor $productInfo
-     * @param null $requestInfo
+     * @param mixed|null $requestInfo
      * @return CurrentProduct
      */
     protected function buildCurrentProduct(
@@ -170,6 +204,10 @@ class CartConflict
         return $currentProduct;
     }
 
+    /**
+     * @param Cart $cart
+     * @return ProductListInCart
+     */
     protected function buildProductListInCart(Cart $cart)
     {
         $productList = new ProductListInCart();
@@ -195,10 +233,9 @@ class CartConflict
                 continue;
             }
 
-            $productSubscriptionInCart =
-                $this->productSubscriptionService->findById(
-                    $repetitionInCart->getSubscriptionId()
-                );
+            $productSubscriptionInCart = $this->productSubscriptionService->findById(
+                $repetitionInCart->getSubscriptionId()
+            );
 
             $productList->setRepetition($repetitionInCart);
             $productList->setRecurrenceProduct($productSubscriptionInCart);
@@ -217,6 +254,7 @@ class CartConflict
         if (!isset($requestInfo['options'])) {
             return true;
         }
+
         return false;
     }
 

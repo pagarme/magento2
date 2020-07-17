@@ -30,12 +30,13 @@ class FinalPricePlugin
      */
     public function beforeSetTemplate(FinalPriceBox $subject, $template)
     {
-        $moduleEnabled = MPSetup::getModuleConfiguration()->isEnabled();
-        $showCurrencyWidget = MPSetup::getModuleConfiguration()
-            ->getRecurrenceConfig()
-            ->isShowRecurrenceCurrencyWidget();
+        $moduleConfiguration = MPSetup::getModuleConfiguration();
 
-        if ($moduleEnabled && $showCurrencyWidget) {
+        if (
+            $moduleConfiguration->isEnabled() &&
+            $moduleConfiguration->getRecurrenceConfig()->isEnabled() &&
+            $moduleConfiguration->getRecurrenceConfig()->isShowRecurrenceCurrencyWidget()
+        ) {
             return ['MundiPagg_MundiPagg::product/priceFinal.phtml'];
         }
 
