@@ -10,6 +10,7 @@ use Mundipagg\Core\Recurrence\Aggregates\Repetition;
 use Mundipagg\Core\Recurrence\Services\RepetitionService;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 use Magento\Framework\App\ObjectManager;
+use Magento\Catalog\Model\Product;
 
 class ProductSubscriptionHelper extends AbstractHelper
 {
@@ -77,9 +78,17 @@ class ProductSubscriptionHelper extends AbstractHelper
 
         $customOptions = $this->addCustomOptionOnArray($customOption, $product);
 
+        $this->keepProductOriginalConfiguration($product);
         $product->setHasOptions(1);
         $product->setCanSaveCustomOptions(true);
         $product->setOptions($customOptions)->save();
+    }
+
+    private function keepProductOriginalConfiguration(Product $product)
+    {
+        if ($product->getStoreId() == 1) {
+            $product->setStoreId(0);
+        }
     }
 
     protected function addCustomOptionOnArray($customOption, $product)
@@ -114,8 +123,8 @@ class ProductSubscriptionHelper extends AbstractHelper
         $sellAsNormalProduct = [
             "title" => "Compra Única",
             "price" => 0,
-            "price_type"  => "fixed",
-            "sort_order"  => "0"
+            "price_type" => "fixed",
+            "sort_order" => "0"
         ];
 
         if (!empty($productSubscription->getSellAsNormalProduct())) {
@@ -129,8 +138,8 @@ class ProductSubscriptionHelper extends AbstractHelper
             $values[] = [
                 "title" => $repetitionService->getCycleTitle($repetition),
                 "price" => 0,
-                "price_type"  => "fixed",
-                "sort_order"  => $repetition->getId()
+                "price_type" => "fixed",
+                "sort_order" => $repetition->getId()
             ];
         }
 
