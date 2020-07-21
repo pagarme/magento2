@@ -11,6 +11,8 @@ use Mundipagg\Core\Recurrence\Services\RepetitionService;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 use Magento\Framework\App\ObjectManager;
 use Magento\Catalog\Model\Product;
+use Magento\Catalog\Model\Attribute\ScopeOverriddenValue;
+use Magento\Catalog\Api\Data\ProductInterface;
 
 class ProductSubscriptionHelper extends AbstractHelper
 {
@@ -19,11 +21,17 @@ class ProductSubscriptionHelper extends AbstractHelper
      */
     protected $i18n;
 
+    /**
+     * @var ObjectManager
+     */
+    protected $objectManager;
+
     public function __construct()
     {
         Magento2CoreSetup::bootstrap();
         $this->i18n = new LocalizationService();
         $this->moneyService = new MoneyService();
+        $this->objectManager = ObjectManager::getInstance();
     }
 
     public function deleteRecurrenceCustomOption(ProductSubscription $productSubscription)
@@ -78,15 +86,52 @@ class ProductSubscriptionHelper extends AbstractHelper
 
         $customOptions = $this->addCustomOptionOnArray($customOption, $product);
 
-        $this->keepProductOriginalConfiguration($product);
+        $this->keeProductConfiguration($product);
+
         $product->setHasOptions(1);
         $product->setCanSaveCustomOptions(true);
         $product->setOptions($customOptions)->save();
     }
 
-    private function keepProductOriginalConfiguration(Product $product)
+    /**
+     * @param Product $product
+     */
+    private function keeProductConfiguration(Product $product)
     {
-        if ($product->getStoreId() == 1) {
+        /**
+         * @var ScopeOverriddenValue $scopeOverriddenValue
+         */
+        $scopeOverriddenValue = $this->objectManager->get(ScopeOverriddenValue::class);
+
+        $forceStoreId = false;
+
+        $listItemsOverrideStore = [
+            'status',
+            'name',
+            'tax_class_id',
+            'visibility',
+            'url_key',
+            'meta_title',
+            'meta_description',
+            'options_container',
+            'msrp_display_actual_price_type'
+        ];
+
+        foreach ($listItemsOverrideStore as $attributeName) {
+            $isOverriden = $scopeOverriddenValue->containsValue(
+                ProductInterface::class,
+                $product,
+                $attributeName,
+                $product->getStoreId()
+            );
+
+            if (!$isOverriden) {
+                $forceStoreId = true;
+                break;
+            }
+        }
+
+        if ($forceStoreId) {
             $product->setStoreId(0);
         }
     }
