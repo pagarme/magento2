@@ -34,13 +34,17 @@ class ProductSubscriptionHelper extends AbstractHelper
         $this->objectManager = ObjectManager::getInstance();
     }
 
+    /**
+     * @param ProductSubscription $productSubscription
+     */
     public function deleteRecurrenceCustomOption(ProductSubscription $productSubscription)
     {
-        $objectManager = ObjectManager::getInstance();
-
         $productId = $productSubscription->getProductId();
-        $product = $objectManager->get('Magento\Catalog\Model\Product')
-            ->load($productId);
+
+        /**
+         * @var Product $product
+         */
+        $product = $this->objectManager->get(Product::class)->load($productId);
 
         $customOptions = [];
         $options = $product->getOptions();
@@ -62,14 +66,15 @@ class ProductSubscriptionHelper extends AbstractHelper
      */
     public function setCustomOption(ProductSubscription $productSubscription)
     {
-        $objectManager = ObjectManager::getInstance();
-
         $productId = $productSubscription->getProductId();
         $product = $this->getProductPlataform($productId);
 
         $values = $this->getValuesFromRepetitions($productSubscription);
 
-        $customOption = $objectManager->create(
+        /**
+         * @var \Magento\Catalog\Api\Data\ProductCustomOptionInterface $customOption
+         */
+        $customOption = $this->objectManager->create(
             'Magento\Catalog\Api\Data\ProductCustomOptionInterface'
         );
 
@@ -136,6 +141,11 @@ class ProductSubscriptionHelper extends AbstractHelper
         }
     }
 
+    /**
+     * @param $customOption
+     * @param $product
+     * @return array
+     */
     protected function addCustomOptionOnArray($customOption, $product)
     {
         $options = $product->getOptions();
@@ -161,6 +171,11 @@ class ProductSubscriptionHelper extends AbstractHelper
         return $customOptions;
     }
 
+    /**
+     * @param ProductSubscription $productSubscription
+     * @return array
+     * @throws \Mundipagg\Core\Kernel\Exceptions\InvalidParamException
+     */
     protected function getValuesFromRepetitions(ProductSubscription $productSubscription)
     {
         $values = [];
@@ -193,14 +208,15 @@ class ProductSubscriptionHelper extends AbstractHelper
 
     /**
      * @param int $productId
-     * @return \Magento\Catalog\Model\Product
+     * @return Product
      * @throws \Exception
      */
     public function getProductPlataform($productId)
     {
-        $objectManager = ObjectManager::getInstance();
-
-        $product = $objectManager->get('Magento\Catalog\Model\Product')
+        /**
+         * @var Product $product
+         */
+        $product = $this->objectManager->get(Product::class)
             ->load($productId);
 
         if ($product->getId() === null) {
