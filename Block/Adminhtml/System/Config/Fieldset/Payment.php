@@ -29,10 +29,10 @@ class Payment extends Fieldset
      */
     protected function _getHeaderTitleHtml($element)
     {
-        $html = '<div class="config-heading meli" ><div class="heading"><strong id="meli-logo">' . $element->getLegend();
+        $html = '<div class="config-heading mundipagg" ><div class="heading"><strong id="mundipagg-logo">' . $element->getLegend();
         $html .= '</strong></div>';
-        $html .= '<div class="button-container meli-cards"><button type="button"'
-            . ' class="meli-payment-btn action-configure button'
+        $html .= '<div class="button-container mundipagg-cards"><button type="button"'
+            . ' class="mundipagg-payment-btn action-configure button'
             . '" id="' . $element->getHtmlId()
             . '-head" onclick="Fieldset.toggleCollapse(\'' . $element->getHtmlId() . '\', \''
             . $this->getUrl('*/*/state') . '\'); return false;"><span class="state-closed">'
