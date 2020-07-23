@@ -207,7 +207,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 
     /**
      * @param Charge[] $charges
-     * @return array
+     * @return array[['key' => value]]
      */
     public function extractAdditionalChargeInformation(array $charges)
     {
