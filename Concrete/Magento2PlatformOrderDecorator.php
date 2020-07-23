@@ -193,13 +193,16 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
     }
 
     /**
-     * @param $name
-     * @param $value
+     * @param string $name
+     * @param string $value
      * @return void
      */
     public function setAdditionalInformation($name, $value)
     {
-        $this->platformOrder->getPayment()->setAdditionalInformation($name, $value);
+        $this->platformOrder
+            ->getPayment()
+            ->setAdditionalInformation($name, $value)
+            ->save();
     }
 
     /**
