@@ -15,6 +15,7 @@ use Mundipagg\Core\Kernel\Abstractions\AbstractModuleCoreSetup as MPSetup;
 use Mundipagg\Core\Kernel\Abstractions\AbstractPlatformOrderDecorator;
 use Mundipagg\Core\Kernel\Aggregates\Charge;
 use Mundipagg\Core\Kernel\Interfaces\PlatformInvoiceInterface;
+use Mundipagg\Core\Kernel\Interfaces\PlatformOrderInterface;
 use Mundipagg\Core\Kernel\Services\MoneyService;
 use Mundipagg\Core\Kernel\Services\OrderService;
 use Mundipagg\Core\Kernel\ValueObjects\Id\CustomerId;
@@ -215,6 +216,24 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             $this->getPaymentMethodPlatform(),
             $charges
         );
+    }
+
+    /**
+     * @param Charge[] $charges
+     */
+    public function addAdditionalInformation(array $charges) {
+        $chargesAddtionalInformation = $this->extractAdditionalChargeInformation(
+            $charges
+        );
+
+        foreach ($chargesAddtionalInformation as $chargesInformation) {
+            foreach ($chargesInformation as $propertyName => $value) {
+                $this->setAdditionalInformation(
+                    $propertyName,
+                    $value
+                );
+            }
+        }
     }
 
     public function setIsCustomerNotified()
