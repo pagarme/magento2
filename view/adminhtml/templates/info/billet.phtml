@@ -10,6 +10,7 @@
  */
 ?>
 <?php
+$postData = [];
 
 /* @var \MundiPagg\MundiPagg\Block\Payment\Info\Billet $this */
 
@@ -17,7 +18,9 @@
  * @var \Mundipagg\Core\Kernel\Aggregates\Transaction $lastTransaction
  */
 $lastTransaction = $this->getTransactionInfo();
-$postData = (json_decode($lastTransaction->getPostData()->tran_data, true));
+if (!empty($lastTransaction)) {
+    $postData = (json_decode($lastTransaction->getPostData()->tran_data, true));
+}
 ?>
 
 <?php if($postData !== null && isset($postData['nosso_numero'])) { ?>
