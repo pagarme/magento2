@@ -11,7 +11,6 @@
 
 namespace MundiPagg\MundiPagg\Block\Adminhtml\System\Config\Fieldset;
 
-
 use Magento\Config\Block\System\Config\Form\Fieldset;
 
 class Payment extends Fieldset
@@ -29,16 +28,30 @@ class Payment extends Fieldset
      */
     protected function _getHeaderTitleHtml($element)
     {
-        $html = '<div class="config-heading meli" ><div class="heading"><strong id="meli-logo">' . $element->getLegend();
-        $html .= '</strong></div>';
-        $html .= '<div class="button-container meli-cards"><button type="button"'
-            . ' class="meli-payment-btn action-configure button'
-            . '" id="' . $element->getHtmlId()
-            . '-head" onclick="Fieldset.toggleCollapse(\'' . $element->getHtmlId() . '\', \''
-            . $this->getUrl('*/*/state') . '\'); return false;"><span class="state-closed">'
-            . __('Configure') . '</span><span class="state-opened">'
-            . __('Close') . '</span></button></div></div>';
-        return $html;
+        $legend = $element->getLegend();
+        $htmlId = $element->getHtmlId();
+        $urlSite = $this->getUrl('*/*/state');
+        $configure = __('Configure');
+        $close = __('Close');
+
+        $html = '<div class="config-heading">
+                <div class="heading"><strong id="logo">{{LEGEND}}</strong></div>
+                <div class="button-container">
+                    <button type="button" class="action-configure button"
+                            id="{{HTML_ID}}-head"
+                            onclick="Fieldset.toggleCollapse(\'{{HTML_ID}}\', \'{{URL_SITE}}\'); return false;">
+                        <span class="state-closed">{{CONFIGURE}}</span><span
+                                class="state-opened">{{CLOSE}}</span></button>
+                </div>
+              </div>';
+
+        $htmlInterpolated = str_replace(
+            ['{{LEGEND}}', '{{HTML_ID}}', '{{URL_SITE}}', '{{CONFIGURE}}', '{{CLOSE}}'],
+            [$legend, $htmlId, $urlSite, $configure, $close],
+            $html
+        );
+
+        return $htmlInterpolated;
     }
 
     /**
