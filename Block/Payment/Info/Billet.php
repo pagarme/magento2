@@ -130,14 +130,14 @@ class Billet extends Info
         Magento2CoreSetup::bootstrap();
         $orderService = new OrderService();
 
-        $orderEntityId = $this->getInfo()->getOrder()->getId();
+        $orderEntityId = $this->getInfo()->getOrder()->getIncrementId();
 
         $platformOrder = new Magento2PlatformOrderDecorator();
-        $platformOrder->loadByIncrementId((int)$orderEntityId);
+        $platformOrder->loadByIncrementId($orderEntityId);
 
         $orderMundipaggId = $platformOrder->getMundipaggId();
 
-        if ($orderMundipaggId === null){
+        if ($orderMundipaggId === null) {
             return [];
         }
 

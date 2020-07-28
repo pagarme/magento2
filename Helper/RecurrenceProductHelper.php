@@ -54,6 +54,10 @@ class RecurrenceProductHelper extends AbstractHelper
         return $this->returnHighestCycle($cycles);
     }
 
+    /**
+     * @param $code
+     * @return float|int|null
+     */
     public function getTotalCyclesFromProductRecurrence($code)
     {
         $magentoOrder =
@@ -64,8 +68,7 @@ class RecurrenceProductHelper extends AbstractHelper
 
         $cycles = [];
         foreach ($products as $product) {
-            $cycles[] =
-                $this->getSelectedRepetitionByProduct($product);
+            $cycles[] = $this->getSelectedRepetitionByProduct($product);
         }
 
         return $this->returnHighestCycle($cycles);
@@ -111,8 +114,16 @@ class RecurrenceProductHelper extends AbstractHelper
         return $selectedRepetition->getCycles();
     }
 
+    /**
+     * @param array $cycles
+     * @return float|int|null
+     */
     public function returnHighestCycle(array $cycles)
     {
+        if (empty($cycles)) {
+            return null;
+        }
+
         return max($cycles);
     }
 
