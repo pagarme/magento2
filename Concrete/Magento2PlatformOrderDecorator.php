@@ -51,6 +51,7 @@ use Magento\Sales\Model\Order\Email\Sender\OrderCommentSender;
 use Magento\Sales\Model\ResourceModel\Order\Status\Collection;
 use Mundipagg\Core\Kernel\Aggregates\Transaction;
 use Mundipagg\Core\Kernel\ValueObjects\TransactionType;
+use Magento\Quote\Model\Quote;
 
 class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 {
@@ -471,7 +472,11 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         return $this->$method($quote);
     }
 
-
+    /**
+     * @param Quote $quote
+     * @return Customer
+     * @throws \Exception
+     */
     private function getRegisteredCustomer($quote)
     {
         $quoteCustomer = $quote->getCustomer();
@@ -523,7 +528,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $cleanDocument = preg_replace(
             '/\D/',
             '',
-            $quote->getCustomerTaxvat()
+            $quote->getCustomer()->getTaxVat()
         );
 
         if (empty($cleanDocument)) {
@@ -549,14 +554,18 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $customer->setAddress($address);
 
         return $customer;
-
     }
 
+    /**
+     * @param Quote $quote
+     * @return Customer
+     * @throws \Exception
+     */
     private function getGuestCustomer($quote)
     {
         $guestAddress = $quote->getBillingAddress();
 
-        $customer = new Customer;
+        $customer = new Customer();
 
         $customer->setName($guestAddress->getName());
         $customer->setEmail($guestAddress->getEmail());
