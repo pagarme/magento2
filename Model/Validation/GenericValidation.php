@@ -21,6 +21,7 @@ class GenericValidation extends \Magento\Framework\App\Config\Value
     public function beforeSave()
     {
         $magento2CoreSetup = new Magento2CoreSetup();
+        Magento2CoreSetup::bootstrap();
         $objectManager = ObjectManager::getInstance();
 
         /**
@@ -33,24 +34,46 @@ class GenericValidation extends \Magento\Framework\App\Config\Value
          */
         $config = $objectManager->get(Magento2ModelConfig::class);
 
-        $storeId = $config->getStore();
-        if (!$storeId) {
-            $storeId = 1;
-        }
+        $storeId = $magento2CoreSetup::getCurrentStoreId();
 
         $storeConfig->setValue(
             $this->getPath(),
             $this->getValue(),
-            ScopeInterface::SCOPE_STORE,
+            ScopeInterface::SCOPE_WEBSITES,
             $storeId
         );
 
         try {
             $magento2CoreSetup->loadModuleConfigurationFromPlatform($storeConfig);
+            $this->verifyScopeAndValue($storeConfig);
         } catch (Exception $e) {
             throw new ValidatorException(__($e->getMessage()));
         }
 
         parent::beforeSave();
+    }
+
+    protected function verifyScopeAndValue($storeConfig)
+    {
+        $oldValue = $this->getOldValue();
+        $newValue = $this->getValue();
+        $scope = $this->getScope();
+
+        $allowedScopes = [
+            ScopeInterface::SCOPE_WEBSITES,
+            'default'
+        ];
+
+        if (
+            !in_array($scope, $allowedScopes) &&
+            $oldValue != $newValue
+        ) {
+            $i18n = new LocalizationService();
+            $comment = $i18n->getDashboard(
+                "Mundipagg module should be configured on Websites scope, please change to website scope to apply these changes"
+            );
+
+            throw new Exception($comment);
+        }
     }
 }
