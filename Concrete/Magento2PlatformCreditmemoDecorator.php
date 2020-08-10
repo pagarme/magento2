@@ -46,7 +46,7 @@ class Magento2PlatformCreditmemoDecorator extends AbstractCreditmemoDecorator
         $creditMemo = $creditmemoFactory->createByOrder($platformOrder);
 
         if ($creditMemo) {
-            $platformOrder->setShouldClosePArentTransaction(true);
+            $platformOrder->setShouldCloseParentTransaction(true);
         }
 
         $this->platformCreditmemo = $creditMemo;
