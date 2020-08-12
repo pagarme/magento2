@@ -320,11 +320,8 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         $objectManager = ObjectManager::getInstance();
         $config = $objectManager->get(Magento2ModelConfig::class);
 
-        $scope = ScopeInterface::SCOPE_STORE;
-        $storeId = $config->getStore();
-        if (!$config->getStore()) {
-            $storeId = 1;
-        }
+        $scope = ScopeInterface::SCOPE_WEBSITES;
+        $storeId = self::getCurrentStoreId();
 
         foreach ($options as $key => $option) {
             $value = $storeConfig->getValue($section . $option, $scope, $storeId);
@@ -348,11 +345,8 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         $objectManager = ObjectManager::getInstance();
         $config = $objectManager->get(Magento2ModelConfig::class);
 
-        $storeId = $config->getStore();
-        if (!$config->getStore()) {
-            $storeId = 1;
-        }
-        $scope = ScopeInterface::SCOPE_STORE;
+        $scope = ScopeInterface::SCOPE_WEBSITES;
+        $storeId = self::getCurrentStoreId();
 
         $brands = array_merge([''],explode(
             ',',
