@@ -41,6 +41,7 @@ class BilletCreditCard extends Cc
 
     public function _construct()
     {
+        Magento2CoreSetup::bootstrap();
         $this->setTemplate(self::TEMPLATE);
     }
 
@@ -118,12 +119,12 @@ class BilletCreditCard extends Cc
 
     public function getCcAmountWithTax()
     {
-        return $this->getInfo()->getAdditionalInformation('cc_cc_amount') + $this->getInfo()->getAdditionalInformation('cc_cc_tax_amount') / 100;
+        return (float)$this->getInfo()->getAdditionalInformation('cc_cc_amount') + (float)$this->getInfo()->getAdditionalInformation('cc_cc_tax_amount');
     }
 
     public function getBilletAmount()
     {
-        return $this->getInfo()->getAdditionalInformation('cc_billet_amount');
+        return (float)$this->getInfo()->getAdditionalInformation('cc_billet_amount');
     }
 
     private function getBoletoLinkFromOrder($info)
@@ -176,7 +177,6 @@ class BilletCreditCard extends Cc
 
     public function getTransactionInfo()
     {
-        Magento2CoreSetup::bootstrap();
         $orderService = new OrderService();
 
         $orderEntityId = $this->getInfo()->getOrder()->getIncrementId();
