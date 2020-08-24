@@ -128,7 +128,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
 
         $storeId = self::getCurrentStoreId();
 
-        if (!self::checkExistWebSite($storeId)) {
+        if (!self::checkWebSiteExists($storeId)) {
             self::$moduleConfig = new Configuration();
             return;
         }
@@ -158,7 +158,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
      * @param int $webSiteId
      * @return bool
      */
-    private static function checkExistWebSite($webSiteId)
+    private static function checkWebSiteExists($webSiteId)
     {
         $objectManager = ObjectManager::getInstance();
 
