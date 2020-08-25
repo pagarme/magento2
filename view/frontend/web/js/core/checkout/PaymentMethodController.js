@@ -367,8 +367,10 @@ PaymentMethodController.prototype.addCreditCardInstallmentsListener = function(f
         var value = jQuery(this).val();
         if (value != "" && value != 'undefined') {
             var interest = jQuery(this).find(':selected').attr("interest");
+            var grandTotal = jQuery(this).find(':selected').attr("total_with_tax");
             paymentMethodController.updateTotal(
                 interest,
+                grandTotal,
                 jQuery(this).attr('name')
             );
         }
@@ -437,7 +439,7 @@ PaymentMethodController.prototype.placeOrder = function (placeOrderObject) {
     this.model.placeOrder(placeOrderObject);
 };
 
-PaymentMethodController.prototype.updateTotal = function(interest, selectName) {
+PaymentMethodController.prototype.updateTotal = function(interest, grandTotal, selectName) {
     var paymentMethodController = this;
 
     if (paymentMethodController.formObject.numberOfPaymentForms > 1) {
@@ -445,15 +447,22 @@ PaymentMethodController.prototype.updateTotal = function(interest, selectName) {
     }
     /**@fixme Move gettotals() to PlatformFormBiding */
     var total = paymentMethodController.platformConfig.updateTotals.getTotals()();
-    total.tax_amount = parseFloat(interest);
-    total.base_tax_amount = parseFloat(interest);
+    interest = (parseInt(interest * 100)) / 100;
+
+    if (interest < 0) {
+        interest = 0;
+    }
+
+    total.tax_amount = interest;
+    total.base_tax_amount = interest;
 
     for (var i = 0, len = total.total_segments.length; i < len; i++) {
         if (total.total_segments[i].code === "grand_total") {
-            total.total_segments[i].value = parseFloat(total.base_grand_total) + parseFloat(interest)
+            total.total_segments[i].value = (parseInt(grandTotal * 100)) / 100;
             continue;
         }
         if (total.total_segments[i].code === "tax") {
+
             total.total_segments[i].value = interest;
         }
     }

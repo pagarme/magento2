@@ -34,6 +34,8 @@ FormHandler.prototype.updateInstallmentSelect = function (installmentsObj, eleme
                 installmentsObj[i].id +
                 "' interest='" +
                 installmentsObj[i].interest +
+                "' total_with_tax='" +
+                installmentsObj[i].total_with_tax +
                 "'>" +
                 installmentsObj[i].label +
             "</option>";

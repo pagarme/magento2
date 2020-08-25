@@ -89,7 +89,7 @@ class CreditCardOrderPlaceBeforeObserver implements ObserverInterface
         foreach ($returnInstallments as $installment) {
             if ($installment->getTimes() == $installments) {
                 $result =
-                    ($installment->getTotal() - $installment->getBaseTotal());
+                    (int) ($installment->getTotal() - $installment->getBaseTotal());
                 $result = $result / 100;
                 break;
             }

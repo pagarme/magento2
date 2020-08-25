@@ -34,6 +34,7 @@ abstract class AbstractInstallmentManagement
                 'id' => $installment->getTimes(),
                 'interest' =>
                     ($installment->getTotal() - $installment->getBaseTotal()) / 100,
+                'total_with_tax' => $installment->getTotal() / 100,
                 'label' => $installmentService->getLabelFor($installment)
             ];
         }
