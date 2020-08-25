@@ -21,6 +21,8 @@ use MundiPagg\MundiPagg\Gateway\Transaction\CreditCard\Config\ConfigInterface;
 use MundiPagg\MundiPagg\Model\Installments\Config\ConfigInterface as InstallmentConfigInterface;
 use MundiPagg\MundiPagg\Helper\ModuleHelper;
 use MundiPagg\MundiPagg\Model\Enum\CreditCardBrandEnum;
+use Magento\Store\Model\StoreManagerInterface;
+use Magento\Store\Model\Website\Interceptor;
 
 final class Magento2CoreSetup extends AbstractModuleCoreSetup
 {
@@ -122,7 +124,14 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
             $storeConfig = $objectManager->get(Magento2StoreConfig::class);
         }
 
-        $configData = new \stdClass;
+        $configData = new \stdClass();
+
+        $storeId = self::getCurrentStoreId();
+
+        if (!self::checkWebSiteExists($storeId)) {
+            self::$moduleConfig = new Configuration();
+            return;
+        }
 
         self::fillWithGeneralConfig($configData, $storeConfig);
         self::fillWithMundipaggKeys($configData, $storeConfig);
@@ -144,6 +153,34 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
 
         self::$moduleConfig = $config;
     }
+
+    /**
+     * @param int $webSiteId
+     * @return bool
+     */
+    private static function checkWebSiteExists($webSiteId)
+    {
+        $objectManager = ObjectManager::getInstance();
+
+        /**
+         * @var StoreManagerInterface $storeManager
+         */
+        $storeManager = $objectManager->get(StoreManagerInterface::class);
+
+        /**
+         * @var Interceptor[] $webSitesList
+         */
+        $webSitesList = $storeManager->getWebsites(true);
+
+        foreach ($webSitesList as $website) {
+            if ($website->getId() == $webSiteId) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 
     static private function fillWithVoucherConfig(&$dataObj, $storeConfig)
     {
@@ -317,10 +354,8 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
 
     static private function fillDataObj($storeConfig, $options, $dataObj, $section)
     {
-        $objectManager = ObjectManager::getInstance();
-        $config = $objectManager->get(Magento2ModelConfig::class);
-
         $scope = ScopeInterface::SCOPE_WEBSITES;
+
         $storeId = self::getCurrentStoreId();
 
         foreach ($options as $key => $option) {
@@ -490,19 +525,19 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
             'showRecurrenceCurrencyWidget' => 'show_recurrence_currency_widget',
 
             'purchaseRecurrenceProductWithNormalProduct'
-                => 'purchase_recurrence_product_with_normal_product',
+            => 'purchase_recurrence_product_with_normal_product',
 
             'conflictMessageRecurrenceProductWithNormalProduct'
-                => 'conflict_recurrence_product_with_normal_product',
+            => 'conflict_recurrence_product_with_normal_product',
 
             'purchaseRecurrenceProductWithRecurrenceProduct'
-                => 'purchase_recurrence_product_with_recurrence_product',
+            => 'purchase_recurrence_product_with_recurrence_product',
 
             'conflictMessageRecurrenceProductWithRecurrenceProduct'
-                => 'conflict_recurrence_product_with_recurrence_product',
+            => 'conflict_recurrence_product_with_recurrence_product',
 
             'decreaseStock'
-                => 'decrease_stock',
+            => 'decrease_stock',
         ];
 
         $section = 'mundipagg_mundipagg/recurrence/';
