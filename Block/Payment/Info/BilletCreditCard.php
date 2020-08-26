@@ -13,6 +13,7 @@ namespace MundiPagg\MundiPagg\Block\Payment\Info;
 
 use Magento\Payment\Block\Info\Cc;
 
+use Mundipagg\Core\Kernel\Aggregates\Charge;
 use Mundipagg\Core\Kernel\Repositories\OrderRepository;
 use Mundipagg\Core\Kernel\Services\OrderService;
 use Mundipagg\Core\Kernel\ValueObjects\Id\OrderId;
@@ -185,7 +186,7 @@ class BilletCreditCard extends Cc
         $platformOrder->loadByIncrementId($orderEntityId);
 
         $orderMundipaggId = $platformOrder->getMundipaggId();
-        if ($orderMundipaggId === null){
+        if ($orderMundipaggId === null) {
             return [];
         }
 
@@ -198,17 +199,13 @@ class BilletCreditCard extends Cc
         $secondLastTransaction = $orderObject->getCharges()[1]->getLastTransaction();
 
         $transactionList = [];
-        foreach ([$lastTransaction, $secondLastTransaction] as $index => $item) {
+        foreach ([$lastTransaction, $secondLastTransaction] as $item) {
             if ($item->getAcquirerNsu() != 0) {
                 $transactionList['creditCard'] =
                     array_merge(
                         $orderObject->getCharges()[0]->getAcquirerTidCapturedAndAutorize(),
-                        [
-                            'tid' => $orderObject->getCharges()[0]
-                            ->getLastTransaction()
-                            ->getAcquirerTid()
-                        ]
-                );
+                        ['tid' => $this->getTid($orderObject->getCharges()[0])]
+                    );
 
                 continue;
             }
@@ -217,5 +214,17 @@ class BilletCreditCard extends Cc
         }
 
         return $transactionList;
+    }
+
+    private function getTid(Charge $charge)
+    {
+        $transaction = $charge->getLastTransaction();
+
+        $tid = null;
+        if ($transaction !== null) {
+            $tid = $transaction->getAcquirerTid();
+        }
+
+        return $tid;
     }
 }
