@@ -11,7 +11,12 @@
 
 namespace MundiPagg\MundiPagg\Block\Payment\Info;
 
+use Exception;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Payment\Block\Info\Cc;
+use Mundipagg\Core\Kernel\Aggregates\Charge;
+use Mundipagg\Core\Kernel\Aggregates\Order;
+use Mundipagg\Core\Kernel\Exceptions\InvalidParamException;
 use Mundipagg\Core\Kernel\Services\OrderService;
 use Mundipagg\Core\Kernel\ValueObjects\Id\OrderId;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
@@ -57,9 +62,10 @@ class CreditCard extends Cc
     }
 
     /**
-     * @return mixed
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Mundipagg\Core\Kernel\Exceptions\InvalidParamException
+     * @return array
+     * @throws InvalidParamException
+     * @throws LocalizedException
+     * @throws Exception
      */
     public function getTransactionInfo()
     {
@@ -72,22 +78,30 @@ class CreditCard extends Cc
         $platformOrder->loadByIncrementId($orderEntityId);
 
         $orderMundipaggId = $platformOrder->getMundipaggId();
-        if ($orderMundipaggId === null){
+        if ($orderMundipaggId === null) {
             return [];
         }
 
         /**
-         * @var \Mundipagg\Core\Kernel\Aggregates\Order orderObject
+         * @var Order orderObject
          */
         $orderObject = $orderService->getOrderByMundiPaggId(new OrderId($orderMundipaggId));
 
         return array_merge(
             $orderObject->getCharges()[0]->getAcquirerTidCapturedAndAutorize(),
-            [
-                'tid' => $orderObject->getCharges()[0]
-                    ->getLastTransaction()
-                    ->getAcquirerTid()
-            ]
+            ['tid' => $this->getTid($orderObject->getCharges()[0])]
         );
+    }
+
+    private function getTid(Charge $charge)
+    {
+        $transaction = $charge->getLastTransaction();
+
+        $tid = null;
+        if ($transaction !== null) {
+            $tid = $transaction->getAcquirerTid();
+        }
+
+        return $tid;
     }
 }
