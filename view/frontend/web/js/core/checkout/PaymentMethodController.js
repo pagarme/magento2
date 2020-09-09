@@ -385,26 +385,20 @@ PaymentMethodController.prototype.twoCardsTotal = function (paymentMethod) {
     var sumTotal = (parseFloat(totalCard1) + parseFloat(totalCard2)).toString();
     var sumInterestTotal = (parseFloat(interestTotalCard1) + parseFloat(interestTotalCard2)).toString();
 
-    return {
-        sumTotal: sumTotal,
-        sumInteresttotal1Total: sumInterestTotal
-    };
+    return { sumTotal, sumInterestTotal };
 }
 
 PaymentMethodController.prototype.boletoCreditCardTotal = function (paymentMethod) {
     var cardElement = paymentMethod.formObject[1].creditCardInstallments.selector;
 
     var totalValueCard = jQuery(cardElement).find(":selected").attr("total_with_tax");
-    var interestCard = jQuery(cardElement).find(":selected").attr("interest");
+    var sumInterestTotal = jQuery(cardElement).find(":selected").attr("interest");
 
     var valueBoleto = paymentMethod.formObject[0].inputAmount.val();
 
     var sumTotal = (parseFloat(totalValueCard) + parseFloat(valueBoleto)).toString();
 
-    return {
-        sumTotal: sumTotal,
-        sumInteresttotal1Total: interestCard
-    };
+    return { sumTotal, sumInterestTotal };
 }
 
 PaymentMethodController.prototype.updateTotalByPaymentMethod = function (paymentMethod, event) {
@@ -415,14 +409,14 @@ PaymentMethodController.prototype.updateTotalByPaymentMethod = function (payment
         var twoCardsTotalObject = paymentMethod.twoCardsTotal(paymentMethod);
 
         grandTotal = twoCardsTotalObject.sumTotal;
-        interest = twoCardsTotalObject.sumInteresttotal1Total;
+        interest = twoCardsTotalObject.sumInterestTotal;
     }
 
     if (paymentMethod.methodCode === "boletoCreditcard") {
         var boletoCreditCardTotalObject = paymentMethod.boletoCreditCardTotal(paymentMethod);
 
         grandTotal = boletoCreditCardTotalObject.sumTotal;
-        interest = boletoCreditCardTotalObject.sumInteresttotal1Total;
+        interest = boletoCreditCardTotalObject.sumInterestTotal;
     }
 
     paymentMethod.updateTotal(
