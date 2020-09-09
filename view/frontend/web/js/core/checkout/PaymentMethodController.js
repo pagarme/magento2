@@ -503,9 +503,6 @@ PaymentMethodController.prototype.placeOrder = function (placeOrderObject) {
 PaymentMethodController.prototype.updateTotal = function(interest, grandTotal, selectName) {
     var paymentMethodController = this;
 
-    if (paymentMethodController.formObject.numberOfPaymentForms > 1) {
-        interest = this.sumInterests(interest, selectName);
-    }
     /**@fixme Move gettotals() to PlatformFormBiding */
     var total = paymentMethodController.platformConfig.updateTotals.getTotals()();
     interest = (parseInt(interest * 100)) / 100;
