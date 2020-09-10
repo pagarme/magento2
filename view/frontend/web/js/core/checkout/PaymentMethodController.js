@@ -394,7 +394,7 @@ PaymentMethodController.prototype.boletoCreditCardTotal = function (paymentMetho
     var totalValueCard = jQuery(cardElement).find(":selected").attr("total_with_tax");
     var sumInterestTotal = jQuery(cardElement).find(":selected").attr("interest");
 
-    var valueBoleto = paymentMethod.formObject[0].inputAmount.val();
+    var valueBoleto = paymentMethod.formObject[0].inputAmount.val().replace(platformConfig.currency.decimalSeparator, ".");
 
     var sumTotal = (parseFloat(totalValueCard) + parseFloat(valueBoleto)).toString();
 
