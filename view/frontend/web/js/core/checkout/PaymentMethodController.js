@@ -301,7 +301,7 @@ PaymentMethodController.prototype.addInputAmountBalanceListener = function(formO
 
         setTimeout(function () {
             paymentMethodController.updateTotalByPaymentMethod(paymentMethodController, form.creditCardInstallments);
-        }, 900);
+        }, 3000);
 
     });
 
