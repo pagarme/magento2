@@ -135,8 +135,10 @@ PaymentMethodController.prototype.twocreditcardsInit = function () {
             this.fillFormText(this.formObject[i], 'mundipagg_two_creditcard');
 
             if (this.formObject[i].inputAmount.val() === "") {
-                this.fillCardAmount(this.formObject[i], 2);
+                this.fillCardAmount(this.formObject[i], 2, i);
             }
+
+
 
             this.fillBrandList(this.formObject[i], 'mundipagg_two_creditcard');
             this.fillSavedCreditCardsSelect(this.formObject[i]);
@@ -201,7 +203,7 @@ PaymentMethodController.prototype.boletoCreditcardInit = function () {
         for (var i = 0, len = this.formObject.numberOfPaymentForms; i < len; i++) {
 
             if (this.formObject[i].inputAmount.val() === "") {
-                this.fillCardAmount(this.formObject[i], 2);
+                this.fillCardAmount(this.formObject[i], 2, i);
             }
 
             if (!this.platformConfig.isMultibuyerEnabled) {
@@ -625,13 +627,20 @@ PaymentMethodController.prototype.fillBrandList = function (formObject, method) 
     );
 };
 
-PaymentMethodController.prototype.fillCardAmount = function (formObject, count) {
+PaymentMethodController.prototype.fillCardAmount = function (formObject, count, card = null) {
     var orderAmount = platFormConfig.updateTotals.getTotals()().grand_total / count;
 
     var amount = orderAmount.toFixed(this.platformConfig.currency.precision);
     var separator = ".";
 
     amount = amount.replace(separator, this.platformConfig.currency.decimalSeparator);
+
+    if (card === 1) {
+        var orderAmountOriginal =  amount.replace(this.platformConfig.currency.decimalSeparator, ".");
+        var amountBalance = (platFormConfig.updateTotals.getTotals()().grand_total - orderAmountOriginal).toFixed(2);
+        formObject.inputAmount.val(amountBalance.replace(".", this.platformConfig.currency.decimalSeparator));
+        return;
+    }
 
     formObject.inputAmount.val(amount);
 };
