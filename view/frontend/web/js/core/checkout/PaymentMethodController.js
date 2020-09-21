@@ -507,7 +507,7 @@ PaymentMethodController.prototype.updateTotal = function(interest, grandTotal, s
 
     /**@fixme Move gettotals() to PlatformFormBiding */
     var total = paymentMethodController.platformConfig.updateTotals.getTotals()();
-    interest = (parseInt(interest * 100)) / 100;
+    interest = (parseInt((interest * 100).toFixed(2))) / 100;
 
     if (interest < 0) {
         interest = 0;
@@ -518,7 +518,8 @@ PaymentMethodController.prototype.updateTotal = function(interest, grandTotal, s
 
     for (var i = 0, len = total.total_segments.length; i < len; i++) {
         if (total.total_segments[i].code === "grand_total") {
-            total.total_segments[i].value = (parseInt(grandTotal * 100)) / 100;
+            grandTotal = parseInt((grandTotal * 100).toFixed(2));
+            total.total_segments[i].value = grandTotal / 100;
             continue;
         }
         if (total.total_segments[i].code === "tax") {
