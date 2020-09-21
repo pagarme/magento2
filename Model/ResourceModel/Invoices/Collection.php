@@ -42,24 +42,24 @@ class Collection extends SearchResult
         $this->getSelect()
             ->joinLeft(
                 $joinTable,
-                'main_table.mundipagg_id = mundipagg_module_core_transaction.charge_id ',
+                "main_table.mundipagg_id = {$joinTable}.charge_id ",
                 [
                     'id' => new \Zend_Db_Expr('GROUP_CONCAT(main_table.id)'),
-                    'tran_id' => new \Zend_Db_Expr('GROUP_CONCAT(mundipagg_module_core_transaction.id)'),
-                    'tran_mundipagg_id' => new \Zend_Db_Expr('GROUP_CONCAT(mundipagg_module_core_transaction.mundipagg_id)'),
-                    'tran_charge_id' => new \Zend_Db_Expr('GROUP_CONCAT(mundipagg_module_core_transaction.charge_id)'),
-                    'tran_amount' => new \Zend_Db_Expr('GROUP_CONCAT(mundipagg_module_core_transaction.amount)'),
-                    'tran_paid_amount' => new \Zend_Db_Expr('GROUP_CONCAT(mundipagg_module_core_transaction.paid_amount)'),
-                    'tran_acquirer_name' => new \Zend_Db_Expr('GROUP_CONCAT(mundipagg_module_core_transaction.acquirer_name)'),
-                    'tran_acquirer_message' => new \Zend_Db_Expr('GROUP_CONCAT(mundipagg_module_core_transaction.acquirer_message)'),
-                    'tran_acquirer_nsu' => new \Zend_Db_Expr('GROUP_CONCAT(mundipagg_module_core_transaction.acquirer_nsu)'),
-                    'tran_acquirer_tid' => new \Zend_Db_Expr('GROUP_CONCAT(mundipagg_module_core_transaction.acquirer_tid)'),
-                    'tran_acquirer_auth_code' => new \Zend_Db_Expr('GROUP_CONCAT(mundipagg_module_core_transaction.acquirer_auth_code)'),
-                    'tran_type' => new \Zend_Db_Expr('GROUP_CONCAT(mundipagg_module_core_transaction.type)'),
-                    'tran_status' => new \Zend_Db_Expr('GROUP_CONCAT(mundipagg_module_core_transaction.status)'),
-                    'tran_created_at' => new \Zend_Db_Expr('GROUP_CONCAT(mundipagg_module_core_transaction.created_at)'),
-                    'tran_boleto_url' => new \Zend_Db_Expr('GROUP_CONCAT(mundipagg_module_core_transaction.boleto_url)'),
-                    'tran_card_data' => new \Zend_Db_Expr('GROUP_CONCAT(mundipagg_module_core_transaction.card_data SEPARATOR "---")')
+                    'tran_id' => new \Zend_Db_Expr("GROUP_CONCAT({$joinTable}.id)"),
+                    'tran_mundipagg_id' => new \Zend_Db_Expr("GROUP_CONCAT({$joinTable}.mundipagg_id)"),
+                    'tran_charge_id' => new \Zend_Db_Expr("GROUP_CONCAT({$joinTable}.charge_id)"),
+                    'tran_amount' => new \Zend_Db_Expr("GROUP_CONCAT({$joinTable}.amount)"),
+                    'tran_paid_amount' => new \Zend_Db_Expr("GROUP_CONCAT({$joinTable}.paid_amount)"),
+                    'tran_acquirer_name' => new \Zend_Db_Expr("GROUP_CONCAT({$joinTable}.acquirer_name)"),
+                    'tran_acquirer_message' => new \Zend_Db_Expr("GROUP_CONCAT({$joinTable}.acquirer_message)"),
+                    'tran_acquirer_nsu' => new \Zend_Db_Expr("GROUP_CONCAT({$joinTable}.acquirer_nsu)"),
+                    'tran_acquirer_tid' => new \Zend_Db_Expr("GROUP_CONCAT({$joinTable}.acquirer_tid)"),
+                    'tran_acquirer_auth_code' => new \Zend_Db_Expr("GROUP_CONCAT({$joinTable}.acquirer_auth_code)"),
+                    'tran_type' => new \Zend_Db_Expr("GROUP_CONCAT({$joinTable}.type)"),
+                    'tran_status' => new \Zend_Db_Expr("GROUP_CONCAT({$joinTable}.status)"),
+                    'tran_created_at' => new \Zend_Db_Expr("GROUP_CONCAT({$joinTable}.created_at)"),
+                    'tran_boleto_url' => new \Zend_Db_Expr("GROUP_CONCAT({$joinTable}.boleto_url)"),
+                    'tran_card_data' => new \Zend_Db_Expr("GROUP_CONCAT({$joinTable}.card_data SEPARATOR '---')")
                 ]
             )
             ->where("main_table.subscription_id = ?", $subscriptionId)
