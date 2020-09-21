@@ -131,10 +131,15 @@ PaymentMethodController.prototype.twocreditcardsInit = function () {
     );
 
     if (typeof this.formObject[1] !== "undefined") {
-
         for (var i = 0, len = this.formObject.numberOfPaymentForms; i < len; i++) {
             this.fillFormText(this.formObject[i], 'mundipagg_two_creditcard');
-            this.fillCardAmount(this.formObject[i], 2);
+
+            if (this.formObject[i].inputAmount.val() === "") {
+                this.fillCardAmount(this.formObject[i], 2, i);
+            }
+
+
+
             this.fillBrandList(this.formObject[i], 'mundipagg_two_creditcard');
             this.fillSavedCreditCardsSelect(this.formObject[i]);
             this.fillInstallments(this.formObject[i]);
@@ -197,14 +202,19 @@ PaymentMethodController.prototype.boletoCreditcardInit = function () {
 
         for (var i = 0, len = this.formObject.numberOfPaymentForms; i < len; i++) {
 
-            this.fillCardAmount(this.formObject[i], 2);
+            if (this.formObject[i].inputAmount.val() === "") {
+                this.fillCardAmount(this.formObject[i], 2, i);
+            }
+
             if (!this.platformConfig.isMultibuyerEnabled) {
                 this.removeMultibuyerForm(this.formObject[i]);
             }
+
             if (this.platformConfig.isMultibuyerEnabled) {
                 this.fillMultibuyerStateSelect(this.formObject[i]);
                 this.addShowMultibuyerListener(this.formObject[i]);
             }
+
             this.formObject[i].inputAmountContainer.show();
             this.addInputAmountBalanceListener(this.formObject[i], i);
         }
@@ -290,6 +300,11 @@ PaymentMethodController.prototype.addInputAmountBalanceListener = function(formO
         var formId = paymentMethodController.model.getFormIdInverted(id);
         var form = paymentMethodController.formObject[formId];
         paymentMethodController.fillInstallments(form);
+
+        setTimeout(function () {
+            paymentMethodController.updateTotalByPaymentMethod(paymentMethodController, form.creditCardInstallments);
+        }, 3000);
+
     });
 
     formObject.inputAmount.on('keyup', function(){
@@ -359,20 +374,68 @@ PaymentMethodController.prototype.addCreditCardNumberListener = function(formObj
     }).bind(this);
 };
 
-PaymentMethodController.prototype.addCreditCardInstallmentsListener = function(formObject) {
+PaymentMethodController.prototype.twoCardsTotal = function (paymentMethod) {
+    var card1 = paymentMethod.formObject[0].creditCardInstallments.selector;
+    var card2 = paymentMethod.formObject[1].creditCardInstallments.selector;
 
+    var totalCard1 = jQuery(card1).find(":selected").attr("total_with_tax");
+    var totalCard2 = jQuery(card2).find(":selected").attr("total_with_tax");
+
+    var interestTotalCard1 = jQuery(card1).find(":selected").attr("interest");
+    var interestTotalCard2 = jQuery(card2).find(":selected").attr("interest");
+
+    var sumTotal = (parseFloat(totalCard1) + parseFloat(totalCard2)).toString();
+    var sumInterestTotal = (parseFloat(interestTotalCard1) + parseFloat(interestTotalCard2)).toString();
+
+    return { sumTotal, sumInterestTotal };
+}
+
+PaymentMethodController.prototype.boletoCreditCardTotal = function (paymentMethod) {
+    var cardElement = paymentMethod.formObject[1].creditCardInstallments.selector;
+
+    var totalValueCard = jQuery(cardElement).find(":selected").attr("total_with_tax");
+    var sumInterestTotal = jQuery(cardElement).find(":selected").attr("interest");
+
+    var valueBoleto = paymentMethod.formObject[0].inputAmount.val().replace(platformConfig.currency.decimalSeparator, ".");
+
+    var sumTotal = (parseFloat(totalValueCard) + parseFloat(valueBoleto)).toString();
+
+    return { sumTotal, sumInterestTotal };
+}
+
+PaymentMethodController.prototype.updateTotalByPaymentMethod = function (paymentMethod, event) {
+    var interest = jQuery(event).find(':selected').attr("interest");
+    var grandTotal = jQuery(event).find(':selected').attr("total_with_tax");
+
+    if (paymentMethod.methodCode === "twocreditcards") {
+        var twoCardsTotalObject = paymentMethod.twoCardsTotal(paymentMethod);
+
+        grandTotal = twoCardsTotalObject.sumTotal;
+        interest = twoCardsTotalObject.sumInterestTotal;
+    }
+
+    if (paymentMethod.methodCode === "boletoCreditcard") {
+        var boletoCreditCardTotalObject = paymentMethod.boletoCreditCardTotal(paymentMethod);
+
+        grandTotal = boletoCreditCardTotalObject.sumTotal;
+        interest = boletoCreditCardTotalObject.sumInterestTotal;
+    }
+
+    paymentMethod.updateTotal(
+        interest,
+        grandTotal,
+        jQuery(event).attr('name')
+    );
+}
+
+PaymentMethodController.prototype.addCreditCardInstallmentsListener = function (formObject) {
     var paymentMethodController = this;
 
-    formObject.creditCardInstallments.on('change', function() {
+    formObject.creditCardInstallments.on('change', function () {
         var value = jQuery(this).val();
+
         if (value != "" && value != 'undefined') {
-            var interest = jQuery(this).find(':selected').attr("interest");
-            var grandTotal = jQuery(this).find(':selected').attr("total_with_tax");
-            paymentMethodController.updateTotal(
-                interest,
-                grandTotal,
-                jQuery(this).attr('name')
-            );
+            paymentMethodController.updateTotalByPaymentMethod(paymentMethodController, this);
         }
     });
 };
@@ -442,12 +505,9 @@ PaymentMethodController.prototype.placeOrder = function (placeOrderObject) {
 PaymentMethodController.prototype.updateTotal = function(interest, grandTotal, selectName) {
     var paymentMethodController = this;
 
-    if (paymentMethodController.formObject.numberOfPaymentForms > 1) {
-        interest = this.sumInterests(interest, selectName);
-    }
     /**@fixme Move gettotals() to PlatformFormBiding */
     var total = paymentMethodController.platformConfig.updateTotals.getTotals()();
-    interest = (parseInt(interest * 100)) / 100;
+    interest = (parseInt((interest * 100).toFixed(2))) / 100;
 
     if (interest < 0) {
         interest = 0;
@@ -458,7 +518,8 @@ PaymentMethodController.prototype.updateTotal = function(interest, grandTotal, s
 
     for (var i = 0, len = total.total_segments.length; i < len; i++) {
         if (total.total_segments[i].code === "grand_total") {
-            total.total_segments[i].value = (parseInt(grandTotal * 100)) / 100;
+            grandTotal = parseInt((grandTotal * 100).toFixed(2));
+            total.total_segments[i].value = grandTotal / 100;
             continue;
         }
         if (total.total_segments[i].code === "tax") {
@@ -544,7 +605,7 @@ PaymentMethodController.prototype.fillInstallments = function (form) {
     jQuery.ajax({
         url: installmentsUrl,
         method: 'GET',
-        cache: true
+        cache: true,
     }).done(function(data) {
         formHandler = new FormHandler();
 
@@ -567,13 +628,20 @@ PaymentMethodController.prototype.fillBrandList = function (formObject, method) 
     );
 };
 
-PaymentMethodController.prototype.fillCardAmount = function (formObject, count) {
+PaymentMethodController.prototype.fillCardAmount = function (formObject, count, card = null) {
     var orderAmount = platFormConfig.updateTotals.getTotals()().grand_total / count;
 
     var amount = orderAmount.toFixed(this.platformConfig.currency.precision);
     var separator = ".";
 
     amount = amount.replace(separator, this.platformConfig.currency.decimalSeparator);
+
+    if (card === 1) {
+        var orderAmountOriginal =  amount.replace(this.platformConfig.currency.decimalSeparator, ".");
+        var amountBalance = (platFormConfig.updateTotals.getTotals()().grand_total - orderAmountOriginal).toFixed(2);
+        formObject.inputAmount.val(amountBalance.replace(".", this.platformConfig.currency.decimalSeparator));
+        return;
+    }
 
     formObject.inputAmount.val(amount);
 };
