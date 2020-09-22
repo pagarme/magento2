@@ -9,10 +9,44 @@
  * @link        http://www.mundipagg.com
  */
 ?>
+<?php
+$postData = [];
+
+/* @var \MundiPagg\MundiPagg\Block\Payment\Info\Billet $this */
+
+/**
+ * @var \Mundipagg\Core\Kernel\Aggregates\Transaction $lastTransaction
+ */
+$lastTransaction = $this->getTransactionInfo();
+if (!empty($lastTransaction)) {
+    $postData = (json_decode($lastTransaction->getPostData()->tran_data, true));
+}
+?>
+
+<?php if($postData !== null && isset($postData['nosso_numero'])) { ?>
+    <span>
+        <b><?= __('Our Number'); ?>: </b><?= $postData['nosso_numero'] ?>
+    </span>
+    <br/>
+<?php } ?>
+
+<?php if($postData !== null && isset($postData['document_number'])) { ?>
+    <span>
+        <b><?= __('Document Number'); ?>: </b><?= $postData['document_number'] ?>
+    </span>
+    <br/>
+    <br/>
+<?php } ?>
+
 <?php if ($this->getBilletUrl() && $this->getInfo()->getOrder()->getStatus() == 'pending'): ?>
     <span><?php echo __($this->getTitle()) ?></span>
-    <hr />
-    <a class="action tocart primary" href="<?php echo $this->getBilletUrl() ?>" target="_blank"><?php echo __('Print Billet') ?></a>
+    <hr/>
+    <a class="action tocart primary" href="<?php echo $this->getBilletUrl() ?>"
+       target="_blank"><?php echo __('Print Billet') ?></a>
 <?php else: ?>
-	<span><?php echo __($this->getTitle()) ?></span>
+    <span><?php echo __($this->getTitle()) ?></span>
 <?php endif ?>
+
+<?php
+$this->getInfoTransactions();
+?>

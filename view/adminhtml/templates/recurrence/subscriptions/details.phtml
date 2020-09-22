@@ -1,0 +1,265 @@
+<?php $subscription = $this->getSubscriptionDetails(); ?>
+
+<section class="admin__page-section order-view-account-information">
+
+    <?php if ($subscription->getStatus()->getStatus() != $this->getDisabledStatusName()) { ?>
+        <div class="page-main-actions">
+            <div class="page-actions" data-ui-id="page-actions-toolbar-content-header">
+                <div class="page-actions-inner" data-title="#000002010">
+                    <div class="page-actions-buttons">
+                        <button id="order_reorder" type="button" class="action-default" onclick="return cancelConfirm()" >
+                            <span><?= __('Cancel subscription'); ?></span>
+                        </button>
+                    </div>
+                    <script>
+                        function cancelConfirm() {
+                            var confirmation = confirm('<?= __('Are you sure you want to delete this item?') ?>');
+                            if (confirmation) {
+                                setLocation('<?php echo $this->getCancelSubscriptionUrl($subscription->getId()); ?>');
+                            }
+                        }
+                    </script>
+                </div>
+            </div>
+        </div>
+    <?php } ?>
+    <div class="admin__page-section-title">
+        <span class="title"><?= __('Subscription data') ?></span>
+    </div>
+    <div class="admin__page-section-content">
+        <div class="admin__page-section-item order-information">
+            <div class="admin__page-section-item-title">
+                <span class="title"><?= __('Order reference') ?> # <?= $subscription->getCode(); ?></span>
+            </div>
+            <div class="admin__page-section-item-content">
+                <table class="admin__table-secondary order-information-table">
+                    <tbody>
+                        <tr>
+                            <th><?= __('Subscription created at') ?></th>
+                            <td><?= $subscription->getCreatedAt(); ?></td>
+                        </tr>
+                        <?php if ($subscription->getStatus()->getStatus() === $this->getDisabledStatusName()) { ?>
+                            <tr>
+                                <th><?= __('Subscription disabled at') ?></th>
+                                <td><?= $subscription->getUpdatedAt(); ?></td>
+                            </tr>
+                        <?php } ?>
+                        <tr>
+                            <th><?= __('Order status') ?></th>
+                            <td>
+                                <span id="order_status">
+                                    <?= $subscription->getPlatformOrder()->getStatus(); ?>
+                                    (<?= $subscription->getPlatformOrder()->getState()->getState(); ?>)
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><?= __('Subscription status') ?></th>
+                            <td>
+                                <span>
+                                    <?= __($subscription->getStatus()->getStatus()); ?>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><?= __('Payment method') ?></th>
+                            <td><span><?= $subscription->getPaymentMethod(); ?></span></td>
+                        </tr>
+
+                        <tr>
+                            <th><?= __('Interval') ?></th>
+                            <td><span><?= __(ucfirst($subscription->getIntervalType())); ?></span></td>
+                        </tr>
+                        <tr>
+                            <th><?= __('Total cycle counting of a product') ?></th>
+                            <td><span><?= $this->getTotalCycles($subscription->getCode()) ?></span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="admin__page-section-item order-account-information">
+            <div class="admin__page-section-item-title">
+                <span class="title"><?= __('Customer information') ?></span>
+            </div>
+            <div class="admin__page-section-item-content">
+                <table class="admin__table-secondary order-account-information-table">
+                    <tbody>
+                        <tr>
+                            <th><?= __('Customer id') ?></th>
+                            <td>
+                                <span><?= $subscription->getPlatformOrder()->getCustomer()->getMundiPaggId()->getValue(); ?></span>
+                            </td>
+                        </tr><tr>
+                            <th><?= __('Customer name') ?></th>
+                            <td>
+                                <span><?= $subscription->getPlatformOrder()->getCustomer()->getName(); ?></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>E-mail</th>
+                            <td><?= $subscription->getPlatformOrder()->getCustomer()->getEmail(); ?></td>
+                        </tr>
+                        <tr>
+                            <th><?= __('Document') ?></th>
+                            <td><?= $subscription->getPlatformOrder()->getCustomer()->getDocument() ;?></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="admin__page-section order-addresses">
+    <div class="admin__page-section-title">
+        <span class="title"><?= __('Items Ordered') ?></span>
+    </div>
+    <table class="data-grid" data-role="grid">
+        <thead>
+        <tr>
+            <th class="data-grid-th">
+                <span class="data-grid-cell-content">ID</span>
+            </th>
+            <th class="data-grid-th">
+                <span class="data-grid-cell-content"><?= __('Product Name') ?></span>
+            </th>
+            <th class="data-grid-th">
+                <span class="data-grid-cell-content"><?= __('Selected Option') ?></span>
+            </th>
+            <th class="data-grid-th">
+                <span class="data-grid-cell-content"><?= __('Cycles') ?></span>
+            </th>
+            <th class="data-grid-th">
+                <span class="data-grid-cell-content"><?= __('Quantity') ?></span>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($this->getProducts($subscription->getCode()) as $product): ?>
+                <tr class="data-row">
+                    <td>
+                        <div class="data-grid-cell-content"><?= $product->getId(); ?></div>
+                    </td>
+                    <td>
+                        <div class="data-grid-cell-content"><?= $product->getName(); ?></div>
+                    </td>
+                    <td>
+                        <div class="data-grid-cell-content">
+                            <?= $this->getProductOptions($product); ?>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="data-grid-cell-content"><?= $this->getProductCycles($product); ?></div>
+                    </td>
+                    <td>
+                        <div class="data-grid-cell-content">
+                            <?= (int) $product->getQtyInvoiced(); ?>
+                        </div>
+                    </td>
+                </tr>
+
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</section>
+
+<section class="admin__page-section order-addresses">
+    <div class="admin__page-section-title">
+        <span class="title"><?= __('Invoices') ?></span>
+    </div>
+    <table class="data-grid" data-role="grid">
+        <thead>
+            <tr>
+                <th class="data-grid-th">
+                    <span class="data-grid-cell-content" >ID</span>
+                </th>
+                <th class="data-grid-th">
+                    <span class="data-grid-cell-content" >Invoice Id</span>
+                </th>
+                <th class="data-grid-th" >
+                    <span class="data-grid-cell-content" ><?= __('Payment Method') ?></span>
+                </th>
+                <th class="data-grid-th">
+                    <span class="data-grid-cell-content" ><?= __('Grand Total') ?></span>
+                </th>
+                <th class="data-grid-th">
+                    <span class="data-grid-cell-content" ><?= __('Paid amount') ?></span>
+                </th>
+                <th class="data-grid-th">
+                    <span class="data-grid-cell-content" ><?= __('Canceled amount') ?></span>
+                </th>
+                <th class="data-grid-th">
+                    <span class="data-grid-cell-content" ><?= __('Refunded amount') ?></span>
+                </th>
+                <th class="data-grid-th">
+                    <span class="data-grid-cell-content" ><?= __('Status') ?></span>
+                </th>
+                <th class="data-grid-th" >
+                    <span class="data-grid-cell-content" ><?= __('Boleto') ?></span>
+                </th>
+                <th class="data-grid-th" >
+                    <span class="data-grid-cell-content" ><?= __('Actions') ?></span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($subscription->getCharges() as $charge):
+            ?>
+            <tr class="data-row" data-repeat-index="0">
+                <td>
+                    <div class="data-grid-cell-content"><?= $charge->getId(); ?></div>
+                </td>
+                <td class="">
+                    <div class="data-grid-cell-content"><?= $charge->getInvoiceId()->getValue(); ?></div>
+                </td>
+                <td>
+                    <div class="data-grid-cell-content"><?= __($charge->getPaymentMethod()->getPaymentMethod()); ?></div>
+                </td>
+                <td>
+                    <div class="data-grid-cell-content"><?= $this->centsToFloat($charge->getAmount()); ?></div>
+                </td>
+                <td>
+                    <div class="data-grid-cell-content"><?= $this->centsToFloat($charge->getPaidAmount()); ?></div>
+                </td>
+                <td>
+                    <div class="data-grid-cell-content"><?= $this->centsToFloat($charge->getCanceledAmount()); ?></div>
+                </td>
+                <td>
+                    <div class="data-grid-cell-content"><?= $this->centsToFloat($charge->getRefundedAmount()); ?></div>
+                </td>
+                <td>
+                    <div class="data-grid-cell-content"><?= __($charge->getStatus()->getStatus()); ?></div>
+                </td>
+                <td>
+                    <?php
+                        $cancelUrl = $charge->getBoletoUrl();
+                        if (strlen($cancelUrl) > 0) {
+                    ?>
+                        <div class="data-grid-cell-content"> <?= $cancelUrl; ?> </div>
+                    <?php
+                        } else {
+                            echo '---';
+                        }
+                    ?>
+                </td>
+                <td>
+                    <div class="data-grid-cell-content">
+                        <?php
+                            $cancelUrl = $this->getCancelInvoiceUrl($charge->getInvoiceId()->getValue());
+                            if ($charge->getStatus()->getStatus() !== 'canceled') {
+                        ?>
+                            <a onclick="return confirm('<?= __('Are you sure you want to delete this item?') ?>')" title="<?= __('Cancel') ?>" href="<?php echo $cancelUrl ?>"><?= __('Cancel') ?></a>
+                        <?php
+                            } else {
+                                echo '---';
+                            }
+                        ?>
+                    </div>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+</section>

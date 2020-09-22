@@ -1,0 +1,131 @@
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+	<argument name="data" xsi:type="array">
+		<item name="js_config" xsi:type="array">
+			<item name="provider" xsi:type="string">mundipagg_mundipagg_invoices_listing.mundipagg_mundipagg_invoices_listing_data_source</item>
+			<item name="deps" xsi:type="string">mundipagg_mundipagg_invoices_listing.mundipagg_mundipagg_invoices_listing_data_source</item>
+		</item>
+		<item name="spinner" xsi:type="string">spinner_columns</item>
+	</argument>
+
+	<listingToolbar name="listing_top">
+		<argument name="data" xsi:type="array">
+			<item name="config" xsi:type="array">
+				<item name="sticky" xsi:type="boolean">true</item>
+			</item>
+		</argument>
+		<columnsControls name="columns_controls"/>
+        <filters name="listing_filters" />
+		<paging name="listing_paging"/>
+	</listingToolbar>
+
+	<dataSource name="nameOfDataSource">
+		<argument name="dataProvider" xsi:type="configurableObject">
+			<argument name="class" xsi:type="string">Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider</argument>
+			<argument name="name" xsi:type="string">mundipagg_mundipagg_invoices_listing_data_source</argument>
+			<argument name="primaryFieldName" xsi:type="string">id</argument>
+			<argument name="requestFieldName" xsi:type="string">id</argument>
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="component" xsi:type="string">Magento_Ui/js/grid/provider</item>
+					<item name="update_url" xsi:type="url" path="mui/index/render"/>
+					<item name="storageConfig" xsi:type="array">
+						<item name="indexField" xsi:type="string">id</item>
+					</item>
+					<item name="filter_url_params" xsi:type="array">
+						<item name="subscription_id" xsi:type="string">*</item>
+					</item>
+				</item>
+			</argument>
+		</argument>
+	</dataSource>
+	<columns name="spinner_columns">
+		<column name="id">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="filter" xsi:type="string">textRange</item>
+					<item name="sorting" xsi:type="string">asc</item>
+					<item name="label" xsi:type="string" translate="true">ID</item>
+				</item>
+			</argument>
+		</column>
+		<column name="invoice_id">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="filter" xsi:type="string">textRange</item>
+					<item name="sorting" xsi:type="string">asc</item>
+					<item name="label" xsi:type="string" translate="true">Invoice Id</item>
+				</item>
+			</argument>
+		</column>
+		<column name="payment_method" class="MundiPagg\MundiPagg\Ui\Component\Listing\Column\Translate">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="filter" xsi:type="string">textRange</item>
+					<item name="sorting" xsi:type="string">asc</item>
+					<item name="label" xsi:type="string" translate="true">Payment Method</item>
+				</item>
+			</argument>
+		</column>
+		<column name="amount" class="MundiPagg\MundiPagg\Ui\Component\Listing\Column\BrazilCurrency">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="filter" xsi:type="string">textRange</item>
+					<item name="sorting" xsi:type="string">asc</item>
+					<item name="label" xsi:type="string" translate="true">Amount</item>
+				</item>
+			</argument>
+		</column>
+		<column name="paid_amount" class="MundiPagg\MundiPagg\Ui\Component\Listing\Column\BrazilCurrency">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="filter" xsi:type="string">textRange</item>
+					<item name="sorting" xsi:type="string">asc</item>
+					<item name="label" xsi:type="string" translate="true">Paid amount</item>
+				</item>
+			</argument>
+		</column>
+		<column name="canceled_amount" class="MundiPagg\MundiPagg\Ui\Component\Listing\Column\BrazilCurrency">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="filter" xsi:type="string">textRange</item>
+					<item name="sorting" xsi:type="string">asc</item>
+					<item name="label" xsi:type="string" translate="true">Canceled amount</item>
+				</item>
+			</argument>
+		</column>
+		<column name="refunded_amount" class="MundiPagg\MundiPagg\Ui\Component\Listing\Column\BrazilCurrency">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="filter" xsi:type="string">textRange</item>
+					<item name="sorting" xsi:type="string">asc</item>
+					<item name="label" xsi:type="string" translate="true">Refunded amount</item>
+				</item>
+			</argument>
+		</column>
+		<column name="status" class="MundiPagg\MundiPagg\Ui\Component\Listing\Column\Translate">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="filter" xsi:type="string">textRange</item>
+					<item name="sorting" xsi:type="string">asc</item>
+					<item name="label" xsi:type="string" translate="true">Status</item>
+				</item>
+			</argument>
+		</column>
+		<column name="tran_boleto_url" class="MundiPagg\MundiPagg\Ui\Component\Column\Invoices\Boleto">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="filter" xsi:type="string">textRange</item>
+					<item name="sorting" xsi:type="string">asc</item>
+					<item name="label" xsi:type="string" translate="true">Boleto</item>
+				</item>
+			</argument>
+		</column>
+		<actionsColumn name="actions" class="MundiPagg\MundiPagg\Ui\Component\Column\Invoices\Actions">
+			<argument name="data" xsi:type="array">
+				<item name="config" xsi:type="array">
+					<item name="indexField" xsi:type="string">id</item>
+				</item>
+			</argument>
+		</actionsColumn>
+	</columns>
+</listing>

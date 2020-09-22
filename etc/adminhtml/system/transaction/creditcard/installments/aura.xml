@@ -13,11 +13,13 @@
 		<label>Installments Aura</label>
 	    <field id="installments_number_aura" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
 	        <label>Number Aura</label>
+			<backend_model>MundiPagg\MundiPagg\Model\Validation\GenericValidation</backend_model>
 	        <comment />
 	        <config_path>payment/mundipagg_creditcard/installments_number_aura</config_path>
 	    </field>
 	    <field id="installment_min_amount_aura" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
 	        <label>Min Amount Aura</label>
+			<backend_model>MundiPagg\MundiPagg\Model\Validation\GenericValidation</backend_model>
 	        <comment />
 	        <config_path>payment/mundipagg_creditcard/installment_min_amount_aura</config_path>
 	    </field>
@@ -29,6 +31,7 @@
 	    </field>
 	    <field id="installments_interest_rate_initial_aura" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
 	        <label>Interest Rate Initial (%) Aura</label>
+			<backend_model>MundiPagg\MundiPagg\Model\Validation\GenericValidation</backend_model>
 	        <comment />
 	        <config_path>payment/mundipagg_creditcard/installments_interest_rate_initial_aura</config_path>
             <depends>
@@ -37,6 +40,7 @@
 	    </field>
 	    <field id="installments_interest_rate_incremental_aura" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
 	        <label>Interest Rate Incremental (%) Aura</label>
+			<backend_model>MundiPagg\MundiPagg\Model\Validation\GenericValidation</backend_model>
 	        <comment />
 	        <config_path>payment/mundipagg_creditcard/installments_interest_rate_incremental_aura</config_path>
             <depends>
@@ -45,6 +49,7 @@
 	    </field>
 	    <field id="installments_max_without_interest_aura" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
 	        <label>Max Without Interest Aura</label>
+			<backend_model>MundiPagg\MundiPagg\Model\Validation\GenericValidation</backend_model>
 	        <comment />
 	        <config_path>payment/mundipagg_creditcard/installments_max_without_interest_aura</config_path>
             <depends>

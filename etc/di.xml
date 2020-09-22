@@ -32,10 +32,20 @@
     <preference for="MundiPagg\MundiPagg\Api\MaintenanceInterface"
                 type="MundiPagg\MundiPagg\Model\Maintenance"/>
 
+    <preference for="MundiPagg\MundiPagg\Api\ProductSubscriptionInterface"
+                type="MundiPagg\MundiPagg\Model\Api\ProductsSubscription"/>
+
+    <preference for="MundiPagg\MundiPagg\Api\ProductPlanInterface"
+                type="MundiPagg\MundiPagg\Model\Api\ProductsPlan"/>
+
     <type name="MundiPagg\MundiPagg\Model\InstallmentsByBrandManagement">
         <arguments>
             <argument name="builder" xsi:type="object">MundiPagg\MundiPagg\Model\Installments\BuilderByBrand</argument>
         </arguments>
+    </type>
+
+    <type name="Magento\Checkout\Model\Cart">
+        <plugin name="prevent_add_to" type="MundiPagg\MundiPagg\Model\Cart\CartConflict"/>
     </type>
 
     <type name="MundiPagg\MundiPagg\Model\InstallmentsByBrandAndAmountManagement">
@@ -83,6 +93,72 @@
     </type>
 
     <!-- Final Cards Mundipagg -->
+
+    <!-- Plans -->
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="mundipagg_mundipagg_plans_listing_data_source" xsi:type="string">MundiPagg\MundiPagg\Model\ResourceModel\ProductsPlan\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="MundiPagg\MundiPagg\Model\ResourceModel\ProductsPlan\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">mundipagg_module_core_recurrence_products_plan</argument>
+            <argument name="resourceModel" xsi:type="string">MundiPagg\MundiPagg\Model\ResourceModel\ProductsPlan</argument>
+        </arguments>
+    </virtualType>
+
+
+
+    <!-- Recurrence Product -->
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="mundipagg_mundipagg_recurrenceproducts_listing_data_source" xsi:type="string">MundiPagg\MundiPagg\Model\ResourceModel\ProductsSubscription\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="MundiPagg\MundiPagg\Model\ResourceModel\ProductsSubscription\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">mundipagg_module_core_recurrence_products_subscription</argument>
+            <argument name="resourceModel" xsi:type="string">MundiPagg\MundiPagg\Model\ResourceModel\ProductsSubscription</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Subscriptions -->
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="mundipagg_mundipagg_subscriptions_listing_data_source" xsi:type="string">MundiPagg\MundiPagg\Model\ResourceModel\Subscriptions\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="MundiPagg\MundiPagg\Model\ResourceModel\Subscriptions\Grid\Collection" type="MundiPagg\MundiPagg\Model\ResourceModel\Subscriptions\Collection">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">mundipagg_module_core_recurrence_subscription</argument>
+            <argument name="resourceModel" xsi:type="string">MundiPagg\MundiPagg\Model\ResourceModel\Subscriptions</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Invoices -->
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="mundipagg_mundipagg_invoices_listing_data_source" xsi:type="string">MundiPagg\MundiPagg\Model\ResourceModel\Invoices\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="MundiPagg\MundiPagg\Model\ResourceModel\Invoices\Grid\Collection" type="MundiPagg\MundiPagg\Model\ResourceModel\Invoices\Collection">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">mundipagg_module_core_recurrence_charge</argument>
+            <argument name="resourceModel" xsi:type="string">MundiPagg\MundiPagg\Model\ResourceModel\Invoices</argument>
+        </arguments>
+    </virtualType>
+
+
+
+
 
     <type name="MundiPagg\MundiPagg\Model\InstallmentsManagement">
         <arguments>
@@ -247,6 +323,87 @@
         </arguments>
     </virtualType>
 
+    <!-- Voucher -->
+    <virtualType name="MundiPaggVoucherRemoteMethodAdapter" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">MundiPagg\MundiPagg\Model\Ui\Voucher\ConfigProvider::CODE</argument>
+            <argument name="valueHandlerPool" xsi:type="object">MundiPaggVoucherValueHandlerPool</argument>
+            <argument name="commandPool" xsi:type="object">MundiPaggVoucherCommandPool</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">MundiPagg\MundiPagg\Block\Payment\Info\Voucher</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggVoucherValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">MundiPaggVoucherConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggVoucherConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">MundiPaggVoucherConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggVoucherConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">MundiPagg\MundiPagg\Model\Ui\Voucher\ConfigProvider::CODE</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggVoucherCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="initialize" xsi:type="string">MundiPagg\MundiPagg\Gateway\Transaction\Base\Command\InitializeCommand</item>
+                <item name="authorize" xsi:type="string">MundiPaggCreditCardAuthorizeCommand</item>
+                <item name="capture" xsi:type="string">MundiPaggCreditCardCaptureCommand</item>
+                <item name="refund" xsi:type="string">MundiPaggCreditCardRefundCommand</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Debit -->
+    <virtualType name="MundiPaggDebitRemoteMethodAdapter" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">MundiPagg\MundiPagg\Model\Ui\Debit\ConfigProvider::CODE</argument>
+            <argument name="valueHandlerPool" xsi:type="object">MundiPaggDebitValueHandlerPool</argument>
+            <argument name="commandPool" xsi:type="object">MundiPaggDebitCommandPool</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">MundiPagg\MundiPagg\Block\Payment\Info\Debit</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggDebitValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">MundiPaggDebitConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggDebitConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">MundiPaggDebitConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggDebitConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">MundiPagg\MundiPagg\Model\Ui\Debit\ConfigProvider::CODE</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggDebitCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="initialize" xsi:type="string">MundiPagg\MundiPagg\Gateway\Transaction\Base\Command\InitializeCommand</item>
+                <item name="capture" xsi:type="string">MundiPaggCreditCardCaptureCommand</item>
+            </argument>
+        </arguments>
+    </virtualType>
 
     <!-- CreditCard -->
 
@@ -425,5 +582,32 @@
         <plugin name="afterSaveCustomerAdminInLine" type="MundiPagg\MundiPagg\Plugin\Admin\CustomerPlugin" sortOrder="1" />
     </type>
 
+<!--    <preference for="Magento\CatalogWidget\Block\Product\ProductsList" type="MundiPagg\MundiPagg\Block\Web\ProductsList" />-->
+
+    <type name="\Magento\Catalog\Pricing\Render\FinalPriceBox">
+        <plugin name="Mundipagg_Mundipagg_change_template" type="MundiPagg\MundiPagg\Plugin\Princing\Render\FinalPricePlugin" />
+    </type>
+
+    <!-- Recurrence -->
+
+    <preference for="Mundipagg\Core\Recurrence\Interfaces\RepetitionInterface" type="Mundipagg\Core\Recurrence\Aggregates\Repetition" />
+    <preference for="MundiPagg\MundiPagg\Api\ProductSubscriptionApiInterface" type="MundiPagg\MundiPagg\Model\Api\ProductsSubscription" />
+    <preference for="MundiPagg\MundiPagg\Api\SubscriptionApiInterface" type="MundiPagg\MundiPagg\Model\Api\Subscription" />
+    <preference for="MundiPagg\MundiPagg\Api\InvoiceApiInterface" type="MundiPagg\MundiPagg\Model\Api\Invoice" />
+
+    <preference for="MundiPagg\MundiPagg\Api\ProductPlanApiInterface" type="MundiPagg\MundiPagg\Model\Api\ProductsPlan" />
+    <preference for="Mundipagg\Core\Recurrence\Interfaces\ProductPlanInterface" type="Mundipagg\Core\Recurrence\Aggregates\Plan" />
+
+    <preference for="MundiPagg\MundiPagg\Api\ObjectMapper\ProductPlan\ProductPlanMapperInterface" type="Mundipagg\Core\Recurrence\Aggregates\Plan" />
+    <preference for="MundiPagg\MundiPagg\Api\ObjectMapper\ProductPlan\SubProduct" type="Mundipagg\Core\Recurrence\Aggregates\SubProduct" />
+
+    <preference for="MundiPagg\MundiPagg\Api\ObjectMapper\ProductSubscription\ProductSubscriptionMapperInterface" type="Mundipagg\Core\Recurrence\Aggregates\ProductSubscription" />
+    <preference for="MundiPagg\MundiPagg\Api\ObjectMapper\ProductSubscription\RepetitionInterface" type="Mundipagg\Core\Recurrence\Aggregates\Repetition" />
+
+    <preference for="MundiPagg\MundiPagg\Api\ObjectMapper\ProductSubscription\RepetitionInterface" type="Mundipagg\Core\Recurrence\Aggregates\Repetition" />
+
+
+    <!-- Admin checkout -->
+    <!--preference for="Magento\Payment\Block\Form" type="MundiPagg\MundiPagg\Block\Form"/-->
 
 </config>

@@ -6,9 +6,6 @@
             <span class="data-grid-cell-content"><?= __('Customer Id') ?></span>
         </th>
         <th class="data-grid-th">
-            <span class="data-grid-cell-content"><?= __('Card Id') ?></span>
-        </th>
-        <th class="data-grid-th">
             <span class="data-grid-cell-content"><?= __('Credit Card') ?></span>
         </th>
         <th class="data-grid-th">
@@ -25,9 +22,6 @@
         <tr class="data-row <?= ($index % 2) ? '_odd-row' : '' ?>">
             <td>
                 <div class="data-grid-cell-content"><?= $card->getCustomerId() ?></div>
-            </td>
-            <td>
-                <div class="data-grid-cell-content"><?= $card->getCardId() ?></div>
             </td>
             <td>
                 <div class="data-grid-cell-content"><?= $card->getMaskedNumber() ?></div>

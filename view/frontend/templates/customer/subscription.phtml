@@ -1,0 +1,52 @@
+<?php
+/**
+ * Phtml List Subscription
+ *
+ * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
+ * @copyright   2019 MundiPagg (http://www.mundipagg.com)
+ * @license     http://www.mundipagg.com Copyright
+ *
+ * @link        http://www.mundipagg.com
+ */
+
+$i = 0;
+/* @var \MundiPagg\MundiPagg\Block\Customer\Subscription $block */
+?>
+<div>
+    <table class="table">
+
+        <thead>
+        <tr>
+            <th><?= __('Id') ?></th>
+            <th><?= __('Order') ?></th>
+            <th><?= __('Total cycle counting of a product') ?></th>
+            <th><?= __('Interval') ?></th>
+            <th><?= __('Status') ?></th>
+            <th><?= __('Subscription created at') ?></th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($block->getAllSubscriptionRecurrenceCoreByCustomerId() as $item) : ?>
+            <?php $i++; ?>
+            <?php
+                $url = $this->getBaseUrl() . 'mundipagg/customer/invoice/?code='. $item->getMundipaggId()->getValue();
+                $status = $item->getStatus()->getStatus();
+                $intervalType = $item->getIntervalType();
+            ?>
+            <tr>
+                <td><?= $i ?></td>
+                <td><?= $item->getCode() ?></td>
+                <td><?= $block->getHighestProductCycle($item) ?></td>
+                <td><?= $block->getInterval($item) ?></td>
+                <td><?= __($status) ?></td>
+                <td><?= $block->getSubscriptionCreatedDate($item)  ?></td>
+                <td>
+                    <button onclick="location.href = '<?= $url ?>';" id="details">
+                        <?= __("View Details") ?>
+                    </button>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>

@@ -12,9 +12,14 @@
 namespace MundiPagg\MundiPagg\Model;
 
 use Magento\Framework\Api\SimpleBuilderInterface;
+use Mundipagg\Core\Kernel\Services\MoneyService;
 use Mundipagg\Core\Kernel\ValueObjects\CardBrand;
+use Mundipagg\Core\Recurrence\Aggregates\Plan;
+use Mundipagg\Core\Recurrence\Services\RecurrenceService;
+use Mundipagg\Core\Recurrence\ValueObjects\IntervalValueObject;
 use MundiPagg\MundiPagg\Api\InstallmentsByBrandAndAmountManagementInterface;
 use Magento\Checkout\Model\Session;
+use MundiPagg\MundiPagg\Helper\RecurrenceProductHelper;
 use MundiPagg\MundiPagg\Model\Installments\Config\ConfigByBrand as Config;
 
 class InstallmentsByBrandAndAmountManagement
@@ -24,6 +29,10 @@ class InstallmentsByBrandAndAmountManagement
     protected $builder;
     protected $session;
     protected $cardBrand;
+    /**
+     * @var RecurrenceProductHelper
+     */
+    protected $recurrenceProductHelper;
 
     /**
      * @param SimpleBuilderInterface $builder
@@ -31,12 +40,14 @@ class InstallmentsByBrandAndAmountManagement
     public function __construct(
         SimpleBuilderInterface $builder,
         Session $session,
-        Config $config
+        Config $config,
+        RecurrenceProductHelper $recurrenceProductHelper
     )
     {
         $this->setBuilder($builder);
         $this->setSession($session);
         $this->setConfig($config);
+        $this->recurrenceProductHelper = $recurrenceProductHelper;
 
         parent::__construct();
     }
@@ -57,37 +68,102 @@ class InstallmentsByBrandAndAmountManagement
             $baseBrand = strtolower($brand);
         }
 
-        $baseAmount = $this->builder->getSession()->getQuote()->getGrandTotal();
+        $quote = $this->builder->getSession()->getQuote();
+
+        $baseAmount = $quote->getGrandTotal();
         if ($amount !== null) {
             $baseAmount = $amount;
         }
 
-        return $this->getCoreInstallments(
+        $moneyService = new MoneyService();
+
+        $baseAmount = str_replace(
+            [",", "."],
+            "",
+            $baseAmount
+        );
+
+        $baseAmount = $moneyService->centsToFloat($baseAmount);
+
+        $installments = $this->getCoreInstallments(
             null,
             CardBrand::$baseBrand(),
             $baseAmount
         );
 
-        //@fixme deprecated code.
+        $maxInstallmentsByRecurrence =
+            $this->getInstallmentsByRecurrence($quote, $installments);
 
-        $cardBrand = $brand != 'null' ? $this->formatCardBrand($brand) : null;
-        $this->session->setCardBrand($cardBrand);
-        $this->session->setCreditCardAmount($amount);
-        $this->getBuilder()->create();
-
-            $result = [];
-
-        /** @var Installment $item */
-        foreach ($this->getBuilder()->getData() as $item) {
-            $result[] = [
-                'id' => $item->getQty(),
-                'interest' => $item->getInterest(),
-                'label' => $item->getLabel()
-            ];
+        if (count($installments) > $maxInstallmentsByRecurrence) {
+            $installments = array_slice(
+                $installments,
+                0,
+                $maxInstallmentsByRecurrence
+            );
         }
 
-        return $result;
+        return $installments;
     }
+
+    public function getInstallmentsByRecurrence($quote, $installments)
+    {
+        $items = $quote->getItems();
+
+        if (!$items) {
+            return;
+        }
+
+        $interval = null;
+        $recurrenceProduct = null;
+        $recurrenceService = new RecurrenceService();
+
+        foreach($items as $item) {
+            if (!empty($interval)) {
+                continue;
+            }
+
+            $productId = $item->getProductId();
+            $recurrenceProduct =
+                $recurrenceService->getRecurrenceProductByProductId($productId);
+            $interval = $this->getInterval($recurrenceProduct, $item);
+        }
+
+        if (!empty($recurrenceProduct) && !$recurrenceProduct->getAllowInstallments()) {
+            return 1;
+        }
+
+        if ($interval !== null) {
+            return $recurrenceService->getMaxInstallmentByRecurrenceInterval($interval);
+        }
+
+        return count($installments);
+    }
+
+    public function getInterval($recurrenceEntity, $item)
+    {
+        if (empty($recurrenceEntity)) {
+            return null;
+        }
+
+        if ($recurrenceEntity->getRecurrenceType() == Plan::RECURRENCE_TYPE) {
+            $intervalType = $recurrenceEntity->getIntervalType();
+            $intervalCount = $recurrenceEntity->getIntervalCount();
+
+            return IntervalValueObject::$intervalType($intervalCount);
+        }
+
+        $repetition = $this->recurrenceProductHelper->getSelectedRepetition($item);
+
+        if (!empty($repetition)) {
+            $intervalType = $repetition->getInterval();
+            $intervalCount = $repetition->getIntervalCount();
+
+            return IntervalValueObject::$intervalType($intervalCount);
+        }
+
+        return null;
+    }
+
 
     /**
      * @param $brand

@@ -62,6 +62,27 @@ class UpgradeSchema implements UpgradeSchemaInterface
             $setup = $this->addCardDataToTransactionTable($setup);
         }
 
+        if (version_compare($version, "2.0.0-beta", "<")) {
+            $setup = $installSchema->installProductsSubscription($setup);
+            $setup = $installSchema->installSubscriptionRepetitions($setup);
+            $setup = $installSchema->installRecurrenceSubscription($setup);
+            $setup = $installSchema->installRecurrenceCharge($setup);
+            $setup = $installSchema->installSubProducts($setup);
+            $setup = $installSchema->installProductsPlan($setup);
+        }
+
+        if (version_compare($version, "2.0.1-beta", "<")) {
+            $setup = $this->addMundipaggIdToSubProductsTable($setup);
+        }
+
+        if (version_compare($version, "2.0.2-beta", "<")) {
+            $setup = $this->addTransactionDataToTransactionTable($setup);
+        }
+
+        if (version_compare($version, "2.1.0-beta", "<")) {
+            $setup = $installSchema->installSubscriptionItems($setup);
+        }
+
         $setup->endSetup();
     }
 
@@ -346,4 +367,45 @@ class UpgradeSchema implements UpgradeSchemaInterface
         return $setup;
     }
 
+    protected function addMundipaggIdToSubProductsTable($setup)
+    {
+        $installer = $setup;
+
+        $connection = $installer->getConnection();
+        $tableName = $installer->getTable('mundipagg_module_core_recurrence_sub_products');
+
+        $connection->addColumn(
+            $tableName,
+            'mundipagg_id',
+            [
+                'type' => Table::TYPE_TEXT,
+                'length' => 21,
+                'nullable' => true,
+                'comment' => 'Mundipagg Id'
+            ]
+        );
+
+        return $setup;
+    }
+
+    protected function addTransactionDataToTransactionTable($setup)
+    {
+        $installer = $setup;
+
+        $connection = $installer->getConnection();
+        $tableName = $installer->getTable('mundipagg_module_core_transaction');
+
+        $connection->addColumn(
+            $tableName,
+            'transaction_data',
+            [
+                'type' => Table::TYPE_TEXT,
+                null,
+                'nullable' => true,
+                'comment' => 'Transaction Data'
+            ]
+        );
+
+        return $setup;
+    }
 }

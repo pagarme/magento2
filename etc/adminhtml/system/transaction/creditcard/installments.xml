@@ -25,6 +25,7 @@
 	    </field>
 	    <field id="installments_number" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="12" translate="label" type="text">
 	        <label>Number</label>
+			<backend_model>MundiPagg\MundiPagg\Model\Validation\GenericValidation</backend_model>
 	        <comment />
 	        <config_path>payment/mundipagg_creditcard/installments_number</config_path>
             <depends>
@@ -33,6 +34,7 @@
             </depends>
 	    </field>
 	    <field id="installment_min_amount" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="13" translate="label" type="text">
+			<backend_model>MundiPagg\MundiPagg\Model\Validation\GenericValidation</backend_model>
 	        <label>Min Amount</label>
 	        <comment />
 	        <config_path>payment/mundipagg_creditcard/installment_min_amount</config_path>
@@ -53,6 +55,7 @@
 	    </field>
 	    <field id="installments_interest_rate_initial" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="15" translate="label" type="text">
 	        <label>Interest Rate Initial (%)</label>
+			<backend_model>MundiPagg\MundiPagg\Model\Validation\GenericValidation</backend_model>
 	        <comment />
 	        <config_path>payment/mundipagg_creditcard/installments_interest_rate_initial</config_path>
             <depends>
@@ -63,6 +66,7 @@
 	    </field>
 	    <field id="installments_interest_rate_incremental" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="16" translate="label" type="text">
 	        <label>Interest Rate Incremental (%)</label>
+			<backend_model>MundiPagg\MundiPagg\Model\Validation\GenericValidation</backend_model>
 	        <comment />
 	        <config_path>payment/mundipagg_creditcard/installments_interest_rate_incremental</config_path>
             <depends>
@@ -73,6 +77,7 @@
 	    </field>
 	    <field id="installments_max_without_interest" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="17" translate="label" type="text">
 	        <label>Max Without Interest</label>
+			<backend_model>MundiPagg\MundiPagg\Model\Validation\GenericValidation</backend_model>
 	        <comment />
 	        <config_path>payment/mundipagg_creditcard/installments_max_without_interest</config_path>
             <depends>
@@ -91,14 +96,6 @@
 	    <include path="MundiPagg_MundiPagg::system/transaction/creditcard/installments/aura.xml"/>
 	    <include path="MundiPagg_MundiPagg::system/transaction/creditcard/installments/jcb.xml"/>
 	    <include path="MundiPagg_MundiPagg::system/transaction/creditcard/installments/credz.xml"/>
-	    <include path="MundiPagg_MundiPagg::system/transaction/creditcard/installments/sodexoalimentacao.xml"/>
-	    <include path="MundiPagg_MundiPagg::system/transaction/creditcard/installments/sodexocultura.xml"/>
-	    <include path="MundiPagg_MundiPagg::system/transaction/creditcard/installments/sodexogift.xml"/>
-	    <include path="MundiPagg_MundiPagg::system/transaction/creditcard/installments/sodexopremium.xml"/>
-	    <include path="MundiPagg_MundiPagg::system/transaction/creditcard/installments/sodexorefeicao.xml"/>
-	    <include path="MundiPagg_MundiPagg::system/transaction/creditcard/installments/sodexocombustivel.xml"/>
-	    <include path="MundiPagg_MundiPagg::system/transaction/creditcard/installments/vr.xml"/>
-	    <include path="MundiPagg_MundiPagg::system/transaction/creditcard/installments/alelo.xml"/>
 	    <include path="MundiPagg_MundiPagg::system/transaction/creditcard/installments/banese.xml"/>
 	    <include path="MundiPagg_MundiPagg::system/transaction/creditcard/installments/cabal.xml"/>
 	</group>

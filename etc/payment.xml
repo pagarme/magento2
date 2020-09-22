@@ -14,6 +14,12 @@
         <method name="mundipagg_two_creditcard">
             <allow_multiple_address>1</allow_multiple_address>
         </method>
+        <method name="mundipagg_voucher">
+            <allow_multiple_address>1</allow_multiple_address>
+        </method>
+        <method name="mundipagg_debit">
+            <allow_multiple_address>1</allow_multiple_address>
+        </method>
         <method name='mundipagg_customer_address'>
             <allow_multiple_address>0</allow_multiple_address>
         </method>
@@ -79,6 +85,9 @@
         </type>
         <type id="Cabal" order="19">
             <label>Cabal</label>
+        </type>
+        <type id="Sodexo" order="20">
+            <label>Sodexo</label>
         </type>
 
         <!-- Billet -->
