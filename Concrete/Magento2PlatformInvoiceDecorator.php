@@ -9,6 +9,7 @@ use Mundipagg\Core\Kernel\Abstractions\AbstractInvoiceDecorator;
 use Mundipagg\Core\Kernel\Interfaces\PlatformOrderInterface;
 use Mundipagg\Core\Kernel\Repositories\OrderRepository;
 use Mundipagg\Core\Kernel\Services\LocalizationService;
+use Mundipagg\Core\Kernel\Services\LogService;
 use Mundipagg\Core\Kernel\Services\MoneyService;
 use Mundipagg\Core\Kernel\ValueObjects\InvoiceState;
 use Magento\Sales\Model\Service\InvoiceService;
@@ -43,11 +44,12 @@ class Magento2PlatformInvoiceDecorator extends AbstractInvoiceDecorator implemen
 
     public function createFor(PlatformOrderInterface $order)
     {
-        //$this->platformInvoice = $this->createInvoice($order->getPlatformOrder());
+        $logService = new LogService(
+            'Invoice',
+            true
+        );
 
-        //return;
-
-        //@deprecated code
+        $logService->info("Preparing invoice for order #{$order->getIncrementId()}.");
         $this->prepareFor($order);
         $this->platformInvoice->setRequestedCaptureCase(\Magento\Sales\Model\Order\Invoice::CAPTURE_OFFLINE);
         $this->platformInvoice->register();
@@ -72,6 +74,8 @@ class Magento2PlatformInvoiceDecorator extends AbstractInvoiceDecorator implemen
         }
 
         $this->save();
+        $logService->info("Invoice saved #{$this->getIncrementId()}");
+
         $transactionSave = ObjectManager::getInstance()->get('Magento\Framework\DB\Transaction');
         $transactionSave->addObject(
             $this->platformInvoice
@@ -82,7 +86,9 @@ class Magento2PlatformInvoiceDecorator extends AbstractInvoiceDecorator implemen
 
         $objectManager = ObjectManager::getInstance();
         $invoiceSender = $objectManager->get(InvoiceSender::class);
+        $logService->info("Sending invoice #{$this->getIncrementId()}");
         $invoiceSender->send($this->platformInvoice);
+        $logService->info("Invoice sended #{$this->getIncrementId()}");
     }
 
     public function setState(InvoiceState $state)
