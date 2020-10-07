@@ -40,6 +40,10 @@ class CustomerName extends Column
 
             $mundipaggCustomer =
                 $customerRepository->findByMundipaggId($customerId);
+            if (!$mundipaggCustomer) {
+                continue;
+            }
+
             $magentoCustomerId = $mundipaggCustomer->getCode();
 
             $objectManager = ObjectManager::getInstance();

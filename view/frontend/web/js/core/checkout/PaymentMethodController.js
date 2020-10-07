@@ -685,7 +685,7 @@ PaymentMethodController.prototype.clearLetters = function (element) {
 
 PaymentMethodController.prototype.clearNumbers = function (element) {
     var val = element.val();
-    var newVal = val.replace(/[0-9]+/g, '');
+    var newVal = val.replace(/[0-9.-]+/g, '');
     element.val(newVal);
 };
 
