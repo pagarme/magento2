@@ -319,7 +319,7 @@ PaymentMethodController.prototype.addInputAmountBalanceListener = function(formO
         value = value.replace(/[^0-9]/g, '');
         value = Number(value);
 
-        if (value > orderAmount) {
+        if (value >= orderAmount) {
             value = orderAmount - 1;
         }
 
@@ -378,14 +378,17 @@ PaymentMethodController.prototype.twoCardsTotal = function (paymentMethod) {
     var card1 = paymentMethod.formObject[0].creditCardInstallments.selector;
     var card2 = paymentMethod.formObject[1].creditCardInstallments.selector;
 
-    var totalCard1 = jQuery(card1).find(":selected").attr("total_with_tax");
-    var totalCard2 = jQuery(card2).find(":selected").attr("total_with_tax");
+    var totalCard1 = paymentMethod.formObject[0].inputAmount.val().replace(platformConfig.currency.decimalSeparator, ".");
+    var totalCard2 = paymentMethod.formObject[1].inputAmount.val().replace(platformConfig.currency.decimalSeparator, ".");
 
     var interestTotalCard1 = jQuery(card1).find(":selected").attr("interest");
     var interestTotalCard2 = jQuery(card2).find(":selected").attr("interest");
 
-    var sumTotal = (parseFloat(totalCard1) + parseFloat(totalCard2)).toString();
-    var sumInterestTotal = (parseFloat(interestTotalCard1) + parseFloat(interestTotalCard2)).toString();
+    var sumTotal = (parseFloat(totalCard1) + parseFloat(totalCard2));
+    var sumInterestTotal = (parseFloat(interestTotalCard1) + parseFloat(interestTotalCard2));
+
+    sumTotal = (sumTotal + sumInterestTotal).toString();
+    sumInterestTotal = sumInterestTotal.toString();
 
     return { sumTotal, sumInterestTotal };
 }
@@ -393,12 +396,15 @@ PaymentMethodController.prototype.twoCardsTotal = function (paymentMethod) {
 PaymentMethodController.prototype.boletoCreditCardTotal = function (paymentMethod) {
     var cardElement = paymentMethod.formObject[1].creditCardInstallments.selector;
 
-    var totalValueCard = jQuery(cardElement).find(":selected").attr("total_with_tax");
     var sumInterestTotal = jQuery(cardElement).find(":selected").attr("interest");
 
+    var valueCard = paymentMethod.formObject[1].inputAmount.val().replace(platformConfig.currency.decimalSeparator, ".");
     var valueBoleto = paymentMethod.formObject[0].inputAmount.val().replace(platformConfig.currency.decimalSeparator, ".");
 
-    var sumTotal = (parseFloat(totalValueCard) + parseFloat(valueBoleto)).toString();
+    var sumTotal = (parseFloat(valueCard) + parseFloat(valueBoleto));
+
+    sumTotal = (sumTotal + parseFloat(sumInterestTotal)).toString();
+    sumInterestTotal = sumInterestTotal.toString();
 
     return { sumTotal, sumInterestTotal };
 }
