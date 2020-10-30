@@ -148,8 +148,8 @@ BoletoCreditcardModel.prototype.getData = function () {
         data.additional_data.billet_buyer_neighborhood = multibuyer.neighborhood.val();
         data.additional_data.billet_buyer_city = multibuyer.city.val();
         data.additional_data.billet_buyer_state = multibuyer.state.val();
-        data.additional_data.billet_buyer_home_phone = multibuyer.homephone.val();
-        data.additional_data.billet_buyer_mobile_phone = multibuyer.mobilephone.val();
+        data.additional_data.billet_buyer_home_phone = multibuyer.homePhone.val();
+        data.additional_data.billet_buyer_mobile_phone = multibuyer.mobilePhone.val();
     }
 
     if (
