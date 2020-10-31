@@ -1,5 +1,4 @@
 <?php
-
 $code = $block->escapeHtml($block->getMethodCode());
 
 $helper = $this->helper('\MundiPagg\MundiPagg\Helper\Adminhtml\CheckoutHelper');
@@ -92,7 +91,7 @@ $installmentUrl = $helper->getInstallmentsUrl($block->getBaseUrl());
                 <div class="admin__field-control control">
                     <input id="mundipagg_cc_cid" type="number" min="0" name="payment[cc_cid]" class="hosted-control hosted-cid cc_cid"/>
 
-                    <div class="hosted-error">The field cvv must be a minimum length of 3 and a maximum length of 4.</div>
+                    <div class="hosted-error">The cvv field must be a minimum length of 3 and a maximum length of 4.</div>
                 </div>
             </div>
 
