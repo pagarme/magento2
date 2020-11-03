@@ -33,22 +33,22 @@
                                                                     <item name="component" xsi:type="string">MundiPagg_MundiPagg/js/view/payment/payments</item>
                                                                     <item name="methods" xsi:type="array">
                                                                         <item name="mundipagg_creditcard" xsi:type="array">
-                                                                            <!-- <item name="isBillingAddressRequired" xsi:type="boolean">true</item> -->
+                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>
                                                                         <item name="mundipagg_billet" xsi:type="array">
-                                                                            <!-- <item name="isBillingAddressRequired" xsi:type="boolean">true</item> -->
+                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>
                                                                         <item name="mundipagg_billet_creditcard" xsi:type="array">
-                                                                            <!-- <item name="isBillingAddressRequired" xsi:type="boolean">true</item> -->
+                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>
                                                                         <item name="mundipagg_two_creditcard" xsi:type="array">
-                                                                            <!-- <item name="isBillingAddressRequired" xsi:type="boolean">true</item> -->
+                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>
                                                                         <item name="mundipagg_voucher" xsi:type="array">
-                                                                            <!-- <item name="isBillingAddressRequired" xsi:type="boolean">true</item> -->
+                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>
                                                                         <item name="mundipagg_debit" xsi:type="array">
-                                                                            <!-- <item name="isBillingAddressRequired" xsi:type="boolean">true</item> -->
+                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>
                                                                     </item>
                                                                 </item>

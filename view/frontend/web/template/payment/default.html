@@ -27,7 +27,9 @@
         </form>
 
         <div class="payment-method-billing-address">
-
+            <!-- ko foreach: $parent.getRegion(getBillingAddressFormName()) -->
+            <!-- ko template: getTemplate() --><!-- /ko -->
+            <!--/ko-->
         </div>
 
         <div class="checkout-agreements-block">
