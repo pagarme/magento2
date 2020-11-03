@@ -27,7 +27,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
             $setup = $this->updateVersionOneZeroTwelve($setup);
         }
 
-//Mundipagg Module Core tables
+        //Mundipagg Module Core tables
         $installSchema = new InstallSchema();
 
         if (version_compare($version, "1.3.0", "<")) {
