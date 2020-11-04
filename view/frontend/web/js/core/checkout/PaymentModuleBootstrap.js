@@ -52,6 +52,6 @@ MundiPaggCore.placeOrder = function(platformObject, model) {
             this.messageList.addErrorMessage(errors[index]);
         }
         jQuery("html, body").animate({scrollTop: 0}, 600);
-        console.log(errors)
+        console.log(errors);
     }
 }
