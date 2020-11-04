@@ -5,10 +5,5 @@ var config = {
         }
     },
     config: {
-        mixins: {
-            'Magento_Checkout/js/model/shipping-save-processor/default': {
-                'MundiPagg_MundiPagg/js/model/shipping-save-processor-default-mixin': true
-            }
-        }
     }
 };
