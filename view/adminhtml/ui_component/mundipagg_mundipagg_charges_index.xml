@@ -37,13 +37,6 @@
 	</listingToolbar>
 	<columns name="mundipagg_mundipagg_charges_columns">
 		<argument name="data" xsi:type="array"/>
-		<!-- <selectionsColumn name="ids">
-			<argument name="data" xsi:type="array">
-				<item name="config" xsi:type="array">
-					<item name="indexField" xsi:type="string">id</item>
-				</item>
-			</argument>
-		</selectionsColumn> -->
 		<column name="id">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">

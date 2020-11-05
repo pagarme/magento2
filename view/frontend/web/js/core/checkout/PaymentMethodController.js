@@ -1,6 +1,6 @@
 var PaymentMethodController = function (methodCode, platformConfig) {
-   this.methodCode = methodCode;
-   this.platformConfig = platformConfig;
+    this.methodCode = methodCode;
+    this.platformConfig = platformConfig;
 };
 
 PaymentMethodController.prototype.init = function () {
@@ -130,15 +130,15 @@ PaymentMethodController.prototype.twocreditcardsInit = function () {
         this.platformConfig.publicKey
     );
 
+    var isTotalOnAmountInputs = this.isTotalOnAmountInputs(this.formObject, this.platformConfig);
+
     if (typeof this.formObject[1] !== "undefined") {
         for (var i = 0, len = this.formObject.numberOfPaymentForms; i < len; i++) {
             this.fillFormText(this.formObject[i], 'mundipagg_two_creditcard');
 
-            if (this.formObject[i].inputAmount.val() === "") {
+            if (this.formObject[i].inputAmount.val() === "" || !isTotalOnAmountInputs) {
                 this.fillCardAmount(this.formObject[i], 2, i);
             }
-
-
 
             this.fillBrandList(this.formObject[i], 'mundipagg_two_creditcard');
             this.fillSavedCreditCardsSelect(this.formObject[i]);
@@ -198,11 +198,13 @@ PaymentMethodController.prototype.boletoCreditcardInit = function () {
         return;
     }
 
+    var isTotalOnAmountInputs = this.isTotalOnAmountInputs(this.formObject, this.platformConfig);
+
     if (typeof this.formObject[1] !== "undefined") {
 
         for (var i = 0, len = this.formObject.numberOfPaymentForms; i < len; i++) {
 
-            if (this.formObject[i].inputAmount.val() === "") {
+            if (this.formObject[i].inputAmount.val() === "" || !isTotalOnAmountInputs) {
                 this.fillCardAmount(this.formObject[i], 2, i);
             }
 
@@ -761,4 +763,13 @@ PaymentMethodController.prototype.addShowMultibuyerListener = function(formObjec
         formHandler.init(formObject);
         formHandler.toggleMultibuyer(formObject);
     });
+}
+
+PaymentMethodController.prototype.isTotalOnAmountInputs = function(formObject, platformConfig) {
+    var orderTotal = platformConfig.updateTotals.getTotals()().grand_total;
+    var card1 = formObject[0].inputAmount.val().replace(platformConfig.currency.decimalSeparator, ".");
+    var card2 = formObject[1].inputAmount.val().replace(platformConfig.currency.decimalSeparator, ".");
+    var totalInputs = (parseFloat(card1) + parseFloat(card2));
+
+    return orderTotal == totalInputs;
 }

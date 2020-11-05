@@ -181,7 +181,6 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         return false;
     }
 
-
     static private function fillWithVoucherConfig(&$dataObj, $storeConfig)
     {
         $options = [
