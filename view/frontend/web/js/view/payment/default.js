@@ -115,6 +115,8 @@ define(
 
                 var _self = this;
 
+                window.MundiPaggCore.platFormConfig.addresses.billingAddress = quote.billingAddress();
+
                 var PlatformPlaceOrder = {
                     obj : _self,
                     data: data,
