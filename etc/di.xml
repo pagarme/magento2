@@ -197,7 +197,7 @@
 
 
 
-
+    <!-- Pix -->
     <virtualType name="MundiPaggPixRemoteMethodAdapter" type="Magento\Payment\Model\Method\Adapter">
         <arguments>
             <argument name="code" xsi:type="const">MundiPagg\MundiPagg\Model\Ui\Pix\ConfigProvider::CODE</argument>
@@ -232,27 +232,28 @@
         <arguments>
             <argument name="commands" xsi:type="array">
                 <item name="initialize" xsi:type="string">MundiPagg\MundiPagg\Gateway\Transaction\Base\Command\InitializeCommand</item>
-                <item name="authorize" xsi:type="string">MundiPaggPixAuthorizeCommand</item>
+<!--                <item name="authorize" xsi:type="string">MundiPaggPixAuthorizeCommand</item>-->
+                <item name="authorize" xsi:type="string">MundiPaggBilletAuthorizeCommand</item>
             </argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="MundiPaggPixAuthorizeCommand" type="MundiPagg\MundiPagg\Gateway\Transaction\Pix\Command\AuthorizeCommand">
-        <arguments>
-            <argument name="requestBuilder" xsi:type="object">MundiPagg\MundiPagg\Gateway\Transaction\Pix\ResourceGateway\Create\RequestBuilder</argument>
-            <argument name="responseHandler" xsi:type="object">MundiPaggPixAuthorizeCommandResponseHandlerPool</argument>
-            <argument name="validator" xsi:type="object">MundiPagg\MundiPagg\Gateway\Transaction\Pix\ResourceGateway\Create\Response\Validator</argument>
-        </arguments>
-    </virtualType>
+<!--    <virtualType name="MundiPaggPixAuthorizeCommand" type="MundiPagg\MundiPagg\Gateway\Transaction\Pix\Command\AuthorizeCommand">-->
+<!--        <arguments>-->
+<!--            <argument name="requestBuilder" xsi:type="object">MundiPagg\MundiPagg\Gateway\Transaction\Pix\ResourceGateway\Create\RequestBuilder</argument>-->
+<!--            <argument name="responseHandler" xsi:type="object">MundiPaggPixAuthorizeCommandResponseHandlerPool</argument>-->
+<!--            <argument name="validator" xsi:type="object">MundiPagg\MundiPagg\Gateway\Transaction\Pix\ResourceGateway\Create\Response\Validator</argument>-->
+<!--        </arguments>-->
+<!--    </virtualType>-->
 
-    <virtualType name="MundiPaggPixAuthorizeCommandResponseHandlerPool" type="Magento\Payment\Gateway\Response\HandlerChain">
-        <arguments>
-            <argument name="handlers" xsi:type="array">
-                <item name="general" xsi:type="string">MundiPagg\MundiPagg\Gateway\Transaction\Pix\ResourceGateway\Create\Response\GeneralHandler</item>
-            </argument>
-        </arguments>
-    </virtualType>
-
+<!--    <virtualType name="MundiPaggPixAuthorizeCommandResponseHandlerPool" type="Magento\Payment\Gateway\Response\HandlerChain">-->
+<!--        <arguments>-->
+<!--            <argument name="handlers" xsi:type="array">-->
+<!--                <item name="general" xsi:type="string">MundiPagg\MundiPagg\Gateway\Transaction\Pix\ResourceGateway\Create\Response\GeneralHandler</item>-->
+<!--            </argument>-->
+<!--        </arguments>-->
+<!--    </virtualType>-->
+    <!-- Pix -->
 
 
 
