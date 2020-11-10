@@ -1,21 +1,14 @@
 <?php
-/**
- * Class billet
- *
- * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
- * @copyright   2017 MundiPagg (http://www.mundipagg.com)
- * @license     http://www.mundipagg.com Copyright
- *
- * @link        http://www.mundipagg.com
- */
-?>
-<?php
+
+use Mundipagg\Core\Kernel\Aggregates\Transaction;
+use MundiPagg\MundiPagg\Block\Payment\Info\Pix;
+
 $postData = [];
 
-/* @var \MundiPagg\MundiPagg\Block\Payment\Info\Pix $this */
+/* @var Pix $this */
 
 /**
- * @var \Mundipagg\Core\Kernel\Aggregates\Transaction $lastTransaction
+ * @var Transaction $lastTransaction
  */
 $lastTransaction = $this->getTransactionInfo();
 if (!empty($lastTransaction)) {
@@ -23,14 +16,14 @@ if (!empty($lastTransaction)) {
 }
 ?>
 
-<?php if($postData !== null && isset($postData['nosso_numero'])) { ?>
+<?php if ($postData !== null && isset($postData['nosso_numero'])) { ?>
     <span>
         <b><?= __('Our Number'); ?>: </b><?= $postData['nosso_numero'] ?>
     </span>
     <br/>
 <?php } ?>
 
-<?php if($postData !== null && isset($postData['document_number'])) { ?>
+<?php if ($postData !== null && isset($postData['document_number'])) { ?>
     <span>
         <b><?= __('Document Number'); ?>: </b><?= $postData['document_number'] ?>
     </span>
@@ -38,15 +31,12 @@ if (!empty($lastTransaction)) {
     <br/>
 <?php } ?>
 
-<?php if ($this->getBilletUrl() && $this->getInfo()->getOrder()->getStatus() == 'pending'): ?>
+<?php if ($this->getPixUrl() && $this->getInfo()->getOrder()->getStatus() == 'pending'): ?>
     <span><?php echo __($this->getTitle()) ?></span>
     <hr/>
-    <a class="action tocart primary" href="<?php echo $this->getBilletUrl() ?>"
-       target="_blank"><?php echo __('Print Billet') ?></a>
+    <a class="action tocart primary" href="<?php echo $this->getPixUrl() ?>"
+       target="_blank"><?php echo __('Print QrCode') ?></a>
 <?php else: ?>
     <span><?php echo __($this->getTitle()) ?></span>
 <?php endif ?>
 
-<?php
-$this->getInfoTransactions();
-?>
