@@ -2,8 +2,14 @@
 
 namespace MundiPagg\MundiPagg\Observer;
 
+use Magento\Catalog\Model\Product;
+use Magento\CatalogRule\Model\ResourceModel\Rule;
+use Magento\CatalogRule\Model\Rule as RuleModel;
+use Magento\Customer\Model\Session;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
+use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
+use Magento\Store\Model\StoreManagerInterface;
 use Mundipagg\Core\Kernel\Services\MoneyService;
 use Mundipagg\Core\Recurrence\Services\ProductSubscriptionService;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
@@ -30,12 +36,48 @@ class CartAddProductAfterObserver implements ObserverInterface
      */
     protected $mundipaggConfig;
 
-    public function __construct(RecurrenceProductHelper $recurrenceProductHelper)
-    {
+    /**
+     * @var TimezoneInterface
+     */
+    private $timeZone;
+
+    /**
+     * @var StoreManagerInterface
+     */
+    private $storeManager;
+
+    /**
+     * @var Session
+     */
+    private $customerSession;
+
+    /**
+     * @var Rule
+     */
+    private $catalogRule;
+
+    /**
+     * @var RuleModel
+     */
+    private $ruleModel;
+
+    public function __construct(
+        RecurrenceProductHelper $recurrenceProductHelper,
+        TimezoneInterface $timeZone,
+        StoreManagerInterface $storeManager,
+        Session $customerSession,
+        Rule $catalogRule,
+        RuleModel $ruleModel
+    ) {
         Magento2CoreSetup::bootstrap();
         $this->recurrenceProductHelper = $recurrenceProductHelper;
         $this->moneyService = new MoneyService();
         $this->mundipaggConfig = Magento2CoreSetup::getModuleConfiguration();
+        $this->timeZone = $timeZone;
+        $this->storeManager = $storeManager;
+        $this->customerSession = $customerSession;
+        $this->catalogRule = $catalogRule;
+        $this->ruleModel = $ruleModel;
     }
 
     /**
@@ -64,12 +106,70 @@ class CartAddProductAfterObserver implements ObserverInterface
         }
 
         $specialPrice = $this->getPriceFromRepetition($item);
-
         if ($specialPrice > 0) {
-            $item->setCustomPrice($specialPrice);
-            $item->setOriginalCustomPrice($specialPrice);
-            $item->getProduct()->setIsSuperMode(true);
+            $this->addAmountRepetition($item, $specialPrice);
         }
+    }
+
+    /**
+     * @param Item $item
+     * @param float $price
+     */
+    public function addAmountRepetition(Item $item, $price)
+    {
+        $currentRule = $this->getCatalogRule($item->getProduct());
+
+        if (($currentRule !== null) && ($currentRule['action_operator'] == 'to_fixed')) {
+            $item->setCustomPrice($price);
+            $item->setOriginalCustomPrice($price);
+            $item->getProduct()->setIsSuperMode(true);
+
+            return;
+        }
+
+        $discountAmount = $this->ruleModel->calcProductPriceRule($item->getProduct(), $price);
+
+        if ($discountAmount == null) {
+            $discountAmount = $price;
+        }
+
+        $item->setCustomPrice($discountAmount);
+        $item->setOriginalCustomPrice($discountAmount);
+        $item->getProduct()->setIsSuperMode(true);
+    }
+
+    /**
+     * @param Product $product
+     * @return array|null
+     */
+    private function getCatalogRule(Product $product)
+    {
+        $storeId = $product->getStoreId();
+        $dateTs = $this->timeZone->scopeTimeStamp($storeId);
+        $websiteId = $this->storeManager->getStore($storeId)->getWebsiteId();
+
+        $customerGroupId = $this->customerSession->getCustomerGroupId();
+        if ($product->hasCustomerGroupId()) {
+            $customerGroupId = $product->getCustomerGroupId();
+        }
+
+        $rulesList = $this->catalogRule->getRulesFromProduct(
+            $dateTs,
+            $websiteId,
+            $customerGroupId,
+            $product->getId()
+        );
+
+        $currentRule = null;
+        foreach ($rulesList as $rule) {
+            if ($rule['action_stop']) {
+                $currentRule = $rule;
+                break;
+            }
+            $currentRule = $rule;
+        }
+
+        return $currentRule;
     }
 
     /**
