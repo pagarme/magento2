@@ -308,7 +308,7 @@ FormObject.pixInit = function (isMultibuyerEnabled) {
         return;
     }
 
-    var boletoElements = {
+    var pixElements = {
         'containerSelector' : containerSelector,
         "inputAmount" : jQuery(containerSelector + " .cc_amount"),
         "inputAmountContainer" : jQuery(containerSelector + " .amount-container")
@@ -333,7 +333,7 @@ FormObject.pixInit = function (isMultibuyerEnabled) {
         }
     }
 
-    this.FormObject = boletoElements;
+    this.FormObject = pixElements;
     this.FormObject.numberOfPaymentForms = 1;
     this.FormObject.multibuyer = multibuyerForm;
     return this.FormObject;
