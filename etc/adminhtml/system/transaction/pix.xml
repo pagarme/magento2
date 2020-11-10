@@ -18,30 +18,23 @@
 	        <label>Title</label>
 	        <config_path>payment/mundipagg_pix/title</config_path>
 	    </field>
-		<field id="text" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="textarea">
-	        <label>Text to Checkout</label>
+	    <field id="expiration_qrcode" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
+	        <label>Expirations QrCode</label>
 	        <comment />
-	        <config_path>payment/mundipagg_pix/text</config_path>
+	        <config_path>payment/mundipagg_pix/expiration_qrcode</config_path>
             <depends>
                 <field id="active">1</field>
             </depends>
 	    </field>
-	    <field id="instructions" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="textarea">
-	        <label>Instructions</label>
-	        <comment />
-	        <config_path>payment/mundipagg_pix/instructions</config_path>
-            <depends>
-                <field id="active">1</field>
-            </depends>
-	    </field>
-	    <field id="expiration_days" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
-	        <label>Expirations Day</label>
-	        <comment />
-	        <config_path>payment/mundipagg_pix/expiration_days</config_path>
-            <depends>
-                <field id="active">1</field>
-            </depends>
-	    </field>
+		<field id="bank_pix" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="select">
+			<label>Type</label>
+			<comment />
+			<source_model>MundiPagg\MundiPagg\Model\Source\PixTypes</source_model>
+			<config_path>payment/mundipagg_pix/types</config_path>
+			<depends>
+				<field id="active">1</field>
+			</depends>
+		</field>
 	    <field id="sort_order" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
 	        <label>Sort Order</label>
 	        <comment />
