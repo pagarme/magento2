@@ -24,6 +24,22 @@
                 <expiration_days>5</expiration_days>
             </mundipagg_billet>
 
+            <mundipagg_pix>
+                <active>1</active>
+                <model>MundiPaggPixRemoteMethodAdapter</model>
+                <order_status>pending_payment</order_status>
+                <payment_action>authorize</payment_action>
+                <title>MundiPagg Pix</title>
+                <can_authorize>1</can_authorize>
+                <can_capture>1</can_capture>
+                <can_use_checkout>1</can_use_checkout>
+                <can_use_internal>1</can_use_internal>
+                <is_gateway>1</is_gateway>
+                <sort_order>1</sort_order>
+                <can_initialize>1</can_initialize>
+                <expiration_days>5</expiration_days>
+            </mundipagg_pix>
+
             <mundipagg_creditcard>
                 <active>1</active>
                 <model>MundiPaggCreditCardsRemoteMethodAdapter</model>

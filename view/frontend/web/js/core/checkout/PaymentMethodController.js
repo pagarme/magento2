@@ -162,6 +162,30 @@ PaymentMethodController.prototype.twocreditcardsInit = function () {
     this.modelToken = new CreditCardToken(this.formObject);
 };
 
+
+PaymentMethodController.prototype.pixInit = function () {
+    this.platformConfig = PlatformConfig.bind(this.platformConfig);
+    this.formObject = FormObject.pixInit(this.platformConfig.isMultibuyerEnabled);
+
+    if (!this.formObject) {
+        return;
+    }
+
+    this.model = new PixModel(this.formObject);
+    this.hideCardAmount(this.formObject);
+
+    if (!this.platformConfig.isMultibuyerEnabled) {
+        this.removeMultibuyerForm(this.formObject);
+    }
+
+    if (this.platformConfig.isMultibuyerEnabled) {
+        this.fillMultibuyerStateSelect(this.formObject);
+        this.addShowMultibuyerListener(this.formObject);
+    }
+};
+
+
+
 PaymentMethodController.prototype.boletoInit = function () {
     this.platformConfig = PlatformConfig.bind(this.platformConfig);
     this.formObject = FormObject.boletoInit(this.platformConfig.isMultibuyerEnabled);

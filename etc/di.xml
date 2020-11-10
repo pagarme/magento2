@@ -190,6 +190,76 @@
         </arguments>
     </type>
 
+
+
+
+
+
+
+
+
+    <virtualType name="MundiPaggPixRemoteMethodAdapter" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">MundiPagg\MundiPagg\Model\Ui\Pix\ConfigProvider::CODE</argument>
+            <argument name="valueHandlerPool" xsi:type="object">MundiPaggPixValueHandlerPool</argument>
+            <argument name="commandPool" xsi:type="object">MundiPaggPixCommandPool</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">MundiPagg\MundiPagg\Block\Payment\Info\Pix</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggPixValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">MundiPaggPixConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggPixConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">MundiPaggPixConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggPixConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">MundiPagg\MundiPagg\Model\Ui\Pix\ConfigProvider::CODE</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggPixCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="initialize" xsi:type="string">MundiPagg\MundiPagg\Gateway\Transaction\Base\Command\InitializeCommand</item>
+                <item name="authorize" xsi:type="string">MundiPaggPixAuthorizeCommand</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggPixAuthorizeCommand" type="MundiPagg\MundiPagg\Gateway\Transaction\Pix\Command\AuthorizeCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">MundiPagg\MundiPagg\Gateway\Transaction\Pix\ResourceGateway\Create\RequestBuilder</argument>
+            <argument name="responseHandler" xsi:type="object">MundiPaggPixAuthorizeCommandResponseHandlerPool</argument>
+            <argument name="validator" xsi:type="object">MundiPagg\MundiPagg\Gateway\Transaction\Pix\ResourceGateway\Create\Response\Validator</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MundiPaggPixAuthorizeCommandResponseHandlerPool" type="Magento\Payment\Gateway\Response\HandlerChain">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="general" xsi:type="string">MundiPagg\MundiPagg\Gateway\Transaction\Pix\ResourceGateway\Create\Response\GeneralHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+
+
+
+
+
+
+
     <!-- Billet -->
     <virtualType name="MundiPaggBilletRemoteMethodAdapter" type="Magento\Payment\Model\Method\Adapter">
         <arguments>
