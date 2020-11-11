@@ -27,7 +27,7 @@ define(
                 return "MundiPagg_MundiPagg/payment/pix-form";
             },
             getMultibuyerForm: function () {
-                return null;
+                return "MundiPagg_MundiPagg/payment/multibuyer-form";
             },
             getText: function () {
                 return window.checkoutConfig.payment.mundipagg_pix.text;
