@@ -78,7 +78,6 @@
 
                 <item name="mundipagg_billet_config_provider" xsi:type="object">MundiPagg\MundiPagg\Model\Ui\Billet\ConfigProvider</item>
 
-
                 <item name="mundipagg_pix_config_provider" xsi:type="object">MundiPagg\MundiPagg\Model\Ui\Pix\ConfigProvider</item>
             </argument>
         </arguments>
