@@ -184,8 +184,6 @@ PaymentMethodController.prototype.pixInit = function () {
     }
 };
 
-
-
 PaymentMethodController.prototype.boletoInit = function () {
     this.platformConfig = PlatformConfig.bind(this.platformConfig);
     this.formObject = FormObject.boletoInit(this.platformConfig.isMultibuyerEnabled);

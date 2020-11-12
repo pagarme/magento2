@@ -27,11 +27,6 @@ interface PixRequestDataProviderInterface extends BaseRequestDataProviderInterfa
     /**
      * @return string
      */
-    public function getDaysToAddInBoletoExpirationDate();
-
-    /**
-     * @return string
-     */
     public function getCustomerAddressStreet($shipping);
 
     /**

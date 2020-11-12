@@ -1,35 +1,27 @@
 <?php
-/**
- * Class ConfigProvider
- *
- * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
- * @copyright   2017 MundiPagg (http://www.mundipagg.com)
- * @license     http://www.mundipagg.com Copyright
- *
- * @link        http://www.mundipagg.com
- */
 
 namespace MundiPagg\MundiPagg\Model\Ui\Pix;
 
-
 use Magento\Checkout\Model\ConfigProviderInterface;
-use MundiPagg\MundiPagg\Gateway\Transaction\Billet\Config\ConfigInterface;
+use Mundipagg\Core\Kernel\ValueObjects\Configuration\PixConfig;
+use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup as MPSetup;
 
 final class ConfigProvider implements ConfigProviderInterface
 {
     const CODE = 'mundipagg_pix';
 
-    protected $billetConfig;
-
     /**
-     * ConfigProvider constructor.
-     * @param ConfigInterface $billetConfig
+     * @var PixConfig
      */
-    public function __construct(
-        ConfigInterface $billetConfig
-    )
+    private $pixConfig;
+
+    public function __construct()
     {
-        $this->setBilletConfig($billetConfig);
+        MPSetup::bootstrap();
+        $moduleConfig = MPSetup::getModuleConfiguration();
+        if (!empty($moduleConfig->getPixConfig())) {
+            $this->pixConfig = $moduleConfig->getPixConfig();
+        }
     }
 
     public function getConfig()
@@ -37,28 +29,10 @@ final class ConfigProvider implements ConfigProviderInterface
         return [
             'payment' => [
                 self::CODE => [
-                    'text' => 'teste',
-                    'title' => 'teste title',
+                    'active' => $this->pixConfig->isEnabled(),
+                    'title' => $this->pixConfig->getTitle(),
                 ]
             ]
         ];
-    }
-
-    /**
-     * @return ConfigInterface
-     */
-    protected function getBilletConfig()
-    {
-        return $this->billetConfig;
-    }
-
-    /**
-     * @param ConfigInterface $billetConfig
-     * @return $this
-     */
-    protected function setBilletConfig(ConfigInterface $billetConfig)
-    {
-        $this->billetConfig = $billetConfig;
-        return $this;
     }
 }

@@ -9,7 +9,6 @@ PixModel.prototype.placeOrder = function (placeOrderObject) {
 }
 
 PixModel.prototype.validate = function () {
-    return true;
     var multibuyerValidator = new MultibuyerValidator(this.formObject);
     var isMultibuyerValid = multibuyerValidator.validate();
 
@@ -17,7 +16,7 @@ PixModel.prototype.validate = function () {
         return true;
     }
 
-
+    return false;
 };
 
 PixModel.prototype.addErrors = function (error) {
@@ -28,7 +27,7 @@ PixModel.prototype.addErrors = function (error) {
 
 PixModel.prototype.getData = function () {
 
-    data = {
+    var data = {
         'method': "mundipagg_pix",
         'additional_data': {}
     };

@@ -4,6 +4,7 @@ namespace MundiPagg\MundiPagg\Concrete;
 
 use Magento\Framework\App\Config as Magento2StoreConfig;
 use Magento\Config\Model\Config as Magento2ModelConfig;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use Magento\Store\Model\ScopeInterface as ScopeInterface;
 use Magento\Framework\App\ObjectManager;
@@ -23,6 +24,7 @@ use MundiPagg\MundiPagg\Helper\ModuleHelper;
 use MundiPagg\MundiPagg\Model\Enum\CreditCardBrandEnum;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Store\Model\Website\Interceptor;
+use stdClass;
 
 final class Magento2CoreSetup extends AbstractModuleCoreSetup
 {
@@ -114,7 +116,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
     }
 
     /**
-     * @param \Magento\Framework\App\Config\ScopeConfigInterface|null $storeConfig
+     * @param ScopeConfigInterface|null $storeConfig
      */
     public function loadModuleConfigurationFromPlatform($storeConfig = null)
     {
@@ -137,6 +139,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         self::fillWithMundipaggKeys($configData, $storeConfig);
         self::fillWithCardConfig($configData, $storeConfig);
         self::fillWithBoletoConfig($configData, $storeConfig);
+        self::fillWithPixConfig($configData, $storeConfig);
         self::fillWithBoletoCreditCardConfig($configData, $storeConfig);
         self::fillWithTwoCreditCardsConfig($configData, $storeConfig);
         self::fillWithVoucherConfig($configData, $storeConfig);
@@ -258,6 +261,25 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
 
         return $dataObj;
     }
+
+    private static function fillWithPixConfig(
+        stdClass $configData,
+        ScopeConfigInterface $storeConfig
+    ) {
+        $options = [
+            'enabled' => 'active',
+            'expirationQrCode' => 'expiration_qrcode',
+            'bankType' => 'types',
+            'title' => 'title'
+        ];
+
+        $section = 'payment/mundipagg_pix/';
+
+        $pixObject = new \stdClass();
+
+        $configData->pixConfig = self::fillDataObj($storeConfig, $options, $pixObject, $section);
+    }
+
 
     static private function fillWithBoletoConfig(&$dataObj, $storeConfig)
     {
