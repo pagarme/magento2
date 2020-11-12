@@ -2,6 +2,7 @@
 
 namespace MundiPagg\MundiPagg\Observer;
 
+use Exception;
 use Magento\Catalog\Model\Product;
 use Magento\CatalogRule\Model\ResourceModel\Rule;
 use Magento\CatalogRule\Model\Rule as RuleModel;
@@ -61,6 +62,18 @@ class CartAddProductAfterObserver implements ObserverInterface
      */
     private $ruleModel;
 
+    const RULE_CATALOG_DISCOUNT_FIXED = 'to_fixed';
+
+    /**
+     * CartAddProductAfterObserver constructor.
+     * @param RecurrenceProductHelper $recurrenceProductHelper
+     * @param TimezoneInterface $timeZone
+     * @param StoreManagerInterface $storeManager
+     * @param Session $customerSession
+     * @param Rule $catalogRule
+     * @param RuleModel $ruleModel
+     * @throws Exception
+     */
     public function __construct(
         RecurrenceProductHelper $recurrenceProductHelper,
         TimezoneInterface $timeZone,
@@ -119,7 +132,10 @@ class CartAddProductAfterObserver implements ObserverInterface
     {
         $currentRule = $this->getCatalogRule($item->getProduct());
 
-        if (($currentRule !== null) && ($currentRule['action_operator'] == 'to_fixed')) {
+        if (
+            ($currentRule !== null) &&
+            ($currentRule['action_operator'] == self::RULE_CATALOG_DISCOUNT_FIXED)
+        ) {
             $item->setCustomPrice($price);
             $item->setOriginalCustomPrice($price);
             $item->getProduct()->setIsSuperMode(true);
