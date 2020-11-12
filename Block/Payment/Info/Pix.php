@@ -24,15 +24,21 @@ class Pix extends Info
      * @return string|null
      * @throws LocalizedException
      */
-    public function getPixUrl()
+    public function getPixInfo()
     {
-        $method = $this->getInfo()->getMethod();
+        $info = $this->getInfo();
+        $method = $info->getMethod();
 
         if (strpos($method, "mundipagg_pix") === false) {
             return null;
         }
 
-        return 'pix-url-qrcode';
+        $lastTransId = $info->getLastTransId();
+        $orderId = substr($lastTransId, 0, 19);
+
+        Magento2CoreSetup::bootstrap();
+        $orderService= new \Mundipagg\Core\Payment\Services\OrderService();
+        return $orderService->getPixQrCodeInfoFromOrder(new OrderId($orderId));
     }
 
     public function getTitle()

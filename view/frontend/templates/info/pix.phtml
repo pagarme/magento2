@@ -1,0 +1,13 @@
+<?php
+    $pixInfo = $this->getPixInfo();
+    if (!empty($pixInfo) && $this->getInfo()->getOrder()->getStatus() == 'pending'):
+?>
+    <span><?php echo __($this->getTitle()) ?></span>
+    <hr />
+    <div class="pix">
+        <img width="130" src="<?= $pixInfo['qr_code_url']?>" />
+        <span style="word-wrap: break-word;"><?= $pixInfo['qr_code']?></span>
+    </div>
+<?php else: ?>
+	<span><?php echo __($this->getTitle()) ?></span>
+<?php endif ?>

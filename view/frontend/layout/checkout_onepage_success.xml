@@ -16,6 +16,12 @@
                     template="payment/billet.phtml"
                     before="order.success.additional.info"
                     cacheable="false" />
+
+            <block  class="MundiPagg\MundiPagg\Block\Payment\Pix"
+                    name="checkout.mundipagg.pix.link"
+                    template="payment/pix.phtml"
+                    before="order.success.additional.info"
+                    cacheable="false" />
         </referenceContainer>
     </body>
 </page>

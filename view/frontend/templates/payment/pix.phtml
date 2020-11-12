@@ -1,0 +1,10 @@
+<?php
+    $pixInfo =  $this->getPixInfo();
+    if (!empty($pixInfo)):
+?>
+    <hr />
+    <div style="text-align: center">
+        <img width="180" src="<?= $pixInfo['qr_code_url']?>" />
+        <p><?= $pixInfo['qr_code']?></p>
+    </div>
+<?php endif ?>
