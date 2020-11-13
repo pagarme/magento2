@@ -4,7 +4,12 @@
 ?>
     <hr />
     <div style="text-align: center">
-        <img width="180" src="<?= $pixInfo['qr_code_url']?>" />
+        <div style="margin-bottom: 40px">
+            <img width="200" src="https://staging-cdn.mundipagg.com/assets/images/site/illustrations/pix-bc-logo-2.png" />
+        </div>
+        <div style="margin-bottom: 20px">
+            <img width="200" src="<?= $pixInfo['qr_code_url']?>" />
+        </div>
         <p><?= $pixInfo['qr_code']?></p>
     </div>
 <?php endif ?>
