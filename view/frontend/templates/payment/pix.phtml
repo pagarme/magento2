@@ -10,6 +10,19 @@
         <div style="margin-bottom: 20px">
             <img width="200" src="<?= $pixInfo['qr_code_url']?>" />
         </div>
-        <p><?= $pixInfo['qr_code']?></p>
+        <a style="cursor: pointer" onclick="copyQrCode()">Copiar Código do Pix</a>
+        <input style="display: none;" type="text" value="<?= $pixInfo['qr_code']?>" id="mp_qr_code" />
     </div>
+
+    <script>
+        function copyQrCode() {
+            var copyText = document.getElementById("mp_qr_code");
+
+            copyText.select();
+            copyText.setSelectionRange(0, 99999);
+            document.execCommand("copy");
+
+            alert("Codigo Pix copiado");
+        }
+    </script>
 <?php endif ?>

@@ -27,7 +27,7 @@
             </depends>
 	    </field>
 		<field id="bank_pix" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="select">
-			<label>Type</label>
+			<label>Bank</label>
 			<comment />
 			<source_model>MundiPagg\MundiPagg\Model\Source\PixTypes</source_model>
 			<config_path>payment/mundipagg_pix/types</config_path>
