@@ -1,0 +1,74 @@
+<?php
+$pixInfo =  $this->getPixInfo();
+if (!empty($pixInfo)):
+    ?>
+    <hr />
+    <div style="margin: 0 auto; width: 420px;">
+        <!-- PIX -->
+        <div style="margin: 0 auto 30px; text-align: center;">
+            <img width="150" src="https://cdn.mundipagg.com/assets/images/site/illustrations/pix-bc-logo-2.png" alt=>
+        </div>
+        <!-- ./PIX -->
+
+        <!-- QR Code -->
+        <div style="margin: 0 auto 10px; text-align: center;">
+            <!-- SUBSTITUIR PELO QRCODE -->
+            <img width="200" src="<?= $pixInfo['qr_code_url']?>" />
+            <!-- ./SUBSTITUIR PELO QRCODE -->
+        </div>
+        <!-- ./QR Code -->
+
+        <!-- AÇÕES -->
+        <div style="margin: 0 auto 0px; min-height: 10px; text-align: center;">
+            <!-- COPIAR -->
+            <div style="display: inline-block;">
+                <svg style="display: inline-block; vertical-align: middle; margin: 0 5px 0 0; width: 20px" aria-hidden="true"
+                     focusable="false" data-prefix="fas" data-icon="copy" class="svg-inline--fa fa-copy fa-w-14" role="img"
+                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                    <path fill="blue"
+                          d="M320 448v40c0 13.255-10.745 24-24 24H24c-13.255 0-24-10.745-24-24V120c0-13.255 10.745-24 24-24h72v296c0 30.879 25.121 56 56 56h168zm0-344V0H152c-13.255 0-24 10.745-24 24v368c0 13.255 10.745 24 24 24h272c13.255 0 24-10.745 24-24V128H344c-13.2 0-24-10.8-24-24zm120.971-31.029L375.029 7.029A24 24 0 0 0 358.059 0H352v96h96v-6.059a24 24 0 0 0-7.029-16.97z">
+                    </path>
+                </svg>
+                <a onclick="copyQrCode()" style="display: inline-block; vertical-align: middle; margin: 0 5px 0 0;">Copiar
+                    código PIX</a>
+                <input style="opacity: 0; user-select: none; pointer-events: none;" type="text" value="<?= $pixInfo['qr_code']?>" id="mp_qr_code" />
+            </div>
+            <!-- ./COPIAR -->
+        </div>
+        <!-- ./AÇÕES -->
+
+        <!-- INSTRUÇÕES -->
+        <div style="margin: 0 auto 30px; text-align: center;">
+            <div style="display: inline-block; vertical-align: top; margin: 0 10px; width: 25%;">
+                <div>Abra o app do seu banco</div>
+                <div style="display: inline-block;background-color: gainsboro;border-radius: 50%;padding: 10px 15px;margin-top: 10px;">
+                    1</div>
+            </div>
+
+            <div style="display: inline-block; vertical-align: top; margin: 0 10px; width: 25%;">
+                <div>Escaneie o QR Code</div>
+                <div style="display: inline-block;background-color: gainsboro;border-radius: 50%;padding: 10px 15px;margin-top: 10px;">
+                    2</div>
+            </div>
+
+            <div style="display: inline-block; vertical-align: top; margin: 0 10px; width: 25%;">
+                <div>Confirme o pagamento</div>
+                <div style="display: inline-block;background-color: gainsboro;border-radius: 50%;padding: 10px 15px;margin-top: 10px;">
+                    3</div>
+            </div>
+        </div>
+        <!-- ./INSTRUÇÕES -->
+    </div>
+
+    <script>
+        function copyQrCode() {
+            var copyText = document.getElementById("mp_qr_code");
+
+            copyText.select();
+            copyText.setSelectionRange(0, 99999);
+            document.execCommand("copy");
+
+            alert("Código Pix copiado");
+        }
+    </script>
+<?php endif ?>

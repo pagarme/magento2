@@ -296,6 +296,49 @@ FormObject.twoCreditCardsInit = function (isMultibuyerEnabled) {
     return this.FormObject;
 };
 
+
+FormObject.pixInit = function (isMultibuyerEnabled) {
+
+    this.FormObject = {};
+
+    var containerSelector = '#mundipagg_pix-form';
+
+    if (typeof jQuery(containerSelector).html() == 'undefined') {
+        this.FormObject = null;
+        return;
+    }
+
+    var pixElements = {
+        'containerSelector' : containerSelector,
+        "inputAmount" : jQuery(containerSelector + " .cc_amount"),
+        "inputAmountContainer" : jQuery(containerSelector + " .amount-container")
+    };
+
+    if (isMultibuyerEnabled) {
+        var multibuyerForm = {
+            "showMultibuyer": jQuery(containerSelector + " .show_multibuyer"),
+            "firstname": jQuery(containerSelector + " .multibuyer_firstname"),
+            "lastname": jQuery(containerSelector + " .multibuyer_lastname"),
+            "email": jQuery(containerSelector + " .multibuyer_email"),
+            "zipcode": jQuery(containerSelector + " .multibuyer_zipcode"),
+            "document": jQuery(containerSelector + " .multibuyer_document"),
+            "street": jQuery(containerSelector + " .multibuyer_street"),
+            "number": jQuery(containerSelector + " .multibuyer_number"),
+            "complement": jQuery(containerSelector + " .multibuyer_complement"),
+            "neighborhood": jQuery(containerSelector + " .multibuyer_neighborhood"),
+            "city": jQuery(containerSelector + " .multibuyer_city"),
+            "state": jQuery(containerSelector + " .multibuyer_state"),
+            "homePhone": jQuery(containerSelector + " .multibuyer_home_phone"),
+            "mobilePhone": jQuery(containerSelector + " .multibuyer_mobile_phone")
+        }
+    }
+
+    this.FormObject = pixElements;
+    this.FormObject.numberOfPaymentForms = 1;
+    this.FormObject.multibuyer = multibuyerForm;
+    return this.FormObject;
+}
+
 FormObject.boletoInit = function (isMultibuyerEnabled) {
 
     this.FormObject = {};

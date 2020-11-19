@@ -168,6 +168,10 @@ class PaymentMethodAvailable implements ObserverInterface
             $paymentMethods[] = "mundipagg_debit";
         }
 
+        if ($this->mundipaggConfig->getPixConfig()->isEnabled()) {
+            $paymentMethods[] = "mundipagg_pix";
+        }
+
         return $paymentMethods;
     }
 

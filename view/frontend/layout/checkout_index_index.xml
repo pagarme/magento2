@@ -32,6 +32,9 @@
                                                                 <item name="mundipagg_payment" xsi:type="array">
                                                                     <item name="component" xsi:type="string">MundiPagg_MundiPagg/js/view/payment/payments</item>
                                                                     <item name="methods" xsi:type="array">
+                                                                        <item name="mundipagg_pix" xsi:type="array">
+                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                                                        </item>
                                                                         <item name="mundipagg_creditcard" xsi:type="array">
                                                                              <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>

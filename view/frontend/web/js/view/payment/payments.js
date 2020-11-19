@@ -20,6 +20,10 @@ define(
 
         rendererList.push(
             {
+                type: "mundipagg_pix",
+                component: "MundiPagg_MundiPagg/js/view/payment/pix"
+            },
+            {
                 type: "mundipagg_creditcard",
                 component: "MundiPagg_MundiPagg/js/view/payment/creditcard"
             },

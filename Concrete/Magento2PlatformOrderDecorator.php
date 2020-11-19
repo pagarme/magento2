@@ -31,6 +31,7 @@ use Mundipagg\Core\Payment\Aggregates\Payments\AbstractPayment;
 use Mundipagg\Core\Payment\Aggregates\Payments\BoletoPayment;
 use Mundipagg\Core\Payment\Aggregates\Payments\NewDebitCardPayment;
 use Mundipagg\Core\Payment\Aggregates\Payments\NewVoucherPayment;
+use Mundipagg\Core\Payment\Aggregates\Payments\PixPayment;
 use Mundipagg\Core\Payment\Aggregates\Shipping;
 use Mundipagg\Core\Payment\Factories\PaymentFactory;
 use Mundipagg\Core\Payment\Repositories\CustomerRepository as CoreCustomerRepository;
@@ -1087,6 +1088,32 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         }
 
         $paymentData[$boletoDataIndex][] = $newPaymentData;
+    }
+
+    private function extractPaymentDataFromMundipaggPix(
+        $additionalInformation,
+        &$paymentData,
+        $payment
+    )
+    {
+        $moneyService = new MoneyService();
+        $newPaymentData = new \stdClass();
+        $newPaymentData->amount =
+            $moneyService->floatToCents($this->platformOrder->getGrandTotal());
+
+        $pixDataIndex = PixPayment::getBaseCode();
+        if (!isset($paymentData[$pixDataIndex])) {
+            $paymentData[$pixDataIndex] = [];
+        }
+
+        if (!empty($additionalInformation['pix_buyer_checkbox'])) {
+            $newPaymentData->customer = $this->extractMultibuyerData(
+                'pix',
+                $additionalInformation
+            );
+        }
+
+        $paymentData[$pixDataIndex][] = $newPaymentData;
     }
 
     public function getShipping()

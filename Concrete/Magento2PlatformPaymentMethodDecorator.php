@@ -10,6 +10,7 @@ class Magento2PlatformPaymentMethodDecorator implements PlatformPaymentMethodInt
     const BOLETO_CREDIT_CARD = 'boleto_credit_card';
     const VOUCHER = 'voucher';
     const DEBIT = "debit";
+    const PIX = "pix";
 
     private $paymentMethod;
 
@@ -72,5 +73,10 @@ class Magento2PlatformPaymentMethodDecorator implements PlatformPaymentMethodInt
     private function debit()
     {
         return self::DEBIT;
+    }
+
+    private function pix()
+    {
+        return self::PIX;
     }
 }
