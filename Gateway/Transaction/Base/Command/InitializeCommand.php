@@ -118,11 +118,11 @@ class InitializeCommand implements CommandInterface
 
         try {
             $quoteSuccess = $quote->getCustomerNote();
-            if ($quoteSuccess == 'mundipagg-processing') {
+            if ($quoteSuccess === 'mundipagg-processing') {
                 $log->orderInfo(
                     $orderDecorator->getCode(),
-                    "Quote already used, order id duplicated."
-                 );
+            "Quote already used, order id duplicated. Customer Note: {$quoteSuccess}"
+                );
                 throw new \Exception("Quote already used, order id duplicated.");
             }
 
