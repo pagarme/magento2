@@ -1,6 +1,9 @@
 var CreditCardToken = function (formObject, documentNumber = null) {
-    this.formObject = formObject;
     this.documentNumber = documentNumber;
+    if (documentNumber != null) {
+        this.documentNumber = documentNumber.replace(/(\.|\/|\-)/g,"");
+    }
+    this.formObject = formObject;
 };
 
 CreditCardToken.prototype.getDataToGenerateToken = function () {
