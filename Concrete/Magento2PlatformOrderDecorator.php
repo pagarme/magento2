@@ -148,7 +148,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             $sendConfigGlobalEmail = MPSetup::getModuleConfiguration()->isSendMailEnabled();
 
             if (!$sendConfigGlobalEmail) {
-                $log->info("send e-mail disabled");
+                $log->info("The e-mail sending configuration is disabled. E-mail not sent");
                 return false;
             }
 
@@ -161,7 +161,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
                 $message
             );
         } catch (\Exception $e) {
-            $log->info("Error send e-mail");
+            $log->info("Unable to send e-mail");
             $log->exception($e);
         }
     }
