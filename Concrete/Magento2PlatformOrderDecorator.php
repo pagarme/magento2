@@ -139,22 +139,31 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
      */
     public function sendEmail($message)
     {
-        $objectManager = ObjectManager::getInstance();
+        $log = new LogService('Order', true);
+        $log->info("Try send e-mail: {$message}");
 
-        $sendConfigGlobalEmail = MPSetup::getModuleConfiguration()->isSendMailEnabled();
+        try {
+            $objectManager = ObjectManager::getInstance();
 
-        if (!$sendConfigGlobalEmail) {
-            return false;
+            $sendConfigGlobalEmail = MPSetup::getModuleConfiguration()->isSendMailEnabled();
+
+            if (!$sendConfigGlobalEmail) {
+                $log->info("The e-mail sending configuration is disabled. E-mail not sent");
+                return false;
+            }
+
+            /* @var OrderCommentSender $orderCommentSender */
+            $orderCommentSender = $objectManager->create(OrderCommentSender::class);
+
+            return $orderCommentSender->send(
+                $this->platformOrder,
+                true,
+                $message
+            );
+        } catch (\Exception $e) {
+            $log->info("Unable to send e-mail");
+            $log->exception($e);
         }
-
-        /* @var OrderCommentSender $orderCommentSender */
-        $orderCommentSender = $objectManager->create(OrderCommentSender::class);
-
-        return $orderCommentSender->send(
-            $this->platformOrder,
-            true,
-            $message
-        );
     }
 
     /**
