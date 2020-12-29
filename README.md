@@ -23,14 +23,14 @@ Add the following lines into your composer.json
 ```
 {
 	"require": {
-		"mundipagg/mundipagg-magento2-module":"^1.2"
+		"mundipagg/mundipagg-magento2-module":"2.*"
 	}
 }
 ```
 
 or simply digit 
 ```
-composer require mundipagg/mundipagg-magento2-module
+composer require 'mundipagg/mundipagg-magento2-module:2.*'
 ```
  
 Then type the following commands from your Magento root:
@@ -41,8 +41,7 @@ composer update
 ./bin/magento setup:di:compile
 ```
 
-
-## Migrating to 2.x.x-beta
+## Upgrading to 2.x from 1.x and 2.x.x-beta
 
 **Steps**
 
@@ -52,8 +51,8 @@ If you have an old module's version
 As a precaution, clear the composer cache:
 `composer clearcache`
 
-Install the beta version:
-`composer require 'mundipagg/mundipagg-magento2-module:2.*@beta' -vvv`
+Install the version:
+`composer require 'mundipagg/mundipagg-magento2-module:2.*' -vvv`
 
 Then run the following commands from your Magento root:
 
