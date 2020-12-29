@@ -15,7 +15,6 @@ namespace MundiPagg\MundiPagg\Gateway\Transaction\Billet\ResourceGateway\Create\
 use Magento\Payment\Gateway\Response\HandlerInterface;
 use MundiPagg\MundiPagg\Gateway\Transaction\Base\ResourceGateway\Response\AbstractHandler;
 use MundiPagg\MundiPagg\Model\ChargesFactory;
-use MundiPagg\MundiPagg\Helper\Logger;
 
 class GeneralHandler extends AbstractHandler implements HandlerInterface
 {
@@ -25,19 +24,12 @@ class GeneralHandler extends AbstractHandler implements HandlerInterface
     protected $modelCharges;
 
     /**
-     * @var \MundiPagg\MundiPagg\Helper\Logger
-     */
-    protected $logger;
-
-    /**
      * @return void
      */
     public function __construct(
-        ChargesFactory $modelCharges,
-        Logger $logger
+        ChargesFactory $modelCharges
     ) {
         $this->modelCharges = $modelCharges;
-        $this->logger = $logger;
     }
 
     /**
@@ -45,8 +37,6 @@ class GeneralHandler extends AbstractHandler implements HandlerInterface
      */
     protected function _handle($payment, $response)
     {
-        $this->logger->logger($response);
-        
         $boletoUrl = $response->charges[0]->lastTransaction->pdf;
 
         $payment->setAdditionalInformation('billet_url', $boletoUrl);

@@ -17,7 +17,6 @@ use Magento\Customer\Model\Customer;
 use MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\Config;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use MundiPagg\MundiPagg\Helper\ModuleHelper;
-use MundiPagg\MundiPagg\Helper\Logger;
 
 class CustomerCreateManagement implements CustomerCreateManagementInterface
 {
@@ -38,15 +37,13 @@ class CustomerCreateManagement implements CustomerCreateManagementInterface
         Customer $customerModel,
         Config $config,
         CustomerRepositoryInterface $customerRepository,
-        ModuleHelper $moduleHelper,
-        Logger $logger
+        ModuleHelper $moduleHelper
     )
     {
         $this->setSession($session);
         $this->setCustomerModel($customerModel);
         $this->setConfig($config);
         $this->setModuleHelper($moduleHelper);
-        $this->setLogger($logger);
         $this->customerRepository = $customerRepository;
     }
 
@@ -66,7 +63,6 @@ class CustomerCreateManagement implements CustomerCreateManagementInterface
 
             $customerIdMundipagg = $customerDataModel->getCustomAttribute('customer_id_mundipagg')->getValue();
 
-            $this->getLogger()->logger('id de retorno do customer' . $customerIdMundipagg);
             return [
                 [
                     'customer_id_mundipagg' => $customerIdMundipagg
@@ -75,10 +71,7 @@ class CustomerCreateManagement implements CustomerCreateManagementInterface
         }
 
         $customerRequest = $this->createRequest($customerJson, $customer->getId());
-        $this->getLogger()->logger($customerRequest->jsonSerialize());
         $result = $this->createSdk()->getCustomers()->createCustomer($customerRequest);
-
-        $this->getLogger()->logger($result->jsonSerialize());
         
         $customerDataModel->setCustomAttribute('customer_id_mundipagg', $result->id);
         $customer = $this->customerRepository->save($customerDataModel);
@@ -189,26 +182,6 @@ class CustomerCreateManagement implements CustomerCreateManagementInterface
     public function setModuleHelper($moduleHelper)
     {
         $this->moduleHelper = $moduleHelper;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLogger()
-    {
-        return $this->logger;
-    }
-
-    /**
-     * @param mixed $logger
-     *
-     * @return self
-     */
-    public function setLogger($logger)
-    {
-        $this->logger = $logger;
 
         return $this;
     }

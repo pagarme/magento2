@@ -18,7 +18,6 @@ use Magento\Sales\Model\Order\Payment;
 use MundiPagg\MundiPagg\Gateway\Transaction\Base\ResourceGateway\Response\AbstractHandler;
 use MundiPagg\MundiPagg\Model\ChargesFactory;
 use MundiPagg\MundiPagg\Gateway\Transaction\CreditCard\Config\Config as ConfigCreditCard;
-use MundiPagg\MundiPagg\Helper\Logger;
 
 class GeneralHandler extends AbstractHandler implements HandlerInterface
 {
@@ -32,19 +31,12 @@ class GeneralHandler extends AbstractHandler implements HandlerInterface
      */
     protected $configCreditCard;
 
-    /**
-     * @var \MundiPagg\MundiPagg\Helper\Logger
-     */
-    protected $logger;
-
     public function __construct(
         ConfigCreditCard $configCreditCard,
-        ChargesFactory $modelCharges,
-        Logger $logger
+        ChargesFactory $modelCharges
     ) {
         $this->modelCharges = $modelCharges;
         $this->configCreditCard = $configCreditCard;
-        $this->logger = $logger;
     }
 
     /**
@@ -54,7 +46,6 @@ class GeneralHandler extends AbstractHandler implements HandlerInterface
      */
     protected function _handle($payment, $response)
     {
-        $this->logger->logger("RESPONSE: \n\n" . json_encode($response, JSON_PRETTY_PRINT));
         $payment->setTransactionId($response->id);
         $this->setPaymentStateCreditCard($payment, $response);
 

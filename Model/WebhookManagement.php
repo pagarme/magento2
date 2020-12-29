@@ -18,7 +18,6 @@ use Mundipagg\Core\Webhook\Exceptions\WebhookHandlerNotFoundException;
 use Mundipagg\Core\Webhook\Services\WebhookReceiverService;
 use MundiPagg\MundiPagg\Api\WebhookManagementInterface;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
-use MundiPagg\MundiPagg\Helper\Logger;
 
 class WebhookManagement implements WebhookManagementInterface
 {
@@ -67,11 +66,6 @@ class WebhookManagement implements WebhookManagementInterface
      */
     protected $orderService;
 
-    /**
-     * @var \MundiPagg\MundiPagg\Helper\Logger
-     */
-    protected $logger;
-
     public function __construct(
         Order $orderFactory,
         ChargesFactory $chargesFactory,
@@ -81,8 +75,7 @@ class WebhookManagement implements WebhookManagementInterface
         InvoiceSender $invoiceSender,
         CreditmemoFactory $creditmemoFactory,
         CreditmemoService $creditmemoService,
-        OrderService $orderService,
-        Logger $logger
+        OrderService $orderService
     ) {
         $this->setOrderFactory($orderFactory);
         $this->setChargesFactory($chargesFactory);
@@ -93,7 +86,6 @@ class WebhookManagement implements WebhookManagementInterface
         $this->setCreditmemoFactory($creditmemoFactory);
         $this->setCreditmemoService($creditmemoService);
         $this->setOrderService($orderService);
-        $this->setLogger($logger);
     }
 
 
@@ -108,9 +100,6 @@ class WebhookManagement implements WebhookManagementInterface
     {
         try {
             Magento2CoreSetup::bootstrap();
-
-            $this->getLogger()->logger($data);
-            //log webhook received.
 
             $postData = new \stdClass();
             $postData->id = $id;
@@ -276,10 +265,8 @@ class WebhookManagement implements WebhookManagementInterface
         }
 
         try {
-            $this->getLogger()->logger($chargeCollection);
             $chargeCollection->save();
         } catch (\Exception $e) {
-            $this->getLogger()->logger($e);
             return $e->getMessage();
         }
 
@@ -466,26 +453,6 @@ class WebhookManagement implements WebhookManagementInterface
     public function setOrderService($orderService)
     {
         $this->orderService = $orderService;
-
-        return $this;
-    }
-
-    /**
-     * @return \MundiPagg\MundiPagg\Helper\Logger
-     */
-    public function getLogger()
-    {
-        return $this->logger;
-    }
-
-    /**
-     * @param \MundiPagg\MundiPagg\Helper\Logger $logger
-     *
-     * @return self
-     */
-    public function setLogger(\MundiPagg\MundiPagg\Helper\Logger $logger)
-    {
-        $this->logger = $logger;
 
         return $this;
     }

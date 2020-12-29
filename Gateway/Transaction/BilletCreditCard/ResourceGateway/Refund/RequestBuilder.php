@@ -25,7 +25,6 @@ use Magento\Checkout\Model\Cart;
 use MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\Config;
 use MundiPagg\MundiPagg\Gateway\Transaction\BilletCreditCard\Config\Config as ConfigBilletCreditCard;
 use MundiPagg\MundiPagg\Model\ChargesFactory;
-use MundiPagg\MundiPagg\Helper\Logger;
 
 class RequestBuilder implements BuilderInterface
 {
@@ -39,11 +38,6 @@ class RequestBuilder implements BuilderInterface
     protected $cart;
     protected $config;
     protected $configBilletCreditCard;
-
-    /**
-     * @var \MundiPagg\MundiPagg\Helper\Logger
-     */
-    protected $logger;
 
     /**
      * \MundiPagg\MundiPagg\Model\ChargesFactory
@@ -62,8 +56,7 @@ class RequestBuilder implements BuilderInterface
         Cart $cart,
         Config $config,
         ConfigBilletCreditCard $configBilletCreditCard,
-        ChargesFactory $modelCharges,
-        Logger $logger
+        ChargesFactory $modelCharges
     )
     {
         $this->setRequest($request);
@@ -73,7 +66,6 @@ class RequestBuilder implements BuilderInterface
         $this->setConfig($config);
         $this->setConfigBilletCreditCard($configBilletCreditCard);
         $this->modelCharges = $modelCharges;
-        $this->logger = $logger;
     }
 
     /**
@@ -317,10 +309,8 @@ class RequestBuilder implements BuilderInterface
                 $response = $this->getApi()->getCharges()->cancelCharge($charge->getChargeId(), $refund);
     
             } catch (\MundiAPILib\Exceptions\ErrorException $error) {
-                $this->logger->logger($error);
                 throw new \InvalidArgumentException($error->message);
             } catch (\Exception $ex) {
-                $this->logger->logger($ex);
                 throw new \InvalidArgumentException($ex->getMessage());
             }
 
@@ -334,10 +324,8 @@ class RequestBuilder implements BuilderInterface
                     $this->logger->logger($refund->jsonSerialize());
                     $responseArray[] = $this->getApi()->getCharges()->cancelCharge($charge->getChargeId(), $refund);
                 } catch (\MundiAPILib\Exceptions\ErrorException $error) {
-                    $this->logger->logger($error);
                     throw new \InvalidArgumentException($error->message);
                 } catch (\Exception $ex) {
-                    $this->logger->logger($ex);
                     throw new \InvalidArgumentException($ex->getMessage());
                 }
             }

@@ -13,7 +13,6 @@ use Magento\Sales\Model\Service\InvoiceService;
 use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
 use Magento\Framework\DB\Transaction;
 use MundiPagg\MundiPagg\Gateway\Transaction\CreditCard\Config\Config as ConfigCreditCard;
-use MundiPagg\MundiPagg\Helper\Logger;
 use MundiPagg\MundiPagg\Model\MundiPaggConfigProvider;
 use Magento\Framework\App\ObjectManager;
 
@@ -28,11 +27,6 @@ class SalesOrderPlaceAfter implements ObserverInterface
      * @var \Magento\Checkout\Model\Session
      */
     protected $checkoutSession;
-
-    /**
-     * @var \MundiPagg\MundiPagg\Helper\Logger
-     */
-    protected $logger;
 
     /**
      * \Magento\Sales\Model\Service\OrderService
@@ -66,12 +60,10 @@ class SalesOrderPlaceAfter implements ObserverInterface
 
     /**
      * @param \Magento\Checkout\Model\Session $checkoutSession
-     * @param \MundiPagg\MundiPagg\Helper\Logger $logger
      * @param Api $api
      */
     public function __construct(
         Session $checkoutSession,
-        Logger $logger,
         OrderService $orderService,
         CustomerFactory $customerFactory,
         SessionFactory $sessionFactory,
@@ -82,7 +74,6 @@ class SalesOrderPlaceAfter implements ObserverInterface
         ConfigCreditCard $configCreditCard
     ) {
         $this->setCheckoutSession($checkoutSession);
-        $this->setLogger($logger);
         $this->setOrderService($orderService);
         $this->setTransaction($transaction);
         $this->setInvoiceService($invoiceService);
@@ -113,7 +104,6 @@ class SalesOrderPlaceAfter implements ObserverInterface
 
         if ( $order->canInvoice() && $this->configCreditCard->getPaymentAction() == 'authorize_capture' ) {
             $result = $this->createInvoice($order);
-            $this->getLogger()->logger($result);
         }
 
         return $this;
@@ -174,26 +164,6 @@ class SalesOrderPlaceAfter implements ObserverInterface
     public function setCheckoutSession(\Magento\Checkout\Model\Session $checkoutSession)
     {
         $this->checkoutSession = $checkoutSession;
-
-        return $this;
-    }
-
-    /**
-     * @return \MundiPagg\MundiPagg\Helper\Logger
-     */
-    public function getLogger()
-    {
-        return $this->logger;
-    }
-
-    /**
-     * @param \MundiPagg\MundiPagg\Helper\Logger $logger
-     *
-     * @return self
-     */
-    public function setLogger($logger)
-    {
-        $this->logger = $logger;
 
         return $this;
     }

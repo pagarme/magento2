@@ -25,7 +25,6 @@ use Magento\Checkout\Model\Cart;
 use MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\Config;
 use MundiPagg\MundiPagg\Helper\ModuleHelper;
 use MundiPagg\MundiPagg\Model\Source\Bank;
-use MundiPagg\MundiPagg\Helper\Logger;
 use MundiPagg\MundiPagg\Helper\CustomerCustomAttributesHelper;
 use Magento\Customer\Model\Session;
 use MundiPagg\MundiPagg\Model\Payment;
@@ -51,7 +50,6 @@ class RequestBuilder implements BuilderInterface
     protected $moduleHelper;
     protected $bank;
     protected $paymentData;
-    protected $logger;
     protected $customerCustomAttributesHelper;
     protected $customerSession;
     protected $payment;
@@ -66,7 +64,6 @@ class RequestBuilder implements BuilderInterface
      * @param Config $config
      * @param ModuleHelper $moduleHelper
      * @param Bank $bank
-     * @param Logger $logger
      * @param CustomerCustomAttributesHelper $customerCustomAttributesHelper
      * @param Payment $payment
      * @param CustomerCustomAttributesHelper $customerCustomAttributesHelper*
@@ -78,7 +75,6 @@ class RequestBuilder implements BuilderInterface
         Config $config,
         ModuleHelper $moduleHelper,
         Bank $bank,
-        Logger $logger,
         CustomerCustomAttributesHelper $customerCustomAttributesHelper,
         Session $customerSession,
         Payment $payment,
@@ -91,7 +87,6 @@ class RequestBuilder implements BuilderInterface
         $this->setConfig($config);
         $this->setModuleHelper($moduleHelper);
         $this->setBank($bank);
-        $this->setLogger($logger);
         $this->customerCustomAttributesHelper = $customerCustomAttributesHelper;
         $this->customerSession = $customerSession;
         $this->payment = $payment;
@@ -256,20 +251,16 @@ class RequestBuilder implements BuilderInterface
         }
 
         try {
-            $this->getLogger()->logger($order->jsonSerialize());
-
             $response = $this->getApi()->getOrders()->createOrder($order);
 
             $this->customerCustomAttributesHelper->setCustomerCustomAttribute($quote->getCustomer(),$response, $quote->getCustomerIsGuest());
 
         } catch (\MundiAPILib\Exceptions\ErrorException $error) {
-            $this->getLogger()->logger($error);
             throw new \InvalidArgumentException($error);
 
             return $error;
 
         } catch (\Exception $ex) {
-            $this->getLogger()->logger($ex);
             throw new \InvalidArgumentException($ex->getMessage());
 
             return $ex;
@@ -489,26 +480,6 @@ class RequestBuilder implements BuilderInterface
     public function setCartItemRequestDataProviderFactory($cartItemRequestDataProviderFactory)
     {
         $this->cartItemRequestDataProviderFactory = $cartItemRequestDataProviderFactory;
-
-        return $this;
-    }
-
-    /**
-     * @return \MundiPagg\MundiPagg\Helper\Logger
-     */
-    public function getLogger()
-    {
-        return $this->logger;
-    }
-
-    /**
-     * @param \MundiPagg\MundiPagg\Helper\Logger $logger
-     *
-     * @return self
-     */
-    public function setLogger(\MundiPagg\MundiPagg\Helper\Logger $logger)
-    {
-        $this->logger = $logger;
 
         return $this;
     }
