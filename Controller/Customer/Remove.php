@@ -16,7 +16,6 @@ use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 use MundiPagg\MundiPagg\Concrete\Magento2SavedCardAdapter;
 use MundiPagg\MundiPagg\Model\CardsRepository;
 use MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\Config;
-use MundiPagg\MundiPagg\Helper\Logger;
 
 class Remove extends Action
 {
@@ -34,11 +33,6 @@ class Remove extends Action
 
     private $config;
 
-    /**
-     * @var \MundiPagg\MundiPagg\Helper\Logger
-     */
-    private $logger;
-
     public function __construct(
         Context $context,
         JsonFactory $jsonFactory,
@@ -46,8 +40,7 @@ class Remove extends Action
         CardsRepository $cardsRepository,
         Session $customerSession,
         Http $request,
-        Config $config,
-        Logger $logger
+        Config $config
     ){
         parent::__construct($context);
         $this->jsonFactory = $jsonFactory;
@@ -56,7 +49,6 @@ class Remove extends Action
         $this->request = $request;
         $this->cardsRepository = $cardsRepository;
         $this->config = $config;
-        $this->logger = $logger;
     }
 
     public function execute()
@@ -101,7 +93,6 @@ class Remove extends Action
                         $card->getCardId(),
                         $card->getCardToken()
                     );
-            $this->logger->logger($response);
 
             $deleteService->$deleteMethod(
                 $idCard,

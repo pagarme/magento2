@@ -25,7 +25,6 @@ use Magento\Checkout\Model\Cart;
 use MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\Config;
 use MundiPagg\MundiPagg\Gateway\Transaction\CreditCard\Config\Config as ConfigCreditCard;
 use MundiPagg\MundiPagg\Model\ChargesFactory;
-use MundiPagg\MundiPagg\Helper\Logger;
 
 class RequestBuilder implements BuilderInterface
 {
@@ -39,11 +38,6 @@ class RequestBuilder implements BuilderInterface
     protected $cart;
     protected $config;
     protected $configCreditCard;
-
-    /**
-     * @var \MundiPagg\MundiPagg\Helper\Logger
-     */
-    protected $logger;
 
     /**
      * \MundiPagg\MundiPagg\Model\ChargesFactory
@@ -63,8 +57,7 @@ class RequestBuilder implements BuilderInterface
         Cart $cart,
         Config $config,
         ConfigCreditCard $configCreditCard,
-        ChargesFactory $modelCharges,
-        Logger $logger
+        ChargesFactory $modelCharges
     )
     {
         $this->setRequest($request);
@@ -73,7 +66,6 @@ class RequestBuilder implements BuilderInterface
         $this->setCart($cart);
         $this->setConfig($config);
         $this->setConfigCreditCard($configCreditCard);
-        $this->setLogger($logger);
         $this->setModelCharges($modelCharges);
     }
 
@@ -313,17 +305,13 @@ class RequestBuilder implements BuilderInterface
             try {
                 $capture->amount = $this->getInvoiceTotalInCents();
                 $capture->code = $charge->getCode();
-                $this->getLogger()->logger($capture->jsonSerialize());
                 $response = $this->getApi()->getCharges()->captureCharge($charge->getChargeId(), $capture);
     
             } catch (\MundiAPILib\Exceptions\ErrorException $error) {
-                $this->getLogger()->logger($error);
                 throw new \InvalidArgumentException($error->message);
             } catch (\Exception $ex) {
-                $this->getLogger()->logger($ex);
                 throw new \InvalidArgumentException($ex->getMessage());
             }
-            $this->getLogger()->logger($response);
             
             return $response;
         }else{
@@ -335,15 +323,12 @@ class RequestBuilder implements BuilderInterface
                     $this->getLogger()->logger($capture->jsonSerialize());
                     $responseArray[] = $this->getApi()->getCharges()->captureCharge($charge->getChargeId(), $capture);
                 } catch (\MundiAPILib\Exceptions\ErrorException $error) {
-                    $this->getLogger()->logger($error);
                     throw new \InvalidArgumentException($error->message);
                 } catch (\Exception $ex) {
-                    $this->getLogger()->logger($ex);
                     throw new \InvalidArgumentException($ex->getMessage());
                 }
             }
         }
-        $this->getLogger()->logger($responseArray);
         
         return $responseArray;
     }
@@ -378,26 +363,6 @@ class RequestBuilder implements BuilderInterface
     public function setCartItemRequestDataProviderFactory($cartItemRequestDataProviderFactory)
     {
         $this->cartItemRequestDataProviderFactory = $cartItemRequestDataProviderFactory;
-
-        return $this;
-    }
-
-    /**
-     * @return \MundiPagg\MundiPagg\Helper\Logger
-     */
-    public function getLogger()
-    {
-        return $this->logger;
-    }
-
-    /**
-     * @param \MundiPagg\MundiPagg\Helper\Logger $logger
-     *
-     * @return self
-     */
-    public function setLogger(\MundiPagg\MundiPagg\Helper\Logger $logger)
-    {
-        $this->logger = $logger;
 
         return $this;
     }

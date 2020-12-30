@@ -26,7 +26,6 @@ use MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\Config;
 use MundiPagg\MundiPagg\Gateway\Transaction\CreditCard\Config\Config as ConfigCreditCard;
 use MundiPagg\MundiPagg\Helper\ModuleHelper;
 use MundiPagg\MundiPagg\Helper\Cards\CreateCard;
-use MundiPagg\MundiPagg\Helper\Logger;
 use MundiPagg\MundiPagg\Helper\CustomerCustomAttributesHelper;
 use Magento\Customer\Model\Session;
 use MundiPagg\MundiPagg\Model\Payment;
@@ -54,11 +53,6 @@ class RequestBuilder implements BuilderInterface
     protected $customerCustomAttributesHelper;
     protected $customerSession;
 
-    /**
-     * @var \MundiPagg\MundiPagg\Helper\Logger
-     */
-    protected $logger;
-
 
     protected $addressRepositoryInterface;
     /**
@@ -71,7 +65,6 @@ class RequestBuilder implements BuilderInterface
      * @param ConfigCreditCard $configCreditCard
      * @param CreateCard $createCrad
      * @param ModuleHelper $moduleHelper
-     * @param Logger $logger
      * @param Payment $payment
      * @param CustomerCustomAttributesHelper $customerCustomAttributesHelper
      */
@@ -84,7 +77,6 @@ class RequestBuilder implements BuilderInterface
         ConfigCreditCard $configCreditCard,
         CreateCard $createCrad,
         ModuleHelper $moduleHelper,
-        Logger $logger,
         Payment $payment,
         CustomerCustomAttributesHelper $customerCustomAttributesHelper,
         Session $customerSession,
@@ -99,7 +91,6 @@ class RequestBuilder implements BuilderInterface
         $this->setConfigCreditCard($configCreditCard);
         $this->setCreateCardHelper($createCrad);
         $this->setModuleHelper($moduleHelper);
-        $this->logger = $logger;
         $this->payment = $payment;
         $this->customerCustomAttributesHelper = $customerCustomAttributesHelper;
         $this->customerSession = $customerSession;
@@ -505,7 +496,6 @@ class RequestBuilder implements BuilderInterface
 
         try {
 
-            $this->logger->logger($order->jsonSerialize());
             $response = $this->getApi()->getOrders()->createOrder($order);
 
             if(($response->charges[0]->status == 'failed')) {
@@ -540,11 +530,8 @@ class RequestBuilder implements BuilderInterface
             $this->customerCustomAttributesHelper->setCustomerCustomAttribute($quote->getCustomer(),$response, $quote->getCustomerIsGuest());
 
         } catch (\MundiAPILib\Exceptions\ErrorException $error) {
-            $this->logger->logger($error);
             throw new \InvalidArgumentException($error);
         } catch (\Exception $ex) {
-
-            $this->logger->logger($ex);
             $acquirerMessage = $ex->getMessage();
 
             if(empty($acquirerMessage)){
