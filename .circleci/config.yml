@@ -91,7 +91,9 @@ jobs:
             docker exec -it newimage /bin/sh -c "mysql magento2 < /app/tmp/magento2_module_install.sql"
 
             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento config:set admin/security/password_is_forced 0"
-            docker exec -it newimage sh -c "cd /var/www/html && php bin/magento config:set admin/security/password_lifetime 0"
+            docker exec -it newimage sh -c "cd /var/www/html && php bin/magento config:set admin/security/password_lifetime 0"                                    
+            
+            docker exec -it newimage sh -c "cd /var/www/html && php bin/magento config:set customer/address/street_lines 4"                       
 
             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento cache:flush"
             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento setup:di:compile"
