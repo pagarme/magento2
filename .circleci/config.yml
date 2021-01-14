@@ -125,6 +125,8 @@ jobs:
             mkdir -p /failureScreenshot
             
             docker cp newimage:/behat-test/failureScreenshots/ /failureScreenshot
+            
+            docker exec -it newimage sh -c "if [ -d /behat-test/failureScreenshots ]; then echo 'Behat fail'; exit 1; else echo 'Behat OK'; fi"
       - store_artifacts:
           path: /failureScreenshot
       - run:
