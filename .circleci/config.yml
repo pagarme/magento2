@@ -100,7 +100,7 @@ jobs:
               echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list && \
               apt-get -y update && apt-get -y install google-chrome-unstable"
             
-            docker exec -it newimage sh -c "git clone https://github.com/mundipagg/ecommerce-test-package.git --branch develop /behat-test"
+            docker exec -it newimage sh -c "git clone https://github.com/mundipagg/ecommerce-test-package.git --branch behat-compatible-ci /behat-test"
               
             docker exec -it newimage sh -c "cd /behat-test && rm -rf composer.lock && rm -rf failureScreenshots"
             
@@ -110,7 +110,7 @@ jobs:
              
             docker exec -it newimage sh -c "cd /behat-test && composer install --prefer-dist"
                           
-            docker exec --detach newimage google-chrome-unstable --disable-gpu --no-sandbox --headless --remote-debugging-address=127.0.0.1 --remote-debugging-port=9222 --disable-extensions -user-data-dir=/tmp/test 
+            docker exec --detach newimage google-chrome-unstable --disable-gpu --no-sandbox --headless --remote-debugging-address=127.0.0.1 --remote-debugging-port=9222 --allow-insecure-localhost --disable-dev-shm-usage --disable-extensions -user-data-dir=/tmp/test 
 
             docker exec -it newimage bash -c "cd /behat-test && printf 'BASE_URL=\"http://localhost/\"' > .env"
           
