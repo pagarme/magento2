@@ -110,7 +110,7 @@ jobs:
               
             docker exec -it newimage sh -c "cd /behat-test && rm -rf composer.lock && rm -rf failureScreenshots"
             
-            docker exec -it newimage sh -c "mkdir failureScreenshots && chmod ugo+rwx failureScreenshots"
+            docker exec -it newimage sh -c "mkdir /behat-test/failureScreenshots && chmod ugo+rwx /behat-test/failureScreenshots"
                                     
             docker exec -it newimage sh -c "composer config -g github-oauth.github.com ${GIT_HUB_AUTH}"
              
@@ -122,11 +122,11 @@ jobs:
           
             docker exec -it newimage sh -c "cd /behat-test && vendor/bin/behat --profile magento2"   
             
-            mkdir -p /failureScreenshot
+            mkdir -p /error
             
-            docker cp newimage:/behat-test/failureScreenshots/ /failureScreenshot
+            docker cp newimage:/behat-test/failureScreenshots/ /error
             
-            docker exec -it newimage sh -c "if [ -d /behat-test/failureScreenshots ]; then echo 'Behat fail'; exit 1; else echo 'Behat OK'; fi"
+            docker exec -it newimage sh -c "if [ -d /error ]; then echo 'Behat fail'; exit 1; else echo 'Behat OK'; fi"
       - store_artifacts:
           path: /failureScreenshot
       - run:
