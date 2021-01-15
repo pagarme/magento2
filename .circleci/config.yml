@@ -128,7 +128,7 @@ jobs:
             
             ls /error
             
-            if [ -d /error/failureScreenshots ]; then echo 'Behat fail'; exit 1; else echo 'Behat OK'; fi
+            if [ -z "$(ls -A -- "error/failureScreenshots")" ]; then echo 'Behat OK'; else echo 'Behat fail'; exit 1;  fi
       - store_artifacts:
           path: /error
       - run:
