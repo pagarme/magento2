@@ -121,7 +121,7 @@ jobs:
                           
             docker exec --detach newimage google-chrome-unstable --disable-gpu --no-sandbox --headless --remote-debugging-address=127.0.0.1 --remote-debugging-port=9222 --allow-insecure-localhost --disable-dev-shm-usage --disable-extensions -user-data-dir=/tmp/test 
 
-            docker exec -it newimage bash -c "cd /behat-test && printf 'BASE_URL=\"http://127.0.0.1"' > .env"
+            docker exec -it newimage bash -c "cd /behat-test && printf 'BASE_URL=\"http://127.0.0.1\"' > .env"
           
             docker exec -it newimage sh -c "cd /behat-test && vendor/bin/behat --profile magento2"   
             
