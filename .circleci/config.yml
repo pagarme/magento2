@@ -94,7 +94,9 @@ jobs:
             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento config:set admin/security/password_lifetime 0"                                    
             
             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento config:set customer/address/street_lines 4" 
-            docker exec -it newimage sh -c "cd /var/www/html && php bin/magento config:set mundipagg_mundipagg/global/active 1"            
+            docker exec -it newimage sh -c "cd /var/www/html && php bin/magento config:set mundipagg_mundipagg/global/active 1"
+            docker exec -it newimage sh -c "cd /var/www/html && php bin/magento config:set payment/mundipagg_creditcard/enabled_saved_cards 1"            
+            docker exec -it newimage sh -c "cd /var/www/html && php bin/magento config:set payment/mundipagg_creditcard/payment_action authorize_capture"
 
             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento cache:flush"
             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento setup:di:compile"
