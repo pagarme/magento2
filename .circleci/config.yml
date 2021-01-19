@@ -98,7 +98,7 @@ jobs:
             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento config:set mundipagg_mundipagg/global/active 1"
             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento config:set payment/mundipagg_creditcard/enabled_saved_cards 1"            
             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento config:set payment/mundipagg_creditcard/payment_action authorize_capture"
-            docker exec -it newimage sh -c "cd /var/www/html && php bin/magento config:set bin/magento config:set web/seo/use_rewrites 0"           
+            docker exec -it newimage sh -c "cd /var/www/html && php bin/magento config:set bin/magento web/seo/use_rewrites 0"           
 
             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento cache:flush"
             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento setup:di:compile"
