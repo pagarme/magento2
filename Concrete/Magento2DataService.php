@@ -160,6 +160,10 @@ class Magento2DataService extends AbstractDataService
         $platformPayment = $platformOrder->getPayment();
 
         $objectManager = ObjectManager::getInstance();
+
+        /**
+         * @var Repository $transactionRepository
+         */
         $transactionRepository = $objectManager->get(Repository::class);
 
         $transaction = $transactionRepository->create();
@@ -201,11 +205,17 @@ class Magento2DataService extends AbstractDataService
                 $lastTransaction->getInstallments();
         }
 
-        foreach ($additionalInformation as $key => $value ) {
+        foreach ($additionalInformation as $key => $value) {
             $transaction->setAdditionalInformation($key, $value);
         }
 
-        $transactionRepository->save($transaction);
+        try {
+            $transactionRepository->save($transaction);
+            
+        } catch (\Exception $e) {
+            // nothing
+        }
+
         $platformPayment->setLastTransId($transaction->getTxnId());
         $platformPayment->save();
     }
