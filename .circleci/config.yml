@@ -76,6 +76,9 @@ jobs:
 
             docker exec -it newimage mysql magento2 -e \
             "INSERT INTO magento2.core_config_data VALUES (null, 'default', 0, 'customer/address/taxvat_show', 1);"
+            
+            docker exec -it newimage mysql magento2 -e \
+            "INSERT INTO magento2.core_config_data VALUES (null, 'default', 0, 'customer/address/street_lines', 4);"
 
             docker exec -it newimage mysql magento2 -e \
             "INSERT INTO magento2.core_config_data VALUES (null, 'default', 0, 'customer/create_account/vat_frontend_visibility', 1);"
@@ -88,33 +91,49 @@ jobs:
             docker exec -it newimage /bin/sh -c "mysql magento2 < /app/tmp/magento2_module_install.sql"
 
             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento config:set admin/security/password_is_forced 0"
-            docker exec -it newimage sh -c "cd /var/www/html && php bin/magento config:set admin/security/password_lifetime 0"
+            docker exec -it newimage sh -c "cd /var/www/html && php bin/magento config:set admin/security/password_lifetime 0"                                    
+            
+            docker exec -it newimage sh -c "cd /var/www/html && php bin/magento config:set payment/mundipagg_creditcard/enabled_saved_cards 1"            
+            docker exec -it newimage sh -c "cd /var/www/html && php bin/magento config:set customer/address/street_lines 4" 
+            docker exec -it newimage sh -c "cd /var/www/html && php bin/magento config:set customer/address/taxvat_show opt" 
+            docker exec -it newimage sh -c "cd /var/www/html && php bin/magento config:set mundipagg_mundipagg/global/active 1"            
+            docker exec -it newimage sh -c "cd /var/www/html && php bin/magento config:set payment/mundipagg_creditcard/payment_action authorize_capture"        
 
-            docker exec -it newimage sh -c "cd /var/www/html && php bin/magento cache:flush"
+            docker exec -it newimage sh -c "cd /var/www/html && php bin/magento cache:flush"            
             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento setup:di:compile"
       - run:
-          name: Install and run Functional Tests dependencies
+          name: Install and run Functional Tests dependencies                 
           command: |
             docker exec -i newimage sh -c \
               "wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
               echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list && \
               apt-get -y update && apt-get -y install google-chrome-unstable"
             
-            docker exec -it newimage sh -c "git clone https://github.com/mundipagg/ecommerce-test-package.git --branch develop /behat-test"
+            docker exec -it newimage sh -c "git clone https://github.com/mundipagg/ecommerce-test-package.git --branch behat-compatible-ci /behat-test"
               
             docker exec -it newimage sh -c "cd /behat-test && rm -rf composer.lock && rm -rf failureScreenshots"
             
-            docker exec -it newimage sh -c "mkdir failureScreenshots && chmod ugo+rwx failureScreenshots"
+            docker exec -it newimage sh -c "mkdir /behat-test/failureScreenshots && chmod ugo+rwx /behat-test/failureScreenshots"
                                     
             docker exec -it newimage sh -c "composer config -g github-oauth.github.com ${GIT_HUB_AUTH}"
              
             docker exec -it newimage sh -c "cd /behat-test && composer install --prefer-dist"
                           
-            docker exec --detach newimage google-chrome-unstable --disable-gpu --no-sandbox --headless --remote-debugging-address=127.0.0.1 --remote-debugging-port=9222 --disable-extensions -user-data-dir=/tmp/test 
+            docker exec --detach newimage google-chrome-unstable --disable-gpu --no-sandbox --headless --remote-debugging-address=127.0.0.1 --remote-debugging-port=9222 --allow-insecure-localhost --disable-dev-shm-usage --disable-extensions -user-data-dir=/tmp/test 
 
-            docker exec -it newimage bash -c "cd /behat-test && printf 'BASE_URL=\"http://localhost/\"' > .env"
+            docker exec -it newimage bash -c "cd /behat-test && printf 'BASE_URL=\"http://127.0.0.1\"' > .env"
           
-            docker exec -it newimage sh -c "cd /behat-test && vendor/bin/behat --profile magento2"         
+            docker exec -it newimage sh -c "cd /behat-test && vendor/bin/behat --profile magento2"   
+            
+            mkdir -p /error                      
+            
+            docker cp newimage:/behat-test/failureScreenshots/ /error
+            
+            ls /error
+            
+            if [ -z "$(ls -A -- "/error/failureScreenshots")" ]; then echo 'Behat OK'; else echo 'Behat fail'; exit 1;  fi
+      - store_artifacts:
+          path: /error
       - run:
           name: Clear useless files
           command: |
