@@ -211,7 +211,6 @@ class Magento2DataService extends AbstractDataService
 
         try {
             $transactionRepository->save($transaction);
-            
         } catch (\Exception $e) {
             // nothing
         }
