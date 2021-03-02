@@ -14,8 +14,8 @@ namespace MundiPagg\MundiPagg\Model\Installments;
 
 use Magento\Framework\Api\AbstractSimpleObjectBuilder;
 use Magento\Framework\Api\ObjectFactory;
-use MundiPagg\MundiPagg\Api\Data\InstallmentInterface;
-use MundiPagg\MundiPagg\Api\Data\InstallmentInterfaceFactory;
+use Pagarme\Pagarme\Api\Data\InstallmentInterface;
+use Pagarme\Pagarme\Api\Data\InstallmentInterfaceFactory;
 use MundiPagg\MundiPagg\Model\Installments\Config\ConfigByBrandInterface;
 use Magento\Checkout\Model\Session;
 
@@ -101,14 +101,14 @@ class BuilderByBrandAndAmount extends AbstractSimpleObjectBuilder
             $installmentAmount = $this->calcPriceWithInterest($qty, $interestRate);
             $interest = true;
             $interestRateTotal = $interestRate * 100;
-            $labelInterestRate = ' ' . $interestRateTotal . '% a.m. '; 
+            $labelInterestRate = ' ' . $interestRateTotal . '% a.m. ';
             $interestRateTotalSend = ($this->calcPriceWithInterestNoFormated($qty, $interestRate) * $qty) - $this->getGrandTotal();
             $interestLabel = __('with interest') . $labelInterestRate;
         }
 
         $grandTotal = $installmentAmount * $qty;
 
-        
+
         $installment->setQty($qty);
         $installment->setPrice($installmentAmount);
         $installment->setHasInterest($interest);

@@ -18,8 +18,8 @@ use Magento\Quote\Api\Data\PaymentInterface;
 use Magento\Framework\Event\ObserverInterface;
 use Mundipagg\Core\Kernel\Services\InstallmentService;
 use Mundipagg\Core\Kernel\ValueObjects\CardBrand;
-use MundiPagg\MundiPagg\Api\InstallmentsByBrandManagementInterface;
-use MundiPagg\MundiPagg\Api\InstallmentsByBrandAndAmountManagementInterface;
+use Pagarme\Pagarme\Api\InstallmentsByBrandManagementInterface;
+use Pagarme\Pagarme\Api\InstallmentsByBrandAndAmountManagementInterface;
 
 
 class CreditCardOrderPlaceBeforeObserver implements ObserverInterface
@@ -67,7 +67,7 @@ class CreditCardOrderPlaceBeforeObserver implements ObserverInterface
 
         $total = $order->getGrandTotal() + $tax;
         $order->setTaxAmount($tax)->setBaseTaxAmount($tax)->setBaseGrandTotal($total)->setGrandTotal($total);
-        
+
         return $this;
     }
 

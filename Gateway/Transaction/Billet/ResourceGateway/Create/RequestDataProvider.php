@@ -15,7 +15,7 @@ namespace MundiPagg\MundiPagg\Gateway\Transaction\Billet\ResourceGateway\Create;
 use Magento\Checkout\Model\Session;
 use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Payment\Model\InfoInterface;
-use MundiPagg\MundiPagg\Api\BilletRequestDataProviderInterface;
+use Pagarme\Pagarme\Api\BilletRequestDataProviderInterface;
 use MundiPagg\MundiPagg\Gateway\Transaction\Base\ResourceGateway\AbstractRequestDataProvider;
 use MundiPagg\MundiPagg\Gateway\Transaction\Billet\Config\ConfigInterface;
 use MundiPagg\MundiPagg\Helper\CustomerAddressInterface;
@@ -100,7 +100,7 @@ class RequestDataProvider
         if ($shipping) {
             return $this->getShippingAddressAttribute($this->getConfig()->getCustomerAddressNumber());
         }
-        
+
         return $this->getBillingAddressAttribute($this->getConfig()->getCustomerAddressNumber());
     }
 

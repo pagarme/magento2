@@ -12,7 +12,7 @@
 namespace MundiPagg\MundiPagg\Model;
 
 use Magento\Framework\Api\SimpleBuilderInterface;
-use MundiPagg\MundiPagg\Api\InstallmentsManagementInterface;
+use Pagarme\Pagarme\Api\InstallmentsManagementInterface;
 use Mundipagg\Core\Kernel\Abstractions\AbstractModuleCoreSetup as MPSetup;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 

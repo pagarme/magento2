@@ -15,7 +15,7 @@ namespace MundiPagg\MundiPagg\Gateway\Transaction\BilletCreditCard\ResourceGatew
 use Magento\Checkout\Model\Session;
 use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Payment\Model\InfoInterface;
-use MundiPagg\MundiPagg\Api\BilletCreditCardRequestDataProviderInterface;
+use Pagarme\Pagarme\Api\BilletCreditCardRequestDataProviderInterface;
 use MundiPagg\MundiPagg\Gateway\Transaction\Base\ResourceGateway\AbstractRequestDataProvider;
 use MundiPagg\MundiPagg\Gateway\Transaction\CreditCard\Config\ConfigInterface;
 use MundiPagg\MundiPagg\Helper\CustomerAddressInterface;
@@ -204,7 +204,7 @@ class RequestDataProvider
         return $this;
     }
 
-    
+
     /**
      * @return string
      */
@@ -225,7 +225,7 @@ class RequestDataProvider
         if ($shipping) {
             return $this->getShippingAddressAttribute($this->getConfig()->getCustomerAddressNumber());
         }
-        
+
         return $this->getBillingAddressAttribute($this->getConfig()->getCustomerAddressNumber());
     }
 

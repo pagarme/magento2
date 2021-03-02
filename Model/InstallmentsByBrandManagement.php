@@ -13,7 +13,7 @@ namespace MundiPagg\MundiPagg\Model;
 
 use Magento\Framework\Api\SimpleBuilderInterface;
 use Mundipagg\Core\Kernel\ValueObjects\CardBrand;
-use MundiPagg\MundiPagg\Api\InstallmentsByBrandManagementInterface;
+use Pagarme\Pagarme\Api\InstallmentsByBrandManagementInterface;
 use Magento\Checkout\Model\Session;
 
 use MundiPagg\MundiPagg\Model\Installments\Config\ConfigByBrand as Config;

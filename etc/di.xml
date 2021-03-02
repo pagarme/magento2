@@ -9,33 +9,33 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <preference for="MundiPagg\MundiPagg\Api\InstallmentsManagementInterface" type="MundiPagg\MundiPagg\Model\InstallmentsManagement" />
-    <preference for="MundiPagg\MundiPagg\Api\Data\InstallmentInterface" type="MundiPagg\MundiPagg\Model\Installment" />
-    <preference for="MundiPagg\MundiPagg\Api\CreditCardRequestDataProviderInterface" type="MundiPagg\MundiPagg\Gateway\Transaction\CreditCard\ResourceGateway\Create\RequestDataProvider" />
-    <preference for="MundiPagg\MundiPagg\Api\TwoCreditCardRequestDataProviderInterface" type="MundiPagg\MundiPagg\Gateway\Transaction\TwoCreditCard\ResourceGateway\Create\RequestDataProvider" />
-    <preference for="MundiPagg\MundiPagg\Api\BilletRequestDataProviderInterface" type="MundiPagg\MundiPagg\Gateway\Transaction\Billet\ResourceGateway\Create\RequestDataProvider" />
-    <preference for="MundiPagg\MundiPagg\Api\CartItemRequestDataProviderInterface" type="MundiPagg\MundiPagg\Gateway\Transaction\Base\ResourceGateway\CartItemRequestDataProvider" />
+    <preference for="Pagarme\Pagarme\Api\InstallmentsManagementInterface" type="MundiPagg\MundiPagg\Model\InstallmentsManagement" />
+    <preference for="Pagarme\Pagarme\Api\Data\InstallmentInterface" type="MundiPagg\MundiPagg\Model\Installment" />
+    <preference for="Pagarme\Pagarme\Api\CreditCardRequestDataProviderInterface" type="MundiPagg\MundiPagg\Gateway\Transaction\CreditCard\ResourceGateway\Create\RequestDataProvider" />
+    <preference for="Pagarme\Pagarme\Api\TwoCreditCardRequestDataProviderInterface" type="MundiPagg\MundiPagg\Gateway\Transaction\TwoCreditCard\ResourceGateway\Create\RequestDataProvider" />
+    <preference for="Pagarme\Pagarme\Api\BilletRequestDataProviderInterface" type="MundiPagg\MundiPagg\Gateway\Transaction\Billet\ResourceGateway\Create\RequestDataProvider" />
+    <preference for="Pagarme\Pagarme\Api\CartItemRequestDataProviderInterface" type="MundiPagg\MundiPagg\Gateway\Transaction\Base\ResourceGateway\CartItemRequestDataProvider" />
     <preference for="MundiPagg\MundiPagg\Model\Installments\Config\ConfigInterface" type="MundiPagg\MundiPagg\Model\Installments\Config\Config" />
     <preference for="MundiPagg\MundiPagg\Model\Installments\Config\ConfigByBrandInterface" type="MundiPagg\MundiPagg\Model\Installments\Config\ConfigByBrand" />
     <preference for="MundiPagg\MundiPagg\Gateway\Transaction\CreditCard\Config\ConfigInterface" type="MundiPagg\MundiPagg\Gateway\Transaction\CreditCard\Config\Config" />
     <preference for="MundiPagg\MundiPagg\Gateway\Transaction\TwoCreditCard\Config\ConfigInterface" type="MundiPagg\MundiPagg\Gateway\Transaction\TwoCreditCard\Config\Config" />
     <preference for="MundiPagg\MundiPagg\Gateway\Transaction\Billet\Config\ConfigInterface" type="MundiPagg\MundiPagg\Gateway\Transaction\Billet\Config\Config" />
     <preference for="MundiPagg\MundiPagg\Gateway\Transaction\BilletCreditCard\Config\ConfigInterface" type="MundiPagg\MundiPagg\Gateway\Transaction\BilletCreditCard\Config\Config" />
-    <preference for="MundiPagg\MundiPagg\Api\BilletCreditCardRequestDataProviderInterface" type="MundiPagg\MundiPagg\Gateway\Transaction\BilletCreditCard\ResourceGateway\Create\RequestDataProvider" />
+    <preference for="Pagarme\Pagarme\Api\BilletCreditCardRequestDataProviderInterface" type="MundiPagg\MundiPagg\Gateway\Transaction\BilletCreditCard\ResourceGateway\Create\RequestDataProvider" />
     <preference for="MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\ConfigInterface" type="MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\Config" />
     <preference for="MundiPagg\MundiPagg\Helper\CustomerAddressInterface" type="MundiPagg\MundiPagg\Helper\CustomerAddress" />
-    <preference for="MundiPagg\MundiPagg\Api\WebhookManagementInterface" type="MundiPagg\MundiPagg\Model\WebhookManagement"/>
-    <preference for="MundiPagg\MundiPagg\Api\InstallmentsByBrandManagementInterface" type="MundiPagg\MundiPagg\Model\InstallmentsByBrandManagement"/>
-    <preference for="MundiPagg\MundiPagg\Api\InstallmentsByBrandAndAmountManagementInterface" type="MundiPagg\MundiPagg\Model\InstallmentsByBrandAndAmountManagement"/>
-    <preference for="MundiPagg\MundiPagg\Api\CustomerCreateManagementInterface" type="MundiPagg\MundiPagg\Model\CustomerCreateManagement" />
+    <preference for="Pagarme\Pagarme\Api\WebhookManagementInterface" type="MundiPagg\MundiPagg\Model\WebhookManagement"/>
+    <preference for="Pagarme\Pagarme\Api\InstallmentsByBrandManagementInterface" type="MundiPagg\MundiPagg\Model\InstallmentsByBrandManagement"/>
+    <preference for="Pagarme\Pagarme\Api\InstallmentsByBrandAndAmountManagementInterface" type="MundiPagg\MundiPagg\Model\InstallmentsByBrandAndAmountManagement"/>
+    <preference for="Pagarme\Pagarme\Api\CustomerCreateManagementInterface" type="MundiPagg\MundiPagg\Model\CustomerCreateManagement" />
 
-    <preference for="MundiPagg\MundiPagg\Api\MaintenanceInterface"
+    <preference for="Pagarme\Pagarme\Api\MaintenanceInterface"
                 type="MundiPagg\MundiPagg\Model\Maintenance"/>
 
-    <preference for="MundiPagg\MundiPagg\Api\ProductSubscriptionInterface"
+    <preference for="Pagarme\Pagarme\Api\ProductSubscriptionInterface"
                 type="MundiPagg\MundiPagg\Model\Api\ProductsSubscription"/>
 
-    <preference for="MundiPagg\MundiPagg\Api\ProductPlanInterface"
+    <preference for="Pagarme\Pagarme\Api\ProductPlanInterface"
                 type="MundiPagg\MundiPagg\Model\Api\ProductsPlan"/>
 
     <type name="MundiPagg\MundiPagg\Model\InstallmentsByBrandManagement">
@@ -55,9 +55,9 @@
     </type>
 
     <!-- Charges Mundipagg -->
-    <preference for="MundiPagg\MundiPagg\Api\ChargesRepositoryInterface" type="MundiPagg\MundiPagg\Model\ChargesRepository"/>
-    <preference for="MundiPagg\MundiPagg\Api\Data\ChargesInterface" type="MundiPagg\MundiPagg\Model\Charges"/>
-    <preference for="MundiPagg\MundiPagg\Api\Data\ChargesSearchResultsInterface" type="Magento\Framework\Api\SearchResults"/>
+    <preference for="Pagarme\Pagarme\Api\ChargesRepositoryInterface" type="MundiPagg\MundiPagg\Model\ChargesRepository"/>
+    <preference for="Pagarme\Pagarme\Api\Data\ChargesInterface" type="MundiPagg\MundiPagg\Model\Charges"/>
+    <preference for="Pagarme\Pagarme\Api\Data\ChargesSearchResultsInterface" type="Magento\Framework\Api\SearchResults"/>
     <virtualType name="MundiPagg\MundiPagg\Model\ResourceModel\Charges\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
         <arguments>
             <argument name="mainTable" xsi:type="string">mundipagg_module_core_charge</argument>
@@ -75,9 +75,9 @@
     <!-- Final Charges Mundipagg -->
 
     <!-- Cards Mundipagg -->
-    <preference for="MundiPagg\MundiPagg\Api\CardsRepositoryInterface" type="MundiPagg\MundiPagg\Model\CardsRepository"/>
-    <preference for="MundiPagg\MundiPagg\Api\Data\CardsInterface" type="MundiPagg\MundiPagg\Model\Cards"/>
-    <preference for="MundiPagg\MundiPagg\Api\Data\CardsSearchResultsInterface" type="Magento\Framework\Api\SearchResults"/>
+    <preference for="Pagarme\Pagarme\Api\CardsRepositoryInterface" type="MundiPagg\MundiPagg\Model\CardsRepository"/>
+    <preference for="Pagarme\Pagarme\Api\Data\CardsInterface" type="MundiPagg\MundiPagg\Model\Cards"/>
+    <preference for="Pagarme\Pagarme\Api\Data\CardsSearchResultsInterface" type="Magento\Framework\Api\SearchResults"/>
     <virtualType name="MundiPagg\MundiPagg\Model\ResourceModel\Cards\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
         <arguments>
             <argument name="mainTable" xsi:type="string">mundipagg_mundipagg_cards</argument>
@@ -633,20 +633,20 @@
     <!-- Recurrence -->
 
     <preference for="Mundipagg\Core\Recurrence\Interfaces\RepetitionInterface" type="Mundipagg\Core\Recurrence\Aggregates\Repetition" />
-    <preference for="MundiPagg\MundiPagg\Api\ProductSubscriptionApiInterface" type="MundiPagg\MundiPagg\Model\Api\ProductsSubscription" />
-    <preference for="MundiPagg\MundiPagg\Api\SubscriptionApiInterface" type="MundiPagg\MundiPagg\Model\Api\Subscription" />
-    <preference for="MundiPagg\MundiPagg\Api\InvoiceApiInterface" type="MundiPagg\MundiPagg\Model\Api\Invoice" />
+    <preference for="Pagarme\Pagarme\Api\ProductSubscriptionApiInterface" type="MundiPagg\MundiPagg\Model\Api\ProductsSubscription" />
+    <preference for="Pagarme\Pagarme\Api\SubscriptionApiInterface" type="MundiPagg\MundiPagg\Model\Api\Subscription" />
+    <preference for="Pagarme\Pagarme\Api\InvoiceApiInterface" type="MundiPagg\MundiPagg\Model\Api\Invoice" />
 
-    <preference for="MundiPagg\MundiPagg\Api\ProductPlanApiInterface" type="MundiPagg\MundiPagg\Model\Api\ProductsPlan" />
+    <preference for="Pagarme\Pagarme\Api\ProductPlanApiInterface" type="MundiPagg\MundiPagg\Model\Api\ProductsPlan" />
     <preference for="Mundipagg\Core\Recurrence\Interfaces\ProductPlanInterface" type="Mundipagg\Core\Recurrence\Aggregates\Plan" />
 
-    <preference for="MundiPagg\MundiPagg\Api\ObjectMapper\ProductPlan\ProductPlanMapperInterface" type="Mundipagg\Core\Recurrence\Aggregates\Plan" />
-    <preference for="MundiPagg\MundiPagg\Api\ObjectMapper\ProductPlan\SubProduct" type="Mundipagg\Core\Recurrence\Aggregates\SubProduct" />
+    <preference for="Pagarme\Pagarme\Api\ObjectMapper\ProductPlan\ProductPlanMapperInterface" type="Mundipagg\Core\Recurrence\Aggregates\Plan" />
+    <preference for="Pagarme\Pagarme\Api\ObjectMapper\ProductPlan\SubProduct" type="Mundipagg\Core\Recurrence\Aggregates\SubProduct" />
 
-    <preference for="MundiPagg\MundiPagg\Api\ObjectMapper\ProductSubscription\ProductSubscriptionMapperInterface" type="Mundipagg\Core\Recurrence\Aggregates\ProductSubscription" />
-    <preference for="MundiPagg\MundiPagg\Api\ObjectMapper\ProductSubscription\RepetitionInterface" type="Mundipagg\Core\Recurrence\Aggregates\Repetition" />
+    <preference for="Pagarme\Pagarme\Api\ObjectMapper\ProductSubscription\ProductSubscriptionMapperInterface" type="Mundipagg\Core\Recurrence\Aggregates\ProductSubscription" />
+    <preference for="Pagarme\Pagarme\Api\ObjectMapper\ProductSubscription\RepetitionInterface" type="Mundipagg\Core\Recurrence\Aggregates\Repetition" />
 
-    <preference for="MundiPagg\MundiPagg\Api\ObjectMapper\ProductSubscription\RepetitionInterface" type="Mundipagg\Core\Recurrence\Aggregates\Repetition" />
+    <preference for="Pagarme\Pagarme\Api\ObjectMapper\ProductSubscription\RepetitionInterface" type="Mundipagg\Core\Recurrence\Aggregates\Repetition" />
 
 
     <!-- Admin checkout -->

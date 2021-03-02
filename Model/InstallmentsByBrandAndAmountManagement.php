@@ -17,7 +17,7 @@ use Mundipagg\Core\Kernel\ValueObjects\CardBrand;
 use Mundipagg\Core\Recurrence\Aggregates\Plan;
 use Mundipagg\Core\Recurrence\Services\RecurrenceService;
 use Mundipagg\Core\Recurrence\ValueObjects\IntervalValueObject;
-use MundiPagg\MundiPagg\Api\InstallmentsByBrandAndAmountManagementInterface;
+use Pagarme\Pagarme\Api\InstallmentsByBrandAndAmountManagementInterface;
 use Magento\Checkout\Model\Session;
 use MundiPagg\MundiPagg\Helper\RecurrenceProductHelper;
 use MundiPagg\MundiPagg\Model\Installments\Config\ConfigByBrand as Config;

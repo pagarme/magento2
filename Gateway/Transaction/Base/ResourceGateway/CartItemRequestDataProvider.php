@@ -13,7 +13,7 @@ namespace MundiPagg\MundiPagg\Gateway\Transaction\Base\ResourceGateway;
 
 
 use Magento\Sales\Model\Order\Item;
-use MundiPagg\MundiPagg\Api\CartItemRequestDataProviderInterface;
+use Pagarme\Pagarme\Api\CartItemRequestDataProviderInterface;
 
 class CartItemRequestDataProvider implements CartItemRequestDataProviderInterface
 {

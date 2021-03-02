@@ -13,7 +13,7 @@ namespace MundiPagg\MundiPagg\Model;
 
 
 use Magento\Framework\DataObject;
-use MundiPagg\MundiPagg\Api\Data\InstallmentInterface;
+use Pagarme\Pagarme\Api\Data\InstallmentInterface;
 use Magento\Framework\Pricing\Helper\Data;
 
 class Installment extends DataObject implements InstallmentInterface

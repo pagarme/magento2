@@ -8,10 +8,10 @@ use Mundipagg\Core\Recurrence\Services\PlanService;
 use Mundipagg\Core\Recurrence\Aggregates\Plan;
 use Mundipagg\Core\Recurrence\Interfaces\ProductPlanInterface;
 use Mundipagg\Core\Recurrence\Factories\PlanFactory;
-use MundiPagg\MundiPagg\Api\ProductPlanApiInterface;
+use Pagarme\Pagarme\Api\ProductPlanApiInterface;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 use MundiPagg\MundiPagg\Helper\ProductPlanHelper;
-use MundiPagg\MundiPagg\Api\ObjectMapper\ProductPlan\ProductPlanMapperInterface;
+use Pagarme\Pagarme\Api\ObjectMapper\ProductPlan\ProductPlanMapperInterface;
 
 class ProductsPlan implements ProductPlanApiInterface
 {

@@ -3,9 +3,9 @@
 
 namespace MundiPagg\MundiPagg\Model;
 
-use MundiPagg\MundiPagg\Api\ChargesRepositoryInterface;
-use MundiPagg\MundiPagg\Api\Data\ChargesSearchResultsInterfaceFactory;
-use MundiPagg\MundiPagg\Api\Data\ChargesInterfaceFactory;
+use Pagarme\Pagarme\Api\ChargesRepositoryInterface;
+use Pagarme\Pagarme\Api\Data\ChargesSearchResultsInterfaceFactory;
+use Pagarme\Pagarme\Api\Data\ChargesInterfaceFactory;
 use Magento\Framework\Api\DataObjectHelper;
 use Magento\Framework\Api\SortOrder;
 use Magento\Framework\Exception\CouldNotDeleteException;
@@ -70,7 +70,7 @@ class ChargesRepository implements ChargesRepositoryInterface
      * {@inheritdoc}
      */
     public function save(
-        \MundiPagg\MundiPagg\Api\Data\ChargesInterface $charges
+        \Pagarme\Pagarme\Api\Data\ChargesInterface $charges
     ) {
         try {
             $charges->getResource()->save($charges);
@@ -109,7 +109,7 @@ class ChargesRepository implements ChargesRepositoryInterface
                 $collection->addFieldToFilter($filter->getField(), [$condition => $filter->getValue()]);
             }
         }
-        
+
         $sortOrders = $criteria->getSortOrders();
         if ($sortOrders) {
             /** @var SortOrder $sortOrder */
@@ -122,7 +122,7 @@ class ChargesRepository implements ChargesRepositoryInterface
         }
         $collection->setCurPage($criteria->getCurrentPage());
         $collection->setPageSize($criteria->getPageSize());
-        
+
         $searchResults = $this->searchResultsFactory->create();
         $searchResults->setSearchCriteria($criteria);
         $searchResults->setTotalCount($collection->getSize());
@@ -134,7 +134,7 @@ class ChargesRepository implements ChargesRepositoryInterface
      * {@inheritdoc}
      */
     public function delete(
-        \MundiPagg\MundiPagg\Api\Data\ChargesInterface $charges
+        \Pagarme\Pagarme\Api\Data\ChargesInterface $charges
     ) {
         try {
             $charges->getResource()->delete($charges);

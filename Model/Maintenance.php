@@ -3,7 +3,7 @@
 namespace MundiPagg\MundiPagg\Model;
 
 use Mundipagg\Core\Maintenance\Services\InfoBuilderService;
-use MundiPagg\MundiPagg\Api\MaintenanceInterface;
+use Pagarme\Pagarme\Api\MaintenanceInterface;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 
 class Maintenance

@@ -3,7 +3,7 @@
 
 namespace MundiPagg\MundiPagg\Model;
 
-use MundiPagg\MundiPagg\Api\Data\ChargesInterface;
+use Pagarme\Pagarme\Api\Data\ChargesInterface;
 use Magento\Framework\Model\AbstractModel;
 
 class Charges extends AbstractModel implements ChargesInterface
@@ -28,7 +28,7 @@ class Charges extends AbstractModel implements ChargesInterface
     /**
      * Set id
      * @param int $id
-     * @return \MundiPagg\MundiPagg\Api\Data\ChargesInterface
+     * @return \Pagarme\Pagarme\Api\Data\ChargesInterface
      */
     public function setId($id)
     {
@@ -47,7 +47,7 @@ class Charges extends AbstractModel implements ChargesInterface
     /**
      * Set charges_id
      * @param string $chargesId
-     * @return \MundiPagg\MundiPagg\Api\Data\ChargesInterface
+     * @return \Pagarme\Pagarme\Api\Data\ChargesInterface
      */
     public function setChargeId($chargeId)
     {
@@ -66,7 +66,7 @@ class Charges extends AbstractModel implements ChargesInterface
     /**
      * Set code
      * @param string $code
-     * @return \MundiPagg\MundiPagg\Api\Data\ChargesInterface
+     * @return \Pagarme\Pagarme\Api\Data\ChargesInterface
      */
     public function setCode($code)
     {
@@ -85,7 +85,7 @@ class Charges extends AbstractModel implements ChargesInterface
     /**
      * Set order_id
      * @param string $orderId
-     * @return \MundiPagg\MundiPagg\Api\Data\ChargesInterface
+     * @return \Pagarme\Pagarme\Api\Data\ChargesInterface
      */
     public function setOrderId($orderId)
     {
@@ -104,7 +104,7 @@ class Charges extends AbstractModel implements ChargesInterface
     /**
      * Set type
      * @param string $type
-     * @return \MundiPagg\MundiPagg\Api\Data\ChargesInterface
+     * @return \Pagarme\Pagarme\Api\Data\ChargesInterface
      */
     public function setType($type)
     {
@@ -123,7 +123,7 @@ class Charges extends AbstractModel implements ChargesInterface
     /**
      * Set status
      * @param string $status
-     * @return \MundiPagg\MundiPagg\Api\Data\ChargesInterface
+     * @return \Pagarme\Pagarme\Api\Data\ChargesInterface
      */
     public function setStatus($status)
     {
@@ -142,7 +142,7 @@ class Charges extends AbstractModel implements ChargesInterface
     /**
      * Set amount
      * @param float $amount
-     * @return \MundiPagg\MundiPagg\Api\Data\ChargesInterface
+     * @return \Pagarme\Pagarme\Api\Data\ChargesInterface
      */
     public function setAmount($amount)
     {
@@ -161,7 +161,7 @@ class Charges extends AbstractModel implements ChargesInterface
     /**
      * Set paid_amount
      * @param float $paidAmount
-     * @return \MundiPagg\MundiPagg\Api\Data\ChargesInterface
+     * @return \Pagarme\Pagarme\Api\Data\ChargesInterface
      */
     public function setPaidAmount($paidAmount)
     {
@@ -180,7 +180,7 @@ class Charges extends AbstractModel implements ChargesInterface
     /**
      * Set refunded_amount
      * @param float $refundedAmount
-     * @return \MundiPagg\MundiPagg\Api\Data\ChargesInterface
+     * @return \Pagarme\Pagarme\Api\Data\ChargesInterface
      */
     public function setRefundedAmount($refundedAmount)
     {
@@ -199,7 +199,7 @@ class Charges extends AbstractModel implements ChargesInterface
     /**
      * Set created_at
      * @param string $createdAt
-     * @return \MundiPagg\MundiPagg\Api\Data\ChargesInterface
+     * @return \Pagarme\Pagarme\Api\Data\ChargesInterface
      */
     public function setCreatedAt($createdAt)
     {
@@ -218,7 +218,7 @@ class Charges extends AbstractModel implements ChargesInterface
     /**
      * Set updated_at
      * @param string $updatedAt
-     * @return \MundiPagg\MundiPagg\Api\Data\ChargesInterface
+     * @return \Pagarme\Pagarme\Api\Data\ChargesInterface
      */
     public function setUpdatedAt($updatedAt)
     {
