@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Api;
+namespace Pagarme\Pagarme\Api;
 
 interface SubscriptionApiInterface
 {
@@ -15,7 +15,7 @@ interface SubscriptionApiInterface
      * List product subscription
      *
      * @param string $customerId
-     * @return \Mundipagg\Core\Recurrence\Interfaces\SubscriptionInterface[]
+     * @return \Pagarme\Core\Recurrence\Interfaces\SubscriptionInterface[]
      */
     public function listByCustomerId($customerId);
 

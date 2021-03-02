@@ -1,7 +1,7 @@
 <?php
 
 
-namespace MundiPagg\MundiPagg\Api\Data;
+namespace Pagarme\Pagarme\Api\Data;
 
 interface CardsInterface
 {
@@ -25,7 +25,7 @@ interface CardsInterface
     /**
      * Set id
      * @param int $id
-     * @return \MundiPagg\MundiPagg\Api\Data\CardsInterface
+     * @return \Pagarme\Pagarme\Api\Data\CardsInterface
      */
     public function setId($id);
 
@@ -38,7 +38,7 @@ interface CardsInterface
     /**
      * Set customer_id
      * @param string $customerId
-     * @return \MundiPagg\MundiPagg\Api\Data\CardsInterface
+     * @return \Pagarme\Pagarme\Api\Data\CardsInterface
      */
     public function setCustomerId($customerId);
 
@@ -51,7 +51,7 @@ interface CardsInterface
     /**
      * Set card_holder_name
      * @param string $cardHolderName
-     * @return \MundiPagg\MundiPagg\Api\Data\CardsInterface
+     * @return \Pagarme\Pagarme\Api\Data\CardsInterface
      */
     public function setCardHolderName($cardHolderName);
 
@@ -64,7 +64,7 @@ interface CardsInterface
     /**
      * Set card_token
      * @param string $cardToken
-     * @return \MundiPagg\MundiPagg\Api\Data\CardsInterface
+     * @return \Pagarme\Pagarme\Api\Data\CardsInterface
      */
     public function setCardToken($cardToken);
 
@@ -77,7 +77,7 @@ interface CardsInterface
     /**
      * Set card_id
      * @param string $cardId
-     * @return \MundiPagg\MundiPagg\Api\Data\CardsInterface
+     * @return \Pagarme\Pagarme\Api\Data\CardsInterface
      */
     public function setCardId($cardId);
 
@@ -90,7 +90,7 @@ interface CardsInterface
     /**
      * Set last_four_numbers
      * @param string $lastFourNumbers
-     * @return \MundiPagg\MundiPagg\Api\Data\CardsInterface
+     * @return \Pagarme\Pagarme\Api\Data\CardsInterface
      */
     public function setLastFourNumbers($lastFourNumbers);
 
@@ -103,7 +103,7 @@ interface CardsInterface
     /**
      * Set first_six_numbers
      * @param string $firstSixNumbers
-     * @return \MundiPagg\MundiPagg\Api\Data\CardsInterface
+     * @return \Pagarme\Pagarme\Api\Data\CardsInterface
      */
     public function setFirstSixNumbers($firstSixNumbers);
 
@@ -116,7 +116,7 @@ interface CardsInterface
     /**
      * Set created_at
      * @param string $createdAt
-     * @return \MundiPagg\MundiPagg\Api\Data\CardsInterface
+     * @return \Pagarme\Pagarme\Api\Data\CardsInterface
      */
     public function setCreatedAt($createdAt);
 
@@ -129,7 +129,7 @@ interface CardsInterface
     /**
      * Set updated_at
      * @param string $updatedAt
-     * @return \MundiPagg\MundiPagg\Api\Data\CardsInterface
+     * @return \Pagarme\Pagarme\Api\Data\CardsInterface
      */
     public function setUpdatedAt($updatedAt);
 
@@ -142,7 +142,7 @@ interface CardsInterface
     /**
      * Set brand
      * @param string $brand
-     * @return \MundiPagg\MundiPagg\Api\Data\CardsInterface
+     * @return \Pagarme\Pagarme\Api\Data\CardsInterface
      */
     public function setBrand($brand);
 }

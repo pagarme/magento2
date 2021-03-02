@@ -1,7 +1,7 @@
 <?php
 
 
-namespace MundiPagg\MundiPagg\Api\Data;
+namespace Pagarme\Pagarme\Api\Data;
 
 interface ChargesInterface
 {
@@ -26,7 +26,7 @@ interface ChargesInterface
     /**
      * Set id
      * @param int $id
-     * @return \MundiPagg\MundiPagg\Api\Data\ChargesInterface
+     * @return \Pagarme\Pagarme\Api\Data\ChargesInterface
      */
     public function setId($id);
 
@@ -39,7 +39,7 @@ interface ChargesInterface
     /**
      * Set charge_id
      * @param string $charges_id
-     * @return \MundiPagg\MundiPagg\Api\Data\ChargesInterface
+     * @return \Pagarme\Pagarme\Api\Data\ChargesInterface
      */
     public function setChargeId($chargeId);
 
@@ -52,7 +52,7 @@ interface ChargesInterface
     /**
      * Set code
      * @param string $code
-     * @return \MundiPagg\MundiPagg\Api\Data\ChargesInterface
+     * @return \Pagarme\Pagarme\Api\Data\ChargesInterface
      */
     public function setCode($code);
 
@@ -65,7 +65,7 @@ interface ChargesInterface
     /**
      * Set order_id
      * @param string $orderId
-     * @return \MundiPagg\MundiPagg\Api\Data\ChargesInterface
+     * @return \Pagarme\Pagarme\Api\Data\ChargesInterface
      */
     public function setOrderId($orderId);
 
@@ -78,7 +78,7 @@ interface ChargesInterface
     /**
      * Set type
      * @param string $type
-     * @return \MundiPagg\MundiPagg\Api\Data\ChargesInterface
+     * @return \Pagarme\Pagarme\Api\Data\ChargesInterface
      */
     public function setType($type);
 
@@ -91,7 +91,7 @@ interface ChargesInterface
     /**
      * Set status
      * @param string $status
-     * @return \MundiPagg\MundiPagg\Api\Data\ChargesInterface
+     * @return \Pagarme\Pagarme\Api\Data\ChargesInterface
      */
     public function setStatus($status);
 
@@ -104,7 +104,7 @@ interface ChargesInterface
     /**
      * Set amount
      * @param float $amount
-     * @return \MundiPagg\MundiPagg\Api\Data\ChargesInterface
+     * @return \Pagarme\Pagarme\Api\Data\ChargesInterface
      */
     public function setAmount($amount);
 
@@ -117,7 +117,7 @@ interface ChargesInterface
     /**
      * Set paid_amount
      * @param float $paidAmount
-     * @return \MundiPagg\MundiPagg\Api\Data\ChargesInterface
+     * @return \Pagarme\Pagarme\Api\Data\ChargesInterface
      */
     public function setPaidAmount($paidAmount);
 
@@ -130,7 +130,7 @@ interface ChargesInterface
     /**
      * Set refunded_amount
      * @param float $refundedAmount
-     * @return \MundiPagg\MundiPagg\Api\Data\ChargesInterface
+     * @return \Pagarme\Pagarme\Api\Data\ChargesInterface
      */
     public function setRefundedAmount($refundedAmount);
 
@@ -143,7 +143,7 @@ interface ChargesInterface
     /**
      * Set created_at
      * @param string $createdAt
-     * @return \MundiPagg\MundiPagg\Api\Data\ChargesInterface
+     * @return \Pagarme\Pagarme\Api\Data\ChargesInterface
      */
     public function setCreatedAt($createdAt);
 
@@ -156,7 +156,7 @@ interface ChargesInterface
     /**
      * Set updated_at
      * @param string $updatedAt
-     * @return \MundiPagg\MundiPagg\Api\Data\ChargesInterface
+     * @return \Pagarme\Pagarme\Api\Data\ChargesInterface
      */
     public function setUpdatedAt($updatedAt);
 }
