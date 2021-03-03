@@ -6,7 +6,7 @@
 		<field id="module_version" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label" type="label">
 			<label>Module Version</label>
 			<comment/>
-			<frontend_model>MundiPagg\MundiPagg\Block\Adminhtml\Form\Field\ModuleVersion</frontend_model>
+			<frontend_model>Pagarme\Pagarme\Block\Adminhtml\Form\Field\ModuleVersion</frontend_model>
 		</field>
 		<field id="active" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="select">
 			<label>Enable this Solution</label>

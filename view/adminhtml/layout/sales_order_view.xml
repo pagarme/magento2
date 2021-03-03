@@ -10,7 +10,7 @@
             <action method="addTab">
                 <!--<uiComponent name="mundipagg_mundipagg_charges_index"/>-->
                 <argument name="name" xsi:type="string">charges</argument>
-                <argument name="block" xsi:type="string">MundiPagg\MundiPagg\Block\Adminhtml\Order\Charge\Tab\View</argument>
+                <argument name="block" xsi:type="string">Pagarme\Pagarme\Block\Adminhtml\Order\Charge\Tab\View</argument>
             </action>
         </referenceBlock>
     </body>

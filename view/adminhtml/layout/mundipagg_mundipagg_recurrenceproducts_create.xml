@@ -7,7 +7,7 @@
 	</head>
 	<body>
 		<referenceContainer name="content">
-			<block class="MundiPagg\MundiPagg\Block\Adminhtml\Recurrence\Subscriptions\Subscription" name="mundipagg.recurrence.subscriptions" template="recurrence/subscriptions/create.phtml" cacheable="false"/>
+			<block class="Pagarme\Pagarme\Block\Adminhtml\Recurrence\Subscriptions\Subscription" name="mundipagg.recurrence.subscriptions" template="recurrence/subscriptions/create.phtml" cacheable="false"/>
 		</referenceContainer>
 	</body>
 </page>

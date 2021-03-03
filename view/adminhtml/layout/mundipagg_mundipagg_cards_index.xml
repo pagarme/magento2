@@ -3,7 +3,7 @@
 	<update handle="styles"/>
 	<body>
 		<referenceContainer name="content">
-			<block class="MundiPagg\MundiPagg\Block\Adminhtml\Customer\Cards" template="MundiPagg_MundiPagg::customer/cards.phtml" cacheable="false"/>
+			<block class="Pagarme\Pagarme\Block\Adminhtml\Customer\Cards" template="MundiPagg_MundiPagg::customer/cards.phtml" cacheable="false"/>
 		</referenceContainer>
 	</body>
 </page>

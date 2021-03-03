@@ -197,7 +197,7 @@
             <argument name="valueHandlerPool" xsi:type="object">MundiPaggPixValueHandlerPool</argument>
             <argument name="commandPool" xsi:type="object">MundiPaggPixCommandPool</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
-            <argument name="infoBlockType" xsi:type="string">MundiPagg\MundiPagg\Block\Payment\Info\Pix</argument>
+            <argument name="infoBlockType" xsi:type="string">Pagarme\Pagarme\Block\Payment\Info\Pix</argument>
         </arguments>
     </virtualType>
 
@@ -239,7 +239,7 @@
             <argument name="valueHandlerPool" xsi:type="object">MundiPaggBilletValueHandlerPool</argument>
             <argument name="commandPool" xsi:type="object">MundiPaggBilletCommandPool</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
-            <argument name="infoBlockType" xsi:type="string">MundiPagg\MundiPagg\Block\Payment\Info\Billet</argument>
+            <argument name="infoBlockType" xsi:type="string">Pagarme\Pagarme\Block\Payment\Info\Billet</argument>
         </arguments>
     </virtualType>
 
@@ -296,7 +296,7 @@
             <argument name="valueHandlerPool" xsi:type="object">MundiPaggTwoCreditCardValueHandlerPool</argument>
             <argument name="commandPool" xsi:type="object">MundiPaggTwoCreditCardCommandPool</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
-            <argument name="infoBlockType" xsi:type="string">MundiPagg\MundiPagg\Block\Payment\Info\TwoCreditCard</argument>
+            <argument name="infoBlockType" xsi:type="string">Pagarme\Pagarme\Block\Payment\Info\TwoCreditCard</argument>
         </arguments>
     </virtualType>
 
@@ -372,7 +372,7 @@
             <argument name="valueHandlerPool" xsi:type="object">MundiPaggVoucherValueHandlerPool</argument>
             <argument name="commandPool" xsi:type="object">MundiPaggVoucherCommandPool</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
-            <argument name="infoBlockType" xsi:type="string">MundiPagg\MundiPagg\Block\Payment\Info\Voucher</argument>
+            <argument name="infoBlockType" xsi:type="string">Pagarme\Pagarme\Block\Payment\Info\Voucher</argument>
         </arguments>
     </virtualType>
 
@@ -414,7 +414,7 @@
             <argument name="valueHandlerPool" xsi:type="object">MundiPaggDebitValueHandlerPool</argument>
             <argument name="commandPool" xsi:type="object">MundiPaggDebitCommandPool</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
-            <argument name="infoBlockType" xsi:type="string">MundiPagg\MundiPagg\Block\Payment\Info\Debit</argument>
+            <argument name="infoBlockType" xsi:type="string">Pagarme\Pagarme\Block\Payment\Info\Debit</argument>
         </arguments>
     </virtualType>
 
@@ -455,7 +455,7 @@
             <argument name="valueHandlerPool" xsi:type="object">MundiPaggCreditCardValueHandlerPool</argument>
             <argument name="commandPool" xsi:type="object">MundiPaggCreditCardCommandPool</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
-            <argument name="infoBlockType" xsi:type="string">MundiPagg\MundiPagg\Block\Payment\Info\CreditCard</argument>
+            <argument name="infoBlockType" xsi:type="string">Pagarme\Pagarme\Block\Payment\Info\CreditCard</argument>
         </arguments>
     </virtualType>
 
@@ -533,7 +533,7 @@
             <argument name="valueHandlerPool" xsi:type="object">MundiPaggBilletCreditCardValueHandlerPool</argument>
             <argument name="commandPool" xsi:type="object">MundiPaggBilletCreditCardCommandPool</argument>
             <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
-            <argument name="infoBlockType" xsi:type="string">MundiPagg\MundiPagg\Block\Payment\Info\BilletCreditCard</argument>
+            <argument name="infoBlockType" xsi:type="string">Pagarme\Pagarme\Block\Payment\Info\BilletCreditCard</argument>
         </arguments>
     </virtualType>
 
@@ -624,7 +624,7 @@
         <plugin name="afterSaveCustomerAdminInLine" type="MundiPagg\MundiPagg\Plugin\Admin\CustomerPlugin" sortOrder="1" />
     </type>
 
-<!--    <preference for="Magento\CatalogWidget\Block\Product\ProductsList" type="MundiPagg\MundiPagg\Block\Web\ProductsList" />-->
+<!--    <preference for="Magento\CatalogWidget\Block\Product\ProductsList" type="Pagarme\Pagarme\Block\Web\ProductsList" />-->
 
     <type name="\Magento\Catalog\Pricing\Render\FinalPriceBox">
         <plugin name="Mundipagg_Mundipagg_change_template" type="MundiPagg\MundiPagg\Plugin\Princing\Render\FinalPricePlugin" />
@@ -650,6 +650,6 @@
 
 
     <!-- Admin checkout -->
-    <!--preference for="Magento\Payment\Block\Form" type="MundiPagg\MundiPagg\Block\Form"/-->
+    <!--preference for="Magento\Payment\Block\Form" type="Pagarme\Pagarme\Block\Form"/-->
 
 </config>
