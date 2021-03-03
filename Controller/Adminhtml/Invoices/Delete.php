@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Controller\Adminhtml\Invoices;
+namespace Pagarme\Pagarme\Controller\Adminhtml\Invoices;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
@@ -77,7 +77,7 @@ class Delete extends Action
         }
 
         $this->messageManager->addMessage($message);
-        $this->_redirect('mundipagg_mundipagg/subscriptions/index');
+        $this->_redirect('pagarme_pagarme/subscriptions/index');
         return;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Controller\Customer;
+namespace Pagarme\Pagarme\Controller\Customer;
 
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
@@ -51,7 +51,7 @@ class Invoice extends Action
 
         $result = $this->pageFactory->create();
         $result->getConfig()->getTitle()->set("Invoices");
-        
+
         return $result;
     }
 }

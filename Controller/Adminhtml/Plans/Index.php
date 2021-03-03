@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Controller\Adminhtml\Plans;
+namespace Pagarme\Pagarme\Controller\Adminhtml\Plans;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
@@ -33,7 +33,7 @@ class Index extends Action
     {
         $resultPage = $this->resultPageFactory->create();
         $resultPage->getConfig()->getTitle()->prepend(__("Plans"));
-        
+
         return $resultPage;
     }
 }

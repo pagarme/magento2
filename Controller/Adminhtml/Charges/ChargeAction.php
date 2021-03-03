@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Controller\Adminhtml\Charges;
+namespace Pagarme\Pagarme\Controller\Adminhtml\Charges;
 
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 

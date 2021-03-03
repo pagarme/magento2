@@ -1,7 +1,7 @@
 <?php
 
 
-namespace MundiPagg\MundiPagg\Controller\Adminhtml\Charges;
+namespace Pagarme\Pagarme\Controller\Adminhtml\Charges;
 
 class Index extends \Magento\Backend\App\Action
 {
@@ -31,7 +31,7 @@ class Index extends \Magento\Backend\App\Action
     {
         $resultPage = $this->resultPageFactory->create();
         $resultPage->getConfig()->getTitle()->prepend(__("Charges"));
-        
+
         return $resultPage;
     }
 }

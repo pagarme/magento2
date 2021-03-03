@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Controller\Adminhtml\RecurrenceProducts;
+namespace Pagarme\Pagarme\Controller\Adminhtml\RecurrenceProducts;
 
 use Magento\Backend\App\Action;
 
@@ -31,7 +31,7 @@ class Index extends Action
     {
         $resultPage = $this->resultPageFactory->create();
         $resultPage->getConfig()->getTitle()->prepend(__("Recurrence Products"));
-        
+
         return $resultPage;
     }
 }

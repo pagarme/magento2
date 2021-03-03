@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Controller\Adminhtml\Charges;
+namespace Pagarme\Pagarme\Controller\Adminhtml\Charges;
 
 use Mundipagg\Core\Kernel\Repositories\ChargeRepository;
 use Mundipagg\Core\Kernel\Services\ChargeService;

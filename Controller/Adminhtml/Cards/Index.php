@@ -1,7 +1,7 @@
 <?php
 
 
-namespace MundiPagg\MundiPagg\Controller\Adminhtml\Cards;
+namespace Pagarme\Pagarme\Controller\Adminhtml\Cards;
 
 class Index extends \Magento\Backend\App\Action
 {
@@ -31,7 +31,7 @@ class Index extends \Magento\Backend\App\Action
     {
         $resultPage = $this->resultPageFactory->create();
         $resultPage->getConfig()->getTitle()->prepend(__("Cards"));
-        
+
         return $resultPage;
     }
 }
