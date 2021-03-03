@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Block;
+namespace Pagarme\Pagarme\Block;
 
 use Magento\Backend\Model\Session\Quote;
 use Magento\Payment\Gateway\Config\Config as GatewayConfig;

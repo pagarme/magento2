@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Block\Payment\Info;
+namespace Pagarme\Pagarme\Block\Payment\Info;
 
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Payment\Block\Info;
@@ -8,12 +8,12 @@ use Mundipagg\Core\Kernel\Aggregates\Order;
 use Mundipagg\Core\Kernel\Exceptions\InvalidParamException;
 use Mundipagg\Core\Kernel\Services\OrderService;
 use Mundipagg\Core\Kernel\ValueObjects\Id\OrderId;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
-use MundiPagg\MundiPagg\Concrete\Magento2PlatformOrderDecorator;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use Pagarme\Pagarme\Concrete\Magento2PlatformOrderDecorator;
 
 class Pix extends Info
 {
-    const TEMPLATE = 'MundiPagg_MundiPagg::info/pix.phtml';
+    const TEMPLATE = 'Pagarme_Pagarme::info/pix.phtml';
 
     public function _construct()
     {
@@ -29,7 +29,7 @@ class Pix extends Info
         $info = $this->getInfo();
         $method = $info->getMethod();
 
-        if (strpos($method, "mundipagg_pix") === false) {
+        if (strpos($method, "pagarme_pix") === false) {
             return null;
         }
 
@@ -61,16 +61,16 @@ class Pix extends Info
         $platformOrder = new Magento2PlatformOrderDecorator();
         $platformOrder->loadByIncrementId($orderEntityId);
 
-        $orderMundipaggId = $platformOrder->getMundipaggId();
+        $orderPagarmeId = $platformOrder->getPagarmeId();
 
-        if ($orderMundipaggId === null) {
+        if ($orderPagarmeId === null) {
             return [];
         }
 
         /**
          * @var Order orderObject
          */
-        $orderObject = $orderService->getOrderByMundiPaggId(new OrderId($orderMundipaggId));
+        $orderObject = $orderService->getOrderByMundiPaggId(new OrderId($orderPagarmeId));
         return $orderObject->getCharges()[0]->getLastTransaction();
     }
 }

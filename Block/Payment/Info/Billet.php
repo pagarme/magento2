@@ -2,14 +2,14 @@
 /**
  * Class Billet
  *
- * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
- * @copyright   2017 MundiPagg (http://www.mundipagg.com)
- * @license     http://www.mundipagg.com Copyright
+ * @author      Open Source Team
+ * @copyright   2021 Pagar.me (https://pagar.me)
+ * @license     https://pagar.me Copyright
  *
- * @link        http://www.mundipagg.com
+ * @link        https://pagar.me
  */
 
-namespace MundiPagg\MundiPagg\Block\Payment\Info;
+namespace Pagarme\Pagarme\Block\Payment\Info;
 
 
 use Magento\Payment\Block\Info;
@@ -20,12 +20,12 @@ use Mundipagg\Core\Kernel\ValueObjects\Id\OrderId;
 use Mundipagg\Core\Kernel\ValueObjects\Id\SubscriptionId;
 use Mundipagg\Core\Recurrence\Repositories\ChargeRepository as SubscriptionChargeRepository;
 use Mundipagg\Core\Recurrence\Repositories\SubscriptionRepository;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
-use MundiPagg\MundiPagg\Concrete\Magento2PlatformOrderDecorator;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use Pagarme\Pagarme\Concrete\Magento2PlatformOrderDecorator;
 
 class Billet extends Info
 {
-    const TEMPLATE = 'MundiPagg_MundiPagg::info/billet.phtml';
+    const TEMPLATE = 'Pagarme_Pagarme::info/billet.phtml';
 
     public function _construct()
     {
@@ -49,7 +49,7 @@ class Billet extends Info
     {
         $method = $this->getInfo()->getMethod();
 
-        if (strpos($method, "mundipagg_billet") === false) {
+        if (strpos($method, "pagarme_billet") === false) {
             return;
         }
 
@@ -135,16 +135,16 @@ class Billet extends Info
         $platformOrder = new Magento2PlatformOrderDecorator();
         $platformOrder->loadByIncrementId($orderEntityId);
 
-        $orderMundipaggId = $platformOrder->getMundipaggId();
+        $orderPagarmeId = $platformOrder->getPagarmeId();
 
-        if ($orderMundipaggId === null) {
+        if ($orderPagarmeId === null) {
             return [];
         }
 
         /**
          * @var \Mundipagg\Core\Kernel\Aggregates\Order orderObject
          */
-        $orderObject = $orderService->getOrderByMundiPaggId(new OrderId($orderMundipaggId));
+        $orderObject = $orderService->getOrderByMundiPaggId(new OrderId($orderPagarmeId));
         return $orderObject->getCharges()[0]->getLastTransaction();
     }
 }

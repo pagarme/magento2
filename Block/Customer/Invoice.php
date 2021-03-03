@@ -3,21 +3,21 @@
 /**
  * Class Invoice
  *
- * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
- * @copyright   2019 MundiPagg (http://www.mundipagg.com)
- * @license     http://www.mundipagg.com Copyright
+ * @author      Open Source Team
+ * @copyright   2021 Pagar.me (https://pagar.me)
+ * @license     https://pagar.me Copyright
  *
- * @link        http://www.mundipagg.com
+ * @link        https://pagar.me
  */
 
-namespace MundiPagg\MundiPagg\Block\Customer;
+namespace Pagarme\Pagarme\Block\Customer;
 
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
 use Magento\Framework\Registry;
 use Magento\Customer\Model\Session;
 use Mundipagg\Core\Kernel\ValueObjects\Id\SubscriptionId;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Mundipagg\Core\Recurrence\Repositories\SubscriptionRepository;
 use Mundipagg\Core\Kernel\Exceptions\InvalidParamException;
 use Mundipagg\Core\Kernel\Abstractions\AbstractEntity;
@@ -87,8 +87,8 @@ class Invoice extends Template
     {
         $codeOrder = $this->coreRegistry->registry('code');
 
-        $mundipaggId = new SubscriptionId($codeOrder);
-        $subscription = $this->subscriptionRepository->findByMundipaggId($mundipaggId);
+        $pagarmeId = new SubscriptionId($codeOrder);
+        $subscription = $this->subscriptionRepository->findByMundipaggId($pagarmeId);
         if (!$subscription) {
             return null;
         }

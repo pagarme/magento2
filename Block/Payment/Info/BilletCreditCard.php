@@ -2,14 +2,14 @@
 /**
  * Class Billet
  *
- * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
- * @copyright   2017 MundiPagg (http://www.mundipagg.com)
- * @license     http://www.mundipagg.com Copyright
+ * @author      Open Source Team
+ * @copyright   2021 Pagar.me (https://pagar.me)
+ * @license     https://pagar.me Copyright
  *
- * @link        http://www.mundipagg.com
+ * @link        https://pagar.me
  */
 
-namespace MundiPagg\MundiPagg\Block\Payment\Info;
+namespace Pagarme\Pagarme\Block\Payment\Info;
 
 use Magento\Payment\Block\Info\Cc;
 
@@ -20,12 +20,12 @@ use Mundipagg\Core\Kernel\ValueObjects\Id\OrderId;
 use Mundipagg\Core\Kernel\ValueObjects\Id\SubscriptionId;
 use Mundipagg\Core\Recurrence\Repositories\ChargeRepository as SubscriptionChargeRepository;
 use Mundipagg\Core\Recurrence\Repositories\SubscriptionRepository;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
-use MundiPagg\MundiPagg\Concrete\Magento2PlatformOrderDecorator;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use Pagarme\Pagarme\Concrete\Magento2PlatformOrderDecorator;
 
 class BilletCreditCard extends Cc
 {
-    const TEMPLATE = 'MundiPagg_MundiPagg::info/billetCreditCard.phtml';
+    const TEMPLATE = 'Pagarme_Pagarme::info/billetCreditCard.phtml';
 
     /**
      * {@inheritdoc}
@@ -80,7 +80,7 @@ class BilletCreditCard extends Cc
     {
         $method = $this->getInfo()->getMethod();
 
-        if (strpos($method, "mundipagg_billet") === false) {
+        if (strpos($method, "pagarme_billet") === false) {
             return;
         }
 
@@ -92,7 +92,7 @@ class BilletCreditCard extends Cc
         }
 
         Magento2CoreSetup::bootstrap();
-        
+
         $lastTransId = $info->getLastTransId();
         $orderId = substr($lastTransId, 0, 19);
 
@@ -185,15 +185,15 @@ class BilletCreditCard extends Cc
         $platformOrder = new Magento2PlatformOrderDecorator();
         $platformOrder->loadByIncrementId($orderEntityId);
 
-        $orderMundipaggId = $platformOrder->getMundipaggId();
-        if ($orderMundipaggId === null) {
+        $orderPagarmeId = $platformOrder->getPagarmeId();
+        if ($orderPagarmeId === null) {
             return [];
         }
 
         /**
          * @var \Mundipagg\Core\Kernel\Aggregates\Order orderObject
          */
-        $orderObject = $orderService->getOrderByMundiPaggId(new OrderId($orderMundipaggId));
+        $orderObject = $orderService->getOrderByMundiPaggId(new OrderId($orderPagarmeId));
 
         $lastTransaction = $orderObject->getCharges()[0]->getLastTransaction();
         $secondLastTransaction = $orderObject->getCharges()[1]->getLastTransaction();

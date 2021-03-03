@@ -1,8 +1,8 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Block\Adminhtml\Order\Charge\Tab;
+namespace Pagarme\Pagarme\Block\Adminhtml\Order\Charge\Tab;
 
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 
 use Mundipagg\Core\Kernel\Repositories\ChargeRepository;
 use Mundipagg\Core\Kernel\Repositories\OrderRepository;
@@ -44,14 +44,14 @@ class View  extends \Magento\Backend\Block\Template implements \Magento\Backend\
     {
         //@todo Create service to return the charges
         $platformOrderID = $this->getOrderIncrementId();
-        $mundipaggOrder = (new OrderRepository)->findByPlatformId($platformOrderID);
+        $pagarmeOrder = (new OrderRepository)->findByPlatformId($platformOrderID);
 
-        if ($mundipaggOrder === null) {
+        if ($pagarmeOrder === null) {
             return [];
         }
 
         $charges = (new ChargeRepository)->findByOrderId(
-            new OrderId($mundipaggOrder->getMundipaggId()->getValue())
+            new OrderId($pagarmeOrder->getMundipaggId()->getValue())
         );
 
         return $charges;
@@ -111,11 +111,11 @@ class View  extends \Magento\Backend\Block\Template implements \Magento\Backend\
 
     public function getChargeCancelUrl()
     {
-        return $this->_urlBuilder->getUrl('mundipagg_mundipagg/charges/cancel');
+        return $this->_urlBuilder->getUrl('pagarme_pagarme/charges/cancel');
     }
 
     public function getChargeCaptureUrl()
     {
-        return $this->_urlBuilder->getUrl('mundipagg_mundipagg/charges/capture');
+        return $this->_urlBuilder->getUrl('pagarme_pagarme/charges/capture');
     }
 }
