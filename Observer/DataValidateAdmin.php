@@ -12,7 +12,7 @@ use Magento\Framework\App\Cache\TypeListInterface;
 use Magento\Framework\App\Cache\Frontend\Pool;
 use Mundipagg\Core\Kernel\Abstractions\AbstractModuleCoreSetup;
 use Mundipagg\Core\Kernel\Repositories\ConfigurationRepository;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use MundiPagg\MundiPagg\Model\MundiPaggConfigProvider;
 
 class DataValidateAdmin implements ObserverInterface
@@ -87,7 +87,7 @@ class DataValidateAdmin implements ObserverInterface
         }
 
         $this->validateConfigMagento();
-        
+
         return $this;
     }
 
@@ -132,7 +132,7 @@ class DataValidateAdmin implements ObserverInterface
 
         if(!$this->configProviderMundipagg->validateSoftDescription()){
             $disableModule = true;
-            $disableMessage[] = __("Error to save MundiPagg Soft Description Credit Card, size too big max 22 character." , 
+            $disableMessage[] = __("Error to save MundiPagg Soft Description Credit Card, size too big max 22 character." ,
                 $url
             );
         }
@@ -162,7 +162,7 @@ class DataValidateAdmin implements ObserverInterface
     {
         $types = array('config','layout','block_html','collections','reflection','db_ddl','eav','config_integration','config_integration_api','full_page','translate','config_webservice');
 
-        foreach ($types as $type) {  
+        foreach ($types as $type) {
             $this->cacheTypeList->cleanType($type);
         }
 

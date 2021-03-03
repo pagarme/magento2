@@ -9,7 +9,7 @@ use Magento\Payment\Observer\AbstractDataAssignObserver;
 use Magento\Framework\Event\Observer;
 use Magento\Quote\Api\Data\PaymentInterface;
 use Mundipagg\Core\Payment\Repositories\SavedCardRepository;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use MundiPagg\MundiPagg\Model\Cards;
 use MundiPagg\MundiPagg\Model\CardsRepository;
 

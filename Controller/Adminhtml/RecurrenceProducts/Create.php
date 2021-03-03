@@ -8,7 +8,7 @@ use Magento\Framework\Registry;
 use Magento\Framework\View\Result\PageFactory;
 use Mundipagg\Core\Recurrence\Aggregates\ProductSubscription;
 use Mundipagg\Core\Recurrence\Services\ProductSubscriptionService;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use MundiPagg\MundiPagg\Model\ProductsSubscriptionFactory;
 
 class Create extends Action

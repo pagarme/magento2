@@ -21,7 +21,7 @@ use Magento\Quote\Model\QuoteFactory;
 use Mundipagg\Core\Kernel\Abstractions\AbstractModuleCoreSetup as MPSetup;
 use Mundipagg\Core\Kernel\Interfaces\PlatformOrderInterface;
 use Mundipagg\Core\Kernel\Services\OrderService;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\ConfigInterface;
 
 abstract class AbstractApiCommand implements CommandInterface

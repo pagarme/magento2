@@ -12,8 +12,8 @@ use Mundipagg\Core\Kernel\Services\LocalizationService;
 use Mundipagg\Core\Kernel\Services\LogService;
 use Mundipagg\Core\Payment\Repositories\CustomerRepository;
 use Mundipagg\Core\Payment\Repositories\SavedCardRepository;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
-use MundiPagg\MundiPagg\Concrete\Magento2SavedCardAdapter;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use Pagarme\Pagarme\Concrete\Magento2SavedCardAdapter;
 use MundiPagg\MundiPagg\Model\CardsRepository;
 use MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\Config;
 
@@ -54,7 +54,7 @@ class Remove extends Action
     public function execute()
     {
         if (!$this->customerSession->isLoggedIn()) {
-            $this->_redirect('customer/account/login'); 
+            $this->_redirect('customer/account/login');
 
             return;
         }
@@ -121,7 +121,7 @@ class Remove extends Action
             }
         }
 
-        $this->_redirect('mundipagg/customer/cards'); 
+        $this->_redirect('mundipagg/customer/cards');
 
         return;
     }

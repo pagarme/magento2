@@ -6,7 +6,7 @@ use Magento\Config\Model\Config as Magento2ModelConfig;
 use Magento\Framework\App\ObjectManager;
 use Magento\Store\Model\ScopeInterface as ScopeInterface;
 use Mundipagg\Core\Kernel\Services\LocalizationService;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Magento\Framework\Exception\ValidatorException;
 use Exception;
 use Magento\Framework\App\MutableScopeConfig;

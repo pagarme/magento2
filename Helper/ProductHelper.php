@@ -5,7 +5,7 @@ namespace MundiPagg\MundiPagg\Helper;
 use Magento\Catalog\Helper\Image;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\UrlInterface;
-use MundiPagg\MundiPagg\Concrete\Magento2PlatformProductDecorator;
+use Pagarme\Pagarme\Concrete\Magento2PlatformProductDecorator;
 
 class ProductHelper
 {

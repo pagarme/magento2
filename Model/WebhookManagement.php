@@ -17,7 +17,7 @@ use Mundipagg\Core\Webhook\Exceptions\WebhookAlreadyHandledException;
 use Mundipagg\Core\Webhook\Exceptions\WebhookHandlerNotFoundException;
 use Mundipagg\Core\Webhook\Services\WebhookReceiverService;
 use Pagarme\Pagarme\Api\WebhookManagementInterface;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 
 class WebhookManagement implements WebhookManagementInterface
 {

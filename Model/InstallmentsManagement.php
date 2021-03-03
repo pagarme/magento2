@@ -14,7 +14,7 @@ namespace MundiPagg\MundiPagg\Model;
 use Magento\Framework\Api\SimpleBuilderInterface;
 use Pagarme\Pagarme\Api\InstallmentsManagementInterface;
 use Mundipagg\Core\Kernel\Abstractions\AbstractModuleCoreSetup as MPSetup;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 
 class InstallmentsManagement
     extends AbstractInstallmentManagement

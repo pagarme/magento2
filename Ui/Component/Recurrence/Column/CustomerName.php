@@ -12,7 +12,7 @@ use Mundipagg\Core\Payment\Repositories\CustomerRepository;
 use Mundipagg\Core\Recurrence\Aggregates\Repetition;
 use Mundipagg\Core\Recurrence\Services\RepetitionService;
 use Mundipagg\Core\Recurrence\ValueObjects\IntervalValueObject;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 
 class CustomerName extends Column
 {

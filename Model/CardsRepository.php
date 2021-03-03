@@ -14,7 +14,7 @@ use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Reflection\DataObjectProcessor;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use MundiPagg\MundiPagg\Model\ResourceModel\Cards as ResourceCards;
 use MundiPagg\MundiPagg\Model\ResourceModel\Cards\CollectionFactory as CardsCollectionFactory;
 use Magento\Store\Model\StoreManagerInterface;

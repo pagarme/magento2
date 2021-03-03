@@ -7,7 +7,7 @@ use Magento\Customer\Model\Session;
 use Mundipagg\Core\Kernel\ValueObjects\Configuration\VoucherConfig;
 use Mundipagg\Core\Payment\Repositories\CustomerRepository;
 use Mundipagg\Core\Payment\Repositories\SavedCardRepository;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup as MPSetup;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup as MPSetup;
 use MundiPagg\MundiPagg\Model\CardsFactory;
 
 final class ConfigProvider implements ConfigProviderInterface
@@ -38,7 +38,7 @@ final class ConfigProvider implements ConfigProviderInterface
         $this->setCustomerSession($customerSession);
         $this->cardsFactory = $cardsFactory;
     }
-    
+
     private function getCardsCore()
     {
         $cards = [];

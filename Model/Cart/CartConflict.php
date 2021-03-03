@@ -12,7 +12,7 @@ use Mundipagg\Core\Recurrence\Services\RepetitionService;
 use Mundipagg\Core\Recurrence\Services\CartRules\MoreThanOneRecurrenceProduct;
 use Mundipagg\Core\Recurrence\Services\CartRules\NormalWithRecurrenceProduct;
 use Mundipagg\Core\Recurrence\Services\CartRules\ProductListInCart;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Mundipagg\Core\Recurrence\Aggregates\Repetition;
 use Magento\Catalog\Model\Product\Interceptor;
 use MundiPagg\MundiPagg\Helper\RecurrenceProductHelper;
