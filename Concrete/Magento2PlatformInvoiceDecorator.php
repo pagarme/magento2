@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Concrete;
+namespace Pagarme\Pagarme\Concrete;
 
 use JsonSerializable;
 use Magento\Framework\App\ObjectManager;

@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Concrete;
+namespace Pagarme\Pagarme\Concrete;
 
 use Magento\Customer\Model\ResourceModel\CustomerRepository;
 use Magento\Framework\Api\FilterBuilder;
@@ -41,11 +41,11 @@ use Mundipagg\Core\Payment\ValueObjects\CustomerType;
 use Mundipagg\Core\Payment\ValueObjects\Phone;
 use Mundipagg\Core\Recurrence\Aggregates\Plan;
 use Mundipagg\Core\Recurrence\Services\RecurrenceService;
-use MundiPagg\MundiPagg\Helper\BuildChargeAddtionalInformationHelper;
-use MundiPagg\MundiPagg\Helper\RecurrenceProductHelper;
-use MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\Config;
-use MundiPagg\MundiPagg\Model\Cards;
-use MundiPagg\MundiPagg\Model\CardsRepository;
+use Pagarme\Pagarme\Helper\BuildChargeAddtionalInformationHelper;
+use Pagarme\Pagarme\Helper\RecurrenceProductHelper;
+use Pagarme\Pagarme\Gateway\Transaction\Base\Config\Config;
+use Pagarme\Pagarme\Model\Cards;
+use Pagarme\Pagarme\Model\CardsRepository;
 use Mundipagg\Core\Kernel\Services\LocalizationService;
 use Mundipagg\Core\Kernel\Services\LogService;
 use Magento\Sales\Model\Order\Email\Sender\OrderCommentSender;
@@ -53,6 +53,7 @@ use Magento\Sales\Model\ResourceModel\Order\Status\Collection;
 use Mundipagg\Core\Kernel\Aggregates\Transaction;
 use Mundipagg\Core\Kernel\ValueObjects\TransactionType;
 use Magento\Quote\Model\Quote;
+use phpDocumentor\Parser\Exception;
 
 class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 {
@@ -374,7 +375,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
     /**
      * @return OrderId|null
      */
-    public function getMundipaggId()
+    public function getPagarmeId()
     {
         $orderId = null;
 
@@ -507,7 +508,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 
         $mpId = null;
         try {
-            $mpId = $savedCustomer->getCustomAttribute('customer_id_mundipagg')
+            $mpId = $savedCustomer->getCustomAttribute('customer_id_pagarme')
                 ->getValue();
             $customerId = new CustomerId($mpId);
             $customer->setMundipaggId($customerId);
@@ -748,7 +749,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         return $paymentMethods;
     }
 
-    private function extractPaymentDataFromMundipaggCreditCard
+    private function extractPaymentDataFromPagarmeCreditCard
     (
         $additionalInformation,
         &$paymentData,
@@ -766,7 +767,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $paymentData[$creditCardDataIndex][] = $newPaymentData;
     }
 
-    private function extractPaymentDataFromMundipaggVoucher
+    private function extractPaymentDataFromPagarmeVoucher
     (
         $additionalInformation,
         &$paymentData,
@@ -784,7 +785,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $paymentData[$creditCardDataIndex][] = $newPaymentData;
     }
 
-    private function extractPaymentDataFromMundipaggDebit
+    private function extractPaymentDataFromPagarmeDebit
     (
         $additionalInformation,
         &$paymentData,
@@ -867,7 +868,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         return $newPaymentData;
     }
 
-    private function extractPaymentDataFromMundipaggTwoCreditCard
+    private function extractPaymentDataFromPagarmeTwoCreditCard
     ($additionalInformation, &$paymentData, $payment)
     {
         $moneyService = new MoneyService();
@@ -981,7 +982,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         return $multibuyer;
     }
 
-    private function extractPaymentDataFromMundipaggBilletCreditcard(
+    private function extractPaymentDataFromPagarmeBilletCreditcard(
         $additionalInformation,
         &$paymentData, $payment
     )
@@ -1073,7 +1074,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $paymentData[$boletoDataIndex][] = $newPaymentData;
     }
 
-    private function extractPaymentDataFromMundipaggBillet(
+    private function extractPaymentDataFromPagarmeBillet(
         $additionalInformation,
         &$paymentData,
         $payment
@@ -1099,7 +1100,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $paymentData[$boletoDataIndex][] = $newPaymentData;
     }
 
-    private function extractPaymentDataFromMundipaggPix(
+    private function extractPaymentDataFromPagarmePix(
         $additionalInformation,
         &$paymentData,
         $payment
@@ -1246,5 +1247,10 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
     public function getTotalCanceled()
     {
         return $this->platformOrder->getTotalCanceled();
+    }
+
+    public function getMundipaggId()
+    {
+        throw new Exception("this method must be removed after we change core to pagar.me");
     }
 }

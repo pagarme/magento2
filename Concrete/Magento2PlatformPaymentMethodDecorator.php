@@ -1,5 +1,5 @@
 <?php
-namespace MundiPagg\MundiPagg\Concrete;
+namespace Pagarme\Pagarme\Concrete;
 
 use Mundipagg\Core\Kernel\Interfaces\PlatformPaymentMethodInterface;
 
