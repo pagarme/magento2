@@ -1,33 +1,33 @@
 <?xml version="1.0" ?>
 <payment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Payment:etc/payment.xsd">
-    
+
     <methods>
-        <method name="mundipagg_billet">
+        <method name="pagarme_billet">
             <allow_multiple_address>1</allow_multiple_address>
         </method>
-        <method name="mundipagg_creditcard">
+        <method name="pagarme_creditcard">
             <allow_multiple_address>1</allow_multiple_address>
         </method>
-        <method name="mundipagg_billet_creditcard">
+        <method name="pagarme_billet_creditcard">
             <allow_multiple_address>1</allow_multiple_address>
         </method>
-        <method name="mundipagg_two_creditcard">
+        <method name="pagarme_two_creditcard">
             <allow_multiple_address>1</allow_multiple_address>
         </method>
-        <method name="mundipagg_voucher">
+        <method name="pagarme_voucher">
             <allow_multiple_address>1</allow_multiple_address>
         </method>
-        <method name="mundipagg_debit">
+        <method name="pagarme_debit">
             <allow_multiple_address>1</allow_multiple_address>
         </method>
-        <method name="mundipagg_pix">
+        <method name="pagarme_pix">
             <allow_multiple_address>1</allow_multiple_address>
         </method>
-        <method name='mundipagg_customer_address'>
+        <method name='pagarme_customer_address'>
             <allow_multiple_address>0</allow_multiple_address>
         </method>
     </methods>
-    
+
     <credit_cards>
         <type id="Visa" order="0">
             <label>Visa</label>

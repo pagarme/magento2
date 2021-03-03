@@ -6,52 +6,52 @@
  */
 -->
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
-    <group id="mundipagg_mundipagg_transaction_creditcard_installments_mastercard_elo" translate="label comment" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="25">
+    <group id="pagarme_pagarme_transaction_creditcard_installments_mastercard_elo" translate="label comment" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="25">
 		<depends>
 			<field id="installments_type">0</field>
 		</depends>
 		<label>Installments Elo</label>
 	    <field id="installments_number_elo" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
 	        <label>Number Elo</label>
-			<backend_model>MundiPagg\MundiPagg\Model\Validation\GenericValidation</backend_model>
+			<backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
 	        <comment />
-	        <config_path>payment/mundipagg_creditcard/installments_number_elo</config_path>
+	        <config_path>payment/pagarme_creditcard/installments_number_elo</config_path>
 	    </field>
 	    <field id="installment_min_amount_elo" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
 	        <label>Min Amount Elo</label>
-			<backend_model>MundiPagg\MundiPagg\Model\Validation\GenericValidation</backend_model>
+			<backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
 	        <comment />
-	        <config_path>payment/mundipagg_creditcard/installment_min_amount_elo</config_path>
+	        <config_path>payment/pagarme_creditcard/installment_min_amount_elo</config_path>
 	    </field>
 	    <field id="installments_interest_by_issuer_elo" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="select">
 	        <label>Interest by issuer Elo</label>
 	        <comment />
 	        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-	        <config_path>payment/mundipagg_creditcard/installments_interest_by_issuer_elo</config_path>
+	        <config_path>payment/pagarme_creditcard/installments_interest_by_issuer_elo</config_path>
 	    </field>
 	    <field id="installments_interest_rate_initial_elo" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
 	        <label>Interest Rate Initial (%) Elo</label>
-			<backend_model>MundiPagg\MundiPagg\Model\Validation\GenericValidation</backend_model>
+			<backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
 	        <comment />
-	        <config_path>payment/mundipagg_creditcard/installments_interest_rate_initial_elo</config_path>
+	        <config_path>payment/pagarme_creditcard/installments_interest_rate_initial_elo</config_path>
             <depends>
                 <field id="installments_interest_by_issuer_elo">1</field>
             </depends>
 	    </field>
 	    <field id="installments_interest_rate_incremental_elo" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
 	        <label>Interest Rate Incremental (%) Elo</label>
-			<backend_model>MundiPagg\MundiPagg\Model\Validation\GenericValidation</backend_model>
+			<backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
 	        <comment />
-	        <config_path>payment/mundipagg_creditcard/installments_interest_rate_incremental_elo</config_path>
+	        <config_path>payment/pagarme_creditcard/installments_interest_rate_incremental_elo</config_path>
             <depends>
                 <field id="installments_interest_by_issuer_elo">1</field>
             </depends>
 	    </field>
 	    <field id="installments_max_without_interest_elo" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
 	        <label>Max Without Interest Elo</label>
-			<backend_model>MundiPagg\MundiPagg\Model\Validation\GenericValidation</backend_model>
+			<backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
 	        <comment />
-	        <config_path>payment/mundipagg_creditcard/installments_max_without_interest_elo</config_path>
+	        <config_path>payment/pagarme_creditcard/installments_max_without_interest_elo</config_path>
             <depends>
                 <field id="installments_interest_by_issuer_elo">1</field>
             </depends>

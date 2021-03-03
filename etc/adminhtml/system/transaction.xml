@@ -6,17 +6,17 @@
  */
 -->
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
-    <group id="mundipagg_mundipagg_transaction" translate="label comment" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="20">
-        <label>MundiPagg Transaction</label>
+    <group id="pagarme_pagarme_transaction" translate="label comment" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="20">
+        <label>Pagar.me Transaction</label>
         <frontend_model>Pagarme\Pagarme\Block\Adminhtml\System\Config\Fieldset\Payment</frontend_model>
-        <include path="MundiPagg_MundiPagg::system/transaction/creditcard.xml"/>
-        <include path="MundiPagg_MundiPagg::system/transaction/pix.xml"/>
-        <include path="MundiPagg_MundiPagg::system/transaction/billet.xml"/>
-        <include path="MundiPagg_MundiPagg::system/transaction/multipleactionstwocreditcard.xml"/>
-        <include path="MundiPagg_MundiPagg::system/transaction/multipleactionscreditcardbillet.xml"/>
-        <include path="MundiPagg_MundiPagg::system/transaction/multibuyer.xml"/>
-        <include path="MundiPagg_MundiPagg::system/transaction/voucher.xml"/>
-        <include path="MundiPagg_MundiPagg::system/transaction/debit.xml"/>
-        <!--<include path="MundiPagg_MundiPagg::system/transaction/recurrence.xml"/>-->
+        <include path="Pagarme_Pagarme::system/transaction/creditcard.xml"/>
+        <include path="Pagarme_Pagarme::system/transaction/pix.xml"/>
+        <include path="Pagarme_Pagarme::system/transaction/billet.xml"/>
+        <include path="Pagarme_Pagarme::system/transaction/multipleactionstwocreditcard.xml"/>
+        <include path="Pagarme_Pagarme::system/transaction/multipleactionscreditcardbillet.xml"/>
+        <include path="Pagarme_Pagarme::system/transaction/multibuyer.xml"/>
+        <include path="Pagarme_Pagarme::system/transaction/voucher.xml"/>
+        <include path="Pagarme_Pagarme::system/transaction/debit.xml"/>
+        <!--<include path="Pagarme_Pagarme::system/transaction/recurrence.xml"/>-->
     </group>
 </include>

@@ -1,14 +1,14 @@
 <?xml version="1.0" ?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
 	<system>
-		<tab id="mundipagg" sortOrder="999" translate="label">
-			<label>MundiPagg</label>
+		<tab id="pagarme" sortOrder="999" translate="label">
+			<label>Pagar.me</label>
 		</tab>
-		<!-- <include path="MundiPagg_MundiPagg::system/antifraud.xml"/> -->
-		<section id="mundipagg" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label">
-			<label>MundiPagg</label>
-			<tab>mundipagg</tab>
-			<resource>MundiPagg_MundiPagg::config_mundipagg_mundipagg</resource>
+		<!-- <include path="Pagarme_Pagarme::system/antifraud.xml"/> -->
+		<section id="pagarme" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label">
+			<label>Pagar.me</label>
+			<tab>pagarme</tab>
+			<resource>Pagarme_Pagarme::config_pagarme_pagarme</resource>
 			<group id="general" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label">
 				<label>General</label>
 				<field id="is_active" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="select">
@@ -19,15 +19,15 @@
 			</group>
 		</section>
 		<section id="payment" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="1000" translate="label">
-            <group id="mundipagg_mundipagg" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label">
+            <group id="pagarme_pagarme" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label">
                 <label>
-                    <![CDATA[MundiPagg&nbsp;&nbsp;<i>Payment Solutions.</i>]]>
+                    <![CDATA[Pagar.me&nbsp;&nbsp;<i>Payment Solutions.</i>]]>
                 </label>
                 <frontend_model>Pagarme\Pagarme\Block\Adminhtml\System\Config\Fieldset\Group</frontend_model>
-                <include path="MundiPagg_MundiPagg::system/global.xml"/>
-                <include path="MundiPagg_MundiPagg::system/customer.xml"/>
-                <include path="MundiPagg_MundiPagg::system/transaction.xml"/>
-                <include path="MundiPagg_MundiPagg::system/recurrence.xml"/>
+                <include path="Pagarme_Pagarme::system/global.xml"/>
+                <include path="Pagarme_Pagarme::system/customer.xml"/>
+                <include path="Pagarme_Pagarme::system/transaction.xml"/>
+                <include path="Pagarme_Pagarme::system/recurrence.xml"/>
             </group>
         </section>
 	</system>

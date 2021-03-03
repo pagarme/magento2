@@ -1,8 +1,8 @@
 <?xml version="1.0" ?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
 	<router id="admin">
-		<route frontName="mundipagg_mundipagg" id="mundipagg_mundipagg">
-			<module before="Magento_Backend" name="MundiPagg_MundiPagg"/>
+		<route frontName="pagarme_pagarme" id="pagarme_pagarme">
+			<module before="Magento_Backend" name="Pagarme_Pagarme"/>
 		</route>
 	</router>
 </config>
