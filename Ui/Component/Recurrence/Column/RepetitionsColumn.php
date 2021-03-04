@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Ui\Component\Recurrence\Column;
+namespace Pagarme\Pagarme\Ui\Component\Recurrence\Column;
 
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\View\Element\UiComponent\ContextInterface;

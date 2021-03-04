@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Ui\Component\Recurrence\Column;
+namespace Pagarme\Pagarme\Ui\Component\Recurrence\Column;
 
 use Magento\Customer\Model\Customer;
 use Magento\Framework\App\ObjectManager;
@@ -38,13 +38,13 @@ class CustomerName extends Column
             $customerRepository = new CustomerRepository();
             $customerId = new CustomerId($item['customer_id']);
 
-            $mundipaggCustomer =
+            $pagarmeCustomer =
                 $customerRepository->findByMundipaggId($customerId);
-            if (!$mundipaggCustomer) {
+            if (!$pagarmeCustomer) {
                 continue;
             }
 
-            $magentoCustomerId = $mundipaggCustomer->getCode();
+            $magentoCustomerId = $pagarmeCustomer->getCode();
 
             $objectManager = ObjectManager::getInstance();
             $customer = $objectManager->get(
