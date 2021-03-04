@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Helper;
+namespace Pagarme\Pagarme\Helper;
 
 use Magento\Catalog\Helper\Image;
 use Magento\Framework\App\ObjectManager;

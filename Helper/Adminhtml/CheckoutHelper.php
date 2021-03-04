@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Helper\Adminhtml;
+namespace Pagarme\Pagarme\Helper\Adminhtml;
 
 use Magento\Framework\App\Helper\AbstractHelper;
 use Mundipagg\Core\Kernel\Services\MoneyService;

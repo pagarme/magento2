@@ -8,7 +8,7 @@ use Mundipagg\Core\Payment\Services\CustomerService;
 use Mundipagg\Core\Kernel\Services\LogService;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Pagarme\Pagarme\Concrete\Magento2PlatformCustomerDecorator;
-use MundiPagg\MundiPagg\Helper\CustomerUpdateMundipaggHelper;
+use MundiPagg\MundiPagg\Helper\CustomerUpdatePagarmeHelper;
 use MundiPagg\MundiPagg\Model\MundiPaggConfigProvider;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Exception\InputException;
@@ -16,17 +16,17 @@ use Magento\Framework\Exception\InputException;
 class AdminCustomerBeforeSave implements ObserverInterface
 {
     /**
-     * @var CustomerUpdateMundipaggHelper
+     * @var CustomerUpdatePagarmeHelper
      */
     protected $customerUpdateMundipaggHelper;
 
     /**
      * AdminCustomerBeforeSave constructor.
-     * @param CustomerUpdateMundipaggHelper $customerUpdateMundipaggHelper
+     * @param CustomerUpdatePagarmeHelper $customerUpdateMundipaggHelper
      * @throws \Exception
      */
     public function __construct(
-        CustomerUpdateMundipaggHelper $customerUpdateMundipaggHelper
+        CustomerUpdatePagarmeHelper $customerUpdateMundipaggHelper
     )
     {
         $this->customerUpdateMundipaggHelper = $customerUpdateMundipaggHelper;

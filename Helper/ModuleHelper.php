@@ -2,14 +2,14 @@
 /**
  * Class AbstractHelper
  *
- * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
- * @copyright   2017 MundiPagg (http://www.mundipagg.com)
- * @license     http://www.mundipagg.com Copyright
+ * @author      Open Source Team
+ * @copyright   2021 Pagar.me (https://pagar.me)
+ * @license     https://pagar.me Copyright
  *
- * @link        http://www.mundipagg.com
+ * @link        https://pagar.me
  */
 
-namespace MundiPagg\MundiPagg\Helper;
+namespace Pagarme\Pagarme\Helper;
 
 use Magento\Framework\Module\ModuleListInterface;
 
@@ -61,16 +61,16 @@ class ModuleHelper extends \Magento\Framework\App\Helper\AbstractHelper
     public function setTaxVat($taxVat,$format = true)
     {
         $this->taxVat = trim($taxVat);
-        
+
         if(empty($this->taxVat)){
             $this->taxVat = null;
         }
-        
+
         if(($format ==  true) and (!is_null($this->taxVat))){
              $this->taxVat = preg_replace("/[^0-9]/", "", $this->taxVat);
         }
         return $this->taxVat;
-        
+
     }
 
     public function getTaxVat()

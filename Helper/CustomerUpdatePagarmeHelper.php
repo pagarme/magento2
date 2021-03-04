@@ -6,14 +6,14 @@
  * Time: 15:25
  */
 
-namespace MundiPagg\MundiPagg\Helper;
+namespace Pagarme\Pagarme\Helper;
 
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use MundiAPILib\Controllers;
 use MundiAPILib\Models\UpdateCustomerRequest;
 use Pagarme\Pagarme\Gateway\Transaction\Base\Config\Config;
 
-class CustomerUpdateMundipaggHelper
+class CustomerUpdatePagarmeHelper
 {
 
     protected $updateCustomerRequest;
@@ -40,21 +40,21 @@ class CustomerUpdateMundipaggHelper
      * @param $customer
      * @return void
      */
-    public function updateEmailMundipagg($customer)
+    public function updateEmailPagarme($customer)
     {
 
         $oldCustomer = $this->customerRepositoryInterface->getById($customer->getId());
 
-        if($oldCustomer->getCustomAttribute('customer_id_mundipagg') && ($oldCustomer->getEmail() != $customer->getEmail())){
+        if($oldCustomer->getCustomAttribute('customer_id_pagarme') && ($oldCustomer->getEmail() != $customer->getEmail())){
 
-            $customerIdMundipagg = $oldCustomer->getCustomAttribute('customer_id_mundipagg')->getValue();
+            $customerIdPagarme = $oldCustomer->getCustomAttribute('customer_id_pagarme')->getValue();
 
             $this->updateCustomerRequest->email = $customer->getEmail();
             $this->updateCustomerRequest->name = $oldCustomer->getFirstName() . ' ' . $oldCustomer->getLastName();
             $this->updateCustomerRequest->document = preg_replace('/[\/.-]/', '', $oldCustomer->getTaxvat());
             $this->updateCustomerRequest->type = 'individual';
 
-            $this->getApi()->getCustomers()->updateCustomer($customerIdMundipagg, $this->updateCustomerRequest);
+            $this->getApi()->getCustomers()->updateCustomer($customerIdPagarme, $this->updateCustomerRequest);
 
         }
 

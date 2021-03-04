@@ -3,7 +3,7 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-namespace MundiPagg\MundiPagg\Helper\Product\Configuration\Plugin;
+namespace Pagarme\Pagarme\Helper\Product\Configuration\Plugin;
 
 class Plan
 {
@@ -24,7 +24,7 @@ class Plan
     ) {
         $product = $item->getProduct();
         $typeId = $product->getTypeId();
-        if ($typeId == \MundiPagg\MundiPagg\Model\Product\Plan::TYPE_CODE) {
+        if ($typeId == \Pagarme\Pagarme\Model\Product\Plan::TYPE_CODE) {
             $options = [];
             /** @var \Magento\GroupedProduct\Model\Product\Type\Grouped $typeInstance */
             $typeInstance = $product->getTypeInstance();
