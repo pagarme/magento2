@@ -2,29 +2,29 @@
 /**
  * Class ConfigInterface
  *
- * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
- * @copyright   2017 MundiPagg (http://www.mundipagg.com)
- * @license     http://www.mundipagg.com Copyright
+ * @author      Open Source Team
+ * @copyright   2021 Pagar.me (https://pagar.me)
+ * @license     https://pagar.me Copyright
  *
- * @link        http://www.mundipagg.com
+ * @link        https://pagar.me
  */
 
-namespace MundiPagg\MundiPagg\Gateway\Transaction\BilletCreditCard\Config;
+namespace Pagarme\Pagarme\Gateway\Transaction\BilletCreditCard\Config;
 
 
 interface ConfigInterface
 {
-    const PATH_ACTIVE                       = 'payment/mundipagg_billet_creditcard/active';
-    const PATH_IS_ONE_DOLLAR_AUTH_ENABLED   = 'payment/mundipagg_billet_creditcard/is_one_dollar_auth_enabled';
-    const PATH_PAYMENT_ACTION               = 'payment/mundipagg_billet_creditcard/payment_action';
-    const PATH_ANTIFRAUD_ACTIVE             = 'payment/mundipagg_billet_creditcard/antifraud_active';
-    const PATH_ANTIFRAUD_MIN_AMOUNT         = 'payment/mundipagg_billet_creditcard/antifraud_min_amount';
-    const PATH_CUSTOMER_STREET              = 'payment/mundipagg_customer_address/street_attribute';
-    const PATH_CUSTOMER_NUMBER              = 'payment/mundipagg_customer_address/number_attribute';
-    const PATH_CUSTOMER_COMPLEMENT          = 'payment/mundipagg_customer_address/complement_attribute';
-    const PATH_CUSTOMER_DISTRICT            = 'payment/mundipagg_customer_address/district_attribute';
-    const PATH_TITLE                        = 'payment/mundipagg_billet_creditcard/title';
-    
+    const PATH_ACTIVE                       = 'payment/pagarme_billet_creditcard/active';
+    const PATH_IS_ONE_DOLLAR_AUTH_ENABLED   = 'payment/pagarme_billet_creditcard/is_one_dollar_auth_enabled';
+    const PATH_PAYMENT_ACTION               = 'payment/pagarme_billet_creditcard/payment_action';
+    const PATH_ANTIFRAUD_ACTIVE             = 'payment/pagarme_billet_creditcard/antifraud_active';
+    const PATH_ANTIFRAUD_MIN_AMOUNT         = 'payment/pagarme_billet_creditcard/antifraud_min_amount';
+    const PATH_CUSTOMER_STREET              = 'payment/pagarme_customer_address/street_attribute';
+    const PATH_CUSTOMER_NUMBER              = 'payment/pagarme_customer_address/number_attribute';
+    const PATH_CUSTOMER_COMPLEMENT          = 'payment/pagarme_customer_address/complement_attribute';
+    const PATH_CUSTOMER_DISTRICT            = 'payment/pagarme_customer_address/district_attribute';
+    const PATH_TITLE                        = 'payment/pagarme_billet_creditcard/title';
+
     /**
      * @return bool
      */
@@ -49,7 +49,7 @@ interface ConfigInterface
      * @return string
      */
     public function getAntifraudMinAmount();
-    
+
     /**
      * @return string
      */

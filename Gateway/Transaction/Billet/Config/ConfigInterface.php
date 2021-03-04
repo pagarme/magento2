@@ -2,27 +2,27 @@
 /**
  * Class ConfigInterface
  *
- * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
- * @copyright   2017 MundiPagg (http://www.mundipagg.com)
- * @license     http://www.mundipagg.com Copyright
+ * @author      Open Source Team
+ * @copyright   2021 Pagar.me (https://pagar.me)
+ * @license     https://pagar.me Copyright
  *
- * @link        http://www.mundipagg.com
+ * @link        https://pagar.me
  */
 
-namespace MundiPagg\MundiPagg\Gateway\Transaction\Billet\Config;
+namespace Pagarme\Pagarme\Gateway\Transaction\Billet\Config;
 
 
 interface ConfigInterface
 {
-    const PATH_INSTRUCTIONS     = 'payment/mundipagg_billet/instructions';
-    const PATH_TEXT             = 'payment/mundipagg_billet/text';
-    const PATH_TYPE_BANK        = 'payment/mundipagg_billet/types';
-    const PATH_EXPIRATION_DAYS  = 'payment/mundipagg_billet/expiration_days';
-    const PATH_CUSTOMER_STREET              = 'payment/mundipagg_customer_address/street_attribute';
-    const PATH_CUSTOMER_NUMBER              = 'payment/mundipagg_customer_address/number_attribute';
-    const PATH_CUSTOMER_COMPLEMENT          = 'payment/mundipagg_customer_address/complement_attribute';
-    const PATH_CUSTOMER_DISTRICT            = 'payment/mundipagg_customer_address/district_attribute';
-    const PATH_TITLE                        = 'payment/mundipagg_billet/title';
+    const PATH_INSTRUCTIONS     = 'payment/pagarme_billet/instructions';
+    const PATH_TEXT             = 'payment/pagarme_billet/text';
+    const PATH_TYPE_BANK        = 'payment/pagarme_billet/types';
+    const PATH_EXPIRATION_DAYS  = 'payment/pagarme_billet/expiration_days';
+    const PATH_CUSTOMER_STREET              = 'payment/pagarme_customer_address/street_attribute';
+    const PATH_CUSTOMER_NUMBER              = 'payment/pagarme_customer_address/number_attribute';
+    const PATH_CUSTOMER_COMPLEMENT          = 'payment/pagarme_customer_address/complement_attribute';
+    const PATH_CUSTOMER_DISTRICT            = 'payment/pagarme_customer_address/district_attribute';
+    const PATH_TITLE                        = 'payment/pagarme_billet/title';
 
     /**
      * @return string
@@ -43,7 +43,7 @@ interface ConfigInterface
      * @return string
      */
     public function getExpirationDays();
-    
+
     /**
      * @return string
      */
