@@ -19,7 +19,7 @@ use Mundipagg\Core\Recurrence\Services\RecurrenceService;
 use Mundipagg\Core\Recurrence\ValueObjects\IntervalValueObject;
 use Pagarme\Pagarme\Api\InstallmentsByBrandAndAmountManagementInterface;
 use Magento\Checkout\Model\Session;
-use MundiPagg\MundiPagg\Helper\RecurrenceProductHelper;
+use Pagarme\Pagarme\Helper\RecurrenceProductHelper;
 use MundiPagg\MundiPagg\Model\Installments\Config\ConfigByBrand as Config;
 
 class InstallmentsByBrandAndAmountManagement

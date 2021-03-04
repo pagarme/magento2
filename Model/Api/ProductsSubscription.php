@@ -11,7 +11,7 @@ use Mundipagg\Core\Recurrence\Services\ProductSubscriptionService;
 use Pagarme\Pagarme\Api\ProductSubscriptionApiInterface;
 use Magento\Framework\Webapi\Rest\Request;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
-use MundiPagg\MundiPagg\Helper\ProductSubscriptionHelper;
+use Pagarme\Pagarme\Helper\ProductSubscriptionHelper;
 use Pagarme\Pagarme\Api\ObjectMapper\ProductSubscription\ProductSubscriptionMapperInterface;
 
 class ProductsSubscription implements ProductSubscriptionApiInterface

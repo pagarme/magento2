@@ -1,7 +1,7 @@
 <?php
 $code = $block->escapeHtml($block->getMethodCode());
 
-$helper = $this->helper('\MundiPagg\MundiPagg\Helper\Adminhtml\CheckoutHelper');
+$helper = $this->helper('\Pagarme\Pagarme\Helper\Adminhtml\CheckoutHelper');
 $brandsAvailables = $helper->getBrandsAvailables($code);
 $publicKey = $helper->getPublicKey();
 

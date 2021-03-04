@@ -9,8 +9,8 @@ use Mundipagg\Core\Recurrence\Interfaces\RecurrenceEntityInterface;
 use Mundipagg\Core\Recurrence\Services\PlanService;
 use Mundipagg\Core\Recurrence\Services\RecurrenceService;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
-use MundiPagg\MundiPagg\Helper\ProductPlanHelper;
-use MundiPagg\MundiPagg\Helper\RecurrenceProductHelper;
+use Pagarme\Pagarme\Helper\ProductPlanHelper;
+use Pagarme\Pagarme\Helper\RecurrenceProductHelper;
 
 class UpdateProductPlanObserver implements ObserverInterface
 {

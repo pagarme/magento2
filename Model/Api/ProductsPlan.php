@@ -10,7 +10,7 @@ use Mundipagg\Core\Recurrence\Interfaces\ProductPlanInterface;
 use Mundipagg\Core\Recurrence\Factories\PlanFactory;
 use Pagarme\Pagarme\Api\ProductPlanApiInterface;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
-use MundiPagg\MundiPagg\Helper\ProductPlanHelper;
+use Pagarme\Pagarme\Helper\ProductPlanHelper;
 use Pagarme\Pagarme\Api\ObjectMapper\ProductPlan\ProductPlanMapperInterface;
 
 class ProductsPlan implements ProductPlanApiInterface

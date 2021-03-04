@@ -7,7 +7,7 @@ use Magento\Framework\Event\ObserverInterface;
 use Mundipagg\Core\Recurrence\Aggregates\Plan;
 use Mundipagg\Core\Recurrence\Services\RecurrenceService;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
-use MundiPagg\MundiPagg\Helper\RecurrenceProductHelper;
+use Pagarme\Pagarme\Helper\RecurrenceProductHelper;
 
 class PaymentMethodAvailable implements ObserverInterface
 {

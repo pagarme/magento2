@@ -15,7 +15,7 @@ use Mundipagg\Core\Recurrence\Services\CartRules\ProductListInCart;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Mundipagg\Core\Recurrence\Aggregates\Repetition;
 use Magento\Catalog\Model\Product\Interceptor;
-use MundiPagg\MundiPagg\Helper\RecurrenceProductHelper;
+use Pagarme\Pagarme\Helper\RecurrenceProductHelper;
 use Magento\Catalog\Model\Product\Option;
 use Magento\Catalog\Api\Data\ProductCustomOptionValuesInterface;
 use Magento\Catalog\Model\Product\Option\Value;
@@ -23,7 +23,7 @@ use Mundipagg\Core\Recurrence\Services\ProductSubscriptionService;
 use Mundipagg\Core\Recurrence\Services\PlanService;
 use Mundipagg\Core\Recurrence\Services\CartRules\JustProductPlanInCart;
 use Mundipagg\Core\Recurrence\Services\CartRules\JustSelfProductPlanInCart;
-use MundiPagg\MundiPagg\Helper\RulesCartRun;
+use Pagarme\Pagarme\Helper\RulesCartRun;
 use Mundipagg\Core\Kernel\Aggregates\Configuration;
 
 class CartConflict

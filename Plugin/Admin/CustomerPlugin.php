@@ -4,7 +4,7 @@ namespace MundiPagg\MundiPagg\Plugin\Admin;
 
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Model\CustomerFactory;
-use MundiPagg\MundiPagg\Helper\CustomerUpdatePagarmeHelper;
+use Pagarme\Pagarme\Helper\CustomerUpdatePagarmeHelper;
 
 class CustomerPlugin
 {

@@ -14,7 +14,7 @@ use Magento\Store\Model\StoreManagerInterface;
 use Mundipagg\Core\Kernel\Services\MoneyService;
 use Mundipagg\Core\Recurrence\Services\ProductSubscriptionService;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
-use MundiPagg\MundiPagg\Helper\RecurrenceProductHelper;
+use Pagarme\Pagarme\Helper\RecurrenceProductHelper;
 use Mundipagg\Core\Kernel\Aggregates\Configuration;
 use Magento\Quote\Model\Quote\Item;
 use Mundipagg\Core\Kernel\Exceptions\InvalidParamException;
