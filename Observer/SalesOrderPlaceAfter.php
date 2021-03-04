@@ -136,7 +136,7 @@ class SalesOrderPlaceAfter implements ObserverInterface
         $invoice = $payment->getCreatedInvoice();
         if ($invoice && !$order->getEmailSent()) {
             $order->addStatusHistoryComment(
-                    'MP - ' .
+                    'PGM - ' .
                     __(
                         'Notified customer about invoice #%1.',
                         $invoice->getIncrementId()

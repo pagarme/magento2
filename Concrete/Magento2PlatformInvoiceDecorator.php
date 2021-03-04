@@ -135,7 +135,7 @@ class Magento2PlatformInvoiceDecorator extends AbstractInvoiceDecorator implemen
         //$invoiceSender->send($invoice);
 
         $order->addStatusHistoryComment(
-            'MP - ' .
+            'PGM - ' .
             __('Notified customer about invoice #%1.', $invoice->getIncrementId())
         )
             ->setIsCustomerNotified(true)
