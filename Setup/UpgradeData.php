@@ -37,7 +37,7 @@ class UpgradeData implements UpgradeDataInterface
     )
     {
         $setup->startSetup();
-        
+
         if (version_compare($context->getVersion(), "0.1.1", "<")) {
             $setup = $this->updateVersionZeroOneOne($setup);
         }
@@ -62,7 +62,7 @@ class UpgradeData implements UpgradeDataInterface
         $customerSetup->removeAttribute(\Magento\Customer\Model\Customer::ENTITY, $attributeCode);
         $customerSetup->addAttribute(
             'customer',
-            $attributeCode, 
+            $attributeCode,
             [
                 'label' => 'Customer Id Mundipagg',
                 'type' => 'varchar',
@@ -90,7 +90,7 @@ class UpgradeData implements UpgradeDataInterface
     {
         $installer = $setup;
         $installer->startSetup();
- 
+
         // Get tutorial_simplenews table
         $tableName = $installer->getTable('mundipagg_mundipagg_charges');
         // Check if the table already exists
@@ -185,7 +185,7 @@ class UpgradeData implements UpgradeDataInterface
                 ->setOption('charset', 'utf8');
             $installer->getConnection()->createTable($table);
         }
- 
+
         $installer->endSetup();
 
         return $setup;
@@ -220,7 +220,7 @@ class UpgradeData implements UpgradeDataInterface
                 'label' => 'Payment Methods',
                 'input' => 'select',
                 'class' => '',
-                'source' => 'MundiPagg\MundiPagg\Model\Source\EavPaymentMethods',
+                'source' => 'Pagarme\Pagarme\Model\Source\EavPaymentMethods',
                 'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_GLOBAL,
                 'visible' => true,
                 'required' => false,
@@ -255,7 +255,7 @@ class UpgradeData implements UpgradeDataInterface
                 'label' => 'Interval',
                 'input' => 'select',
                 'class' => '',
-                'source' => 'MundiPagg\MundiPagg\Model\Source\EavInterval',
+                'source' => 'Pagarme\Pagarme\Model\Source\EavInterval',
                 'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_GLOBAL,
                 'visible' => true,
                 'required' => false,
@@ -323,7 +323,7 @@ class UpgradeData implements UpgradeDataInterface
                 'label' => 'Billing Type',
                 'input' => 'select',
                 'class' => '',
-                'source' => 'MundiPagg\MundiPagg\Model\Source\EavBillingType',
+                'source' => 'Pagarme\Pagarme\Model\Source\EavBillingType',
                 'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_GLOBAL,
                 'visible' => true,
                 'required' => false,
@@ -432,7 +432,7 @@ class UpgradeData implements UpgradeDataInterface
                 'label' => 'Payment Methods',
                 'input' => 'select',
                 'class' => '',
-                'source' => 'MundiPagg\MundiPagg\Model\Source\EavPaymentMethods',
+                'source' => 'Pagarme\Pagarme\Model\Source\EavPaymentMethods',
                 'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_GLOBAL,
                 'visible' => true,
                 'required' => false,
@@ -467,7 +467,7 @@ class UpgradeData implements UpgradeDataInterface
                 'label' => 'Interval',
                 'input' => 'select',
                 'class' => '',
-                'source' => 'MundiPagg\MundiPagg\Model\Source\EavInterval',
+                'source' => 'Pagarme\Pagarme\Model\Source\EavInterval',
                 'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_GLOBAL,
                 'visible' => true,
                 'required' => false,
@@ -534,7 +534,7 @@ class UpgradeData implements UpgradeDataInterface
                 'label' => 'Billing Type',
                 'input' => 'select',
                 'class' => '',
-                'source' => 'MundiPagg\MundiPagg\Model\Source\EavBillingType',
+                'source' => 'Pagarme\Pagarme\Model\Source\EavBillingType',
                 'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_GLOBAL,
                 'visible' => true,
                 'required' => false,
@@ -601,7 +601,7 @@ class UpgradeData implements UpgradeDataInterface
                 'label' => 'Start At',
                 'input' => 'select',
                 'class' => '',
-                'source' => 'MundiPagg\MundiPagg\Model\Source\EavInterval',
+                'source' => 'Pagarme\Pagarme\Model\Source\EavInterval',
                 'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_GLOBAL,
                 'visible' => true,
                 'required' => false,

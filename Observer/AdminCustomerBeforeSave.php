@@ -9,7 +9,7 @@ use Mundipagg\Core\Kernel\Services\LogService;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Pagarme\Pagarme\Concrete\Magento2PlatformCustomerDecorator;
 use Pagarme\Pagarme\Helper\CustomerUpdatePagarmeHelper;
-use MundiPagg\MundiPagg\Model\MundiPaggConfigProvider;
+use Pagarme\Pagarme\Model\MundiPaggConfigProvider;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Exception\InputException;
 

@@ -13,14 +13,14 @@ use Magento\Framework\App\Cache\Frontend\Pool;
 use Mundipagg\Core\Kernel\Abstractions\AbstractModuleCoreSetup;
 use Mundipagg\Core\Kernel\Repositories\ConfigurationRepository;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
-use MundiPagg\MundiPagg\Model\MundiPaggConfigProvider;
+use Pagarme\Pagarme\Model\MundiPaggConfigProvider;
 
 class DataValidateAdmin implements ObserverInterface
 {
     /**
      * Contains the config provider for Mundipagg
      *
-     * @var \MundiPagg\MundiPagg\Model\MundiPaggConfigProvider
+     * @var \Pagarme\Pagarme\Model\MundiPaggConfigProvider
      */
     protected $configProviderMundipagg;
 

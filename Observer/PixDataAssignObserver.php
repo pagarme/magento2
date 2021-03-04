@@ -10,8 +10,8 @@ use Magento\Framework\Event\Observer;
 use Magento\Quote\Api\Data\PaymentInterface;
 use Mundipagg\Core\Payment\Repositories\SavedCardRepository;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
-use MundiPagg\MundiPagg\Model\Cards;
-use MundiPagg\MundiPagg\Model\CardsRepository;
+use Pagarme\Pagarme\Model\Cards;
+use Pagarme\Pagarme\Model\CardsRepository;
 
 class PixDataAssignObserver extends AbstractDataAssignObserver
 {

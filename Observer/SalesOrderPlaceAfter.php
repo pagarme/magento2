@@ -13,7 +13,7 @@ use Magento\Sales\Model\Service\InvoiceService;
 use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
 use Magento\Framework\DB\Transaction;
 use Pagarme\Pagarme\Gateway\Transaction\CreditCard\Config\Config as ConfigCreditCard;
-use MundiPagg\MundiPagg\Model\MundiPaggConfigProvider;
+use Pagarme\Pagarme\Model\MundiPaggConfigProvider;
 use Magento\Framework\App\ObjectManager;
 
 class SalesOrderPlaceAfter implements ObserverInterface

@@ -5,7 +5,7 @@ namespace MundiPagg\MundiPagg\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Event\Observer as EventObserver;
 use Magento\Framework\Exception\InputException;
-use MundiPagg\MundiPagg\Model\MundiPaggConfigProvider;
+use Pagarme\Pagarme\Model\MundiPaggConfigProvider;
 use Magento\Framework\App\ObjectManager;
 use Mundipagg\Core\Kernel\Services\LogService;
 use Mundipagg\Core\Kernel\Services\LocalizationService;

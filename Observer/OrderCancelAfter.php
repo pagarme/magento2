@@ -15,7 +15,7 @@ use Magento\Framework\Webapi\Exception as M2WebApiException;
 use Magento\Framework\Phrase;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Pagarme\Pagarme\Concrete\Magento2PlatformOrderDecorator;
-use MundiPagg\MundiPagg\Model\MundiPaggConfigProvider;
+use Pagarme\Pagarme\Model\MundiPaggConfigProvider;
 
 class OrderCancelAfter implements ObserverInterface
 {
