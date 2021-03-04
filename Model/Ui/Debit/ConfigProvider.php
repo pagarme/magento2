@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Model\Ui\Debit;
+namespace Pagarme\Pagarme\Model\Ui\Debit;
 
 use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Customer\Model\Session;
@@ -11,7 +11,7 @@ use Pagarme\Pagarme\Concrete\Magento2CoreSetup as MPSetup;
 
 final class ConfigProvider implements ConfigProviderInterface
 {
-    const CODE = 'mundipagg_debit';
+    const CODE = 'pagarme_debit';
 
     protected $debitConfig;
 

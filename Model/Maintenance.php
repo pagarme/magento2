@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Model;
+namespace Pagarme\Pagarme\Model;
 
 use Mundipagg\Core\Maintenance\Services\InfoBuilderService;
 use Pagarme\Pagarme\Api\MaintenanceInterface;

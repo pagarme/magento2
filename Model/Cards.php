@@ -1,7 +1,7 @@
 <?php
 
 
-namespace MundiPagg\MundiPagg\Model;
+namespace Pagarme\Pagarme\Model;
 
 use Pagarme\Pagarme\Api\Data\CardsInterface;
 use Magento\Framework\Model\AbstractModel;
@@ -13,7 +13,7 @@ class Cards extends AbstractModel implements CardsInterface
      */
     protected function _construct()
     {
-        $this->_init('MundiPagg\MundiPagg\Model\ResourceModel\Cards');
+        $this->_init('Pagarme\Pagarme\Model\ResourceModel\Cards');
     }
 
     /**

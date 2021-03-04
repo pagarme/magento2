@@ -3,12 +3,12 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-namespace MundiPagg\MundiPagg\Model\Product\ProductPlan\Initialization\Helper\ProductLinks\Plugin;
+namespace Pagarme\Pagarme\Model\Product\ProductPlan\Initialization\Helper\ProductLinks\Plugin;
 
 use Magento\Catalog\Api\Data\ProductLinkExtensionFactory;
 use Magento\Catalog\Api\Data\ProductLinkInterfaceFactory;
 use Magento\Catalog\Api\ProductRepositoryInterface;
-use \MundiPagg\MundiPagg\Model\Product\ProductPlan\Plan as TypePlan;
+use \Pagarme\Pagarme\Model\Product\ProductPlan\Plan as TypePlan;
 
 /**
  * Class Plan

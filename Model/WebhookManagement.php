@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Model;
+namespace Pagarme\Pagarme\Model;
 
 use Magento\Framework\DB\Transaction;
 use Magento\Framework\Phrase;

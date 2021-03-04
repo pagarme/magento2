@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Model\Api;
+namespace Pagarme\Pagarme\Model\Api;
 
 use Magento\Framework\App\ObjectManager;
 use Mundipagg\Core\Kernel\Services\LocalizationService;

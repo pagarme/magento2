@@ -1,7 +1,7 @@
 <?php
 
 
-namespace MundiPagg\MundiPagg\Model;
+namespace Pagarme\Pagarme\Model;
 
 use Pagarme\Pagarme\Api\ChargesRepositoryInterface;
 use Pagarme\Pagarme\Api\Data\ChargesSearchResultsInterfaceFactory;
@@ -12,8 +12,8 @@ use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Reflection\DataObjectProcessor;
-use MundiPagg\MundiPagg\Model\ResourceModel\Charges as ResourceCharges;
-use MundiPagg\MundiPagg\Model\ResourceModel\Charges\CollectionFactory as ChargesCollectionFactory;
+use Pagarme\Pagarme\Model\ResourceModel\Charges as ResourceCharges;
+use Pagarme\Pagarme\Model\ResourceModel\Charges\CollectionFactory as ChargesCollectionFactory;
 use Magento\Store\Model\StoreManagerInterface;
 
 class ChargesRepository implements ChargesRepositoryInterface

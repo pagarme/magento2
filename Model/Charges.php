@@ -1,7 +1,7 @@
 <?php
 
 
-namespace MundiPagg\MundiPagg\Model;
+namespace Pagarme\Pagarme\Model;
 
 use Pagarme\Pagarme\Api\Data\ChargesInterface;
 use Magento\Framework\Model\AbstractModel;
@@ -13,7 +13,7 @@ class Charges extends AbstractModel implements ChargesInterface
      */
     protected function _construct()
     {
-        $this->_init('MundiPagg\MundiPagg\Model\ResourceModel\Charges');
+        $this->_init('Pagarme\Pagarme\Model\ResourceModel\Charges');
     }
 
     /**

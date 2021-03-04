@@ -1,5 +1,5 @@
 <?php
-namespace MundiPagg\MundiPagg\Model\Product;
+namespace Pagarme\Pagarme\Model\Product;
 
 use Magento\Catalog\Model\Product\Type\AbstractType;
 use Magento\Catalog\Model\Product;

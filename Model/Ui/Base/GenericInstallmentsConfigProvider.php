@@ -2,17 +2,17 @@
 /**
  * Class GenericInstallmentConfigProvider
  *
- * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
- * @copyright   2017 MundiPagg (http://www.mundipagg.com)
- * @license     http://www.mundipagg.com Copyright
+ * @author      Open Source Team
+ * @copyright   2021 Pagar.me (https://pagar.me)
+ * @license     https://pagar.me Copyright
  *
- * @link        http://www.mundipagg.com
+ * @link        https://pagar.me
  */
 
-namespace MundiPagg\MundiPagg\Model\Ui\Base;
+namespace Pagarme\Pagarme\Model\Ui\Base;
 
 use Mundipagg\Core\Kernel\Services\LocalizationService;
-use MundiPagg\MundiPagg\Model\Installments\Config\ConfigInterface;
+use Pagarme\Pagarme\Model\Installments\Config\ConfigInterface;
 use Pagarme\Pagarme\Gateway\Transaction\Base\Config\ConfigInterface as BaseConfig;
 use Magento\Checkout\Model\ConfigProviderInterface;
 use \Magento\Store\Model\StoreManagerInterface;

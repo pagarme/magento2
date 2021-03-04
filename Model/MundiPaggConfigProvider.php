@@ -1,24 +1,24 @@
 <?php
-namespace MundiPagg\MundiPagg\Model;
+namespace Pagarme\Pagarme\Model;
 
 use \Magento\Store\Model\ScopeInterface;
 
 /**
  * Class MundiPaggConfigProvider
  *
- * @package MundiPagg\MundiPagg\Model
+ * @package Pagarme\Pagarme\Model
  */
 class MundiPaggConfigProvider
 {
     /**
      * Contains if the module is active or not
      */
-    const XML_PATH_SOFTDESCRIPTION  = 'payment/mundipagg_creditcard/soft_description';
-    const XML_PATH_ACTIVE            = 'mundipagg_mundipagg/global/active';
-    const PATH_CUSTOMER_STREET      = 'payment/mundipagg_customer_address/street_attribute';
-    const PATH_CUSTOMER_NUMBER      = 'payment/mundipagg_customer_address/number_attribute';
-    const PATH_CUSTOMER_COMPLEMENT  = 'payment/mundipagg_customer_address/complement_attribute';
-    const PATH_CUSTOMER_DISTRICT    = 'payment/mundipagg_customer_address/district_attribute';
+    const XML_PATH_SOFTDESCRIPTION  = 'payment/pagarme_creditcard/soft_description';
+    const XML_PATH_ACTIVE            = 'pagarme_pagarme/global/active';
+    const PATH_CUSTOMER_STREET      = 'payment/pagarme_customer_address/street_attribute';
+    const PATH_CUSTOMER_NUMBER      = 'payment/pagarme_customer_address/number_attribute';
+    const PATH_CUSTOMER_COMPLEMENT  = 'payment/pagarme_customer_address/complement_attribute';
+    const PATH_CUSTOMER_DISTRICT    = 'payment/pagarme_customer_address/district_attribute';
 
 
     /**

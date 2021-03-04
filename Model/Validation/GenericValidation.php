@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Model\Validation;
+namespace Pagarme\Pagarme\Model\Validation;
 
 use Magento\Config\Model\Config as Magento2ModelConfig;
 use Magento\Framework\App\ObjectManager;

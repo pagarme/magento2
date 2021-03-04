@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Model\Api;
+namespace Pagarme\Pagarme\Model\Api;
 
 use Magento\Framework\Webapi\Rest\Request;
 use Mundipagg\Core\Recurrence\Services\InvoiceService;

@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Model\Cart;
+namespace Pagarme\Pagarme\Model\Cart;
 
 use Magento\Checkout\Model\Cart;
 use Magento\Framework\Exception\LocalizedException;
@@ -56,7 +56,7 @@ class CartConflict
     /**
      * @var Configuration
      */
-    private $mundipaggConfig;
+    private $pagarmeConfig;
 
     /**
      * CartConflict constructor.
@@ -71,7 +71,7 @@ class CartConflict
         $this->productSubscriptionService = new ProductSubscriptionService();
         $this->planService = new PlanService();
         $this->rulesCartRun = new RulesCartRun();
-        $this->mundipaggConfig = Magento2CoreSetup::getModuleConfiguration();
+        $this->pagarmeConfig = Magento2CoreSetup::getModuleConfiguration();
     }
 
     /**
@@ -82,8 +82,8 @@ class CartConflict
     public function beforeUpdateItems(Cart $cart, $dataQty)
     {
         if (
-            !$this->mundipaggConfig->isEnabled() ||
-            !$this->mundipaggConfig->getRecurrenceConfig()->isEnabled()
+            !$this->pagarmeConfig->isEnabled() ||
+            !$this->pagarmeConfig->getRecurrenceConfig()->isEnabled()
         ) {
             return;
         }
@@ -122,8 +122,8 @@ class CartConflict
         $requestInfo = null
     ) {
         if (
-            !$this->mundipaggConfig->isEnabled() ||
-            !$this->mundipaggConfig->getRecurrenceConfig()->isEnabled()
+            !$this->pagarmeConfig->isEnabled() ||
+            !$this->pagarmeConfig->getRecurrenceConfig()->isEnabled()
         ) {
             return [$productInfo, $requestInfo];
         }

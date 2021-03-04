@@ -5,7 +5,7 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-namespace MundiPagg\MundiPagg\Model\Product\ProductPlan\Cart\Configuration\Plugin;
+namespace Pagarme\Pagarme\Model\Product\ProductPlan\Cart\Configuration\Plugin;
 
 class Plan
 {
@@ -26,7 +26,7 @@ class Plan
         \Magento\Catalog\Model\Product $product,
         $config
     ) {
-        if ($product->getTypeId() == \MundiPagg\MundiPagg\Model\Product\ProductPlan\Plan::TYPE_CODE) {
+        if ($product->getTypeId() == \Pagarme\Pagarme\Model\Product\ProductPlan\Plan::TYPE_CODE) {
             return isset($config['super_group']);
         }
 

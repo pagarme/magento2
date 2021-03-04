@@ -2,14 +2,14 @@
 /**
  * Class ConfigInterface
  *
- * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
- * @copyright   2017 MundiPagg (http://www.mundipagg.com)
- * @license     http://www.mundipagg.com Copyright
+ * @author      Open Source Team
+ * @copyright   2021 Pagar.me (https://pagar.me)
+ * @license     https://pagar.me Copyright
  *
- * @link        http://www.mundipagg.com
+ * @link        https://pagar.me
  */
 
-namespace MundiPagg\MundiPagg\Model\Installments\Config;
+namespace Pagarme\Pagarme\Model\Installments\Config;
 
 
 interface ConfigInterface
@@ -22,7 +22,7 @@ interface ConfigInterface
     const PATH_INSTALLMENTS_INTEREST_RATE_INCREMENTAL       = 'payment/%s/installments_interest_rate_incremental';
     const PATH_INSTALLMENTS_INTEREST_BY_ISSUER              = 'payment/%s/installments_interest_by_issuer';
     const PATH_INSTALLMENTS_MAX_WITHOUT_INTEREST            = 'payment/%s/installments_max_without_interest';
-    const PATH_MULTI_BUYER_ACTIVE                           = 'payment/mundipagg_multibuyer/active';
+    const PATH_MULTI_BUYER_ACTIVE                           = 'payment/pagarme_multibuyer/active';
 
     public function isActive();
 

@@ -2,21 +2,21 @@
 /**
  * Class Builder
  *
- * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
- * @copyright   2017 MundiPagg (http://www.mundipagg.com)
- * @license     http://www.mundipagg.com Copyright
+ * @author      Open Source Team
+ * @copyright   2021 Pagar.me (https://pagar.me)
+ * @license     https://pagar.me Copyright
  *
- * @link        http://www.mundipagg.com
+ * @link        https://pagar.me
  */
 
-namespace MundiPagg\MundiPagg\Model\Installments;
+namespace Pagarme\Pagarme\Model\Installments;
 
 
 use Magento\Framework\Api\AbstractSimpleObjectBuilder;
 use Magento\Framework\Api\ObjectFactory;
 use Pagarme\Pagarme\Api\Data\InstallmentInterface;
 use Pagarme\Pagarme\Api\Data\InstallmentInterfaceFactory;
-use MundiPagg\MundiPagg\Model\Installments\Config\ConfigByBrandInterface;
+use Pagarme\Pagarme\Model\Installments\Config\ConfigByBrandInterface;
 use Magento\Checkout\Model\Session;
 
 class BuilderByBrand extends AbstractSimpleObjectBuilder

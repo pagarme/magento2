@@ -2,21 +2,21 @@
 /**
  * Class InstallmentsByBrandManagements
  *
- * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
- * @copyright   2017 MundiPagg (http://www.mundipagg.com)
- * @license     http://www.mundipagg.com Copyright
+ * @author      Open Source Team
+ * @copyright   2021 Pagar.me (https://pagar.me)
+ * @license     https://pagar.me Copyright
  *
- * @link        http://www.mundipagg.com
+ * @link        https://pagar.me
  */
 
-namespace MundiPagg\MundiPagg\Model;
+namespace Pagarme\Pagarme\Model;
 
 use Magento\Framework\Api\SimpleBuilderInterface;
 use Mundipagg\Core\Kernel\ValueObjects\CardBrand;
 use Pagarme\Pagarme\Api\InstallmentsByBrandManagementInterface;
 use Magento\Checkout\Model\Session;
 
-use MundiPagg\MundiPagg\Model\Installments\Config\ConfigByBrand as Config;
+use Pagarme\Pagarme\Model\Installments\Config\ConfigByBrand as Config;
 
 class InstallmentsByBrandManagement
     extends AbstractInstallmentManagement
