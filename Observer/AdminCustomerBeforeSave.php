@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Observer;
+namespace Pagarme\Pagarme\Observer;
 
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Event\Observer as EventObserver;
@@ -9,7 +9,7 @@ use Mundipagg\Core\Kernel\Services\LogService;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Pagarme\Pagarme\Concrete\Magento2PlatformCustomerDecorator;
 use Pagarme\Pagarme\Helper\CustomerUpdatePagarmeHelper;
-use Pagarme\Pagarme\Model\MundiPaggConfigProvider;
+use Pagarme\Pagarme\Model\PagarmeConfigProvider;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Exception\InputException;
 
@@ -18,18 +18,18 @@ class AdminCustomerBeforeSave implements ObserverInterface
     /**
      * @var CustomerUpdatePagarmeHelper
      */
-    protected $customerUpdateMundipaggHelper;
+    protected $customerUpdatePagarmeHelper;
 
     /**
      * AdminCustomerBeforeSave constructor.
-     * @param CustomerUpdatePagarmeHelper $customerUpdateMundipaggHelper
+     * @param CustomerUpdatePagarmeHelper $customerUpdatePagarmeHelper
      * @throws \Exception
      */
     public function __construct(
-        CustomerUpdatePagarmeHelper $customerUpdateMundipaggHelper
+        CustomerUpdatePagarmeHelper $customerUpdatePagarmeHelper
     )
     {
-        $this->customerUpdateMundipaggHelper = $customerUpdateMundipaggHelper;
+        $this->customerUpdatePagarmeHelper = $customerUpdatePagarmeHelper;
         Magento2CoreSetup::bootstrap();
     }
 
@@ -72,9 +72,9 @@ class AdminCustomerBeforeSave implements ObserverInterface
     {
         $objectManager = ObjectManager::getInstance();
 
-        /* @var MundiPaggConfigProvider $mundipaggProvider */
-        $mundipaggProvider = $objectManager->get(MundiPaggConfigProvider::class);
+        /* @var PagarmeConfigProvider $pagarmeProvider */
+        $pagarmeProvider = $objectManager->get(PagarmeConfigProvider::class);
 
-        return $mundipaggProvider->getModuleStatus();
+        return $pagarmeProvider->getModuleStatus();
     }
 }

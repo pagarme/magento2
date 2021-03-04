@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Observer;
+namespace Pagarme\Pagarme\Observer;
 
 use Exception;
 use Magento\Catalog\Model\Product;
@@ -35,7 +35,7 @@ class CartAddProductAfterObserver implements ObserverInterface
     /**
      * @var Configuration
      */
-    protected $mundipaggConfig;
+    protected $pagarmeConfig;
 
     /**
      * @var TimezoneInterface
@@ -85,7 +85,7 @@ class CartAddProductAfterObserver implements ObserverInterface
         Magento2CoreSetup::bootstrap();
         $this->recurrenceProductHelper = $recurrenceProductHelper;
         $this->moneyService = new MoneyService();
-        $this->mundipaggConfig = Magento2CoreSetup::getModuleConfiguration();
+        $this->pagarmeConfig = Magento2CoreSetup::getModuleConfiguration();
         $this->timeZone = $timeZone;
         $this->storeManager = $storeManager;
         $this->customerSession = $customerSession;
@@ -100,8 +100,8 @@ class CartAddProductAfterObserver implements ObserverInterface
     public function execute(Observer $observer)
     {
         if (
-            !$this->mundipaggConfig->isEnabled() ||
-            !$this->mundipaggConfig->getRecurrenceConfig()->isEnabled()
+            !$this->pagarmeConfig->isEnabled() ||
+            !$this->pagarmeConfig->getRecurrenceConfig()->isEnabled()
         ) {
             return;
         }

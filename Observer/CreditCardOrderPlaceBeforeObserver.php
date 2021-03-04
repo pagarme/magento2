@@ -2,14 +2,14 @@
 /**
  * Class CreditCardDataAssignObserver
  *
- * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
- * @copyright   2017 MundiPagg (http://www.mundipagg.com)
- * @license     http://www.mundipagg.com Copyright
+ * @author      Open Source Team
+ * @copyright   2021 Pagar.me (https://pagar.me)
+ * @license     https://pagar.me Copyright
  *
- * @link        http://www.mundipagg.com
+ * @link        https://pagar.me
  */
 
-namespace MundiPagg\MundiPagg\Observer;
+namespace Pagarme\Pagarme\Observer;
 
 
 use Magento\Framework\DataObject;
@@ -44,11 +44,11 @@ class CreditCardOrderPlaceBeforeObserver implements ObserverInterface
         $order = $observer->getOrder();
         $payment = $order->getPayment();
 
-        if ('mundipagg_creditcard' != $payment->getMethod() && 'mundipagg_billet_creditcard' != $payment->getMethod() && 'mundipagg_two_creditcard' != $payment->getMethod()) {
+        if ('pagarme_creditcard' != $payment->getMethod() && 'pagarme_billet_creditcard' != $payment->getMethod() && 'pagarme_two_creditcard' != $payment->getMethod()) {
             return $this;
         }
 
-        if($payment->getMethod() == 'mundipagg_creditcard'){
+        if($payment->getMethod() == 'pagarme_creditcard'){
             $tax = $this->getTaxOrder(
                 $payment->getAdditionalInformation('cc_installments'),
                 $payment->getAdditionalInformation('cc_type'),
@@ -56,11 +56,11 @@ class CreditCardOrderPlaceBeforeObserver implements ObserverInterface
             );
         }
 
-        if($payment->getMethod() == 'mundipagg_billet_creditcard'){
+        if($payment->getMethod() == 'pagarme_billet_creditcard'){
             $tax = $this->getTaxOrderByAmount($payment->getAdditionalInformation('cc_installments'), $payment->getCcType(), $payment->getAdditionalInformation('cc_cc_amount'));
         }
 
-        if($payment->getMethod() == 'mundipagg_two_creditcard'){
+        if($payment->getMethod() == 'pagarme_two_creditcard'){
             $tax = $payment->getAdditionalInformation('cc_second_card_tax_amount') + $payment->getAdditionalInformation('cc_first_card_tax_amount');
         }
 

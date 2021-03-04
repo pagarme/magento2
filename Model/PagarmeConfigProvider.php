@@ -4,11 +4,11 @@ namespace Pagarme\Pagarme\Model;
 use \Magento\Store\Model\ScopeInterface;
 
 /**
- * Class MundiPaggConfigProvider
+ * Class PagarmeConfigProvider
  *
  * @package Pagarme\Pagarme\Model
  */
-class MundiPaggConfigProvider
+class PagarmeConfigProvider
 {
     /**
      * Contains if the module is active or not

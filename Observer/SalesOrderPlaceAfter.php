@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Observer;
+namespace Pagarme\Pagarme\Observer;
 
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Event\Observer as EventObserver;
@@ -13,7 +13,7 @@ use Magento\Sales\Model\Service\InvoiceService;
 use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
 use Magento\Framework\DB\Transaction;
 use Pagarme\Pagarme\Gateway\Transaction\CreditCard\Config\Config as ConfigCreditCard;
-use Pagarme\Pagarme\Model\MundiPaggConfigProvider;
+use Pagarme\Pagarme\Model\PagarmeConfigProvider;
 use Magento\Framework\App\ObjectManager;
 
 class SalesOrderPlaceAfter implements ObserverInterface
@@ -98,7 +98,7 @@ class SalesOrderPlaceAfter implements ObserverInterface
         $order = $event->getOrder();
         $payment = $order->getPayment();
 
-        if ($payment->getMethod() != 'mundipagg_creditcard') {
+        if ($payment->getMethod() != 'pagarme_creditcard') {
             return $this;
         }
 
@@ -112,9 +112,9 @@ class SalesOrderPlaceAfter implements ObserverInterface
     public function moduleIsEnable()
     {
         $objectManager = ObjectManager::getInstance();
-        $mundipaggProvider = $objectManager->get(MundiPaggConfigProvider::class);
+        $pagarmeProvider = $objectManager->get(PagarmeConfigProvider::class);
 
-        return $mundipaggProvider->getModuleStatus();
+        return $pagarmeProvider->getModuleStatus();
     }
 
     /**

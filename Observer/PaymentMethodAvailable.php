@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Observer;
+namespace Pagarme\Pagarme\Observer;
 
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
@@ -14,7 +14,7 @@ class PaymentMethodAvailable implements ObserverInterface
     /**
      * @var \Mundipagg\Core\Kernel\Aggregates\Configuration
      */
-    protected $mundipaggConfig;
+    protected $pagarmeConfig;
     /**
      * @var RecurrenceProductHelper
      */
@@ -25,7 +25,7 @@ class PaymentMethodAvailable implements ObserverInterface
     ) {
         Magento2CoreSetup::bootstrap();
         $this->recurrenceProductHelper = $recurrenceProductHelper;
-        $this->mundipaggConfig = Magento2CoreSetup::getModuleConfiguration();
+        $this->pagarmeConfig = Magento2CoreSetup::getModuleConfiguration();
     }
 
     /**
@@ -45,11 +45,11 @@ class PaymentMethodAvailable implements ObserverInterface
         if (!empty($recurrenceProduct)) {
 
             $currentMethod = $observer->getEvent()->getMethodInstance()->getCode();
-            $isMundipaggMethod = strpos($currentMethod, "mundipagg");
+            $isPagarmeMethod = strpos($currentMethod, "pagarme");
 
             if (
-                !$this->mundipaggConfig->isEnabled() ||
-                $isMundipaggMethod === false
+                !$this->pagarmeConfig->isEnabled() ||
+                $isPagarmeMethod === false
             ) {
                 $checkResult = $observer->getEvent()->getResult();
                 $checkResult->setData('is_available', false);
@@ -59,8 +59,8 @@ class PaymentMethodAvailable implements ObserverInterface
             $this->switchPaymentMethodsForRecurrence($observer, $recurrenceProduct);
         }
 
-        if (!$this->mundipaggConfig->isEnabled()) {
-            $this->disableMundipaggPaymentMethods($observer);
+        if (!$this->pagarmeConfig->isEnabled()) {
+            $this->disablePagarmePaymentMethods($observer);
         }
 
         return;
@@ -69,7 +69,7 @@ class PaymentMethodAvailable implements ObserverInterface
     /**
      * @param Observer $observer
      */
-    private function disableMundipaggPaymentMethods(Observer $observer)
+    private function disablePagarmePaymentMethods(Observer $observer)
     {
         $currentMethod = $observer->getEvent()->getMethodInstance()->getCode();
 
@@ -87,12 +87,12 @@ class PaymentMethodAvailable implements ObserverInterface
      */
     private function switchPaymentMethodsForRecurrence($observer, $recurrenceProducts)
     {
-        $mundipaggPaymentsMethods = $this->getAvailableConfigMethods();
+        $pagarmePaymentsMethods = $this->getAvailableConfigMethods();
         $currentMethod = $observer->getEvent()->getMethodInstance()->getCode();
 
         $methodsAvailable = $this->getAvailableRecurrenceMethods(
             $recurrenceProducts,
-            $mundipaggPaymentsMethods
+            $pagarmePaymentsMethods
         );
 
         if (!in_array($currentMethod, $methodsAvailable)) {
@@ -103,34 +103,34 @@ class PaymentMethodAvailable implements ObserverInterface
 
     /**
      * @param $recurrenceProducts
-     * @param $mundipaggPaymentsMethods
+     * @param $pagarmePaymentsMethods
      * @return array
      */
     public function getAvailableRecurrenceMethods(
         $recurrenceProducts,
-        $mundipaggPaymentsMethods
+        $pagarmePaymentsMethods
     ) {
         if (empty($recurrenceProducts)) {
-            return $mundipaggPaymentsMethods;
+            return $pagarmePaymentsMethods;
         }
 
-        $mundipaggPaymentsMethodsFlip = array_flip($mundipaggPaymentsMethods);
+        $pagarmePaymentsMethodsFlip = array_flip($pagarmePaymentsMethods);
 
         $methodsAvailable = [];
         foreach ($recurrenceProducts as $recurrenceProduct) {
 
             if (
                 $recurrenceProduct->getCreditCard() &&
-                in_array('mundipagg_creditcard', $mundipaggPaymentsMethodsFlip)
+                in_array('pagarme_creditcard', $pagarmePaymentsMethodsFlip)
             ) {
-                $methodsAvailable[] = 'mundipagg_creditcard';
+                $methodsAvailable[] = 'pagarme_creditcard';
             }
 
             if (
                 $recurrenceProduct->getBoleto() &&
-                in_array('mundipagg_billet', $mundipaggPaymentsMethodsFlip)
+                in_array('pagarme_billet', $pagarmePaymentsMethodsFlip)
             ) {
-                $methodsAvailable[] = 'mundipagg_billet';
+                $methodsAvailable[] = 'pagarme_billet';
             }
         }
 
@@ -144,32 +144,32 @@ class PaymentMethodAvailable implements ObserverInterface
     {
         $paymentMethods = [];
 
-        if ($this->mundipaggConfig->isBoletoEnabled()) {
-            $paymentMethods[] = "mundipagg_billet";
+        if ($this->pagarmeConfig->isBoletoEnabled()) {
+            $paymentMethods[] = "pagarme_billet";
         }
 
-        if ($this->mundipaggConfig->isCreditCardEnabled()) {
-            $paymentMethods[] = "mundipagg_creditcard";
+        if ($this->pagarmeConfig->isCreditCardEnabled()) {
+            $paymentMethods[] = "pagarme_creditcard";
         }
 
-        if ($this->mundipaggConfig->isBoletoCreditCardEnabled()) {
-            $paymentMethods[] = "mundipagg_billet_creditcard";
+        if ($this->pagarmeConfig->isBoletoCreditCardEnabled()) {
+            $paymentMethods[] = "pagarme_billet_creditcard";
         }
 
-        if ($this->mundipaggConfig->isTwoCreditCardsEnabled()) {
-            $paymentMethods[] = "mundipagg_two_creditcard";
+        if ($this->pagarmeConfig->isTwoCreditCardsEnabled()) {
+            $paymentMethods[] = "pagarme_two_creditcard";
         }
 
-        if ($this->mundipaggConfig->getVoucherConfig()->isEnabled()) {
-            $paymentMethods[] = "mundipagg_voucher";
+        if ($this->pagarmeConfig->getVoucherConfig()->isEnabled()) {
+            $paymentMethods[] = "pagarme_voucher";
         }
 
-        if ($this->mundipaggConfig->getDebitConfig()->isEnabled()) {
-            $paymentMethods[] = "mundipagg_debit";
+        if ($this->pagarmeConfig->getDebitConfig()->isEnabled()) {
+            $paymentMethods[] = "pagarme_debit";
         }
 
-        if ($this->mundipaggConfig->getPixConfig()->isEnabled()) {
-            $paymentMethods[] = "mundipagg_pix";
+        if ($this->pagarmeConfig->getPixConfig()->isEnabled()) {
+            $paymentMethods[] = "pagarme_pix";
         }
 
         return $paymentMethods;
