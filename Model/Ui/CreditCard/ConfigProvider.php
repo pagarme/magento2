@@ -18,7 +18,7 @@ use Mundipagg\Core\Payment\Repositories\CustomerRepository;
 use Mundipagg\Core\Payment\Repositories\SavedCardRepository;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use MundiPagg\MundiPagg\Model\CardsFactory;
-use MundiPagg\MundiPagg\Gateway\Transaction\CreditCard\Config\ConfigInterface;
+use Pagarme\Pagarme\Gateway\Transaction\CreditCard\Config\ConfigInterface;
 
 final class ConfigProvider implements ConfigProviderInterface
 {

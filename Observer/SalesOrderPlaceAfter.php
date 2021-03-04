@@ -12,7 +12,7 @@ use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Sales\Model\Service\InvoiceService;
 use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
 use Magento\Framework\DB\Transaction;
-use MundiPagg\MundiPagg\Gateway\Transaction\CreditCard\Config\Config as ConfigCreditCard;
+use Pagarme\Pagarme\Gateway\Transaction\CreditCard\Config\Config as ConfigCreditCard;
 use MundiPagg\MundiPagg\Model\MundiPaggConfigProvider;
 use Magento\Framework\App\ObjectManager;
 
@@ -54,7 +54,7 @@ class SalesOrderPlaceAfter implements ObserverInterface
     protected $invoiceSender;
 
     /**
-     * \MundiPagg\MundiPagg\Gateway\Transaction\CreditCard\Config\Config
+     * \Pagarme\Pagarme\Gateway\Transaction\CreditCard\Config\Config
      */
     protected $configCreditCard;
 

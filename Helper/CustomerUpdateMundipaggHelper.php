@@ -11,7 +11,7 @@ namespace MundiPagg\MundiPagg\Helper;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use MundiAPILib\Controllers;
 use MundiAPILib\Models\UpdateCustomerRequest;
-use MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\Config;
+use Pagarme\Pagarme\Gateway\Transaction\Base\Config\Config;
 
 class CustomerUpdateMundipaggHelper
 {

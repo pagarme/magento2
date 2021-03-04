@@ -13,7 +13,7 @@ namespace MundiPagg\MundiPagg\Model\Installments\Config;
 
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
-use MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\AbstractConfig;
+use Pagarme\Pagarme\Gateway\Transaction\Base\Config\AbstractConfig;
 
 class Config extends AbstractConfig implements ConfigInterface
 {

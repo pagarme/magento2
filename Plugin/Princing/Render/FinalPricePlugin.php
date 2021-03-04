@@ -8,7 +8,7 @@ use Mundipagg\Core\Kernel\Abstractions\AbstractModuleCoreSetup as MPSetup;
 use Mundipagg\Core\Recurrence\Aggregates\ProductSubscription;
 use Mundipagg\Core\Recurrence\Services\ProductSubscriptionService;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
-use MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\Config;
+use Pagarme\Pagarme\Gateway\Transaction\Base\Config\Config;
 use Magento\Catalog\Pricing\Render\FinalPriceBox;
 use Magento\Catalog\Model\Product\Interceptor as ProductInterceptor;
 use Mundipagg\Core\Recurrence\Aggregates\Repetition;

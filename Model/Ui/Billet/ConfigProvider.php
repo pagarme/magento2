@@ -13,7 +13,7 @@ namespace MundiPagg\MundiPagg\Model\Ui\Billet;
 
 
 use Magento\Checkout\Model\ConfigProviderInterface;
-use MundiPagg\MundiPagg\Gateway\Transaction\Billet\Config\ConfigInterface;
+use Pagarme\Pagarme\Gateway\Transaction\Billet\Config\ConfigInterface;
 
 final class ConfigProvider implements ConfigProviderInterface
 {
