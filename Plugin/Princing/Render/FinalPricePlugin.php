@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Plugin\Princing\Render;
+namespace Pagarme\Pagarme\Plugin\Princing\Render;
 
 use Magento\Catalog\Model\Product;
 use Magento\Framework\App\ObjectManager;
@@ -37,7 +37,7 @@ class FinalPricePlugin
             $moduleConfiguration->getRecurrenceConfig()->isEnabled() &&
             $moduleConfiguration->getRecurrenceConfig()->isShowRecurrenceCurrencyWidget()
         ) {
-            return ['MundiPagg_MundiPagg::product/priceFinal.phtml'];
+            return ['Pagarme_Pagarme::product/priceFinal.phtml'];
         }
 
         return [$template];

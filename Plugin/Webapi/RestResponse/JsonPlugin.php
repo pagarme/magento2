@@ -1,5 +1,5 @@
 <?php
-namespace MundiPagg\MundiPagg\Plugin\Webapi\RestResponse;
+namespace Pagarme\Pagarme\Plugin\Webapi\RestResponse;
 
 use Magento\Framework\Webapi\Rest\Request;
 use Magento\Framework\Webapi\Rest\Response\Renderer\Json;

@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Plugin\Admin;
+namespace Pagarme\Pagarme\Plugin\Admin;
 
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Model\CustomerFactory;
@@ -22,22 +22,22 @@ class CustomerPlugin
     /**
      * @var CustomerUpdatePagarmeHelper
      */
-    protected $customerUpdateMundipaggHelper;
+    protected $customerUpdatePagarmeHelper;
 
     /**
      * CustomerPlugin constructor.
      * @param CustomerRepositoryInterface $customerRepositoryInterface
      * @param CustomerFactory $customerFactory
-     * @param CustomerUpdatePagarmeHelper $customerUpdateMundipaggHelper
+     * @param CustomerUpdatePagarmeHelper $customerUpdatePagarmeHelper
      */
     public function __construct(
         CustomerRepositoryInterface $customerRepositoryInterface,
         CustomerFactory $customerFactory,
-        CustomerUpdatePagarmeHelper $customerUpdateMundipaggHelper
+        CustomerUpdatePagarmeHelper $customerUpdatePagarmeHelper
     ) {
         $this->customerRepositoryInterface = $customerRepositoryInterface;
         $this->customerFactory = $customerFactory;
-        $this->customerUpdateMundipaggHelper = $customerUpdateMundipaggHelper;
+        $this->customerUpdatePagarmeHelper = $customerUpdatePagarmeHelper;
     }
 
     /**
@@ -54,7 +54,7 @@ class CustomerPlugin
         $customer->setId($userData['entity_id']);
         $customer->setEmail($userData['email']);
 
-        $this->customerUpdateMundipaggHelper->updateEmailPagarme($customer);
+        $this->customerUpdatePagarmeHelper->updateEmailPagarme($customer);
 
         return $subject;
 
