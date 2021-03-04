@@ -28,7 +28,7 @@ PixModel.prototype.addErrors = function (error) {
 PixModel.prototype.getData = function () {
 
     var data = {
-        'method': "mundipagg_pix",
+        'method': "pagarme_pix",
         'additional_data': {}
     };
 

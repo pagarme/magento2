@@ -2,35 +2,35 @@
 /*global define*/
 define(
     [
-        "MundiPagg_MundiPagg/js/view/payment/default",
-        "MundiPagg_MundiPagg/js/core/models/PixModel"
+        "Pagarme_Pagarme/js/view/payment/default",
+        "Pagarme_Pagarme/js/core/models/PixModel"
     ],
     function (Component, $t) {
 
         return Component.extend({
             defaults: {
-                template: "MundiPagg_MundiPagg/payment/default"
+                template: "Pagarme_Pagarme/payment/default"
             },
             getCode: function () {
-                return "mundipagg_pix";
+                return "pagarme_pix";
             },
             isActive: function () {
-                return window.checkoutConfig.payment.mundipagg_pix.active;
+                return window.checkoutConfig.payment.pagarme_pix.active;
             },
             getTitle: function () {
-                return window.checkoutConfig.payment.mundipagg_pix.title;
+                return window.checkoutConfig.payment.pagarme_pix.title;
             },
             getBase: function () {
-                return "MundiPagg_MundiPagg/payment/pix";
+                return "Pagarme_Pagarme/payment/pix";
             },
             getForm: function () {
-                return "MundiPagg_MundiPagg/payment/pix-form";
+                return "Pagarme_Pagarme/payment/pix-form";
             },
             getMultibuyerForm: function () {
-                return "MundiPagg_MundiPagg/payment/multibuyer-form";
+                return "Pagarme_Pagarme/payment/multibuyer-form";
             },
             getText: function () {
-                return window.checkoutConfig.payment.mundipagg_pix.text;
+                return window.checkoutConfig.payment.pagarme_pix.text;
             },
 
             getModel: function () {

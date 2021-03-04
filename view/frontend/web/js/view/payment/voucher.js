@@ -3,13 +3,13 @@
 /*global define*/
 define(
     [
-        "MundiPagg_MundiPagg/js/view/payment/default",
-        "MundiPagg_MundiPagg/js/core/checkout/PaymentModuleBootstrap",
-        "MundiPagg_MundiPagg/js/core/models/VoucherModel",
+        "Pagarme_Pagarme/js/view/payment/default",
+        "Pagarme_Pagarme/js/core/checkout/PaymentModuleBootstrap",
+        "Pagarme_Pagarme/js/core/models/VoucherModel",
         "underscore",
         'mage/translate',
-        'MundiPagg_MundiPagg/js/action/installments',
-        'MundiPagg_MundiPagg/js/action/installmentsByBrand',
+        'Pagarme_Pagarme/js/action/installments',
+        'Pagarme_Pagarme/js/action/installmentsByBrand',
         'Magento_Checkout/js/model/full-screen-loader',
         'ko',
         'jquery',
@@ -29,13 +29,13 @@ define(
         return Component.extend({
 
             defaults: {
-                template: "MundiPagg_MundiPagg/payment/default",
+                template: "Pagarme_Pagarme/payment/default",
                 allInstallments: ko.observableArray([]),
                 creditCardType: '',
             },
 
             getCode: function() {
-                return "mundipagg_voucher";
+                return "pagarme_voucher";
             },
 
             getModel: function() {
@@ -43,23 +43,23 @@ define(
             },
 
             isActive: function() {
-                return window.checkoutConfig.payment.mundipagg_voucher.active;
+                return window.checkoutConfig.payment.pagarme_voucher.active;
             },
 
             getTitle: function() {
-                return window.checkoutConfig.payment.mundipagg_voucher.title;
+                return window.checkoutConfig.payment.pagarme_voucher.title;
             },
 
             getBase: function () {
-                return "MundiPagg_MundiPagg/payment/voucher";
+                return "Pagarme_Pagarme/payment/voucher";
             },
 
             getForm: function () {
-                return "MundiPagg_MundiPagg/payment/creditcard-form";
+                return "Pagarme_Pagarme/payment/creditcard-form";
             },
 
             getMultibuyerForm: function () {
-                return "MundiPagg_MundiPagg/payment/multibuyer-form";
+                return "Pagarme_Pagarme/payment/multibuyer-form";
             },
 
             getData: function () {

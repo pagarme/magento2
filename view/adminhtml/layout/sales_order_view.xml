@@ -3,12 +3,12 @@
     <body>
         <referenceBlock name="content">
             <action method="setTemplate">
-                <argument name="template" translate="true" xsi:type="string">MundiPagg_MundiPagg::order/view/info.phtml</argument>
+                <argument name="template" translate="true" xsi:type="string">Pagarme_Pagarme::order/view/info.phtml</argument>
             </action>
         </referenceBlock>
         <referenceBlock name="sales_order_tabs">
             <action method="addTab">
-                <!--<uiComponent name="mundipagg_mundipagg_charges_index"/>-->
+                <!--<uiComponent name="pagarme_pagarme_charges_index"/>-->
                 <argument name="name" xsi:type="string">charges</argument>
                 <argument name="block" xsi:type="string">Pagarme\Pagarme\Block\Adminhtml\Order\Charge\Tab\View</argument>
             </action>

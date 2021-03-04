@@ -2,15 +2,15 @@
 <listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
 	<argument name="data" xsi:type="array">
 		<item name="js_config" xsi:type="array">
-			<item name="provider" xsi:type="string">mundipagg_mundipagg_charges_index.mundipagg_mundipagg_charges_grid_data_source</item>
-			<item name="deps" xsi:type="string">mundipagg_mundipagg_charges_index.mundipagg_mundipagg_charges_grid_data_source</item>
+			<item name="provider" xsi:type="string">pagarme_pagarme_charges_index.pagarme_pagarme_charges_grid_data_source</item>
+			<item name="deps" xsi:type="string">pagarme_pagarme_charges_index.pagarme_pagarme_charges_grid_data_source</item>
 		</item>
-		<item name="spinner" xsi:type="string">mundipagg_mundipagg_charges_columns</item>
+		<item name="spinner" xsi:type="string">pagarme_pagarme_charges_columns</item>
 	</argument>
-	<dataSource name="mundipagg_mundipagg_charges_grid_data_source">
+	<dataSource name="pagarme_pagarme_charges_grid_data_source">
 		<argument name="dataProvider" xsi:type="configurableObject">
 			<argument name="class" xsi:type="string">Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider</argument>
-			<argument name="name" xsi:type="string">mundipagg_mundipagg_charges_grid_data_source</argument>
+			<argument name="name" xsi:type="string">pagarme_pagarme_charges_grid_data_source</argument>
 			<argument name="primaryFieldName" xsi:type="string">charges_id</argument>
 			<argument name="requestFieldName" xsi:type="string">id</argument>
 			<argument name="data" xsi:type="array">
@@ -35,7 +35,7 @@
 		<filters name="listing_filters"/>
 		<paging name="listing_paging"/>
 	</listingToolbar>
-	<columns name="mundipagg_mundipagg_charges_columns">
+	<columns name="pagarme_pagarme_charges_columns">
 		<argument name="data" xsi:type="array"/>
 		<column name="id">
 			<argument name="data" xsi:type="array">
@@ -46,7 +46,7 @@
 				</item>
 			</argument>
 		</column>
-		<column name="mundipagg_id">
+		<column name="pagarme_id">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
 					<item name="filter" xsi:type="string">text</item>

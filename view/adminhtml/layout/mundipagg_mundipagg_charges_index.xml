@@ -3,7 +3,7 @@
 	<update handle="styles"/>
 	<body>
 		<referenceContainer name="content">
-			<uiComponent name="mundipagg_mundipagg_charges_index"/>
+			<uiComponent name="pagarme_pagarme_charges_index"/>
 		</referenceContainer>
 	</body>
 </page>

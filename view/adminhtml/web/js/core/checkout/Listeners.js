@@ -2,11 +2,11 @@ define([
     "jquery",
     "uiComponent",
     "Magento_Ui/js/modal/alert",
-    "MundiPagg_MundiPagg/js/core/checkout/PlatformFormBiding",
+    "Pagarme_Pagarme/js/core/checkout/PlatformFormBiding",
 ], function ($, Class, alert, PlatformFormBiding) {
-    
+
     var Listeners = {};
-    
+
     Listeners.addCreditCardNumberListener = function (formObject) {
         var listeners = this;
 
@@ -52,7 +52,7 @@ define([
             }
         });
     };
-    
+
     Listeners.addCreditCardHolderNameListener = function(formObject) {
         var listeners = this;
         formObject.creditCardHolderName.on("keyup", function () {
@@ -156,6 +156,6 @@ define([
         var newVal = val.replace(/[0-9]+/g, "");
         element.val(newVal);
     };
-    
+
     return Listeners;
 });

@@ -9,7 +9,7 @@
     <update handle="customer_account"/>
 	<body>
 	    <referenceContainer name="content">
-	        <block class="Pagarme\Pagarme\Block\Customer\Cards" name="mundipagg.customer.cards.list" template="customer/cards.phtml" cacheable="false"/>
+	        <block class="Pagarme\Pagarme\Block\Customer\Cards" name="pagarme.customer.cards.list" template="customer/cards.phtml" cacheable="false"/>
 	    </referenceContainer>
 	</body>
 </page>

@@ -8,7 +8,7 @@ define(
     [
         'mageUtils',
         'Magento_Payment/js/model/credit-card-validation/credit-card-number-validator/luhn10-validator',
-        'MundiPagg_MundiPagg/js/model/credit-card-validation/credit-card-number-validator/credit-card-type'
+        'Pagarme_Pagarme/js/model/credit-card-validation/credit-card-number-validator/credit-card-type'
     ],
     function (utils, luhn10, creditCardTypes) {
 

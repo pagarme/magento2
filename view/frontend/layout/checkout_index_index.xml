@@ -1,16 +1,16 @@
 <?xml version="1.0" ?>
 <!--
 /**
- * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
- * @copyright   2017 MundiPagg (http://www.mundipagg.com)
- * @license     http://www.mundipagg.com  Copyright
+ * @author      Open Source Team
+ * @copyright   2021 Pagar.me (https://pagar.me)
+ * @license     https://pagar.me Copyright
  *
- * @link        http://www.mundipagg.com
+ * @link        https://pagar.me
  */
 -->
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="checkout" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
-        <css src="MundiPagg_MundiPagg/css/mundipagg_style.css" />
+        <css src="Pagarme_Pagarme/css/pagarme_style.css" />
     </head>
     <body>
         <referenceBlock name="checkout.root">
@@ -29,28 +29,28 @@
                                                         <item name="renders" xsi:type="array">
                                                             <!-- merge payment method renders here -->
                                                             <item name="children" xsi:type="array">
-                                                                <item name="mundipagg_payment" xsi:type="array">
-                                                                    <item name="component" xsi:type="string">MundiPagg_MundiPagg/js/view/payment/payments</item>
+                                                                <item name="pagarme_payment" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Pagarme_Pagarme/js/view/payment/payments</item>
                                                                     <item name="methods" xsi:type="array">
-                                                                        <item name="mundipagg_pix" xsi:type="array">
+                                                                        <item name="pagarme_pix" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>
-                                                                        <item name="mundipagg_creditcard" xsi:type="array">
+                                                                        <item name="pagarme_creditcard" xsi:type="array">
                                                                              <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>
-                                                                        <item name="mundipagg_billet" xsi:type="array">
+                                                                        <item name="pagarme_billet" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>
-                                                                        <item name="mundipagg_billet_creditcard" xsi:type="array">
+                                                                        <item name="pagarme_billet_creditcard" xsi:type="array">
                                                                              <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>
-                                                                        <item name="mundipagg_two_creditcard" xsi:type="array">
+                                                                        <item name="pagarme_two_creditcard" xsi:type="array">
                                                                              <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>
-                                                                        <item name="mundipagg_voucher" xsi:type="array">
+                                                                        <item name="pagarme_voucher" xsi:type="array">
                                                                              <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>
-                                                                        <item name="mundipagg_debit" xsi:type="array">
+                                                                        <item name="pagarme_debit" xsi:type="array">
                                                                              <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>
                                                                     </item>

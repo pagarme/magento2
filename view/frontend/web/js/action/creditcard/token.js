@@ -1,9 +1,9 @@
 /**
- * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
- * @copyright   2017 MundiPagg (http://www.mundipagg.com)
- * @license     http://www.mundipagg.com  Copyright
+ * @author      Open Source Team
+ * @copyright   2021 Pagar.me (https://pagar.me)
+ * @license     https://pagar.me Copyright
  *
- * @link        http://www.mundipagg.com
+ * @link        https://pagar.me
  */
 /*browser:true*/
 /*global define*/
@@ -21,7 +21,7 @@ define(
         return function (dataJson, successCallback, failCallback) {
             var self = this;
             var serviceUrl = 'https://api.mundipagg.com/core/v1/tokens?appId=' + window.checkoutConfig.payment.ccform.pk_token;
-            
+
             var getAPIData = function(url, data, success, fail) {
                 var xhr = new XMLHttpRequest();
                 xhr.open('POST', url);

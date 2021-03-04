@@ -2,11 +2,11 @@
 /**
  * Phtml List Subscription
  *
- * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
- * @copyright   2019 MundiPagg (http://www.mundipagg.com)
- * @license     http://www.mundipagg.com Copyright
+ * @author      Open Source Team
+ * @copyright   2021 Pagar.me (https://pagar.me)
+ * @license     https://pagar.me Copyright
  *
- * @link        http://www.mundipagg.com
+ * @link        https://pagar.me
  */
 
 $i = 0;
@@ -29,7 +29,7 @@ $i = 0;
         <?php foreach ($block->getAllSubscriptionRecurrenceCoreByCustomerId() as $item) : ?>
             <?php $i++; ?>
             <?php
-                $url = $this->getBaseUrl() . 'mundipagg/customer/invoice/?code='. $item->getMundipaggId()->getValue();
+                $url = $this->getBaseUrl() . 'pagarme/customer/invoice/?code='. $item->getMundipaggId()->getValue();
                 $status = $item->getStatus()->getStatus();
                 $intervalType = $item->getIntervalType();
             ?>
