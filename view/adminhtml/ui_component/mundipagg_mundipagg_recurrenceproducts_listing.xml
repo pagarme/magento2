@@ -53,7 +53,7 @@
 				</item>
 			</argument>
 		</column>
-		<column name="product_id" class="MundiPagg\MundiPagg\Ui\Component\Recurrence\Column\ProductRecurrenceName">
+		<column name="product_id" class="Pagarme\Pagarme\Ui\Component\Recurrence\Column\ProductRecurrenceName">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
 					<item name="filter" xsi:type="string">text</item>
@@ -67,7 +67,7 @@
 				</item>
 			</argument>
 		</column>
-		<column name="boleto" class="MundiPagg\MundiPagg\Ui\Component\Recurrence\Column\PaymentMethodColumn">
+		<column name="boleto" class="Pagarme\Pagarme\Ui\Component\Recurrence\Column\PaymentMethodColumn">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
 					<item name="label" translate="true" xsi:type="string">Payment Method</item>
@@ -87,7 +87,7 @@
 				</item>
 			</argument>
 		</column>
-		<column name="repetitions" class="MundiPagg\MundiPagg\Ui\Component\Recurrence\Column\RepetitionsColumn">
+		<column name="repetitions" class="Pagarme\Pagarme\Ui\Component\Recurrence\Column\RepetitionsColumn">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
 					<item name="editor" xsi:type="array">
@@ -100,7 +100,7 @@
 				</item>
 			</argument>
 		</column>
-		<actionsColumn name="actions" class="MundiPagg\MundiPagg\Ui\Component\Column\Actions">
+		<actionsColumn name="actions" class="Pagarme\Pagarme\Ui\Component\Column\Actions">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
 					<item name="indexField" xsi:type="string">id</item>

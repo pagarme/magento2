@@ -78,7 +78,7 @@
 				</item>
 			</argument>
 		</column>
-		<column name="amount" class="MundiPagg\MundiPagg\Ui\Component\Listing\Column\BrazilCurrency">
+		<column name="amount" class="Pagarme\Pagarme\Ui\Component\Listing\Column\BrazilCurrency">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
 					<item name="filter" xsi:type="string">text</item>
@@ -86,7 +86,7 @@
 				</item>
 			</argument>
 		</column>
-		<column name="paid_amount" class="MundiPagg\MundiPagg\Ui\Component\Listing\Column\BrazilCurrency">
+		<column name="paid_amount" class="Pagarme\Pagarme\Ui\Component\Listing\Column\BrazilCurrency">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
 					<item name="filter" xsi:type="string">text</item>
@@ -94,7 +94,7 @@
 				</item>
 			</argument>
 		</column>
-		<column name="refunded_amount" class="MundiPagg\MundiPagg\Ui\Component\Listing\Column\BrazilCurrency">
+		<column name="refunded_amount" class="Pagarme\Pagarme\Ui\Component\Listing\Column\BrazilCurrency">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
 					<item name="filter" xsi:type="string">text</item>
