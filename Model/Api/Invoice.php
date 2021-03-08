@@ -5,7 +5,7 @@ namespace Pagarme\Pagarme\Model\Api;
 use Magento\Framework\Webapi\Rest\Request;
 use Mundipagg\Core\Recurrence\Services\InvoiceService;
 use Pagarme\Pagarme\Api\InvoiceApiInterface;
-use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 
 class Invoice implements InvoiceApiInterface
 {

@@ -6,7 +6,7 @@ use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Event\Observer as EventObserver;
 use Mundipagg\Core\Payment\Services\CustomerService;
 use Mundipagg\Core\Kernel\Services\LogService;
-use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 use Pagarme\Pagarme\Concrete\Magento2PlatformCustomerDecorator;
 use Pagarme\Pagarme\Helper\CustomerUpdatePagarmeHelper;
 use Pagarme\Pagarme\Model\PagarmeConfigProvider;

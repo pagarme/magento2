@@ -12,7 +12,7 @@ use Magento\Framework\App\Cache\TypeListInterface;
 use Magento\Framework\App\Cache\Frontend\Pool;
 use Mundipagg\Core\Kernel\Abstractions\AbstractModuleCoreSetup;
 use Mundipagg\Core\Kernel\Repositories\ConfigurationRepository;
-use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 use Pagarme\Pagarme\Model\PagarmeConfigProvider;
 
 class DataValidateAdmin implements ObserverInterface

@@ -13,7 +13,7 @@ use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Mundipagg\Core\Kernel\Services\MoneyService;
 use Mundipagg\Core\Recurrence\Services\ProductSubscriptionService;
-use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 use Pagarme\Pagarme\Helper\RecurrenceProductHelper;
 use Mundipagg\Core\Kernel\Aggregates\Configuration;
 use Magento\Quote\Model\Quote\Item;

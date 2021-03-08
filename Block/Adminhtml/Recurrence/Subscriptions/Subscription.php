@@ -17,7 +17,7 @@ use Mundipagg\Core\Kernel\ValueObjects\Id\SubscriptionId;
 use Mundipagg\Core\Recurrence\Repositories\ChargeRepository;
 use Mundipagg\Core\Recurrence\Services\SubscriptionService;
 use Mundipagg\Core\Recurrence\ValueObjects\IntervalValueObject;
-use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 use Pagarme\Pagarme\Helper\RecurrenceProductHelper;
 use Pagarme\Pagarme\Ui\Component\Column\Invoices\Actions;
 use Pagarme\Pagarme\Ui\Component\Recurrence\Column\TotalCyclesByProduct;

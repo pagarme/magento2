@@ -9,7 +9,7 @@ use Pagarme\Pagarme\Model\PagarmeConfigProvider;
 use Magento\Framework\App\ObjectManager;
 use Mundipagg\Core\Kernel\Services\LogService;
 use Mundipagg\Core\Kernel\Services\LocalizationService;
-use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 
 class CustomerAddressSaveBefore implements ObserverInterface
 {

@@ -7,7 +7,7 @@ use Magento\Framework\Exception\InputException;
 use Magento\Framework\Event\ObserverInterface;
 use Mundipagg\Core\Kernel\Interfaces\PlatformOrderInterface;
 use Mundipagg\Core\Payment\Services\ValidationService;
-use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 
 
 class OrderPlaceBeforeObserver implements ObserverInterface

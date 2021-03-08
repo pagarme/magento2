@@ -23,7 +23,7 @@ use Mundipagg\Core\Kernel\Services\OrderLogService;
 use Mundipagg\Core\Kernel\Services\OrderService;
 use Mundipagg\Core\Recurrence\Services\RecurrenceService;
 use Mundipagg\Core\Recurrence\Services\SubscriptionService;
-use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 use Pagarme\Pagarme\Concrete\Magento2PlatformPaymentMethodDecorator;
 use Pagarme\Pagarme\Model\Ui\CreditCard\ConfigProvider;
 use Pagarme\Pagarme\Model\Ui\TwoCreditCard\ConfigProvider as TwoCreditCardConfigProvider;

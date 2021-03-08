@@ -11,7 +11,7 @@
 <routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
 
-    <route url="/V1/mundipagg/creditcard/installments" method="POST">
+    <route url="/V1/pagarme/creditcard/installments" method="POST">
         <service class="Pagarme\Pagarme\Api\InstallmentsManagementInterface"
                  method="getInstallments"/>
         <resources>
@@ -19,7 +19,7 @@
         </resources>
     </route>
 
-    <route url="/V1/mundipagg/customer/create" method="POST">
+    <route url="/V1/pagarme/customer/create" method="POST">
         <service
                 class="Pagarme\Pagarme\Api\CustomerCreateManagementInterface"
                 method="createCustomer"/>
@@ -28,7 +28,7 @@
         </resources>
     </route>
 
-    <route url="/V1/mundipagg/webhook" method="POST">
+    <route url="/V1/pagarme/webhook" method="POST">
         <service class="Pagarme\Pagarme\Api\WebhookManagementInterface"
                  method="save"/>
         <resources>
@@ -36,7 +36,7 @@
         </resources>
     </route>
 
-    <route url="/V1/mundipagg/installments/brand/:brand" method="GET">
+    <route url="/V1/pagarme/installments/brand/:brand" method="GET">
         <service
                 class="Pagarme\Pagarme\Api\InstallmentsByBrandManagementInterface"
                 method="getInstallmentsByBrand"/>
@@ -45,7 +45,7 @@
         </resources>
     </route>
 
-    <route url="/V1/mundipagg/installments/brandbyamount/:brand/:amount"
+    <route url="/V1/pagarme/installments/brandbyamount/:brand/:amount"
            method="GET">
         <service
                 class="Pagarme\Pagarme\Api\InstallmentsByBrandAndAmountManagementInterface"
@@ -55,7 +55,7 @@
         </resources>
     </route>
 
-    <route url="/V1/mundipagg/maintenance/:params" method="GET">
+    <route url="/V1/pagarme/maintenance/:params" method="GET">
         <service class="Pagarme\Pagarme\Api\MaintenanceInterface"
                  method="index"/>
         <resources>
@@ -65,7 +65,7 @@
 
     <!-- Recurrence Apis -->
 
-    <route url="/V1/mundipagg/recurrence/product/formData" method="POST">
+    <route url="/V1/pagarme/recurrence/product/formData" method="POST">
         <service class="Pagarme\Pagarme\Api\ProductSubscriptionApiInterface"
                  method="saveFormData"/>
         <resources>
@@ -73,7 +73,7 @@
         </resources>
     </route>
 
-    <route url="/V1/mundipagg/recurrence/plan/product/formData" method="POST">
+    <route url="/V1/pagarme/recurrence/plan/product/formData" method="POST">
         <service class="Pagarme\Pagarme\Api\ProductPlanInterface"
                  method="saveFormData"/>
         <resources>
@@ -81,7 +81,7 @@
         </resources>
     </route>
 
-    <route url="/V1/mundipagg/recurrence/product" method="POST">
+    <route url="/V1/pagarme/recurrence/product" method="POST">
         <service class="Pagarme\Pagarme\Api\ProductSubscriptionApiInterface"
                  method="save"/>
         <resources>
@@ -89,14 +89,14 @@
         </resources>
     </route>
 
-    <route url="/V1/mundipagg/recurrence/product" method="GET">
+    <route url="/V1/pagarme/recurrence/product" method="GET">
         <service class="Pagarme\Pagarme\Api\ProductSubscriptionApiInterface"
                  method="list"/>
         <resources>
             <resource ref="Magento_Catalog::products"/>
         </resources>
     </route>
-    <route url="/V1/mundipagg/recurrence/product/:id" method="GET">
+    <route url="/V1/pagarme/recurrence/product/:id" method="GET">
         <service class="Pagarme\Pagarme\Api\ProductSubscriptionApiInterface"
                  method="getProductSubscription"/>
         <resources>
@@ -104,7 +104,7 @@
         </resources>
     </route>
 
-    <route url="/V1/mundipagg/recurrence/product/:id" method="PUT">
+    <route url="/V1/pagarme/recurrence/product/:id" method="PUT">
         <service class="Pagarme\Pagarme\Api\ProductSubscriptionApiInterface"
                  method="update"/>
         <resources>
@@ -112,7 +112,7 @@
         </resources>
     </route>
 
-    <route url="/V1/mundipagg/recurrence/product/:id" method="DELETE">
+    <route url="/V1/pagarme/recurrence/product/:id" method="DELETE">
         <service class="Pagarme\Pagarme\Api\ProductSubscriptionApiInterface"
                  method="delete"/>
         <resources>
@@ -120,7 +120,7 @@
         </resources>
     </route>
 
-    <route url="/V1/mundipagg/recurrence/subscription" method="GET">
+    <route url="/V1/pagarme/recurrence/subscription" method="GET">
         <service class="Pagarme\Pagarme\Api\SubscriptionApiInterface"
                  method="list"/>
         <resources>
@@ -128,7 +128,7 @@
         </resources>
     </route>
 
-    <route url="/V1/mundipagg/recurrence/subscription/cancel/:id" method="POST">
+    <route url="/V1/pagarme/recurrence/subscription/cancel/:id" method="POST">
         <service class="Pagarme\Pagarme\Api\SubscriptionApiInterface"
                  method="cancel"/>
         <resources>
@@ -136,21 +136,21 @@
         </resources>
     </route>
 
-    <route url="/V1/mundipagg/recurrence/invoice/:id" method="GET">
+    <route url="/V1/pagarme/recurrence/invoice/:id" method="GET">
         <service class="Pagarme\Pagarme\Api\InvoiceApiInterface" method="getByInvoiceId"/>
         <resources>
             <resource ref="Magento_Sales::sales" />
         </resources>
     </route>
 
-    <route url="/V1/mundipagg/recurrence/invoice/cancel/:id" method="POST">
+    <route url="/V1/pagarme/recurrence/invoice/cancel/:id" method="POST">
         <service class="Pagarme\Pagarme\Api\InvoiceApiInterface" method="cancelByInvoiceId"/>
         <resources>
             <resource ref="Magento_Sales::sales" />
         </resources>
     </route>
 
-    <route url="/V1/mundipagg/recurrence/plan/product" method="POST">
+    <route url="/V1/pagarme/recurrence/plan/product" method="POST">
         <service class="Pagarme\Pagarme\Api\ProductPlanApiInterface"
                  method="save"/>
         <resources>
@@ -158,7 +158,7 @@
         </resources>
     </route>
 
-    <route url="/V1/mundipagg/recurrence/plan/product/:id" method="PUT">
+    <route url="/V1/pagarme/recurrence/plan/product/:id" method="PUT">
         <service class="Pagarme\Pagarme\Api\ProductPlanApiInterface"
                  method="update"/>
         <resources>
@@ -166,7 +166,7 @@
         </resources>
     </route>
 
-    <route url="/V1/mundipagg/recurrence/plan/product" method="GET">
+    <route url="/V1/pagarme/recurrence/plan/product" method="GET">
         <service class="Pagarme\Pagarme\Api\ProductPlanApiInterface"
                  method="list"/>
         <resources>
@@ -174,7 +174,7 @@
         </resources>
     </route>
 
-    <route url="/V1/mundipagg/recurrence/plan/product/:id" method="GET">
+    <route url="/V1/pagarme/recurrence/plan/product/:id" method="GET">
         <service class="Pagarme\Pagarme\Api\ProductPlanApiInterface"
                  method="find"/>
         <resources>
@@ -182,7 +182,7 @@
         </resources>
     </route>
 
-    <route url="/V1/mundipagg/recurrence/plan/product/:id" method="DELETE">
+    <route url="/V1/pagarme/recurrence/plan/product/:id" method="DELETE">
         <service class="Pagarme\Pagarme\Api\ProductPlanApiInterface"
                  method="delete"/>
         <resources>

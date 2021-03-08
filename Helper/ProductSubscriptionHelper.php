@@ -8,7 +8,7 @@ use Mundipagg\Core\Kernel\Services\MoneyService;
 use Mundipagg\Core\Recurrence\Aggregates\ProductSubscription;
 use Mundipagg\Core\Recurrence\Aggregates\Repetition;
 use Mundipagg\Core\Recurrence\Services\RepetitionService;
-use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 use Magento\Framework\App\ObjectManager;
 use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\Attribute\ScopeOverriddenValue;

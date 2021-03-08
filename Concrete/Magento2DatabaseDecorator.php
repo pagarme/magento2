@@ -1,6 +1,6 @@
 <?php
 
-namespace Pagarme\Pagarme\Concrete;
+namespace MundiPagg\MundiPagg\Concrete;
 
 use Mundipagg\Core\Kernel\Abstractions\AbstractDatabaseDecorator;
 

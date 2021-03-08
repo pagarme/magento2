@@ -11,7 +11,7 @@ use Mundipagg\Core\Recurrence\Services\PlanService;
 use Mundipagg\Core\Recurrence\Services\RecurrenceService;
 use Mundipagg\Core\Recurrence\Services\SubscriptionService;
 use Mundipagg\Core\Recurrence\ValueObjects\PlanId;
-use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 
 class RecurrenceProductHelper extends AbstractHelper
 {

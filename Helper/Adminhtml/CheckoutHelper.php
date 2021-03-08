@@ -5,7 +5,7 @@ namespace Pagarme\Pagarme\Helper\Adminhtml;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Mundipagg\Core\Kernel\Services\MoneyService;
 use Mundipagg\Core\Payment\Services\CardService;
-use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 
 class CheckoutHelper extends AbstractHelper
 {
@@ -79,7 +79,7 @@ class CheckoutHelper extends AbstractHelper
     }
     public function getInstallmentsUrl($baseUrl)
     {
-        return $baseUrl . "rest/default/V1/mundipagg/installments/brandbyamount";
+        return $baseUrl . "rest/default/V1/pagarme/installments/brandbyamount";
     }
 
     public function formatGrandTotal($granTotal)

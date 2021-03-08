@@ -13,7 +13,7 @@ use Mundipagg\Core\Kernel\Services\OrderLogService;
 use Mundipagg\Core\Kernel\Services\LocalizationService;
 use Magento\Framework\Webapi\Exception as M2WebApiException;
 use Magento\Framework\Phrase;
-use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 use Pagarme\Pagarme\Concrete\Magento2PlatformOrderDecorator;
 use Pagarme\Pagarme\Model\PagarmeConfigProvider;
 

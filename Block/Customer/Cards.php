@@ -16,7 +16,7 @@ use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
 use Mundipagg\Core\Payment\Repositories\CustomerRepository;
 use Mundipagg\Core\Payment\Repositories\SavedCardRepository;
-use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 use Pagarme\Pagarme\Concrete\Magento2SavedCardAdapter;
 use Pagarme\Pagarme\Model\CardsRepository;
 use Magento\Framework\Api\SearchCriteriaBuilder;

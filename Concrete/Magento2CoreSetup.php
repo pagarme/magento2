@@ -1,6 +1,6 @@
 <?php
 
-namespace Pagarme\Pagarme\Concrete;
+namespace MundiPagg\MundiPagg\Concrete;
 
 use Magento\Framework\App\Config as Magento2StoreConfig;
 use Magento\Config\Model\Config as Magento2ModelConfig;

@@ -29,7 +29,7 @@ class JsonPlugin
      */
     public function aroundRender(Json $jsonRenderer, callable $proceed, $data)
     {
-        if ($this->request->getPathInfo() == "/V1/mundipagg/recurrence/plan/product") {
+        if ($this->request->getPathInfo() == "/V1/pagarme/recurrence/plan/product") {
             return json_encode($data);
         }
         return $proceed($data);

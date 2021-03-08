@@ -2,7 +2,7 @@
 
 namespace Pagarme\Pagarme\Block\Adminhtml\Order\Charge\Tab;
 
-use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 
 use Mundipagg\Core\Kernel\Repositories\ChargeRepository;
 use Mundipagg\Core\Kernel\Repositories\OrderRepository;
