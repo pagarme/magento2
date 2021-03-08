@@ -53,7 +53,6 @@ use Magento\Sales\Model\ResourceModel\Order\Status\Collection;
 use Mundipagg\Core\Kernel\Aggregates\Transaction;
 use Mundipagg\Core\Kernel\ValueObjects\TransactionType;
 use Magento\Quote\Model\Quote;
-use phpDocumentor\Parser\Exception;
 
 class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 {
@@ -1251,6 +1250,6 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 
     public function getMundipaggId()
     {
-        throw new Exception("this method must be removed after we change core to pagar.me");
+        return $this->getPagarmeId();
     }
 }

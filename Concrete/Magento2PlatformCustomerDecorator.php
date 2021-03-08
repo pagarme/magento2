@@ -93,6 +93,6 @@ class Magento2PlatformCustomerDecorator implements PlatformCustomerInterface
 
     public function getMundipaggId()
     {
-        throw new Exception("this method must be removed after we change core to pagar.me");
+        return $this->getPagarmeId();
     }
 }
