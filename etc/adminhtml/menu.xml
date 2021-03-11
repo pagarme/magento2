@@ -1,15 +1,15 @@
 <?xml version="1.0" ?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
 	<menu>
-		<add id="MundiPagg::top_level" module="MundiPagg_MundiPagg" resource="Magento_Backend::content" sortOrder="9999" title="MundiPagg"/>
-		<add id="MundiPagg::mundipagg_mundipagg_label" module="MundiPagg_MundiPagg" parent="MundiPagg::top_level" resource="Magento_Config::config" sortOrder="1" title="Configurations"/>
-		<add action="mundipagg_mundipagg/charges/index" id="MundiPagg::mundipagg_mundipagg_charges" module="MundiPagg_MundiPagg" parent="MundiPagg::mundipagg_mundipagg_label" resource="Magento_Backend::content" sortOrder="20" title="Charges MundiPagg"/>
-		<add action="mundipagg_mundipagg/cards/index" id="MundiPagg::mundipagg_mundipagg_cards" module="MundiPagg_MundiPagg" parent="MundiPagg::mundipagg_mundipagg_label" resource="Magento_Backend::content" sortOrder="10" title="Cards MundiPagg"/>
-		<add action="adminhtml/system_config/edit/section/payment" id="MundiPagg::mundipagg_mundipagg_payment_methods" module="MundiPagg_MundiPagg" parent="MundiPagg::mundipagg_mundipagg_label" resource="Magento_Config::config" sortOrder="1" title="Payment Methods"/>
+		<add id="Pagarme::top_level" module="Pagarme_Pagarme" resource="Magento_Backend::content" sortOrder="9999" title="Pagar.me"/>
+		<add id="Pagarme::pagarme_pagarme_label" module="Pagarme_Pagarme" parent="Pagarme::top_level" resource="Magento_Config::config" sortOrder="1" title="Configurations"/>
+		<add action="pagarme_pagarme/charges/index" id="Pagarme::pagarme_pagarme_charges" module="Pagarme_Pagarme" parent="Pagarme::pagarme_pagarme_label" resource="Magento_Backend::content" sortOrder="20" title="Charges Pagar.me"/>
+		<add action="pagarme_pagarme/cards/index" id="Pagarme::pagarme_pagarme_cards" module="Pagarme_Pagarme" parent="Pagarme::pagarme_pagarme_label" resource="Magento_Backend::content" sortOrder="10" title="Cards Pagar.me"/>
+		<add action="adminhtml/system_config/edit/section/payment" id="Pagarme::pagarme_pagarme_payment_methods" module="Pagarme_Pagarme" parent="Pagarme::pagarme_pagarme_label" resource="Magento_Config::config" sortOrder="1" title="Payment Methods"/>
 
-		<add id="MundiPagg::mundipagg_mundipagg_recurrence" module="MundiPagg_MundiPagg" parent="MundiPagg::top_level" resource="Magento_Config::config" sortOrder="30" title="Recurrence"/>
-		<add action="mundipagg_mundipagg/recurrenceproducts/index" id="MundiPagg::mundipagg_mundipagg_recurrenceproducts_index" module="MundiPagg_MundiPagg" parent="MundiPagg::mundipagg_mundipagg_recurrence" resource="Magento_Config::config" sortOrder="1" title="Recurrence Products"/>
-		<add action="mundipagg_mundipagg/plans/index" id="MundiPagg::mundipagg_mundipagg_plans_index" module="MundiPagg_MundiPagg" parent="MundiPagg::mundipagg_mundipagg_recurrence" resource="Magento_Config::config" sortOrder="1" title="Plans"/>
-		<add action="mundipagg_mundipagg/subscriptions/index" id="MundiPagg::mundipagg_mundipagg_subscriptions_index" module="MundiPagg_MundiPagg" parent="MundiPagg::mundipagg_mundipagg_recurrence" resource="Magento_Config::config" sortOrder="1" title="Subscriptions"/>
+		<add id="Pagarme::pagarme_pagarme_recurrence" module="Pagarme_Pagarme" parent="Pagarme::top_level" resource="Magento_Config::config" sortOrder="30" title="Recurrence"/>
+		<add action="pagarme_pagarme/recurrenceproducts/index" id="Pagarme::pagarme_pagarme_recurrenceproducts_index" module="Pagarme_Pagarme" parent="Pagarme::pagarme_pagarme_recurrence" resource="Magento_Config::config" sortOrder="1" title="Recurrence Products"/>
+		<add action="pagarme_pagarme/plans/index" id="Pagarme::pagarme_pagarme_plans_index" module="Pagarme_Pagarme" parent="Pagarme::pagarme_pagarme_recurrence" resource="Magento_Config::config" sortOrder="1" title="Plans"/>
+		<add action="pagarme_pagarme/subscriptions/index" id="Pagarme::pagarme_pagarme_subscriptions_index" module="Pagarme_Pagarme" parent="Pagarme::pagarme_pagarme_recurrence" resource="Magento_Config::config" sortOrder="1" title="Subscriptions"/>
 	</menu>
 </config>

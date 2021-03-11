@@ -2,14 +2,14 @@
 /**
  * Class ConfigProvider
  *
- * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
- * @copyright   2017 MundiPagg (http://www.mundipagg.com)
- * @license     http://www.mundipagg.com Copyright
+ * @author      Open Source Team
+ * @copyright   2021 Pagar.me (https://pagar.me)
+ * @license     https://pagar.me Copyright
  *
- * @link        http://www.mundipagg.com
+ * @link        https://pagar.me
  */
 
-namespace MundiPagg\MundiPagg\Model\Ui\BilletCreditCard;
+namespace Pagarme\Pagarme\Model\Ui\BilletCreditCard;
 
 
 use Magento\Checkout\Model\ConfigProviderInterface;
@@ -18,12 +18,12 @@ use Mundipagg\Core\Kernel\Abstractions\AbstractModuleCoreSetup as MPSetup;
 use Mundipagg\Core\Payment\Repositories\CustomerRepository;
 use Mundipagg\Core\Payment\Repositories\SavedCardRepository;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
-use MundiPagg\MundiPagg\Model\CardsFactory;
-use MundiPagg\MundiPagg\Gateway\Transaction\BilletCreditCard\Config\ConfigInterface;
+use Pagarme\Pagarme\Model\CardsFactory;
+use Pagarme\Pagarme\Gateway\Transaction\BilletCreditCard\Config\ConfigInterface;
 
 final class ConfigProvider implements ConfigProviderInterface
 {
-    const CODE = 'mundipagg_billet_creditcard';
+    const CODE = 'pagarme_billet_creditcard';
 
     protected $billetCreditCardConfig;
 

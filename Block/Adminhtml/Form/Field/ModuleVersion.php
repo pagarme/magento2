@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Block\Adminhtml\Form\Field;
+namespace Pagarme\Pagarme\Block\Adminhtml\Form\Field;
 
 use Magento\Framework\Data\Form\Element\AbstractElement;
 use Mundipagg\Core\Kernel\Services\VersionService;

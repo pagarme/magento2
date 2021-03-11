@@ -1,5 +1,5 @@
 <?php
-namespace MundiPagg\MundiPagg\Observer;
+namespace Pagarme\Pagarme\Observer;
 
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\App\Request\DataPersistorInterface;
@@ -13,16 +13,16 @@ use Magento\Framework\App\Cache\Frontend\Pool;
 use Mundipagg\Core\Kernel\Abstractions\AbstractModuleCoreSetup;
 use Mundipagg\Core\Kernel\Repositories\ConfigurationRepository;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
-use MundiPagg\MundiPagg\Model\MundiPaggConfigProvider;
+use Pagarme\Pagarme\Model\PagarmeConfigProvider;
 
 class DataValidateAdmin implements ObserverInterface
 {
     /**
-     * Contains the config provider for Mundipagg
+     * Contains the config provider for Pagar.me
      *
-     * @var \MundiPagg\MundiPagg\Model\MundiPaggConfigProvider
+     * @var \Pagarme\Pagarme\Model\PagarmeConfigProvider
      */
-    protected $configProviderMundipagg;
+    protected $configProviderPagarme;
 
     /**
      *
@@ -56,7 +56,7 @@ class DataValidateAdmin implements ObserverInterface
     protected $cacheFrontendPool;
 
     public function __construct(
-        MundiPaggConfigProvider $configProviderMundipagg,
+        PagarmeConfigProvider $configProviderPagarme,
         ManagerInterface $messageManager,
         StoreManagerInterface $storeManager,
         UrlInterface $urlBuilder,
@@ -71,7 +71,7 @@ class DataValidateAdmin implements ObserverInterface
         $this->responseFactory = $responseFactory;
         $this->cacheTypeList = $cacheTypeList;
         $this->cacheFrontendPool = $cacheFrontendPool;
-        $this->configProviderMundipagg = $configProviderMundipagg;
+        $this->configProviderPagarme = $configProviderPagarme;
     }
 
     /**
@@ -87,7 +87,7 @@ class DataValidateAdmin implements ObserverInterface
         }
 
         $this->validateConfigMagento();
-        
+
         return $this;
     }
 
@@ -121,7 +121,7 @@ class DataValidateAdmin implements ObserverInterface
 
     public function moduleIsEnable()
     {
-        return $this->configProviderMundipagg->getModuleStatus();
+        return $this->configProviderPagarme->getModuleStatus();
     }
 
     protected function validateConfigMagento()
@@ -130,9 +130,9 @@ class DataValidateAdmin implements ObserverInterface
         $disableMessage;
         $url = $this->urlBuilder->getUrl('adminhtml/system_config/edit/section/payment');
 
-        if(!$this->configProviderMundipagg->validateSoftDescription()){
+        if(!$this->configProviderPagarme->validateSoftDescription()){
             $disableModule = true;
-            $disableMessage[] = __("Error to save MundiPagg Soft Description Credit Card, size too big max 22 character." , 
+            $disableMessage[] = __("Error to save Pagar.me Soft Description Credit Card, size too big max 22 character." ,
                 $url
             );
         }
@@ -162,7 +162,7 @@ class DataValidateAdmin implements ObserverInterface
     {
         $types = array('config','layout','block_html','collections','reflection','db_ddl','eav','config_integration','config_integration_api','full_page','translate','config_webservice');
 
-        foreach ($types as $type) {  
+        foreach ($types as $type) {
             $this->cacheTypeList->cleanType($type);
         }
 

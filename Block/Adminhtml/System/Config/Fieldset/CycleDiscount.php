@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Block\Adminhtml\System\Config\Fieldset;
+namespace Pagarme\Pagarme\Block\Adminhtml\System\Config\Fieldset;
 
 use Magento\Config\Block\System\Config\Form\Field\FieldArray\AbstractFieldArray;
 

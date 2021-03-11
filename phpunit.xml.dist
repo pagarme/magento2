@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 /**
- * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
- * @copyright   2017 MundiPagg (http://www.mundipagg.com)
- * @license     http://www.mundipagg.com  Copyright
+ * @author      Open Source Team
+ * @copyright   2021 Pagar.me (https://pagar.me)
+ * @license     https://pagar.me Copyright
  *
- * @link        http://www.mundipagg.com
+ * @link        https://pagar.me
  */
 -->
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -13,7 +13,7 @@
          colors="true"
          bootstrap="./Test/Unit/bootstrap.php"
         >
-    <testsuite name="MundiPagg">
+    <testsuite name="Pagarme">
         <directory suffix="Test.php">Test/Unit</directory>
     </testsuite>
 

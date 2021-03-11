@@ -6,94 +6,94 @@
  */
 -->
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
-    <group id="mundipagg_mundipagg_transaction_recurrence" translate="label comment" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="20">
+    <group id="pagarme_pagarme_transaction_recurrence" translate="label comment" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="20">
         <label>Recurrence</label>
 
         <field id="active" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label" type="select">
             <label>Enabled</label>
             <comment>When activated module of recurrence is active to store.</comment>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-            <config_path>payment/mundipagg_recurrence/active</config_path>
+            <config_path>payment/pagarme_recurrence/active</config_path>
         </field>
 
         <field id="single_subscription" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label" type="select">
             <label>Enable Single Subscription</label>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-            <config_path>payment/mundipagg_recurrence/single_subscription</config_path>
+            <config_path>payment/pagarme_recurrence/single_subscription</config_path>
         </field>
 
         <field id="single_subscription_plan" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label" type="select">
             <label>Enable Subscription by paln </label>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-            <config_path>payment/mundipagg_recurrence/single_subscription_plan</config_path>
+            <config_path>payment/pagarme_recurrence/single_subscription_plan</config_path>
         </field>
 
         <field id="payment_update_by_customer" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label" type="select">
             <label>Enable payment method update by customer</label>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-            <config_path>payment/mundipagg_recurrence/payment_update_by_customer</config_path>
+            <config_path>payment/pagarme_recurrence/payment_update_by_customer</config_path>
         </field>
 
         <field id="payment_credit_card_update_by_customer" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label" type="select">
             <label>Enable credit card update by customer</label>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-            <config_path>payment/mundipagg_recurrence/payment_credit_card_update_by_customer</config_path>
+            <config_path>payment/pagarme_recurrence/payment_credit_card_update_by_customer</config_path>
         </field>
 
         <field id="subscription_installment" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label" type="select">
             <label>Enable Subscription Installment</label>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-            <config_path>payment/mundipagg_recurrence/subscription_installment</config_path>
+            <config_path>payment/pagarme_recurrence/subscription_installment</config_path>
         </field>
-        <group id="mundipagg_mundipagg_transaction_recurence_global" translate="label comment" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="20">
+        <group id="pagarme_pagarme_transaction_recurence_global" translate="label comment" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="20">
             <label>Global Config</label>
             <field id="global_recurence_global_payment_methods" translate="label comment" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0">
                 <label>Payment Methods</label>
-                <config_path>payment/mundipagg_recurrence/global_payment_methods</config_path>
-                <source_model>MundiPagg\MundiPagg\Model\Source\PaymentMethods</source_model>
+                <config_path>payment/pagarme_recurrence/global_payment_methods</config_path>
+                <source_model>Pagarme\Pagarme\Model\Source\PaymentMethods</source_model>
             </field>
 
             <field id="payment_recurence_global_interval" translate="label comment" type="select" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="0">
                 <label>Interval</label>
-                <config_path>payment/mundipagg_recurrence/global_interval</config_path>
-                <source_model>MundiPagg\MundiPagg\Model\Source\Interval</source_model>
+                <config_path>payment/pagarme_recurrence/global_interval</config_path>
+                <source_model>Pagarme\Pagarme\Model\Source\Interval</source_model>
             </field>
 
             <field id="payment_recurence_global_interval_number" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="3" translate="label" type="text">
                 <label>Period</label>
                 <comment>Enter the interval period.</comment>
-                <config_path>payment/mundipagg_recurrence/global_interval_number</config_path>
+                <config_path>payment/pagarme_recurrence/global_interval_number</config_path>
             </field>
 
 
             <field id="payment_recurence_global_billing" translate="label comment" type="select" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="0">
                 <label>Billing Type</label>
-                <config_path>payment/mundipagg_recurrence/global_billing"</config_path>
-                <source_model>MundiPagg\MundiPagg\Model\Source\Billing</source_model>
+                <config_path>payment/pagarme_recurrence/global_billing"</config_path>
+                <source_model>Pagarme\Pagarme\Model\Source\Billing</source_model>
             </field>
 
             <field id="payment_recurence_global_billing_day" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="5" translate="label" type="text">
                 <label>Day</label>
-                <config_path>payment/mundipagg_recurrence/global_billing_day</config_path>
+                <config_path>payment/pagarme_recurrence/global_billing_day</config_path>
             </field>
 
             <field id="payment_recurence_global_start_at" translate="label comment" type="select" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="0">
                 <label>Start At</label>
-                <config_path>payment/mundipagg_recurrence/global_start_day"</config_path>
-                <source_model>MundiPagg\MundiPagg\Model\Source\Interval</source_model>
+                <config_path>payment/pagarme_recurrence/global_start_day"</config_path>
+                <source_model>Pagarme\Pagarme\Model\Source\Interval</source_model>
             </field>
 
             <field id="payment_recurence_global_start_at_day" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="7" translate="label" type="text">
                 <label>Days</label>
                 <comment>Enter the days to start.</comment>
-                <config_path>payment/mundipagg_recurrence/global_start_day_number</config_path>
+                <config_path>payment/pagarme_recurrence/global_start_day_number</config_path>
             </field>
 
             <field id="payment_recurence_global_cycle_discount" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="8" translate="label">
                 <label>Cycle Discount</label>
-                <frontend_model>MundiPagg\MundiPagg\Block\Adminhtml\System\Config\Fieldset\CycleDiscount</frontend_model>
+                <frontend_model>Pagarme\Pagarme\Block\Adminhtml\System\Config\Fieldset\CycleDiscount</frontend_model>
                 <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
-                <config_path>payment/mundipagg_recurrence/global_cycle_discount</config_path>
+                <config_path>payment/pagarme_recurrence/global_cycle_discount</config_path>
             </field>
 
         </group>

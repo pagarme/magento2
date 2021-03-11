@@ -1,7 +1,7 @@
 <?php
 
 
-namespace MundiPagg\MundiPagg\Model\ResourceModel;
+namespace Pagarme\Pagarme\Model\ResourceModel;
 
 class Charges extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Controller\Adminhtml\RecurrenceProducts;
+namespace Pagarme\Pagarme\Controller\Adminhtml\RecurrenceProducts;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
@@ -9,7 +9,7 @@ use Magento\Framework\View\Result\PageFactory;
 use Mundipagg\Core\Recurrence\Aggregates\ProductSubscription;
 use Mundipagg\Core\Recurrence\Services\ProductSubscriptionService;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
-use MundiPagg\MundiPagg\Model\ProductsSubscriptionFactory;
+use Pagarme\Pagarme\Model\ProductsSubscriptionFactory;
 
 class Create extends Action
 {
@@ -61,7 +61,7 @@ class Create extends Action
 
             if (!$productData || !$productData->getId()) {
                 $this->messageManager->addError(__('Product subscription not exist.'));
-                $this->_redirect('mundipagg_mundipagg/recurrenceproducts/index');
+                $this->_redirect('pagarme_pagarme/recurrenceproducts/index');
                 return;
             }
 

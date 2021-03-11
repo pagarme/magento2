@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Controller\Adminhtml\RecurrenceProducts;
+namespace Pagarme\Pagarme\Controller\Adminhtml\RecurrenceProducts;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
@@ -9,8 +9,8 @@ use Magento\Framework\Registry;
 use Magento\Framework\View\Result\PageFactory;
 use Mundipagg\Core\Recurrence\Services\ProductSubscriptionService;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
-use MundiPagg\MundiPagg\Helper\ProductSubscriptionHelper;
-use MundiPagg\MundiPagg\Model\ProductsSubscriptionFactory;
+use Pagarme\Pagarme\Helper\ProductSubscriptionHelper;
+use Pagarme\Pagarme\Model\ProductsSubscriptionFactory;
 
 class Delete extends Action
 {
@@ -61,7 +61,7 @@ class Delete extends Action
             if (!$productData || !$productData->getId()) {
                 $message = $this->messageFactory->create('error', __('Product subscription not exist.'));
                 $this->messageManager->addErrorMessage($message);
-                $this->_redirect('mundipagg_mundipagg/recurrenceproducts/index');
+                $this->_redirect('pagarme_pagarme/recurrenceproducts/index');
                 return;
             }
         }
@@ -73,7 +73,7 @@ class Delete extends Action
         $message = $this->messageFactory->create('success', _("Product subscription deleted."));
         $this->messageManager->addMessage($message);
 
-        $this->_redirect('mundipagg_mundipagg/recurrenceproducts/index');
+        $this->_redirect('pagarme_pagarme/recurrenceproducts/index');
         return;
     }
 }

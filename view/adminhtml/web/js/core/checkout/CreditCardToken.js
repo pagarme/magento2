@@ -2,7 +2,7 @@ define([
     "jquery",
     "uiComponent",
     "Magento_Ui/js/modal/alert",
-    "MundiPagg_MundiPagg/js/core/checkout/PlatformFormBiding",
+    "Pagarme_Pagarme/js/core/checkout/PlatformFormBiding",
 ], function ($, Class, alert, PlatformFormBiding) {
     var CreditCardToken = function (formObject) {
         this.formObject = formObject;

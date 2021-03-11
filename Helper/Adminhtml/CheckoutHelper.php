@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Helper\Adminhtml;
+namespace Pagarme\Pagarme\Helper\Adminhtml;
 
 use Magento\Framework\App\Helper\AbstractHelper;
 use Mundipagg\Core\Kernel\Services\MoneyService;
@@ -79,7 +79,7 @@ class CheckoutHelper extends AbstractHelper
     }
     public function getInstallmentsUrl($baseUrl)
     {
-        return $baseUrl . "rest/default/V1/mundipagg/installments/brandbyamount";
+        return $baseUrl . "rest/default/V1/pagarme/installments/brandbyamount";
     }
 
     public function formatGrandTotal($granTotal)

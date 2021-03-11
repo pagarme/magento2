@@ -19,7 +19,7 @@ require([
 
     MundipaggAdmin.updateTotals = function (action, interest, amount) {
         var amountFormatted = "R$" + this.formatMoney(amount);
-        jQuery(".mundipagg-tax").remove();
+        jQuery(".pagarme-tax").remove();
         if (action === "remove-tax") {
             jQuery("#order-totals table tr:last .price").html(amountFormatted);
             return;
@@ -43,7 +43,7 @@ require([
     };
 
     MundipaggAdmin.getTaxHtml = function (interest) {
-        return "<tr id=\"mundipagg-tax\" class=\"row-totals mundipagg-tax\">" +
+        return "<tr id=\"pagarme-tax\" class=\"row-totals pagarme-tax\">" +
         "<td style=\"\" class=\"admin__total-mark\" colspan=\"1\"> Tax </td>" +
         "<td style=\"\" class=\"admin__total-amount\">" +
         "   <span class=\"price\">" + interest + "</span>"+

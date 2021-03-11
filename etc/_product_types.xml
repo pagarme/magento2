@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Catalog:etc/product_types.xsd">
-    <type name="plan" label="Plan" modelInstance="MundiPagg\MundiPagg\Model\Product\ProductPlan\Plan" composite='true' indexPriority="50" sortOrder="30">
+    <type name="plan" label="Plan" modelInstance="Pagarme\Pagarme\Model\Product\ProductPlan\Plan" composite='true' indexPriority="50" sortOrder="30">
 
     </type>
-    <type name="recurrence" label="Recurrence" modelInstance="MundiPagg\MundiPagg\Model\Product\Recurrence" indexPriority="70" sortOrder="70"></type>
-    <type name="only_plan_item" label="Only Plan Item" modelInstance="MundiPagg\MundiPagg\Model\Product\OnlyPlanItem" indexPriority="70" sortOrder="70"></type>
+    <type name="recurrence" label="Recurrence" modelInstance="Pagarme\Pagarme\Model\Product\Recurrence" indexPriority="70" sortOrder="70"></type>
+    <type name="only_plan_item" label="Only Plan Item" modelInstance="Pagarme\Pagarme\Model\Product\OnlyPlanItem" indexPriority="70" sortOrder="70"></type>
 </config>

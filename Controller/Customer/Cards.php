@@ -1,5 +1,5 @@
 <?php
-namespace MundiPagg\MundiPagg\Controller\Customer;
+namespace Pagarme\Pagarme\Controller\Customer;
 
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
@@ -32,13 +32,13 @@ class Cards extends Action
     public function execute()
     {
         if (!$this->customerSession->isLoggedIn()) {
-            $this->_redirect('customer/account/login'); 
+            $this->_redirect('customer/account/login');
 
-            return; # code... 
+            return; # code...
         }
         $result = $this->pageFactory->create();
         $result->getConfig()->getTitle()->set("My Cards");
-        
+
         return $result;
     }
 

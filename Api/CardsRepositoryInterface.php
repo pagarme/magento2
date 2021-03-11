@@ -1,7 +1,7 @@
 <?php
 
 
-namespace MundiPagg\MundiPagg\Api;
+namespace Pagarme\Pagarme\Api;
 
 use Magento\Framework\Api\SearchCriteriaInterface;
 
@@ -11,18 +11,18 @@ interface CardsRepositoryInterface
 
     /**
      * Save Cards
-     * @param \MundiPagg\MundiPagg\Api\Data\CardsInterface $cards
-     * @return \MundiPagg\MundiPagg\Api\Data\CardsInterface
+     * @param \Pagarme\Pagarme\Api\Data\CardsInterface $cards
+     * @return \Pagarme\Pagarme\Api\Data\CardsInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function save(
-        \MundiPagg\MundiPagg\Api\Data\CardsInterface $cards
+        \Pagarme\Pagarme\Api\Data\CardsInterface $cards
     );
 
     /**
      * Retrieve Cards
      * @param string $cardsId
-     * @return \MundiPagg\MundiPagg\Api\Data\CardsInterface
+     * @return \Pagarme\Pagarme\Api\Data\CardsInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function getById($cardsId);
@@ -30,7 +30,7 @@ interface CardsRepositoryInterface
     /**
      * Retrieve Cards matching the specified criteria.
      * @param \Magento\Framework\Api\SearchCriteriaInterface $searchCriteria
-     * @return \MundiPagg\MundiPagg\Api\Data\CardsSearchResultsInterface
+     * @return \Pagarme\Pagarme\Api\Data\CardsSearchResultsInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function getList(
@@ -39,12 +39,12 @@ interface CardsRepositoryInterface
 
     /**
      * Delete Cards
-     * @param \MundiPagg\MundiPagg\Api\Data\CardsInterface $cards
+     * @param \Pagarme\Pagarme\Api\Data\CardsInterface $cards
      * @return bool true on success
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function delete(
-        \MundiPagg\MundiPagg\Api\Data\CardsInterface $cards
+        \Pagarme\Pagarme\Api\Data\CardsInterface $cards
     );
 
     /**

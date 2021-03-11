@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Block\Adminhtml\Recurrence\Plans;
+namespace Pagarme\Pagarme\Block\Adminhtml\Recurrence\Plans;
 
 use Magento\Catalog\Api\ProductRepositoryInterfaceFactory;
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
@@ -9,7 +9,7 @@ use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\Registry;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
-use MundiPagg\MundiPagg\Helper\ProductHelper;
+use Pagarme\Pagarme\Helper\ProductHelper;
 
 class Plan extends Template
 {

@@ -2,24 +2,24 @@
 /**
  * Class GeneralHandler
  *
- * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
- * @copyright   2017 MundiPagg (http://www.mundipagg.com)
- * @license     http://www.mundipagg.com Copyright
+* @author      Open Source Team
+ * @copyright   2021 Pagar.me (https://pagar.me)
+ * @license     https://pagar.me Copyright
  *
- * @link        http://www.mundipagg.com
+ * @link        https://pagar.me
  */
 
-namespace MundiPagg\MundiPagg\Gateway\Transaction\CreditCard\ResourceGateway\Capture\Response;
+namespace Pagarme\Pagarme\Gateway\Transaction\CreditCard\ResourceGateway\Capture\Response;
 
 
 use Magento\Payment\Gateway\Response\HandlerInterface;
-use MundiPagg\MundiPagg\Gateway\Transaction\Base\ResourceGateway\Response\AbstractHandler;
-use MundiPagg\MundiPagg\Model\ChargesFactory;
+use Pagarme\Pagarme\Gateway\Transaction\Base\ResourceGateway\Response\AbstractHandler;
+use Pagarme\Pagarme\Model\ChargesFactory;
 
 class GeneralHandler extends AbstractHandler implements HandlerInterface
 {
 	/**
-     * \MundiPagg\MundiPagg\Model\ChargesFactory
+     * \Pagarme\Pagarme\Model\ChargesFactory
      */
 	protected $modelCharges;
 
@@ -47,7 +47,7 @@ class GeneralHandler extends AbstractHandler implements HandlerInterface
         } catch (\Exception $e) {
             return $e->getMessage();
         }
-        
+
         return $this;
     }
 }

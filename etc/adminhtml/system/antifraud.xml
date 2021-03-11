@@ -1,19 +1,19 @@
 <?xml version="1.0"?>
 <!--
 /**
- * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
- * @copyright   2017 MundiPagg (http://www.mundipagg.com)
- * @license     http://www.mundipagg.com  Copyright
+ * @author      Open Source Team
+ * @copyright   2021 Pagar.me (https://pagar.me)
+ * @license     https://pagar.me Copyright
  *
- * @link        http://www.mundipagg.com
+ * @link        https://pagar.me
  *
  */
 -->
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
-    <section id="mundipagg_mundipagg_antifraud" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>MundiPagg AntiFraud</label>
-        <tab>mundipagg_mundipagg</tab>
-        <resource>MundiPagg_MundiPagg::config</resource>
+    <section id="pagarme_pagarme_antifraud" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Pagar.me AntiFraud</label>
+        <tab>pagarme_pagarme</tab>
+        <resource>Pagarme_Pagarme::config</resource>
 
         <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>General</label>
@@ -24,8 +24,8 @@
             </field>
         </group>
 
-        <include path="MundiPagg_MundiPagg::system/antifraud/fingerprint.xml"/>
-        <include path="MundiPagg_MundiPagg::system/antifraud/options.xml"/>
-        <include path="MundiPagg_MundiPagg::system/antifraud/mdd.xml"/>
+        <include path="Pagarme_Pagarme::system/antifraud/fingerprint.xml"/>
+        <include path="Pagarme_Pagarme::system/antifraud/options.xml"/>
+        <include path="Pagarme_Pagarme::system/antifraud/mdd.xml"/>
     </section>
 </include>

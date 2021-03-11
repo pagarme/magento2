@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Block\Payment\Info;
+namespace Pagarme\Pagarme\Block\Payment\Info;
 
 use Magento\Payment\Block\Info\Cc;
 

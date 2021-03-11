@@ -1,18 +1,18 @@
-<?php 
+<?php
 
 /**
  * Class CreateCard
  *
- * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
- * @copyright   2017 MundiPagg (http://www.mundipagg.com)
- * @license     http://www.mundipagg.com Copyright
+ * @author      Open Source Team
+ * @copyright   2021 Pagar.me (https://pagar.me)
+ * @license     https://pagar.me Copyright
  *
- * @link        http://www.mundipagg.com
+ * @link        https://pagar.me
  */
 
-namespace MundiPagg\MundiPagg\Helper\Cards;
+namespace Pagarme\Pagarme\Helper\Cards;
 
-use MundiPagg\MundiPagg\Model\CardsFactory;
+use Pagarme\Pagarme\Model\CardsFactory;
 
 class CreateCard
 {

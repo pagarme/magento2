@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Concrete;
+namespace Pagarme\Pagarme\Concrete;
 
 use Magento\Framework\App\ObjectManager;
 use Magento\Sales\Model\Order\Payment\Transaction\Repository;
@@ -45,28 +45,28 @@ class Magento2DataService extends AbstractDataService
                     continue;
                 }
 
-                $lastMundipaggTransaction = $charge->getLastTransaction();
+                $lastPagarmeTransaction = $charge->getLastTransaction();
 
                 $additionalInfo[$baseKey . '_acquirer_nsu'] =
-                    $lastMundipaggTransaction->getAcquirerNsu();
+                    $lastPagarmeTransaction->getAcquirerNsu();
 
                 $additionalInfo[$baseKey . '_acquirer_tid'] =
-                    $lastMundipaggTransaction->getAcquirerTid();
+                    $lastPagarmeTransaction->getAcquirerTid();
 
                 $additionalInfo[$baseKey . '_acquirer_auth_code'] =
-                    $lastMundipaggTransaction->getAcquirerAuthCode();
+                    $lastPagarmeTransaction->getAcquirerAuthCode();
 
                 $additionalInfo[$baseKey . '_acquirer_name'] =
-                    $lastMundipaggTransaction->getAcquirerName();
+                    $lastPagarmeTransaction->getAcquirerName();
 
                 $additionalInfo[$baseKey . '_acquirer_message'] =
-                    $lastMundipaggTransaction->getAcquirerMessage();
+                    $lastPagarmeTransaction->getAcquirerMessage();
 
                 $additionalInfo[$baseKey . '_brand'] =
-                    $lastMundipaggTransaction->getBrand();
+                    $lastPagarmeTransaction->getBrand();
 
                 $additionalInfo[$baseKey . '_installments'] =
-                    $lastMundipaggTransaction->getInstallments();
+                    $lastPagarmeTransaction->getInstallments();
             }
 
             $this->OLDcreateCaptureTransaction(
@@ -80,7 +80,7 @@ class Magento2DataService extends AbstractDataService
     private function getChargeBaseKey($transactionAuth, $charge)
     {
         $orderCreationResponse =
-            $transactionAuth->getAdditionalInformation('mundipagg_payment_module_api_response');
+            $transactionAuth->getAdditionalInformation('pagarme_payment_module_api_response');
 
         if ($orderCreationResponse === null) {
             return null;

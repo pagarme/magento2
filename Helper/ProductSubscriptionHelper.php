@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Helper;
+namespace Pagarme\Pagarme\Helper;
 
 use Magento\Framework\App\Helper\AbstractHelper;
 use Mundipagg\Core\Kernel\Services\LocalizationService;

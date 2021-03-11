@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Model\Enum;
+namespace Pagarme\Pagarme\Model\Enum;
 
 abstract class CreditCardBrandEnum
 {

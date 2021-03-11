@@ -1,56 +1,56 @@
 <?xml version="1.0"?>
 <!--
 /**
- * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
- * @copyright   2017 MundiPagg (http://www.mundipagg.com)
- * @license     http://www.mundipagg.com Copyright
+ * @author      Open Source Team
+ * @copyright   2021 Pagar.me (https://pagar.me)
+ * @license     https://pagar.me Copyright
  *
- * @link        http://www.mundipagg.com
+ * @link        https://pagar.me
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <virtualType name="MundiPaggCreditCardUiConfigProvider" type="Magento\Payment\Model\CcGenericConfigProvider">
+    <virtualType name="PagarmeCreditCardUiConfigProvider" type="Magento\Payment\Model\CcGenericConfigProvider">
         <arguments>
             <argument name="methodCodes" xsi:type="array">
-                <item name="mundipagg_creditcard" xsi:type="const">MundiPagg\MundiPagg\Model\Ui\CreditCard\ConfigProvider::CODE</item>
+                <item name="pagarme_creditcard" xsi:type="const">Pagarme\Pagarme\Model\Ui\CreditCard\ConfigProvider::CODE</item>
             </argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="MundiPaggTwoCreditCardUiConfigProvider" type="Magento\Payment\Model\CcGenericConfigProvider">
+    <virtualType name="PagarmeTwoCreditCardUiConfigProvider" type="Magento\Payment\Model\CcGenericConfigProvider">
         <arguments>
             <argument name="methodCodes" xsi:type="array">
-                <item name="mundipagg_two_creditcard" xsi:type="const">MundiPagg\MundiPagg\Model\Ui\TwoCreditCard\ConfigProvider::CODE</item>
+                <item name="pagarme_two_creditcard" xsi:type="const">Pagarme\Pagarme\Model\Ui\TwoCreditCard\ConfigProvider::CODE</item>
             </argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="MundiPaggBilletCreditCardUiConfigProvider" type="Magento\Payment\Model\CcGenericConfigProvider">
+    <virtualType name="PagarmeBilletCreditCardUiConfigProvider" type="Magento\Payment\Model\CcGenericConfigProvider">
         <arguments>
             <argument name="methodCodes" xsi:type="array">
-                <item name="mundipagg_billet_creditcard" xsi:type="const">MundiPagg\MundiPagg\Model\Ui\BilletCreditCard\ConfigProvider::CODE</item>
+                <item name="pagarme_billet_creditcard" xsi:type="const">Pagarme\Pagarme\Model\Ui\BilletCreditCard\ConfigProvider::CODE</item>
             </argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="MundiPaggCreditCardInstallmentsUiConfigProvider" type="MundiPagg\MundiPagg\Model\Ui\CreditCard\InstallmentsConfigProvider">
+    <virtualType name="PagarmeCreditCardInstallmentsUiConfigProvider" type="Pagarme\Pagarme\Model\Ui\CreditCard\InstallmentsConfigProvider">
         <arguments>
-            <argument name="config" xsi:type="object">MundiPaggCreditCardInstallment</argument>
+            <argument name="config" xsi:type="object">PagarmeCreditCardInstallment</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="MundiPaggVoucherUiConfigProvider" type="Magento\Payment\Model\CcGenericConfigProvider">
+    <virtualType name="PagarmeVoucherUiConfigProvider" type="Magento\Payment\Model\CcGenericConfigProvider">
         <arguments>
             <argument name="methodCodes" xsi:type="array">
-                <item name="mundipagg_voucher" xsi:type="const">MundiPagg\MundiPagg\Model\Ui\Voucher\ConfigProvider::CODE</item>
+                <item name="pagarme_voucher" xsi:type="const">Pagarme\Pagarme\Model\Ui\Voucher\ConfigProvider::CODE</item>
             </argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="MundiPaggDebitUiConfigProvider" type="Magento\Payment\Model\CcGenericConfigProvider">
+    <virtualType name="PagarmeDebitUiConfigProvider" type="Magento\Payment\Model\CcGenericConfigProvider">
         <arguments>
             <argument name="methodCodes" xsi:type="array">
-                <item name="mundipagg_debit" xsi:type="const">MundiPagg\MundiPagg\Model\Ui\Debit\ConfigProvider::CODE</item>
+                <item name="pagarme_debit" xsi:type="const">Pagarme\Pagarme\Model\Ui\Debit\ConfigProvider::CODE</item>
             </argument>
         </arguments>
     </virtualType>
@@ -58,27 +58,27 @@
     <type name="Magento\Checkout\Model\CompositeConfigProvider">
         <arguments>
             <argument name="configProviders" xsi:type="array">
-                <item name="mundipagg_creditcard_config_provider" xsi:type="object">MundiPaggCreditCardUiConfigProvider</item>
-                <item name="mundipagg_creditcard_config_provider_unique" xsi:type="object">MundiPagg\MundiPagg\Model\Ui\CreditCard\ConfigProvider</item>
+                <item name="pagarme_creditcard_config_provider" xsi:type="object">PagarmeCreditCardUiConfigProvider</item>
+                <item name="pagarme_creditcard_config_provider_unique" xsi:type="object">Pagarme\Pagarme\Model\Ui\CreditCard\ConfigProvider</item>
 
-                <item name="mundipagg_billet_creditcard_config_provider" xsi:type="object">MundiPaggBilletCreditCardUiConfigProvider</item>
-                <item name="mundipagg_billet_creditcard_config_provider_unique" xsi:type="object">MundiPagg\MundiPagg\Model\Ui\BilletCreditCard\ConfigProvider</item>
+                <item name="pagarme_billet_creditcard_config_provider" xsi:type="object">PagarmeBilletCreditCardUiConfigProvider</item>
+                <item name="pagarme_billet_creditcard_config_provider_unique" xsi:type="object">Pagarme\Pagarme\Model\Ui\BilletCreditCard\ConfigProvider</item>
 
-                <item name="mundipagg_two_creditcard_config_provider" xsi:type="object">MundiPaggTwoCreditCardUiConfigProvider</item>
-                <item name="mundipagg_two_creditcard_config_provider_unique" xsi:type="object">MundiPagg\MundiPagg\Model\Ui\TwoCreditCard\ConfigProvider</item>
+                <item name="pagarme_two_creditcard_config_provider" xsi:type="object">PagarmeTwoCreditCardUiConfigProvider</item>
+                <item name="pagarme_two_creditcard_config_provider_unique" xsi:type="object">Pagarme\Pagarme\Model\Ui\TwoCreditCard\ConfigProvider</item>
 
-                <item name="mundipagg_voucher_config_provider" xsi:type="object">MundiPaggVoucherUiConfigProvider</item>
-                <item name="mundipagg_voucher_config_provider_unique" xsi:type="object">MundiPagg\MundiPagg\Model\Ui\Voucher\ConfigProvider</item>
+                <item name="pagarme_voucher_config_provider" xsi:type="object">PagarmeVoucherUiConfigProvider</item>
+                <item name="pagarme_voucher_config_provider_unique" xsi:type="object">Pagarme\Pagarme\Model\Ui\Voucher\ConfigProvider</item>
 
-                <item name="mundipagg_debit_config_provider" xsi:type="object">MundiPaggDebitUiConfigProvider</item>
-                <item name="mundipagg_debit_config_provider_unique" xsi:type="object">MundiPagg\MundiPagg\Model\Ui\Debit\ConfigProvider</item>
+                <item name="pagarme_debit_config_provider" xsi:type="object">PagarmeDebitUiConfigProvider</item>
+                <item name="pagarme_debit_config_provider_unique" xsi:type="object">Pagarme\Pagarme\Model\Ui\Debit\ConfigProvider</item>
 
                 <item name="generic_config_provider" xsi:type="object">Magento\Payment\Model\CcGenericConfigProvider</item>
-                <item name="installments_creditcard" xsi:type="object">MundiPaggCreditCardInstallmentsUiConfigProvider</item>
+                <item name="installments_creditcard" xsi:type="object">PagarmeCreditCardInstallmentsUiConfigProvider</item>
 
-                <item name="mundipagg_billet_config_provider" xsi:type="object">MundiPagg\MundiPagg\Model\Ui\Billet\ConfigProvider</item>
+                <item name="pagarme_billet_config_provider" xsi:type="object">Pagarme\Pagarme\Model\Ui\Billet\ConfigProvider</item>
 
-                <item name="mundipagg_pix_config_provider" xsi:type="object">MundiPagg\MundiPagg\Model\Ui\Pix\ConfigProvider</item>
+                <item name="pagarme_pix_config_provider" xsi:type="object">Pagarme\Pagarme\Model\Ui\Pix\ConfigProvider</item>
             </argument>
         </arguments>
     </type>

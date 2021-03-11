@@ -1,10 +1,10 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Model\Enum;
+namespace Pagarme\Pagarme\Model\Enum;
 
 /**
  * Class PersonTypeEnum
- * @package MundiPagg\MundiPagg\Model\Enum
+ * @package Pagarme\Pagarme\Model\Enum
  */
 abstract class PersonTypeEnum
 {

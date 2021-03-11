@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Block\Adminhtml\Recurrence\Subscriptions;
+namespace Pagarme\Pagarme\Block\Adminhtml\Recurrence\Subscriptions;
 
 use Magento\Catalog\Api\ProductRepositoryInterfaceFactory;
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
@@ -18,9 +18,9 @@ use Mundipagg\Core\Recurrence\Repositories\ChargeRepository;
 use Mundipagg\Core\Recurrence\Services\SubscriptionService;
 use Mundipagg\Core\Recurrence\ValueObjects\IntervalValueObject;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
-use MundiPagg\MundiPagg\Helper\RecurrenceProductHelper;
-use MundiPagg\MundiPagg\Ui\Component\Column\Invoices\Actions;
-use MundiPagg\MundiPagg\Ui\Component\Recurrence\Column\TotalCyclesByProduct;
+use Pagarme\Pagarme\Helper\RecurrenceProductHelper;
+use Pagarme\Pagarme\Ui\Component\Column\Invoices\Actions;
+use Pagarme\Pagarme\Ui\Component\Recurrence\Column\TotalCyclesByProduct;
 use Magento\Catalog\Model\ResourceModel\Product\Collection as ProductCollection;
 use Magento\Catalog\Model\Product\Interceptor as ProductInterceptor;
 
@@ -28,8 +28,8 @@ class Subscription extends Template
 {
     const INACTIVE_STATUS = 'INACTIVE';
     const CANCELED_STATUS = 'canceled';
-    const URL_PATH_DELETE = 'mundipagg_mundipagg/invoices/delete';
-    const URL_PATH_CANCEL_SUBSCRIPTION = 'mundipagg_mundipagg/subscriptions/delete/id';
+    const URL_PATH_DELETE = 'pagarme_pagarme/invoices/delete';
+    const URL_PATH_CANCEL_SUBSCRIPTION = 'pagarme_pagarme/subscriptions/delete/id';
 
     private $objectManager;
 

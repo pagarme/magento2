@@ -2,14 +2,14 @@
 /**
  * Class Cards
  *
- * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
- * @copyright   2019 MundiPagg (http://www.mundipagg.com)
- * @license     http://www.mundipagg.com Copyright
+ * @author      Open Source Team
+ * @copyright   2021 Pagar.me (https://pagar.me)
+ * @license     https://pagar.me Copyright
  *
- * @link        http://www.mundipagg.com
+ * @link        https://pagar.me
  */
 
-namespace MundiPagg\MundiPagg\Block\Adminhtml\Customer;
+namespace Pagarme\Pagarme\Block\Adminhtml\Customer;
 
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
@@ -17,8 +17,8 @@ use Mundipagg\Core\Payment\Aggregates\SavedCard;
 use Mundipagg\Core\Payment\Repositories\CustomerRepository;
 use Mundipagg\Core\Payment\Repositories\SavedCardRepository;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
-use MundiPagg\MundiPagg\Concrete\Magento2SavedCardAdapter;
-use MundiPagg\MundiPagg\Model\CardsRepository;
+use Pagarme\Pagarme\Concrete\Magento2SavedCardAdapter;
+use Pagarme\Pagarme\Model\CardsRepository;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Customer\Model\Session;
 
@@ -75,14 +75,14 @@ class Cards extends Template
 
         $listCards = $this->getCardsRepository()->getList($searchCriteria);
 
-        /* @var \MundiPagg\MundiPagg\Model\Cards[] $cards */
+        /* @var \Pagarme\Pagarme\Model\Cards[] $cards */
         $cards = $listCards->getItems();
         foreach ($cards as &$card) {
             $card->setMaskedNumber('****.****.****.' . $card->getLastFourNumbers());
         }
 
         $cards = array_values($cards);
-       
+
 
         return array_merge($cards, $this->getCoreCards());
     }
@@ -94,12 +94,12 @@ class Cards extends Template
     private function getCoreCards()
     {
         Magento2CoreSetup::bootstrap();
-        
+
         $savedCardRepository = new SavedCardRepository();
         $customerRepository = new CustomerRepository();
 
         $listSavedCoreCard = $savedCardRepository->listEntities(0, false);
-       
+
         /* @var Magento2SavedCardAdapter[]|array $cards */
         $cards = [];
         foreach ($listSavedCoreCard as $savedCoreCard) {
@@ -120,7 +120,7 @@ class Cards extends Template
     }
 
     /**
-     * @return \MundiPagg\MundiPagg\Model\CardsRepository
+     * @return \Pagarme\Pagarme\Model\CardsRepository
      */
     public function getCardsRepository()
     {

@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Model;
+namespace Pagarme\Pagarme\Model;
 
 use Mundipagg\Core\Kernel\Aggregates\Order;
 use Mundipagg\Core\Kernel\Exceptions\InvalidParamException;

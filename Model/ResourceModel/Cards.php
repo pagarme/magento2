@@ -1,7 +1,7 @@
 <?php
 
 
-namespace MundiPagg\MundiPagg\Model\ResourceModel;
+namespace Pagarme\Pagarme\Model\ResourceModel;
 
 class Cards extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
 {
@@ -13,6 +13,6 @@ class Cards extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
      */
     protected function _construct()
     {
-        $this->_init('mundipagg_mundipagg_cards', 'id');
+        $this->_init('pagarme_pagarme_cards', 'id');
     }
 }

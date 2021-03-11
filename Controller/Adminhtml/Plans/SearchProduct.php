@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Controller\Adminhtml\Plans;
+namespace Pagarme\Pagarme\Controller\Adminhtml\Plans;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
@@ -14,7 +14,7 @@ use Mundipagg\Core\Recurrence\Aggregates\ProductSubscription;
 use Mundipagg\Core\Recurrence\Services\PlanService;
 use Mundipagg\Core\Recurrence\Services\ProductSubscriptionService;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
-use MundiPagg\MundiPagg\Helper\ProductHelper;
+use Pagarme\Pagarme\Helper\ProductHelper;
 
 class SearchProduct extends Action
 {
@@ -137,7 +137,7 @@ class SearchProduct extends Action
                 $product['cycles'] = $subProductRecurrence->getCycles();
                 $product['quantity'] = $subProductRecurrence->getQuantity();
                 $product['id'] = $subProductRecurrence->getId();
-                $product['mundipagg_id'] = $subProductRecurrence->getMundipaggId();
+                $product['pagarme_id'] = $subProductRecurrence->getMundipaggId();
             }
 
             $bundleProducts[] = $product;

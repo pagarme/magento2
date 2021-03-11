@@ -1,18 +1,19 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Concrete;
+namespace Pagarme\Pagarme\Concrete;
 
 use Mundipagg\Core\Kernel\Interfaces\PlatformCustomerInterface;
 use Mundipagg\Core\Kernel\ValueObjects\Id\CustomerId;
 use Mundipagg\Core\Payment\ValueObjects\CustomerType;
 use Mundipagg\Core\Payment\Repositories\CustomerRepository;
+use phpDocumentor\Parser\Exception;
 
 class Magento2PlatformCustomerDecorator implements PlatformCustomerInterface
 {
     protected $platformCustomer;
 
     /** @var CustomerId */
-    protected $mundipaggId;
+    protected $pagarmeId;
 
     public function __construct($platformCustomer = null)
     {
@@ -27,25 +28,25 @@ class Magento2PlatformCustomerDecorator implements PlatformCustomerInterface
     /**
      * @return CustomerId|null
      */
-    public function getMundipaggId()
+    public function getPagarmeId()
     {
-        if ($this->mundipaggId !== null) {
-            return $this->mundipaggId;
+        if ($this->pagarmeId !== null) {
+            return $this->pagarmeId;
         }
 
         $customerRepository = new CustomerRepository();
         $customer = $customerRepository->findByCode($this->platformCustomer->getId());
 
         if ($customer !== null) {
-            $this->mundipaggId = $customer->getMundipaggId()->getValue();
-            return $this->mundipaggId;
+            $this->pagarmeId = $customer->getMundipaggId()->getValue();
+            return $this->pagarmeId;
         }
 
         /** @var  $mpIdLegado deprecated */
-        $mpIdLegado = $this->platformCustomer->getCustomAttribute('customer_id_mundipagg');
+        $mpIdLegado = $this->platformCustomer->getCustomAttribute('customer_id_pagarme');
         if (!empty($mpIdLegado->getValue())) {
-            $this->mundipaggId = $mpIdLegado;
-            return $this->mundipaggId;
+            $this->pagarmeId = $mpIdLegado;
+            return $this->pagarmeId;
         }
 
         return null;
@@ -88,5 +89,10 @@ class Magento2PlatformCustomerDecorator implements PlatformCustomerInterface
     public function getPhones()
     {
         /** @TODO */
+    }
+
+    public function getMundipaggId()
+    {
+        return $this->getPagarmeId();
     }
 }

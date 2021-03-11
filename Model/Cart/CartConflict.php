@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Model\Cart;
+namespace Pagarme\Pagarme\Model\Cart;
 
 use Magento\Checkout\Model\Cart;
 use Magento\Framework\Exception\LocalizedException;
@@ -15,7 +15,7 @@ use Mundipagg\Core\Recurrence\Services\CartRules\ProductListInCart;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 use Mundipagg\Core\Recurrence\Aggregates\Repetition;
 use Magento\Catalog\Model\Product\Interceptor;
-use MundiPagg\MundiPagg\Helper\RecurrenceProductHelper;
+use Pagarme\Pagarme\Helper\RecurrenceProductHelper;
 use Magento\Catalog\Model\Product\Option;
 use Magento\Catalog\Api\Data\ProductCustomOptionValuesInterface;
 use Magento\Catalog\Model\Product\Option\Value;
@@ -23,7 +23,7 @@ use Mundipagg\Core\Recurrence\Services\ProductSubscriptionService;
 use Mundipagg\Core\Recurrence\Services\PlanService;
 use Mundipagg\Core\Recurrence\Services\CartRules\JustProductPlanInCart;
 use Mundipagg\Core\Recurrence\Services\CartRules\JustSelfProductPlanInCart;
-use MundiPagg\MundiPagg\Helper\RulesCartRun;
+use Pagarme\Pagarme\Helper\RulesCartRun;
 use Mundipagg\Core\Kernel\Aggregates\Configuration;
 
 class CartConflict
@@ -56,7 +56,7 @@ class CartConflict
     /**
      * @var Configuration
      */
-    private $mundipaggConfig;
+    private $pagarmeConfig;
 
     /**
      * CartConflict constructor.
@@ -71,7 +71,7 @@ class CartConflict
         $this->productSubscriptionService = new ProductSubscriptionService();
         $this->planService = new PlanService();
         $this->rulesCartRun = new RulesCartRun();
-        $this->mundipaggConfig = Magento2CoreSetup::getModuleConfiguration();
+        $this->pagarmeConfig = Magento2CoreSetup::getModuleConfiguration();
     }
 
     /**
@@ -82,8 +82,8 @@ class CartConflict
     public function beforeUpdateItems(Cart $cart, $dataQty)
     {
         if (
-            !$this->mundipaggConfig->isEnabled() ||
-            !$this->mundipaggConfig->getRecurrenceConfig()->isEnabled()
+            !$this->pagarmeConfig->isEnabled() ||
+            !$this->pagarmeConfig->getRecurrenceConfig()->isEnabled()
         ) {
             return;
         }
@@ -122,8 +122,8 @@ class CartConflict
         $requestInfo = null
     ) {
         if (
-            !$this->mundipaggConfig->isEnabled() ||
-            !$this->mundipaggConfig->getRecurrenceConfig()->isEnabled()
+            !$this->pagarmeConfig->isEnabled() ||
+            !$this->pagarmeConfig->getRecurrenceConfig()->isEnabled()
         ) {
             return [$productInfo, $requestInfo];
         }

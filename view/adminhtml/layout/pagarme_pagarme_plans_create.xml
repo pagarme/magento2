@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+	<head>
+		<css src="Pagarme_Pagarme::css/jquery-ui.min.css" />
+		<css src="Pagarme_Pagarme::css/pagarme_style.css" />
+		<script src="Pagarme_Pagarme::js/recurrence.js"/>
+	</head>
+	<body>
+		<referenceContainer name="content">
+			<block class="Pagarme\Pagarme\Block\Adminhtml\Recurrence\Plans\Plan" name="pagarme.recurrence.plans" template="recurrence/plans/create.phtml" cacheable="false"/>
+		</referenceContainer>
+	</body>
+</page>

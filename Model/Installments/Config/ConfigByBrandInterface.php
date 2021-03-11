@@ -2,14 +2,14 @@
 /**
  * Class ConfigByBrandInterface
  *
- * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
- * @copyright   2017 MundiPagg (http://www.mundipagg.com)
- * @license     http://www.mundipagg.com Copyright
+ * @author      Open Source Team
+ * @copyright   2021 Pagar.me (https://pagar.me)
+ * @license     https://pagar.me Copyright
  *
- * @link        http://www.mundipagg.com
+ * @link        https://pagar.me
  */
 
-namespace MundiPagg\MundiPagg\Model\Installments\Config;
+namespace Pagarme\Pagarme\Model\Installments\Config;
 
 
 interface ConfigByBrandInterface

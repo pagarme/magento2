@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Controller\Adminhtml\Subscriptions;
+namespace Pagarme\Pagarme\Controller\Adminhtml\Subscriptions;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
@@ -10,7 +10,7 @@ use Magento\Framework\Registry;
 use Magento\Framework\View\Result\PageFactory;
 use Mundipagg\Core\Recurrence\Services\ProductSubscriptionService;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
-use MundiPagg\MundiPagg\Model\ProductsSubscriptionFactory;
+use Pagarme\Pagarme\Model\ProductsSubscriptionFactory;
 use Magento\Framework\HTTP\ZendClientFactory;
 use Mundipagg\Core\Recurrence\Services\SubscriptionService;
 
@@ -79,7 +79,7 @@ class Delete extends Action
         }
 
         $this->messageManager->addMessage($message);
-        $this->_redirect('mundipagg_mundipagg/subscriptions/index');
+        $this->_redirect('pagarme_pagarme/subscriptions/index');
         return;
     }
 }

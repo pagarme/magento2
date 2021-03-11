@@ -1,13 +1,13 @@
 <?php
 
 
-namespace MundiPagg\MundiPagg\Model;
+namespace Pagarme\Pagarme\Model;
 
 use Magento\Framework\App\ObjectManager;
 use Mundipagg\Core\Payment\Repositories\SavedCardRepository;
-use MundiPagg\MundiPagg\Api\CardsRepositoryInterface;
-use MundiPagg\MundiPagg\Api\Data\CardsSearchResultsInterfaceFactory;
-use MundiPagg\MundiPagg\Api\Data\CardsInterfaceFactory;
+use Pagarme\Pagarme\Api\CardsRepositoryInterface;
+use Pagarme\Pagarme\Api\Data\CardsSearchResultsInterfaceFactory;
+use Pagarme\Pagarme\Api\Data\CardsInterfaceFactory;
 use Magento\Framework\Api\DataObjectHelper;
 use Magento\Framework\Api\SortOrder;
 use Magento\Framework\Exception\CouldNotDeleteException;
@@ -15,8 +15,8 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Reflection\DataObjectProcessor;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
-use MundiPagg\MundiPagg\Model\ResourceModel\Cards as ResourceCards;
-use MundiPagg\MundiPagg\Model\ResourceModel\Cards\CollectionFactory as CardsCollectionFactory;
+use Pagarme\Pagarme\Model\ResourceModel\Cards as ResourceCards;
+use Pagarme\Pagarme\Model\ResourceModel\Cards\CollectionFactory as CardsCollectionFactory;
 use Magento\Store\Model\StoreManagerInterface;
 
 class CardsRepository implements CardsRepositoryInterface
@@ -73,7 +73,7 @@ class CardsRepository implements CardsRepositoryInterface
      * {@inheritdoc}
      */
     public function save(
-        \MundiPagg\MundiPagg\Api\Data\CardsInterface $cards
+        \Pagarme\Pagarme\Api\Data\CardsInterface $cards
     ) {
         try {
             $cards->getResource()->save($cards);
@@ -142,7 +142,7 @@ class CardsRepository implements CardsRepositoryInterface
                 $collection->addFieldToFilter($filter->getField(), [$condition => $filter->getValue()]);
             }
         }
-        
+
         $sortOrders = $criteria->getSortOrders();
         if ($sortOrders) {
             /** @var SortOrder $sortOrder */
@@ -155,7 +155,7 @@ class CardsRepository implements CardsRepositoryInterface
         }
         $collection->setCurPage($criteria->getCurrentPage());
         $collection->setPageSize($criteria->getPageSize());
-        
+
         $searchResults = $this->searchResultsFactory->create();
         $searchResults->setSearchCriteria($criteria);
         $searchResults->setTotalCount($collection->getSize());
@@ -167,7 +167,7 @@ class CardsRepository implements CardsRepositoryInterface
      * {@inheritdoc}
      */
     public function delete(
-        \MundiPagg\MundiPagg\Api\Data\CardsInterface $cards
+        \Pagarme\Pagarme\Api\Data\CardsInterface $cards
     ) {
         try {
             $cards->getResource()->delete($cards);

@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Model\ResourceModel\ProductsSubscription;
+namespace Pagarme\Pagarme\Model\ResourceModel\ProductsSubscription;
 
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 
@@ -16,8 +16,8 @@ class Collection extends AbstractCollection
     protected function _construct()
     {
         $this->_init(
-            'MundiPagg\MundiPagg\Model\ProductsSubscription',
-            'MundiPagg\MundiPagg\Model\ResourceModel\ProductsSubscription'
+            'Pagarme\Pagarme\Model\ProductsSubscription',
+            'Pagarme\Pagarme\Model\ResourceModel\ProductsSubscription'
         );
     }
 }

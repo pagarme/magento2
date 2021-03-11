@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Observer;
+namespace Pagarme\Pagarme\Observer;
 
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Exception\InputException;
@@ -19,7 +19,7 @@ class OrderPlaceBeforeObserver implements ObserverInterface
         $order = $observer->getOrder();
         $payment = $order->getPayment();
 
-        if (strpos($payment->getMethod(), 'mundipagg') === false) {
+        if (strpos($payment->getMethod(), 'pagarme') === false) {
             return;
         }
 

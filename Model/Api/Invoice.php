@@ -1,10 +1,10 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Model\Api;
+namespace Pagarme\Pagarme\Model\Api;
 
 use Magento\Framework\Webapi\Rest\Request;
 use Mundipagg\Core\Recurrence\Services\InvoiceService;
-use MundiPagg\MundiPagg\Api\InvoiceApiInterface;
+use Pagarme\Pagarme\Api\InvoiceApiInterface;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 
 class Invoice implements InvoiceApiInterface

@@ -2,14 +2,14 @@
 /**
  * Class Billet
  *
- * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
- * @copyright   2017 MundiPagg (http://www.mundipagg.com)
- * @license     http://www.mundipagg.com Copyright
+ * @author      Open Source Team
+ * @copyright   2021 Pagar.me (https://pagar.me)
+ * @license     https://pagar.me Copyright
  *
- * @link        http://www.mundipagg.com
+ * @link        https://pagar.me
  */
 
-namespace MundiPagg\MundiPagg\Block\Customer;
+namespace Pagarme\Pagarme\Block\Customer;
 
 
 use Magento\Framework\View\Element\Template;
@@ -17,8 +17,8 @@ use Magento\Framework\View\Element\Template\Context;
 use Mundipagg\Core\Payment\Repositories\CustomerRepository;
 use Mundipagg\Core\Payment\Repositories\SavedCardRepository;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
-use MundiPagg\MundiPagg\Concrete\Magento2SavedCardAdapter;
-use MundiPagg\MundiPagg\Model\CardsRepository;
+use Pagarme\Pagarme\Concrete\Magento2SavedCardAdapter;
+use Pagarme\Pagarme\Model\CardsRepository;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use \Magento\Customer\Model\Session;
 

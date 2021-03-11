@@ -6,52 +6,52 @@
  */
 -->
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
-    <group id="mundipagg_mundipagg_transaction_creditcard_installments_mastercard_discover" translate="label comment" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="20">
+    <group id="pagarme_pagarme_transaction_creditcard_installments_mastercard_discover" translate="label comment" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="20">
 		<depends>
 			<field id="installments_type">0</field>
 		</depends>
 		<label>Installments Discover</label>
 	    <field id="installments_number_discover" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
-			<backend_model>MundiPagg\MundiPagg\Model\Validation\GenericValidation</backend_model>
+			<backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
 	        <label>Number Discover</label>
 	        <comment />
-	        <config_path>payment/mundipagg_creditcard/installments_number_discover</config_path>
+	        <config_path>payment/pagarme_creditcard/installments_number_discover</config_path>
 	    </field>
 	    <field id="installment_min_amount_discover" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
-			<backend_model>MundiPagg\MundiPagg\Model\Validation\GenericValidation</backend_model>
+			<backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
 	        <label>Min Amount Discover</label>
 	        <comment />
-	        <config_path>payment/mundipagg_creditcard/installment_min_amount_discover</config_path>
+	        <config_path>payment/pagarme_creditcard/installment_min_amount_discover</config_path>
 	    </field>
 	    <field id="installments_interest_by_issuer_discover" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="select">
 	        <label>Interest by issuer Discover</label>
 	        <comment />
 	        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-	        <config_path>payment/mundipagg_creditcard/installments_interest_by_issuer_discover</config_path>
+	        <config_path>payment/pagarme_creditcard/installments_interest_by_issuer_discover</config_path>
 	    </field>
 	    <field id="installments_interest_rate_initial_discover" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
 	        <label>Interest Rate Initial (%) Discover</label>
-			<backend_model>MundiPagg\MundiPagg\Model\Validation\GenericValidation</backend_model>
+			<backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
 	        <comment />
-	        <config_path>payment/mundipagg_creditcard/installments_interest_rate_initial_discover</config_path>
+	        <config_path>payment/pagarme_creditcard/installments_interest_rate_initial_discover</config_path>
             <depends>
                 <field id="installments_interest_by_issuer_discover">1</field>
             </depends>
 	    </field>
 	    <field id="installments_interest_rate_incremental_discover" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
 	        <label>Interest Rate Incremental (%) Discover</label>
-			<backend_model>MundiPagg\MundiPagg\Model\Validation\GenericValidation</backend_model>
+			<backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
 	        <comment />
-	        <config_path>payment/mundipagg_creditcard/installments_interest_rate_incremental_discover</config_path>
+	        <config_path>payment/pagarme_creditcard/installments_interest_rate_incremental_discover</config_path>
             <depends>
                 <field id="installments_interest_by_issuer_discover">1</field>
             </depends>
 	    </field>
 	    <field id="installments_max_without_interest_discover" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
 	        <label>Max Without Interest Discover</label>
-			<backend_model>MundiPagg\MundiPagg\Model\Validation\GenericValidation</backend_model>
+			<backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
 	        <comment />
-	        <config_path>payment/mundipagg_creditcard/installments_max_without_interest_discover</config_path>
+	        <config_path>payment/pagarme_creditcard/installments_max_without_interest_discover</config_path>
             <depends>
                 <field id="installments_interest_by_issuer_discover">1</field>
             </depends>

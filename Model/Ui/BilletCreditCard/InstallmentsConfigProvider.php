@@ -2,19 +2,19 @@
 /**
  * Class InstallmentConfigProvider
  *
- * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
- * @copyright   2017 MundiPagg (http://www.mundipagg.com)
- * @license     http://www.mundipagg.com Copyright
+ * @author      Open Source Team
+ * @copyright   2021 Pagar.me (https://pagar.me)
+ * @license     https://pagar.me Copyright
  *
- * @link        http://www.mundipagg.com
+ * @link        https://pagar.me
  */
 
-namespace MundiPagg\MundiPagg\Model\Ui\BilletCreditCard;
+namespace Pagarme\Pagarme\Model\Ui\BilletCreditCard;
 
 
-use MundiPagg\MundiPagg\Model\Ui\Base\GenericInstallmentsConfigProvider;
+use Pagarme\Pagarme\Model\Ui\Base\GenericInstallmentsConfigProvider;
 
 class InstallmentsConfigProvider extends GenericInstallmentsConfigProvider
 {
-    const CODE = 'mundipagg_billet_creditcard';
+    const CODE = 'pagarme_billet_creditcard';
 }

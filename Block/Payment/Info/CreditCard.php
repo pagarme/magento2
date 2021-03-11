@@ -2,14 +2,14 @@
 /**
  * Class Billet
  *
- * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
- * @copyright   2017 MundiPagg (http://www.mundipagg.com)
- * @license     http://www.mundipagg.com Copyright
+ * @author      Open Source Team
+ * @copyright   2021 Pagar.me (https://pagar.me)
+ * @license     https://pagar.me Copyright
  *
- * @link        http://www.mundipagg.com
+ * @link        https://pagar.me
  */
 
-namespace MundiPagg\MundiPagg\Block\Payment\Info;
+namespace Pagarme\Pagarme\Block\Payment\Info;
 
 use Exception;
 use Magento\Framework\Exception\LocalizedException;
@@ -20,11 +20,11 @@ use Mundipagg\Core\Kernel\Exceptions\InvalidParamException;
 use Mundipagg\Core\Kernel\Services\OrderService;
 use Mundipagg\Core\Kernel\ValueObjects\Id\OrderId;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
-use MundiPagg\MundiPagg\Concrete\Magento2PlatformOrderDecorator;
+use Pagarme\Pagarme\Concrete\Magento2PlatformOrderDecorator;
 
 class CreditCard extends Cc
 {
-    const TEMPLATE = 'MundiPagg_MundiPagg::info/creditCard.phtml';
+    const TEMPLATE = 'Pagarme_Pagarme::info/creditCard.phtml';
 
     public function _construct()
     {
@@ -77,15 +77,15 @@ class CreditCard extends Cc
         $platformOrder = new Magento2PlatformOrderDecorator();
         $platformOrder->loadByIncrementId($orderEntityId);
 
-        $orderMundipaggId = $platformOrder->getMundipaggId();
-        if ($orderMundipaggId === null) {
+        $orderPagarmeId = $platformOrder->getPagarmeId();
+        if ($orderPagarmeId === null) {
             return [];
         }
 
         /**
          * @var Order orderObject
          */
-        $orderObject = $orderService->getOrderByMundiPaggId(new OrderId($orderMundipaggId));
+        $orderObject = $orderService->getOrderByMundiPaggId(new OrderId($orderPagarmeId));
 
         return array_merge(
             $orderObject->getCharges()[0]->getAcquirerTidCapturedAndAutorize(),

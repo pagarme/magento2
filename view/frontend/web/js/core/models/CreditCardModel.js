@@ -83,7 +83,7 @@ CreditCardModel.prototype.fillData = function() {
     var formObject = this.formObject;
 
     return {
-        'method': "mundipagg_creditcard",
+        'method': "pagarme_creditcard",
         'additional_data': {
             'cc_type': formObject.creditCardBrand.val(),
             'cc_last_4': this.getLastFourNumbers(),

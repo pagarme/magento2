@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Model;
+namespace Pagarme\Pagarme\Model;
 
 use Magento\Framework\DataObject\IdentityInterface;
 use Magento\Framework\Model\AbstractModel;
@@ -9,7 +9,7 @@ class ProductsSubscription extends AbstractModel implements IdentityInterface
 {
     protected function _construct()
     {
-        $this->_init('MundiPagg\MundiPagg\Model\ResourceModel\ProductsSubscription');
+        $this->_init('Pagarme\Pagarme\Model\ResourceModel\ProductsSubscription');
     }
 
     /**

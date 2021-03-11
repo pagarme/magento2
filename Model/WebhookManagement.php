@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Model;
+namespace Pagarme\Pagarme\Model;
 
 use Magento\Framework\DB\Transaction;
 use Magento\Framework\Phrase;
@@ -16,7 +16,7 @@ use Mundipagg\Core\Kernel\Exceptions\AbstractMundipaggCoreException;
 use Mundipagg\Core\Webhook\Exceptions\WebhookAlreadyHandledException;
 use Mundipagg\Core\Webhook\Exceptions\WebhookHandlerNotFoundException;
 use Mundipagg\Core\Webhook\Services\WebhookReceiverService;
-use MundiPagg\MundiPagg\Api\WebhookManagementInterface;
+use Pagarme\Pagarme\Api\WebhookManagementInterface;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
 
 class WebhookManagement implements WebhookManagementInterface

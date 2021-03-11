@@ -1,63 +1,63 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
-    <event name="payment_method_assign_data_mundipagg_creditcard">
-        <observer name="mundipagg_payment_method_assign_data_mundipagg_creditcard" instance="MundiPagg\MundiPagg\Observer\CreditCardDataAssignObserver" />
+    <event name="payment_method_assign_data_pagarme_creditcard">
+        <observer name="pagarme_payment_method_assign_data_pagarme_creditcard" instance="Pagarme\Pagarme\Observer\CreditCardDataAssignObserver" />
     </event>
-    <event name="payment_method_assign_data_mundipagg_voucher">
-        <observer name="mundipagg_payment_method_assign_data_mundipagg_voucher" instance="MundiPagg\MundiPagg\Observer\VoucherDataAssignObserver" />
+    <event name="payment_method_assign_data_pagarme_voucher">
+        <observer name="pagarme_payment_method_assign_data_pagarme_voucher" instance="Pagarme\Pagarme\Observer\VoucherDataAssignObserver" />
     </event>
-    <event name="payment_method_assign_data_mundipagg_debit">
-        <observer name="mundipagg_payment_method_assign_data_mundipagg_debit" instance="MundiPagg\MundiPagg\Observer\DebitDataAssignObserver" />
+    <event name="payment_method_assign_data_pagarme_debit">
+        <observer name="pagarme_payment_method_assign_data_pagarme_debit" instance="Pagarme\Pagarme\Observer\DebitDataAssignObserver" />
     </event>
-    <event name="payment_method_assign_data_mundipagg_billet_creditcard">
-        <observer name="mundipagg_payment_method_assign_data_mundipagg_billet_creditcard" instance="MundiPagg\MundiPagg\Observer\BilletCreditCardDataAssignObserver" />
+    <event name="payment_method_assign_data_pagarme_billet_creditcard">
+        <observer name="pagarme_payment_method_assign_data_pagarme_billet_creditcard" instance="Pagarme\Pagarme\Observer\BilletCreditCardDataAssignObserver" />
     </event>
-    <event name="payment_method_assign_data_mundipagg_billet">
-        <observer name="mundipagg_payment_method_assign_data_mundipagg_billet" instance="MundiPagg\MundiPagg\Observer\BilletDataAssignObserver" />
+    <event name="payment_method_assign_data_pagarme_billet">
+        <observer name="pagarme_payment_method_assign_data_pagarme_billet" instance="Pagarme\Pagarme\Observer\BilletDataAssignObserver" />
     </event>
-    <event name="payment_method_assign_data_mundipagg_pix">
-        <observer name="mundipagg_payment_method_assign_data_mundipagg_pix" instance="MundiPagg\MundiPagg\Observer\PixDataAssignObserver" />
+    <event name="payment_method_assign_data_pagarme_pix">
+        <observer name="pagarme_payment_method_assign_data_pagarme_pix" instance="Pagarme\Pagarme\Observer\PixDataAssignObserver" />
     </event>
     <event name="sales_order_place_before">
-        <observer name="mundipagg_payment_sales_order_place_before_mundipagg_creditcard" instance="MundiPagg\MundiPagg\Observer\CreditCardOrderPlaceBeforeObserver" />
-        <observer name="mundipagg_payment_sales_order_place_before" instance="MundiPagg\MundiPagg\Observer\OrderPlaceBeforeObserver" />
+        <observer name="pagarme_payment_sales_order_place_before_pagarme_creditcard" instance="Pagarme\Pagarme\Observer\CreditCardOrderPlaceBeforeObserver" />
+        <observer name="pagarme_payment_sales_order_place_before" instance="Pagarme\Pagarme\Observer\OrderPlaceBeforeObserver" />
     </event>
-    <event name="payment_method_assign_data_mundipagg_two_creditcard">
-        <observer name="mundipagg_payment_method_assign_data_mundipagg_two_creditcard" instance="MundiPagg\MundiPagg\Observer\TwoCreditCardDataAssignObserver" />
+    <event name="payment_method_assign_data_pagarme_two_creditcard">
+        <observer name="pagarme_payment_method_assign_data_pagarme_two_creditcard" instance="Pagarme\Pagarme\Observer\TwoCreditCardDataAssignObserver" />
     </event>
     <event name="sales_order_place_after">
-        <observer name="mundipagg_payment_method_mundipagg_credit_card_after_place_order" instance="MundiPagg\MundiPagg\Observer\SalesOrderPlaceAfter" />
+        <observer name="pagarme_payment_method_pagarme_credit_card_after_place_order" instance="Pagarme\Pagarme\Observer\SalesOrderPlaceAfter" />
     </event>
     <event name="admin_system_config_changed_section_payment">
-        <observer name="Mundipagg_DataValidateAdmin" instance="MundiPagg\MundiPagg\Observer\DataValidateAdmin" />
+        <observer name="Pagarme_DataValidateAdmin" instance="Pagarme\Pagarme\Observer\DataValidateAdmin" />
     </event>
     <event name="adminhtml_customer_prepare_save">
-        <observer name="mundipagg_payment_adminhtml_customer_prepare_save" instance="MundiPagg\MundiPagg\Observer\AdminCustomerBeforeSave" />
+        <observer name="pagarme_payment_adminhtml_customer_prepare_save" instance="Pagarme\Pagarme\Observer\AdminCustomerBeforeSave" />
     </event>
     <event name="customer_address_save_before">
-        <observer name="mundipagg_customer_address_before_save_viv_observer" instance="\MundiPagg\MundiPagg\Observer\CustomerAddressSaveBefore" />
+        <observer name="pagarme_customer_address_before_save_viv_observer" instance="\Pagarme\Pagarme\Observer\CustomerAddressSaveBefore" />
     </event>
     <event name="payment_method_is_active">
-        <observer name="custom_payment" instance="MundiPagg\MundiPagg\Observer\PaymentMethodAvailable" />
+        <observer name="custom_payment" instance="Pagarme\Pagarme\Observer\PaymentMethodAvailable" />
     </event>
 
     <event name="order_cancel_after">
-        <observer name="cancel_order_at_mundipagg"
-                  instance="MundiPagg\MundiPagg\Observer\OrderCancelAfter" />
+        <observer name="cancel_order_at_pagarme"
+                  instance="Pagarme\Pagarme\Observer\OrderCancelAfter" />
     </event>
 
     <event name="sales_order_payment_refund">
-        <observer name="cancel_order_at_mundipagg_via_payment_refund"
-                  instance="MundiPagg\MundiPagg\Observer\OrderCancelAfter" />
+        <observer name="cancel_order_at_pagarme_via_payment_refund"
+                  instance="Pagarme\Pagarme\Observer\OrderCancelAfter" />
     </event>
 
     <event name="checkout_cart_product_add_after">
         <observer name="add_cart_product"
-                  instance="MundiPagg\MundiPagg\Observer\CartAddProductAfterObserver" />
+                  instance="Pagarme\Pagarme\Observer\CartAddProductAfterObserver" />
     </event>
 
     <event name="controller_action_catalog_product_save_entity_after">
         <observer name="update_product_plan"
-                  instance="MundiPagg\MundiPagg\Observer\UpdateProductPlanObserver" />
+                  instance="Pagarme\Pagarme\Observer\UpdateProductPlanObserver" />
     </event>
 </config>

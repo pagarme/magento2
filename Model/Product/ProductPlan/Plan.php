@@ -1,5 +1,5 @@
 <?php
-namespace MundiPagg\MundiPagg\Model\Product\ProductPlan;
+namespace Pagarme\Pagarme\Model\Product\ProductPlan;
 
 use Magento\Catalog\Api\ProductRepositoryInterface;
 

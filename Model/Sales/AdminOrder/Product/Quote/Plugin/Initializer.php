@@ -1,8 +1,8 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Model\Sales\AdminOrder\Product\Quote\Plugin;
+namespace Pagarme\Pagarme\Model\Sales\AdminOrder\Product\Quote\Plugin;
 
-use \MundiPagg\MundiPagg\Model\Product\ProductPlan\Plan;
+use \Pagarme\Pagarme\Model\Product\ProductPlan\Plan;
 
 class Initializer
 {

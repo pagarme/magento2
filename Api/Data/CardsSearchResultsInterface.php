@@ -1,7 +1,7 @@
 <?php
 
 
-namespace MundiPagg\MundiPagg\Api\Data;
+namespace Pagarme\Pagarme\Api\Data;
 
 interface CardsSearchResultsInterface extends \Magento\Framework\Api\SearchResultsInterface
 {
@@ -9,13 +9,13 @@ interface CardsSearchResultsInterface extends \Magento\Framework\Api\SearchResul
 
     /**
      * Get Cards list.
-     * @return \MundiPagg\MundiPagg\Api\Data\CardsInterface[]
+     * @return \Pagarme\Pagarme\Api\Data\CardsInterface[]
      */
     public function getItems();
 
     /**
      * Set content list.
-     * @param \MundiPagg\MundiPagg\Api\Data\CardsInterface[] $items
+     * @param \Pagarme\Pagarme\Api\Data\CardsInterface[] $items
      * @return $this
      */
     public function setItems(array $items);

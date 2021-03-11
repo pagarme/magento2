@@ -1,9 +1,9 @@
 /**
- * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
- * @copyright   2017 MundiPagg (http://www.mundipagg.com)
- * @license     http://www.mundipagg.com  Copyright
+ * @author      Open Source Team
+ * @copyright   2021 Pagar.me (https://pagar.me)
+ * @license     https://pagar.me Copyright
  *
- * @link        http://www.mundipagg.com
+ * @link        https://pagar.me
  */
 /*browser:true*/
 /*global define*/
@@ -12,7 +12,7 @@ define(
         "Magento_Checkout/js/view/payment/default",
         "ko",
         "jquery",
-        'MundiPagg_MundiPagg/js/action/installmentsByBrand',
+        'Pagarme_Pagarme/js/action/installmentsByBrand',
         "Magento_Checkout/js/model/quote",
         "Magento_Catalog/js/price-utils",
         "Magento_Checkout/js/model/totals",
@@ -24,18 +24,18 @@ define(
         "mage/translate",
         "Magento_Ui/js/model/messageList",
         'Magento_Checkout/js/model/url-builder',
-        "MundiPagg_MundiPagg/js/core/checkout/PaymentModuleBootstrap",
-        "MundiPagg_MundiPagg/js/core/checkout/PaymentMethodController",
-        "MundiPagg_MundiPagg/js/core/checkout/PlatformPlaceOrder",
-        "MundiPagg_MundiPagg/js/core/checkout/Bin",
-        "MundiPagg_MundiPagg/js/core/checkout/PlatformFormBiding",
-        "MundiPagg_MundiPagg/js/core/checkout/PlatformFormHandler",
-        "MundiPagg_MundiPagg/js/core/checkout/CreditCardToken",
-        "MundiPagg_MundiPagg/js/core/checkout/Installments",
-        "MundiPagg_MundiPagg/js/core/validators/CreditCardValidator",
-        "MundiPagg_MundiPagg/js/core/validators/CustomerValidator",
-        "MundiPagg_MundiPagg/js/core/validators/MultibuyerValidator",
-        "MundiPagg_MundiPagg/js/core/validators/VoucherCardValidator",
+        "Pagarme_Pagarme/js/core/checkout/PaymentModuleBootstrap",
+        "Pagarme_Pagarme/js/core/checkout/PaymentMethodController",
+        "Pagarme_Pagarme/js/core/checkout/PlatformPlaceOrder",
+        "Pagarme_Pagarme/js/core/checkout/Bin",
+        "Pagarme_Pagarme/js/core/checkout/PlatformFormBiding",
+        "Pagarme_Pagarme/js/core/checkout/PlatformFormHandler",
+        "Pagarme_Pagarme/js/core/checkout/CreditCardToken",
+        "Pagarme_Pagarme/js/core/checkout/Installments",
+        "Pagarme_Pagarme/js/core/validators/CreditCardValidator",
+        "Pagarme_Pagarme/js/core/validators/CustomerValidator",
+        "Pagarme_Pagarme/js/core/validators/MultibuyerValidator",
+        "Pagarme_Pagarme/js/core/validators/VoucherCardValidator",
     ],
     function(
         Component,

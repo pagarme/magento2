@@ -1,5 +1,5 @@
 <?php
-namespace MundiPagg\MundiPagg\Controller\Customer;
+namespace Pagarme\Pagarme\Controller\Customer;
 
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
@@ -13,9 +13,9 @@ use Mundipagg\Core\Kernel\Services\LogService;
 use Mundipagg\Core\Payment\Repositories\CustomerRepository;
 use Mundipagg\Core\Payment\Repositories\SavedCardRepository;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
-use MundiPagg\MundiPagg\Concrete\Magento2SavedCardAdapter;
-use MundiPagg\MundiPagg\Model\CardsRepository;
-use MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\Config;
+use Pagarme\Pagarme\Concrete\Magento2SavedCardAdapter;
+use Pagarme\Pagarme\Model\CardsRepository;
+use Pagarme\Pagarme\Gateway\Transaction\Base\Config\Config;
 
 class Remove extends Action
 {
@@ -54,7 +54,7 @@ class Remove extends Action
     public function execute()
     {
         if (!$this->customerSession->isLoggedIn()) {
-            $this->_redirect('customer/account/login'); 
+            $this->_redirect('customer/account/login');
 
             return;
         }
@@ -121,7 +121,7 @@ class Remove extends Action
             }
         }
 
-        $this->_redirect('mundipagg/customer/cards'); 
+        $this->_redirect('pagarme/customer/cards');
 
         return;
     }

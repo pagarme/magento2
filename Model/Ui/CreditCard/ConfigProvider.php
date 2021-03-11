@@ -2,14 +2,14 @@
 /**
  * Class ConfigProvider
  *
- * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
- * @copyright   2017 MundiPagg (http://www.mundipagg.com)
- * @license     http://www.mundipagg.com Copyright
+ * @author      Open Source Team
+ * @copyright   2021 Pagar.me (https://pagar.me)
+ * @license     https://pagar.me Copyright
  *
- * @link        http://www.mundipagg.com
+ * @link        https://pagar.me
  */
 
-namespace MundiPagg\MundiPagg\Model\Ui\CreditCard;
+namespace Pagarme\Pagarme\Model\Ui\CreditCard;
 
 
 use Magento\Checkout\Model\ConfigProviderInterface;
@@ -17,12 +17,12 @@ use Magento\Customer\Model\Session;
 use Mundipagg\Core\Payment\Repositories\CustomerRepository;
 use Mundipagg\Core\Payment\Repositories\SavedCardRepository;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
-use MundiPagg\MundiPagg\Model\CardsFactory;
-use MundiPagg\MundiPagg\Gateway\Transaction\CreditCard\Config\ConfigInterface;
+use Pagarme\Pagarme\Model\CardsFactory;
+use Pagarme\Pagarme\Gateway\Transaction\CreditCard\Config\ConfigInterface;
 
 final class ConfigProvider implements ConfigProviderInterface
 {
-    const CODE = 'mundipagg_creditcard';
+    const CODE = 'pagarme_creditcard';
 
     protected $creditCardConfig;
 
@@ -50,9 +50,9 @@ final class ConfigProvider implements ConfigProviderInterface
         $selectedCard = '';
         $is_saved_card = 0;
         $cards = [];
-        
+
         if ($this->getCustomerSession()->isLoggedIn()) {
-            
+
             $idCustomer = $this->getCustomerSession()->getCustomer()->getId();
 
             $model = $this->getCardsFactory();

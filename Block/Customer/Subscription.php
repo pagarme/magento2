@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Block\Customer;
+namespace Pagarme\Pagarme\Block\Customer;
 
 use Magento\Customer\Model\Session;
 use Magento\Framework\App\ObjectManager;
@@ -12,7 +12,7 @@ use Mundipagg\Core\Recurrence\Aggregates\Repetition;
 use Mundipagg\Core\Recurrence\Repositories\SubscriptionRepository;
 use Mundipagg\Core\Recurrence\Services\RepetitionService;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
-use MundiPagg\MundiPagg\Helper\RecurrenceProductHelper;
+use Pagarme\Pagarme\Helper\RecurrenceProductHelper;
 
 class Subscription extends Template
 {

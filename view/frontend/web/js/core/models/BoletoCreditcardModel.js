@@ -108,7 +108,7 @@ BoletoCreditcardModel.prototype.getData = function () {
     }
 
     var data = {
-        'method': "mundipagg_billet_creditcard",
+        'method': "pagarme_billet_creditcard",
         'additional_data': {
             //boleto
             'cc_billet_amount': this.formObject[0].inputAmount.val(),

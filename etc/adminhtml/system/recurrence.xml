@@ -1,50 +1,50 @@
 <?xml version="1.0"?>
 
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
-	<group id="mundipagg_mundipagg_recurrence" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="40" translate="label">
+	<group id="pagarme_pagarme_recurrence" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="40" translate="label">
 		<label>Recurrence Settings (Beta)</label>
 		<field id="active" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="select">
 			<label>Enable this Solution</label>
 			<comment />
 			<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-			<config_path>mundipagg_mundipagg/recurrence/active</config_path>
+			<config_path>pagarme_pagarme/recurrence/active</config_path>
 		</field>
 		<field id="show_recurrence_currency_widget" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="21" translate="label" type="select">
 			<label>Show Recurrence Currency Widget</label>
 			<comment />
 			<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-			<config_path>mundipagg_mundipagg/recurrence/show_recurrence_currency_widget</config_path>
+			<config_path>pagarme_pagarme/recurrence/show_recurrence_currency_widget</config_path>
 		</field>
 
 		<field id="purchase_recurrence_product_with_normal_product" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="22" translate="label" type="select">
 			<label>Purchase of recurrence product with simple product</label>
 			<comment>Allow to purchase recurrence products with simple products on the same shopping cart</comment>
 			<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-			<config_path>mundipagg_mundipagg/recurrence/purchase_recurrence_product_with_normal_product</config_path>
+			<config_path>pagarme_pagarme/recurrence/purchase_recurrence_product_with_normal_product</config_path>
 		</field>
 		<field id="conflict_recurrence_product_with_normal_product" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="23" translate="label" type="textarea">
 			<label>Conflict checkout Message</label>
 			<comment />
-			<config_path>mundipagg_mundipagg/recurrence/conflict_recurrence_product_with_normal_product</config_path>
+			<config_path>pagarme_pagarme/recurrence/conflict_recurrence_product_with_normal_product</config_path>
 		</field>
 
 		<field id="purchase_recurrence_product_with_recurrence_product" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="24" translate="label" type="select">
 			<label>Purchase of recurrence product with recurrence product</label>
 			<comment>Allow to purchase more than one recurrence product on the same shopping cart</comment>
 			<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-			<config_path>mundipagg_mundipagg/recurrence/purchase_recurrence_product_with_recurrence_product</config_path>
+			<config_path>pagarme_pagarme/recurrence/purchase_recurrence_product_with_recurrence_product</config_path>
 		</field>
 		<field id="conflict_recurrence_product_with_recurrence_product" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="25" translate="label" type="textarea">
 			<label>Conflict checkout Message</label>
 			<comment />
-			<config_path>mundipagg_mundipagg/recurrence/conflict_recurrence_product_with_recurrence_product</config_path>
+			<config_path>pagarme_pagarme/recurrence/conflict_recurrence_product_with_recurrence_product</config_path>
 		</field>
 
 		<field id="decrease_stock" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="26" translate="label" type="select">
 			<label>Enable to decrease product stock with each cycle</label>
 			<comment>With this option enabled, the module will decrease product stock with each recurrence cycle</comment>
 			<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-			<config_path>mundipagg_mundipagg/recurrence/decrease_stock</config_path>
+			<config_path>pagarme_pagarme/recurrence/decrease_stock</config_path>
 		</field>
 	</group>
 </include>

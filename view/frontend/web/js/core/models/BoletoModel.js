@@ -29,7 +29,7 @@ BoletoModel.prototype.addErrors = function (error) {
 BoletoModel.prototype.getData = function () {
 
     data = {
-        'method': "mundipagg_billet",
+        'method': "pagarme_billet",
         'additional_data': {}
     };
 

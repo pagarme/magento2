@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Helper;
+namespace Pagarme\Pagarme\Helper;
 
 use Magento\Catalog\Model\Product;
 use Magento\Framework\App\ObjectManager;

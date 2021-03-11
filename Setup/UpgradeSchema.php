@@ -1,5 +1,5 @@
 <?php
-namespace MundiPagg\MundiPagg\Setup;
+namespace Pagarme\Pagarme\Setup;
 
 use Magento\Framework\Setup\UpgradeSchemaInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
@@ -72,7 +72,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
         }
 
         if (version_compare($version, "2.0.1-beta", "<")) {
-            $setup = $this->addMundipaggIdToSubProductsTable($setup);
+            $setup = $this->addPagarmeIdToSubProductsTable($setup);
         }
 
         if (version_compare($version, "2.0.2-beta", "<")) {
@@ -90,9 +90,9 @@ class UpgradeSchema implements UpgradeSchemaInterface
     {
         $installer = $setup;
         $installer->startSetup();
- 
+
         // Get tutorial_simplenews table
-        $tableName = $installer->getTable('mundipagg_mundipagg_cards');
+        $tableName = $installer->getTable('pagarme_pagarme_cards');
         // Check if the table already exists
         if ($installer->getConnection()->isTableExists($tableName) != true) {
             // Create tutorial_simplenews table
@@ -152,12 +152,12 @@ class UpgradeSchema implements UpgradeSchemaInterface
                     ['nullable' => false],
                     'Updated At'
                 )
-                ->setComment('Mundipagg Card Tokens')
+                ->setComment('Pagar.me Card Tokens')
                 ->setOption('type', 'InnoDB')
                 ->setOption('charset', 'utf8');
             $installer->getConnection()->createTable($table);
         }
- 
+
         $installer->endSetup();
 
         return $setup;
@@ -171,7 +171,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
         $connection = $installer->getConnection();
 
         $connection->addColumn(
-            $installer->getTable('mundipagg_mundipagg_cards'),
+            $installer->getTable('pagarme_pagarme_cards'),
             'brand',
             [
                 'type' => Table::TYPE_TEXT,
@@ -367,7 +367,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
         return $setup;
     }
 
-    protected function addMundipaggIdToSubProductsTable($setup)
+    protected function addPagarmeIdToSubProductsTable($setup)
     {
         $installer = $setup;
 

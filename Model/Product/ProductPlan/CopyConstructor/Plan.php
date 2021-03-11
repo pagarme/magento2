@@ -3,7 +3,7 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-namespace MundiPagg\MundiPagg\Model\Product\ProductPlan\CopyContructor;
+namespace Pagarme\Pagarme\Model\Product\ProductPlan\CopyContructor;
 
 class Plan implements \Magento\Catalog\Model\Product\CopyConstructorInterface
 {
@@ -36,7 +36,7 @@ class Plan implements \Magento\Catalog\Model\Product\CopyConstructorInterface
      */
     public function build(\Magento\Catalog\Model\Product $product, \Magento\Catalog\Model\Product $duplicate)
     {
-        if ($product->getTypeId() !== \MundiPagg\MundiPagg\Model\Product\ProductPlan\Plan::TYPE_CODE) {
+        if ($product->getTypeId() !== \Pagarme\Pagarme\Model\Product\ProductPlan\Plan::TYPE_CODE) {
             //do nothing if not grouped product
             return;
         }

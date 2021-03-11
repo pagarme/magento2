@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Ui\Component\Recurrence\Column;
+namespace Pagarme\Pagarme\Ui\Component\Recurrence\Column;
 
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\View\Element\UiComponent\ContextInterface;
@@ -13,7 +13,7 @@ use Mundipagg\Core\Recurrence\Services\ProductSubscriptionService;
 use Mundipagg\Core\Recurrence\Services\RepetitionService;
 use Mundipagg\Core\Recurrence\ValueObjects\DiscountValueObject;
 use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
-use MundiPagg\MundiPagg\Helper\ProductSubscriptionHelper;
+use Pagarme\Pagarme\Helper\ProductSubscriptionHelper;
 
 class RepetitionsColumn extends Column
 {

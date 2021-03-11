@@ -17,18 +17,25 @@ use Mundipagg\Core\Kernel\Factories\ConfigurationFactory;
 use Mundipagg\Core\Kernel\Services\MoneyService;
 use Mundipagg\Core\Kernel\ValueObjects\CardBrand;
 use Mundipagg\Core\Kernel\ValueObjects\Configuration\CardConfig;
-use MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\Config;
-use MundiPagg\MundiPagg\Gateway\Transaction\CreditCard\Config\ConfigInterface;
-use MundiPagg\MundiPagg\Model\Installments\Config\ConfigInterface as InstallmentConfigInterface;
-use MundiPagg\MundiPagg\Helper\ModuleHelper;
-use MundiPagg\MundiPagg\Model\Enum\CreditCardBrandEnum;
+use Pagarme\Pagarme\Gateway\Transaction\Base\Config\Config;
+use Pagarme\Pagarme\Gateway\Transaction\CreditCard\Config\ConfigInterface;
+use Pagarme\Pagarme\Model\Installments\Config\ConfigInterface as InstallmentConfigInterface;
+use Pagarme\Pagarme\Helper\ModuleHelper;
+use Pagarme\Pagarme\Model\Enum\CreditCardBrandEnum;
+use Pagarme\Pagarme\Concrete\Magento2DatabaseDecorator;
+use Pagarme\Pagarme\Concrete\Magento2PlatformOrderDecorator;
+use Pagarme\Pagarme\Concrete\Magento2PlatformInvoiceDecorator;
+use Pagarme\Pagarme\Concrete\Magento2PlatformCreditmemoDecorator;
+use Pagarme\Pagarme\Concrete\Magento2DataService;
+use Pagarme\Pagarme\Concrete\Magento2PlatformPaymentMethodDecorator;
+use Pagarme\Pagarme\Concrete\Magento2PlatformProductDecorator;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Store\Model\Website\Interceptor;
 use stdClass;
 
 final class Magento2CoreSetup extends AbstractModuleCoreSetup
 {
-    const MODULE_NAME = 'MundiPagg_MundiPagg';
+    const MODULE_NAME = 'Pagarme_Pagarme';
 
     protected function setModuleVersion()
     {
@@ -136,7 +143,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         }
 
         self::fillWithGeneralConfig($configData, $storeConfig);
-        self::fillWithMundipaggKeys($configData, $storeConfig);
+        self::fillWithPagarmeKeys($configData, $storeConfig);
         self::fillWithCardConfig($configData, $storeConfig);
         self::fillWithBoletoConfig($configData, $storeConfig);
         self::fillWithPixConfig($configData, $storeConfig);
@@ -194,7 +201,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
             'saveCards' => 'enabled_saved_cards'
         ];
 
-        $section = 'payment/mundipagg_voucher/';
+        $section = 'payment/pagarme_voucher/';
 
         $voucherObject = new \stdClass();
 
@@ -219,7 +226,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
             'saveCards' => 'enabled_saved_cards'
         ];
 
-        $section = 'payment/mundipagg_debit/';
+        $section = 'payment/pagarme_debit/';
 
         $debitObject = new \stdClass();
 
@@ -242,7 +249,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
             'saveCards' => 'enabled_saved_cards',
             'installmentsDefaultConfig' => 'installments_type'
         ];
-        $section = 'payment/mundipagg_creditcard/';
+        $section = 'payment/pagarme_creditcard/';
 
         $dataObj = self::fillDataObj($storeConfig, $options, $dataObj, $section);
 
@@ -273,7 +280,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
             'title' => 'title'
         ];
 
-        $section = 'payment/mundipagg_pix/';
+        $section = 'payment/pagarme_pix/';
 
         $pixObject = new \stdClass();
 
@@ -289,32 +296,32 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
             'boletoDueDays' => 'expiration_days',
             'boletoBankCode' => 'types'
         ];
-        $section = 'payment/mundipagg_billet/';
+        $section = 'payment/pagarme_billet/';
         $dataObj = self::fillDataObj($storeConfig, $options, $dataObj, $section);
     }
 
     static private function fillWithBoletoCreditCardConfig(&$dataObj, $storeConfig)
     {
         $options = ['boletoCreditCardEnabled' => 'active'];
-        $section = 'payment/mundipagg_billet_creditcard/';
+        $section = 'payment/pagarme_billet_creditcard/';
         $dataObj = self::fillDataObj($storeConfig, $options, $dataObj, $section);
     }
 
     static private function fillWithTwoCreditCardsConfig(&$dataObj, $storeConfig)
     {
         $options = ['twoCreditCardsEnabled' => 'active'];
-        $section = 'payment/mundipagg_two_creditcard/';
+        $section = 'payment/pagarme_two_creditcard/';
         $dataObj = self::fillDataObj($storeConfig, $options, $dataObj, $section);
     }
 
     static private function fillWithMultiBuyerConfig(&$dataObj, $storeConfig)
     {
         $options = ['multibuyer' => 'active'];
-        $section = 'payment/mundipagg_multibuyer/';
+        $section = 'payment/pagarme_multibuyer/';
         $dataObj = self::fillDataObj($storeConfig, $options, $dataObj, $section);
     }
 
-    static private function fillWithMundipaggKeys(&$dataObj, $storeConfig)
+    static private function fillWithPagarmeKeys(&$dataObj, $storeConfig)
     {
         $options = [
             Configuration::KEY_SECRET => 'secret_key',
@@ -326,7 +333,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
             $options[Configuration::KEY_PUBLIC] .= '_test';
         }
 
-        $section = 'mundipagg_mundipagg/global/';
+        $section = 'pagarme_pagarme/global/';
 
         $keys = new \stdClass;
 
@@ -348,7 +355,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
             'createOrder' => 'create_order'
         ];
 
-        $section = 'mundipagg_mundipagg/global/';
+        $section = 'pagarme_pagarme/global/';
 
         $dataObj = self::fillDataObj($storeConfig, $options, $dataObj, $section);
     }
@@ -361,7 +368,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
             'neighborhood' => 'district_attribute',
             'complement' => 'complement_attribute',
         ];
-        $section = 'payment/mundipagg_customer_address/';
+        $section = 'payment/pagarme_customer_address/';
 
         $addressAttributes = new \stdClass();
         $dataObj->addressAttributes =
@@ -561,7 +568,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
             => 'decrease_stock',
         ];
 
-        $section = 'mundipagg_mundipagg/recurrence/';
+        $section = 'pagarme_pagarme/recurrence/';
 
         $recurrenceConfig = new \stdClass();
         $dataObj->recurrenceConfig = self::fillDataObj(

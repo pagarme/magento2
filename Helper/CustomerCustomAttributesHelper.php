@@ -6,7 +6,7 @@
  * Time: 15:49
  */
 
-namespace MundiPagg\MundiPagg\Helper;
+namespace Pagarme\Pagarme\Helper;
 
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Model\CustomerFactory;
@@ -37,15 +37,15 @@ class CustomerCustomAttributesHelper
         $this->customerModel = $customerModel;
     }
 
-    public function setCustomerCustomAttribute($magentoCustomer, $mundipaggResponse, $customerIsGuest)
+    public function setCustomerCustomAttribute($magentoCustomer, $pagarmeResponse, $customerIsGuest)
     {
 
-        if(isset($mundipaggResponse->customer) && !empty($mundipaggResponse->customer && !$customerIsGuest)){
+        if(isset($pagarmeResponse->customer) && !empty($pagarmeResponse->customer && !$customerIsGuest)){
 
             $this->customerModel->setWebsiteId($this->storeManager->getStore()->getWebsiteId());
             $customer = $this->customerModel->loadByEmail($magentoCustomer->getEmail());
             $customerDataModel = $customer->getDataModel();
-            $customerDataModel->setCustomAttribute('customer_id_mundipagg', $mundipaggResponse->customer->id);
+            $customerDataModel->setCustomAttribute('customer_id_pagarme', $pagarmeResponse->customer->id);
 
             try{
                 $this->customerRepository->save($customerDataModel);

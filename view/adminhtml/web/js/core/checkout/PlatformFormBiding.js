@@ -2,7 +2,7 @@ define([
     "jquery",
     "uiComponent",
     "Magento_Ui/js/modal/alert",
-    "MundiPagg_MundiPagg/js/core/checkout/PlatformFormBiding",
+    "Pagarme_Pagarme/js/core/checkout/PlatformFormBiding",
 ], function ($, Class, alert, PlatformFormBiding) {
 
     var FormObject = {};
@@ -11,7 +11,7 @@ define([
 
         var creditCardForm = {};
 
-        var containerSelector = "#payment_form_mundipagg_creditcard";
+        var containerSelector = "#payment_form_pagarme_creditcard";
 
         if (typeof jQuery(containerSelector).html() === "undefined") {
             this.creditCardForm = null;

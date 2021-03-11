@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Ui\Component\Column;
+namespace Pagarme\Pagarme\Ui\Component\Column;
 
 use Magento\Cms\Block\Adminhtml\Page\Grid\Renderer\Action\UrlBuilder;
 use Magento\Ui\Component\Listing\Columns\Column;
@@ -11,8 +11,8 @@ use Magento\Framework\UrlInterface;
 class Actions extends Column
 {
     /** Url path */
-    const URL_PATH_EDIT = 'mundipagg_mundipagg/*/create';
-    const URL_PATH_DELETE = 'mundipagg_mundipagg/*/delete';
+    const URL_PATH_EDIT = 'pagarme_pagarme/*/create';
+    const URL_PATH_DELETE = 'pagarme_pagarme/*/delete';
     /** @var UrlBuilder */
     protected $actionUrlBuilder;
     /** @var UrlInterface */
@@ -61,12 +61,12 @@ class Actions extends Column
     protected function getActions($name, $type, $item)
     {
         $actions[$name]['edit'] = [
-            'href' => $this->getUrlMundipagg($type, $item, self::URL_PATH_EDIT),
+            'href' => $this->getUrlPagarme($type, $item, self::URL_PATH_EDIT),
             'label' => __('Edit')
         ];
 
         $actions[$name]['delete'] = [
-            'href' => $this->getUrlMundipagg($type, $item, self::URL_PATH_DELETE),
+            'href' => $this->getUrlPagarme($type, $item, self::URL_PATH_DELETE),
             'label' => __('Delete'),
             'confirm' => [
                 'title' => __('Confirm action'),
@@ -77,7 +77,7 @@ class Actions extends Column
         return $actions;
     }
 
-    protected function getUrlMundipagg($type, $item, $path)
+    protected function getUrlPagarme($type, $item, $path)
     {
         $path = str_replace("*", $type, $path);
 
