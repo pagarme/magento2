@@ -159,8 +159,8 @@ jobs:
        - run:
            name: Send deployment webhook to Rancher
            command: |
-               BODY='{"push_data":{"tag":"'"${CIRCLE_BRANCH}"'"},"repository":{"repo_name":"'"${DOCKER_ACCOUNT}/${PROJECT_NAME}"'"}}'
-             curl -X POST ${RANCHER_STG_DEPLOY_URL} -H 'Content-Type: application/json' -d "${BODY}"
+            BODY='{"push_data":{"tag":"'"${CIRCLE_BRANCH}"'"},"repository":{"repo_name":"'"${DOCKER_ACCOUNT}/${PROJECT_NAME}"'"}}'
+            curl -X POST ${RANCHER_STG_DEPLOY_URL} -H 'Content-Type: application/json' -d "${BODY}"
 workflows:
   version: 2
   build_publish_deploy:
