@@ -43,7 +43,6 @@ jobs:
              cp .circleci/data/Dockerfile .
              cp .circleci/data/wait-for-mysql.sh .
              cp .circleci/data/magento2_module_install.sql .
-             cp .circleci/data/composer.json .
       - run:
           name: Build image base for modifications
           command: |
