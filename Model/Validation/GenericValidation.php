@@ -70,7 +70,7 @@ class GenericValidation extends \Magento\Framework\App\Config\Value
         ) {
             $i18n = new LocalizationService();
             $comment = $i18n->getDashboard(
-                "Mundipagg module should be configured on Websites scope, please change to website scope to apply these changes"
+                "Pagar.me module should be configured on Websites scope, please change to website scope to apply these changes"
             );
 
             throw new Exception($comment);
