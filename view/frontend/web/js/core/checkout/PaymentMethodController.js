@@ -625,8 +625,6 @@ PaymentMethodController.prototype.fillInstallments = function (form) {
         amount = 0;
     }
 
-    form.creditCardInstallments.prop('disabled', true);
-
     var installmentsUrl =
         this.platformConfig.urls.installments + '/' +
         selectedBrand + '/' +
@@ -639,6 +637,9 @@ PaymentMethodController.prototype.fillInstallments = function (form) {
     }).done(function(data) {
         formHandler = new FormHandler();
 
+        if (!data.length) return;
+
+        form.creditCardInstallments.prop('disabled', true);
         formHandler.updateInstallmentSelect(data, form.creditCardInstallments, installmentSelected);
         form.creditCardInstallments.prop('disabled', false);
 
