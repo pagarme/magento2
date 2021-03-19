@@ -14,9 +14,9 @@ namespace Pagarme\Pagarme\Model\Ui\CreditCard;
 
 use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Customer\Model\Session;
-use Mundipagg\Core\Payment\Repositories\CustomerRepository;
-use Mundipagg\Core\Payment\Repositories\SavedCardRepository;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use Pagarme\Core\Payment\Repositories\CustomerRepository;
+use Pagarme\Core\Payment\Repositories\SavedCardRepository;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Pagarme\Pagarme\Model\CardsFactory;
 use Pagarme\Pagarme\Gateway\Transaction\CreditCard\Config\ConfigInterface;
 
@@ -76,7 +76,7 @@ final class ConfigProvider implements ConfigProviderInterface
             $customer = $customerRepository->findByCode($idCustomer);
             if ($customer !== null) {
                 $coreCards =
-                    $savedCardRepository->findByOwnerId($customer->getMundipaggId());
+                    $savedCardRepository->findByOwnerId($customer->getPagarmeId());
 
                 foreach ($coreCards as $coreCard) {
                     $is_saved_card = 1;

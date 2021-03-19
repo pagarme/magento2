@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Concrete;
+namespace Pagarme\Pagarme\Concrete;
 
 use Magento\Framework\App\Config as Magento2StoreConfig;
 use Magento\Config\Model\Config as Magento2ModelConfig;
@@ -11,12 +11,12 @@ use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\ProductMetadataInterface;
 use Magento\Framework\Filesystem\DirectoryList;
 use Magento\Store\Model\StoreManager as MagentoStoreManager;
-use Mundipagg\Core\Kernel\Abstractions\AbstractModuleCoreSetup;
-use Mundipagg\Core\Kernel\Aggregates\Configuration;
-use Mundipagg\Core\Kernel\Factories\ConfigurationFactory;
-use Mundipagg\Core\Kernel\Services\MoneyService;
-use Mundipagg\Core\Kernel\ValueObjects\CardBrand;
-use Mundipagg\Core\Kernel\ValueObjects\Configuration\CardConfig;
+use Pagarme\Core\Kernel\Abstractions\AbstractModuleCoreSetup;
+use Pagarme\Core\Kernel\Aggregates\Configuration;
+use Pagarme\Core\Kernel\Factories\ConfigurationFactory;
+use Pagarme\Core\Kernel\Services\MoneyService;
+use Pagarme\Core\Kernel\ValueObjects\CardBrand;
+use Pagarme\Core\Kernel\ValueObjects\Configuration\CardConfig;
 use Pagarme\Pagarme\Gateway\Transaction\Base\Config\Config;
 use Pagarme\Pagarme\Gateway\Transaction\CreditCard\Config\ConfigInterface;
 use Pagarme\Pagarme\Model\Installments\Config\ConfigInterface as InstallmentConfigInterface;

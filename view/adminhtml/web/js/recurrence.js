@@ -271,7 +271,7 @@ require([
         $("#interval_type").val(product.intervalType);
         $("#interval_count").val(product.intervalCount);
         $("#product_id").val(product.productId);
-        $("#plan-id").val(product.mundipaggId);
+        $("#plan-id").val(product.pagarmeId);
         $("#status").val(product.status);
         $("#trial_period_days").val(product.trialPeriodDays);
 

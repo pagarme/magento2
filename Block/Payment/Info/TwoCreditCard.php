@@ -13,12 +13,12 @@ namespace Pagarme\Pagarme\Block\Payment\Info;
 
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Payment\Block\Info\Cc;
-use Mundipagg\Core\Kernel\Aggregates\Charge;
-use Mundipagg\Core\Kernel\Aggregates\Order;
-use Mundipagg\Core\Kernel\Exceptions\InvalidParamException;
-use Mundipagg\Core\Kernel\Services\OrderService;
-use Mundipagg\Core\Kernel\ValueObjects\Id\OrderId;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use Pagarme\Core\Kernel\Aggregates\Charge;
+use Pagarme\Core\Kernel\Aggregates\Order;
+use Pagarme\Core\Kernel\Exceptions\InvalidParamException;
+use Pagarme\Core\Kernel\Services\OrderService;
+use Pagarme\Core\Kernel\ValueObjects\Id\OrderId;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Pagarme\Pagarme\Concrete\Magento2PlatformOrderDecorator;
 
 class TwoCreditCard extends Cc
@@ -114,7 +114,7 @@ class TwoCreditCard extends Cc
         /**
          * @var Order orderObject
          */
-        $orderObject = $orderService->getOrderByMundiPaggId(new OrderId($orderPagarmeId));
+        $orderObject = $orderService->getOrderByPagarmeId(new OrderId($orderPagarmeId));
 
         return [
             'card1' => array_merge(

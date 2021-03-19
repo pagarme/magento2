@@ -14,9 +14,9 @@ namespace Pagarme\Pagarme\Block\Customer;
 
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
-use Mundipagg\Core\Payment\Repositories\CustomerRepository;
-use Mundipagg\Core\Payment\Repositories\SavedCardRepository;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use Pagarme\Core\Payment\Repositories\CustomerRepository;
+use Pagarme\Core\Payment\Repositories\SavedCardRepository;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Pagarme\Pagarme\Concrete\Magento2SavedCardAdapter;
 use Pagarme\Pagarme\Model\CardsRepository;
 use Magento\Framework\Api\SearchCriteriaBuilder;
@@ -80,7 +80,7 @@ class Cards extends Template
         $cards = [];
         if ($customer !== null) {
             $coreCards =
-                $savedCardRepository->findByOwnerId($customer->getMundipaggId());
+                $savedCardRepository->findByOwnerId($customer->getPagarmeId());
 
             foreach ($coreCards as $coreCard) {
                 $cards[] = new Magento2SavedCardAdapter($coreCard);

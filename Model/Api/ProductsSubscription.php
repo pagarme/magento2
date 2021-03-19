@@ -3,14 +3,14 @@
 namespace Pagarme\Pagarme\Model\Api;
 
 use Magento\Framework\App\ObjectManager;
-use Mundipagg\Core\Kernel\Services\LocalizationService;
-use Mundipagg\Core\Kernel\Services\MoneyService;
-use Mundipagg\Core\Recurrence\Aggregates\ProductSubscription;
-use Mundipagg\Core\Recurrence\Aggregates\Repetition;
-use Mundipagg\Core\Recurrence\Services\ProductSubscriptionService;
+use Pagarme\Core\Kernel\Services\LocalizationService;
+use Pagarme\Core\Kernel\Services\MoneyService;
+use Pagarme\Core\Recurrence\Aggregates\ProductSubscription;
+use Pagarme\Core\Recurrence\Aggregates\Repetition;
+use Pagarme\Core\Recurrence\Services\ProductSubscriptionService;
 use Pagarme\Pagarme\Api\ProductSubscriptionApiInterface;
 use Magento\Framework\Webapi\Rest\Request;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Pagarme\Pagarme\Helper\ProductSubscriptionHelper;
 use Pagarme\Pagarme\Api\ObjectMapper\ProductSubscription\ProductSubscriptionMapperInterface;
 

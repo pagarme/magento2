@@ -2,7 +2,7 @@
 
 namespace Pagarme\Pagarme\Api;
 
-use Mundipagg\Core\Recurrence\Interfaces\ProductPlanInterface;
+use Pagarme\Core\Recurrence\Interfaces\ProductPlanInterface;
 use Pagarme\Pagarme\Api\ObjectMapper\ProductPlan\ProductPlanMapperInterface;
 
 interface ProductPlanApiInterface

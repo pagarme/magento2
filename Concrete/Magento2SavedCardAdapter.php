@@ -2,8 +2,8 @@
 
 namespace Pagarme\Pagarme\Concrete;
 
-use Mundipagg\Core\Payment\Aggregates\Customer;
-use Mundipagg\Core\Payment\Aggregates\SavedCard;
+use Pagarme\Core\Payment\Aggregates\Customer;
+use Pagarme\Core\Payment\Aggregates\SavedCard;
 
 final class Magento2SavedCardAdapter
 {
@@ -66,7 +66,7 @@ final class Magento2SavedCardAdapter
 
     public function getCardId()
     {
-        return $this->adaptee->getMundipaggId()->getValue();
+        return $this->adaptee->getPagarmeId()->getValue();
     }
 
     /**

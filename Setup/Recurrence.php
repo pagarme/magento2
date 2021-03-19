@@ -305,7 +305,7 @@ class Recurrence {
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundi_rec_interval',
+            'eav_pagarme_rec_interval',
             [
                 'group' => 'Recurrence Config',
                 'type' => 'varchar',
@@ -342,7 +342,7 @@ class Recurrence {
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundi_rec_interval_period',
+            'eav_pagarme_rec_interval_period',
             [
                 'group' => 'Recurrence Config',
                 'type' => 'int',
@@ -376,7 +376,7 @@ class Recurrence {
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundi_rec_billing_type',
+            'eav_pagarme_rec_billing_type',
             [
                 'group' => 'Recurrence Config',
                 'type' => 'varchar',
@@ -412,7 +412,7 @@ class Recurrence {
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundi_rec_billing_type_day',
+            'eav_pagarme_rec_billing_type_day',
             [
                 'group' => 'Recurrence Config',
                 'type' => 'int',
@@ -449,7 +449,7 @@ class Recurrence {
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundi_rec_start_at',
+            'eav_pagarme_rec_start_at',
             [
                 'group' => 'Recurrence Config',
                 'type' => 'varchar',
@@ -486,7 +486,7 @@ class Recurrence {
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundi_rec_start_at_day',
+            'eav_pagarme_rec_start_at_day',
             [
                 'group' => 'Recurrence Config',
                 'type' => 'int',
@@ -520,11 +520,11 @@ class Recurrence {
 
         $eavSetup->removeAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundi_rec_cycle_discount');
+            'eav_pagarme_rec_cycle_discount');
         /*
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundi_rec_cycle_discount',
+            'eav_pagarme_rec_cycle_discount',
             [
                 'group' => 'Recurrence Config',
                 'type' => 'int',
@@ -558,7 +558,7 @@ class Recurrence {
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundi_rec_allow_set',
+            'eav_pagarme_rec_allow_set',
             [
                 'group' => 'Recurrence Config',
                 'type' => 'int',
@@ -591,7 +591,7 @@ class Recurrence {
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundi_rec_global',
+            'eav_pagarme_rec_global',
             [
                 'group' => 'Recurrence Config',
                 'type' => 'int',
@@ -624,7 +624,7 @@ class Recurrence {
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundi_rec_allow_other',
+            'eav_pagarme_rec_allow_other',
             [
                 'group' => 'Recurrence Config',
                 'type' => 'int',

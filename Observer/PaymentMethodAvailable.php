@@ -4,15 +4,15 @@ namespace Pagarme\Pagarme\Observer;
 
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
-use Mundipagg\Core\Recurrence\Aggregates\Plan;
-use Mundipagg\Core\Recurrence\Services\RecurrenceService;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use Pagarme\Core\Recurrence\Aggregates\Plan;
+use Pagarme\Core\Recurrence\Services\RecurrenceService;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Pagarme\Pagarme\Helper\RecurrenceProductHelper;
 
 class PaymentMethodAvailable implements ObserverInterface
 {
     /**
-     * @var \Mundipagg\Core\Kernel\Aggregates\Configuration
+     * @var \Pagarme\Core\Kernel\Aggregates\Configuration
      */
     protected $pagarmeConfig;
     /**

@@ -11,7 +11,7 @@
 
 namespace Pagarme\Pagarme\Model\Ui\Base;
 
-use Mundipagg\Core\Kernel\Services\LocalizationService;
+use Pagarme\Core\Kernel\Services\LocalizationService;
 use Pagarme\Pagarme\Model\Installments\Config\ConfigInterface;
 use Pagarme\Pagarme\Gateway\Transaction\Base\Config\ConfigInterface as BaseConfig;
 use Magento\Checkout\Model\ConfigProviderInterface;

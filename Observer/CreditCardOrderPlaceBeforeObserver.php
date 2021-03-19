@@ -16,8 +16,8 @@ use Magento\Framework\DataObject;
 use Magento\Framework\Event\Observer;
 use Magento\Quote\Api\Data\PaymentInterface;
 use Magento\Framework\Event\ObserverInterface;
-use Mundipagg\Core\Kernel\Services\InstallmentService;
-use Mundipagg\Core\Kernel\ValueObjects\CardBrand;
+use Pagarme\Core\Kernel\Services\InstallmentService;
+use Pagarme\Core\Kernel\ValueObjects\CardBrand;
 use Pagarme\Pagarme\Api\InstallmentsByBrandManagementInterface;
 use Pagarme\Pagarme\Api\InstallmentsByBrandAndAmountManagementInterface;
 

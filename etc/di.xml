@@ -60,7 +60,7 @@
     <preference for="Pagarme\Pagarme\Api\Data\ChargesSearchResultsInterface" type="Magento\Framework\Api\SearchResults"/>
     <virtualType name="Pagarme\Pagarme\Model\ResourceModel\Charges\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
         <arguments>
-            <argument name="mainTable" xsi:type="string">mundipagg_module_core_charge</argument>
+            <argument name="mainTable" xsi:type="string">pagarme_module_core_charge</argument>
             <argument name="resourceModel" xsi:type="string">Pagarme\Pagarme\Model\ResourceModel\Charges\Collection</argument>
         </arguments>
     </virtualType>
@@ -104,7 +104,7 @@
     </type>
     <virtualType name="Pagarme\Pagarme\Model\ResourceModel\ProductsPlan\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
         <arguments>
-            <argument name="mainTable" xsi:type="string">mundipagg_module_core_recurrence_products_plan</argument>
+            <argument name="mainTable" xsi:type="string">pagarme_module_core_recurrence_products_plan</argument>
             <argument name="resourceModel" xsi:type="string">Pagarme\Pagarme\Model\ResourceModel\ProductsPlan</argument>
         </arguments>
     </virtualType>
@@ -121,7 +121,7 @@
     </type>
     <virtualType name="Pagarme\Pagarme\Model\ResourceModel\ProductsSubscription\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
         <arguments>
-            <argument name="mainTable" xsi:type="string">mundipagg_module_core_recurrence_products_subscription</argument>
+            <argument name="mainTable" xsi:type="string">pagarme_module_core_recurrence_products_subscription</argument>
             <argument name="resourceModel" xsi:type="string">Pagarme\Pagarme\Model\ResourceModel\ProductsSubscription</argument>
         </arguments>
     </virtualType>
@@ -136,7 +136,7 @@
     </type>
     <virtualType name="Pagarme\Pagarme\Model\ResourceModel\Subscriptions\Grid\Collection" type="Pagarme\Pagarme\Model\ResourceModel\Subscriptions\Collection">
         <arguments>
-            <argument name="mainTable" xsi:type="string">mundipagg_module_core_recurrence_subscription</argument>
+            <argument name="mainTable" xsi:type="string">pagarme_module_core_recurrence_subscription</argument>
             <argument name="resourceModel" xsi:type="string">Pagarme\Pagarme\Model\ResourceModel\Subscriptions</argument>
         </arguments>
     </virtualType>
@@ -151,7 +151,7 @@
     </type>
     <virtualType name="Pagarme\Pagarme\Model\ResourceModel\Invoices\Grid\Collection" type="Pagarme\Pagarme\Model\ResourceModel\Invoices\Collection">
         <arguments>
-            <argument name="mainTable" xsi:type="string">mundipagg_module_core_recurrence_charge</argument>
+            <argument name="mainTable" xsi:type="string">pagarme_module_core_recurrence_charge</argument>
             <argument name="resourceModel" xsi:type="string">Pagarme\Pagarme\Model\ResourceModel\Invoices</argument>
         </arguments>
     </virtualType>
@@ -632,21 +632,21 @@
 
     <!-- Recurrence -->
 
-    <preference for="Mundipagg\Core\Recurrence\Interfaces\RepetitionInterface" type="Mundipagg\Core\Recurrence\Aggregates\Repetition" />
+    <preference for="Pagarme\Core\Recurrence\Interfaces\RepetitionInterface" type="Pagarme\Core\Recurrence\Aggregates\Repetition" />
     <preference for="Pagarme\Pagarme\Api\ProductSubscriptionApiInterface" type="Pagarme\Pagarme\Model\Api\ProductsSubscription" />
     <preference for="Pagarme\Pagarme\Api\SubscriptionApiInterface" type="Pagarme\Pagarme\Model\Api\Subscription" />
     <preference for="Pagarme\Pagarme\Api\InvoiceApiInterface" type="Pagarme\Pagarme\Model\Api\Invoice" />
 
     <preference for="Pagarme\Pagarme\Api\ProductPlanApiInterface" type="Pagarme\Pagarme\Model\Api\ProductsPlan" />
-    <preference for="Mundipagg\Core\Recurrence\Interfaces\ProductPlanInterface" type="Mundipagg\Core\Recurrence\Aggregates\Plan" />
+    <preference for="Pagarme\Core\Recurrence\Interfaces\ProductPlanInterface" type="Pagarme\Core\Recurrence\Aggregates\Plan" />
 
-    <preference for="Pagarme\Pagarme\Api\ObjectMapper\ProductPlan\ProductPlanMapperInterface" type="Mundipagg\Core\Recurrence\Aggregates\Plan" />
-    <preference for="Pagarme\Pagarme\Api\ObjectMapper\ProductPlan\SubProduct" type="Mundipagg\Core\Recurrence\Aggregates\SubProduct" />
+    <preference for="Pagarme\Pagarme\Api\ObjectMapper\ProductPlan\ProductPlanMapperInterface" type="Pagarme\Core\Recurrence\Aggregates\Plan" />
+    <preference for="Pagarme\Pagarme\Api\ObjectMapper\ProductPlan\SubProduct" type="Pagarme\Core\Recurrence\Aggregates\SubProduct" />
 
-    <preference for="Pagarme\Pagarme\Api\ObjectMapper\ProductSubscription\ProductSubscriptionMapperInterface" type="Mundipagg\Core\Recurrence\Aggregates\ProductSubscription" />
-    <preference for="Pagarme\Pagarme\Api\ObjectMapper\ProductSubscription\RepetitionInterface" type="Mundipagg\Core\Recurrence\Aggregates\Repetition" />
+    <preference for="Pagarme\Pagarme\Api\ObjectMapper\ProductSubscription\ProductSubscriptionMapperInterface" type="Pagarme\Core\Recurrence\Aggregates\ProductSubscription" />
+    <preference for="Pagarme\Pagarme\Api\ObjectMapper\ProductSubscription\RepetitionInterface" type="Pagarme\Core\Recurrence\Aggregates\Repetition" />
 
-    <preference for="Pagarme\Pagarme\Api\ObjectMapper\ProductSubscription\RepetitionInterface" type="Mundipagg\Core\Recurrence\Aggregates\Repetition" />
+    <preference for="Pagarme\Pagarme\Api\ObjectMapper\ProductSubscription\RepetitionInterface" type="Pagarme\Core\Recurrence\Aggregates\Repetition" />
 
 
     <!-- Admin checkout -->

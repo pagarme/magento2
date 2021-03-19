@@ -6,7 +6,7 @@ use Magento\Framework\App\ObjectManager;
 use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use Magento\Framework\View\Element\UiComponentFactory;
 use Magento\Ui\Component\Listing\Columns\Column;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Pagarme\Pagarme\Helper\RecurrenceProductHelper;
 
 class TotalCyclesByProduct extends Column

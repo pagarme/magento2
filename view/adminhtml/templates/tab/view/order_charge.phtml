@@ -27,7 +27,7 @@ $priceHelper = $objectManager->create('Magento\Framework\Pricing\Helper\Data'); 
         <tbody>
             <?php foreach ($block->getCharges() as $charge) :?>
                 <tr>
-                    <td><?php echo $charge->getMundipaggId()->getValue();?></td>
+                    <td><?php echo $charge->getPagarmeId()->getValue();?></td>
                     <td><?php echo $priceHelper->currency($charge->getAmount() / 100, true, false); ?></td>
                     <td><?php echo $priceHelper->currency($charge->getPaidAmount() / 100, true, false);?></td>
                     <td><?php echo $priceHelper->currency($charge->getCanceledAmount() / 100, true, false);?></td>
@@ -39,7 +39,7 @@ $priceHelper = $objectManager->create('Magento\Framework\Pricing\Helper\Data'); 
                         <button class="action charge-button"
                                 action="capture"
                                 order="<?php echo $charge->getOrderId()->getValue();?>"
-                                charge="<?php echo $charge->getMundipaggId()->getValue();?>"
+                                charge="<?php echo $charge->getPagarmeId()->getValue();?>"
                                 message="<?php echo __('Do you would capture this charge?') ?>"
                         >Capture</button>
                     </td>
@@ -48,7 +48,7 @@ $priceHelper = $objectManager->create('Magento\Framework\Pricing\Helper\Data'); 
                         <button class="action charge-button"
                                 action="cancel"
                                 order="<?php echo $charge->getOrderId()->getValue();?>"
-                                charge="<?php echo $charge->getMundipaggId()->getValue();?>"
+                                charge="<?php echo $charge->getPagarmeId()->getValue();?>"
                                 message="<?php echo __('Do you would cancel this charge?') ?>"
                         >Cancel</button>
                     </td>

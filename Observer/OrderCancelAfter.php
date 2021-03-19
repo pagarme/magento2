@@ -2,18 +2,18 @@
 
 namespace Pagarme\Pagarme\Observer;
 
-use Mundipagg\Core\Kernel\Repositories\OrderRepository;
+use Pagarme\Core\Kernel\Repositories\OrderRepository;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Event\Observer as EventObserver;
-use Mundipagg\Core\Kernel\Exceptions\AbstractMundipaggCoreException;
-use Mundipagg\Core\Kernel\Factories\OrderFactory;
-use Mundipagg\Core\Kernel\Services\OrderService;
-use Mundipagg\Core\Kernel\Services\OrderLogService;
-use Mundipagg\Core\Kernel\Services\LocalizationService;
+use Pagarme\Core\Kernel\Exceptions\AbstractPagarmeCoreException;
+use Pagarme\Core\Kernel\Factories\OrderFactory;
+use Pagarme\Core\Kernel\Services\OrderService;
+use Pagarme\Core\Kernel\Services\OrderLogService;
+use Pagarme\Core\Kernel\Services\LocalizationService;
 use Magento\Framework\Webapi\Exception as M2WebApiException;
 use Magento\Framework\Phrase;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Pagarme\Pagarme\Concrete\Magento2PlatformOrderDecorator;
 use Pagarme\Pagarme\Model\PagarmeConfigProvider;
 
@@ -64,7 +64,7 @@ class OrderCancelAfter implements ObserverInterface
                 $platformOrder->getIncrementId()
             );
 
-        } catch(AbstractMundipaggCoreException $e) {
+        } catch(AbstractPagarmeCoreException $e) {
             throw new M2WebApiException(
                 new Phrase($e->getMessage()),
                 0,
@@ -92,7 +92,7 @@ class OrderCancelAfter implements ObserverInterface
             $orderFactory = new OrderFactory();
             $order = $orderFactory->createFromPostData($chargeInfo);
 
-            $orderService->cancelAtMundipagg($order);
+            $orderService->cancelAtPagarme($order);
             return;
         }
 
@@ -105,7 +105,7 @@ class OrderCancelAfter implements ObserverInterface
 
         $platformOrder = new Magento2PlatformOrderDecorator();
         $platformOrder->loadByIncrementId($incrementId);
-        $orderService->cancelAtMundipaggByPlatformOrder($platformOrder);
+        $orderService->cancelAtPagarmeByPlatformOrder($platformOrder);
     }
 
     private function getPlatformOrderFromObserver(EventObserver $observer)

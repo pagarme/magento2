@@ -4,14 +4,14 @@ namespace Pagarme\Pagarme\Helper;
 
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\ObjectManager;
-use Mundipagg\Core\Kernel\Abstractions\AbstractModuleCoreSetup as MPSetup;
-use Mundipagg\Core\Kernel\Interfaces\PlatformOrderInterface;
-use Mundipagg\Core\Recurrence\Repositories\RepetitionRepository;
-use Mundipagg\Core\Recurrence\Services\PlanService;
-use Mundipagg\Core\Recurrence\Services\RecurrenceService;
-use Mundipagg\Core\Recurrence\Services\SubscriptionService;
-use Mundipagg\Core\Recurrence\ValueObjects\PlanId;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use Pagarme\Core\Kernel\Abstractions\AbstractModuleCoreSetup as MPSetup;
+use Pagarme\Core\Kernel\Interfaces\PlatformOrderInterface;
+use Pagarme\Core\Recurrence\Repositories\RepetitionRepository;
+use Pagarme\Core\Recurrence\Services\PlanService;
+use Pagarme\Core\Recurrence\Services\RecurrenceService;
+use Pagarme\Core\Recurrence\Services\SubscriptionService;
+use Pagarme\Core\Recurrence\ValueObjects\PlanId;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 
 class RecurrenceProductHelper extends AbstractHelper
 {
@@ -39,7 +39,7 @@ class RecurrenceProductHelper extends AbstractHelper
     public function getTotalCyclesFromPlan($planID)
     {
         $planService = new PlanService();
-        $plan = $planService->findByMundipaggId(new PlanId($planID));
+        $plan = $planService->findByPagarmeId(new PlanId($planID));
         $cycles = [];
 
         if (empty($plan)) {

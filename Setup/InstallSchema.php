@@ -43,7 +43,7 @@ class InstallSchema implements InstallSchemaInterface
     public function installConfig(
         SchemaSetupInterface $installer
     ) {
-        $tableName = $installer->getTable('mundipagg_module_core_configuration');
+        $tableName = $installer->getTable('pagarme_module_core_configuration');
         if (!$installer->getConnection()->isTableExists($tableName)) {
             $configTable = $installer->getConnection()
                 ->newTable($tableName)
@@ -79,7 +79,7 @@ class InstallSchema implements InstallSchemaInterface
     public function installWebhook(
         SchemaSetupInterface $installer
     ) {
-        $tableName = $installer->getTable('mundipagg_module_core_webhook');
+        $tableName = $installer->getTable('pagarme_module_core_webhook');
         if (!$installer->getConnection()->isTableExists($tableName)) {
             $webhookTable = $installer->getConnection()
                 ->newTable($tableName)
@@ -96,7 +96,7 @@ class InstallSchema implements InstallSchemaInterface
                     'ID'
                 )
                 ->addColumn(
-                    'mundipagg_id',
+                    'pagarme_id',
                     Table::TYPE_TEXT,
                     21,
                     [
@@ -125,7 +125,7 @@ class InstallSchema implements InstallSchemaInterface
     public function installOrder(
         SchemaSetupInterface $installer
     ) {
-        $tableName = $installer->getTable('mundipagg_module_core_order');
+        $tableName = $installer->getTable('pagarme_module_core_order');
         if (!$installer->getConnection()->isTableExists($tableName)) {
             $webhookTable = $installer->getConnection()
                 ->newTable($tableName)
@@ -142,7 +142,7 @@ class InstallSchema implements InstallSchemaInterface
                     'ID'
                 )
                 ->addColumn(
-                    'mundipagg_id',
+                    'pagarme_id',
                     Table::TYPE_TEXT,
                     19,
                     [
@@ -180,7 +180,7 @@ class InstallSchema implements InstallSchemaInterface
     public function installCharge(
         SchemaSetupInterface $installer
     ) {
-        $tableName = $installer->getTable('mundipagg_module_core_charge');
+        $tableName = $installer->getTable('pagarme_module_core_charge');
         if (!$installer->getConnection()->isTableExists($tableName)) {
             $webhookTable = $installer->getConnection()
                 ->newTable($tableName)
@@ -197,7 +197,7 @@ class InstallSchema implements InstallSchemaInterface
                     'ID'
                 )
                 ->addColumn(
-                    'mundipagg_id',
+                    'pagarme_id',
                     Table::TYPE_TEXT,
                     19,
                     [
@@ -284,7 +284,7 @@ class InstallSchema implements InstallSchemaInterface
     public function installTransaction(
         SchemaSetupInterface $installer
     ) {
-        $tableName = $installer->getTable('mundipagg_module_core_transaction');
+        $tableName = $installer->getTable('pagarme_module_core_transaction');
         if (!$installer->getConnection()->isTableExists($tableName)) {
             $webhookTable = $installer->getConnection()
                 ->newTable($tableName)
@@ -301,7 +301,7 @@ class InstallSchema implements InstallSchemaInterface
                     'ID'
                 )
                 ->addColumn(
-                    'mundipagg_id',
+                    'pagarme_id',
                     Table::TYPE_TEXT,
                     21,
                     [
@@ -428,7 +428,7 @@ class InstallSchema implements InstallSchemaInterface
 
     public function installSavedCard(SchemaSetupInterface $installer)
     {
-        $tableName = $installer->getTable('mundipagg_module_core_saved_card');
+        $tableName = $installer->getTable('pagarme_module_core_saved_card');
         if (!$installer->getConnection()->isTableExists($tableName)) {
             $savedCardTable = $installer->getConnection()
                 ->newTable($tableName)
@@ -445,7 +445,7 @@ class InstallSchema implements InstallSchemaInterface
                     'ID'
                 )
                 ->addColumn(
-                    'mundipagg_id',
+                    'pagarme_id',
                     Table::TYPE_TEXT,
                     21,
                     [
@@ -499,7 +499,7 @@ class InstallSchema implements InstallSchemaInterface
 
     public function installCustomer(SchemaSetupInterface $installer)
     {
-        $tableName = $installer->getTable('mundipagg_module_core_customer');
+        $tableName = $installer->getTable('pagarme_module_core_customer');
         if (!$installer->getConnection()->isTableExists($tableName)) {
             $customer = $installer->getConnection()
                 ->newTable($tableName)
@@ -525,7 +525,7 @@ class InstallSchema implements InstallSchemaInterface
                     'platform customer id'
                 )
                 ->addColumn(
-                    'mundipagg_id',
+                    'pagarme_id',
                     Table::TYPE_TEXT,
                     20,
                     [
@@ -543,7 +543,7 @@ class InstallSchema implements InstallSchemaInterface
 
     public function installProductsPlan(SchemaSetupInterface $installer)
     {
-        $tableName = $installer->getTable('mundipagg_module_core_recurrence_products_plan');
+        $tableName = $installer->getTable('pagarme_module_core_recurrence_products_plan');
         if (!$installer->getConnection()->isTableExists($tableName)) {
             $customer = $installer->getConnection()
                 ->newTable($tableName)
@@ -690,7 +690,7 @@ class InstallSchema implements InstallSchemaInterface
 
     public function installSubProducts(SchemaSetupInterface $installer)
     {
-        $tableName = $installer->getTable('mundipagg_module_core_recurrence_sub_products');
+        $tableName = $installer->getTable('pagarme_module_core_recurrence_sub_products');
         if (!$installer->getConnection()->isTableExists($tableName)) {
             $customer = $installer->getConnection()
                 ->newTable($tableName)
@@ -722,7 +722,7 @@ class InstallSchema implements InstallSchemaInterface
                     [
                         'nullable' => false
                     ],
-                    'Id from table mundipagg_module_core_products_(plan/subscription)'
+                    'Id from table pagarme_module_core_products_(plan/subscription)'
                 )
                 ->addColumn(
                     'recurrence_type',
@@ -783,7 +783,7 @@ class InstallSchema implements InstallSchemaInterface
 
     public function installProductsSubscription(SchemaSetupInterface $installer)
     {
-        $tableName = $installer->getTable('mundipagg_module_core_recurrence_products_subscription');
+        $tableName = $installer->getTable('pagarme_module_core_recurrence_products_subscription');
         if (!$installer->getConnection()->isTableExists($tableName)) {
             $customer = $installer->getConnection()
                 ->newTable($tableName)
@@ -877,7 +877,7 @@ class InstallSchema implements InstallSchemaInterface
 
     public function installSubscriptionRepetitions(SchemaSetupInterface $installer)
     {
-        $tableName = $installer->getTable('mundipagg_module_core_recurrence_subscription_repetitions');
+        $tableName = $installer->getTable('pagarme_module_core_recurrence_subscription_repetitions');
         if (!$installer->getConnection()->isTableExists($tableName)) {
             $configTable = $installer->getConnection()
                 ->newTable($tableName)
@@ -900,7 +900,7 @@ class InstallSchema implements InstallSchemaInterface
                     [
                         'nullable' => false
                     ],
-                    'Id from mundipagg_module_core_products_subscription'
+                    'Id from pagarme_module_core_products_subscription'
                 )
                 ->setOption('charset', 'utf8')
                 ->addColumn(
@@ -963,7 +963,7 @@ class InstallSchema implements InstallSchemaInterface
     public function installRecurrenceSubscription(SchemaSetupInterface $installer)
     {
         $tableName = $installer->getTable(
-            'mundipagg_module_core_recurrence_subscription'
+            'pagarme_module_core_recurrence_subscription'
         );
 
         if (!$installer->getConnection()->isTableExists($tableName)) {
@@ -991,7 +991,7 @@ class InstallSchema implements InstallSchemaInterface
                     'Customer id'
                 )
                 ->addColumn(
-                    'mundipagg_id',
+                    'pagarme_id',
                     Table::TYPE_TEXT,
                     null,
                     [
@@ -1104,7 +1104,7 @@ class InstallSchema implements InstallSchemaInterface
     public function installRecurrenceCharge(SchemaSetupInterface $installer)
     {
         $tableName = $installer->getTable(
-            'mundipagg_module_core_recurrence_charge'
+            'pagarme_module_core_recurrence_charge'
         );
 
         if (!$installer->getConnection()->isTableExists($tableName)) {
@@ -1123,7 +1123,7 @@ class InstallSchema implements InstallSchemaInterface
                     'ID'
                 )
                 ->addColumn(
-                    'mundipagg_id',
+                    'pagarme_id',
                     Table::TYPE_TEXT,
                     null,
                     [
@@ -1283,7 +1283,7 @@ class InstallSchema implements InstallSchemaInterface
     public function installSubscriptionItems(SchemaSetupInterface $installer)
     {
         $tableName = $installer->getTable(
-            'mundipagg_module_core_recurrence_subscription_items'
+            'pagarme_module_core_recurrence_subscription_items'
         );
 
         if (!$installer->getConnection()->isTableExists($tableName)) {
@@ -1302,7 +1302,7 @@ class InstallSchema implements InstallSchemaInterface
                     'ID'
                 )
                 ->addColumn(
-                    'mundipagg_id',
+                    'pagarme_id',
                     Table::TYPE_TEXT,
                     null,
                     [

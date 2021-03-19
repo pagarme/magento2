@@ -2,7 +2,7 @@
 
 namespace Pagarme\Pagarme\Controller\Adminhtml\Charges;
 
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 
 use Magento\Framework\App\Request\Http;
 use Magento\Backend\App\Action\Context;

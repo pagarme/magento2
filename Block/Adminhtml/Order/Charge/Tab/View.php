@@ -2,11 +2,11 @@
 
 namespace Pagarme\Pagarme\Block\Adminhtml\Order\Charge\Tab;
 
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 
-use Mundipagg\Core\Kernel\Repositories\ChargeRepository;
-use Mundipagg\Core\Kernel\Repositories\OrderRepository;
-use Mundipagg\Core\Kernel\ValueObjects\Id\OrderId;
+use Pagarme\Core\Kernel\Repositories\ChargeRepository;
+use Pagarme\Core\Kernel\Repositories\OrderRepository;
+use Pagarme\Core\Kernel\ValueObjects\Id\OrderId;
 
 class View  extends \Magento\Backend\Block\Template implements \Magento\Backend\Block\Widget\Tab\TabInterface
 {
@@ -51,7 +51,7 @@ class View  extends \Magento\Backend\Block\Template implements \Magento\Backend\
         }
 
         $charges = (new ChargeRepository)->findByOrderId(
-            new OrderId($pagarmeOrder->getMundipaggId()->getValue())
+            new OrderId($pagarmeOrder->getPagarmeId()->getValue())
         );
 
         return $charges;
