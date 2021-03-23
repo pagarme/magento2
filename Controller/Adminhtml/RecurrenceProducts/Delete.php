@@ -70,7 +70,7 @@ class Delete extends Action
 
         $productSubscriptionService->delete($productId);
 
-        $message = $this->messageFactory->create('success', _("Product subscription deleted."));
+        $message = $this->messageFactory->create('success', __("Product subscription deleted."));
         $this->messageManager->addMessage($message);
 
         $this->_redirect('pagarme_pagarme/recurrenceproducts/index');
