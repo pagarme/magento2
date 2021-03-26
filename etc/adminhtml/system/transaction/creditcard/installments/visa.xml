@@ -12,25 +12,25 @@
 		</depends>
 		<label>Installments Visa</label>
 	    <field id="installments_number_visa" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
-	        <label>Number Visa</label>
+	        <label>Max number of installments</label>
 			<backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
 	        <comment />
 	        <config_path>payment/pagarme_creditcard/installments_number_visa</config_path>
 	    </field>
 	    <field id="installment_min_amount_visa" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
-	        <label>Min Amount Visa</label>
+	        <label>Min installment amount</label>
 			<backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
 	        <comment />
 	        <config_path>payment/pagarme_creditcard/installment_min_amount_visa</config_path>
 	    </field>
 	    <field id="installments_interest_by_issuer_visa" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="select">
-	        <label>Interest by issuer Visa</label>
+	        <label>Enable interest</label>
 	        <comment />
 	        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
 	        <config_path>payment/pagarme_creditcard/installments_interest_by_issuer_visa</config_path>
 	    </field>
 	    <field id="installments_interest_rate_initial_visa" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
-	        <label>Interest Rate Initial (%) Visa</label>
+	        <label>Initial interest rate (%)</label>
 			<backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
 	        <comment />
 	        <config_path>payment/pagarme_creditcard/installments_interest_rate_initial_visa</config_path>
@@ -39,7 +39,7 @@
             </depends>
 	    </field>
 	    <field id="installments_interest_rate_incremental_visa" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
-	        <label>Interest Rate Incremental (%) Visa</label>
+	        <label>Incremental interest rate (%)</label>
 			<backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
 	        <comment />
 	        <config_path>payment/pagarme_creditcard/installments_interest_rate_incremental_visa</config_path>
@@ -48,7 +48,7 @@
             </depends>
 	    </field>
 	    <field id="installments_max_without_interest_visa" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
-	        <label>Max Without Interest Visa</label>
+	        <label>Number of installments without interest</label>
 			<backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
 	        <comment />
 	        <config_path>payment/pagarme_creditcard/installments_max_without_interest_visa</config_path>

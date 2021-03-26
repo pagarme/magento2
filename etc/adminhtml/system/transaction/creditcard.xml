@@ -9,17 +9,17 @@
     <group id="pagarme_creditcard" translate="label comment" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="20">
         <label>Credit Card</label>
         <field id="active" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label" type="select">
-            <label>Enabled</label>
+            <label>Enable this payment method</label>
             <comment />
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>payment/pagarme_creditcard/active</config_path>
         </field>
         <field id="title" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
-            <label>Title</label>
+            <label>Payment label</label>
             <config_path>payment/pagarme_creditcard/title</config_path>
         </field>
         <field id="soft_description" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
-            <label>Soft Description Pagar.me</label>
+            <label>Soft descriptor</label>
             <config_path>payment/pagarme_creditcard/soft_description</config_path>
             <comment>Max size 22.</comment>
         </field>
@@ -29,13 +29,13 @@
             <comment>object from \Magento\Quote\Model\Quote</comment>
         </field> -->
         <field id="payment_action" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="40" translate="label" type="select">
-            <label>Payment Action</label>
+            <label>Payment action</label>
             <comment />
             <source_model>Pagarme\Pagarme\Model\Source\PaymentAction</source_model>
             <config_path>payment/pagarme_creditcard/payment_action</config_path>
         </field>
         <field id="sort_order" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="70" translate="label" type="text">
-            <label>Sort Order</label>
+            <label>Payment method order</label>
             <comment />
             <config_path>payment/pagarme_creditcard/sort_order</config_path>
         </field>
@@ -43,7 +43,7 @@
         <field id="enabled_saved_cards" showInDefault="1" showInStore="1"
                showInWebsite="1"
                sortOrder="71" translate="label" type="select">
-            <label>Enable Saved Credit-Cards</label>
+            <label>Enable card wallet</label>
             <comment />
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>payment/pagarme_creditcard/enabled_saved_cards</config_path>
