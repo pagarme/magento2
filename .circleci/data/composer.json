@@ -9,7 +9,7 @@
     ],
 "repositories": [
     {
-            "url": "git@github.com:pagarme/ecommerce-module-core.git",
+            "url": "https://www.github.com/pagarme/ecommerce-module-core.git",
             "type": "vcs",
             "no-api": true
     }
