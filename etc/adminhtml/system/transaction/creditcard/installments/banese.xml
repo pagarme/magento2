@@ -12,25 +12,25 @@
 		</depends>
 		<label>Installments Banese</label>
 	    <field id="installments_number_banese" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
-	        <label>Number Banese</label>
+	        <label>Max number of installments</label>
 			<backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
 	        <comment />
 	        <config_path>payment/pagarme_creditcard/installments_number_banese</config_path>
 	    </field>
 	    <field id="installment_min_amount_banese" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
-	        <label>Min Amount Banese</label>
+	        <label>Min installment amount</label>
 			<backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
 	        <comment />
 	        <config_path>payment/pagarme_creditcard/installment_min_amount_banese</config_path>
 	    </field>
 	    <field id="installments_interest_by_issuer_banese" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="select">
-	        <label>Interest by issuer Banese</label>
+	        <label>Enable interest</label>
 	        <comment />
 	        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
 	        <config_path>payment/pagarme_creditcard/installments_interest_by_issuer_banese</config_path>
 	    </field>
 	    <field id="installments_interest_rate_initial_banese" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
-	        <label>Interest Rate Initial (%) Banese</label>
+	        <label>Initial interest rate (%)</label>
 			<backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
 	        <comment />
 	        <config_path>payment/pagarme_creditcard/installments_interest_rate_initial_banese</config_path>
@@ -39,7 +39,7 @@
             </depends>
 	    </field>
 	    <field id="installments_interest_rate_incremental_banese" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
-	        <label>Interest Rate Incremental (%) Banese</label>
+	        <label>Incremental interest rate (%)</label>
 			<backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
 	        <comment />
 	        <config_path>payment/pagarme_creditcard/installments_interest_rate_incremental_banese</config_path>
@@ -48,7 +48,7 @@
             </depends>
 	    </field>
 	    <field id="installments_max_without_interest_banese" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
-	        <label>Max Without Interest Banese</label>
+	        <label>Number of installments without interest</label>
 			<backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
 	        <comment />
 	        <config_path>payment/pagarme_creditcard/installments_max_without_interest_banese</config_path>

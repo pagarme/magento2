@@ -14,13 +14,13 @@ namespace Pagarme\Pagarme\Block\Payment\Info;
 
 use Magento\Payment\Block\Info;
 use Magento\Framework\DataObject;
-use Mundipagg\Core\Kernel\Repositories\OrderRepository;
-use Mundipagg\Core\Kernel\Services\OrderService;
-use Mundipagg\Core\Kernel\ValueObjects\Id\OrderId;
-use Mundipagg\Core\Kernel\ValueObjects\Id\SubscriptionId;
-use Mundipagg\Core\Recurrence\Repositories\ChargeRepository as SubscriptionChargeRepository;
-use Mundipagg\Core\Recurrence\Repositories\SubscriptionRepository;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use Pagarme\Core\Kernel\Repositories\OrderRepository;
+use Pagarme\Core\Kernel\Services\OrderService;
+use Pagarme\Core\Kernel\ValueObjects\Id\OrderId;
+use Pagarme\Core\Kernel\ValueObjects\Id\SubscriptionId;
+use Pagarme\Core\Recurrence\Repositories\ChargeRepository as SubscriptionChargeRepository;
+use Pagarme\Core\Recurrence\Repositories\SubscriptionRepository;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Pagarme\Pagarme\Concrete\Magento2PlatformOrderDecorator;
 
 class Billet extends Info
@@ -77,7 +77,7 @@ class Billet extends Info
         }
 
         $orderRepository = new OrderRepository();
-        $order = $orderRepository->findByMundipaggId(new OrderId($orderId));
+        $order = $orderRepository->findByPagarmeId(new OrderId($orderId));
 
         if ($order !== null) {
             $charges = $order->getCharges();
@@ -105,7 +105,7 @@ class Billet extends Info
         $chargeRepository = new SubscriptionChargeRepository();
         $subscriptionId =
             new SubscriptionId(
-                $subscription->getMundipaggId()->getValue()
+                $subscription->getPagarmeId()->getValue()
             );
 
         $charge = $chargeRepository->findBySubscriptionId($subscriptionId);
@@ -123,7 +123,7 @@ class Billet extends Info
     /**
      * @return mixed
      * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Mundipagg\Core\Kernel\Exceptions\InvalidParamException
+     * @throws \Pagarme\Core\Kernel\Exceptions\InvalidParamException
      */
     public function getTransactionInfo()
     {
@@ -142,9 +142,9 @@ class Billet extends Info
         }
 
         /**
-         * @var \Mundipagg\Core\Kernel\Aggregates\Order orderObject
+         * @var \Pagarme\Core\Kernel\Aggregates\Order orderObject
          */
-        $orderObject = $orderService->getOrderByMundiPaggId(new OrderId($orderPagarmeId));
+        $orderObject = $orderService->getOrderByPagarmeId(new OrderId($orderPagarmeId));
         return $orderObject->getCharges()[0]->getLastTransaction();
     }
 }

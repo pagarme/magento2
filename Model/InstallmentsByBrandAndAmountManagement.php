@@ -12,11 +12,11 @@
 namespace Pagarme\Pagarme\Model;
 
 use Magento\Framework\Api\SimpleBuilderInterface;
-use Mundipagg\Core\Kernel\Services\MoneyService;
-use Mundipagg\Core\Kernel\ValueObjects\CardBrand;
-use Mundipagg\Core\Recurrence\Aggregates\Plan;
-use Mundipagg\Core\Recurrence\Services\RecurrenceService;
-use Mundipagg\Core\Recurrence\ValueObjects\IntervalValueObject;
+use Pagarme\Core\Kernel\Services\MoneyService;
+use Pagarme\Core\Kernel\ValueObjects\CardBrand;
+use Pagarme\Core\Recurrence\Aggregates\Plan;
+use Pagarme\Core\Recurrence\Services\RecurrenceService;
+use Pagarme\Core\Recurrence\ValueObjects\IntervalValueObject;
 use Pagarme\Pagarme\Api\InstallmentsByBrandAndAmountManagementInterface;
 use Magento\Checkout\Model\Session;
 use Pagarme\Pagarme\Helper\RecurrenceProductHelper;

@@ -13,8 +13,8 @@ namespace Pagarme\Pagarme\Model;
 
 use Magento\Framework\Api\SimpleBuilderInterface;
 use Pagarme\Pagarme\Api\InstallmentsManagementInterface;
-use Mundipagg\Core\Kernel\Abstractions\AbstractModuleCoreSetup as MPSetup;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use Pagarme\Core\Kernel\Abstractions\AbstractModuleCoreSetup as MPSetup;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 
 class InstallmentsManagement
     extends AbstractInstallmentManagement

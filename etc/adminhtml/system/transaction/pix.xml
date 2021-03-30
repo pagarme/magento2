@@ -9,17 +9,17 @@
     <group id="pagarme_pagarme_transaction_pix" translate="label comment" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="20">
         <label>Pix</label>
 	    <field id="active" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="select">
-	        <label>Enabled</label>
+	        <label>Enable this payment method</label>
 	        <comment />
 	        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
 	        <config_path>payment/pagarme_pix/active</config_path>
 	    </field>
 	    <field id="title" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
-	        <label>Title</label>
+	        <label>Payment label</label>
 	        <config_path>payment/pagarme_pix/title</config_path>
 	    </field>
 	    <field id="expiration_qrcode" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
-	        <label>Expirations QrCode</label>
+	        <label>Qrcode expiration time (seconds)</label>
 	        <comment />
 	        <config_path>payment/pagarme_pix/expiration_qrcode</config_path>
             <depends>
@@ -36,7 +36,7 @@
 			</depends>
 		</field>
 	    <field id="sort_order" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
-	        <label>Sort Order</label>
+	        <label>Payment method order</label>
 	        <comment />
 	        <config_path>payment/pagarme_pix/sort_order</config_path>
 	    </field>

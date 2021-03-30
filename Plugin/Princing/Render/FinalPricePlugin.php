@@ -4,14 +4,14 @@ namespace Pagarme\Pagarme\Plugin\Princing\Render;
 
 use Magento\Catalog\Model\Product;
 use Magento\Framework\App\ObjectManager;
-use Mundipagg\Core\Kernel\Abstractions\AbstractModuleCoreSetup as MPSetup;
-use Mundipagg\Core\Recurrence\Aggregates\ProductSubscription;
-use Mundipagg\Core\Recurrence\Services\ProductSubscriptionService;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use Pagarme\Core\Kernel\Abstractions\AbstractModuleCoreSetup as MPSetup;
+use Pagarme\Core\Recurrence\Aggregates\ProductSubscription;
+use Pagarme\Core\Recurrence\Services\ProductSubscriptionService;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Pagarme\Pagarme\Gateway\Transaction\Base\Config\Config;
 use Magento\Catalog\Pricing\Render\FinalPriceBox;
 use Magento\Catalog\Model\Product\Interceptor as ProductInterceptor;
-use Mundipagg\Core\Recurrence\Aggregates\Repetition;
+use Pagarme\Core\Recurrence\Aggregates\Repetition;
 
 class FinalPricePlugin
 {

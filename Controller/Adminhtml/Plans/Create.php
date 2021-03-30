@@ -6,9 +6,9 @@ use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\Registry;
 use Magento\Framework\View\Result\PageFactory;
-use Mundipagg\Core\Recurrence\Aggregates\Plan;
-use Mundipagg\Core\Recurrence\Repositories\PlanRepository;
-use Mundipagg\Core\Recurrence\Services\PlanService;
+use Pagarme\Core\Recurrence\Aggregates\Plan;
+use Pagarme\Core\Recurrence\Repositories\PlanRepository;
+use Pagarme\Core\Recurrence\Services\PlanService;
 
 class Create extends Action
 {

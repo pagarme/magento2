@@ -7,7 +7,7 @@
 -->
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
     <group id="pagarme_pagarme_transaction" translate="label comment" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="20">
-        <label>Pagar.me Transaction</label>
+        <label>Payment methods</label>
         <frontend_model>Pagarme\Pagarme\Block\Adminhtml\System\Config\Fieldset\Payment</frontend_model>
         <include path="Pagarme_Pagarme::system/transaction/creditcard.xml"/>
         <include path="Pagarme_Pagarme::system/transaction/pix.xml"/>

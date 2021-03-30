@@ -17,31 +17,31 @@
 		</field>
 
 		<field id="purchase_recurrence_product_with_normal_product" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="22" translate="label" type="select">
-			<label>Purchase of recurrence product with simple product</label>
+			<label>Allow purchase with other product</label>
 			<comment>Allow to purchase recurrence products with simple products on the same shopping cart</comment>
 			<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
 			<config_path>pagarme_pagarme/recurrence/purchase_recurrence_product_with_normal_product</config_path>
 		</field>
 		<field id="conflict_recurrence_product_with_normal_product" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="23" translate="label" type="textarea">
-			<label>Conflict checkout Message</label>
+			<label>Checkout conflict message</label>
 			<comment />
 			<config_path>pagarme_pagarme/recurrence/conflict_recurrence_product_with_normal_product</config_path>
 		</field>
 
 		<field id="purchase_recurrence_product_with_recurrence_product" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="24" translate="label" type="select">
-			<label>Purchase of recurrence product with recurrence product</label>
+			<label>Allow purchase with other recurrence product</label>
 			<comment>Allow to purchase more than one recurrence product on the same shopping cart</comment>
 			<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
 			<config_path>pagarme_pagarme/recurrence/purchase_recurrence_product_with_recurrence_product</config_path>
 		</field>
 		<field id="conflict_recurrence_product_with_recurrence_product" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="25" translate="label" type="textarea">
-			<label>Conflict checkout Message</label>
+			<label>Conflict checkout message</label>
 			<comment />
 			<config_path>pagarme_pagarme/recurrence/conflict_recurrence_product_with_recurrence_product</config_path>
 		</field>
 
 		<field id="decrease_stock" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="26" translate="label" type="select">
-			<label>Enable to decrease product stock with each cycle</label>
+			<label>Update product stock at each cycle</label>
 			<comment>With this option enabled, the module will decrease product stock with each recurrence cycle</comment>
 			<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
 			<config_path>pagarme_pagarme/recurrence/decrease_stock</config_path>

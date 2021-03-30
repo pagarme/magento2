@@ -4,9 +4,9 @@ namespace Pagarme\Pagarme\Observer;
 
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Event\Observer as EventObserver;
-use Mundipagg\Core\Payment\Services\CustomerService;
-use Mundipagg\Core\Kernel\Services\LogService;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use Pagarme\Core\Payment\Services\CustomerService;
+use Pagarme\Core\Kernel\Services\LogService;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Pagarme\Pagarme\Concrete\Magento2PlatformCustomerDecorator;
 use Pagarme\Pagarme\Helper\CustomerUpdatePagarmeHelper;
 use Pagarme\Pagarme\Model\PagarmeConfigProvider;
@@ -48,7 +48,7 @@ class AdminCustomerBeforeSave implements ObserverInterface
 
         $customerService = new CustomerService();
         try {
-            $customerService->updateCustomerAtMundipagg($platformCustomer);
+            $customerService->updateCustomerAtPagarme($platformCustomer);
         } catch (\Exception $exception) {
             $log = new LogService('CustomerService');
             $log->info($exception->getMessage());

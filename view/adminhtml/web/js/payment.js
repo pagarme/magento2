@@ -4,20 +4,20 @@ require([
 ], function ($) {
     "use strict";
 
-    var MundipaggAdmin = {};
+    var PagarmeAdmin = {};
 
     $(document).ready(function(){
     });
 
-    MundipaggAdmin.placeOrder = function (order) {
+    PagarmeAdmin.placeOrder = function (order) {
         var code = order.paymentMethod;
         var method = code.split("_");
 
         var submitFunction = order.submit;
-        window.MundipaggAdmin[method[1]].placeOrder(submitFunction);
+        window.PagarmeAdmin[method[1]].placeOrder(submitFunction);
     };
 
-    MundipaggAdmin.updateTotals = function (action, interest, amount) {
+    PagarmeAdmin.updateTotals = function (action, interest, amount) {
         var amountFormatted = "R$" + this.formatMoney(amount);
         jQuery(".pagarme-tax").remove();
         if (action === "remove-tax") {
@@ -31,7 +31,7 @@ require([
         jQuery("#order-totals table tr:last .price").html(amountFormatted);
     };
 
-    MundipaggAdmin.formatMoney = function (amount) {
+    PagarmeAdmin.formatMoney = function (amount) {
         var tmp = amount.toString();
         tmp = tmp.replace(/\D/g, "");
         tmp = tmp.replace(/([0-9]{2})$/g, ",$1");
@@ -42,7 +42,7 @@ require([
         return tmp;
     };
 
-    MundipaggAdmin.getTaxHtml = function (interest) {
+    PagarmeAdmin.getTaxHtml = function (interest) {
         return "<tr id=\"pagarme-tax\" class=\"row-totals pagarme-tax\">" +
         "<td style=\"\" class=\"admin__total-mark\" colspan=\"1\"> Tax </td>" +
         "<td style=\"\" class=\"admin__total-amount\">" +
@@ -51,5 +51,5 @@ require([
         "</tr>";
     };
 
-    window.MundipaggAdmin = MundipaggAdmin;
+    window.PagarmeAdmin = PagarmeAdmin;
 });

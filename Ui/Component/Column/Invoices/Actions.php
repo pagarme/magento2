@@ -86,7 +86,7 @@ class Actions extends Column
     protected function getUrlPagarmeEdit($item, $path)
     {
         $url = $this->urlBuilder->getUrl($path);
-        return $url . "?invoice_id={$item['mundipagg_id']}";
+        return $url . "?invoice_id={$item['pagarme_id']}";
     }
 
     protected function getUrlPagarmeDelete($item, $path)

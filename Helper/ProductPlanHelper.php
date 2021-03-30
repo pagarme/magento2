@@ -4,10 +4,10 @@ namespace Pagarme\Pagarme\Helper;
 
 use Magento\Catalog\Model\Product;
 use Magento\Framework\App\ObjectManager;
-use Mundipagg\Core\Kernel\Services\MoneyService;
-use Mundipagg\Core\Recurrence\Interfaces\ProductPlanInterface;
-use Mundipagg\Core\Recurrence\Services\SubProductService;
-use Mundipagg\Core\Recurrence\ValueObjects\PricingSchemeValueObject as PricingScheme;
+use Pagarme\Core\Kernel\Services\MoneyService;
+use Pagarme\Core\Recurrence\Interfaces\ProductPlanInterface;
+use Pagarme\Core\Recurrence\Services\SubProductService;
+use Pagarme\Core\Recurrence\ValueObjects\PricingSchemeValueObject as PricingScheme;
 
 class ProductPlanHelper
 {
@@ -21,7 +21,7 @@ class ProductPlanHelper
         ProductPlanInterface $productPlan
     ) {
         $productPlan->setId($planOriginal->getId());
-        $productPlan->setMundipaggId($planOriginal->getMundipaggId());
+        $productPlan->setPagarmeId($planOriginal->getPagarmeId());
         $productPlan->setProductId($planOriginal->getProductId());
         $productPlan->setBillingType($planOriginal->getBillingType());
         $productPlan->setStatus('ACTIVE');
@@ -78,7 +78,7 @@ class ProductPlanHelper
             );
 
             if (!empty($subProductSaved)) {
-                $subProduct->setMundipaggId($subProductSaved->getMundipaggId());
+                $subProduct->setPagarmeId($subProductSaved->getPagarmeId());
                 $subProduct->setId($subProductSaved->getId());
             }
         }
@@ -87,7 +87,7 @@ class ProductPlanHelper
     /**
      * @param $planId
      * @param $productId
-     * @return \Mundipagg\Core\Kernel\ValueObjects\AbstractValidString|null
+     * @return \Pagarme\Core\Kernel\ValueObjects\AbstractValidString|null
      */
     protected static function getSubProductFromDb($planId, $productId)
     {

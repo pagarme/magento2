@@ -3,9 +3,9 @@
 namespace Pagarme\Pagarme\Helper\Adminhtml;
 
 use Magento\Framework\App\Helper\AbstractHelper;
-use Mundipagg\Core\Kernel\Services\MoneyService;
-use Mundipagg\Core\Payment\Services\CardService;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use Pagarme\Core\Kernel\Services\MoneyService;
+use Pagarme\Core\Payment\Services\CardService;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 
 class CheckoutHelper extends AbstractHelper
 {

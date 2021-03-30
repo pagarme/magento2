@@ -12,7 +12,7 @@
 namespace Pagarme\Pagarme\Model;
 
 use Magento\Framework\Api\SimpleBuilderInterface;
-use Mundipagg\Core\Kernel\ValueObjects\CardBrand;
+use Pagarme\Core\Kernel\ValueObjects\CardBrand;
 use Pagarme\Pagarme\Api\InstallmentsByBrandManagementInterface;
 use Magento\Checkout\Model\Session;
 

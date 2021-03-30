@@ -16,13 +16,13 @@ use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
 use Magento\Framework\Registry;
 use Magento\Customer\Model\Session;
-use Mundipagg\Core\Kernel\ValueObjects\Id\SubscriptionId;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
-use Mundipagg\Core\Recurrence\Repositories\SubscriptionRepository;
-use Mundipagg\Core\Kernel\Exceptions\InvalidParamException;
-use Mundipagg\Core\Kernel\Abstractions\AbstractEntity;
-use Mundipagg\Core\Recurrence\Repositories\ChargeRepository;
-use Mundipagg\Core\Recurrence\Aggregates\Charge;
+use Pagarme\Core\Kernel\ValueObjects\Id\SubscriptionId;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use Pagarme\Core\Recurrence\Repositories\SubscriptionRepository;
+use Pagarme\Core\Kernel\Exceptions\InvalidParamException;
+use Pagarme\Core\Kernel\Abstractions\AbstractEntity;
+use Pagarme\Core\Recurrence\Repositories\ChargeRepository;
+use Pagarme\Core\Recurrence\Aggregates\Charge;
 
 class Invoice extends Template
 {
@@ -88,7 +88,7 @@ class Invoice extends Template
         $codeOrder = $this->coreRegistry->registry('code');
 
         $pagarmeId = new SubscriptionId($codeOrder);
-        $subscription = $this->subscriptionRepository->findByMundipaggId($pagarmeId);
+        $subscription = $this->subscriptionRepository->findByPagarmeId($pagarmeId);
         if (!$subscription) {
             return null;
         }
@@ -108,7 +108,7 @@ class Invoice extends Template
         /* @var string[] $listSubscriptionCode */
         $listSubscriptionCode = [];
         foreach ($subscriptionList as $subscription) {
-            $listSubscriptionCode[] = $subscription->getMundipaggId()->getValue();
+            $listSubscriptionCode[] = $subscription->getPagarmeId()->getValue();
         }
 
         if (!in_array($codeOrder, $listSubscriptionCode)) {

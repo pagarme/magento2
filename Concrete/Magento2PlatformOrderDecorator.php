@@ -11,47 +11,47 @@ use Magento\Quote\Model\QuoteFactory;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment\Transaction\Repository as TransactionRepository;
 use Magento\Sales\Model\Order\Payment\Repository as PaymentRepository;
-use Mundipagg\Core\Kernel\Abstractions\AbstractModuleCoreSetup as MPSetup;
-use Mundipagg\Core\Kernel\Abstractions\AbstractPlatformOrderDecorator;
-use Mundipagg\Core\Kernel\Aggregates\Charge;
-use Mundipagg\Core\Kernel\Interfaces\PlatformInvoiceInterface;
-use Mundipagg\Core\Kernel\Interfaces\PlatformOrderInterface;
-use Mundipagg\Core\Kernel\Services\MoneyService;
-use Mundipagg\Core\Kernel\Services\OrderService;
-use Mundipagg\Core\Kernel\ValueObjects\Id\CustomerId;
-use Mundipagg\Core\Kernel\ValueObjects\Id\OrderId;
-use Mundipagg\Core\Kernel\ValueObjects\OrderState;
-use Mundipagg\Core\Kernel\ValueObjects\OrderStatus;
-use Mundipagg\Core\Kernel\ValueObjects\PaymentMethod;
-use Mundipagg\Core\Payment\Aggregates\Address;
-use Mundipagg\Core\Payment\Aggregates\Customer;
-use Mundipagg\Core\Payment\Aggregates\Item;
-use Mundipagg\Core\Payment\Aggregates\Payments\AbstractCreditCardPayment;
-use Mundipagg\Core\Payment\Aggregates\Payments\AbstractPayment;
-use Mundipagg\Core\Payment\Aggregates\Payments\BoletoPayment;
-use Mundipagg\Core\Payment\Aggregates\Payments\NewDebitCardPayment;
-use Mundipagg\Core\Payment\Aggregates\Payments\NewVoucherPayment;
-use Mundipagg\Core\Payment\Aggregates\Payments\PixPayment;
-use Mundipagg\Core\Payment\Aggregates\Shipping;
-use Mundipagg\Core\Payment\Factories\PaymentFactory;
-use Mundipagg\Core\Payment\Repositories\CustomerRepository as CoreCustomerRepository;
-use Mundipagg\Core\Payment\Repositories\SavedCardRepository;
-use Mundipagg\Core\Payment\ValueObjects\CustomerPhones;
-use Mundipagg\Core\Payment\ValueObjects\CustomerType;
-use Mundipagg\Core\Payment\ValueObjects\Phone;
-use Mundipagg\Core\Recurrence\Aggregates\Plan;
-use Mundipagg\Core\Recurrence\Services\RecurrenceService;
+use Pagarme\Core\Kernel\Abstractions\AbstractModuleCoreSetup as MPSetup;
+use Pagarme\Core\Kernel\Abstractions\AbstractPlatformOrderDecorator;
+use Pagarme\Core\Kernel\Aggregates\Charge;
+use Pagarme\Core\Kernel\Interfaces\PlatformInvoiceInterface;
+use Pagarme\Core\Kernel\Interfaces\PlatformOrderInterface;
+use Pagarme\Core\Kernel\Services\MoneyService;
+use Pagarme\Core\Kernel\Services\OrderService;
+use Pagarme\Core\Kernel\ValueObjects\Id\CustomerId;
+use Pagarme\Core\Kernel\ValueObjects\Id\OrderId;
+use Pagarme\Core\Kernel\ValueObjects\OrderState;
+use Pagarme\Core\Kernel\ValueObjects\OrderStatus;
+use Pagarme\Core\Kernel\ValueObjects\PaymentMethod;
+use Pagarme\Core\Payment\Aggregates\Address;
+use Pagarme\Core\Payment\Aggregates\Customer;
+use Pagarme\Core\Payment\Aggregates\Item;
+use Pagarme\Core\Payment\Aggregates\Payments\AbstractCreditCardPayment;
+use Pagarme\Core\Payment\Aggregates\Payments\AbstractPayment;
+use Pagarme\Core\Payment\Aggregates\Payments\BoletoPayment;
+use Pagarme\Core\Payment\Aggregates\Payments\NewDebitCardPayment;
+use Pagarme\Core\Payment\Aggregates\Payments\NewVoucherPayment;
+use Pagarme\Core\Payment\Aggregates\Payments\PixPayment;
+use Pagarme\Core\Payment\Aggregates\Shipping;
+use Pagarme\Core\Payment\Factories\PaymentFactory;
+use Pagarme\Core\Payment\Repositories\CustomerRepository as CoreCustomerRepository;
+use Pagarme\Core\Payment\Repositories\SavedCardRepository;
+use Pagarme\Core\Payment\ValueObjects\CustomerPhones;
+use Pagarme\Core\Payment\ValueObjects\CustomerType;
+use Pagarme\Core\Payment\ValueObjects\Phone;
+use Pagarme\Core\Recurrence\Aggregates\Plan;
+use Pagarme\Core\Recurrence\Services\RecurrenceService;
 use Pagarme\Pagarme\Helper\BuildChargeAddtionalInformationHelper;
 use Pagarme\Pagarme\Helper\RecurrenceProductHelper;
 use Pagarme\Pagarme\Gateway\Transaction\Base\Config\Config;
 use Pagarme\Pagarme\Model\Cards;
 use Pagarme\Pagarme\Model\CardsRepository;
-use Mundipagg\Core\Kernel\Services\LocalizationService;
-use Mundipagg\Core\Kernel\Services\LogService;
+use Pagarme\Core\Kernel\Services\LocalizationService;
+use Pagarme\Core\Kernel\Services\LogService;
 use Magento\Sales\Model\Order\Email\Sender\OrderCommentSender;
 use Magento\Sales\Model\ResourceModel\Order\Status\Collection;
-use Mundipagg\Core\Kernel\Aggregates\Transaction;
-use Mundipagg\Core\Kernel\ValueObjects\TransactionType;
+use Pagarme\Core\Kernel\Aggregates\Transaction;
+use Pagarme\Core\Kernel\ValueObjects\TransactionType;
 use Magento\Quote\Model\Quote;
 
 class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
@@ -395,7 +395,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             return $orderId;
         }
 
-        return $orderCore->getMundipaggId();
+        return $orderCore->getPagarmeId();
     }
 
     public function getHistoryCommentCollection()
@@ -510,7 +510,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             $mpId = $savedCustomer->getCustomAttribute('customer_id_pagarme')
                 ->getValue();
             $customerId = new CustomerId($mpId);
-            $customer->setMundipaggId($customerId);
+            $customer->setPagarmeId($customerId);
         } catch (\Throwable $e) {
         }
 
@@ -520,7 +520,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
                 $savedCustomer->getId()
             );
             if ($coreCustomer !== null) {
-                $customer->setMundipaggId($coreCustomer->getMundipaggId());
+                $customer->setPagarmeId($coreCustomer->getPagarmeId());
             }
         }
 
@@ -681,7 +681,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $type = $coreProduct->getRecurrenceType();
 
         if ($type == Plan::RECURRENCE_TYPE) {
-            $item->setMundipaggId($coreProduct->getMundipaggId());
+            $item->setPagarmeId($coreProduct->getPagarmeId());
             $item->setType($type);
             return $item;
         }
@@ -1248,8 +1248,4 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         return $this->platformOrder->getTotalCanceled();
     }
 
-    public function getMundipaggId()
-    {
-        return $this->getPagarmeId();
-    }
 }

@@ -4,27 +4,27 @@ namespace Pagarme\Pagarme\Model\Cart;
 
 use Magento\Checkout\Model\Cart;
 use Magento\Framework\Exception\LocalizedException;
-use Mundipagg\Core\Kernel\Services\LocalizationService;
-use Mundipagg\Core\Recurrence\Interfaces\ProductPlanInterface;
-use Mundipagg\Core\Recurrence\Services\CartRules\CurrentProduct;
-use Mundipagg\Core\Recurrence\Services\RecurrenceService;
-use Mundipagg\Core\Recurrence\Services\RepetitionService;
-use Mundipagg\Core\Recurrence\Services\CartRules\MoreThanOneRecurrenceProduct;
-use Mundipagg\Core\Recurrence\Services\CartRules\NormalWithRecurrenceProduct;
-use Mundipagg\Core\Recurrence\Services\CartRules\ProductListInCart;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
-use Mundipagg\Core\Recurrence\Aggregates\Repetition;
+use Pagarme\Core\Kernel\Services\LocalizationService;
+use Pagarme\Core\Recurrence\Interfaces\ProductPlanInterface;
+use Pagarme\Core\Recurrence\Services\CartRules\CurrentProduct;
+use Pagarme\Core\Recurrence\Services\RecurrenceService;
+use Pagarme\Core\Recurrence\Services\RepetitionService;
+use Pagarme\Core\Recurrence\Services\CartRules\MoreThanOneRecurrenceProduct;
+use Pagarme\Core\Recurrence\Services\CartRules\NormalWithRecurrenceProduct;
+use Pagarme\Core\Recurrence\Services\CartRules\ProductListInCart;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use Pagarme\Core\Recurrence\Aggregates\Repetition;
 use Magento\Catalog\Model\Product\Interceptor;
 use Pagarme\Pagarme\Helper\RecurrenceProductHelper;
 use Magento\Catalog\Model\Product\Option;
 use Magento\Catalog\Api\Data\ProductCustomOptionValuesInterface;
 use Magento\Catalog\Model\Product\Option\Value;
-use Mundipagg\Core\Recurrence\Services\ProductSubscriptionService;
-use Mundipagg\Core\Recurrence\Services\PlanService;
-use Mundipagg\Core\Recurrence\Services\CartRules\JustProductPlanInCart;
-use Mundipagg\Core\Recurrence\Services\CartRules\JustSelfProductPlanInCart;
+use Pagarme\Core\Recurrence\Services\ProductSubscriptionService;
+use Pagarme\Core\Recurrence\Services\PlanService;
+use Pagarme\Core\Recurrence\Services\CartRules\JustProductPlanInCart;
+use Pagarme\Core\Recurrence\Services\CartRules\JustSelfProductPlanInCart;
 use Pagarme\Pagarme\Helper\RulesCartRun;
-use Mundipagg\Core\Kernel\Aggregates\Configuration;
+use Pagarme\Core\Kernel\Aggregates\Configuration;
 
 class CartConflict
 {

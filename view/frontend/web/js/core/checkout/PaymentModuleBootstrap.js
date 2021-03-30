@@ -2,26 +2,26 @@
  * This code should be migrated to core_module
  */
 
-var MundiPaggCore = {
+var PagarmeCore = {
     paymentMethod : []
 };
 
-MundiPaggCore.initPaymentMethod = function (methodCode, platformConfig) {
+PagarmeCore.initPaymentMethod = function (methodCode, platformConfig) {
     var _self = this;
     setTimeout(function() {
         _self.init(methodCode, platformConfig);
     }, 1000);
 };
 
-MundiPaggCore.init = function (methodCode, platformConfig) {
+PagarmeCore.init = function (methodCode, platformConfig) {
     this.paymentMethod[methodCode] = new PaymentMethodController(methodCode, platformConfig);
     this.paymentMethod[methodCode].init();
 }
-MundiPaggCore.initBin = function (methodCode, obj) {
+PagarmeCore.initBin = function (methodCode, obj) {
     this.paymentMethod[methodCode].initBin(obj);
 };
 
-MundiPaggCore.validatePaymentMethod = function (methodCode) {
+PagarmeCore.validatePaymentMethod = function (methodCode) {
     this.paymentMethod =
         new PaymentMethodController(methodCode);
 
@@ -29,7 +29,7 @@ MundiPaggCore.validatePaymentMethod = function (methodCode) {
     return this.paymentMethod.formValidation();
 };
 
-MundiPaggCore.placeOrder = function(platformObject, model) {
+PagarmeCore.placeOrder = function(platformObject, model) {
 
     if (this.paymentMethod[model].model.validate()) {
         try {

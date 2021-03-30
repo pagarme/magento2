@@ -16,12 +16,12 @@ use Magento\Framework\View\Element\Template\Context;
 use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Sales\Api\Data\OrderInterface as Order;
 use Magento\Sales\Api\Data\OrderPaymentInterface as Payment;
-use Mundipagg\Core\Kernel\Repositories\OrderRepository;
-use Mundipagg\Core\Kernel\ValueObjects\Id\OrderId;
-use Mundipagg\Core\Kernel\ValueObjects\Id\SubscriptionId;
-use Mundipagg\Core\Recurrence\Repositories\SubscriptionRepository;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
-use Mundipagg\Core\Recurrence\Repositories\ChargeRepository as SubscriptionChargeRepository;
+use Pagarme\Core\Kernel\Repositories\OrderRepository;
+use Pagarme\Core\Kernel\ValueObjects\Id\OrderId;
+use Pagarme\Core\Kernel\ValueObjects\Id\SubscriptionId;
+use Pagarme\Core\Recurrence\Repositories\SubscriptionRepository;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use Pagarme\Core\Recurrence\Repositories\ChargeRepository as SubscriptionChargeRepository;
 
 class Billet extends Template
 {
@@ -101,7 +101,7 @@ class Billet extends Template
         }
 
         $orderRepository = new OrderRepository();
-        $order = $orderRepository->findByMundipaggId(new OrderId($orderId));
+        $order = $orderRepository->findByPagarmeId(new OrderId($orderId));
 
         if ($order !== null) {
             $charges = $order->getCharges();
@@ -129,7 +129,7 @@ class Billet extends Template
         $chargeRepository = new SubscriptionChargeRepository();
         $subscriptionId =
             new SubscriptionId(
-                $subscription->getMundipaggId()->getValue()
+                $subscription->getPagarmeId()->getValue()
             );
 
         $charge = $chargeRepository->findBySubscriptionId($subscriptionId);

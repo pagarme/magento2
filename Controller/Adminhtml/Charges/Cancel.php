@@ -2,10 +2,10 @@
 
 namespace Pagarme\Pagarme\Controller\Adminhtml\Charges;
 
-use Mundipagg\Core\Kernel\Repositories\ChargeRepository;
-use Mundipagg\Core\Kernel\Services\ChargeService;
-use Mundipagg\Core\Kernel\Services\LogService;
-use Mundipagg\Core\Kernel\ValueObjects\Id\ChargeId;
+use Pagarme\Core\Kernel\Repositories\ChargeRepository;
+use Pagarme\Core\Kernel\Services\ChargeService;
+use Pagarme\Core\Kernel\Services\LogService;
+use Pagarme\Core\Kernel\ValueObjects\Id\ChargeId;
 
 class Cancel extends ChargeAction
 {

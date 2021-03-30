@@ -36,7 +36,7 @@ define([
         this.listenPaymentChange();
         this.addListeners(config);
 
-        window.MundipaggAdmin[method[1]] = this;
+        window.PagarmeAdmin[method[1]] = this;
     };
 
     CreditCardModel.listenPaymentChange = function () {
@@ -44,7 +44,7 @@ define([
 
         jQuery("#order-billing_method_form input.admin__control-radio").on("click", function(e){
             var amount = _self.formObject.inputAmountWithoutTax.val();
-            MundipaggAdmin.updateTotals("remove-tax", 0, amount);
+            PagarmeAdmin.updateTotals("remove-tax", 0, amount);
         });
     };
 
