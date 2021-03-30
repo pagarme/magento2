@@ -7,7 +7,15 @@
         "OSL-3.0",
         "AFL-3.0"
     ],
+"repositories": [
+    {
+            "url": "git@github.com:pagarme/ecommerce-module-core.git",
+            "type": "vcs",
+            "no-api": true
+    }
+],
     "require": {
+        "pagarme/ecommerce-module-core": "dev-master",
         "php": "7.0.2|7.0.4|~7.0.6|~7.1.0",
         "zendframework/zend-stdlib": "^2.7.7",
         "zendframework/zend-code": "^3.1.0",
@@ -230,7 +238,8 @@
             "Magento\\Framework\\": "lib/internal/Magento/Framework/",
             "Magento\\Setup\\": "setup/src/Magento/Setup/",
             "Magento\\": "app/code/Magento/",
-            "MundiPagg\\MundiPagg\\": "app/code/Pagarme/Pagarme"
+            "Pagarme\\Core\\": "app/code/Pagarme/Core/",
+            "Pagarme\\Pagarme\\": "app/code/Pagarme/Pagarme/"
         },
         "psr-0": {
             "": [
