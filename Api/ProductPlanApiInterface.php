@@ -1,18 +1,18 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Api;
+namespace Pagarme\Pagarme\Api;
 
-use Mundipagg\Core\Recurrence\Interfaces\ProductPlanInterface;
-use MundiPagg\MundiPagg\Api\ObjectMapper\ProductPlan\ProductPlanMapperInterface;
+use Pagarme\Core\Recurrence\Interfaces\ProductPlanInterface;
+use Pagarme\Pagarme\Api\ObjectMapper\ProductPlan\ProductPlanMapperInterface;
 
 interface ProductPlanApiInterface
 {
     /**
      * Save product plan
      *
-     * @param \MundiPagg\MundiPagg\Api\ObjectMapper\ProductPlan\ProductPlanMapperInterface $productPlan
+     * @param \Pagarme\Pagarme\Api\ObjectMapper\ProductPlan\ProductPlanMapperInterface $productPlan
      * @param int $id
-     * @return \MundiPagg\MundiPagg\Api\ObjectMapper\ProductPlan\ProductPlanMapperInterface|array
+     * @return \Pagarme\Pagarme\Api\ObjectMapper\ProductPlan\ProductPlanMapperInterface|array
      */
     public function save($productPlan, $id = null);
 
@@ -21,14 +21,14 @@ interface ProductPlanApiInterface
      *
      * @param array $form
      * @param int $id
-     * @return \MundiPagg\MundiPagg\Api\ObjectMapper\ProductPlan\ProductPlanMapperInterface|array
+     * @return \Pagarme\Pagarme\Api\ObjectMapper\ProductPlan\ProductPlanMapperInterface|array
      */
     public function saveFormData();
 
     /**
      * List product plan
      *
-     * @return \MundiPagg\MundiPagg\Api\ObjectMapper\ProductPlan\ProductPlanMapperInterface[]|array
+     * @return \Pagarme\Pagarme\Api\ObjectMapper\ProductPlan\ProductPlanMapperInterface[]|array
      */
     public function list();
 
@@ -36,8 +36,8 @@ interface ProductPlanApiInterface
      * Update product plan
      *
      * @param int $id
-     * @param \MundiPagg\MundiPagg\Api\ObjectMapper\ProductPlan\ProductPlanMapperInterface $productPlan
-     * @return \MundiPagg\MundiPagg\Api\ObjectMapper\ProductPlan\ProductPlanMapperInterface|array
+     * @param \Pagarme\Pagarme\Api\ObjectMapper\ProductPlan\ProductPlanMapperInterface $productPlan
+     * @return \Pagarme\Pagarme\Api\ObjectMapper\ProductPlan\ProductPlanMapperInterface|array
      */
     public function update($id, $productPlan);
 
@@ -45,7 +45,7 @@ interface ProductPlanApiInterface
      * Get a product plan
      *
      * @param int $id
-     * @return \MundiPagg\MundiPagg\Api\ObjectMapper\ProductPlan\ProductPlanMapperInterface|array
+     * @return \Pagarme\Pagarme\Api\ObjectMapper\ProductPlan\ProductPlanMapperInterface|array
      */
     public function find($id);
 
@@ -53,7 +53,7 @@ interface ProductPlanApiInterface
      * Delete product plan
      *
      * @param int $id
-     * @return \MundiPagg\MundiPagg\Api\ObjectMapper\ProductPlan\ProductPlanMapperInterface|array
+     * @return \Pagarme\Pagarme\Api\ObjectMapper\ProductPlan\ProductPlanMapperInterface|array
      */
     public function delete($id);
 

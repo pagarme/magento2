@@ -2,18 +2,18 @@
 /**
  * Class Validator
  *
- * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
- * @copyright   2017 MundiPagg (http://www.mundipagg.com)
- * @license     http://www.mundipagg.com Copyright
+ * @author      Open Source Team
+ * @copyright   2021 Pagar.me (https://pagar.me)
+ * @license     https://pagar.me Copyright
  *
- * @link        http://www.mundipagg.com
+ * @link        https://pagar.me
  */
 
-namespace MundiPagg\MundiPagg\Gateway\Transaction\Billet\ResourceGateway\Create\Response;
+namespace Pagarme\Pagarme\Gateway\Transaction\Billet\ResourceGateway\Create\Response;
 
 
 use Magento\Payment\Gateway\Validator\ValidatorInterface;
-use MundiPagg\MundiPagg\Gateway\Transaction\Base\ResourceGateway\Response\AbstractValidator;
+use Pagarme\Pagarme\Gateway\Transaction\Base\ResourceGateway\Response\AbstractValidator;
 
 class Validator extends AbstractValidator implements ValidatorInterface
 {
@@ -23,7 +23,7 @@ class Validator extends AbstractValidator implements ValidatorInterface
     public function validate(array $validationSubject)
     {
         if (!isset($validationSubject['response'])) {
-            throw new \InvalidArgumentException('MundiPagg Credit Card Authorize Response object should be provided');
+            throw new \InvalidArgumentException('Pagar.me Credit Card Authorize Response object should be provided');
         }
 
         $isValid = true;

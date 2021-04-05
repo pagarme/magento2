@@ -1,11 +1,11 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Api\ObjectMapper\ProductSubscription;
+namespace Pagarme\Pagarme\Api\ObjectMapper\ProductSubscription;
 
-interface ProductSubscriptionMapperInterface extends \Mundipagg\Core\Recurrence\Interfaces\ProductSubscriptionInterface
+interface ProductSubscriptionMapperInterface extends \Pagarme\Core\Recurrence\Interfaces\ProductSubscriptionInterface
 {
     /**
-     * @return \MundiPagg\MundiPagg\Api\ObjectMapper\ProductSubscription\RepetitionInterface[]|null
+     * @return \Pagarme\Pagarme\Api\ObjectMapper\ProductSubscription\RepetitionInterface[]|null
      */
     public function getRepetitions();
 

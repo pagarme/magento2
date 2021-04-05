@@ -1,10 +1,10 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Model;
+namespace Pagarme\Pagarme\Model;
 
-use Mundipagg\Core\Maintenance\Services\InfoBuilderService;
-use MundiPagg\MundiPagg\Api\MaintenanceInterface;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use Pagarme\Core\Maintenance\Services\InfoBuilderService;
+use Pagarme\Pagarme\Api\MaintenanceInterface;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 
 class Maintenance
     implements MaintenanceInterface

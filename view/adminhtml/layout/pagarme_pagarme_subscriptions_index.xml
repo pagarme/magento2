@@ -3,7 +3,7 @@
 	<update handle="styles"/>
 	<body>
 		<referenceContainer name="content">
-			<uiComponent name="mundipagg_mundipagg_recurrenceproducts_listing"/>
+			<uiComponent name="pagarme_pagarme_subscriptions_listing"/>
 		</referenceContainer>
 	</body>
 </page>

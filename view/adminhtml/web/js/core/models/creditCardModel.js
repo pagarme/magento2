@@ -2,10 +2,10 @@ define([
     "jquery",
     "uiComponent",
     "Magento_Ui/js/modal/alert",
-    "MundiPagg_MundiPagg/js/core/checkout/PlatformFormBiding",
-    "MundiPagg_MundiPagg/js/core/checkout/CreditCardToken",
-    "MundiPagg_MundiPagg/js/core/checkout/Listeners",
-    "MundiPagg_MundiPagg/js/core/checkout/CreditCardValidator",
+    "Pagarme_Pagarme/js/core/checkout/PlatformFormBiding",
+    "Pagarme_Pagarme/js/core/checkout/CreditCardToken",
+    "Pagarme_Pagarme/js/core/checkout/Listeners",
+    "Pagarme_Pagarme/js/core/checkout/CreditCardValidator",
 ], function (
     $,
     Class,
@@ -36,7 +36,7 @@ define([
         this.listenPaymentChange();
         this.addListeners(config);
 
-        window.MundipaggAdmin[method[1]] = this;
+        window.PagarmeAdmin[method[1]] = this;
     };
 
     CreditCardModel.listenPaymentChange = function () {
@@ -44,7 +44,7 @@ define([
 
         jQuery("#order-billing_method_form input.admin__control-radio").on("click", function(e){
             var amount = _self.formObject.inputAmountWithoutTax.val();
-            MundipaggAdmin.updateTotals("remove-tax", 0, amount);
+            PagarmeAdmin.updateTotals("remove-tax", 0, amount);
         });
     };
 
@@ -130,7 +130,7 @@ define([
         var formObject = this.formObject;
         var saveThiscard = false;
         return {
-            "method": "mundipagg_creditcard",
+            "method": "pagarme_creditcard",
             "additional_data": {
                 "cc_type": formObject.creditCardBrand.val(),
                 "cc_last_4": this.getLastFourNumbers(),

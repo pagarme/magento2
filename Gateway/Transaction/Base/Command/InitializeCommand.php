@@ -2,34 +2,34 @@
 /**
  * Class InitializedCommand
  *
- * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
- * @copyright   2017 MundiPagg (http://www.mundipagg.com)
- * @license     http://www.mundipagg.com Copyright
+ * @author      Open Source Team
+ * @copyright   2021 Pagar.me (https://pagar.me)
+ * @license     https://pagar.me Copyright
  *
- * @link        http://www.mundipagg.com
+ * @link        https://pagar.me
  */
 
-namespace MundiPagg\MundiPagg\Gateway\Transaction\Base\Command;
+namespace Pagarme\Pagarme\Gateway\Transaction\Base\Command;
 
 use Magento\Payment\Gateway\Helper\SubjectReader;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Payment\Gateway\CommandInterface;
 use Magento\Sales\Model\Order\Payment;
-use Mundipagg\Core\Kernel\Abstractions\AbstractModuleCoreSetup as MPSetup;
-use Mundipagg\Core\Kernel\Abstractions\AbstractPlatformOrderDecorator;
-use Mundipagg\Core\Kernel\Interfaces\PlatformOrderInterface;
-use Mundipagg\Core\Kernel\Services\OrderLogService;
-use Mundipagg\Core\Kernel\Services\OrderService;
-use Mundipagg\Core\Recurrence\Services\RecurrenceService;
-use Mundipagg\Core\Recurrence\Services\SubscriptionService;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
-use MundiPagg\MundiPagg\Concrete\Magento2PlatformPaymentMethodDecorator;
-use MundiPagg\MundiPagg\Model\Ui\CreditCard\ConfigProvider;
-use MundiPagg\MundiPagg\Model\Ui\TwoCreditCard\ConfigProvider as TwoCreditCardConfigProvider;
+use Pagarme\Core\Kernel\Abstractions\AbstractModuleCoreSetup as MPSetup;
+use Pagarme\Core\Kernel\Abstractions\AbstractPlatformOrderDecorator;
+use Pagarme\Core\Kernel\Interfaces\PlatformOrderInterface;
+use Pagarme\Core\Kernel\Services\OrderLogService;
+use Pagarme\Core\Kernel\Services\OrderService;
+use Pagarme\Core\Recurrence\Services\RecurrenceService;
+use Pagarme\Core\Recurrence\Services\SubscriptionService;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use Pagarme\Pagarme\Concrete\Magento2PlatformPaymentMethodDecorator;
+use Pagarme\Pagarme\Model\Ui\CreditCard\ConfigProvider;
+use Pagarme\Pagarme\Model\Ui\TwoCreditCard\ConfigProvider as TwoCreditCardConfigProvider;
 use Magento\Framework\Phrase;
 use Magento\Framework\Webapi\Exception as M2WebApiException;
-use MundiPagg\MundiPagg\Helper\RecurrenceProductHelper;
+use Pagarme\Pagarme\Helper\RecurrenceProductHelper;
 
 class InitializeCommand implements CommandInterface
 {
@@ -118,7 +118,7 @@ class InitializeCommand implements CommandInterface
 
         try {
             $quoteSuccess = $quote->getCustomerNote();
-            if ($quoteSuccess === 'mundipagg-processing') {
+            if ($quoteSuccess === 'pagarme-processing') {
                 $log->orderInfo(
                     $orderDecorator->getCode(),
                     "Quote already used, order id duplicated. Customer Note: {$quoteSuccess}"
@@ -126,7 +126,7 @@ class InitializeCommand implements CommandInterface
                 throw new \Exception("Quote already used, order id duplicated.");
             }
 
-            $quote->setCustomerNote('mundipagg-processing');
+            $quote->setCustomerNote('pagarme-processing');
             $quote->save();
 
             $log->orderInfo(
@@ -138,12 +138,12 @@ class InitializeCommand implements CommandInterface
             $isSubscription = $subscriptionService->isSubscription($orderDecorator);
 
             if ($isSubscription) {
-                $subscriptionService->createSubscriptionAtMundipagg($orderDecorator);
+                $subscriptionService->createSubscriptionAtPagarme($orderDecorator);
             }
 
             if (!$isSubscription) {
                 $orderService = new OrderService();
-                $orderService->createOrderAtMundipagg($orderDecorator);
+                $orderService->createOrderAtPagarme($orderDecorator);
             }
 
             $orderDecorator->save();

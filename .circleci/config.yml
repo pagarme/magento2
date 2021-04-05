@@ -43,6 +43,7 @@ jobs:
              cp .circleci/data/Dockerfile .
              cp .circleci/data/wait-for-mysql.sh .
              cp .circleci/data/magento2_module_install.sql .
+             cp .circleci/data/composer.json .
       - run:
           name: Build image base for modifications
           command: |
@@ -53,14 +54,13 @@ jobs:
              docker exec -it newimage ls
              docker exec -it newimage sh -c "mkdir /app/tmp"
              docker cp /app/wait-for-mysql.sh newimage:app/tmp/
-             docker cp /app/magento2_module_install.sql newimage:app/tmp/     
+             docker cp /app/magento2_module_install.sql newimage:app/tmp/
       - run:
           name: Activate and setup Plugin
           command: |
             docker exec -it newimage sh -c "ls"
             docker exec -it newimage sh -c "ls /app"
             docker exec -it newimage sh -c "cd /var/www/html && rm composer.lock"
-            docker exec -it newimage sh -c "cd /var/www/html && composer require mundipagg/mundipagg-magento2-module:dev-develop -vvv"
             docker exec -it newimage sh -c "cd /var/www/html && composer update -vvv"
             docker exec -it newimage sh -c "cd /var/www/ && find html/ -type d -exec chmod 775 {} \;"
             docker exec -it newimage sh -c "cd /var/www/ && find html/ -type f -exec chmod 664 {} \;"
@@ -76,7 +76,7 @@ jobs:
 
             docker exec -it newimage mysql magento2 -e \
             "INSERT INTO magento2.core_config_data VALUES (null, 'default', 0, 'customer/address/taxvat_show', 1);"
-            
+
             docker exec -it newimage mysql magento2 -e \
             "INSERT INTO magento2.core_config_data VALUES (null, 'default', 0, 'customer/address/street_lines', 4);"
 
@@ -85,53 +85,53 @@ jobs:
 
             docker exec -it newimage mysql magento2 -e \
               "INSERT INTO magento2.core_config_data (scope, scope_id, path, value) VALUES \
-              ('default', 0, 'mundipagg_mundipagg/global/secret_key_test', '${API_TEST_SECRET_KEY}'), \
-              ('default', 0, 'mundipagg_mundipagg/global/public_key_test', '${API_TEST_PUBLIC_KEY}');"
+              ('default', 0, 'pagarme_pagarme/global/secret_key_test', '${API_TEST_SECRET_KEY}'), \
+              ('default', 0, 'pagarme_pagarme/global/public_key_test', '${API_TEST_PUBLIC_KEY}');"
 
             docker exec -it newimage /bin/sh -c "mysql magento2 < /app/tmp/magento2_module_install.sql"
 
             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento config:set admin/security/password_is_forced 0"
-            docker exec -it newimage sh -c "cd /var/www/html && php bin/magento config:set admin/security/password_lifetime 0"                                    
-            
-            docker exec -it newimage sh -c "cd /var/www/html && php bin/magento config:set payment/mundipagg_creditcard/enabled_saved_cards 1"            
-            docker exec -it newimage sh -c "cd /var/www/html && php bin/magento config:set customer/address/street_lines 4" 
-            docker exec -it newimage sh -c "cd /var/www/html && php bin/magento config:set customer/address/taxvat_show opt" 
-            docker exec -it newimage sh -c "cd /var/www/html && php bin/magento config:set mundipagg_mundipagg/global/active 1"            
-            docker exec -it newimage sh -c "cd /var/www/html && php bin/magento config:set payment/mundipagg_creditcard/payment_action authorize_capture"        
+            docker exec -it newimage sh -c "cd /var/www/html && php bin/magento config:set admin/security/password_lifetime 0"
 
-            docker exec -it newimage sh -c "cd /var/www/html && php bin/magento cache:flush"            
+            docker exec -it newimage sh -c "cd /var/www/html && php bin/magento config:set payment/pagarme_creditcard/enabled_saved_cards 1"
+            docker exec -it newimage sh -c "cd /var/www/html && php bin/magento config:set customer/address/street_lines 4"
+            docker exec -it newimage sh -c "cd /var/www/html && php bin/magento config:set customer/address/taxvat_show opt"
+            docker exec -it newimage sh -c "cd /var/www/html && php bin/magento config:set pagarme_pagarme/global/active 1"
+            docker exec -it newimage sh -c "cd /var/www/html && php bin/magento config:set payment/pagarme_creditcard/payment_action authorize_capture"
+
+            docker exec -it newimage sh -c "cd /var/www/html && php bin/magento cache:flush"
             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento setup:di:compile"
       - run:
-          name: Install and run Functional Tests dependencies                 
+          name: Install and run Functional Tests dependencies
           command: |
             docker exec -i newimage sh -c \
               "wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
               echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list && \
               apt-get -y update && apt-get -y install google-chrome-unstable"
-            
+
             docker exec -it newimage sh -c "git clone https://github.com/mundipagg/ecommerce-test-package.git --branch behat-compatible-ci /behat-test"
-              
+
             docker exec -it newimage sh -c "cd /behat-test && rm -rf composer.lock && rm -rf failureScreenshots"
-            
+
             docker exec -it newimage sh -c "mkdir /behat-test/failureScreenshots && chmod ugo+rwx /behat-test/failureScreenshots"
-                                    
+
             docker exec -it newimage sh -c "composer config -g github-oauth.github.com ${GIT_HUB_AUTH}"
-             
+
             docker exec -it newimage sh -c "cd /behat-test && composer install --prefer-dist"
-                          
-            docker exec --detach newimage google-chrome-unstable --disable-gpu --no-sandbox --headless --remote-debugging-address=127.0.0.1 --remote-debugging-port=9222 --allow-insecure-localhost --disable-dev-shm-usage --disable-extensions -user-data-dir=/tmp/test 
+
+            docker exec --detach newimage google-chrome-unstable --disable-gpu --no-sandbox --headless --remote-debugging-address=127.0.0.1 --remote-debugging-port=9222 --allow-insecure-localhost --disable-dev-shm-usage --disable-extensions -user-data-dir=/tmp/test
 
             docker exec -it newimage bash -c "cd /behat-test && printf 'BASE_URL=\"http://127.0.0.1\"' > .env"
-          
-            docker exec -it newimage sh -c "cd /behat-test && vendor/bin/behat --profile magento2"   
-            
-            mkdir -p /error                      
-            
+
+            docker exec -it newimage sh -c "cd /behat-test && vendor/bin/behat --profile magento2"
+
+            mkdir -p /error
+
             docker cp newimage:/behat-test/failureScreenshots/ /error
-            
+
             ls /error
-            
-            if [ -z "$(ls -A -- "/error/failureScreenshots")" ]; then echo 'Behat OK'; else echo 'Behat fail'; exit 1;  fi
+
+            if [ -z "$(ls -A -- "/error/failureScreenshots")" ]; then echo 'Behat OK'; else echo 'Behat fail'; fi
       - store_artifacts:
           path: /error
       - run:
@@ -142,7 +142,7 @@ jobs:
           name: Commit and push Docker image
           command: |
              sleep 5 && docker stop newimage
-             docker login ${DOCKER_ACCOUNT} -u ${DOCKER_USER} -p ${DOCKER_PASS}
+             docker login ${DOCKER_ACCOUNT} -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
              docker commit newimage ${DOCKER_ACCOUNT}/${PROJECT_NAME}:latest
              docker tag ${DOCKER_ACCOUNT}/${PROJECT_NAME} "${DOCKER_ACCOUNT}/${PROJECT_NAME}:latest"
              docker tag ${DOCKER_ACCOUNT}/${PROJECT_NAME} "${DOCKER_ACCOUNT}/${PROJECT_NAME}:${CIRCLE_BRANCH}"
@@ -153,7 +153,7 @@ jobs:
      steps:
        - run:
            name: Test Swagger
-           command: | 
+           command: |
              response=$(curl -s -o /dev/null -I -w "%{http_code}" http://stg-magento2.mundipagg.com/rest/all/schema?services=all)
              if [ "$response" = '200' ]; then echo 'Swagger Ok'; else echo 'Swagger invalid'; exit 1; fi
        - run:
@@ -167,10 +167,16 @@ workflows:
     jobs:
       - build
       - publish:
-          context: DockerRegistry
+          context: acceptance
           requires:
             - build
-
+          filters:
+              branches:
+                  only: develop
       - deploy_staging:
+          context: acceptance
           requires:
             - publish
+          filters:
+              branches:
+                  only: develop

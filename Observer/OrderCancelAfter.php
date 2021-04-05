@@ -1,21 +1,21 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Observer;
+namespace Pagarme\Pagarme\Observer;
 
-use Mundipagg\Core\Kernel\Repositories\OrderRepository;
+use Pagarme\Core\Kernel\Repositories\OrderRepository;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Event\Observer as EventObserver;
-use Mundipagg\Core\Kernel\Exceptions\AbstractMundipaggCoreException;
-use Mundipagg\Core\Kernel\Factories\OrderFactory;
-use Mundipagg\Core\Kernel\Services\OrderService;
-use Mundipagg\Core\Kernel\Services\OrderLogService;
-use Mundipagg\Core\Kernel\Services\LocalizationService;
+use Pagarme\Core\Kernel\Exceptions\AbstractPagarmeCoreException;
+use Pagarme\Core\Kernel\Factories\OrderFactory;
+use Pagarme\Core\Kernel\Services\OrderService;
+use Pagarme\Core\Kernel\Services\OrderLogService;
+use Pagarme\Core\Kernel\Services\LocalizationService;
 use Magento\Framework\Webapi\Exception as M2WebApiException;
 use Magento\Framework\Phrase;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
-use MundiPagg\MundiPagg\Concrete\Magento2PlatformOrderDecorator;
-use MundiPagg\MundiPagg\Model\MundiPaggConfigProvider;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use Pagarme\Pagarme\Concrete\Magento2PlatformOrderDecorator;
+use Pagarme\Pagarme\Model\PagarmeConfigProvider;
 
 class OrderCancelAfter implements ObserverInterface
 {
@@ -39,7 +39,7 @@ class OrderCancelAfter implements ObserverInterface
 
         $payment = $order->getPayment();
 
-        if (!in_array($payment->getMethod(), $this->mundipaggMethods())) {
+        if (!in_array($payment->getMethod(), $this->pagarmeMethods())) {
             return $this;
         }
 
@@ -64,7 +64,7 @@ class OrderCancelAfter implements ObserverInterface
                 $platformOrder->getIncrementId()
             );
 
-        } catch(AbstractMundipaggCoreException $e) {
+        } catch(AbstractPagarmeCoreException $e) {
             throw new M2WebApiException(
                 new Phrase($e->getMessage()),
                 0,
@@ -76,9 +76,9 @@ class OrderCancelAfter implements ObserverInterface
     public function moduleIsEnable()
     {
         $objectManager = ObjectManager::getInstance();
-        $mundipaggProvider = $objectManager->get(MundiPaggConfigProvider::class);
+        $pagarmeProvider = $objectManager->get(PagarmeConfigProvider::class);
 
-        return $mundipaggProvider->getModuleStatus();
+        return $pagarmeProvider->getModuleStatus();
     }
 
     private function cancelOrderByTransactionInfo($transaction, $orderId)
@@ -92,7 +92,7 @@ class OrderCancelAfter implements ObserverInterface
             $orderFactory = new OrderFactory();
             $order = $orderFactory->createFromPostData($chargeInfo);
 
-            $orderService->cancelAtMundipagg($order);
+            $orderService->cancelAtPagarme($order);
             return;
         }
 
@@ -105,7 +105,7 @@ class OrderCancelAfter implements ObserverInterface
 
         $platformOrder = new Magento2PlatformOrderDecorator();
         $platformOrder->loadByIncrementId($incrementId);
-        $orderService->cancelAtMundipaggByPlatformOrder($platformOrder);
+        $orderService->cancelAtPagarmeByPlatformOrder($platformOrder);
     }
 
     private function getPlatformOrderFromObserver(EventObserver $observer)
@@ -149,9 +149,9 @@ class OrderCancelAfter implements ObserverInterface
 
         $chargeInfo =  $transaction->getAdditionalInformation();
 
-        if (!empty($chargeInfo['mundipagg_payment_module_api_response'])) {
+        if (!empty($chargeInfo['pagarme_payment_module_api_response'])) {
             $chargeInfo =
-                $chargeInfo['mundipagg_payment_module_api_response'];
+                $chargeInfo['pagarme_payment_module_api_response'];
             return json_decode($chargeInfo,true);
         }
 
@@ -161,7 +161,7 @@ class OrderCancelAfter implements ObserverInterface
     private function throwErrorMessage($orderId)
     {
         $i18n = new LocalizationService();
-        $message = "Can't cancel current order. Please cancel it by Mundipagg panel";
+        $message = "Can't cancel current order. Please cancel it by Pagar.me panel";
 
         $ExceptionMessage = $i18n->getDashboard($message);
 
@@ -172,13 +172,13 @@ class OrderCancelAfter implements ObserverInterface
         throw $e;
     }
 
-    private function mundipaggMethods()
+    private function pagarmeMethods()
     {
         return [
-          'mundipagg_creditcard',
-          'mundipagg_billet',
-          'mundipagg_two_creditcard',
-          'mundipagg_billet_creditcard',
+          'pagarme_creditcard',
+          'pagarme_billet',
+          'pagarme_two_creditcard',
+          'pagarme_billet_creditcard',
         ];
     }
 }

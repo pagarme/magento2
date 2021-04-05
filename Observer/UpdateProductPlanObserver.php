@@ -1,16 +1,16 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Observer;
+namespace Pagarme\Pagarme\Observer;
 
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
-use Mundipagg\Core\Recurrence\Aggregates\Plan;
-use Mundipagg\Core\Recurrence\Interfaces\RecurrenceEntityInterface;
-use Mundipagg\Core\Recurrence\Services\PlanService;
-use Mundipagg\Core\Recurrence\Services\RecurrenceService;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
-use MundiPagg\MundiPagg\Helper\ProductPlanHelper;
-use MundiPagg\MundiPagg\Helper\RecurrenceProductHelper;
+use Pagarme\Core\Recurrence\Aggregates\Plan;
+use Pagarme\Core\Recurrence\Interfaces\RecurrenceEntityInterface;
+use Pagarme\Core\Recurrence\Services\PlanService;
+use Pagarme\Core\Recurrence\Services\RecurrenceService;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use Pagarme\Pagarme\Helper\ProductPlanHelper;
+use Pagarme\Pagarme\Helper\RecurrenceProductHelper;
 
 class UpdateProductPlanObserver implements ObserverInterface
 {
@@ -50,7 +50,7 @@ class UpdateProductPlanObserver implements ObserverInterface
         try{
             ProductPlanHelper::mapperProductPlan($recurrence);
             $service = new PlanService();
-            $service->updatePlanAtMundipagg($recurrence);
+            $service->updatePlanAtPagarme($recurrence);
             $service->save($recurrence);
         } catch (\Exception $exception) {
             return $exception->getMessage();

@@ -2,24 +2,24 @@
 /**
  * Class CreditCardDataAssignObserver
  *
- * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
- * @copyright   2017 MundiPagg (http://www.mundipagg.com)
- * @license     http://www.mundipagg.com Copyright
+ * @author      Open Source Team
+ * @copyright   2021 Pagar.me (https://pagar.me)
+ * @license     https://pagar.me Copyright
  *
- * @link        http://www.mundipagg.com
+ * @link        https://pagar.me
  */
 
-namespace MundiPagg\MundiPagg\Observer;
+namespace Pagarme\Pagarme\Observer;
 
 
 use Magento\Framework\DataObject;
 use Magento\Framework\Event\Observer;
 use Magento\Quote\Api\Data\PaymentInterface;
 use Magento\Framework\Event\ObserverInterface;
-use Mundipagg\Core\Kernel\Services\InstallmentService;
-use Mundipagg\Core\Kernel\ValueObjects\CardBrand;
-use MundiPagg\MundiPagg\Api\InstallmentsByBrandManagementInterface;
-use MundiPagg\MundiPagg\Api\InstallmentsByBrandAndAmountManagementInterface;
+use Pagarme\Core\Kernel\Services\InstallmentService;
+use Pagarme\Core\Kernel\ValueObjects\CardBrand;
+use Pagarme\Pagarme\Api\InstallmentsByBrandManagementInterface;
+use Pagarme\Pagarme\Api\InstallmentsByBrandAndAmountManagementInterface;
 
 
 class CreditCardOrderPlaceBeforeObserver implements ObserverInterface
@@ -44,11 +44,11 @@ class CreditCardOrderPlaceBeforeObserver implements ObserverInterface
         $order = $observer->getOrder();
         $payment = $order->getPayment();
 
-        if ('mundipagg_creditcard' != $payment->getMethod() && 'mundipagg_billet_creditcard' != $payment->getMethod() && 'mundipagg_two_creditcard' != $payment->getMethod()) {
+        if ('pagarme_creditcard' != $payment->getMethod() && 'pagarme_billet_creditcard' != $payment->getMethod() && 'pagarme_two_creditcard' != $payment->getMethod()) {
             return $this;
         }
 
-        if($payment->getMethod() == 'mundipagg_creditcard'){
+        if($payment->getMethod() == 'pagarme_creditcard'){
             $tax = $this->getTaxOrder(
                 $payment->getAdditionalInformation('cc_installments'),
                 $payment->getAdditionalInformation('cc_type'),
@@ -56,18 +56,18 @@ class CreditCardOrderPlaceBeforeObserver implements ObserverInterface
             );
         }
 
-        if($payment->getMethod() == 'mundipagg_billet_creditcard'){
+        if($payment->getMethod() == 'pagarme_billet_creditcard'){
             $tax = $this->getTaxOrderByAmount($payment->getAdditionalInformation('cc_installments'), $payment->getCcType(), $payment->getAdditionalInformation('cc_cc_amount'));
         }
 
-        if($payment->getMethod() == 'mundipagg_two_creditcard'){
+        if($payment->getMethod() == 'pagarme_two_creditcard'){
             $tax = $payment->getAdditionalInformation('cc_second_card_tax_amount') + $payment->getAdditionalInformation('cc_first_card_tax_amount');
         }
 
 
         $total = $order->getGrandTotal() + $tax;
         $order->setTaxAmount($tax)->setBaseTaxAmount($tax)->setBaseGrandTotal($total)->setGrandTotal($total);
-        
+
         return $this;
     }
 

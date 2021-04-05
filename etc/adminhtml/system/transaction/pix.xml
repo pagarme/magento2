@@ -6,22 +6,22 @@
  */
 -->
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
-    <group id="mundipagg_mundipagg_transaction_pix" translate="label comment" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="20">
+    <group id="pagarme_pagarme_transaction_pix" translate="label comment" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="20">
         <label>Pix</label>
 	    <field id="active" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="select">
-	        <label>Enabled</label>
+	        <label>Enable this payment method</label>
 	        <comment />
 	        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-	        <config_path>payment/mundipagg_pix/active</config_path>
+	        <config_path>payment/pagarme_pix/active</config_path>
 	    </field>
 	    <field id="title" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
-	        <label>Title</label>
-	        <config_path>payment/mundipagg_pix/title</config_path>
+	        <label>Payment label</label>
+	        <config_path>payment/pagarme_pix/title</config_path>
 	    </field>
 	    <field id="expiration_qrcode" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
-	        <label>Expirations QrCode</label>
+	        <label>Qrcode expiration time (seconds)</label>
 	        <comment />
-	        <config_path>payment/mundipagg_pix/expiration_qrcode</config_path>
+	        <config_path>payment/pagarme_pix/expiration_qrcode</config_path>
             <depends>
                 <field id="active">1</field>
             </depends>
@@ -29,16 +29,16 @@
 		<field id="bank_pix" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="select">
 			<label>Bank</label>
 			<comment />
-			<source_model>MundiPagg\MundiPagg\Model\Source\PixTypes</source_model>
-			<config_path>payment/mundipagg_pix/types</config_path>
+			<source_model>Pagarme\Pagarme\Model\Source\PixTypes</source_model>
+			<config_path>payment/pagarme_pix/types</config_path>
 			<depends>
 				<field id="active">1</field>
 			</depends>
 		</field>
 	    <field id="sort_order" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
-	        <label>Sort Order</label>
+	        <label>Payment method order</label>
 	        <comment />
-	        <config_path>payment/mundipagg_pix/sort_order</config_path>
+	        <config_path>payment/pagarme_pix/sort_order</config_path>
 	    </field>
     </group>
 </include>

@@ -215,13 +215,13 @@ require([
         var id = data.id == undefined ? "" : data.id;
         var cycles = data.cycles == undefined ? "" : data.cycles;
         var quantity = data.quantity == undefined ? 1 : data.quantity;
-        var mundipagg_id = data.mundipagg_id == undefined ? "" : data.mundipagg_id;
+        var pagarme_id = data.pagarme_id == undefined ? "" : data.pagarme_id;
 
         var inputsHidden = "<input type='hidden' name='form[items][" + index + "][product_id]' value='" + data.code + "'/>" +
             "<input type='hidden' name='form[items][" + index + "][name]' value='" + data.name + "'/>" +
             "<input type='hidden' name='form[items][" + index + "][price]' value='" + data.price + "'/>" +
             "<input type='hidden' name='form[items][" + index + "][quantity]' value='" + quantity + "'/>" +
-            "<input type='hidden' name='form[items][" + index + "][mundipagg_id]' value='" + mundipagg_id + "'/>" +
+            "<input type='hidden' name='form[items][" + index + "][pagarme_id]' value='" + pagarme_id + "'/>" +
             "<input type='hidden' name='form[items][" + index + "][id]' value='" + id + "'/>";
 
         var quantityColumn = "<input type='number' disabled name='form[items][" + index + "][quantity]' value='" + quantity + "'/>";
@@ -271,7 +271,7 @@ require([
         $("#interval_type").val(product.intervalType);
         $("#interval_count").val(product.intervalCount);
         $("#product_id").val(product.productId);
-        $("#plan-id").val(product.mundipaggId);
+        $("#plan-id").val(product.pagarmeId);
         $("#status").val(product.status);
         $("#trial_period_days").val(product.trialPeriodDays);
 

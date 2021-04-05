@@ -1,10 +1,10 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Api\ObjectMapper\ProductPlan;
+namespace Pagarme\Pagarme\Api\ObjectMapper\ProductPlan;
 
-use \Mundipagg\Mundipagg\Api\Increment;
+use \Pagarme\Pagarme\Api\Increment;
 
-interface SubProduct extends \Mundipagg\Core\Recurrence\Interfaces\SubProductEntityInterface
+interface SubProduct extends \Pagarme\Core\Recurrence\Interfaces\SubProductEntityInterface
 {
 
 }

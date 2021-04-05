@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<ruleset name="MundiPagg Gateway Module Coding Standards">
-    <description>Generally-applicable sniffs for MundiPagg Gateway Module</description>
+<ruleset name="Pagar.me Gateway Module Coding Standards">
+    <description>Generally-applicable sniffs for Pagar.me Gateway Module</description>
 
     <rule ref="EcgM2"/>
 

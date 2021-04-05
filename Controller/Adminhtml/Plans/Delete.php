@@ -1,16 +1,16 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Controller\Adminhtml\Plans;
+namespace Pagarme\Pagarme\Controller\Adminhtml\Plans;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\Message\Factory;
 use Magento\Framework\Registry;
 use Magento\Framework\View\Result\PageFactory;
-use Mundipagg\Core\Recurrence\Services\PlanService;
-use Mundipagg\Core\Recurrence\Services\ProductSubscriptionService;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
-use MundiPagg\MundiPagg\Model\ProductsSubscriptionFactory;
+use Pagarme\Core\Recurrence\Services\PlanService;
+use Pagarme\Core\Recurrence\Services\ProductSubscriptionService;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use Pagarme\Pagarme\Model\ProductsSubscriptionFactory;
 
 class Delete extends Action
 {
@@ -60,7 +60,7 @@ class Delete extends Action
             if (!$productData || !$productData->getId()) {
                 $message = $this->messageFactory->create('error', __('Plan not exist.'));
                 $this->messageManager->addErrorMessage($message);
-                $this->_redirect('mundipagg_mundipagg/plans/index');
+                $this->_redirect('pagarme_pagarme/plans/index');
                 return;
             }
         }
@@ -70,7 +70,7 @@ class Delete extends Action
         $message = $this->messageFactory->create('success', _("Plan deleted."));
         $this->messageManager->addMessage($message);
 
-        $this->_redirect('mundipagg_mundipagg/plans/index');
+        $this->_redirect('pagarme_pagarme/plans/index');
         return;
     }
 }

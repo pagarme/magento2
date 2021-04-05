@@ -1,5 +1,5 @@
 <?php
-namespace MundiPagg\MundiPagg\Controller\Customer;
+namespace Pagarme\Pagarme\Controller\Customer;
 
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
@@ -8,14 +8,14 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\View\Result\PageFactory;
 use Magento\Customer\Model\Session;
 use Magento\Framework\App\Request\Http;
-use Mundipagg\Core\Kernel\Services\LocalizationService;
-use Mundipagg\Core\Kernel\Services\LogService;
-use Mundipagg\Core\Payment\Repositories\CustomerRepository;
-use Mundipagg\Core\Payment\Repositories\SavedCardRepository;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
-use MundiPagg\MundiPagg\Concrete\Magento2SavedCardAdapter;
-use MundiPagg\MundiPagg\Model\CardsRepository;
-use MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\Config;
+use Pagarme\Core\Kernel\Services\LocalizationService;
+use Pagarme\Core\Kernel\Services\LogService;
+use Pagarme\Core\Payment\Repositories\CustomerRepository;
+use Pagarme\Core\Payment\Repositories\SavedCardRepository;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use Pagarme\Pagarme\Concrete\Magento2SavedCardAdapter;
+use Pagarme\Pagarme\Model\CardsRepository;
+use Pagarme\Pagarme\Gateway\Transaction\Base\Config\Config;
 
 class Remove extends Action
 {
@@ -54,7 +54,7 @@ class Remove extends Action
     public function execute()
     {
         if (!$this->customerSession->isLoggedIn()) {
-            $this->_redirect('customer/account/login'); 
+            $this->_redirect('customer/account/login');
 
             return;
         }
@@ -121,7 +121,7 @@ class Remove extends Action
             }
         }
 
-        $this->_redirect('mundipagg/customer/cards'); 
+        $this->_redirect('pagarme/customer/cards');
 
         return;
     }
@@ -154,7 +154,7 @@ class Remove extends Action
             throw $baseException;
         }
 
-        if (!$customer->getMundipaggId()->equals($savedCard->getOwnerId())) {
+        if (!$customer->getPagarmeId()->equals($savedCard->getOwnerId())) {
             $baseException->setMessage("The logged user doesn't own the informed card.");
             throw $baseException;
         }

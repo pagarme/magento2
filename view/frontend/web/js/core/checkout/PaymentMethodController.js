@@ -33,9 +33,9 @@ PaymentMethodController.prototype.creditcardInit = function () {
 
     this.fillCardAmount(this.formObject, 1);
     this.hideCardAmount(this.formObject);
-    this.fillFormText(this.formObject, 'mundipagg_creditcard');
+    this.fillFormText(this.formObject, 'pagarme_creditcard');
     this.fillSavedCreditCardsSelect(this.formObject);
-    this.fillBrandList(this.formObject, 'mundipagg_creditcard');
+    this.fillBrandList(this.formObject, 'pagarme_creditcard');
     this.fillInstallments(this.formObject);
 
     if (!this.platformConfig.isMultibuyerEnabled) {
@@ -66,8 +66,8 @@ PaymentMethodController.prototype.voucherInit = function () {
 
     this.fillCardAmount(this.formObject, 1);
     this.hideCardAmount(this.formObject);
-    this.fillFormText(this.formObject, 'mundipagg_voucher');
-    this.fillBrandList(this.formObject, "mundipagg_voucher");
+    this.fillFormText(this.formObject, 'pagarme_voucher');
+    this.fillBrandList(this.formObject, "pagarme_voucher");
     this.removeInstallmentsSelect(this.formObject);
     this.fillSavedCreditCardsSelect(this.formObject);
     this.showCvvCard(this.formObject);
@@ -100,8 +100,8 @@ PaymentMethodController.prototype.debitInit = function () {
 
     this.fillCardAmount(this.formObject, 1);
     this.hideCardAmount(this.formObject);
-    this.fillFormText(this.formObject, 'mundipagg_debit');
-    this.fillBrandList(this.formObject, "mundipagg_debit");
+    this.fillFormText(this.formObject, 'pagarme_debit');
+    this.fillBrandList(this.formObject, "pagarme_debit");
     this.removeInstallmentsSelect(this.formObject);
     this.fillSavedCreditCardsSelect(this.formObject);
 
@@ -134,13 +134,13 @@ PaymentMethodController.prototype.twocreditcardsInit = function () {
 
     if (typeof this.formObject[1] !== "undefined") {
         for (var i = 0, len = this.formObject.numberOfPaymentForms; i < len; i++) {
-            this.fillFormText(this.formObject[i], 'mundipagg_two_creditcard');
+            this.fillFormText(this.formObject[i], 'pagarme_two_creditcard');
 
             if (this.formObject[i].inputAmount.val() === "" || !isTotalOnAmountInputs) {
                 this.fillCardAmount(this.formObject[i], 2, i);
             }
 
-            this.fillBrandList(this.formObject[i], 'mundipagg_two_creditcard');
+            this.fillBrandList(this.formObject[i], 'pagarme_two_creditcard');
             this.fillSavedCreditCardsSelect(this.formObject[i]);
             this.fillInstallments(this.formObject[i]);
 
@@ -243,8 +243,8 @@ PaymentMethodController.prototype.boletoCreditcardInit = function () {
             this.addInputAmountBalanceListener(this.formObject[i], i);
         }
 
-        this.fillBrandList(this.formObject[1], 'mundipagg_billet_creditcard');
-        this.fillFormText(this.formObject[1], 'mundipagg_billet_creditcard');
+        this.fillBrandList(this.formObject[1], 'pagarme_billet_creditcard');
+        this.fillFormText(this.formObject[1], 'pagarme_billet_creditcard');
         this.fillSavedCreditCardsSelect(this.formObject[1]);
         this.fillInstallments(this.formObject[1]);
         this.addCreditCardListeners(this.formObject[1]);
@@ -510,7 +510,7 @@ PaymentMethodController.prototype.addSavedCreditCardsListener = function(formObj
             formObject.multibuyer.showMultibuyer.parent().hide();
         }
 
-        if (formObject.containerSelector == "#mundipagg_voucher-form") {
+        if (formObject.containerSelector == "#pagarme_voucher-form") {
             paymentMethodController.showCvvCard(formObject);
         }
     });
@@ -625,8 +625,6 @@ PaymentMethodController.prototype.fillInstallments = function (form) {
         amount = 0;
     }
 
-    form.creditCardInstallments.prop('disabled', true);
-
     var installmentsUrl =
         this.platformConfig.urls.installments + '/' +
         selectedBrand + '/' +
@@ -639,6 +637,9 @@ PaymentMethodController.prototype.fillInstallments = function (form) {
     }).done(function(data) {
         formHandler = new FormHandler();
 
+        if (!data.length) return;
+
+        form.creditCardInstallments.prop('disabled', true);
         formHandler.updateInstallmentSelect(data, form.creditCardInstallments, installmentSelected);
         form.creditCardInstallments.prop('disabled', false);
 
@@ -649,7 +650,7 @@ PaymentMethodController.prototype.fillInstallments = function (form) {
 
 PaymentMethodController.prototype.fillBrandList = function (formObject, method) {
     if (method == undefined) {
-        method = 'mundipagg_creditcard';
+        method = 'pagarme_creditcard';
     }
     var formHandler = new FormHandler();
     formHandler.fillBrandList(

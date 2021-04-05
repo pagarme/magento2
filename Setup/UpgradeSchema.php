@@ -1,5 +1,5 @@
 <?php
-namespace MundiPagg\MundiPagg\Setup;
+namespace Pagarme\Pagarme\Setup;
 
 use Magento\Framework\Setup\UpgradeSchemaInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
@@ -27,7 +27,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
             $setup = $this->updateVersionOneZeroTwelve($setup);
         }
 
-        //Mundipagg Module Core tables
+        //Pagarme Module Core tables
         $installSchema = new InstallSchema();
 
         if (version_compare($version, "1.3.0", "<")) {
@@ -72,7 +72,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
         }
 
         if (version_compare($version, "2.0.1-beta", "<")) {
-            $setup = $this->addMundipaggIdToSubProductsTable($setup);
+            $setup = $this->addPagarmeIdToSubProductsTable($setup);
         }
 
         if (version_compare($version, "2.0.2-beta", "<")) {
@@ -90,9 +90,9 @@ class UpgradeSchema implements UpgradeSchemaInterface
     {
         $installer = $setup;
         $installer->startSetup();
- 
+
         // Get tutorial_simplenews table
-        $tableName = $installer->getTable('mundipagg_mundipagg_cards');
+        $tableName = $installer->getTable('pagarme_pagarme_cards');
         // Check if the table already exists
         if ($installer->getConnection()->isTableExists($tableName) != true) {
             // Create tutorial_simplenews table
@@ -152,12 +152,12 @@ class UpgradeSchema implements UpgradeSchemaInterface
                     ['nullable' => false],
                     'Updated At'
                 )
-                ->setComment('Mundipagg Card Tokens')
+                ->setComment('Pagar.me Card Tokens')
                 ->setOption('type', 'InnoDB')
                 ->setOption('charset', 'utf8');
             $installer->getConnection()->createTable($table);
         }
- 
+
         $installer->endSetup();
 
         return $setup;
@@ -171,7 +171,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
         $connection = $installer->getConnection();
 
         $connection->addColumn(
-            $installer->getTable('mundipagg_mundipagg_cards'),
+            $installer->getTable('pagarme_pagarme_cards'),
             'brand',
             [
                 'type' => Table::TYPE_TEXT,
@@ -194,7 +194,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
         $connection = $installer->getConnection();
 
         $connection->modifyColumn(
-            $installer->getTable('mundipagg_module_core_transaction'),
+            $installer->getTable('pagarme_module_core_transaction'),
             'acquirer_tid',
             [
                 'type' => Table::TYPE_TEXT,
@@ -202,7 +202,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
             ]
         )
         ->modifyColumn(
-            $installer->getTable('mundipagg_module_core_transaction'),
+            $installer->getTable('pagarme_module_core_transaction'),
             'acquirer_nsu',
             [
                 'type' => Table::TYPE_TEXT,
@@ -210,7 +210,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
             ]
         )
         ->modifyColumn(
-            $installer->getTable('mundipagg_module_core_transaction'),
+            $installer->getTable('pagarme_module_core_transaction'),
             'acquirer_auth_code',
             [
                 'type' => Table::TYPE_TEXT,
@@ -226,7 +226,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
         $installer = $setup;
 
         $connection = $installer->getConnection();
-        $tableName = $installer->getTable('mundipagg_module_core_transaction');
+        $tableName = $installer->getTable('pagarme_module_core_transaction');
 
         $connection->addColumn(
             $tableName,
@@ -247,7 +247,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
         $installer = $setup;
 
         $connection = $installer->getConnection();
-        $tableName = $installer->getTable('mundipagg_module_core_configuration');
+        $tableName = $installer->getTable('pagarme_module_core_configuration');
 
         $connection->addColumn(
             $tableName,
@@ -268,7 +268,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
         $installer = $setup;
 
         $connection = $installer->getConnection();
-        $tableName = $installer->getTable('mundipagg_module_core_saved_card');
+        $tableName = $installer->getTable('pagarme_module_core_saved_card');
 
         $connection->addColumn(
             $tableName,
@@ -289,7 +289,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
         $installer = $setup;
 
         $connection = $installer->getConnection();
-        $tableName = $installer->getTable('mundipagg_module_core_saved_card');
+        $tableName = $installer->getTable('pagarme_module_core_saved_card');
 
         $connection->addColumn(
             $tableName,
@@ -309,7 +309,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
         $installer = $setup;
 
         $connection = $installer->getConnection();
-        $tableName = $installer->getTable('mundipagg_module_core_charge');
+        $tableName = $installer->getTable('pagarme_module_core_charge');
 
         $connection->addColumn(
             $tableName,
@@ -330,7 +330,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
         $installer = $setup;
 
         $connection = $installer->getConnection();
-        $tableName = $installer->getTable('mundipagg_module_core_charge');
+        $tableName = $installer->getTable('pagarme_module_core_charge');
 
         $connection->addColumn(
             $tableName,
@@ -351,7 +351,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
         $installer = $setup;
 
         $connection = $installer->getConnection();
-        $tableName = $installer->getTable('mundipagg_module_core_transaction');
+        $tableName = $installer->getTable('pagarme_module_core_transaction');
 
         $connection->addColumn(
             $tableName,
@@ -367,21 +367,21 @@ class UpgradeSchema implements UpgradeSchemaInterface
         return $setup;
     }
 
-    protected function addMundipaggIdToSubProductsTable($setup)
+    protected function addPagarmeIdToSubProductsTable($setup)
     {
         $installer = $setup;
 
         $connection = $installer->getConnection();
-        $tableName = $installer->getTable('mundipagg_module_core_recurrence_sub_products');
+        $tableName = $installer->getTable('pagarme_module_core_recurrence_sub_products');
 
         $connection->addColumn(
             $tableName,
-            'mundipagg_id',
+            'pagarme_id',
             [
                 'type' => Table::TYPE_TEXT,
                 'length' => 21,
                 'nullable' => true,
-                'comment' => 'Mundipagg Id'
+                'comment' => 'Pagarme Id'
             ]
         );
 
@@ -393,7 +393,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
         $installer = $setup;
 
         $connection = $installer->getConnection();
-        $tableName = $installer->getTable('mundipagg_module_core_transaction');
+        $tableName = $installer->getTable('pagarme_module_core_transaction');
 
         $connection->addColumn(
             $tableName,

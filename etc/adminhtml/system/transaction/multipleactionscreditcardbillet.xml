@@ -6,22 +6,22 @@
  */
 -->
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
-    <group id="mundipagg_mundipagg_transaction_multipleactionscreditcardbillet" translate="label comment" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="20">
-        <label>Multiple Actions Credit Card and Billet</label>
+    <group id="pagarme_pagarme_transaction_multipleactionscreditcardbillet" translate="label comment" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="20">
+        <label>Multi-means Credit Card and Boleto</label>
         <field id="active" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label" type="select">
-            <label>Enabled</label>
+            <label>Enable this payment method</label>
             <comment />
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-            <config_path>payment/mundipagg_billet_creditcard/active</config_path>
+            <config_path>payment/pagarme_billet_creditcard/active</config_path>
         </field>
         <field id="title" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
-            <label>Title</label>
-            <config_path>payment/mundipagg_billet_creditcard/title</config_path>
+            <label>Payment label</label>
+            <config_path>payment/pagarme_billet_creditcard/title</config_path>
         </field>
         <field id="sort_order" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="70" translate="label" type="text">
-            <label>Sort Order</label>
+            <label>Payment method order</label>
             <comment />
-            <config_path>payment/mundipagg_billet_creditcard/sort_order</config_path>
+            <config_path>payment/pagarme_billet_creditcard/sort_order</config_path>
         </field>
     </group>
 </include>

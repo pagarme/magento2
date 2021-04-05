@@ -1,13 +1,13 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Observer;
+namespace Pagarme\Pagarme\Observer;
 
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\Event\ObserverInterface;
-use Mundipagg\Core\Kernel\Interfaces\PlatformOrderInterface;
-use Mundipagg\Core\Payment\Services\ValidationService;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use Pagarme\Core\Kernel\Interfaces\PlatformOrderInterface;
+use Pagarme\Core\Payment\Services\ValidationService;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 
 
 class OrderPlaceBeforeObserver implements ObserverInterface
@@ -19,7 +19,7 @@ class OrderPlaceBeforeObserver implements ObserverInterface
         $order = $observer->getOrder();
         $payment = $order->getPayment();
 
-        if (strpos($payment->getMethod(), 'mundipagg') === false) {
+        if (strpos($payment->getMethod(), 'pagarme') === false) {
             return;
         }
 

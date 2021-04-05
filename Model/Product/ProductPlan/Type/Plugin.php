@@ -4,7 +4,7 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-namespace MundiPagg\MundiPagg\Model\Product\ProductPlan\Type;
+namespace Pagarme\Pagarme\Model\Product\ProductPlan\Type;
 
 use Magento\Framework\Module\Manager;
 

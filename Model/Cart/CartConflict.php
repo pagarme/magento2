@@ -1,30 +1,30 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Model\Cart;
+namespace Pagarme\Pagarme\Model\Cart;
 
 use Magento\Checkout\Model\Cart;
 use Magento\Framework\Exception\LocalizedException;
-use Mundipagg\Core\Kernel\Services\LocalizationService;
-use Mundipagg\Core\Recurrence\Interfaces\ProductPlanInterface;
-use Mundipagg\Core\Recurrence\Services\CartRules\CurrentProduct;
-use Mundipagg\Core\Recurrence\Services\RecurrenceService;
-use Mundipagg\Core\Recurrence\Services\RepetitionService;
-use Mundipagg\Core\Recurrence\Services\CartRules\MoreThanOneRecurrenceProduct;
-use Mundipagg\Core\Recurrence\Services\CartRules\NormalWithRecurrenceProduct;
-use Mundipagg\Core\Recurrence\Services\CartRules\ProductListInCart;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
-use Mundipagg\Core\Recurrence\Aggregates\Repetition;
+use Pagarme\Core\Kernel\Services\LocalizationService;
+use Pagarme\Core\Recurrence\Interfaces\ProductPlanInterface;
+use Pagarme\Core\Recurrence\Services\CartRules\CurrentProduct;
+use Pagarme\Core\Recurrence\Services\RecurrenceService;
+use Pagarme\Core\Recurrence\Services\RepetitionService;
+use Pagarme\Core\Recurrence\Services\CartRules\MoreThanOneRecurrenceProduct;
+use Pagarme\Core\Recurrence\Services\CartRules\NormalWithRecurrenceProduct;
+use Pagarme\Core\Recurrence\Services\CartRules\ProductListInCart;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use Pagarme\Core\Recurrence\Aggregates\Repetition;
 use Magento\Catalog\Model\Product\Interceptor;
-use MundiPagg\MundiPagg\Helper\RecurrenceProductHelper;
+use Pagarme\Pagarme\Helper\RecurrenceProductHelper;
 use Magento\Catalog\Model\Product\Option;
 use Magento\Catalog\Api\Data\ProductCustomOptionValuesInterface;
 use Magento\Catalog\Model\Product\Option\Value;
-use Mundipagg\Core\Recurrence\Services\ProductSubscriptionService;
-use Mundipagg\Core\Recurrence\Services\PlanService;
-use Mundipagg\Core\Recurrence\Services\CartRules\JustProductPlanInCart;
-use Mundipagg\Core\Recurrence\Services\CartRules\JustSelfProductPlanInCart;
-use MundiPagg\MundiPagg\Helper\RulesCartRun;
-use Mundipagg\Core\Kernel\Aggregates\Configuration;
+use Pagarme\Core\Recurrence\Services\ProductSubscriptionService;
+use Pagarme\Core\Recurrence\Services\PlanService;
+use Pagarme\Core\Recurrence\Services\CartRules\JustProductPlanInCart;
+use Pagarme\Core\Recurrence\Services\CartRules\JustSelfProductPlanInCart;
+use Pagarme\Pagarme\Helper\RulesCartRun;
+use Pagarme\Core\Kernel\Aggregates\Configuration;
 
 class CartConflict
 {
@@ -56,7 +56,7 @@ class CartConflict
     /**
      * @var Configuration
      */
-    private $mundipaggConfig;
+    private $pagarmeConfig;
 
     /**
      * CartConflict constructor.
@@ -71,7 +71,7 @@ class CartConflict
         $this->productSubscriptionService = new ProductSubscriptionService();
         $this->planService = new PlanService();
         $this->rulesCartRun = new RulesCartRun();
-        $this->mundipaggConfig = Magento2CoreSetup::getModuleConfiguration();
+        $this->pagarmeConfig = Magento2CoreSetup::getModuleConfiguration();
     }
 
     /**
@@ -82,8 +82,8 @@ class CartConflict
     public function beforeUpdateItems(Cart $cart, $dataQty)
     {
         if (
-            !$this->mundipaggConfig->isEnabled() ||
-            !$this->mundipaggConfig->getRecurrenceConfig()->isEnabled()
+            !$this->pagarmeConfig->isEnabled() ||
+            !$this->pagarmeConfig->getRecurrenceConfig()->isEnabled()
         ) {
             return;
         }
@@ -122,8 +122,8 @@ class CartConflict
         $requestInfo = null
     ) {
         if (
-            !$this->mundipaggConfig->isEnabled() ||
-            !$this->mundipaggConfig->getRecurrenceConfig()->isEnabled()
+            !$this->pagarmeConfig->isEnabled() ||
+            !$this->pagarmeConfig->getRecurrenceConfig()->isEnabled()
         ) {
             return [$productInfo, $requestInfo];
         }

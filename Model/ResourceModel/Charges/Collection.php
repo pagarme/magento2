@@ -1,7 +1,7 @@
 <?php
 
 
-namespace MundiPagg\MundiPagg\Model\ResourceModel\Charges;
+namespace Pagarme\Pagarme\Model\ResourceModel\Charges;
 
 class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection
 {
@@ -14,8 +14,8 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
     protected function _construct()
     {
         $this->_init(
-            'MundiPagg\MundiPagg\Model\Charges',
-            'MundiPagg\MundiPagg\Model\ResourceModel\Charges'
+            'Pagarme\Pagarme\Model\Charges',
+            'Pagarme\Pagarme\Model\ResourceModel\Charges'
         );
     }
 }

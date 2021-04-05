@@ -1,5 +1,5 @@
 <?php
-namespace MundiPagg\MundiPagg\Setup;
+namespace Pagarme\Pagarme\Setup;
 
 use Magento\Eav\Setup\EavSetup;
 use Magento\Eav\Setup\EavSetupFactory;
@@ -42,7 +42,7 @@ class Recurrence {
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundipagg_payment',
+            'eav_pagarme_payment',
             [
                 'group' => 'Plan Config',
                 'type' => 'varchar',
@@ -52,7 +52,7 @@ class Recurrence {
                 'label' => 'Payment Methods',
                 'input' => 'select',
                 'class' => '',
-                'source' => 'MundiPagg\MundiPagg\Model\Source\EavPaymentMethods',
+                'source' => 'Pagarme\Pagarme\Model\Source\EavPaymentMethods',
                 'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_GLOBAL,
                 'visible' => true,
                 'required' => false,
@@ -80,7 +80,7 @@ class Recurrence {
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundipagg_interval',
+            'eav_pagarme_interval',
             [
                 'group' => 'Plan Config',
                 'type' => 'varchar',
@@ -90,7 +90,7 @@ class Recurrence {
                 'label' => 'Interval',
                 'input' => 'select',
                 'class' => '',
-                'source' => 'MundiPagg\MundiPagg\Model\Source\EavInterval',
+                'source' => 'Pagarme\Pagarme\Model\Source\EavInterval',
                 'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_GLOBAL,
                 'visible' => true,
                 'required' => false,
@@ -117,7 +117,7 @@ class Recurrence {
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundipagg_interval_period',
+            'eav_pagarme_interval_period',
             [
                 'group' => 'Plan Config',
                 'type' => 'int',
@@ -152,7 +152,7 @@ class Recurrence {
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundipagg_billing_type',
+            'eav_pagarme_billing_type',
             [
                 'group' => 'Plan Config',
                 'type' => 'varchar',
@@ -162,7 +162,7 @@ class Recurrence {
                 'label' => 'Billing Type',
                 'input' => 'select',
                 'class' => '',
-                'source' => 'MundiPagg\MundiPagg\Model\Source\EavBillingType',
+                'source' => 'Pagarme\Pagarme\Model\Source\EavBillingType',
                 'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_GLOBAL,
                 'visible' => true,
                 'required' => false,
@@ -189,7 +189,7 @@ class Recurrence {
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundipagg_billing_type_day',
+            'eav_pagarme_billing_type_day',
             [
                 'group' => 'Plan Config',
                 'type' => 'int',
@@ -223,7 +223,7 @@ class Recurrence {
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundipagg_trial_period',
+            'eav_pagarme_trial_period',
             [
                 'group' => 'Plan Config',
                 'type' => 'int',
@@ -258,16 +258,16 @@ class Recurrence {
 
         $eavSetup->removeAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundipagg_rec_interval'
+            'eav_pagarme_rec_interval'
         );
         $eavSetup->removeAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundipagg_rec_payment'
+            'eav_pagarme_rec_payment'
         );
 
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundi_rec_payment',
+            'eav_pagarme_rec_payment',
             [
                 'group' => 'Recurrence Config',
                 'type' => 'varchar',
@@ -277,7 +277,7 @@ class Recurrence {
                 'label' => 'Payment Methods',
                 'input' => 'select',
                 'class' => '',
-                'source' => 'MundiPagg\MundiPagg\Model\Source\EavPaymentMethods',
+                'source' => 'Pagarme\Pagarme\Model\Source\EavPaymentMethods',
                 'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_GLOBAL,
                 'visible' => true,
                 'required' => false,
@@ -305,7 +305,7 @@ class Recurrence {
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundi_rec_interval',
+            'eav_pagarme_rec_interval',
             [
                 'group' => 'Recurrence Config',
                 'type' => 'varchar',
@@ -315,7 +315,7 @@ class Recurrence {
                 'label' => 'Interval',
                 'input' => 'select',
                 'class' => '',
-                'source' => 'MundiPagg\MundiPagg\Model\Source\EavInterval',
+                'source' => 'Pagarme\Pagarme\Model\Source\EavInterval',
                 'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_GLOBAL,
                 'visible' => true,
                 'required' => false,
@@ -342,7 +342,7 @@ class Recurrence {
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundi_rec_interval_period',
+            'eav_pagarme_rec_interval_period',
             [
                 'group' => 'Recurrence Config',
                 'type' => 'int',
@@ -376,7 +376,7 @@ class Recurrence {
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundi_rec_billing_type',
+            'eav_pagarme_rec_billing_type',
             [
                 'group' => 'Recurrence Config',
                 'type' => 'varchar',
@@ -386,7 +386,7 @@ class Recurrence {
                 'label' => 'Billing Type',
                 'input' => 'select',
                 'class' => '',
-                'source' => 'MundiPagg\MundiPagg\Model\Source\EavBillingType',
+                'source' => 'Pagarme\Pagarme\Model\Source\EavBillingType',
                 'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_GLOBAL,
                 'visible' => true,
                 'required' => false,
@@ -412,7 +412,7 @@ class Recurrence {
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundi_rec_billing_type_day',
+            'eav_pagarme_rec_billing_type_day',
             [
                 'group' => 'Recurrence Config',
                 'type' => 'int',
@@ -449,7 +449,7 @@ class Recurrence {
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundi_rec_start_at',
+            'eav_pagarme_rec_start_at',
             [
                 'group' => 'Recurrence Config',
                 'type' => 'varchar',
@@ -459,7 +459,7 @@ class Recurrence {
                 'label' => 'Start At',
                 'input' => 'select',
                 'class' => '',
-                'source' => 'MundiPagg\MundiPagg\Model\Source\EavInterval',
+                'source' => 'Pagarme\Pagarme\Model\Source\EavInterval',
                 'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_GLOBAL,
                 'visible' => true,
                 'required' => false,
@@ -486,7 +486,7 @@ class Recurrence {
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundi_rec_start_at_day',
+            'eav_pagarme_rec_start_at_day',
             [
                 'group' => 'Recurrence Config',
                 'type' => 'int',
@@ -520,11 +520,11 @@ class Recurrence {
 
         $eavSetup->removeAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundi_rec_cycle_discount');
+            'eav_pagarme_rec_cycle_discount');
         /*
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundi_rec_cycle_discount',
+            'eav_pagarme_rec_cycle_discount',
             [
                 'group' => 'Recurrence Config',
                 'type' => 'int',
@@ -558,7 +558,7 @@ class Recurrence {
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundi_rec_allow_set',
+            'eav_pagarme_rec_allow_set',
             [
                 'group' => 'Recurrence Config',
                 'type' => 'int',
@@ -591,7 +591,7 @@ class Recurrence {
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundi_rec_global',
+            'eav_pagarme_rec_global',
             [
                 'group' => 'Recurrence Config',
                 'type' => 'int',
@@ -624,7 +624,7 @@ class Recurrence {
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundi_rec_allow_other',
+            'eav_pagarme_rec_allow_other',
             [
                 'group' => 'Recurrence Config',
                 'type' => 'int',

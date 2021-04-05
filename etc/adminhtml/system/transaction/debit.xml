@@ -6,42 +6,42 @@
  */
 -->
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
-    <group id="mundipagg_debit" translate="label comment" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="20">
+    <group id="pagarme_debit" translate="label comment" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="20">
         <label>Debit Card</label>
         <field id="active" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label" type="select">
-            <label>Enabled</label>
+            <label>Enable this payment method</label>
             <comment />
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-            <config_path>payment/mundipagg_debit/active</config_path>
+            <config_path>payment/pagarme_debit/active</config_path>
         </field>
         <field id="title" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
-            <label>Title</label>
-            <config_path>payment/mundipagg_debit/title</config_path>
+            <label>Payment label</label>
+            <config_path>payment/pagarme_debit/title</config_path>
         </field>
         <field id="soft_description" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
-            <label>Soft Description MundiPagg</label>
-            <config_path>payment/mundipagg_debit/soft_description</config_path>
+            <label>Soft descriptor</label>
+            <config_path>payment/pagarme_debit/soft_description</config_path>
             <comment>Max size 22.</comment>
         </field>
 <!--        <field id="payment_action" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="40" translate="label" type="select">-->
 <!--            <label>Payment Action</label>-->
 <!--            <comment />-->
-<!--            <source_model>MundiPagg\MundiPagg\Model\Source\PaymentAction</source_model>-->
-<!--            <config_path>payment/mundipagg_debit/payment_action</config_path>-->
+<!--            <source_model>Pagarme\Pagarme\Model\Source\PaymentAction</source_model>-->
+<!--            <config_path>payment/pagarme_debit/payment_action</config_path>-->
 <!--        </field>-->
         <field id="sort_order" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="70" translate="label" type="text">
-            <label>Sort Order</label>
+            <label>Payment method order</label>
             <comment />
-            <config_path>payment/mundipagg_debit/sort_order</config_path>
+            <config_path>payment/pagarme_debit/sort_order</config_path>
         </field>
         <field id="enabled_saved_cards" showInDefault="1" showInStore="1"
                showInWebsite="1"
                sortOrder="71" translate="label" type="select">
-            <label>Enable Saved debits</label>
+            <label>Enable card wallet</label>
             <comment />
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-            <config_path>payment/mundipagg_debit/enabled_saved_cards</config_path>
+            <config_path>payment/pagarme_debit/enabled_saved_cards</config_path>
         </field>
-	    <include path="MundiPagg_MundiPagg::system/transaction/debit/types.xml"/>
+	    <include path="Pagarme_Pagarme::system/transaction/debit/types.xml"/>
     </group>
 </include>

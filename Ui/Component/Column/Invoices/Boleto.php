@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Ui\Component\Column\Invoices;
+namespace Pagarme\Pagarme\Ui\Component\Column\Invoices;
 
 use Magento\Cms\Block\Adminhtml\Page\Grid\Renderer\Action\UrlBuilder;
 use Magento\Ui\Component\Listing\Columns\Column;
@@ -11,8 +11,8 @@ use Magento\Framework\UrlInterface;
 class Boleto extends Column
 {
     /** Url path */
-    const URL_PATH_EDIT = 'mundipagg_mundipagg/invoices/index';
-    const URL_PATH_DELETE = 'mundipagg_mundipagg/invoices/delete';
+    const URL_PATH_EDIT = 'pagarme_pagarme/invoices/index';
+    const URL_PATH_DELETE = 'pagarme_pagarme/invoices/delete';
     /** @var UrlBuilder */
     protected $actionUrlBuilder;
     /** @var UrlInterface */

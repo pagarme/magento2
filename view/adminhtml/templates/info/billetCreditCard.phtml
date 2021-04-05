@@ -1,7 +1,7 @@
 <?php
-/* @var \MundiPagg\MundiPagg\Block\Payment\Info\Billet $this */
+/* @var \Pagarme\Pagarme\Block\Payment\Info\Billet $this */
 /**
- * @var \Mundipagg\Core\Kernel\Aggregates\Transaction $lastTransaction
+ * @var \Pagarme\Core\Kernel\Aggregates\Transaction $lastTransaction
  */
 $lastTransactions = $this->getTransactionInfo();
 $postDataBillet = (json_decode($lastTransactions['billet']->getPostData()->tran_data, true));

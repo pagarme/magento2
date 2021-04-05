@@ -1,9 +1,9 @@
 /**
- * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
- * @copyright   2017 MundiPagg (http://www.mundipagg.com)
- * @license     http://www.mundipagg.com  Copyright
+ * @author      Open Source Team
+ * @copyright   2021 Pagar.me (https://pagar.me)
+ * @license     https://pagar.me Copyright
  *
- * @link        http://www.mundipagg.com
+ * @link        https://pagar.me
  */
 /*browser:true*/
 /*global define*/
@@ -19,7 +19,7 @@ define(
 
         return function (orderId) {
             var serviceUrl;
-            serviceUrl = urlBuilder.createUrl('/mundipagg/redirect-after-placeorder/:orderId/link', {
+            serviceUrl = urlBuilder.createUrl('/pagarme/redirect-after-placeorder/:orderId/link', {
                 orderId: orderId
             });
 

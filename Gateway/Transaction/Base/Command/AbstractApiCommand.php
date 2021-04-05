@@ -2,14 +2,14 @@
 /**
  * Class AbstractApiCommand
  *
- * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
- * @copyright   2017 MundiPagg (http://www.mundipagg.com)
- * @license     http://www.mundipagg.com Copyright
+ * @author      Open Source Team
+ * @copyright   2021 Pagar.me (https://pagar.me)
+ * @license     https://pagar.me Copyright
  *
- * @link        http://www.mundipagg.com
+ * @link        https://pagar.me
  */
 
-namespace MundiPagg\MundiPagg\Gateway\Transaction\Base\Command;
+namespace Pagarme\Pagarme\Gateway\Transaction\Base\Command;
 
 use Magento\Framework\App\ObjectManager;
 use Magento\Payment\Gateway\CommandInterface;
@@ -18,11 +18,11 @@ use Magento\Payment\Gateway\Response\HandlerInterface as ResponseHandler;
 use Magento\Payment\Gateway\Validator\ValidatorInterface;
 use Magento\Payment\Gateway\Command\CommandException;
 use Magento\Quote\Model\QuoteFactory;
-use Mundipagg\Core\Kernel\Abstractions\AbstractModuleCoreSetup as MPSetup;
-use Mundipagg\Core\Kernel\Interfaces\PlatformOrderInterface;
-use Mundipagg\Core\Kernel\Services\OrderService;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
-use MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\ConfigInterface;
+use Pagarme\Core\Kernel\Abstractions\AbstractModuleCoreSetup as MPSetup;
+use Pagarme\Core\Kernel\Interfaces\PlatformOrderInterface;
+use Pagarme\Core\Kernel\Services\OrderService;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use Pagarme\Pagarme\Gateway\Transaction\Base\Config\ConfigInterface;
 
 abstract class AbstractApiCommand implements CommandInterface
 {

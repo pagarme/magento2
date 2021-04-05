@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+	<head>
+		<css src="Pagarme_Pagarme::css/jquery-ui.min.css" />
+		<css src="Pagarme_Pagarme::css/pagarme_style.css" />
+	</head>
+	<body>
+		<referenceContainer name="content">
+			<block class="Pagarme\Pagarme\Block\Adminhtml\Recurrence\Subscriptions\Subscription" name="pagarme.recurrence.subscriptions.details" template="recurrence/subscriptions/details.phtml" cacheable="false"/>
+		</referenceContainer>
+	</body>
+</page>

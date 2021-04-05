@@ -3,7 +3,7 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-namespace MundiPagg\MundiPagg\Ui\DataProvider\Product\Form\Modifier;
+namespace Pagarme\Pagarme\Ui\DataProvider\Product\Form\Modifier;
 
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Api\Data\ProductLinkInterface;
@@ -12,7 +12,7 @@ use Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\AbstractModifier;
 use Magento\Framework\Phrase;
 use Magento\Ui\Component\Modal;
 use Magento\Ui\Component\Form;
-use MundiPagg\MundiPagg\Model\Product\ProductPlan\Plan as GroupedProductType;
+use Pagarme\Pagarme\Model\Product\ProductPlan\Plan as GroupedProductType;
 use Magento\Framework\UrlInterface;
 use Magento\Ui\Component\DynamicRows;
 use Magento\Catalog\Api\ProductLinkRepositoryInterface;

@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Ui\Component\Column\Invoices;
+namespace Pagarme\Pagarme\Ui\Component\Column\Invoices;
 
 use Magento\Cms\Block\Adminhtml\Page\Grid\Renderer\Action\UrlBuilder;
 use Magento\Ui\Component\Listing\Columns\Column;
@@ -11,8 +11,8 @@ use Magento\Framework\UrlInterface;
 class Actions extends Column
 {
     /** Url path */
-    const URL_PATH_EDIT = 'mundipagg_mundipagg/invoices/index';
-    const URL_PATH_DELETE = 'mundipagg_mundipagg/invoices/delete';
+    const URL_PATH_EDIT = 'pagarme_pagarme/invoices/index';
+    const URL_PATH_DELETE = 'pagarme_pagarme/invoices/delete';
     /** @var UrlBuilder */
     protected $actionUrlBuilder;
     /** @var UrlInterface */
@@ -65,7 +65,7 @@ class Actions extends Column
     {
         if ($item['status']->getText() != 'canceled') {
             $actions[$name]['delete'] = [
-                'href' => $this->getUrlMundipaggDelete($item, self::URL_PATH_DELETE),
+                'href' => $this->getUrlPagarmeDelete($item, self::URL_PATH_DELETE),
                 'label' => __('Cancel'),
                 'confirm' => [
                     'title' => __('Confirm action'),
@@ -83,13 +83,13 @@ class Actions extends Column
         return $actions;
     }
 
-    protected function getUrlMundipaggEdit($item, $path)
+    protected function getUrlPagarmeEdit($item, $path)
     {
         $url = $this->urlBuilder->getUrl($path);
-        return $url . "?invoice_id={$item['mundipagg_id']}";
+        return $url . "?invoice_id={$item['pagarme_id']}";
     }
 
-    protected function getUrlMundipaggDelete($item, $path)
+    protected function getUrlPagarmeDelete($item, $path)
     {
         return $this->urlBuilder->getUrl($path, ['id' => $item['invoice_id']]);
     }

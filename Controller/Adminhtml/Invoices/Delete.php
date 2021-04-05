@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Controller\Adminhtml\Invoices;
+namespace Pagarme\Pagarme\Controller\Adminhtml\Invoices;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
@@ -8,8 +8,8 @@ use Magento\Framework\Message\Factory;
 use Magento\Framework\Message\MessageInterface;
 use Magento\Framework\Registry;
 use Magento\Framework\View\Result\PageFactory;
-use Mundipagg\Core\Recurrence\Services\InvoiceService;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use Pagarme\Core\Recurrence\Services\InvoiceService;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Magento\Framework\HTTP\ZendClientFactory;
 
 class Delete extends Action
@@ -77,7 +77,7 @@ class Delete extends Action
         }
 
         $this->messageManager->addMessage($message);
-        $this->_redirect('mundipagg_mundipagg/subscriptions/index');
+        $this->_redirect('pagarme_pagarme/subscriptions/index');
         return;
     }
 }

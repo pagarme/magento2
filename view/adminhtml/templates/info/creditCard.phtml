@@ -1,9 +1,9 @@
-<?php /* @var \MundiPagg\MundiPagg\Block\Payment\Info\CreditCard $this */ ?>
+<?php /* @var \Pagarme\Pagarme\Block\Payment\Info\CreditCard $this */ ?>
 <?php if ($this->getCcType()): ?>
 
     <?php
     /**
-     * @var \Mundipagg\Core\Kernel\Aggregates\Transaction $lastTransaction
+     * @var \Pagarme\Core\Kernel\Aggregates\Transaction $lastTransaction
      */
     $lastTransaction =  $this->getTransactionInfo();
     ?>

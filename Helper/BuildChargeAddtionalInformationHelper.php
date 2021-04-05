@@ -1,10 +1,10 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Helper;
+namespace Pagarme\Pagarme\Helper;
 
-use Mundipagg\Core\Kernel\Aggregates\Transaction;
-use Mundipagg\Core\Kernel\ValueObjects\TransactionType;
-use Mundipagg\Core\Kernel\Aggregates\Charge;
+use Pagarme\Core\Kernel\Aggregates\Transaction;
+use Pagarme\Core\Kernel\ValueObjects\TransactionType;
+use Pagarme\Core\Kernel\Aggregates\Charge;
 
 class BuildChargeAddtionalInformationHelper
 {
@@ -19,7 +19,7 @@ class BuildChargeAddtionalInformationHelper
          * @var string contains method name, call dynamic
          */
         $methodName = str_replace(
-            ['_', 'Mundipagg'],
+            ['_', 'Pagarme'],
             '',
             ucwords($paymentMethodPlatform, "_")
         );

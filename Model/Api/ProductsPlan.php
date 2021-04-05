@@ -1,17 +1,17 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Model\Api;
+namespace Pagarme\Pagarme\Model\Api;
 
 use Magento\Framework\Webapi\Exception as MagentoException;
 use Magento\Framework\Webapi\Rest\Request;
-use Mundipagg\Core\Recurrence\Services\PlanService;
-use Mundipagg\Core\Recurrence\Aggregates\Plan;
-use Mundipagg\Core\Recurrence\Interfaces\ProductPlanInterface;
-use Mundipagg\Core\Recurrence\Factories\PlanFactory;
-use MundiPagg\MundiPagg\Api\ProductPlanApiInterface;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
-use MundiPagg\MundiPagg\Helper\ProductPlanHelper;
-use MundiPagg\MundiPagg\Api\ObjectMapper\ProductPlan\ProductPlanMapperInterface;
+use Pagarme\Core\Recurrence\Services\PlanService;
+use Pagarme\Core\Recurrence\Aggregates\Plan;
+use Pagarme\Core\Recurrence\Interfaces\ProductPlanInterface;
+use Pagarme\Core\Recurrence\Factories\PlanFactory;
+use Pagarme\Pagarme\Api\ProductPlanApiInterface;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use Pagarme\Pagarme\Helper\ProductPlanHelper;
+use Pagarme\Pagarme\Api\ObjectMapper\ProductPlan\ProductPlanMapperInterface;
 
 class ProductsPlan implements ProductPlanApiInterface
 {

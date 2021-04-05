@@ -1,15 +1,15 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Observer;
+namespace Pagarme\Pagarme\Observer;
 
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Event\Observer as EventObserver;
 use Magento\Framework\Exception\InputException;
-use MundiPagg\MundiPagg\Model\MundiPaggConfigProvider;
+use Pagarme\Pagarme\Model\PagarmeConfigProvider;
 use Magento\Framework\App\ObjectManager;
-use Mundipagg\Core\Kernel\Services\LogService;
-use Mundipagg\Core\Kernel\Services\LocalizationService;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use Pagarme\Core\Kernel\Services\LogService;
+use Pagarme\Core\Kernel\Services\LocalizationService;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 
 class CustomerAddressSaveBefore implements ObserverInterface
 {
@@ -33,9 +33,9 @@ class CustomerAddressSaveBefore implements ObserverInterface
     public function moduleIsEnable()
     {
         $objectManager = ObjectManager::getInstance();
-        $mundipaggProvider = $objectManager->get(MundiPaggConfigProvider::class);
+        $pagarmeProvider = $objectManager->get(PagarmeConfigProvider::class);
 
-        return $mundipaggProvider->getModuleStatus();
+        return $pagarmeProvider->getModuleStatus();
     }
 
     /**

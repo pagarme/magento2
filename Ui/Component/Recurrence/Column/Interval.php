@@ -1,15 +1,15 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Ui\Component\Recurrence\Column;
+namespace Pagarme\Pagarme\Ui\Component\Recurrence\Column;
 
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use Magento\Framework\View\Element\UiComponentFactory;
 use Magento\Ui\Component\Listing\Columns\Column;
-use Mundipagg\Core\Recurrence\Aggregates\Repetition;
-use Mundipagg\Core\Recurrence\Services\RepetitionService;
-use Mundipagg\Core\Recurrence\ValueObjects\IntervalValueObject;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use Pagarme\Core\Recurrence\Aggregates\Repetition;
+use Pagarme\Core\Recurrence\Services\RepetitionService;
+use Pagarme\Core\Recurrence\ValueObjects\IntervalValueObject;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 
 class Interval extends Column
 {

@@ -1,9 +1,9 @@
 /**
- * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
- * @copyright   2017 MundiPagg (http://www.mundipagg.com)
- * @license     http://www.mundipagg.com  Copyright
+ * @author      Open Source Team
+ * @copyright   2021 Pagar.me (https://pagar.me)
+ * @license     https://pagar.me Copyright
  *
- * @link        http://www.mundipagg.com
+ * @link        https://pagar.me
  */
 /*browser:true*/
 /*global define*/
@@ -20,32 +20,32 @@ define(
 
         rendererList.push(
             {
-                type: "mundipagg_pix",
-                component: "MundiPagg_MundiPagg/js/view/payment/pix"
+                type: "pagarme_pix",
+                component: "Pagarme_Pagarme/js/view/payment/pix"
             },
             {
-                type: "mundipagg_creditcard",
-                component: "MundiPagg_MundiPagg/js/view/payment/creditcard"
+                type: "pagarme_creditcard",
+                component: "Pagarme_Pagarme/js/view/payment/creditcard"
             },
             {
-                type: "mundipagg_voucher",
-                component: "MundiPagg_MundiPagg/js/view/payment/voucher"
+                type: "pagarme_voucher",
+                component: "Pagarme_Pagarme/js/view/payment/voucher"
             },
             {
-                type: "mundipagg_debit",
-                component: "MundiPagg_MundiPagg/js/view/payment/debit"
+                type: "pagarme_debit",
+                component: "Pagarme_Pagarme/js/view/payment/debit"
             },
             {
-                type: "mundipagg_billet",
-                component: "MundiPagg_MundiPagg/js/view/payment/boleto"
+                type: "pagarme_billet",
+                component: "Pagarme_Pagarme/js/view/payment/boleto"
             },
             {
-                type: "mundipagg_two_creditcard",
-                component: "MundiPagg_MundiPagg/js/view/payment/twocreditcards"
+                type: "pagarme_two_creditcard",
+                component: "Pagarme_Pagarme/js/view/payment/twocreditcards"
             },
             {
-                type: "mundipagg_billet_creditcard",
-                component: "MundiPagg_MundiPagg/js/view/payment/boletocreditcard"
+                type: "pagarme_billet_creditcard",
+                component: "Pagarme_Pagarme/js/view/payment/boletocreditcard"
             }
         );
         return Component.extend({});

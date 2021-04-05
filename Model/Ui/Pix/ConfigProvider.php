@@ -1,14 +1,14 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Model\Ui\Pix;
+namespace Pagarme\Pagarme\Model\Ui\Pix;
 
 use Magento\Checkout\Model\ConfigProviderInterface;
-use Mundipagg\Core\Kernel\ValueObjects\Configuration\PixConfig;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup as MPSetup;
+use Pagarme\Core\Kernel\ValueObjects\Configuration\PixConfig;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup as MPSetup;
 
 final class ConfigProvider implements ConfigProviderInterface
 {
-    const CODE = 'mundipagg_pix';
+    const CODE = 'pagarme_pix';
 
     /**
      * @var PixConfig

@@ -1,17 +1,17 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Api;
+namespace Pagarme\Pagarme\Api;
 
-use MundiPagg\MundiPagg\Api\ObjectMapper\ProductSubscription\ProductSubscriptionMapperInterface;
+use Pagarme\Pagarme\Api\ObjectMapper\ProductSubscription\ProductSubscriptionMapperInterface;
 
 interface ProductSubscriptionApiInterface
 {
     /**
      * Save product subscription
      *
-     * @param \MundiPagg\MundiPagg\Api\ObjectMapper\ProductSubscription\ProductSubscriptionMapperInterface $productSubscription
+     * @param \Pagarme\Pagarme\Api\ObjectMapper\ProductSubscription\ProductSubscriptionMapperInterface $productSubscription
      * @param int $id
-     * @return \MundiPagg\MundiPagg\Api\ObjectMapper\ProductSubscription\ProductSubscriptionMapperInterface|array
+     * @return \Pagarme\Pagarme\Api\ObjectMapper\ProductSubscription\ProductSubscriptionMapperInterface|array
      */
     public function save($productSubscription, $id = null);
 
@@ -20,14 +20,14 @@ interface ProductSubscriptionApiInterface
      *
      * @param array $form
      * @param int $id
-     * @return \MundiPagg\MundiPagg\Api\ObjectMapper\ProductSubscription\ProductSubscriptionMapperInterface|array
+     * @return \Pagarme\Pagarme\Api\ObjectMapper\ProductSubscription\ProductSubscriptionMapperInterface|array
      */
     public function saveFormData();
 
     /**
      * List product subscription
      *
-     * @return \MundiPagg\MundiPagg\Api\ObjectMapper\ProductSubscription\ProductSubscriptionMapperInterface[]
+     * @return \Pagarme\Pagarme\Api\ObjectMapper\ProductSubscription\ProductSubscriptionMapperInterface[]
      */
     public function list();
 
@@ -35,8 +35,8 @@ interface ProductSubscriptionApiInterface
      * Update product subscription
      *
      * @param int $id
-     * @param \MundiPagg\MundiPagg\Api\ObjectMapper\ProductSubscription\ProductSubscriptionMapperInterface $productSubscription
-     * @return \MundiPagg\MundiPagg\Api\ObjectMapper\ProductSubscription\ProductSubscriptionMapperInterface|array
+     * @param \Pagarme\Pagarme\Api\ObjectMapper\ProductSubscription\ProductSubscriptionMapperInterface $productSubscription
+     * @return \Pagarme\Pagarme\Api\ObjectMapper\ProductSubscription\ProductSubscriptionMapperInterface|array
      */
     public function update($id, $productSubscription);
 
@@ -44,7 +44,7 @@ interface ProductSubscriptionApiInterface
      * Get a product subscription
      *
      * @param int $id
-     * @return \MundiPagg\MundiPagg\Api\ObjectMapper\ProductSubscription\ProductSubscriptionMapperInterface
+     * @return \Pagarme\Pagarme\Api\ObjectMapper\ProductSubscription\ProductSubscriptionMapperInterface
      */
     public function getProductSubscription($id);
 

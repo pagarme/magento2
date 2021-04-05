@@ -2,26 +2,26 @@
 /**
  * Class Billet
  *
- * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
- * @copyright   2017 MundiPagg (http://www.mundipagg.com)
- * @license     http://www.mundipagg.com Copyright
+ * @author      Open Source Team
+ * @copyright   2021 Pagar.me (https://pagar.me)
+ * @license     https://pagar.me Copyright
  *
- * @link        http://www.mundipagg.com
+ * @link        https://pagar.me
  */
 
-namespace MundiPagg\MundiPagg\Block\Payment;
+namespace Pagarme\Pagarme\Block\Payment;
 
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
 use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Sales\Api\Data\OrderInterface as Order;
 use Magento\Sales\Api\Data\OrderPaymentInterface as Payment;
-use Mundipagg\Core\Kernel\Repositories\OrderRepository;
-use Mundipagg\Core\Kernel\ValueObjects\Id\OrderId;
-use Mundipagg\Core\Kernel\ValueObjects\Id\SubscriptionId;
-use Mundipagg\Core\Recurrence\Repositories\SubscriptionRepository;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
-use Mundipagg\Core\Recurrence\Repositories\ChargeRepository as SubscriptionChargeRepository;
+use Pagarme\Core\Kernel\Repositories\OrderRepository;
+use Pagarme\Core\Kernel\ValueObjects\Id\OrderId;
+use Pagarme\Core\Kernel\ValueObjects\Id\SubscriptionId;
+use Pagarme\Core\Recurrence\Repositories\SubscriptionRepository;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use Pagarme\Core\Recurrence\Repositories\ChargeRepository as SubscriptionChargeRepository;
 
 class Pix extends Template
 {
@@ -75,7 +75,7 @@ class Pix extends Template
         $info = $this->getPayment();
         $method = $info->getMethod();
 
-        if (strpos($method, "mundipagg_pix") === false) {
+        if (strpos($method, "pagarme_pix") === false) {
             return null;
         }
 
@@ -83,7 +83,7 @@ class Pix extends Template
         $orderId = substr($lastTransId, 0, 19);
 
         Magento2CoreSetup::bootstrap();
-        $orderService= new \Mundipagg\Core\Payment\Services\OrderService();
+        $orderService= new \Pagarme\Core\Payment\Services\OrderService();
         return $orderService->getPixQrCodeInfoFromOrder(new OrderId($orderId));
     }
 }

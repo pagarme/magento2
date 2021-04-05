@@ -1,24 +1,28 @@
 <?xml version="1.0" ?>
 <listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+	<argument name="context" xsi:type="configurableObject">
+		<argument name="class" xsi:type="string">Magento\Framework\View\Element\UiComponent\Context</argument>
+		<argument name="namespace" xsi:type="string">pagarme_pagarme_cards_index</argument>
+	</argument>
 	<argument name="data" xsi:type="array">
 		<item name="js_config" xsi:type="array">
-			<item name="provider" xsi:type="string">mundipagg_mundipagg_charges_index.mundipagg_mundipagg_charges_grid_data_source</item>
-			<item name="deps" xsi:type="string">mundipagg_mundipagg_charges_index.mundipagg_mundipagg_charges_grid_data_source</item>
+			<item name="provider" xsi:type="string">pagarme_pagarme_cards_index.pagarme_pagarme_cards_grid_data_source</item>
+			<item name="deps" xsi:type="string">pagarme_pagarme_cards_index.pagarme_pagarme_cards_grid_data_source</item>
 		</item>
-		<item name="spinner" xsi:type="string">mundipagg_mundipagg_charges_columns</item>
+		<item name="spinner" xsi:type="string">pagarme_pagarme_cards_columns</item>
 	</argument>
-	<dataSource name="mundipagg_mundipagg_charges_grid_data_source">
+	<dataSource name="pagarme_pagarme_cards_grid_data_source">
 		<argument name="dataProvider" xsi:type="configurableObject">
 			<argument name="class" xsi:type="string">Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider</argument>
-			<argument name="name" xsi:type="string">mundipagg_mundipagg_charges_grid_data_source</argument>
-			<argument name="primaryFieldName" xsi:type="string">charges_id</argument>
+			<argument name="name" xsi:type="string">pagarme_pagarme_cards_grid_data_source</argument>
+			<argument name="primaryFieldName" xsi:type="string">id</argument>
 			<argument name="requestFieldName" xsi:type="string">id</argument>
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
 					<item name="component" xsi:type="string">Magento_Ui/js/grid/provider</item>
 					<item name="update_url" path="mui/index/render" xsi:type="url"/>
 					<item name="storageConfig" xsi:type="array">
-						<item name="indexField" xsi:type="string">charges_id</item>
+						<item name="indexField" xsi:type="string">id</item>
 					</item>
 				</item>
 			</argument>
@@ -35,7 +39,7 @@
 		<filters name="listing_filters"/>
 		<paging name="listing_paging"/>
 	</listingToolbar>
-	<columns name="mundipagg_mundipagg_charges_columns">
+	<columns name="pagarme_pagarme_cards_columns">
 		<argument name="data" xsi:type="array"/>
 		<column name="id">
 			<argument name="data" xsi:type="array">
@@ -46,59 +50,51 @@
 				</item>
 			</argument>
 		</column>
-		<column name="mundipagg_id">
+		<column name="customer_id">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
 					<item name="filter" xsi:type="string">text</item>
-					<item name="label" translate="true" xsi:type="string">Charge ID</item>
+					<item name="label" translate="true" xsi:type="string">Customer Id</item>
 				</item>
 			</argument>
 		</column>
-		<column name="code">
+		<column name="card_token">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
 					<item name="filter" xsi:type="string">text</item>
-					<item name="label" translate="true" xsi:type="string">code</item>
+					<item name="label" translate="true" xsi:type="string">Card Token</item>
 				</item>
 			</argument>
 		</column>
-		<column name="order_id">
+		<column name="card_id">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
 					<item name="filter" xsi:type="string">text</item>
-					<item name="label" translate="true" xsi:type="string">Order Id</item>
+					<item name="label" translate="true" xsi:type="string">Card Id</item>
 				</item>
 			</argument>
 		</column>
-		<column name="status">
+		<column name="last_four_numbers">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
 					<item name="filter" xsi:type="string">text</item>
-					<item name="label" translate="true" xsi:type="string">Status</item>
+					<item name="label" translate="true" xsi:type="string">Last Four Numbers</item>
 				</item>
 			</argument>
 		</column>
-		<column name="amount" class="MundiPagg\MundiPagg\Ui\Component\Listing\Column\BrazilCurrency">
+		<column name="created_at">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
-					<item name="filter" xsi:type="string">text</item>
-					<item name="label" translate="true" xsi:type="string">Amount</item>
+					<item name="filter" xsi:type="string">date</item>
+					<item name="label" translate="true" xsi:type="string">Created At</item>
 				</item>
 			</argument>
 		</column>
-		<column name="paid_amount" class="MundiPagg\MundiPagg\Ui\Component\Listing\Column\BrazilCurrency">
+		<column name="updated_at">
 			<argument name="data" xsi:type="array">
 				<item name="config" xsi:type="array">
-					<item name="filter" xsi:type="string">text</item>
-					<item name="label" translate="true" xsi:type="string">Paid Amount</item>
-				</item>
-			</argument>
-		</column>
-		<column name="refunded_amount" class="MundiPagg\MundiPagg\Ui\Component\Listing\Column\BrazilCurrency">
-			<argument name="data" xsi:type="array">
-				<item name="config" xsi:type="array">
-					<item name="filter" xsi:type="string">text</item>
-					<item name="label" translate="true" xsi:type="string">Refunded Amount</item>
+					<item name="filter" xsi:type="string">date</item>
+					<item name="label" translate="true" xsi:type="string">Updated At</item>
 				</item>
 			</argument>
 		</column>

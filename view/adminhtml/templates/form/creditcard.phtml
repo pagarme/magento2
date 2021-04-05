@@ -1,7 +1,7 @@
 <?php
 $code = $block->escapeHtml($block->getMethodCode());
 
-$helper = $this->helper('\MundiPagg\MundiPagg\Helper\Adminhtml\CheckoutHelper');
+$helper = $this->helper('\Pagarme\Pagarme\Helper\Adminhtml\CheckoutHelper');
 $brandsAvailables = $helper->getBrandsAvailables($code);
 $publicKey = $helper->getPublicKey();
 
@@ -43,7 +43,7 @@ $installmentUrl = $helper->getInstallmentsUrl($block->getBaseUrl());
                     <span>Credit Card Number</span>
                 </label>
                 <div class="admin__field-control control">
-                    <input id="mundipagg_cc_number"  name="payment[cc_number]" style="width: 335px;" class="hosted-control cc_number" />
+                    <input id="pagarme_cc_number"  name="payment[cc_number]" style="width: 335px;" class="hosted-control cc_number" />
                     <div class="hosted-error">Please, enter valid Credit Card Number</div>
                 </div>
             </div>
@@ -52,7 +52,7 @@ $installmentUrl = $helper->getInstallmentsUrl($block->getBaseUrl());
                     <span>Credit Card Name</span>
                 </label>
                 <div class="admin__field-control control">
-                    <input id="mundipagg_cc_name" name="payment[cc_owner]" style="width: 335px;" class="hosted-control cc_owner" />
+                    <input id="pagarme_cc_name" name="payment[cc_owner]" style="width: 335px;" class="hosted-control cc_owner" />
                     <div class="hosted-error">Please, enter valid Credit Card Name</div>
                 </div>
             </div>
@@ -89,7 +89,7 @@ $installmentUrl = $helper->getInstallmentsUrl($block->getBaseUrl());
                     <span>CVV</span>
                 </label>
                 <div class="admin__field-control control">
-                    <input id="mundipagg_cc_cid" type="number" min="0" name="payment[cc_cid]" class="hosted-control hosted-cid cc_cid"/>
+                    <input id="pagarme_cc_cid" type="number" min="0" name="payment[cc_cid]" class="hosted-control hosted-cid cc_cid"/>
 
                     <div class="hosted-error">The cvv field must be a minimum length of 3 and a maximum length of 4.</div>
                 </div>
@@ -116,7 +116,7 @@ $installmentUrl = $helper->getInstallmentsUrl($block->getBaseUrl());
 <script>
     require([
         "jquery",
-        'MundiPagg_MundiPagg/js/core/models/creditCardModel',
+        'Pagarme_Pagarme/js/core/models/creditCardModel',
         "jquery/ui"
     ], function (
         $,

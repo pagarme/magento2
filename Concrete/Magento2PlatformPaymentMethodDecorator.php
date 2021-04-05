@@ -1,7 +1,7 @@
 <?php
-namespace MundiPagg\MundiPagg\Concrete;
+namespace Pagarme\Pagarme\Concrete;
 
-use Mundipagg\Core\Kernel\Interfaces\PlatformPaymentMethodInterface;
+use Pagarme\Core\Kernel\Interfaces\PlatformPaymentMethodInterface;
 
 class Magento2PlatformPaymentMethodDecorator implements PlatformPaymentMethodInterface
 {

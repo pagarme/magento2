@@ -1,7 +1,7 @@
 <?php
 
 
-namespace MundiPagg\MundiPagg\Setup;
+namespace Pagarme\Pagarme\Setup;
 
 use Magento\Framework\Setup\UpgradeDataInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
@@ -37,7 +37,7 @@ class UpgradeData implements UpgradeDataInterface
     )
     {
         $setup->startSetup();
-        
+
         if (version_compare($context->getVersion(), "0.1.1", "<")) {
             $setup = $this->updateVersionZeroOneOne($setup);
         }
@@ -58,13 +58,13 @@ class UpgradeData implements UpgradeDataInterface
         $setup->startSetup();
 
         $customerSetup = $this->customerSetupFactory->create(['setup' => $setup]);
-        $attributeCode = 'customer_id_mundipagg';
+        $attributeCode = 'customer_id_pagarme';
         $customerSetup->removeAttribute(\Magento\Customer\Model\Customer::ENTITY, $attributeCode);
         $customerSetup->addAttribute(
             'customer',
-            $attributeCode, 
+            $attributeCode,
             [
-                'label' => 'Customer Id Mundipagg',
+                'label' => 'Customer Id Pagar.me',
                 'type' => 'varchar',
                 'input' => 'text',
                 'required' => false,
@@ -90,9 +90,9 @@ class UpgradeData implements UpgradeDataInterface
     {
         $installer = $setup;
         $installer->startSetup();
- 
+
         // Get tutorial_simplenews table
-        $tableName = $installer->getTable('mundipagg_mundipagg_charges');
+        $tableName = $installer->getTable('pagarme_pagarme_charges');
         // Check if the table already exists
         if ($installer->getConnection()->isTableExists($tableName) != true) {
             // Create tutorial_simplenews table
@@ -180,12 +180,12 @@ class UpgradeData implements UpgradeDataInterface
                     ['nullable' => false],
                     'Updated At'
                 )
-                ->setComment('Mundipagg Charges')
+                ->setComment('Pagar.me Charges')
                 ->setOption('type', 'InnoDB')
                 ->setOption('charset', 'utf8');
             $installer->getConnection()->createTable($table);
         }
- 
+
         $installer->endSetup();
 
         return $setup;
@@ -210,7 +210,7 @@ class UpgradeData implements UpgradeDataInterface
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundipagg_payment',
+            'eav_pagarme_payment',
             [
                 'group' => 'Plan Config',
                 'type' => 'varchar',
@@ -220,7 +220,7 @@ class UpgradeData implements UpgradeDataInterface
                 'label' => 'Payment Methods',
                 'input' => 'select',
                 'class' => '',
-                'source' => 'MundiPagg\MundiPagg\Model\Source\EavPaymentMethods',
+                'source' => 'Pagarme\Pagarme\Model\Source\EavPaymentMethods',
                 'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_GLOBAL,
                 'visible' => true,
                 'required' => false,
@@ -245,7 +245,7 @@ class UpgradeData implements UpgradeDataInterface
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundipagg_interval',
+            'eav_pagarme_interval',
             [
                 'group' => 'Plan Config',
                 'type' => 'varchar',
@@ -255,7 +255,7 @@ class UpgradeData implements UpgradeDataInterface
                 'label' => 'Interval',
                 'input' => 'select',
                 'class' => '',
-                'source' => 'MundiPagg\MundiPagg\Model\Source\EavInterval',
+                'source' => 'Pagarme\Pagarme\Model\Source\EavInterval',
                 'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_GLOBAL,
                 'visible' => true,
                 'required' => false,
@@ -281,7 +281,7 @@ class UpgradeData implements UpgradeDataInterface
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundipagg_interval_period',
+            'eav_pagarme_interval_period',
             [
                 'group' => 'Plan Config',
                 'type' => 'int',
@@ -313,7 +313,7 @@ class UpgradeData implements UpgradeDataInterface
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundipagg_billing_type',
+            'eav_pagarme_billing_type',
             [
                 'group' => 'Plan Config',
                 'type' => 'varchar',
@@ -323,7 +323,7 @@ class UpgradeData implements UpgradeDataInterface
                 'label' => 'Billing Type',
                 'input' => 'select',
                 'class' => '',
-                'source' => 'MundiPagg\MundiPagg\Model\Source\EavBillingType',
+                'source' => 'Pagarme\Pagarme\Model\Source\EavBillingType',
                 'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_GLOBAL,
                 'visible' => true,
                 'required' => false,
@@ -348,7 +348,7 @@ class UpgradeData implements UpgradeDataInterface
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundipagg_billing_type_day',
+            'eav_pagarme_billing_type_day',
             [
                 'group' => 'Plan Config',
                 'type' => 'int',
@@ -380,7 +380,7 @@ class UpgradeData implements UpgradeDataInterface
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundipagg_trial_period',
+            'eav_pagarme_trial_period',
             [
                 'group' => 'Plan Config',
                 'type' => 'int',
@@ -413,16 +413,16 @@ class UpgradeData implements UpgradeDataInterface
 
         $eavSetup->removeAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundipagg_rec_interval'
+            'eav_pagarme_rec_interval'
         );
         $eavSetup->removeAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundipagg_rec_payment'
+            'eav_pagarme_rec_payment'
         );
 
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundi_rec_payment',
+            'eav_pagarme_rec_payment',
             [
                 'group' => 'Recurrence Config',
                 'type' => 'varchar',
@@ -432,7 +432,7 @@ class UpgradeData implements UpgradeDataInterface
                 'label' => 'Payment Methods',
                 'input' => 'select',
                 'class' => '',
-                'source' => 'MundiPagg\MundiPagg\Model\Source\EavPaymentMethods',
+                'source' => 'Pagarme\Pagarme\Model\Source\EavPaymentMethods',
                 'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_GLOBAL,
                 'visible' => true,
                 'required' => false,
@@ -457,7 +457,7 @@ class UpgradeData implements UpgradeDataInterface
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundi_rec_interval',
+            'eav_pagarme_rec_interval',
             [
                 'group' => 'Recurrence Config',
                 'type' => 'varchar',
@@ -467,7 +467,7 @@ class UpgradeData implements UpgradeDataInterface
                 'label' => 'Interval',
                 'input' => 'select',
                 'class' => '',
-                'source' => 'MundiPagg\MundiPagg\Model\Source\EavInterval',
+                'source' => 'Pagarme\Pagarme\Model\Source\EavInterval',
                 'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_GLOBAL,
                 'visible' => true,
                 'required' => false,
@@ -492,7 +492,7 @@ class UpgradeData implements UpgradeDataInterface
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundi_rec_interval_period',
+            'eav_pagarme_rec_interval_period',
             [
                 'group' => 'Recurrence Config',
                 'type' => 'int',
@@ -524,7 +524,7 @@ class UpgradeData implements UpgradeDataInterface
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundi_rec_billing_type',
+            'eav_pagarme_rec_billing_type',
             [
                 'group' => 'Recurrence Config',
                 'type' => 'varchar',
@@ -534,7 +534,7 @@ class UpgradeData implements UpgradeDataInterface
                 'label' => 'Billing Type',
                 'input' => 'select',
                 'class' => '',
-                'source' => 'MundiPagg\MundiPagg\Model\Source\EavBillingType',
+                'source' => 'Pagarme\Pagarme\Model\Source\EavBillingType',
                 'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_GLOBAL,
                 'visible' => true,
                 'required' => false,
@@ -559,7 +559,7 @@ class UpgradeData implements UpgradeDataInterface
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundi_rec_billing_type_day',
+            'eav_pagarme_rec_billing_type_day',
             [
                 'group' => 'Recurrence Config',
                 'type' => 'int',
@@ -591,7 +591,7 @@ class UpgradeData implements UpgradeDataInterface
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundi_rec_start_at',
+            'eav_pagarme_rec_start_at',
             [
                 'group' => 'Recurrence Config',
                 'type' => 'varchar',
@@ -601,7 +601,7 @@ class UpgradeData implements UpgradeDataInterface
                 'label' => 'Start At',
                 'input' => 'select',
                 'class' => '',
-                'source' => 'MundiPagg\MundiPagg\Model\Source\EavInterval',
+                'source' => 'Pagarme\Pagarme\Model\Source\EavInterval',
                 'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_GLOBAL,
                 'visible' => true,
                 'required' => false,
@@ -627,7 +627,7 @@ class UpgradeData implements UpgradeDataInterface
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundi_rec_start_at_day',
+            'eav_pagarme_rec_start_at_day',
             [
                 'group' => 'Recurrence Config',
                 'type' => 'int',
@@ -660,7 +660,7 @@ class UpgradeData implements UpgradeDataInterface
 
         $eavSetup->removeAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundi_rec_cycle_discount');
+            'eav_pagarme_rec_cycle_discount');
     }
 
     public function updateConfigProductRecurrenceAllowSet($setup)
@@ -668,7 +668,7 @@ class UpgradeData implements UpgradeDataInterface
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundi_rec_allow_set',
+            'eav_pagarme_rec_allow_set',
             [
                 'group' => 'Recurrence Config',
                 'type' => 'int',
@@ -700,7 +700,7 @@ class UpgradeData implements UpgradeDataInterface
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundi_rec_global',
+            'eav_pagarme_rec_global',
             [
                 'group' => 'Recurrence Config',
                 'type' => 'int',
@@ -732,7 +732,7 @@ class UpgradeData implements UpgradeDataInterface
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            'eav_mundi_rec_allow_other',
+            'eav_pagarme_rec_allow_other',
             [
                 'group' => 'Recurrence Config',
                 'type' => 'int',

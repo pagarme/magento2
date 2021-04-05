@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Model\ResourceModel\Subscriptions;
+namespace Pagarme\Pagarme\Model\ResourceModel\Subscriptions;
 
 use Magento\Framework\Data\Collection\Db\FetchStrategyInterface as FetchStrategy;
 use Magento\Framework\Data\Collection\EntityFactoryInterface as EntityFactory;

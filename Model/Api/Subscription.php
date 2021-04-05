@@ -1,13 +1,13 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Model\Api;
+namespace Pagarme\Pagarme\Model\Api;
 
 use Magento\Framework\Webapi\Rest\Request;
-use Mundipagg\Core\Kernel\Services\LocalizationService;
-use Mundipagg\Core\Kernel\Services\MoneyService;
-use Mundipagg\Core\Recurrence\Services\SubscriptionService;
-use MundiPagg\MundiPagg\Api\SubscriptionApiInterface;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use Pagarme\Core\Kernel\Services\LocalizationService;
+use Pagarme\Core\Kernel\Services\MoneyService;
+use Pagarme\Core\Recurrence\Services\SubscriptionService;
+use Pagarme\Pagarme\Api\SubscriptionApiInterface;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 
 class Subscription implements SubscriptionApiInterface
 {
@@ -64,7 +64,7 @@ class Subscription implements SubscriptionApiInterface
      * List product subscription
      *
      * @param string $customerId
-     * @return \Mundipagg\Core\Recurrence\Interfaces\SubscriptionInterface[]
+     * @return \Pagarme\Core\Recurrence\Interfaces\SubscriptionInterface[]
      */
     public function listByCustomerId($customerId)
     {

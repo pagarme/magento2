@@ -2,17 +2,17 @@
 /**
  * Class Config
  *
- * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
- * @copyright   2017 MundiPagg (http://www.mundipagg.com)
- * @license     http://www.mundipagg.com Copyright
+ * @author      Open Source Team
+ * @copyright   2021 Pagar.me (https://pagar.me)
+ * @license     https://pagar.me Copyright
  *
- * @link        http://www.mundipagg.com
+ * @link        https://pagar.me
  */
 
-namespace MundiPagg\MundiPagg\Gateway\Transaction\TwoCreditCard\Config;
+namespace Pagarme\Pagarme\Gateway\Transaction\TwoCreditCard\Config;
 
 
-use MundiPagg\MundiPagg\Gateway\Transaction\Base\Config\AbstractConfig;
+use Pagarme\Pagarme\Gateway\Transaction\Base\Config\AbstractConfig;
 
 class Config extends AbstractConfig implements ConfigInterface
 {
@@ -55,7 +55,7 @@ class Config extends AbstractConfig implements ConfigInterface
     {
         return $this->getConfig(static::PATH_SOFT_DESCRIPTION);
     }
-    
+
     /**
      * @return string
      */
@@ -71,7 +71,7 @@ class Config extends AbstractConfig implements ConfigInterface
     {
         return $this->getConfig(static::PATH_CUSTOMER_NUMBER);
     }
-    
+
     /**
      * @return string
      */
@@ -96,7 +96,7 @@ class Config extends AbstractConfig implements ConfigInterface
         $title = $this->getConfig(static::PATH_TITLE);
 
         if(empty($title)){
-            return __('MundiPagg Two Credit Cards');
+            return __('Pagar.me Two Credit Cards');
         }
 
         return $title;

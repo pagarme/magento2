@@ -2,14 +2,14 @@
 /**
  * Class CreditCardDataAssignObserver
  *
- * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
- * @copyright   2017 MundiPagg (http://www.mundipagg.com)
- * @license     http://www.mundipagg.com Copyright
+ * @author      Open Source Team
+ * @copyright   2021 Pagar.me (https://pagar.me)
+ * @license     https://pagar.me Copyright
  *
- * @link        http://www.mundipagg.com
+ * @link        https://pagar.me
  */
 
-namespace MundiPagg\MundiPagg\Observer;
+namespace Pagarme\Pagarme\Observer;
 
 
 use Magento\Framework\App\ObjectManager;
@@ -18,10 +18,10 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Payment\Observer\AbstractDataAssignObserver;
 use Magento\Framework\Event\Observer;
 use Magento\Quote\Api\Data\PaymentInterface;
-use Mundipagg\Core\Payment\Repositories\SavedCardRepository;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
-use MundiPagg\MundiPagg\Model\Cards;
-use MundiPagg\MundiPagg\Model\CardsRepository;
+use Pagarme\Core\Payment\Repositories\SavedCardRepository;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use Pagarme\Pagarme\Model\Cards;
+use Pagarme\Pagarme\Model\CardsRepository;
 
 class BilletCreditCardDataAssignObserver extends AbstractDataAssignObserver
 {
@@ -91,7 +91,7 @@ class BilletCreditCardDataAssignObserver extends AbstractDataAssignObserver
                 'cc_cc_amount' => $additionalData->getCcCcAmount(),
                 'cc_billet_amount' => $additionalData->getCcBilletAmount()
             ]);
-            
+
             $info->setAdditionalInformation('cc_savecard', $additionalData->getCcSavecard());
         }
 

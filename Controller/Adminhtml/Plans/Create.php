@@ -1,14 +1,14 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Controller\Adminhtml\Plans;
+namespace Pagarme\Pagarme\Controller\Adminhtml\Plans;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\Registry;
 use Magento\Framework\View\Result\PageFactory;
-use Mundipagg\Core\Recurrence\Aggregates\Plan;
-use Mundipagg\Core\Recurrence\Repositories\PlanRepository;
-use Mundipagg\Core\Recurrence\Services\PlanService;
+use Pagarme\Core\Recurrence\Aggregates\Plan;
+use Pagarme\Core\Recurrence\Repositories\PlanRepository;
+use Pagarme\Core\Recurrence\Services\PlanService;
 
 class Create extends Action
 {
@@ -50,7 +50,7 @@ class Create extends Action
 
             if (!$planData || !$planData->getId()) {
                 $this->messageManager->addError(__('Product plan not exist.'));
-                $this->_redirect('mundipagg_mundipagg/plans/index');
+                $this->_redirect('pagarme_pagarme/plans/index');
                 return;
             }
             $this->coreRegistry->register('product_data', json_encode($planData));

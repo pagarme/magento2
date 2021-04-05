@@ -1,8 +1,8 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Concrete;
+namespace Pagarme\Pagarme\Concrete;
 
-use Mundipagg\Core\Kernel\Abstractions\AbstractDatabaseDecorator;
+use Pagarme\Core\Kernel\Abstractions\AbstractDatabaseDecorator;
 
 final class Magento2DatabaseDecorator extends AbstractDatabaseDecorator
 {
@@ -10,46 +10,46 @@ final class Magento2DatabaseDecorator extends AbstractDatabaseDecorator
     {
         $this->tableArray = [
             AbstractDatabaseDecorator::TABLE_MODULE_CONFIGURATION =>
-                $this->db->getTableName('mundipagg_module_core_configuration'),
+                $this->db->getTableName('pagarme_module_core_configuration'),
 
             AbstractDatabaseDecorator::TABLE_WEBHOOK =>
-                $this->db->getTableName('mundipagg_module_core_webhook'),
+                $this->db->getTableName('pagarme_module_core_webhook'),
 
             AbstractDatabaseDecorator::TABLE_ORDER =>
-                $this->db->getTableName('mundipagg_module_core_order'),
+                $this->db->getTableName('pagarme_module_core_order'),
 
             AbstractDatabaseDecorator::TABLE_CHARGE =>
-                $this->db->getTableName('mundipagg_module_core_charge'),
+                $this->db->getTableName('pagarme_module_core_charge'),
 
             AbstractDatabaseDecorator::TABLE_TRANSACTION =>
-                $this->db->getTableName('mundipagg_module_core_transaction'),
+                $this->db->getTableName('pagarme_module_core_transaction'),
 
             AbstractDatabaseDecorator::TABLE_SAVED_CARD =>
-                $this->db->getTableName('mundipagg_module_core_saved_card'),
+                $this->db->getTableName('pagarme_module_core_saved_card'),
 
             AbstractDatabaseDecorator::TABLE_CUSTOMER =>
-                $this->db->getTableName('mundipagg_module_core_customer'),
+                $this->db->getTableName('pagarme_module_core_customer'),
 
             AbstractDatabaseDecorator::TABLE_RECURRENCE_PRODUCTS_PLAN =>
-                $this->db->getTableName('mundipagg_module_core_recurrence_products_plan'),
+                $this->db->getTableName('pagarme_module_core_recurrence_products_plan'),
 
             AbstractDatabaseDecorator::TABLE_RECURRENCE_PRODUCTS_SUBSCRIPTION =>
-                $this->db->getTableName('mundipagg_module_core_recurrence_products_subscription'),
+                $this->db->getTableName('pagarme_module_core_recurrence_products_subscription'),
 
             AbstractDatabaseDecorator::TABLE_RECURRENCE_SUB_PRODUCTS=>
-                $this->db->getTableName('mundipagg_module_core_recurrence_sub_products'),
+                $this->db->getTableName('pagarme_module_core_recurrence_sub_products'),
 
             AbstractDatabaseDecorator::TABLE_RECURRENCE_CHARGE =>
-                $this->db->getTableName('mundipagg_module_core_recurrence_charge'),
+                $this->db->getTableName('pagarme_module_core_recurrence_charge'),
 
             AbstractDatabaseDecorator::TABLE_RECURRENCE_SUBSCRIPTION =>
-                $this->db->getTableName('mundipagg_module_core_recurrence_subscription'),
+                $this->db->getTableName('pagarme_module_core_recurrence_subscription'),
 
             AbstractDatabaseDecorator::TABLE_RECURRENCE_SUBSCRIPTION_REPETITIONS =>
-                $this->db->getTableName('mundipagg_module_core_recurrence_subscription_repetitions'),
+                $this->db->getTableName('pagarme_module_core_recurrence_subscription_repetitions'),
 
             AbstractDatabaseDecorator::TABLE_RECURRENCE_SUBSCRIPTION_ITEM =>
-                $this->db->getTableName('mundipagg_module_core_recurrence_subscription_items')
+                $this->db->getTableName('pagarme_module_core_recurrence_subscription_items')
         ];
     }
 

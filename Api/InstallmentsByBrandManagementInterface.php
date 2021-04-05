@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Api;
+namespace Pagarme\Pagarme\Api;
 
 interface InstallmentsByBrandManagementInterface
 {

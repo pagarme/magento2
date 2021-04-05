@@ -15,7 +15,7 @@ $quantityOptionCicle = 4;
                     </button>
                     <button id="back" title="Back" type="button"
                             class="action- scalable back"
-                            onclick="location.href = '<?php echo $block->getUrl('mundipagg_mundipagg/recurrenceproducts/index') ?>'"
+                            onclick="location.href = '<?php echo $block->getUrl('pagarme_pagarme/recurrenceproducts/index') ?>'"
                             data-ui-id="back-button">
                         <span><?php echo __('Back') ?></span>
                     </button>
@@ -40,7 +40,7 @@ $quantityOptionCicle = 4;
     <input id="url-search" value="<?php echo $block->getUrl('*/plans/searchproduct'); ?>" type="hidden"/>
 
     <!-- Url Post-->
-    <input id="url-post" value="<?php echo $block->getBaseUrl() . 'rest/V1/mundipagg/recurrence/product/formData'; ?>" type="hidden"/>
+    <input id="url-post" value="<?php echo $block->getBaseUrl() . 'rest/V1/pagarme/recurrence/product/formData'; ?>" type="hidden"/>
 
     <input type="hidden" name="form_key" value="<?php echo $block->getFormKey() ?>" />
 

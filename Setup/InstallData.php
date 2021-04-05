@@ -1,7 +1,7 @@
 <?php
 
 
-namespace MundiPagg\MundiPagg\Setup;
+namespace Pagarme\Pagarme\Setup;
 
 use Magento\Framework\Setup\InstallDataInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
@@ -27,7 +27,7 @@ class InstallData implements InstallDataInterface
             $data = ['visible_on_front' => 1];
             $connection->update($tableName, $data, $where);
         }
-        
+
         $setup->endSetup();
     }
 }

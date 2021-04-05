@@ -1,10 +1,10 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Concrete;
+namespace Pagarme\Pagarme\Concrete;
 
 use Magento\Framework\App\ObjectManager;
-use Mundipagg\Core\Kernel\Abstractions\AbstractCreditmemoDecorator;
-use Mundipagg\Core\Kernel\Interfaces\PlatformOrderInterface;
+use Pagarme\Core\Kernel\Abstractions\AbstractCreditmemoDecorator;
+use Pagarme\Core\Kernel\Interfaces\PlatformOrderInterface;
 
 class Magento2PlatformCreditmemoDecorator extends AbstractCreditmemoDecorator
 {

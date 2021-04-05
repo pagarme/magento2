@@ -2,11 +2,11 @@ define([
     "jquery",
     "uiComponent",
     "Magento_Ui/js/modal/alert",
-    "MundiPagg_MundiPagg/js/core/checkout/PlatformFormBiding",
+    "Pagarme_Pagarme/js/core/checkout/PlatformFormBiding",
 ], function ($, Class, alert, PlatformFormBiding) {
-    
+
     var Listeners = {};
-    
+
     Listeners.addCreditCardNumberListener = function (formObject) {
         var listeners = this;
 
@@ -27,7 +27,7 @@ define([
             return;
         }
         var amount = formObject.inputAmountWithoutTax.val();
-        window.MundipaggAdmin.updateTotals("remove-tax", 0, amount);
+        window.PagarmeAdmin.updateTotals("remove-tax", 0, amount);
 
         formObject.creditCardBrand.on("change", function() {
             var value = jQuery(this).val();
@@ -52,7 +52,7 @@ define([
             }
         });
     };
-    
+
     Listeners.addCreditCardHolderNameListener = function(formObject) {
         var listeners = this;
         formObject.creditCardHolderName.on("keyup", function () {
@@ -112,13 +112,13 @@ define([
         total = total.toFixed(2);
         if (newInterest > 0) {
             formObject.inputAmount.val(total);
-            window.MundipaggAdmin.updateTotals("add-tax", newInterest, total);
+            window.PagarmeAdmin.updateTotals("add-tax", newInterest, total);
             return;
 
         }
         total = parseFloat(amountWithoutTax).toFixed(2);
         formObject.inputAmount.val(amountWithoutTax);
-        window.MundipaggAdmin.updateTotals("remove-tax", 0, total);
+        window.PagarmeAdmin.updateTotals("remove-tax", 0, total);
     };
 
     Listeners.updateInstallmentSelect = function (installmentsObj, element) {
@@ -156,6 +156,6 @@ define([
         var newVal = val.replace(/[0-9]+/g, "");
         element.val(newVal);
     };
-    
+
     return Listeners;
 });

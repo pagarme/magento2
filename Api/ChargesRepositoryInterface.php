@@ -1,7 +1,7 @@
 <?php
 
 
-namespace MundiPagg\MundiPagg\Api;
+namespace Pagarme\Pagarme\Api;
 
 use Magento\Framework\Api\SearchCriteriaInterface;
 
@@ -11,18 +11,18 @@ interface ChargesRepositoryInterface
 
     /**
      * Save Charges
-     * @param \MundiPagg\MundiPagg\Api\Data\ChargesInterface $charges
-     * @return \MundiPagg\MundiPagg\Api\Data\ChargesInterface
+     * @param \Pagarme\Pagarme\Api\Data\ChargesInterface $charges
+     * @return \Pagarme\Pagarme\Api\Data\ChargesInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function save(
-        \MundiPagg\MundiPagg\Api\Data\ChargesInterface $charges
+        \Pagarme\Pagarme\Api\Data\ChargesInterface $charges
     );
 
     /**
      * Retrieve Charges
      * @param string $chargesId
-     * @return \MundiPagg\MundiPagg\Api\Data\ChargesInterface
+     * @return \Pagarme\Pagarme\Api\Data\ChargesInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function getById($chargesId);
@@ -30,7 +30,7 @@ interface ChargesRepositoryInterface
     /**
      * Retrieve Charges matching the specified criteria.
      * @param \Magento\Framework\Api\SearchCriteriaInterface $searchCriteria
-     * @return \MundiPagg\MundiPagg\Api\Data\ChargesSearchResultsInterface
+     * @return \Pagarme\Pagarme\Api\Data\ChargesSearchResultsInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function getList(
@@ -39,12 +39,12 @@ interface ChargesRepositoryInterface
 
     /**
      * Delete Charges
-     * @param \MundiPagg\MundiPagg\Api\Data\ChargesInterface $charges
+     * @param \Pagarme\Pagarme\Api\Data\ChargesInterface $charges
      * @return bool true on success
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function delete(
-        \MundiPagg\MundiPagg\Api\Data\ChargesInterface $charges
+        \Pagarme\Pagarme\Api\Data\ChargesInterface $charges
     );
 
     /**

@@ -3,20 +3,20 @@
 /*global define*/
 define(
     [
-        "MundiPagg_MundiPagg/js/view/payment/default",
-        "MundiPagg_MundiPagg/js/core/checkout/PaymentModuleBootstrap",
-        "MundiPagg_MundiPagg/js/core/models/BoletoCreditcardModel",
+        "Pagarme_Pagarme/js/view/payment/default",
+        "Pagarme_Pagarme/js/core/checkout/PaymentModuleBootstrap",
+        "Pagarme_Pagarme/js/core/models/BoletoCreditcardModel",
         "underscore",
         'mage/translate',
-        'MundiPagg_MundiPagg/js/action/installments',
-        'MundiPagg_MundiPagg/js/action/installmentsByBrand',
+        'Pagarme_Pagarme/js/action/installments',
+        'Pagarme_Pagarme/js/action/installmentsByBrand',
         'Magento_Checkout/js/model/full-screen-loader',
         'ko',
         'jquery',
     ],
     function(
         Component,
-        MundipaggCore,
+        PagarmeCore,
         BoletoCreditcardModel,
         _,
         $t,
@@ -29,13 +29,13 @@ define(
         return Component.extend({
 
             defaults: {
-                template: "MundiPagg_MundiPagg/payment/default",
+                template: "Pagarme_Pagarme/payment/default",
                 allInstallments: ko.observableArray([]),
                 creditCardType: '',
             },
 
             getCode: function() {
-                return "mundipagg_billet_creditcard";
+                return "pagarme_billet_creditcard";
             },
 
             getModel: function() {
@@ -43,30 +43,30 @@ define(
             },
 
             isActive: function() {
-                return window.checkoutConfig.payment.mundipagg_billet_creditcard.active;
+                return window.checkoutConfig.payment.pagarme_billet_creditcard.active;
             },
 
             getTitle: function() {
-                return window.checkoutConfig.payment.mundipagg_billet_creditcard.title;
+                return window.checkoutConfig.payment.pagarme_billet_creditcard.title;
             },
 
             getBase: function () {
-                return "MundiPagg_MundiPagg/payment/boletocreditcard";
+                return "Pagarme_Pagarme/payment/boletocreditcard";
             },
 
             getForm: function () {
-                return "MundiPagg_MundiPagg/payment/boleto-form";
+                return "Pagarme_Pagarme/payment/boleto-form";
             },
             getFormCreditcard: function () {
-                return "MundiPagg_MundiPagg/payment/creditcard-form";
+                return "Pagarme_Pagarme/payment/creditcard-form";
             },
 
             getMultibuyerForm: function () {
-                return "MundiPagg_MundiPagg/payment/multibuyer-form";
+                return "Pagarme_Pagarme/payment/multibuyer-form";
             },
 
             getData: function () {
-                var paymentMethod = window.MundiPaggCore.paymentMethod[this.getModel()];
+                var paymentMethod = window.PagarmeCore.paymentMethod[this.getModel()];
                 if (paymentMethod == undefined) {
                     return paymentMethod;
                 }
@@ -75,7 +75,7 @@ define(
             },
 
             getText: function () {
-                return window.checkoutConfig.payment.mundipagg_billet.text;
+                return window.checkoutConfig.payment.pagarme_billet.text;
             },
 
             /**

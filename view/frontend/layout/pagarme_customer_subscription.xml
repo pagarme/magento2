@@ -9,7 +9,7 @@
     <update handle="customer_account"/>
 	<body>
 	    <referenceContainer name="content">
-	        <block class="MundiPagg\MundiPagg\Block\Customer\Invoice" name="mundipagg.customer.invoice.list" template="customer/invoice.phtml" cacheable="false"/>
+	        <block class="Pagarme\Pagarme\Block\Customer\Subscription" name="pagarme.customer.subscription.list" template="customer/subscription.phtml" cacheable="false"/>
 	    </referenceContainer>
 	</body>
 </page>

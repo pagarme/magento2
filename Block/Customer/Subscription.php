@@ -1,18 +1,18 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Block\Customer;
+namespace Pagarme\Pagarme\Block\Customer;
 
 use Magento\Customer\Model\Session;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
-use Mundipagg\Core\Kernel\Abstractions\AbstractEntity;
-use Mundipagg\Core\Kernel\Exceptions\InvalidParamException;
-use Mundipagg\Core\Recurrence\Aggregates\Repetition;
-use Mundipagg\Core\Recurrence\Repositories\SubscriptionRepository;
-use Mundipagg\Core\Recurrence\Services\RepetitionService;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
-use MundiPagg\MundiPagg\Helper\RecurrenceProductHelper;
+use Pagarme\Core\Kernel\Abstractions\AbstractEntity;
+use Pagarme\Core\Kernel\Exceptions\InvalidParamException;
+use Pagarme\Core\Recurrence\Aggregates\Repetition;
+use Pagarme\Core\Recurrence\Repositories\SubscriptionRepository;
+use Pagarme\Core\Recurrence\Services\RepetitionService;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use Pagarme\Pagarme\Helper\RecurrenceProductHelper;
 
 class Subscription extends Template
 {
@@ -52,7 +52,7 @@ class Subscription extends Template
     }
 
     /**
-     * @return AbstractEntity|\Mundipagg\Core\Recurrence\Aggregates\Subscription[]|null
+     * @return AbstractEntity|\Pagarme\Core\Recurrence\Aggregates\Subscription[]|null
      * @throws InvalidParamException
      */
     public function getAllSubscriptionRecurrenceCoreByCustomerId()
@@ -86,7 +86,7 @@ class Subscription extends Template
     public function getSubscriptionCreatedDate($subscription)
     {
         $subscriptionRepository = new SubscriptionRepository();
-        $subscription = $subscriptionRepository->findByMundipaggId($subscription->getSubscriptionId());
+        $subscription = $subscriptionRepository->findByPagarmeId($subscription->getSubscriptionId());
         $createdAt = new \Datetime($subscription->getCreatedAt());
         return $createdAt->format('d/m/Y');
 

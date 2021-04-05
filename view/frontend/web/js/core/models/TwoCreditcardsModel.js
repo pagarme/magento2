@@ -161,7 +161,7 @@ TwoCreditcardsModel.prototype.fillData = function () {
     }
 
     return {
-        'method': "mundipagg_two_creditcard",
+        'method': "pagarme_two_creditcard",
         'additional_data': {
             //first
             'cc_first_card_amount': this.formObject[0].inputAmount.val(),

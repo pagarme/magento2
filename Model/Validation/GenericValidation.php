@@ -1,12 +1,12 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Model\Validation;
+namespace Pagarme\Pagarme\Model\Validation;
 
 use Magento\Config\Model\Config as Magento2ModelConfig;
 use Magento\Framework\App\ObjectManager;
 use Magento\Store\Model\ScopeInterface as ScopeInterface;
-use Mundipagg\Core\Kernel\Services\LocalizationService;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use Pagarme\Core\Kernel\Services\LocalizationService;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Magento\Framework\Exception\ValidatorException;
 use Exception;
 use Magento\Framework\App\MutableScopeConfig;
@@ -70,7 +70,7 @@ class GenericValidation extends \Magento\Framework\App\Config\Value
         ) {
             $i18n = new LocalizationService();
             $comment = $i18n->getDashboard(
-                "Mundipagg module should be configured on Websites scope, please change to website scope to apply these changes"
+                "Pagar.me module should be configured on Websites scope, please change to website scope to apply these changes"
             );
 
             throw new Exception($comment);

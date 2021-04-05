@@ -2,20 +2,20 @@
 /**
  * Class AbstractRequestDataProvider
  *
- * @author      MundiPagg Embeddables Team <embeddables@mundipagg.com>
- * @copyright   2017 MundiPagg (http://www.mundipagg.com)
- * @license     http://www.mundipagg.com Copyright
+ * @author      Open Source Team
+ * @copyright   2021 Pagar.me (https://pagar.me)
+ * @license     https://pagar.me Copyright
  *
- * @link        http://www.mundipagg.com
+ * @link        https://pagar.me
  */
 
-namespace MundiPagg\MundiPagg\Gateway\Transaction\Base\ResourceGateway;
+namespace Pagarme\Pagarme\Gateway\Transaction\Base\ResourceGateway;
 
 
 use Magento\Checkout\Model\Session;
 use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Payment\Model\InfoInterface;
-use MundiPagg\MundiPagg\Helper\CustomerAddressInterface;
+use Pagarme\Pagarme\Helper\CustomerAddressInterface;
 
 abstract class AbstractRequestDataProvider
 {
@@ -82,7 +82,7 @@ abstract class AbstractRequestDataProvider
      */
     public function getPersonType()
     {
-        return \MundiPagg\MundiPagg\Model\Enum\PersonTypeEnum::COMPANY;
+        return \Pagarme\Pagarme\Model\Enum\PersonTypeEnum::COMPANY;
     }
 
     /**
@@ -100,8 +100,8 @@ abstract class AbstractRequestDataProvider
     {
         $identity = (int) preg_replace('/[^0-9]/','', $this->getDocumentNumber());
         return (strlen($identity) === 14) ?
-            \MundiPagg\MundiPagg\Model\Enum\DocumentTypeEnum::CNPJ :
-            \MundiPagg\MundiPagg\Model\Enum\DocumentTypeEnum::CPF;
+            \Pagarme\Pagarme\Model\Enum\DocumentTypeEnum::CNPJ :
+            \Pagarme\Pagarme\Model\Enum\DocumentTypeEnum::CPF;
     }
 
 
@@ -190,7 +190,7 @@ abstract class AbstractRequestDataProvider
      */
     public function getBillingAddressCountry()
     {
-        return \MundiPagg\MundiPagg\Model\Enum\CountryEnum::BRAZIL;
+        return \Pagarme\Pagarme\Model\Enum\CountryEnum::BRAZIL;
     }
 
     /**
@@ -262,7 +262,7 @@ abstract class AbstractRequestDataProvider
      */
     public function getShippingAddressCountry()
     {
-        return \MundiPagg\MundiPagg\Model\Enum\CountryEnum::BRAZIL;
+        return \Pagarme\Pagarme\Model\Enum\CountryEnum::BRAZIL;
     }
 
     /**
@@ -309,11 +309,11 @@ abstract class AbstractRequestDataProvider
     protected function getBrandAdapter($brand)
     {
         $fromTo = [
-            'VI' => \MundiPagg\MundiPagg\Model\Enum\CreditCardBrandEnum::VISA,
-            'MC' => \MundiPagg\MundiPagg\Model\Enum\CreditCardBrandEnum::MASTERCARD,
-            'AE' => \MundiPagg\MundiPagg\Model\Enum\CreditCardBrandEnum::AMEX,
-            'DI' => \MundiPagg\MundiPagg\Model\Enum\CreditCardBrandEnum::DISCOVER,
-            'DN' => \MundiPagg\MundiPagg\Model\Enum\CreditCardBrandEnum::DINERS,
+            'VI' => \Pagarme\Pagarme\Model\Enum\CreditCardBrandEnum::VISA,
+            'MC' => \Pagarme\Pagarme\Model\Enum\CreditCardBrandEnum::MASTERCARD,
+            'AE' => \Pagarme\Pagarme\Model\Enum\CreditCardBrandEnum::AMEX,
+            'DI' => \Pagarme\Pagarme\Model\Enum\CreditCardBrandEnum::DISCOVER,
+            'DN' => \Pagarme\Pagarme\Model\Enum\CreditCardBrandEnum::DINERS,
         ];
 
         return (isset($fromTo[$brand])) ? $fromTo[$brand] : false;

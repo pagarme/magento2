@@ -6,13 +6,13 @@
  */
 -->
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
-    <group id="mundipagg_mundipagg_transaction_multibuyer" translate="label comment" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="20">
+    <group id="pagarme_pagarme_transaction_multibuyer" translate="label comment" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="20">
         <label>Multi Buyer</label>
         <field id="active" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label" type="select">
-            <label>Enabled</label>
+            <label>Enable this payment method</label>
             <comment />
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-            <config_path>payment/mundipagg_multibuyer/active</config_path>
+            <config_path>payment/pagarme_multibuyer/active</config_path>
         </field>
     </group>
 </include>

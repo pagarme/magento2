@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Controller\Adminhtml\Subscriptions;
+namespace Pagarme\Pagarme\Controller\Adminhtml\Subscriptions;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
@@ -53,6 +53,6 @@ class Details extends Action
             return $resultPage;
         }
 
-        $this->_redirect('mundipagg_mundipagg/subscriptions/index');
+        $this->_redirect('pagarme_pagarme/subscriptions/index');
     }
 }

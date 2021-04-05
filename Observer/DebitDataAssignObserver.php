@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Observer;
+namespace Pagarme\Pagarme\Observer;
 
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\DataObject;
@@ -8,10 +8,10 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Payment\Observer\AbstractDataAssignObserver;
 use Magento\Framework\Event\Observer;
 use Magento\Quote\Api\Data\PaymentInterface;
-use Mundipagg\Core\Payment\Repositories\SavedCardRepository;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
-use MundiPagg\MundiPagg\Model\Cards;
-use MundiPagg\MundiPagg\Model\CardsRepository;
+use Pagarme\Core\Payment\Repositories\SavedCardRepository;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use Pagarme\Pagarme\Model\Cards;
+use Pagarme\Pagarme\Model\CardsRepository;
 
 class DebitDataAssignObserver extends AbstractDataAssignObserver
 {

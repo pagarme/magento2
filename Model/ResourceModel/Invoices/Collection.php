@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Model\ResourceModel\Invoices;
+namespace Pagarme\Pagarme\Model\ResourceModel\Invoices;
 
 use Magento\Framework\Data\Collection\Db\FetchStrategyInterface as FetchStrategy;
 use Magento\Framework\Data\Collection\EntityFactoryInterface as EntityFactory;
@@ -37,16 +37,16 @@ class Collection extends SearchResult
     {
         $subscriptionId = $this->request->getParam('subscription_id');
 
-        $joinTable = $this->getTable('mundipagg_module_core_transaction');
+        $joinTable = $this->getTable('pagarme_module_core_transaction');
 
         $this->getSelect()
             ->joinLeft(
                 $joinTable,
-                "main_table.mundipagg_id = {$joinTable}.charge_id ",
+                "main_table.pagarme_id = {$joinTable}.charge_id ",
                 [
                     'id' => new \Zend_Db_Expr('GROUP_CONCAT(main_table.id)'),
                     'tran_id' => new \Zend_Db_Expr("GROUP_CONCAT({$joinTable}.id)"),
-                    'tran_mundipagg_id' => new \Zend_Db_Expr("GROUP_CONCAT({$joinTable}.mundipagg_id)"),
+                    'tran_pagarme_id' => new \Zend_Db_Expr("GROUP_CONCAT({$joinTable}.pagarme_id)"),
                     'tran_charge_id' => new \Zend_Db_Expr("GROUP_CONCAT({$joinTable}.charge_id)"),
                     'tran_amount' => new \Zend_Db_Expr("GROUP_CONCAT({$joinTable}.amount)"),
                     'tran_paid_amount' => new \Zend_Db_Expr("GROUP_CONCAT({$joinTable}.paid_amount)"),

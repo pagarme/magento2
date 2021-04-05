@@ -1,6 +1,6 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Model\Source\Status;
+namespace Pagarme\Pagarme\Model\Source\Status;
 
 
 use Magento\Sales\Model\Config\Source\Order\Status;

@@ -1,17 +1,17 @@
 <?php
 
-namespace MundiPagg\MundiPagg\Concrete;
+namespace Pagarme\Pagarme\Concrete;
 
 use JsonSerializable;
 use Magento\Framework\App\ObjectManager;
 use Magento\Sales\Model\Order\Invoice;
-use Mundipagg\Core\Kernel\Abstractions\AbstractInvoiceDecorator;
-use Mundipagg\Core\Kernel\Interfaces\PlatformOrderInterface;
-use Mundipagg\Core\Kernel\Repositories\OrderRepository;
-use Mundipagg\Core\Kernel\Services\LocalizationService;
-use Mundipagg\Core\Kernel\Services\LogService;
-use Mundipagg\Core\Kernel\Services\MoneyService;
-use Mundipagg\Core\Kernel\ValueObjects\InvoiceState;
+use Pagarme\Core\Kernel\Abstractions\AbstractInvoiceDecorator;
+use Pagarme\Core\Kernel\Interfaces\PlatformOrderInterface;
+use Pagarme\Core\Kernel\Repositories\OrderRepository;
+use Pagarme\Core\Kernel\Services\LocalizationService;
+use Pagarme\Core\Kernel\Services\LogService;
+use Pagarme\Core\Kernel\Services\MoneyService;
+use Pagarme\Core\Kernel\ValueObjects\InvoiceState;
 use Magento\Sales\Model\Service\InvoiceService;
 use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
 use Magento\Framework\DB\Transaction;
@@ -135,7 +135,7 @@ class Magento2PlatformInvoiceDecorator extends AbstractInvoiceDecorator implemen
         //$invoiceSender->send($invoice);
 
         $order->addStatusHistoryComment(
-            'MP - ' .
+            'PGM - ' .
             __('Notified customer about invoice #%1.', $invoice->getIncrementId())
         )
             ->setIsCustomerNotified(true)
