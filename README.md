@@ -11,8 +11,8 @@ Coming soon :construction:
 Coming Soon in *Packagist*! :construction:
 
 ## Requirements
-* PHP >= 5.6
-* Magento >= 2.1
+* PHP >= 7.1
+* Magento >= 2.3
 
 ## Configuration
 
