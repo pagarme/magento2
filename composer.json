@@ -35,7 +35,7 @@
     },
     "autoload": {
         "files": [
-            "registration.php"
+            "app/code/Pagarme/Pagarme/registration.php"
         ],
         "psr-4": {
             "Pagarme\\Pagarme\\": ""
