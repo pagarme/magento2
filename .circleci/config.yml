@@ -43,7 +43,6 @@ jobs:
              cp .circleci/data/Dockerfile .
              cp .circleci/data/wait-for-mysql.sh .
              cp .circleci/data/magento2_module_install.sql .
-             cp .circleci/data/composer.json .
       - run:
           name: Build image base for modifications
           command: |
@@ -61,6 +60,7 @@ jobs:
             docker exec -it newimage sh -c "ls"
             docker exec -it newimage sh -c "ls /app"
             docker exec -it newimage sh -c "cd /var/www/html && rm composer.lock"
+            docker exec -it newimage sh -c "cd /var/www/html && composer require pagarme/ecommerce-module-core:dev-master -vvv"
             docker exec -it newimage sh -c "cd /var/www/html && composer update -vvv"
             docker exec -it newimage sh -c "cd /var/www/ && find html/ -type d -exec chmod 775 {} \;"
             docker exec -it newimage sh -c "cd /var/www/ && find html/ -type f -exec chmod 664 {} \;"
@@ -170,9 +170,6 @@ workflows:
           context: acceptance
           requires:
             - build
-          filters:
-              branches:
-                  only: develop
       - deploy_staging:
           context: acceptance
           requires:
