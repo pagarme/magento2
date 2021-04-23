@@ -2,7 +2,7 @@
 
 namespace Pagarme\Pagarme\Setup;
 
-require_once("app/bootstrap.php");
+require_once "app/bootstrap.php";
 
 $bootstrap = \Magento\Framework\App\Bootstrap::create(BP, $_SERVER);
 $objectManager = $bootstrap->getObjectManager();
@@ -13,12 +13,12 @@ $writer = new \Zend\Log\Writer\Stream(BP . '/var/log/Pagarme_Migration.log');
 $logger = new \Zend\Log\Logger();
 $logger->addWriter($writer);
 
-if(isset($argv)) {
+if (isset($argv)) {
     $m = new MigrateData($conn, $logger, $argv);
     $m->run();
 }
 
-class MigrateData 
+class MigrateData
 {
     public function __construct($conn, $logger, $argv)
     {
@@ -31,33 +31,32 @@ class MigrateData
     public function run()
     {
         try {
-            $this->log[] = $this->line('MigrateData, options: ' . json_encode($this->opt). ' ');
+            $this->log[] = $this->line('MigrateData, options: ' . json_encode($this->opt) . ' ');
             if ($this->validate()) {
                 $this->populateQueries();
-                $this->getData(); 
+                $this->getData();
                 $this->migrateData();
             }
-        } catch (\Throwable $e) {
+        } catch (\Throwable $exception) {
 
         } finally {
-            $this->log[] = "\n".$this->line('Finished in ' . $this->timer($this->start) . ' ');
+            $this->log[] = "\n" . $this->line('Finished in ' . $this->timer($this->start) . ' ');
             $logs = join("\n", $this->log);
             $this->logger->info("\n" . $logs);
             echo "\n" . $logs . "\n";
-            if(isset($e))
-            {
-                $this->logger->err($e."\n\n");
-                $l = $this->line('-');
-                echo "\n" . $l . "\n\e[0;31;43mERROR:\e[0m " . $e->getMessage() . "\n" . $l . "\n";
+            if (isset($exception)) {
+                $this->logger->err($exception . "\n\n");
+                $line = $this->line('-');
+                echo "\n" . $line . "\n\e[0;31;43mERROR:\e[0m " . $e->getMessage() . "\n" . $line . "\n";
             }
             echo "\n";
         }
     }
 
-    private function validate() 
+    private function validate()
     {
         $res = $this->conn->fetchRow('SELECT COUNT(1) as qtd FROM information_schema.tables
-                                      WHERE table_schema = (SELECT DATABASE() FROM DUAL) 
+                                      WHERE table_schema = (SELECT DATABASE() FROM DUAL)
                                       AND table_name = "mundipagg_module_core_customer" LIMIT 1');
         if ($res['qtd'] > 0) {
             return true;
@@ -66,17 +65,17 @@ class MigrateData
         return false;
     }
 
-    private function getData() 
+    private function getData()
     {
         $this->log[] = "\n## \e[0;92mGetting data from tables\e[0m";
         foreach ($this->queries as $table => $query) {
-            $sql = 'SELECT COUNT(1) as qtd '.substr($query['sel'], strpos($query['sel'], 'FROM'));
+            $sql = 'SELECT COUNT(1) as qtd ' . substr($query['sel'], strpos($query['sel'], 'FROM'));
             $res = $this->conn->fetchRow($sql);
-            $this->log[] = ' - '.$table.': ' . number_format($res['qtd'], 0) . ' rows';
+            $this->log[] = ' - ' . $table . ': ' . number_format($res['qtd'], 0) . ' rows';
         }
     }
 
-    private function migrateData() 
+    private function migrateData()
     {
         if (!isset($this->opt['execute'])) {
             return;
@@ -87,7 +86,7 @@ class MigrateData
                 continue;
             }
             $time = microtime(true);
-            $sql = $query['ins']. ' '.$query['sel'] . ' ' .$this->opt['limit'];
+            $sql = $query['ins'] . ' ' . $query['sel'] . ' ' . $this->opt['limit'];
             $res = $this->conn->query($sql);
             $rowCount = number_format($res->rowCount(), 0);
             $this->log[] = ' - ' . $table . ': ' . $rowCount . ' inserts in ' . $this->timer($time);
@@ -97,15 +96,15 @@ class MigrateData
     private function isTableInGroup($table)
     {
         $groups['config'] = ['config_data'];
-        $groups['card'] = ['core_customer','core_saved_card','mundipagg_cards'];
-        $groups['order'] = ['core_order','core_charge','mundipagg_charges','core_transaction'];
-        $groups['recurrence'] = ['core_recurrence_charge','core_recurrence_products_plan',
-                                 'core_recurrence_products_subscription','core_recurrence_subscription',
-                                 'core_recurrence_subscription_items','core_recurrence_subscription_repetitions',
-                                 'core_recurrence_sub_products'];
+        $groups['card'] = ['core_customer', 'core_saved_card', 'mundipagg_cards'];
+        $groups['order'] = ['core_order', 'core_charge', 'mundipagg_charges', 'core_transaction'];
+        $groups['recurrence'] = ['core_recurrence_charge', 'core_recurrence_products_plan',
+            'core_recurrence_products_subscription', 'core_recurrence_subscription',
+            'core_recurrence_subscription_items', 'core_recurrence_subscription_repetitions',
+            'core_recurrence_sub_products'];
 
         if (!isset($groups[$this->opt['group']])) {
-            throw new \Exception('Group "'. $this->opt['group'] . '" invalid for execution!');
+            throw new \Exception('Group "' . $this->opt['group'] . '" invalid for execution!');
         }
 
         return array_search($table, $groups[$this->opt['group']]);
@@ -117,7 +116,7 @@ class MigrateData
             return null;
         }
         $opt = ['execute' => true, 'group' => null, 'limit' => null];
-        foreach($argv as $i => $arg) {
+        foreach ($argv as $i => $arg) {
             if (strpos($arg, 'group=') !== false) {
                 $opt['group'] = explode('=', $argv[$i])[1];
             }
@@ -132,36 +131,34 @@ class MigrateData
     {
         $scale = substr($limit, -1);
         $multiplier = 1;
-        if(strtoupper($scale) === 'K')
-        {
+        if (strtoupper($scale) === 'K') {
             $multiplier = 1000;
         }
-        if(strtoupper($scale) === 'M')
-        {
+        if (strtoupper($scale) === 'M') {
             $multiplier = 1000000;
         }
         $limit = intval($limit) * $multiplier;
-        return (is_int($limit)) ? 'LIMIT '.$limit : null;
+        return (is_int($limit)) ? 'LIMIT ' . $limit : null;
     }
 
     private function timer($from)
     {
-        return number_format(microtime(true)-$from, 3) . ' seconds';
+        return number_format(microtime(true) - $from, 3) . ' seconds';
     }
 
     private function line($str)
     {
-        return $str . str_repeat('-', 80-strlen($str));
+        return $str . str_repeat('-', 80 - strlen($str));
     }
 
-    private function populateQueries() 
+    private function populateQueries()
     {
         //-- config
-        $this->queries['config_data']['ins'] = "INSERT INTO core_config_data 
-                                                            (scope, 
-                                                             scope_id, 
-                                                             path, 
-                                                             value, 
+        $this->queries['config_data']['ins'] = "INSERT INTO core_config_data
+                                                            (scope,
+                                                             scope_id,
+                                                             path,
+                                                             value,
                                                              updated_at)";
         $this->queries['config_data']['sel'] = "SELECT scope,
                                                        scope_id,
@@ -175,8 +172,8 @@ class MigrateData
                                                                                                          WHERE path LIKE '%pagarme%')";
 
         //-- customer
-        $this->queries['core_customer']['ins'] = "INSERT INTO pagarme_module_core_customer 
-                                                              (code, 
+        $this->queries['core_customer']['ins'] = "INSERT INTO pagarme_module_core_customer
+                                                              (code,
                                                                pagarme_id)";
         $this->queries['core_customer']['sel'] = "SELECT code,
                                                          mundipagg_id
@@ -225,9 +222,9 @@ class MigrateData
                                                                                FROM   pagarme_pagarme_cards)";
 
         // -- order
-        $this->queries['core_order']['ins'] = "INSERT INTO pagarme_module_core_order 
-                                                           (pagarme_id, 
-                                                            code, 
+        $this->queries['core_order']['ins'] = "INSERT INTO pagarme_module_core_order
+                                                           (pagarme_id,
+                                                            code,
                                                             status)";
         $this->queries['core_order']['sel'] = "SELECT mundipagg_id,
                                                       code,
@@ -511,4 +508,3 @@ class MigrateData
 
     }
 }
-
