@@ -47,7 +47,7 @@ class MigrateData
             if (isset($exception)) {
                 $this->logger->err($exception . "\n\n");
                 $line = $this->line('-');
-                echo "\n" . $line . "\n\e[0;31;43mERROR:\e[0m " . $e->getMessage() . "\n" . $line . "\n";
+                echo "\n" . $line . "\n\e[0;31;43mERROR:\e[0m " . $exception->getMessage() . "\n" . $line . "\n";
             }
             echo "\n";
         }
