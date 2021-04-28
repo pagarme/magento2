@@ -61,6 +61,7 @@ jobs:
             docker exec -it newimage sh -c "ls"
             docker exec -it newimage sh -c "ls /app"
             docker exec -it newimage sh -c "cd /var/www/html && rm composer.lock"
+            docker exec -it newimage sh -c "composer self-update --1"
             docker exec -it newimage sh -c "cd /var/www/html && composer update -vvv"
             docker exec -it newimage sh -c "cd /var/www/ && find html/ -type d -exec chmod 775 {} \;"
             docker exec -it newimage sh -c "cd /var/www/ && find html/ -type f -exec chmod 664 {} \;"
