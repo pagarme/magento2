@@ -183,15 +183,13 @@ class MigrateData
                         (scope,
                         scope_id,
                         path,
-                        value,
-                        updated_at)
+                        value)
         ';
         $this->queries['config_data']['sel'] = '
             SELECT scope,
                    scope_id,
                    REPLACE(path, "mundipagg", "pagarme"),
-                   value,
-                   Now()
+                   value
             FROM   core_config_data
             WHERE  path LIKE "%mundipagg%"
                    AND REPLACE(path, "mundipagg", "pagarme") NOT IN (SELECT path
@@ -372,6 +370,20 @@ class MigrateData
             FROM   mundipagg_module_core_transaction
             WHERE  mundipagg_id NOT IN (SELECT pagarme_id
                                         FROM   pagarme_module_core_transaction)
+        ';
+
+        // -- webhook
+        $this->queries['core_webhook']['ins'] = '
+            INSERT INTO pagarme_module_core_webhook
+                        (pagarme_id,
+                         handled_at)
+        ';
+        $this->queries['core_webhook']['sel'] = '
+            SELECT mundipagg_id,
+                   handled_at
+            FROM   mundipagg_module_core_webhook
+            WHERE  mundipagg_id NOT IN (SELECT pagarme_id
+                                        FROM   pagarme_module_core_webhook)
         ';
 
         // -- recurrence_charge
