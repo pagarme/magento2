@@ -38,7 +38,7 @@ define(
             },
 
             getData: function () {
-                var paymentMethod = window.MundiPaggCore.paymentMethod[this.getModel()];
+                var paymentMethod = window.PagarmeCore.paymentMethod[this.getModel()];
                 if (paymentMethod == undefined) {
                     return paymentMethod;
                 }

@@ -27,7 +27,7 @@ define([
             return;
         }
         var amount = formObject.inputAmountWithoutTax.val();
-        window.MundipaggAdmin.updateTotals("remove-tax", 0, amount);
+        window.PagarmeAdmin.updateTotals("remove-tax", 0, amount);
 
         formObject.creditCardBrand.on("change", function() {
             var value = jQuery(this).val();
@@ -112,13 +112,13 @@ define([
         total = total.toFixed(2);
         if (newInterest > 0) {
             formObject.inputAmount.val(total);
-            window.MundipaggAdmin.updateTotals("add-tax", newInterest, total);
+            window.PagarmeAdmin.updateTotals("add-tax", newInterest, total);
             return;
 
         }
         total = parseFloat(amountWithoutTax).toFixed(2);
         formObject.inputAmount.val(amountWithoutTax);
-        window.MundipaggAdmin.updateTotals("remove-tax", 0, total);
+        window.PagarmeAdmin.updateTotals("remove-tax", 0, total);
     };
 
     Listeners.updateInstallmentSelect = function (installmentsObj, element) {

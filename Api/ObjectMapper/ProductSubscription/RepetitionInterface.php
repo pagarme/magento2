@@ -2,7 +2,7 @@
 
 namespace Pagarme\Pagarme\Api\ObjectMapper\ProductSubscription;
 
-interface RepetitionInterface extends \Mundipagg\Core\Recurrence\Interfaces\RepetitionInterface
+interface RepetitionInterface extends \Pagarme\Core\Recurrence\Interfaces\RepetitionInterface
 {
 
 }

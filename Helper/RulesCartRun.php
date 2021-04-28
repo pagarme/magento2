@@ -3,16 +3,16 @@
 namespace Pagarme\Pagarme\Helper;
 
 use Magento\Framework\Exception\LocalizedException;
-use Mundipagg\Core\Kernel\Abstractions\AbstractModuleCoreSetup as MPSetup;
-use Mundipagg\Core\Recurrence\Services\CartRules\CompatibleRecurrenceProducts;
-use Mundipagg\Core\Recurrence\Services\CartRules\CurrentProduct;
-use Mundipagg\Core\Recurrence\Services\CartRules\JustOneProductPlanInCart;
-use Mundipagg\Core\Recurrence\Services\CartRules\JustProductPlanInCart;
-use Mundipagg\Core\Recurrence\Services\CartRules\JustSelfProductPlanInCart;
-use Mundipagg\Core\Recurrence\Services\CartRules\MoreThanOneRecurrenceProduct;
-use Mundipagg\Core\Recurrence\Services\CartRules\NormalWithRecurrenceProduct;
-use Mundipagg\Core\Recurrence\Services\CartRules\ProductListInCart;
-use Mundipagg\Core\Recurrence\Services\CartRules\RuleInterface;
+use Pagarme\Core\Kernel\Abstractions\AbstractModuleCoreSetup as MPSetup;
+use Pagarme\Core\Recurrence\Services\CartRules\CompatibleRecurrenceProducts;
+use Pagarme\Core\Recurrence\Services\CartRules\CurrentProduct;
+use Pagarme\Core\Recurrence\Services\CartRules\JustOneProductPlanInCart;
+use Pagarme\Core\Recurrence\Services\CartRules\JustProductPlanInCart;
+use Pagarme\Core\Recurrence\Services\CartRules\JustSelfProductPlanInCart;
+use Pagarme\Core\Recurrence\Services\CartRules\MoreThanOneRecurrenceProduct;
+use Pagarme\Core\Recurrence\Services\CartRules\NormalWithRecurrenceProduct;
+use Pagarme\Core\Recurrence\Services\CartRules\ProductListInCart;
+use Pagarme\Core\Recurrence\Services\CartRules\RuleInterface;
 
 class RulesCartRun
 {

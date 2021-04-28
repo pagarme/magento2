@@ -2,9 +2,9 @@
 
 namespace Pagarme\Pagarme\Helper;
 
-use Mundipagg\Core\Kernel\Aggregates\Transaction;
-use Mundipagg\Core\Kernel\ValueObjects\TransactionType;
-use Mundipagg\Core\Kernel\Aggregates\Charge;
+use Pagarme\Core\Kernel\Aggregates\Transaction;
+use Pagarme\Core\Kernel\ValueObjects\TransactionType;
+use Pagarme\Core\Kernel\Aggregates\Charge;
 
 class BuildChargeAddtionalInformationHelper
 {

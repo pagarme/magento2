@@ -8,12 +8,12 @@ use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\View\Result\PageFactory;
-use Mundipagg\Core\Kernel\Services\MoneyService;
-use Mundipagg\Core\Recurrence\Aggregates\Plan;
-use Mundipagg\Core\Recurrence\Aggregates\ProductSubscription;
-use Mundipagg\Core\Recurrence\Services\PlanService;
-use Mundipagg\Core\Recurrence\Services\ProductSubscriptionService;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use Pagarme\Core\Kernel\Services\MoneyService;
+use Pagarme\Core\Recurrence\Aggregates\Plan;
+use Pagarme\Core\Recurrence\Aggregates\ProductSubscription;
+use Pagarme\Core\Recurrence\Services\PlanService;
+use Pagarme\Core\Recurrence\Services\ProductSubscriptionService;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Pagarme\Pagarme\Helper\ProductHelper;
 
 class SearchProduct extends Action
@@ -137,7 +137,7 @@ class SearchProduct extends Action
                 $product['cycles'] = $subProductRecurrence->getCycles();
                 $product['quantity'] = $subProductRecurrence->getQuantity();
                 $product['id'] = $subProductRecurrence->getId();
-                $product['pagarme_id'] = $subProductRecurrence->getMundipaggId();
+                $product['pagarme_id'] = $subProductRecurrence->getPagarmeId();
             }
 
             $bundleProducts[] = $product;

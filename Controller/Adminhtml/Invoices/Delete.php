@@ -8,8 +8,8 @@ use Magento\Framework\Message\Factory;
 use Magento\Framework\Message\MessageInterface;
 use Magento\Framework\Registry;
 use Magento\Framework\View\Result\PageFactory;
-use Mundipagg\Core\Recurrence\Services\InvoiceService;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use Pagarme\Core\Recurrence\Services\InvoiceService;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Magento\Framework\HTTP\ZendClientFactory;
 
 class Delete extends Action

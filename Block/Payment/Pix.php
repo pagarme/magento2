@@ -16,12 +16,12 @@ use Magento\Framework\View\Element\Template\Context;
 use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Sales\Api\Data\OrderInterface as Order;
 use Magento\Sales\Api\Data\OrderPaymentInterface as Payment;
-use Mundipagg\Core\Kernel\Repositories\OrderRepository;
-use Mundipagg\Core\Kernel\ValueObjects\Id\OrderId;
-use Mundipagg\Core\Kernel\ValueObjects\Id\SubscriptionId;
-use Mundipagg\Core\Recurrence\Repositories\SubscriptionRepository;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
-use Mundipagg\Core\Recurrence\Repositories\ChargeRepository as SubscriptionChargeRepository;
+use Pagarme\Core\Kernel\Repositories\OrderRepository;
+use Pagarme\Core\Kernel\ValueObjects\Id\OrderId;
+use Pagarme\Core\Kernel\ValueObjects\Id\SubscriptionId;
+use Pagarme\Core\Recurrence\Repositories\SubscriptionRepository;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use Pagarme\Core\Recurrence\Repositories\ChargeRepository as SubscriptionChargeRepository;
 
 class Pix extends Template
 {
@@ -83,7 +83,7 @@ class Pix extends Template
         $orderId = substr($lastTransId, 0, 19);
 
         Magento2CoreSetup::bootstrap();
-        $orderService= new \Mundipagg\Core\Payment\Services\OrderService();
+        $orderService= new \Pagarme\Core\Payment\Services\OrderService();
         return $orderService->getPixQrCodeInfoFromOrder(new OrderId($orderId));
     }
 }

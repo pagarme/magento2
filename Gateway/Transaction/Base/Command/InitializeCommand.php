@@ -16,14 +16,14 @@ use Magento\Sales\Model\Order;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Payment\Gateway\CommandInterface;
 use Magento\Sales\Model\Order\Payment;
-use Mundipagg\Core\Kernel\Abstractions\AbstractModuleCoreSetup as MPSetup;
-use Mundipagg\Core\Kernel\Abstractions\AbstractPlatformOrderDecorator;
-use Mundipagg\Core\Kernel\Interfaces\PlatformOrderInterface;
-use Mundipagg\Core\Kernel\Services\OrderLogService;
-use Mundipagg\Core\Kernel\Services\OrderService;
-use Mundipagg\Core\Recurrence\Services\RecurrenceService;
-use Mundipagg\Core\Recurrence\Services\SubscriptionService;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use Pagarme\Core\Kernel\Abstractions\AbstractModuleCoreSetup as MPSetup;
+use Pagarme\Core\Kernel\Abstractions\AbstractPlatformOrderDecorator;
+use Pagarme\Core\Kernel\Interfaces\PlatformOrderInterface;
+use Pagarme\Core\Kernel\Services\OrderLogService;
+use Pagarme\Core\Kernel\Services\OrderService;
+use Pagarme\Core\Recurrence\Services\RecurrenceService;
+use Pagarme\Core\Recurrence\Services\SubscriptionService;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Pagarme\Pagarme\Concrete\Magento2PlatformPaymentMethodDecorator;
 use Pagarme\Pagarme\Model\Ui\CreditCard\ConfigProvider;
 use Pagarme\Pagarme\Model\Ui\TwoCreditCard\ConfigProvider as TwoCreditCardConfigProvider;
@@ -138,12 +138,12 @@ class InitializeCommand implements CommandInterface
             $isSubscription = $subscriptionService->isSubscription($orderDecorator);
 
             if ($isSubscription) {
-                $subscriptionService->createSubscriptionAtMundipagg($orderDecorator);
+                $subscriptionService->createSubscriptionAtPagarme($orderDecorator);
             }
 
             if (!$isSubscription) {
                 $orderService = new OrderService();
-                $orderService->createOrderAtMundipagg($orderDecorator);
+                $orderService->createOrderAtPagarme($orderDecorator);
             }
 
             $orderDecorator->save();

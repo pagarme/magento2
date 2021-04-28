@@ -7,19 +7,19 @@
 -->
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
     <group id="pagarme_pagarme_transaction_billet" translate="label comment" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="20">
-        <label>Billet</label>
+        <label>Boleto</label>
 	    <field id="active" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="select">
-	        <label>Enabled</label>
+	        <label>Enable this payment method</label>
 	        <comment />
 	        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
 	        <config_path>payment/pagarme_billet/active</config_path>
 	    </field>
 	    <field id="title" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
-	        <label>Title</label>
+	        <label>Payment label</label>
 	        <config_path>payment/pagarme_billet/title</config_path>
 	    </field>
 		<field id="text" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="textarea">
-	        <label>Text to Checkout</label>
+	        <label>Instructions on checkout page</label>
 	        <comment />
 	        <config_path>payment/pagarme_billet/text</config_path>
             <depends>
@@ -27,7 +27,7 @@
             </depends>
 	    </field>
 	    <field id="types" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="select">
-	        <label>Type</label>
+	        <label>Bank</label>
 	        <comment />
 	        <source_model>Pagarme\Pagarme\Model\Source\BilletTypes</source_model>
 	        <config_path>payment/pagarme_billet/types</config_path>
@@ -36,7 +36,7 @@
             </depends>
 	    </field>
 	    <field id="instructions" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="textarea">
-	        <label>Instructions</label>
+	        <label>Payment instructions</label>
 	        <comment />
 	        <config_path>payment/pagarme_billet/instructions</config_path>
             <depends>
@@ -44,7 +44,7 @@
             </depends>
 	    </field>
 	    <field id="expiration_days" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
-	        <label>Expirations Day</label>
+	        <label>Default expiration days</label>
 	        <comment />
 	        <config_path>payment/pagarme_billet/expiration_days</config_path>
             <depends>
@@ -52,7 +52,7 @@
             </depends>
 	    </field>
 	    <field id="sort_order" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
-	        <label>Sort Order</label>
+	        <label>Payment method order</label>
 	        <comment />
 	        <config_path>payment/pagarme_billet/sort_order</config_path>
 	    </field>

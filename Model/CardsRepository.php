@@ -4,7 +4,7 @@
 namespace Pagarme\Pagarme\Model;
 
 use Magento\Framework\App\ObjectManager;
-use Mundipagg\Core\Payment\Repositories\SavedCardRepository;
+use Pagarme\Core\Payment\Repositories\SavedCardRepository;
 use Pagarme\Pagarme\Api\CardsRepositoryInterface;
 use Pagarme\Pagarme\Api\Data\CardsSearchResultsInterfaceFactory;
 use Pagarme\Pagarme\Api\Data\CardsInterfaceFactory;
@@ -14,7 +14,7 @@ use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Reflection\DataObjectProcessor;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Pagarme\Pagarme\Model\ResourceModel\Cards as ResourceCards;
 use Pagarme\Pagarme\Model\ResourceModel\Cards\CollectionFactory as CardsCollectionFactory;
 use Magento\Store\Model\StoreManagerInterface;
@@ -112,7 +112,7 @@ class CardsRepository implements CardsRepositoryInterface
                     $objectManager = ObjectManager::getInstance();
                     /** @var Cards $card */
                     $cards = $objectManager->get(Cards::class);
-                    $cards->setCardToken($savedCard->getMundipaggId()->getValue());
+                    $cards->setCardToken($savedCard->getPagarmeId()->getValue());
                     $cards->setCardId($savedCard->getOwnerId()->getValue());
                     $cards->setBrand($savedCard->getBrand()->getName());
                     $cards->setCardHolderName($savedCard->getOwnerName());

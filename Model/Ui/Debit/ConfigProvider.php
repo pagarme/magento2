@@ -4,10 +4,10 @@ namespace Pagarme\Pagarme\Model\Ui\Debit;
 
 use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Customer\Model\Session;
-use Mundipagg\Core\Kernel\ValueObjects\Configuration\DebitConfig;
-use Mundipagg\Core\Payment\Repositories\CustomerRepository;
-use Mundipagg\Core\Payment\Repositories\SavedCardRepository;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup as MPSetup;
+use Pagarme\Core\Kernel\ValueObjects\Configuration\DebitConfig;
+use Pagarme\Core\Payment\Repositories\CustomerRepository;
+use Pagarme\Core\Payment\Repositories\SavedCardRepository;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup as MPSetup;
 
 final class ConfigProvider implements ConfigProviderInterface
 {
@@ -50,7 +50,7 @@ final class ConfigProvider implements ConfigProviderInterface
             return $cards;
         }
 
-        $coreCards = $savedCardRepository->findByOwnerId($customer->getMundipaggId());
+        $coreCards = $savedCardRepository->findByOwnerId($customer->getPagarmeId());
 
         foreach ($coreCards as $coreCard) {
             $selectedCard = 'mp_core_' . $coreCard->getId();

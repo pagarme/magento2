@@ -88,13 +88,13 @@ class Actions extends Column
     protected function getUrlPagarmeEdit($item, $path)
     {
         $url = $this->urlBuilder->getUrl($path);
-        return $url . "?subscription_id={$item['mundipagg_id']}";
+        return $url . "?subscription_id={$item['pagarme_id']}";
     }
 
     protected function getUrlPagarmeDetails($item, $path)
     {
         $url = $this->urlBuilder->getUrl($path);
-        return $url . "?subscription_id={$item['mundipagg_id']}";
+        return $url . "?subscription_id={$item['pagarme_id']}";
     }
 
     protected function getUrlPagarmeDelete($item, $path)

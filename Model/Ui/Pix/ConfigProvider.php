@@ -3,8 +3,8 @@
 namespace Pagarme\Pagarme\Model\Ui\Pix;
 
 use Magento\Checkout\Model\ConfigProviderInterface;
-use Mundipagg\Core\Kernel\ValueObjects\Configuration\PixConfig;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup as MPSetup;
+use Pagarme\Core\Kernel\ValueObjects\Configuration\PixConfig;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup as MPSetup;
 
 final class ConfigProvider implements ConfigProviderInterface
 {

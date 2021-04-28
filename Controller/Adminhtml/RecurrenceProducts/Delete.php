@@ -7,8 +7,8 @@ use Magento\Backend\App\Action\Context;
 use Magento\Framework\Message\Factory;
 use Magento\Framework\Registry;
 use Magento\Framework\View\Result\PageFactory;
-use Mundipagg\Core\Recurrence\Services\ProductSubscriptionService;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use Pagarme\Core\Recurrence\Services\ProductSubscriptionService;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Pagarme\Pagarme\Helper\ProductSubscriptionHelper;
 use Pagarme\Pagarme\Model\ProductsSubscriptionFactory;
 
@@ -70,7 +70,7 @@ class Delete extends Action
 
         $productSubscriptionService->delete($productId);
 
-        $message = $this->messageFactory->create('success', _("Product subscription deleted."));
+        $message = $this->messageFactory->create('success', __("Product subscription deleted."));
         $this->messageManager->addMessage($message);
 
         $this->_redirect('pagarme_pagarme/recurrenceproducts/index');

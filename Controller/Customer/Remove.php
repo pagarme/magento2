@@ -8,11 +8,11 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\View\Result\PageFactory;
 use Magento\Customer\Model\Session;
 use Magento\Framework\App\Request\Http;
-use Mundipagg\Core\Kernel\Services\LocalizationService;
-use Mundipagg\Core\Kernel\Services\LogService;
-use Mundipagg\Core\Payment\Repositories\CustomerRepository;
-use Mundipagg\Core\Payment\Repositories\SavedCardRepository;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use Pagarme\Core\Kernel\Services\LocalizationService;
+use Pagarme\Core\Kernel\Services\LogService;
+use Pagarme\Core\Payment\Repositories\CustomerRepository;
+use Pagarme\Core\Payment\Repositories\SavedCardRepository;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Pagarme\Pagarme\Concrete\Magento2SavedCardAdapter;
 use Pagarme\Pagarme\Model\CardsRepository;
 use Pagarme\Pagarme\Gateway\Transaction\Base\Config\Config;
@@ -154,7 +154,7 @@ class Remove extends Action
             throw $baseException;
         }
 
-        if (!$customer->getMundipaggId()->equals($savedCard->getOwnerId())) {
+        if (!$customer->getPagarmeId()->equals($savedCard->getOwnerId())) {
             $baseException->setMessage("The logged user doesn't own the informed card.");
             throw $baseException;
         }

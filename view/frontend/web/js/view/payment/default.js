@@ -53,12 +53,12 @@ define(
         $t,
         globalMessageList,
         urlBuilder,
-        MundiPaggCore,
+        PagarmeCore,
         PaymentController,
         PlatformPlaceOrder
     ) {
 
-        window.MundiPaggCore.messageList = globalMessageList;
+        window.PagarmeCore.messageList = globalMessageList;
         return Component.extend({
             initPaymentMethod: function() {
                 var _self = this;
@@ -91,8 +91,8 @@ define(
                 /** @fixme Update total should be moved to platformFormBinging **/
                 platFormConfig.updateTotals = quote;
 
-                window.MundiPaggCore.platFormConfig = platFormConfig;
-                window.MundiPaggCore.initPaymentMethod(
+                window.PagarmeCore.platFormConfig = platFormConfig;
+                window.PagarmeCore.initPaymentMethod(
                     this.getModel(),
                     platFormConfig
                 );
@@ -115,7 +115,7 @@ define(
 
                 var _self = this;
 
-                window.MundiPaggCore.platFormConfig.addresses.billingAddress = quote.billingAddress();
+                window.PagarmeCore.platFormConfig.addresses.billingAddress = quote.billingAddress();
 
                 var PlatformPlaceOrder = {
                     obj : _self,
@@ -123,7 +123,7 @@ define(
                     event: event
                 };
 
-                window.MundiPaggCore.placeOrder(
+                window.PagarmeCore.placeOrder(
                     PlatformPlaceOrder,
                     this.getModel()
                 );
@@ -135,8 +135,8 @@ define(
             selectPaymentMethod: function() {
                 var data = this.getData();
                 if (data == undefined) {
-                    var platFormConfig = window.MundiPaggCore.platFormConfig;
-                    window.MundiPaggCore.init(this.getModel(), platFormConfig);
+                    var platFormConfig = window.PagarmeCore.platFormConfig;
+                    window.PagarmeCore.init(this.getModel(), platFormConfig);
                 }
                 selectPaymentMethodAction(this.getData());
                 checkoutData.setSelectedPaymentMethod(this.item.method);

@@ -12,12 +12,12 @@ use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
 use Magento\Sales\Model\Service\CreditmemoService;
 use Magento\Sales\Model\Service\InvoiceService;
 use Magento\Sales\Model\Service\OrderService;
-use Mundipagg\Core\Kernel\Exceptions\AbstractMundipaggCoreException;
-use Mundipagg\Core\Webhook\Exceptions\WebhookAlreadyHandledException;
-use Mundipagg\Core\Webhook\Exceptions\WebhookHandlerNotFoundException;
-use Mundipagg\Core\Webhook\Services\WebhookReceiverService;
+use Pagarme\Core\Kernel\Exceptions\AbstractPagarmeCoreException;
+use Pagarme\Core\Webhook\Exceptions\WebhookAlreadyHandledException;
+use Pagarme\Core\Webhook\Exceptions\WebhookHandlerNotFoundException;
+use Pagarme\Core\Webhook\Services\WebhookReceiverService;
 use Pagarme\Pagarme\Api\WebhookManagementInterface;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 
 class WebhookManagement implements WebhookManagementInterface
 {
@@ -50,7 +50,7 @@ class WebhookManagement implements WebhookManagementInterface
                 "message" => $e->getMessage(),
                 "code" => 200
             ];
-        } catch(AbstractMundipaggCoreException $e) {
+        } catch(AbstractPagarmeCoreException $e) {
             throw new M2WebApiException(
                 new Phrase($e->getMessage()),
                 0,

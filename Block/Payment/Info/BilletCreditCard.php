@@ -13,14 +13,14 @@ namespace Pagarme\Pagarme\Block\Payment\Info;
 
 use Magento\Payment\Block\Info\Cc;
 
-use Mundipagg\Core\Kernel\Aggregates\Charge;
-use Mundipagg\Core\Kernel\Repositories\OrderRepository;
-use Mundipagg\Core\Kernel\Services\OrderService;
-use Mundipagg\Core\Kernel\ValueObjects\Id\OrderId;
-use Mundipagg\Core\Kernel\ValueObjects\Id\SubscriptionId;
-use Mundipagg\Core\Recurrence\Repositories\ChargeRepository as SubscriptionChargeRepository;
-use Mundipagg\Core\Recurrence\Repositories\SubscriptionRepository;
-use MundiPagg\MundiPagg\Concrete\Magento2CoreSetup;
+use Pagarme\Core\Kernel\Aggregates\Charge;
+use Pagarme\Core\Kernel\Repositories\OrderRepository;
+use Pagarme\Core\Kernel\Services\OrderService;
+use Pagarme\Core\Kernel\ValueObjects\Id\OrderId;
+use Pagarme\Core\Kernel\ValueObjects\Id\SubscriptionId;
+use Pagarme\Core\Recurrence\Repositories\ChargeRepository as SubscriptionChargeRepository;
+use Pagarme\Core\Recurrence\Repositories\SubscriptionRepository;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Pagarme\Pagarme\Concrete\Magento2PlatformOrderDecorator;
 
 class BilletCreditCard extends Cc
@@ -97,7 +97,7 @@ class BilletCreditCard extends Cc
         $orderId = substr($lastTransId, 0, 19);
 
         $orderRepository = new OrderRepository();
-        $order = $orderRepository->findByMundipaggId(new OrderId($orderId));
+        $order = $orderRepository->findByPagarmeId(new OrderId($orderId));
 
         if ($order !== null) {
             $charges = $order->getCharges();
@@ -138,7 +138,7 @@ class BilletCreditCard extends Cc
         }
 
         $orderRepository = new OrderRepository();
-        $order = $orderRepository->findByMundipaggId(new OrderId($orderId));
+        $order = $orderRepository->findByPagarmeId(new OrderId($orderId));
 
         if ($order !== null) {
             $charges = $order->getCharges();
@@ -166,7 +166,7 @@ class BilletCreditCard extends Cc
         $chargeRepository = new SubscriptionChargeRepository();
         $subscriptionId =
             new SubscriptionId(
-                $subscription->getMundipaggId()->getValue()
+                $subscription->getPagarmeId()->getValue()
             );
 
         $charge = $chargeRepository->findBySubscriptionId($subscriptionId);
@@ -191,9 +191,9 @@ class BilletCreditCard extends Cc
         }
 
         /**
-         * @var \Mundipagg\Core\Kernel\Aggregates\Order orderObject
+         * @var \Pagarme\Core\Kernel\Aggregates\Order orderObject
          */
-        $orderObject = $orderService->getOrderByMundiPaggId(new OrderId($orderPagarmeId));
+        $orderObject = $orderService->getOrderByPagarmeId(new OrderId($orderPagarmeId));
 
         $lastTransaction = $orderObject->getCharges()[0]->getLastTransaction();
         $secondLastTransaction = $orderObject->getCharges()[1]->getLastTransaction();

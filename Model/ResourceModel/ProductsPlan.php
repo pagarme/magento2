@@ -14,6 +14,6 @@ class ProductsPlan extends AbstractDb
 
     protected function _construct()
     {
-        $this->_init('mundipagg_module_core_products_plan', 'id');
+        $this->_init('pagarme_module_core_products_plan', 'id');
     }
 }

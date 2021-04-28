@@ -12,25 +12,25 @@
 		</depends>
 		<label>Installments JCB</label>
 	    <field id="installments_number_jcb" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
-	        <label>Number JCB</label>
+	        <label>Max number of installments</label>
 			<backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
 	        <comment />
 	        <config_path>payment/pagarme_creditcard/installments_number_jcb</config_path>
 	    </field>
 	    <field id="installment_min_amount_jcb" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
-	        <label>Min Amount JCB</label>
+	        <label>Min installments amount</label>
 			<backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
 	        <comment />
 	        <config_path>payment/pagarme_creditcard/installment_min_amount_jcb</config_path>
 	    </field>
 	    <field id="installments_interest_by_issuer_jcb" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="select">
-	        <label>Interest by issuer JCB</label>
+	        <label>Enable interest</label>
 	        <comment />
 	        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
 	        <config_path>payment/pagarme_creditcard/installments_interest_by_issuer_jcb</config_path>
 	    </field>
 	    <field id="installments_interest_rate_initial_jcb" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
-	        <label>Interest Rate Initial (%) JCB</label>
+	        <label>Initial interest rate (%)</label>
 			<backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
 	        <comment />
 	        <config_path>payment/pagarme_creditcard/installments_interest_rate_initial_jcb</config_path>
@@ -39,7 +39,7 @@
             </depends>
 	    </field>
 	    <field id="installments_interest_rate_incremental_jcb" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
-	        <label>Interest Rate Incremental (%) JCB</label>
+	        <label>Incremental interest rate (%)</label>
 			<backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
 	        <comment />
 	        <config_path>payment/pagarme_creditcard/installments_interest_rate_incremental_jcb</config_path>
@@ -48,7 +48,7 @@
             </depends>
 	    </field>
 	    <field id="installments_max_without_interest_jcb" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
-	        <label>Max Without Interest JCB</label>
+	        <label>Number of installments without interest</label>
 			<backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
 	        <comment />
 	        <config_path>payment/pagarme_creditcard/installments_max_without_interest_jcb</config_path>

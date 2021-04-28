@@ -89,7 +89,7 @@
                         <tr>
                             <th><?= __('Customer id') ?></th>
                             <td>
-                                <span><?= $subscription->getPlatformOrder()->getCustomer()->getMundiPaggId()->getValue(); ?></span>
+                                <span><?= $subscription->getPlatformOrder()->getCustomer()->getPagarmeId()->getValue(); ?></span>
                             </td>
                         </tr><tr>
                             <th><?= __('Customer name') ?></th>

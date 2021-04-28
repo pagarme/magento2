@@ -15,8 +15,7 @@
 	        <config_path>payment/pagarme_creditcard/installments_active</config_path>
 	    </field>
 	    <field id="installments_type" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="11" translate="label" type="select">
-	        <label>Type installments Unique</label>
-	        <comment>Unique(Yes) or by Brand(No).</comment>
+	        <label>Default configuration for all brands</label>
 	        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
 	        <config_path>payment/pagarme_creditcard/installments_type</config_path>
 	        <depends>
@@ -24,7 +23,7 @@
             </depends>
 	    </field>
 	    <field id="installments_number" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="12" translate="label" type="text">
-	        <label>Number</label>
+	        <label>Max number of installments</label>
 			<backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
 	        <comment />
 	        <config_path>payment/pagarme_creditcard/installments_number</config_path>
@@ -35,7 +34,7 @@
 	    </field>
 	    <field id="installment_min_amount" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="13" translate="label" type="text">
 			<backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
-	        <label>Min Amount</label>
+	        <label>Min installment amount</label>
 	        <comment />
 	        <config_path>payment/pagarme_creditcard/installment_min_amount</config_path>
             <depends>
@@ -44,7 +43,7 @@
             </depends>
 	    </field>
 	    <field id="installments_interest_by_issuer" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="14" translate="label" type="select">
-	        <label>Interest by issuer</label>
+	        <label>Enable interest</label>
 	        <comment />
 	        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
 	        <config_path>payment/pagarme_creditcard/installments_interest_by_issuer</config_path>
@@ -54,7 +53,7 @@
             </depends>
 	    </field>
 	    <field id="installments_interest_rate_initial" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="15" translate="label" type="text">
-	        <label>Interest Rate Initial (%)</label>
+	        <label>Initial interest rate (%)</label>
 			<backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
 	        <comment />
 	        <config_path>payment/pagarme_creditcard/installments_interest_rate_initial</config_path>
@@ -65,7 +64,7 @@
             </depends>
 	    </field>
 	    <field id="installments_interest_rate_incremental" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="16" translate="label" type="text">
-	        <label>Interest Rate Incremental (%)</label>
+	        <label>Incremental interest rate (%)</label>
 			<backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
 	        <comment />
 	        <config_path>payment/pagarme_creditcard/installments_interest_rate_incremental</config_path>
@@ -76,7 +75,7 @@
             </depends>
 	    </field>
 	    <field id="installments_max_without_interest" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="17" translate="label" type="text">
-	        <label>Max Without Interest</label>
+	        <label>Number of installments without interest</label>
 			<backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
 	        <comment />
 	        <config_path>payment/pagarme_creditcard/installments_max_without_interest</config_path>

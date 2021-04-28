@@ -2,7 +2,7 @@
 namespace Pagarme\Pagarme\Concrete;
 
 use Magento\Framework\App\ObjectManager;
-use Mundipagg\Core\Kernel\Interfaces\PlatformProductInterface;
+use Pagarme\Core\Kernel\Interfaces\PlatformProductInterface;
 
 class Magento2PlatformProductDecorator implements PlatformProductInterface
 {

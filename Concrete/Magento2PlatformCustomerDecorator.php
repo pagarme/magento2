@@ -2,11 +2,10 @@
 
 namespace Pagarme\Pagarme\Concrete;
 
-use Mundipagg\Core\Kernel\Interfaces\PlatformCustomerInterface;
-use Mundipagg\Core\Kernel\ValueObjects\Id\CustomerId;
-use Mundipagg\Core\Payment\ValueObjects\CustomerType;
-use Mundipagg\Core\Payment\Repositories\CustomerRepository;
-use phpDocumentor\Parser\Exception;
+use Pagarme\Core\Kernel\Interfaces\PlatformCustomerInterface;
+use Pagarme\Core\Kernel\ValueObjects\Id\CustomerId;
+use Pagarme\Core\Payment\ValueObjects\CustomerType;
+use Pagarme\Core\Payment\Repositories\CustomerRepository;
 
 class Magento2PlatformCustomerDecorator implements PlatformCustomerInterface
 {
@@ -38,7 +37,7 @@ class Magento2PlatformCustomerDecorator implements PlatformCustomerInterface
         $customer = $customerRepository->findByCode($this->platformCustomer->getId());
 
         if ($customer !== null) {
-            $this->pagarmeId = $customer->getMundipaggId()->getValue();
+            $this->pagarmeId = $customer->getPagarmeId()->getValue();
             return $this->pagarmeId;
         }
 
@@ -91,8 +90,4 @@ class Magento2PlatformCustomerDecorator implements PlatformCustomerInterface
         /** @TODO */
     }
 
-    public function getMundipaggId()
-    {
-        return $this->getPagarmeId();
-    }
 }
