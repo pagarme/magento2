@@ -46,7 +46,7 @@ class CheckoutHelper extends AbstractHelper
     public function getPublicKey()
     {
         $config = Magento2CoreSetup::getModuleConfiguration();
-        $publicKey= $config->getPublicKey();
+        $publicKey = $config->getPublicKey();
         if (!$publicKey) {
             return null;
         }
@@ -79,7 +79,8 @@ class CheckoutHelper extends AbstractHelper
     }
     public function getInstallmentsUrl($baseUrl)
     {
-        return $baseUrl . "rest/default/V1/pagarme/installments/brandbyamount";
+        $defaultStoreViewCode = Magento2CoreSetup::getDefaultStoreViewCode();
+        return $baseUrl . "rest/{$defaultStoreViewCode}/V1/mundipagg/installments/brandbyamount";
     }
 
     public function formatGrandTotal($granTotal)
