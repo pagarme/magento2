@@ -6,7 +6,6 @@ use Pagarme\Core\Kernel\Interfaces\PlatformCustomerInterface;
 use Pagarme\Core\Kernel\ValueObjects\Id\CustomerId;
 use Pagarme\Core\Payment\ValueObjects\CustomerType;
 use Pagarme\Core\Payment\Repositories\CustomerRepository;
-use phpDocumentor\Parser\Exception;
 
 class Magento2PlatformCustomerDecorator implements PlatformCustomerInterface
 {

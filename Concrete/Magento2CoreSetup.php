@@ -486,6 +486,15 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         return $priceHelper->currency($price, true, false);
     }
 
+    public static function getDefaultStoreViewCode()
+    {
+        $objectManager = ObjectManager::getInstance();
+        $storeInterfaceName = '\Magento\Store\Model\StoreManagerInterface';
+        $storeManager = $objectManager->get($storeInterfaceName);
+
+        return $storeManager->getDefaultStoreView()->getCode();
+    }
+
     public static function getCurrentStoreId()
     {
         $objectManager = ObjectManager::getInstance();
