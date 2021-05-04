@@ -1,3 +1,6 @@
+# Module in development
+## This module should not be used before its first release.
+
 # Magento2/Pagar.me Integration module
 This is the official Magento2 module for Pagar.me integration
 
