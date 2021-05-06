@@ -21,7 +21,7 @@
         <field id="soft_description" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
             <label>Soft descriptor</label>
             <config_path>payment/pagarme_creditcard/soft_description</config_path>
-            <comment>Max size 22.</comment>
+            <comment><![CDATA[<p>Max size <span id='soft_description_max_size'></span>.</p>]]></comment>
         </field>
         <!-- <field id="customer_identity_attribute_code" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="30" translate="label" type="text">
             <label>Customer Identity (CPF/CNPJ) Attribute</label>
@@ -47,6 +47,9 @@
             <comment />
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>payment/pagarme_creditcard/enabled_saved_cards</config_path>
+            <depends>
+                <field id="*/*/pagarme_pagarme_global/integration_type">1</field>
+            </depends>
         </field>
 
 	    <include path="Pagarme_Pagarme::system/transaction/creditcard/types.xml"/>

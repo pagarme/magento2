@@ -43,5 +43,8 @@
             <config_path>payment/pagarme_debit/enabled_saved_cards</config_path>
         </field>
 	    <include path="Pagarme_Pagarme::system/transaction/debit/types.xml"/>
+        <depends>
+            <field id="*/*/pagarme_pagarme_global/integration_type">1</field>
+        </depends>
     </group>
 </include>

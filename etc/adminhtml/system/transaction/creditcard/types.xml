@@ -6,13 +6,26 @@
  */
 -->
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
-    <group id="pagarme_pagarme_transaction_creditcard_providers" translate="label comment" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="90">
-    	<label>Card brands</label>
-	    <field id="cctypes" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="multiselect">
-	        <label>Card brands</label>
-	        <comment />
-	        <source_model>Pagarme\Pagarme\Model\Source\Cctype</source_model>
-	        <config_path>payment/pagarme_creditcard/cctypes</config_path>
-	    </field>
-	</group>
+    <group id="pagarme_pagarme_group_gateway" translate="label comment" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="90">
+        <label>Card brands</label>
+        <field id="cctypes" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="multiselect">
+            <comment />
+            <source_model>Pagarme\Pagarme\Model\Source\Cctype</source_model>
+            <config_path>payment/pagarme_creditcard/cctypes</config_path>
+        </field>
+        <depends>
+            <field id="*/*/pagarme_pagarme_global/integration_type">1</field>
+        </depends>
+    </group>
+    <group id="pagarme_pagarme_group_psp" translate="label comment" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="90">
+        <label>Card brands</label>
+        <field id="cctypes" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="multiselect">
+            <comment />
+            <source_model>Pagarme\Pagarme\Model\Source\CctypePSP</source_model>
+            <config_path>payment/pagarme_creditcard/cctypes</config_path>
+        </field>
+        <depends>
+            <field id="*/*/pagarme_pagarme_global/integration_type">0</field>
+        </depends>
+    </group>
 </include>
