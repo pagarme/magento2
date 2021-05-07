@@ -33,7 +33,7 @@
 	        <config_path>payment/pagarme_billet/types</config_path>
             <depends>
                 <field id="active">1</field>
-                <field id="*/*/pagarme_pagarme_global/integration_type">1</field>
+                <field id="*/*/pagarme_pagarme_global/is_gateway_integration_type">1</field>
             </depends>
 	    </field>
 	    <field id="instructions" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="textarea">

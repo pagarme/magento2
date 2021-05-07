@@ -44,7 +44,7 @@
         </field>
 	    <include path="Pagarme_Pagarme::system/transaction/debit/types.xml"/>
         <depends>
-            <field id="*/*/pagarme_pagarme_global/integration_type">1</field>
+            <field id="*/*/pagarme_pagarme_global/is_gateway_integration_type">1</field>
         </depends>
     </group>
 </include>

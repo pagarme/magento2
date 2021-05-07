@@ -3,10 +3,11 @@ require([
     "jquery/ui",
 ], function ($) {
     $(document).ready(function(){
-        var integrationTypeElement = document.getElementById('payment_us_pagarme_pagarme_pagarme_pagarme_global_integration_type');
+        var integrationTypeElement = $("select[id*='pagarme_pagarme_global_is_gateway_integration_type']");
+        console.log(integrationTypeElement);
         changeCommentsByIntegrionType(integrationTypeElement.value);
 
-        integrationTypeElement.addEventListener('change', function () {
+        integrationTypeElement.change(function () {
             changeCommentsByIntegrionType(this.value);
             console.log(integrationTypeElement.value);
         });

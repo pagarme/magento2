@@ -56,11 +56,11 @@
                 <field id="test_mode">1</field>
             </depends>
         </field>
-        <field id="integration_type" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="50" translate="label" type="select">
+        <field id="is_gateway_integration_type" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="50" translate="label" type="select">
             <label>Enable Advanced Settings</label>
             <comment><![CDATA[<p><strong style='color:red'>Warning!</strong> Configurations that only work for <strong>Gateway</strong> customers, who have a direct contract with an acquirer.</p>]]></comment>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-            <config_path>pagarme_pagarme/integration_type/integration</config_path>
+            <config_path>pagarme_pagarme/global/is_gateway_integration_type</config_path>
         </field>
         <field id="create_order" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="50" translate="label" type="select">
             <label>Always creates order</label>

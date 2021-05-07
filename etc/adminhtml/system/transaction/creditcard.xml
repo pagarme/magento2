@@ -48,7 +48,7 @@
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>payment/pagarme_creditcard/enabled_saved_cards</config_path>
             <depends>
-                <field id="*/*/pagarme_pagarme_global/integration_type">1</field>
+                <field id="*/*/pagarme_pagarme_global/is_gateway_integration_type">1</field>
             </depends>
         </field>
 

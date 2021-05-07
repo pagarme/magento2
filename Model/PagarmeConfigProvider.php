@@ -14,7 +14,7 @@ class PagarmeConfigProvider
     /**
      * Contains if the module is active or not
      */
-    const XML_PATH_ADVANCED_SETTINGS_ENABLED  = 'pagarme_pagarme/integration_type/integration';
+    const XML_PATH_IS_GATEWAY_INTEGRATION_TYPE  = 'pagarme_pagarme/global/is_gateway_integration_type';
     const XML_PATH_SOFTDESCRIPTION   = 'payment/pagarme_creditcard/soft_description';
     const XML_PATH_MAX_INSTALLMENT   = 'payment/pagarme_creditcard/installments_number';
     const XML_PATH_ACTIVE            = 'pagarme_pagarme/global/active';
@@ -75,23 +75,23 @@ class PagarmeConfigProvider
         );
     }
 
-    public function getAdvancedSettingsIsEnabled()
+    public function isGatewayIntegrationType()
     {
         return $this->scopeConfig->getValue(
-            self::XML_PATH_ADVANCED_SETTINGS_ENABLED,
+            self::XML_PATH_IS_GATEWAY_INTEGRATION_TYPE,
             ScopeInterface::SCOPE_STORE
         );
     }
 
     public function validateSoftDescription()
     {
-        $advancedSettingsIsEnabled = $this->getAdvancedSettingsIsEnabled();
+        $isGatewayIntegrationType = $this->isGatewayIntegrationType();
         $softDescription = $this->getSoftDescription();
         $maxSizeForGateway = 22;
         $maxSizeForPSP = 13;
 
         if (
-            $advancedSettingsIsEnabled
+            $isGatewayIntegrationType
             && strlen($softDescription) > $maxSizeForGateway
         ) {
             $newResult = substr($softDescription, 0, $maxSizeForGateway);
@@ -106,7 +106,7 @@ class PagarmeConfigProvider
         }
 
         if (
-            !$advancedSettingsIsEnabled
+            !$isGatewayIntegrationType
             && strlen($softDescription) > $maxSizeForPSP
         ) {
             $newResult = substr($softDescription, 0, $maxSizeForPSP);
@@ -125,12 +125,12 @@ class PagarmeConfigProvider
 
     public function validateMaxInstallment()
     {
-        $advancedSettingsIsEnabled = $this->getAdvancedSettingsIsEnabled();
+        $isGatewayIntegrationType = $this->isGatewayIntegrationType();
         $maxInstallment = $this->getMaxInstallment();
         $maxInstallmentForPSP = 12;
 
         if (
-            !$advancedSettingsIsEnabled
+            !$isGatewayIntegrationType
             && $maxInstallment > $maxInstallmentForPSP
         ) {
             $this->config->saveConfig(

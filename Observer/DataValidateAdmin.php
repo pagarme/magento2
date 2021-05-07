@@ -90,7 +90,7 @@ class DataValidateAdmin implements ObserverInterface
 
         $this->validateConfigMagento();
 
-        if (!$this->integrationTypeIsGateway()) {
+        if (!$this->isGatewayIntegrationType()) {
             $this->configProviderPagarme->disableVoucher();
             $this->configProviderPagarme->disableDebit();
             $this->configProviderPagarme->disableRecurrence();
@@ -134,9 +134,9 @@ class DataValidateAdmin implements ObserverInterface
         return $this->configProviderPagarme->getModuleStatus();
     }
 
-    public function integrationTypeIsGateway()
+    public function isGatewayIntegrationType()
     {
-        return $this->configProviderPagarme->getAdvancedSettingsIsEnabled();
+        return $this->configProviderPagarme->isGatewayIntegrationType();
     }
 
     protected function validateConfigMagento()
