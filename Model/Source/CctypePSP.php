@@ -12,13 +12,13 @@ namespace Pagarme\Pagarme\Model\Source;
  * @link        https://pagar.me
  */
 
-class Cctype extends \Magento\Payment\Model\Source\Cctype
+class CctypePSP extends \Magento\Payment\Model\Source\Cctype
 {
     /**
      * @return array
      */
     public function getAllowedTypes()
     {
-        return BrandTypes::getGatewayBrands();
+        return BrandTypes::getPspBrands();
     }
 }

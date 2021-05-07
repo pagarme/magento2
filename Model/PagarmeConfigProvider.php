@@ -1,4 +1,5 @@
 <?php
+
 namespace Pagarme\Pagarme\Model;
 
 use \Magento\Store\Model\ScopeInterface;
@@ -13,13 +14,17 @@ class PagarmeConfigProvider
     /**
      * Contains if the module is active or not
      */
-    const XML_PATH_SOFTDESCRIPTION  = 'payment/pagarme_creditcard/soft_description';
+    const XML_PATH_IS_GATEWAY_INTEGRATION_TYPE  = 'pagarme_pagarme/global/is_gateway_integration_type';
+    const XML_PATH_SOFTDESCRIPTION   = 'payment/pagarme_creditcard/soft_description';
+    const XML_PATH_MAX_INSTALLMENT   = 'payment/pagarme_creditcard/installments_number';
     const XML_PATH_ACTIVE            = 'pagarme_pagarme/global/active';
-    const PATH_CUSTOMER_STREET      = 'payment/pagarme_customer_address/street_attribute';
-    const PATH_CUSTOMER_NUMBER      = 'payment/pagarme_customer_address/number_attribute';
-    const PATH_CUSTOMER_COMPLEMENT  = 'payment/pagarme_customer_address/complement_attribute';
-    const PATH_CUSTOMER_DISTRICT    = 'payment/pagarme_customer_address/district_attribute';
-
+    const XML_PATH_VOUCHER_ACTIVE    = 'payment/pagarme_voucher/active';
+    const XML_PATH_DEBIT_ACTIVE      = 'payment/pagarme_debit/active';
+    const XML_PATH_RECURRENCE_ACTIVE = 'pagarme_pagarme/recurrence/active';
+    const PATH_CUSTOMER_STREET       = 'payment/pagarme_customer_address/street_attribute';
+    const PATH_CUSTOMER_NUMBER       = 'payment/pagarme_customer_address/number_attribute';
+    const PATH_CUSTOMER_COMPLEMENT   = 'payment/pagarme_customer_address/complement_attribute';
+    const PATH_CUSTOMER_DISTRICT     = 'payment/pagarme_customer_address/district_attribute';
 
     /**
      * Contains scope config of Magento
@@ -56,22 +61,91 @@ class PagarmeConfigProvider
      */
     public function getSoftDescription()
     {
-        return $this->scopeConfig->getValue(self::XML_PATH_SOFTDESCRIPTION, ScopeInterface::SCOPE_STORE);
+        return $this->scopeConfig->getValue(
+            self::XML_PATH_SOFTDESCRIPTION,
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    public function getMaxInstallment()
+    {
+        return $this->scopeConfig->getValue(
+            self::XML_PATH_MAX_INSTALLMENT,
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    public function isGatewayIntegrationType()
+    {
+        return $this->scopeConfig->getValue(
+            self::XML_PATH_IS_GATEWAY_INTEGRATION_TYPE,
+            ScopeInterface::SCOPE_STORE
+        );
     }
 
     public function validateSoftDescription()
     {
+        $isGatewayIntegrationType = $this->isGatewayIntegrationType();
         $softDescription = $this->getSoftDescription();
+        $maxSizeForGateway = 22;
+        $maxSizeForPSP = 13;
 
-        if(strlen($softDescription) > 22){
-            $newResult = substr($softDescription, 0, 21);
-            $this->config->saveConfig(self::XML_PATH_SOFTDESCRIPTION, $newResult, 'default', 0);
+        if (
+            $isGatewayIntegrationType
+            && strlen($softDescription) > $maxSizeForGateway
+        ) {
+            $newResult = substr($softDescription, 0, $maxSizeForGateway);
+            $this->config->saveConfig(
+                self::XML_PATH_SOFTDESCRIPTION,
+                $newResult,
+                'default',
+                0
+            );
+
+            return false;
+        }
+
+        if (
+            !$isGatewayIntegrationType
+            && strlen($softDescription) > $maxSizeForPSP
+        ) {
+            $newResult = substr($softDescription, 0, $maxSizeForPSP);
+            $this->config->saveConfig(
+                self::XML_PATH_SOFTDESCRIPTION,
+                $newResult,
+                'default',
+                0
+            );
 
             return false;
         }
 
         return true;
     }
+
+    public function validateMaxInstallment()
+    {
+        $isGatewayIntegrationType = $this->isGatewayIntegrationType();
+        $maxInstallment = $this->getMaxInstallment();
+        $maxInstallmentForPSP = 12;
+
+        if (
+            !$isGatewayIntegrationType
+            && $maxInstallment > $maxInstallmentForPSP
+        ) {
+            $this->config->saveConfig(
+                self::XML_PATH_MAX_INSTALLMENT,
+                $maxInstallmentForPSP,
+                'default',
+                0
+            );
+
+            return false;
+        }
+
+        return true;
+    }
+
     /**
      * Returns the soft_description configuration
      *
@@ -110,4 +184,33 @@ class PagarmeConfigProvider
         ];
     }
 
+    public function disableVoucher()
+    {
+        $this->config->saveConfig(
+            self::XML_PATH_VOUCHER_ACTIVE,
+            0,
+            'default',
+            0
+        );
+    }
+
+    public function disableDebit()
+    {
+        $this->config->saveConfig(
+            self::XML_PATH_DEBIT_ACTIVE,
+            0,
+            'default',
+            0
+        );
+    }
+
+    public function disableRecurrence()
+    {
+        $this->config->saveConfig(
+            self::XML_PATH_RECURRENCE_ACTIVE,
+            0,
+            'default',
+            0
+        );
+    }
 }
