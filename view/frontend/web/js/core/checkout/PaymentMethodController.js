@@ -807,7 +807,7 @@ PaymentMethodController.prototype.isTotalOnAmountInputs = function(formObject, p
 };
 
 PaymentMethodController.prototype.validatePublicKey = function (publicKey) {
-    if (true) {
+    if (!publicKey) {
         var error =
             "Não foi possivel conectar com o serviço de pagamento. " +
             "Por favor contate o administrador da loja.";
