@@ -94,7 +94,7 @@ class PagarmeConfigProvider
             $advancedSettingsIsEnabled
             && strlen($softDescription) > $maxSizeForGateway
         ) {
-            $newResult = substr($softDescription, 0, $maxSizeForGateway - 1);
+            $newResult = substr($softDescription, 0, $maxSizeForGateway);
             $this->config->saveConfig(
                 self::XML_PATH_SOFTDESCRIPTION,
                 $newResult,
@@ -109,7 +109,7 @@ class PagarmeConfigProvider
             !$advancedSettingsIsEnabled
             && strlen($softDescription) > $maxSizeForPSP
         ) {
-            $newResult = substr($softDescription, 0, $maxSizeForPSP - 1);
+            $newResult = substr($softDescription, 0, $maxSizeForPSP);
             $this->config->saveConfig(
                 self::XML_PATH_SOFTDESCRIPTION,
                 $newResult,
