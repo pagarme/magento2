@@ -4,15 +4,22 @@ require([
 ], function ($) {
     $(document).ready(function(){
         var integrationTypeElement = $("select[id*='pagarme_pagarme_global_is_gateway_integration_type']");
-        changeCommentsByIntegrionType(integrationTypeElement.value);
+        changeCommentsByIntegrionType(integrationTypeElement.val());
+
+        changeAdminCssBorders();
 
         integrationTypeElement.on("change", function () {
-            changeCommentsByIntegrionType(this.value);
+            changeCommentsByIntegrionType($(this).val());
         });
 
         function changeCommentsByIntegrionType(integrationType) {
             document.getElementById('soft_description_max_size').innerHTML = integrationType === '0' ? 13 : 22;
             document.getElementById('installments_max_size').innerHTML = integrationType === '0' ? 12 : 24;
+        }
+
+        function changeAdminCssBorders() {
+            var transactionDiv = $("tr[id*='pagarme_pagarme_transaction']").find('.section-config');
+            transactionDiv.css('border', 0);
         }
     });
 });
