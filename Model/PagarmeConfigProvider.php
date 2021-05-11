@@ -15,16 +15,18 @@ class PagarmeConfigProvider
      * Contains if the module is active or not
      */
     const XML_PATH_IS_GATEWAY_INTEGRATION_TYPE  = 'pagarme_pagarme/global/is_gateway_integration_type';
-    const XML_PATH_SOFTDESCRIPTION   = 'payment/pagarme_creditcard/soft_description';
-    const XML_PATH_MAX_INSTALLMENT   = 'payment/pagarme_creditcard/installments_number';
-    const XML_PATH_ACTIVE            = 'pagarme_pagarme/global/active';
-    const XML_PATH_VOUCHER_ACTIVE    = 'payment/pagarme_voucher/active';
-    const XML_PATH_DEBIT_ACTIVE      = 'payment/pagarme_debit/active';
-    const XML_PATH_RECURRENCE_ACTIVE = 'pagarme_pagarme/recurrence/active';
-    const PATH_CUSTOMER_STREET       = 'payment/pagarme_customer_address/street_attribute';
-    const PATH_CUSTOMER_NUMBER       = 'payment/pagarme_customer_address/number_attribute';
-    const PATH_CUSTOMER_COMPLEMENT   = 'payment/pagarme_customer_address/complement_attribute';
-    const PATH_CUSTOMER_DISTRICT     = 'payment/pagarme_customer_address/district_attribute';
+    const XML_PATH_IS_ENABLE_SAVED_CARDS = 'payment/pagarme_creditcard/enabled_saved_cards';
+    const XML_PATH_SOFT_DESCRIPTION      = 'payment/pagarme_creditcard/soft_description';
+    const XML_PATH_MAX_INSTALLMENT       = 'payment/pagarme_creditcard/installments_number';
+    const XML_PATH_ACTIVE                = 'pagarme_pagarme/global/active';
+    const XML_PATH_VOUCHER_ACTIVE        = 'payment/pagarme_voucher/active';
+    const XML_PATH_DEBIT_ACTIVE          = 'payment/pagarme_debit/active';
+    const XML_PATH_RECURRENCE_ACTIVE     = 'pagarme_pagarme/recurrence/active';
+    const XML_PATH_ANTIFRAUD_ACTIVE      = 'payment/pagarme_creditcard/antifraud_active';
+    const PATH_CUSTOMER_STREET           = 'payment/pagarme_customer_address/street_attribute';
+    const PATH_CUSTOMER_NUMBER           = 'payment/pagarme_customer_address/number_attribute';
+    const PATH_CUSTOMER_COMPLEMENT       = 'payment/pagarme_customer_address/complement_attribute';
+    const PATH_CUSTOMER_DISTRICT         = 'payment/pagarme_customer_address/district_attribute';
 
     /**
      * Contains scope config of Magento
@@ -62,7 +64,7 @@ class PagarmeConfigProvider
     public function getSoftDescription()
     {
         return $this->scopeConfig->getValue(
-            self::XML_PATH_SOFTDESCRIPTION,
+            self::XML_PATH_SOFT_DESCRIPTION,
             ScopeInterface::SCOPE_STORE
         );
     }
@@ -96,7 +98,7 @@ class PagarmeConfigProvider
         ) {
             $newResult = substr($softDescription, 0, $maxSizeForGateway);
             $this->config->saveConfig(
-                self::XML_PATH_SOFTDESCRIPTION,
+                self::XML_PATH_SOFT_DESCRIPTION,
                 $newResult,
                 'default',
                 0
@@ -111,7 +113,7 @@ class PagarmeConfigProvider
         ) {
             $newResult = substr($softDescription, 0, $maxSizeForPSP);
             $this->config->saveConfig(
-                self::XML_PATH_SOFTDESCRIPTION,
+                self::XML_PATH_SOFT_DESCRIPTION,
                 $newResult,
                 'default',
                 0
@@ -208,6 +210,26 @@ class PagarmeConfigProvider
     {
         $this->config->saveConfig(
             self::XML_PATH_RECURRENCE_ACTIVE,
+            0,
+            'default',
+            0
+        );
+    }
+
+    public function disableAntifraud()
+    {
+        $this->config->saveConfig(
+            self::XML_PATH_ANTIFRAUD_ACTIVE,
+            0,
+            'default',
+            0
+        );
+    }
+
+    public function disableSavedCard()
+    {
+        $this->config->saveConfig(
+            self::XML_PATH_IS_ENABLE_SAVED_CARDS,
             0,
             'default',
             0

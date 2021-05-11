@@ -94,6 +94,9 @@ class DataValidateAdmin implements ObserverInterface
             $this->configProviderPagarme->disableVoucher();
             $this->configProviderPagarme->disableDebit();
             $this->configProviderPagarme->disableRecurrence();
+            $this->configProviderPagarme->disableSavedCard();
+            $this->configProviderPagarme->disableAntifraud();
+
             ObjectManager::getInstance()->get(Cache::class)
                 ->clean(Config::CACHE_TAG);
         }
@@ -128,7 +131,6 @@ class DataValidateAdmin implements ObserverInterface
         AbstractModuleCoreSetup::setModuleConfiguration($moduleConfig);
     }
 
-
     public function moduleIsEnable()
     {
         return $this->configProviderPagarme->getModuleStatus();
@@ -154,7 +156,7 @@ class DataValidateAdmin implements ObserverInterface
 
         if (!$this->configProviderPagarme->validateSoftDescription()) {
             $disableModule = true;
-            $disableMessage[] = __("Error to save Pagar.me Soft Description Credit Card, size too big.",
+            $disableMessage[] = __("Error to save Pagar.me Soft Descriptor Credit Card, size too big.",
                 $url
             );
         }
