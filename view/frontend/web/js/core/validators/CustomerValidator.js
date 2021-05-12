@@ -12,11 +12,15 @@ CustomerValidator.prototype.validate = function () {
     }
 
     if (address.vatId <= 0 && address.vatId != null) {
-        this.errors.push("Customer document is a required field");
+        this.errors.push("O campo CPF/CNPJ é obrigatório.");
     }
 
     if (address.street.length < 3) {
-        this.errors.push("Invalid address");
+        this.errors.push(
+            "O endereço fornecido está diferente do esperado. " +
+            "Verifique se você preencheu os campos " +
+            "rua, número e bairro e tente novamente."
+        );
     }
 }
 

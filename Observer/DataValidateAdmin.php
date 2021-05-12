@@ -1,6 +1,8 @@
 <?php
 namespace Pagarme\Pagarme\Observer;
 
+use Magento\Framework\App\Cache;
+use Magento\Framework\App\Config;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\App\Request\DataPersistorInterface;
 use Magento\Framework\App\ObjectManager;
@@ -88,6 +90,17 @@ class DataValidateAdmin implements ObserverInterface
 
         $this->validateConfigMagento();
 
+        if (!$this->isGatewayIntegrationType()) {
+            $this->configProviderPagarme->disableVoucher();
+            $this->configProviderPagarme->disableDebit();
+            $this->configProviderPagarme->disableRecurrence();
+            $this->configProviderPagarme->disableSavedCard();
+            $this->configProviderPagarme->disableAntifraud();
+
+            ObjectManager::getInstance()->get(Cache::class)
+                ->clean(Config::CACHE_TAG);
+        }
+
         return $this;
     }
 
@@ -118,10 +131,14 @@ class DataValidateAdmin implements ObserverInterface
         AbstractModuleCoreSetup::setModuleConfiguration($moduleConfig);
     }
 
-
     public function moduleIsEnable()
     {
         return $this->configProviderPagarme->getModuleStatus();
+    }
+
+    public function isGatewayIntegrationType()
+    {
+        return $this->configProviderPagarme->isGatewayIntegrationType();
     }
 
     protected function validateConfigMagento()
@@ -130,9 +147,16 @@ class DataValidateAdmin implements ObserverInterface
         $disableMessage;
         $url = $this->urlBuilder->getUrl('adminhtml/system_config/edit/section/payment');
 
-        if(!$this->configProviderPagarme->validateSoftDescription()){
+        if (!$this->configProviderPagarme->validateMaxInstallment()) {
             $disableModule = true;
-            $disableMessage[] = __("Error to save Pagar.me Soft Description Credit Card, size too big max 22 character." ,
+            $disableMessage[] = __("Error to save Pagar.me Max Installments, size too big." ,
+                $url
+            );
+        }
+
+        if (!$this->configProviderPagarme->validateSoftDescription()) {
+            $disableModule = true;
+            $disableMessage[] = __("Error to save Pagar.me Soft Descriptor Credit Card, size too big.",
                 $url
             );
         }
