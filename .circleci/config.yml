@@ -101,6 +101,7 @@ jobs:
 
             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento cache:flush"
             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento setup:di:compile"
+            docker exec -it newimage sh -c "cd /var/www/html && php bin/magento deploy:mode:set developer && php bin/magento deploy:mode:set production"
       - run:
           name: Install and run Functional Tests dependencies
           command: |
@@ -170,13 +171,7 @@ workflows:
           context: acceptance
           requires:
             - build
-          filters:
-              branches:
-                  only: develop
       - deploy_staging:
           context: acceptance
           requires:
             - publish
-          filters:
-              branches:
-                  only: develop
