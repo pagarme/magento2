@@ -64,7 +64,6 @@ jobs:
             docker exec -it newimage sh -c "cd /var/www/html && composer update -vvv"
             docker exec -it newimage sh -c "cd /var/www/ && find html/ -type d -exec chmod 775 {} \;"
             docker exec -it newimage sh -c "cd /var/www/ && find html/ -type f -exec chmod 664 {} \;"
-            docker exec -it newimage sh -c "cd /var/www/ && chown -R www-data:www-data html/"
             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento setup:upgrade"
             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento setup:di:compile"
             docker exec -it newimage php index.php
@@ -101,7 +100,7 @@ jobs:
 
             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento cache:flush"
             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento setup:di:compile"
-            docker exec -it newimage sh -c "cd /var/www/html && php bin/magento deploy:mode:set developer && php bin/magento deploy:mode:set production"
+            docker exec -it newimage sh -c "cd /var/www/ && chown -R www-data:www-data html/"
       - run:
           name: Install and run Functional Tests dependencies
           command: |
