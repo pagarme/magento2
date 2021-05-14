@@ -30,12 +30,13 @@ class InstallSchema implements InstallSchemaInterface
         $this->installTransaction($setup);
         $this->installSavedCard($setup);
         $this->installCustomer($setup);
-//        $this->installProductsSubscription($setup);
-//        $this->installSubscriptionRepetitions($setup);
-//        $this->installRecurrenceSubscription($setup);
-//        $this->installRecurrenceCharge($setup);
-//        $this->installSubProducts($setup);
-//        $this->installProductsPlan($setup);
+        $this->installHubToken($setup);
+        //        $this->installProductsSubscription($setup);
+        //        $this->installSubscriptionRepetitions($setup);
+        //        $this->installRecurrenceSubscription($setup);
+        //        $this->installRecurrenceCharge($setup);
+        //        $this->installSubProducts($setup);
+        //        $this->installProductsPlan($setup);
 
         $setup->endSetup();
     }
@@ -532,6 +533,64 @@ class InstallSchema implements InstallSchemaInterface
                         'nullable' => false
                     ],
                     'format: cus_xxxxxxxxxxxxxxxx'
+                )
+                ->setComment('Customer Table')
+                ->setOption('charset', 'utf8');
+
+            $installer->getConnection()->createTable($customer);
+        }
+        return $installer;
+    }
+
+    public function installHubToken(SchemaSetupInterface $installer)
+    {
+        $tableName = $installer->getTable('pagarme_module_core_hub_install_token');
+        if (!$installer->getConnection()->isTableExists($tableName)) {
+            $customer = $installer->getConnection()
+                ->newTable($tableName)
+                ->addColumn(
+                    'id',
+                    Table::TYPE_INTEGER,
+                    null,
+                    [
+                        'identity' => true,
+                        'unsigned' => true,
+                        'nullable' => false,
+                        'primary' => true
+                    ],
+                    'ID'
+                )
+                ->addColumn(
+                    'token',
+                    Table::TYPE_TEXT,
+                    100,
+                    [
+                        'nullable' => false
+                    ],
+                    'hub install token'
+                )
+                ->addColumn(
+                    'used',
+                    Table::TYPE_BOOLEAN,
+                    11,
+                    [
+                        'nullable' => false
+                    ],
+                    'ensures token was used or not'
+                )
+                ->addColumn(
+                    'created_at_timestamp',
+                    Table::TYPE_INTEGER,
+                    null,
+                    ['nullable' => false],
+                    'Token Created timestap'
+                )
+                ->addColumn(
+                    'expire_at_timestamp',
+                    Table::TYPE_INTEGER,
+                    null,
+                    ['nullable' => false],
+                    'Token Expiration timestamp'
                 )
                 ->setComment('Customer Table')
                 ->setOption('charset', 'utf8');
