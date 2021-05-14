@@ -32,7 +32,6 @@ class UpgradeSchema implements UpgradeSchemaInterface
         $installSchema = new InstallSchema();
 
         if (version_compare($version, "1.3.0", "<")) {
-            $setup = $installSchema->installHubToken($setup);
             $setup = $installSchema->installWebhook($setup);
             $setup = $installSchema->installOrder($setup);
             $setup = $installSchema->installCharge($setup);
