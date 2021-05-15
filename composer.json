@@ -1,5 +1,5 @@
 {
-    "name": "pagarme/magento2-module",
+    "name": "pagarme/pagarme-magento2-module",
     "license": "MIT",
     "version": "1.0.0",
     "type": "magento2-module",
