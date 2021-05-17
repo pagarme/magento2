@@ -563,7 +563,7 @@ class InstallSchema implements InstallSchemaInterface
                 ->addColumn(
                     'token',
                     Table::TYPE_TEXT,
-                    100,
+                    255,
                     [
                         'nullable' => false
                     ],
