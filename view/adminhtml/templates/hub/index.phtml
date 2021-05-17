@@ -1,9 +1,5 @@
 <span id="botao-hub"></span>
 <?php
-$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-$install_id = $objectManager->get('Magento\Framework\App\Config\ScopeConfigInterface')->getValue('pagarme_pagarme/hub/install_id');
-$access_token = $objectManager->get('Magento\Framework\App\Config\ScopeConfigInterface')->getValue('pagarme_pagarme/hub/access_token');
-
 echo '<br><br>install_id: "<b>' . $install_id . '</b>"<br>access_token: "<b>' . $access_token . '</b>"<br>';
 ?>
 <script>
