@@ -2,15 +2,18 @@
 
 namespace Pagarme\Pagarme\Controller\Adminhtml\Hub;
 
-use Pagarme\Core\Hub\Repositories\InstallTokenRepository;
+use Magento\Framework\App\ObjectManager;
+use Magento\Framework\App\Config as Magento2StoreConfig;
+use Magento\Store\Model\ScopeInterface as ScopeInterface;
 use Pagarme\Core\Hub\Services\HubIntegrationService;
-use Pagarme\Core\Hub\ValueObjects\HubInstallToken;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 
 class Index extends \Magento\Backend\App\Action
 {
 
     protected $resultPageFactory;
+    protected $configWriter;
+    protected $cacheManager;
 
     /**
      * Constructor
@@ -20,9 +23,14 @@ class Index extends \Magento\Backend\App\Action
      */
     public function __construct(
         \Magento\Backend\App\Action\Context $context,
-        \Magento\Framework\View\Result\PageFactory $resultPageFactory
+        \Magento\Framework\View\Result\PageFactory $resultPageFactory,
+        \Magento\Framework\App\Config\Storage\WriterInterface $configWriter,
+        \Magento\Framework\App\Cache\Manager $cacheManager
     ) {
         $this->resultPageFactory = $resultPageFactory;
+        $this->configWriter = $configWriter;
+        $this->cacheManager = $cacheManager;
+
         parent::__construct($context);
         Magento2CoreSetup::bootstrap();
     }
@@ -51,10 +59,40 @@ class Index extends \Magento\Backend\App\Action
                 'https://stg-hubapi.mundipagg.com/auth/apps/access-tokens',
                 'https://stg-magento2.mundipagg.com/rest/V1/pagarme/webhook'
             );
+
+            $this->updateStoreFields();
         }
 
         $url = $this->getUrl('adminhtml/system_config/edit/section/payment');
         header('Location: ' . explode('?', $url)[0]);
         exit;
+    }
+
+    private function updateStoreFields()
+    {
+
+        $actualConfigurations = Magento2CoreSetup::getModuleConfiguration();
+
+        $this->configWriter->save(
+            "pagarme_pagarme/hub/install_id",
+            $actualConfigurations->getHubInstallId()->getValue()
+        );
+
+        $this->configWriter->save(
+            "pagarme_pagarme/hub/access_token",
+            $actualConfigurations->getSecretKey()->getValue()
+        );
+
+        $this->configWriter->save(
+            "pagarme_pagarme/global/secret_key",
+            $actualConfigurations->getSecretKey()->getValue()
+        );
+
+        $this->configWriter->save(
+            "pagarme_pagarme/global/public_key",
+            $actualConfigurations->getPublicKey()->getValue()
+        );
+
+        $this->cacheManager->clean(['config']);
     }
 }
