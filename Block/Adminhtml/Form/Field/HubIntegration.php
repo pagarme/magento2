@@ -17,28 +17,39 @@ class HubIntegration extends Field
     protected function _renderValue(AbstractElement $element)
     {
         Magento2CoreSetup::bootstrap();
+
+        $installId = Magento2CoreSetup::getModuleConfiguration()->getHubInstallId();
+
+        $hubUrl = $this->getHubUrl($installId);
+        $buttonText = __($this->getButtonText($installId));
+        $newWindow = $this->mustOpenInNewWindow($installId);
+
         $html = '<td class="value">';
         $html .= $this->_getElementHtml($element);
         $html .= sprintf('
         <p
         id="botao-hub"
         hub-url="%s"
-        button-text="%s"></p>', $this->getHubUrl(), __($this->getButtonText()));
+        button-text="%s"
+        new-window="%s"></p>', $hubUrl, $buttonText, $newWindow);
         $html .= '</td>';
 
         return $html;
     }
 
-    private function getButtonText()
+    private function getButtonText($installId)
     {
-        $installId = Magento2CoreSetup::getModuleConfiguration()->getHubInstallId();
         return $installId ? "View Integration" : "Integrate With Mundipagg";
     }
 
-    private function getHubUrl()
+    private function getHubUrl($installId)
     {
-        $installId = Magento2CoreSetup::getModuleConfiguration()->getHubInstallId();
         return $installId ? $this->getBaseViewUrl($installId->getValue()) : $this->getBaseIntegrateUrl();
+    }
+
+    private function mustOpenInNewWindow($installId)
+    {
+        return false; //!empty($installId);
     }
 
     private function getBaseIntegrateUrl()
