@@ -49,7 +49,7 @@ class HubIntegration extends Field
 
     private function mustOpenInNewWindow($installId)
     {
-        return false; //!empty($installId);
+        return !empty($installId);
     }
 
     private function getBaseIntegrateUrl()
