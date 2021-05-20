@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Class ConfigInterface
  *
@@ -18,6 +19,7 @@ interface ConfigInterface
     const PATH_SECRET_KEY_TEST     = 'pagarme_pagarme/global/secret_key_test';
     const PATH_PUBLIC_KEY          = 'pagarme_pagarme/global/public_key';
     const PATH_SECRET_KEY          = 'pagarme_pagarme/global/secret_key';
+    const PATH_HUB_INSTALL_ID      = 'pagarme_pagarme/hub/install_id';
     const PATH_TEST_MODE           = 'pagarme_pagarme/global/test_mode';
     const PATH_SEND_EMAIL          = 'pagarme_pagarme/global/sendmail';
     const PATH_CUSTOMER_STREET     = 'payment/pagarme_customer_address/street_attribute';
@@ -34,6 +36,11 @@ interface ConfigInterface
      * @return string
      */
     public function getPublicKey();
+
+    /**
+     * @return string
+     */
+    public function isHubEnabled();
 
     /**
      * @return string
