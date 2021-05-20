@@ -28,7 +28,8 @@ PaymentMethodController.prototype.creditcardInit = function () {
 
     this.model = new CreditCardModel(
         this.formObject,
-        this.platformConfig.publicKey
+        this.platformConfig.publicKey,
+        this.platformConfig.isHubEnabled
     );
 
     this.fillCardAmount(this.formObject, 1);

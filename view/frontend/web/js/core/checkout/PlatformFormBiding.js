@@ -5,6 +5,7 @@ PlatformConfig.bind = function (platformConfig) {
     grandTotal = parseFloat(platformConfig.grand_total);
 
     publicKey = platformConfig.payment.ccform.pk_token;
+    isHubEnabled = platformConfig.payment.ccform.hub_enabled;
 
     urls = {
         base: platformConfig.base_url,
@@ -38,6 +39,7 @@ PlatformConfig.bind = function (platformConfig) {
         currency : currency,
         text: text,
         publicKey: publicKey,
+        isHubEnabled: isHubEnabled,
         totals: totals,
         loader: loader,
         addresses: platformConfig.addresses,
