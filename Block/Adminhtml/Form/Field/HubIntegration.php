@@ -39,7 +39,7 @@ class HubIntegration extends Field
 
     private function getButtonText($installId)
     {
-        return $installId ? "View Integration" : "Integrate With Mundipagg";
+        return $installId ? __("View Integration") : __("Integrate With Pagar.me");
     }
 
     private function getHubUrl($installId)
