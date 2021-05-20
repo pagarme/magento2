@@ -62,7 +62,8 @@ PaymentMethodController.prototype.voucherInit = function () {
 
     this.model = new VoucherModel(
         this.formObject,
-        this.platformConfig.publicKey
+        this.platformConfig.publicKey,
+        this.platformConfig.isHubEnabled
     );
 
     this.fillCardAmount(this.formObject, 1);
@@ -96,7 +97,8 @@ PaymentMethodController.prototype.debitInit = function () {
 
     this.model = new DebitModel(
         this.formObject,
-        this.platformConfig.publicKey
+        this.platformConfig.publicKey,
+        this.platformConfig.isHubEnabled
     );
 
     this.fillCardAmount(this.formObject, 1);
@@ -128,7 +130,8 @@ PaymentMethodController.prototype.twocreditcardsInit = function () {
     }
     this.model = new TwoCreditcardsModel(
         this.formObject,
-        this.platformConfig.publicKey
+        this.platformConfig.publicKey,
+        this.platformConfig.isHubEnabled
     );
 
     var isTotalOnAmountInputs = this.isTotalOnAmountInputs(this.formObject, this.platformConfig);
@@ -254,7 +257,8 @@ PaymentMethodController.prototype.boletoCreditcardInit = function () {
 
     this.model = new BoletoCreditcardModel(
         this.formObject,
-        this.platformConfig.publicKey
+        this.platformConfig.publicKey,
+        this.platformConfig.isHubEnabled
     );
 }
 
