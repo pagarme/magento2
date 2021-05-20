@@ -11,9 +11,5 @@
 		<add action="pagarme_pagarme/recurrenceproducts/index" id="Pagarme::pagarme_pagarme_recurrenceproducts_index" module="Pagarme_Pagarme" parent="Pagarme::pagarme_pagarme_recurrence" resource="Magento_Config::config" sortOrder="1" title="Recurrence Products"/>
 		<add action="pagarme_pagarme/plans/index" id="Pagarme::pagarme_pagarme_plans_index" module="Pagarme_Pagarme" parent="Pagarme::pagarme_pagarme_recurrence" resource="Magento_Config::config" sortOrder="1" title="Plans"/>
 		<add action="pagarme_pagarme/subscriptions/index" id="Pagarme::pagarme_pagarme_subscriptions_index" module="Pagarme_Pagarme" parent="Pagarme::pagarme_pagarme_recurrence" resource="Magento_Config::config" sortOrder="1" title="Subscriptions"/>
-
-		<add id="Pagarme::pagarme_pagarme_hub" module="Pagarme_Pagarme" parent="Pagarme::top_level" resource="Magento_Config::config" sortOrder="60" title="Hub"/>
-		<add action="pagarme_pagarme/hub/index" id="Pagarme::pagarme_pagarme_hub_index" module="Pagarme_Pagarme" parent="Pagarme::pagarme_pagarme_hub" resource="Magento_Backend::content" sortOrder="70" title="Hub Config"/>
-
 	</menu>
 </config>
