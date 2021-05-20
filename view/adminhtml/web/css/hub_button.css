@@ -1,6 +1,6 @@
 #botao-hub button {
-    background-color: #00b7b4;
-    border-color: rgb(0, 183, 180);
+    background-color: #65a300;
+    border-color: rgb(101, 163, 0);
     border-radius: 4px;
     border-style: solid;
     border-width: 2px;
@@ -21,8 +21,8 @@
 }
 
 #mundipagg-hub button:hover, #mundipagg-hub button:active, #mundipagg-hub button:focus {
-    background-color: #178176;
-    border-color: #178176;
+    background-color: rgb(125, 163, 0);
+    border-color: rgb(125, 163, 0);
 }
 
 #mundipagg-hub button img {
