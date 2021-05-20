@@ -285,3 +285,5 @@
 "<p>Max size <span id='soft_description_max_size'></span>.</p>", "<p>Max size <span id='soft_description_max_size'></span>.</p>"
 "<p>Max size <span id='installments_max_size'></span>.</p>", "<p>Max size <span id='installments_max_size'></span>.</p>"
 "<p><strong style='color:red'>Warning!</strong> Don't forget to add your store's domain on Pagar.me dashboard</p>", "<p><strong style='color:red'>Warning!</strong> Don't forget to add your store's domain on Pagar.me dashboard</p>"
+"View Integration", "View Integration"
+"Integrate With Pagar.me", "Integrate With Pagar.me"
