@@ -55,9 +55,7 @@ class Index extends \Magento\Backend\App\Action
             $hubIntegrationService = new HubIntegrationService();
             $hubIntegrationService->endHubIntegration(
                 $params['&install_token'],
-                $params['authorization_code'],
-                'https://stg-hubapi.mundipagg.com/auth/apps/access-tokens',
-                'https://stg-magento2.mundipagg.com/rest/V1/pagarme/webhook'
+                $params['authorization_code']
             );
 
             $this->updateStoreFields();
@@ -91,6 +89,11 @@ class Index extends \Magento\Backend\App\Action
         $this->configWriter->save(
             "pagarme_pagarme/global/public_key",
             $actualConfigurations->getPublicKey()->getValue()
+        );
+
+        $this->configWriter->save(
+            "pagarme_pagarme/global/test_mode",
+            0
         );
 
         $this->cacheManager->clean(['config']);
