@@ -14,6 +14,7 @@ class Index extends \Magento\Backend\App\Action
     protected $resultPageFactory;
     protected $configWriter;
     protected $cacheManager;
+    protected $requestObject;
 
     /**
      * Constructor
@@ -25,11 +26,13 @@ class Index extends \Magento\Backend\App\Action
         \Magento\Backend\App\Action\Context $context,
         \Magento\Framework\View\Result\PageFactory $resultPageFactory,
         \Magento\Framework\App\Config\Storage\WriterInterface $configWriter,
-        \Magento\Framework\App\Cache\Manager $cacheManager
+        \Magento\Framework\App\Cache\Manager $cacheManager,
+        \Magento\Framework\App\RequestInterface $request
     ) {
         $this->resultPageFactory = $resultPageFactory;
         $this->configWriter = $configWriter;
         $this->cacheManager = $cacheManager;
+        $this->requestObject = $request;
 
         parent::__construct($context);
         Magento2CoreSetup::bootstrap();
@@ -43,10 +46,7 @@ class Index extends \Magento\Backend\App\Action
     public function execute()
     {
         if (isset($_GET['authorization_code'])) {
-            $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-            $request = $objectManager->get('\Magento\Framework\App\RequestInterface');
-
-            $params = $request->getParams();
+            $params = $this->requestObject->getParams();
 
             $hubIntegrationService = new HubIntegrationService();
             $hubIntegrationService->endHubIntegration(
