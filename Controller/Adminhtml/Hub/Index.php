@@ -43,10 +43,6 @@ class Index extends \Magento\Backend\App\Action
     public function execute()
     {
         if (isset($_GET['authorization_code'])) {
-            $writer = new \Zend\Log\Writer\Stream(BP . '/var/log/Pagarme_Hub.log');
-            $logger = new \Zend\Log\Logger();
-            $logger->addWriter($writer);
-
             $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
             $request = $objectManager->get('\Magento\Framework\App\RequestInterface');
 
