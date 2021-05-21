@@ -20,12 +20,12 @@
     transition: all .3s ease-in-out;
 }
 
-#mundipagg-hub button:hover, #mundipagg-hub button:active, #mundipagg-hub button:focus {
+#botao-hub button:hover, #botao-hub button:active, #botao-hub button:focus {
     background-color: rgb(125, 163, 0);
     border-color: rgb(125, 163, 0);
 }
 
-#mundipagg-hub button img {
+#botao-hub button img {
     width: 16px;
     margin-bottom: -3px;
     margin-top: -3px;
