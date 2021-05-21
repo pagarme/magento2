@@ -80,7 +80,7 @@ class CheckoutHelper extends AbstractHelper
     public function getInstallmentsUrl($baseUrl)
     {
         $defaultStoreViewCode = Magento2CoreSetup::getDefaultStoreViewCode();
-        return $baseUrl . "rest/{$defaultStoreViewCode}/V1/mundipagg/installments/brandbyamount";
+        return $baseUrl . "rest/{$defaultStoreViewCode}/V1/pagarme/installments/brandbyamount";
     }
 
     public function formatGrandTotal($granTotal)
