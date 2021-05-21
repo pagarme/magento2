@@ -18,7 +18,8 @@ class HubIntegration extends Field
     {
         Magento2CoreSetup::bootstrap();
 
-        $installId = Magento2CoreSetup::getModuleConfiguration()->getHubInstallId();
+        $installId = Magento2CoreSetup::getModuleConfiguration()
+            ->getHubInstallId();
 
         $hubUrl = $this->getHubUrl($installId);
         $buttonText = $this->getButtonText($installId);
@@ -26,12 +27,18 @@ class HubIntegration extends Field
 
         $html = '<td class="value">';
         $html .= $this->_getElementHtml($element);
-        $html .= sprintf('
-        <p
-        id="botao-hub"
-        hub-url="%s"
-        button-text="%s"
-        new-window="%s"></p>', $hubUrl, $buttonText, $newWindow);
+
+        $html .= sprintf(
+            '<p
+            id="botao-hub"
+            hub-url="%s"
+            button-text="%s"
+            new-window="%s"></p>',
+            $hubUrl,
+            $buttonText,
+            $newWindow
+        );
+
         $html .= '</td>';
 
         return $html;
@@ -39,12 +46,15 @@ class HubIntegration extends Field
 
     private function getButtonText($installId)
     {
-        return $installId ? __("View Integration") : __("Integrate With Pagar.me");
+        return $installId ?
+            __("View Integration") : __("Integrate With Pagar.me");
     }
 
     private function getHubUrl($installId)
     {
-        return $installId ? $this->getBaseViewUrl($installId->getValue()) : $this->getBaseIntegrateUrl();
+        return $installId ?
+            $this->getBaseViewIntegrationUrl($installId->getValue()) :
+            $this->getBaseIntegrateUrl();
     }
 
     private function mustOpenInNewWindow($installId)
@@ -54,12 +64,27 @@ class HubIntegration extends Field
 
     private function getBaseIntegrateUrl()
     {
-        return "https://stghub.mundipagg.com/apps/{$this->getPublicAppKey()}/authorize?redirect={$this->getRedirectUrl()}&install_token/{$this->getInstallToken()}";
+        $baseUrl = sprintf(
+            'https://stghub.mundipagg.com/apps/%s/authorize',
+            $this->getPublicAppKey()
+        );
+
+        $params = sprintf(
+            '?redirect=%s&install_token/%s',
+            $this->getRedirectUrl(),
+            $this->getInstallToken()
+        );
+
+        return $baseUrl . $params;
     }
 
-    private function getBaseViewUrl($installId)
+    private function getBaseViewIntegrationUrl($installId)
     {
-        return "https://stghub.mundipagg.com/apps/{$this->getPublicAppKey()}/edit/{$installId}";
+        return sprintf(
+            'https://stghub.mundipagg.com/apps/%s/edit/%s',
+            $this->getPublicAppKey(),
+            $installId
+        );
     }
 
     private function getPublicAppKey()
@@ -76,7 +101,8 @@ class HubIntegration extends Field
     {
         $installSeed = uniqid();
         $hubIntegrationService = new HubIntegrationService();
-        $installToken = $hubIntegrationService->startHubIntegration($installSeed);
+        $installToken = $hubIntegrationService
+            ->startHubIntegration($installSeed);
 
         return $installToken->getValue();
     }

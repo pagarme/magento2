@@ -592,7 +592,7 @@ class InstallSchema implements InstallSchemaInterface
                     ['nullable' => false],
                     'Token Expiration timestamp'
                 )
-                ->setComment('Customer Table')
+                ->setComment('Hub Install Token Table')
                 ->setOption('charset', 'utf8');
 
             $installer->getConnection()->createTable($customer);
