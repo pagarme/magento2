@@ -21,7 +21,7 @@ class HubIntegration extends Field
         $installId = Magento2CoreSetup::getModuleConfiguration()->getHubInstallId();
 
         $hubUrl = $this->getHubUrl($installId);
-        $buttonText = __($this->getButtonText($installId));
+        $buttonText = $this->getButtonText($installId);
         $newWindow = $this->mustOpenInNewWindow($installId);
 
         $html = '<td class="value">';
