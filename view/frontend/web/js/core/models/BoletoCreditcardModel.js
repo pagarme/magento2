@@ -1,6 +1,7 @@
-var BoletoCreditcardModel= function (formObject, publicKey) {
+var BoletoCreditcardModel= function (formObject, publicKey, isHubEnabled) {
     this.formObject = formObject;
     this.publicKey = publicKey;
+    this.isHubEnabled = isHubEnabled;
     this.modelToken = new CreditCardToken(this.formObject);
     this.errors = [];
     this.formIds = [0, 1];
@@ -59,7 +60,7 @@ BoletoCreditcardModel.prototype.addErrors = function (error) {
 
 BoletoCreditcardModel.prototype.getCreditCardToken = function (formObject, success, error) {
     var modelToken = new CreditCardToken(formObject);
-    modelToken.getToken(this.publicKey)
+    modelToken.getToken(this.publicKey, this.isHubEnabled)
         .done(success)
         .fail(error);
 };

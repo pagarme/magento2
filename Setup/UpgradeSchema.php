@@ -1,4 +1,5 @@
 <?php
+
 namespace Pagarme\Pagarme\Setup;
 
 use Magento\Framework\Setup\UpgradeSchemaInterface;
@@ -201,22 +202,22 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 'length' => 300,
             ]
         )
-        ->modifyColumn(
-            $installer->getTable('pagarme_module_core_transaction'),
-            'acquirer_nsu',
-            [
-                'type' => Table::TYPE_TEXT,
-                'length' => 300,
-            ]
-        )
-        ->modifyColumn(
-            $installer->getTable('pagarme_module_core_transaction'),
-            'acquirer_auth_code',
-            [
-                'type' => Table::TYPE_TEXT,
-                'length' => 300,
-            ]
-        );
+            ->modifyColumn(
+                $installer->getTable('pagarme_module_core_transaction'),
+                'acquirer_nsu',
+                [
+                    'type' => Table::TYPE_TEXT,
+                    'length' => 300,
+                ]
+            )
+            ->modifyColumn(
+                $installer->getTable('pagarme_module_core_transaction'),
+                'acquirer_auth_code',
+                [
+                    'type' => Table::TYPE_TEXT,
+                    'length' => 300,
+                ]
+            );
 
         return $setup;
     }
