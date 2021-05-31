@@ -6,13 +6,14 @@ namespace Pagarme\Pagarme\Setup;
 use Magento\Framework\Setup\InstallDataInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
+use Magento\Customer\Setup\CustomerSetupFactory;
 
 class InstallData implements InstallDataInterface
 {
 
     private $customerSetupFactory;
     public function __construct(
-        \Magento\Customer\Setup\CustomerSetupFactory $customerSetupFactory
+        CustomerSetupFactory $customerSetupFactory
     ) {
         $this->customerSetupFactory = $customerSetupFactory;
     }
@@ -34,11 +35,11 @@ class InstallData implements InstallDataInterface
             $connection->update($tableName, $data, $where);
         }
 
-        $this->addsCustomerIdPagarme($setup);
+        $this->addCustomerIdPagarme($setup);
         $setup->endSetup();
     }
 
-    protected function addsCustomerIdPagarme($setup)
+    protected function addCustomerIdPagarme($setup)
     {
         $setup->startSetup();
 
