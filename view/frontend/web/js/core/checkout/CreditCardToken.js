@@ -20,12 +20,18 @@ CreditCardToken.prototype.getDataToGenerateToken = function () {
     };
 }
 
-CreditCardToken.prototype.getToken = function (pkKey) {
+CreditCardToken.prototype.getToken = function (pkKey, isHubEnabled) {
     var data = this.getDataToGenerateToken();
+
+    // TODO: THIS MUST BE REMOVED WHEN WE START USING PRODUCTION HUB!
+    const url = isHubEnabled ?
+        'https://stgapi.mundipagg.com/core/v1/tokens?appId=' :
+        'https://api.mundipagg.com/core/v1/tokens?appId=';
+
     return jQuery.ajax({
         type: 'POST',
         dataType: 'json',
-        url: 'https://api.mundipagg.com/core/v1/tokens?appId=' + pkKey,
+        url: url + pkKey,
         async: false,
         cache: true,
         data
