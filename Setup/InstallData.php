@@ -26,7 +26,9 @@ class InstallData implements InstallDataInterface
         ModuleContextInterface $context
     ) {
         $setup->startSetup();
-        $tableName = $setup->getTable('sales_order_status_state');
+        $tableName = $setup->getTable(
+            'sales_order_status_state'
+        );
 
         if ($setup->getConnection()->isTableExists($tableName) == true) {
             $connection = $setup->getConnection();
