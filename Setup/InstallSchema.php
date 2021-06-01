@@ -28,15 +28,18 @@ class InstallSchema implements InstallSchemaInterface
         $this->installOrder($setup);
         $this->installCharge($setup);
         $this->installTransaction($setup);
+        $this->installCard($setup);
+        $this->installCharges($setup);
         $this->installSavedCard($setup);
         $this->installCustomer($setup);
         $this->installHubToken($setup);
-        //        $this->installProductsSubscription($setup);
-        //        $this->installSubscriptionRepetitions($setup);
-        //        $this->installRecurrenceSubscription($setup);
-        //        $this->installRecurrenceCharge($setup);
-        //        $this->installSubProducts($setup);
-        //        $this->installProductsPlan($setup);
+        $this->installProductsSubscription($setup);
+        $this->installSubscriptionItems($setup);
+        $this->installSubscriptionRepetitions($setup);
+        $this->installRecurrenceSubscription($setup);
+        $this->installRecurrenceCharge($setup);
+        $this->installSubProducts($setup);
+        $this->installProductsPlan($setup);
 
         $setup->endSetup();
     }
@@ -68,6 +71,15 @@ class InstallSchema implements InstallSchemaInterface
                         'nullable' => false
                     ],
                     'data'
+                )
+                ->addColumn(
+                    'store_id',
+                    Table::TYPE_TEXT,
+                    50,
+                    [
+                        'nullable' => true
+                    ],
+                    'Store id'
                 )
                 ->setComment('Configuration Table')
                 ->setOption('charset', 'utf8');
@@ -274,6 +286,24 @@ class InstallSchema implements InstallSchemaInterface
                     ],
                     'Status'
                 )
+                ->addColumn(
+                    'metadata',
+                    Table::TYPE_TEXT,
+                    500,
+                    [
+                        'nullable' => true,
+                    ],
+                    'Charge metadata'
+                )
+                ->addColumn(
+                    'customer_id',
+                    Table::TYPE_TEXT,
+                    50,
+                    [
+                        'nullable' => true,
+                    ],
+                    'Charge customer id'
+                )
                 ->setComment('Charge Table')
                 ->setOption('charset', 'utf8');
 
@@ -341,8 +371,8 @@ class InstallSchema implements InstallSchemaInterface
                 )
                 ->addColumn(
                     'acquirer_tid',
-                    Table::TYPE_INTEGER,
-                    null,
+                    Table::TYPE_TEXT,
+                    300,
                     [
                         'unsigned' => true,
                         'nullable' => false,
@@ -351,8 +381,8 @@ class InstallSchema implements InstallSchemaInterface
                 )
                 ->addColumn(
                     'acquirer_nsu',
-                    Table::TYPE_INTEGER,
-                    null,
+                    Table::TYPE_TEXT,
+                    300,
                     [
                         'unsigned' => true,
                         'nullable' => false,
@@ -361,8 +391,8 @@ class InstallSchema implements InstallSchemaInterface
                 )
                 ->addColumn(
                     'acquirer_auth_code',
-                    Table::TYPE_INTEGER,
-                    null,
+                    Table::TYPE_TEXT,
+                    300,
                     [
                         'unsigned' => true,
                         'nullable' => false,
@@ -419,12 +449,220 @@ class InstallSchema implements InstallSchemaInterface
                     ],
                     'Created At'
                 )
+                ->addColumn(
+                    'boleto_url',
+                    Table::TYPE_TEXT,
+                    500,
+                    [
+                        'nullable' => false,
+                    ],
+                    'Boleto url'
+                )
+                ->addColumn(
+                    'card_data',
+                    Table::TYPE_TEXT,
+                    600,
+                    [
+                        'nullable' => true,
+                    ],
+                    'Card data'
+                )
+                ->addColumn(
+                    'transaction_data',
+                    Table::TYPE_TEXT,
+                    null,
+                    [
+                        'nullable' => true,
+                    ],
+                    'Transaction Data'
+                )
                 ->setComment('Transaction Table')
                 ->setOption('charset', 'utf8');
 
             $installer->getConnection()->createTable($webhookTable);
         }
         return $installer;
+    }
+
+    public function installCard(SchemaSetupInterface $installer)
+    {
+        $tableName = $installer->getTable('pagarme_pagarme_cards');
+        if (!$installer->getConnection()->isTableExists($tableName)) {
+            $savedCardTable = $installer->getConnection()
+                ->newTable($tableName)
+                ->addColumn(
+                    'id',
+                    Table::TYPE_INTEGER,
+                    null,
+                    [
+                        'identity' => true,
+                        'unsigned' => true,
+                        'nullable' => false,
+                        'primary' => true
+                    ],
+                    'ID'
+                )
+                ->addColumn(
+                    'customer_id',
+                    Table::TYPE_INTEGER,
+                    null,
+                    ['nullable' => false, 'default' => '0'],
+                    'Customer Id'
+                )
+                ->addColumn(
+                    'card_token',
+                    Table::TYPE_TEXT,
+                    null,
+                    ['nullable' => false, 'default' => ''],
+                    'Card Token'
+                )
+                ->addColumn(
+                    'card_id',
+                    Table::TYPE_TEXT,
+                    null,
+                    ['nullable' => false, 'default' => ''],
+                    'Card Id'
+                )
+                ->addColumn(
+                    'last_four_numbers',
+                    Table::TYPE_TEXT,
+                    null,
+                    ['nullable' => false, 'default' => ''],
+                    'Last Four Numbers'
+                )
+                ->addColumn(
+                    'created_at',
+                    Table::TYPE_DATETIME,
+                    null,
+                    ['nullable' => false],
+                    'Created At'
+                )
+                ->addColumn(
+                    'updated_at',
+                    Table::TYPE_DATETIME,
+                    null,
+                    ['nullable' => false],
+                    'Updated At'
+                )
+                ->addColumn(
+                    'brand',
+                    Table::TYPE_TEXT,
+                    255,
+                    ['nullable' => false,  'default' => ''],
+                    'Card Brand'
+                )
+                ->setComment('Pagar.me Card Tokens')
+                ->setOption('type', 'InnoDB')
+                ->setOption('charset', 'utf8');
+
+            $installer->getConnection()->createTable($savedCardTable);
+        }
+        return $installer;
+    }
+
+    protected function installCharges($setup)
+    {
+        $installer = $setup;
+        $installer->startSetup();
+
+        // Get tutorial_simplenews table
+        $tableName = $installer->getTable('pagarme_pagarme_charges');
+        // Check if the table already exists
+        if ($installer->getConnection()->isTableExists($tableName) != true) {
+            // Create tutorial_simplenews table
+            $table = $installer->getConnection()
+                ->newTable($tableName)
+                ->addColumn(
+                    'id',
+                    Table::TYPE_INTEGER,
+                    null,
+                    [
+                        'identity' => true,
+                        'unsigned' => true,
+                        'nullable' => false,
+                        'primary' => true
+                    ],
+                    'ID'
+                )
+                ->addColumn(
+                    'charge_id',
+                    Table::TYPE_TEXT,
+                    null,
+                    ['nullable' => false, 'default' => ''],
+                    'Charge Id'
+                )
+                ->addColumn(
+                    'code',
+                    Table::TYPE_TEXT,
+                    null,
+                    ['nullable' => false, 'default' => ''],
+                    'Code'
+                )
+                ->addColumn(
+                    'order_id',
+                    Table::TYPE_TEXT,
+                    null,
+                    ['nullable' => false, 'default' => ''],
+                    'Order Id'
+                )
+                ->addColumn(
+                    'type',
+                    Table::TYPE_TEXT,
+                    null,
+                    ['nullable' => false, 'default' => ''],
+                    'Type'
+                )
+                ->addColumn(
+                    'status',
+                    Table::TYPE_TEXT,
+                    null,
+                    ['nullable' => false, 'default' => ''],
+                    'Status'
+                )
+                ->addColumn(
+                    'amount',
+                    Table::TYPE_FLOAT,
+                    null,
+                    ['nullable' => false, 'default' => '0'],
+                    'Amount'
+                )
+                ->addColumn(
+                    'paid_amount',
+                    Table::TYPE_FLOAT,
+                    null,
+                    ['nullable' => false, 'default' => '0'],
+                    'Paid Amount'
+                )
+                ->addColumn(
+                    'refunded_amount',
+                    Table::TYPE_FLOAT,
+                    null,
+                    ['nullable' => false, 'default' => '0'],
+                    'Refunded Amount'
+                )
+                ->addColumn(
+                    'created_at',
+                    Table::TYPE_DATETIME,
+                    null,
+                    ['nullable' => false],
+                    'Created At'
+                )
+                ->addColumn(
+                    'updated_at',
+                    Table::TYPE_DATETIME,
+                    null,
+                    ['nullable' => false],
+                    'Updated At'
+                )
+                ->setComment('Pagar.me Charges')
+                ->setOption('type', 'InnoDB')
+                ->setOption('charset', 'utf8');
+            $installer->getConnection()->createTable($table);
+        }
+
+        $installer->endSetup();
+
+        return $setup;
     }
 
     public function installSavedCard(SchemaSetupInterface $installer)
@@ -489,6 +727,24 @@ class InstallSchema implements InstallSchemaInterface
                         'nullable' => false
                     ],
                     'card brand'
+                )
+                ->addColumn(
+                    'owner_name',
+                    Table::TYPE_TEXT,
+                    50,
+                    [
+                        'nullable' => true
+                    ],
+                    'Card owner name'
+                )
+                ->addColumn(
+                    'created_at',
+                    Table::TYPE_DATETIME,
+                    null,
+                    [
+                        'nullable' => false,
+                    ],
+                    'Card createdAt'
                 )
                 ->setComment('Saved Card Table')
                 ->setOption('charset', 'utf8');
@@ -832,6 +1088,13 @@ class InstallSchema implements InstallSchemaInterface
                     null,
                     ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT_UPDATE],
                     'Updated At'
+                )
+                ->addColumn(
+                    'pagarme_id',
+                    Table::TYPE_TEXT,
+                    21,
+                    ['nullable' => true],
+                    'Pagarme Id'
                 )
                 ->setOption('charset', 'utf8');
 

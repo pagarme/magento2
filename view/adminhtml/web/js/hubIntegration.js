@@ -11,6 +11,10 @@ require([
         this.setup = function() {
             var container = document.getElementById(this.containerId);
 
+            if (!container){
+                return;
+            }
+
             const url = container.getAttribute("hub-url").replace("{redirectUrl}");
             const text = container.getAttribute("button-text");
             const openInNewWindow = !!container.getAttribute("new-window");
