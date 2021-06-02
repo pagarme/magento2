@@ -71,7 +71,6 @@ class Index extends \Magento\Backend\App\Action
     private function getCallbackUrl()
     {
         $baseUrl = $this->storeManager->getStore()->getBaseUrl();
-        $baseUrl = "http://6dc3ad02673a.ngrok.io/";
         return $baseUrl . "rest/V1/pagarme/hub/command";
     }
 
