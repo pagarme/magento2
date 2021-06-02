@@ -648,6 +648,8 @@
 
     <preference for="Pagarme\Pagarme\Api\ObjectMapper\ProductSubscription\RepetitionInterface" type="Pagarme\Core\Recurrence\Aggregates\Repetition" />
 
+    <preference for="Pagarme\Pagarme\Api\HubCommandInterface"
+                type="Pagarme\Pagarme\Model\Api\HubCommand"/>
 
     <!-- Admin checkout -->
     <!--preference for="Magento\Payment\Block\Form" type="Pagarme\Pagarme\Block\Form"/-->

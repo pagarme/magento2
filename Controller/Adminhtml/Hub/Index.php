@@ -3,8 +3,6 @@
 namespace Pagarme\Pagarme\Controller\Adminhtml\Hub;
 
 use Magento\Framework\App\ObjectManager;
-use Magento\Framework\App\Config as Magento2StoreConfig;
-use Magento\Store\Model\ScopeInterface as ScopeInterface;
 use Pagarme\Core\Hub\Services\HubIntegrationService;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 
@@ -15,6 +13,7 @@ class Index extends \Magento\Backend\App\Action
     protected $configWriter;
     protected $cacheManager;
     protected $requestObject;
+    protected $storeManager;
 
     /**
      * Constructor
@@ -34,6 +33,12 @@ class Index extends \Magento\Backend\App\Action
         $this->cacheManager = $cacheManager;
         $this->requestObject = $request;
 
+        $objectManager = ObjectManager::getInstance();
+
+        $this->storeManager = $objectManager->get(
+            \Magento\Store\Model\StoreManagerInterface::class
+        );
+
         parent::__construct($context);
         Magento2CoreSetup::bootstrap();
     }
@@ -51,7 +56,8 @@ class Index extends \Magento\Backend\App\Action
             $hubIntegrationService = new HubIntegrationService();
             $hubIntegrationService->endHubIntegration(
                 $params['&install_token'],
-                $params['authorization_code']
+                $params['authorization_code'],
+                $this->getCallbackUrl()
             );
 
             $this->updateStoreFields();
@@ -60,6 +66,13 @@ class Index extends \Magento\Backend\App\Action
         $url = $this->getUrl('adminhtml/system_config/edit/section/payment');
         header('Location: ' . explode('?', $url)[0]);
         exit;
+    }
+
+    private function getCallbackUrl()
+    {
+        $baseUrl = $this->storeManager->getStore()->getBaseUrl();
+        $baseUrl = "http://6dc3ad02673a.ngrok.io/";
+        return $baseUrl . "rest/V1/pagarme/hub/command";
     }
 
     private function updateStoreFields()

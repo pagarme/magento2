@@ -23,7 +23,6 @@ class HubIntegration extends Field
 
         $hubUrl = $this->getHubUrl($installId);
         $buttonText = $this->getButtonText($installId);
-        $newWindow = $this->mustOpenInNewWindow($installId);
 
         $html = '<td class="value">';
         $html .= $this->_getElementHtml($element);
@@ -32,11 +31,9 @@ class HubIntegration extends Field
             '<p
             id="botao-hub"
             hub-url="%s"
-            button-text="%s"
-            new-window="%s"></p>',
+            button-text="%s"></p>',
             $hubUrl,
-            $buttonText,
-            $newWindow
+            $buttonText
         );
 
         $html .= '</td>';
@@ -57,10 +54,6 @@ class HubIntegration extends Field
             $this->getBaseIntegrateUrl();
     }
 
-    private function mustOpenInNewWindow($installId)
-    {
-        return !empty($installId);
-    }
 
     private function getBaseIntegrateUrl()
     {
