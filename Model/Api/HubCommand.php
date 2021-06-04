@@ -46,9 +46,9 @@ class HubCommand implements HubCommandInterface
             json_encode($this->request->getBodyParams())
         );
 
-        $hubCommandFactory = new HubIntegrationService();
+        $hubIntegrationService = new HubIntegrationService();
         try {
-            $hubCommandFactory->executeCommandFromPost($params);
+            $hubIntegrationService->executeCommandFromPost($params);
         } catch (\Exception $e) {
             throw new MagentoException(
                 __($e->getMessage()),
