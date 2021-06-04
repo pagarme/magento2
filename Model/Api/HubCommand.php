@@ -49,7 +49,7 @@ class HubCommand implements HubCommandInterface
         $hubIntegrationService = new HubIntegrationService();
         try {
             $hubIntegrationService->executeCommandFromPost($params);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             throw new MagentoException(
                 __($e->getMessage()),
                 0,
