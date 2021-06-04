@@ -4,7 +4,6 @@ namespace Pagarme\Pagarme\Model\Api;
 
 use Magento\Framework\Webapi\Rest\Request;
 use Magento\Framework\Webapi\Exception as MagentoException;
-use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\Config\Storage\WriterInterface;
 use Magento\Framework\App\Cache\Manager;
 use Pagarme\Pagarme\Api\HubCommandInterface;
@@ -29,13 +28,14 @@ class HubCommand implements HubCommandInterface
      */
     protected $cacheManager;
 
-    public function __construct(Request $request)
-    {
+    public function __construct(
+        Request $request,
+        WriterInterface $configWriter,
+        Manager $cacheManager
+    ) {
         $this->request = $request;
-
-        $objectManager = ObjectManager::getInstance();
-        $this->configWriter = $objectManager->get(WriterInterface::class);
-        $this->cacheManager = $objectManager->get(Manager::class);
+        $this->configWriter = $configWriter;
+        $this->cacheManager = $cacheManager;
 
         Magento2CoreSetup::bootstrap();
     }
