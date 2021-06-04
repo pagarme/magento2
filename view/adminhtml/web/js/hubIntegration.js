@@ -17,23 +17,11 @@ require([
 
             const url = container.getAttribute("hub-url").replace("{redirectUrl}");
             const text = container.getAttribute("button-text");
-            const openInNewWindow = !!container.getAttribute("new-window");
 
             createButton(text, function(event) {
                 event.preventDefault();
 
-                openInNewWindow ? openInNewTab() : openInSameTab();
-
-                function openInSameTab(){
-                    window.location.href = url;
-                }
-
-                function openInNewTab(){
-                    window.open(
-                        url,
-                        '_blank'
-                      );
-                }
+                window.location.href = url;
             });
         };
 

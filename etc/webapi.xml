@@ -189,4 +189,13 @@
             <resource ref="Magento_Catalog::products"/>
         </resources>
     </route>
+
+    <route url="/V1/pagarme/hub/command" method="POST">
+        <service class="Pagarme\Pagarme\Api\HubCommandInterface"
+                 method="execute"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+
 </routes>
