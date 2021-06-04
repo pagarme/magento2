@@ -59,13 +59,12 @@ class HubCommand implements HubCommandInterface
 
         $command = strtolower($params->command) . 'Command';
 
-        if (method_exists($this, $command)) {
-            $commandMessage = $this->$command();
-        } else {
-            $commandMessage = "Command $params->command executed successfully";
+        if (!method_exists($this, $command)) {
+            return "Command $params->command executed successfully";
         }
 
-        return new $commandMessage;
+        $commandMessage = $this->$command();
+        return $commandMessage;
     }
 
     public function uninstallCommand()
