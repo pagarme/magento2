@@ -43,15 +43,15 @@ class HubIntegration extends Field
 
     private function getButtonText($installId)
     {
-        return $installId ?
-        __("View Integration") : __("Integrate With Pagar.me");
+        return $installId
+            ? __("View Integration") : __("Integrate With Pagar.me");
     }
 
     private function getHubUrl($installId)
     {
-        return $installId ?
-        $this->getBaseViewIntegrationUrl($installId->getValue()) :
-        $this->getBaseIntegrateUrl();
+        return $installId
+            ? $this->getBaseViewIntegrationUrl($installId->getValue())
+            : $this->getBaseIntegrateUrl();
     }
 
     private function getBaseIntegrateUrl()
