@@ -2,8 +2,8 @@
 
 namespace Pagarme\Pagarme\Block\Adminhtml\Form\Field;
 
-use Magento\Framework\Data\Form\Element\AbstractElement;
 use Magento\Config\Block\System\Config\Form\Field;
+use Magento\Framework\Data\Form\Element\AbstractElement;
 use Pagarme\Core\Hub\Services\HubIntegrationService;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 
@@ -44,16 +44,15 @@ class HubIntegration extends Field
     private function getButtonText($installId)
     {
         return $installId ?
-            __("View Integration") : __("Integrate With Pagar.me");
+        __("View Integration") : __("Integrate With Pagar.me");
     }
 
     private function getHubUrl($installId)
     {
         return $installId ?
-            $this->getBaseViewIntegrationUrl($installId->getValue()) :
-            $this->getBaseIntegrateUrl();
+        $this->getBaseViewIntegrationUrl($installId->getValue()) :
+        $this->getBaseIntegrateUrl();
     }
-
 
     private function getBaseIntegrateUrl()
     {
@@ -63,8 +62,9 @@ class HubIntegration extends Field
         );
 
         $params = sprintf(
-            '?redirect=%s&install_token/%s',
+            '?redirect=%swebsite/%s/&install_token/%s',
             $this->getRedirectUrl(),
+            $this->getCurrentWebsiteId(),
             $this->getInstallToken()
         );
 
@@ -98,5 +98,15 @@ class HubIntegration extends Field
             ->startHubIntegration($installSeed);
 
         return $installToken->getValue();
+    }
+
+    private function getCurrentWebsiteId()
+    {
+        $params = $this->getRequest()->getParams();
+        if (isset($params['website'])) {
+            return $params['website'];
+        }
+        $store = isset($params['store']) ? $params['store'] : null;
+        return $this->_storeManager->getStore($store)->getWebsiteId();
     }
 }
