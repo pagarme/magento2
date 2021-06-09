@@ -102,6 +102,39 @@ jobs:
             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento setup:di:compile"
             docker exec -it newimage sh -c "cd /var/www/ && chown -R www-data:www-data html/"
       - run:
+          name: Install and run Functional Tests dependencies
+          command: |
+            docker exec -i newimage sh -c \
+              "wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
+              echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list && \
+              apt-get -y update && apt-get -y install google-chrome-unstable"
+
+            docker exec -it newimage sh -c "git clone https://github.com/mundipagg/ecommerce-test-package.git --branch behat-compatible-ci /behat-test"
+
+            docker exec -it newimage sh -c "cd /behat-test && rm -rf composer.lock && rm -rf failureScreenshots"
+
+            docker exec -it newimage sh -c "mkdir /behat-test/failureScreenshots && chmod ugo+rwx /behat-test/failureScreenshots"
+
+            docker exec -it newimage sh -c "composer config -g github-oauth.github.com ${GIT_HUB_AUTH}"
+
+            docker exec -it newimage sh -c "cd /behat-test && composer install --prefer-dist"
+
+            docker exec --detach newimage google-chrome-unstable --disable-gpu --no-sandbox --headless --remote-debugging-address=127.0.0.1 --remote-debugging-port=9222 --allow-insecure-localhost --disable-dev-shm-usage --disable-extensions -user-data-dir=/tmp/test
+
+            docker exec -it newimage bash -c "cd /behat-test && printf 'BASE_URL=\"http://127.0.0.1\"' > .env"
+
+            docker exec -it newimage sh -c "cd /behat-test && vendor/bin/behat --profile magento2"
+
+            mkdir -p /error
+
+            docker cp newimage:/behat-test/failureScreenshots/ /error
+
+            ls /error
+
+            if [ -z "$(ls -A -- "/error/failureScreenshots")" ]; then echo 'Behat OK'; else echo 'Behat fail'; fi
+      - store_artifacts:
+          path: /error
+      - run:
           name: Clear useless files
           command: |
             pwd
@@ -112,7 +145,7 @@ jobs:
              docker login ${DOCKER_ACCOUNT} -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
              docker commit newimage ${DOCKER_ACCOUNT}/${PROJECT_NAME}:latest
              docker tag ${DOCKER_ACCOUNT}/${PROJECT_NAME} "${DOCKER_ACCOUNT}/${PROJECT_NAME}:latest"
-             docker tag ${DOCKER_ACCOUNT}/${PROJECT_NAME} "${DOCKER_ACCOUNT}/${PROJECT_NAME}:develop"
+             docker tag ${DOCKER_ACCOUNT}/${PROJECT_NAME} "${DOCKER_ACCOUNT}/${PROJECT_NAME}:${CIRCLE_BRANCH}"
              docker tag ${DOCKER_ACCOUNT}/${PROJECT_NAME} "${DOCKER_ACCOUNT}/${PROJECT_NAME}:${CIRCLE_SHA1:0:8}"
              docker push "${DOCKER_ACCOUNT}/${PROJECT_NAME}"
   deploy_staging:
@@ -126,7 +159,7 @@ jobs:
        - run:
            name: Send deployment webhook to Rancher
            command: |
-             BODY='{"push_data":{"tag":"'"develop"'"},"repository":{"repo_name":"'"${DOCKER_ACCOUNT}/${PROJECT_NAME}"'"}}'
+             BODY='{"push_data":{"tag":"'"${CIRCLE_BRANCH}"'"},"repository":{"repo_name":"'"${DOCKER_ACCOUNT}/${PROJECT_NAME}"'"}}'
              curl -X POST ${RANCHER_STG_DEPLOY_URL} -H 'Content-Type: application/json' -d "${BODY}"
 workflows:
   version: 2
@@ -137,7 +170,13 @@ workflows:
           context: acceptance
           requires:
             - build
+          filters:
+              branches:
+                  only: develop
       - deploy_staging:
           context: acceptance
           requires:
             - publish
+          filters:
+              branches:
+                  only: develop
