@@ -9,6 +9,7 @@ use Magento\Setup\Exception;
 use Magento\Store\Model\StoreManagerInterface;
 use Pagarme\Pagarme\Api\BulkApiInterface;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use Pagarme\Pagarme\Factories\BulkSingleResponseFactory;
 
 class Bulk implements BulkApiInterface
 {
@@ -18,7 +19,7 @@ class Bulk implements BulkApiInterface
     private $request;
 
     /**
-     * @var \Magento\Framework\HTTP\Client\Curl
+     * @var Curl
      */
     protected $curl;
 
@@ -62,14 +63,19 @@ class Bulk implements BulkApiInterface
         }
 
         foreach ($bodyParams['requests'] as $key => $request) {
-            $validate = $this->validateSingleRequestParams($key, $request);
+            $validationInfo = $this->validateSingleRequestParams($key, $request);
 
-            if ($validate['code'] === self::HTTP_OK) {
-                $this->executeCurl($key, $request);
+            if ($validationInfo['code'] === self::HTTP_OK) {
+                $responseFactory = new BulkSingleResponseFactory();
+                $curlResponse = $this->executeCurl($key, $request);
+                $response = $responseFactory->createFromCurlResponse($curlResponse);
+                $this->setFormatedResponse($key, $response, $request);
             }
 
-            if ($validate['code'] === self::HTTP_BAD_REQUEST) {
-                $this->setFormatedResponse($key, $validate, $request);
+            if ($validationInfo['code'] === self::HTTP_BAD_REQUEST) {
+                $responseFactory = new BulkSingleResponseFactory();
+                $response = $responseFactory->createFromArrayData($validationInfo);
+                $this->setFormatedResponse($key, $response, $request);
             }
         }
 
@@ -134,20 +140,14 @@ class Bulk implements BulkApiInterface
 
         try {
             $this->curl->$method($apiUrl, $params);
-            $curlResponse = $this->curl;
-        }catch (\Exception $exception) {
+            return $this->curl;
+        } catch (\Exception $exception) {
             throw new MagentoException(
                 __($exception->getMessage()),
                 0,
                 self::HTTP_INTERNAL_SERVER_ERROR
             );
         }
-
-        $this->setFormatedResponse(
-            $key,
-            $curlResponse,
-            $request
-        );
     }
 
     private function getApiBaseUrl(): string
@@ -158,23 +158,13 @@ class Bulk implements BulkApiInterface
 
     private function setFormatedResponse(
         int $index,
-        $response,
+        BulkSingleResponse $response,
         array $request
     ): void {
-        if ($response instanceof Curl) {
-            $body = json_decode($response->getBody(), true);
-            $status = $response->getStatus();
-        }
-
-        if (is_array($response)) {
-            $body = ["message " => $response['message']];
-            $status = $response['code'];
-        }
-
         $this->responseArray[] = array(
             "index" => $index,
-            "status" => $status,
-            "body" => $body,
+            "status" => $response->getStatus(),
+            "body" => $response->getBody(),
             "path" => $request['path'] ?? null,
             "method" => $request['method'] ?? null,
         );
