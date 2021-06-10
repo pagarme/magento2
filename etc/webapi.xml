@@ -206,4 +206,11 @@
         </resources>
     </route>
 
+    <route url="/V1/pagarme/bulk" method="POST">
+        <service class="Pagarme\Pagarme\Api\BulkApiInterface"
+                 method="execute"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
 </routes>
