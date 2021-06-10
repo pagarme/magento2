@@ -198,4 +198,12 @@
         </resources>
     </route>
 
+    <route url="/V1/pagarme/charge/cancel/:id" method="POST">
+        <service class="Pagarme\Pagarme\Api\ChargeApiInterface"
+                 method="cancel"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+
 </routes>

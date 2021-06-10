@@ -38,6 +38,9 @@
     <preference for="Pagarme\Pagarme\Api\ProductPlanInterface"
                 type="Pagarme\Pagarme\Model\Api\ProductsPlan"/>
 
+    <preference for="Pagarme\Pagarme\Api\ChargeApiInterface"
+                type="Pagarme\Pagarme\Model\Api\Charge"/>
+
     <type name="Pagarme\Pagarme\Model\InstallmentsByBrandManagement">
         <arguments>
             <argument name="builder" xsi:type="object">Pagarme\Pagarme\Model\Installments\BuilderByBrand</argument>
