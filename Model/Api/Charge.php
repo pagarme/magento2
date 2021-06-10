@@ -4,7 +4,7 @@ namespace Pagarme\Pagarme\Model\Api;
 
 use Magento\Framework\Webapi\Exception as MagentoException;
 use Pagarme\Core\Kernel\Services\ChargeService;
-use Pagarme\Pagarme\Model\Api\ResponseMessage;
+use Pagarme\Pagarme\Model\Api\ResponseMessage as ApiResponseMessage;
 use Pagarme\Pagarme\Api\ChargeApiInterface;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 
@@ -36,7 +36,7 @@ class Charge implements ChargeApiInterface
             }
 
             if ($response->isSuccess()) {
-                $message = new ResponseMessage($response->getMessage());
+                $message = new ApiResponseMessage($response->getMessage());
 
                 return $message;
             }
@@ -44,7 +44,7 @@ class Charge implements ChargeApiInterface
             throw new MagentoException(__($response->getMessage()), 0, 400);
 
         } catch (\Exception $exception) {
-            throw new MagentoException(__($exception->getMessage()), 0, 500);
+            throw new MagentoException(__($exception->getMessage()), 0, 400);
         }
     }
 }
