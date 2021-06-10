@@ -39,7 +39,7 @@ class Bulk implements BulkApiInterface
 
     public function __construct(
         Request $request,
-        \Magento\Framework\HTTP\Client\Curl $curl,
+        Curl $curl,
         StoreManagerInterface $storeManager
     )
     {
@@ -53,38 +53,104 @@ class Bulk implements BulkApiInterface
      */
     public function execute()
     {
-        $requestParams = $this->request->getBodyParams();
-        $accessToken = $requestParams['access_token'];
-        $this->curl->addHeader("Authorization", "Bearer {$accessToken}");
+        $bodyParams = $this->request->getBodyParams();
+        $this->validateRequestsParam($bodyParams);
 
-        foreach ($requestParams['requests'] as $key => $request) {
-            $this->executeCurl($key, $request);
+        if (isset($bodyParams['access_token'])) {
+            $accessToken = $bodyParams['access_token'];
+            $this->curl->addHeader("Authorization", "Bearer {$accessToken}");
+        }
+
+        foreach ($bodyParams['requests'] as $key => $request) {
+            $validate = $this->validateSingleRequestParams($key, $request);
+
+            if ($validate['code'] === self::HTTP_OK) {
+                $this->executeCurl($key, $request);
+            }
+
+            if ($validate['code'] === self::HTTP_BAD_REQUEST) {
+                $this->setFormatedResponse($key, $validate, $request);
+            }
         }
 
         return $this->getFormatedResponse();
     }
 
-    private function executeCurl(int $key, array $request): void
+    private function validateRequestsParam($bodyParams)
+    {
+        if (!isset($bodyParams['requests'])) {
+            throw new MagentoException(
+                __("Requests parameter is required."),
+                0,
+                self::HTTP_BAD_REQUEST
+            );
+        }
+
+        if (!is_array($bodyParams['requests'])) {
+            throw new MagentoException(
+                __("Requests parameter must be an array."),
+                0,
+                self::HTTP_BAD_REQUEST
+            );
+        }
+    }
+
+    private function validateSingleRequestParams(
+        int $key,
+        array $request
+    ): array {
+        if (!isset($request['method'])) {
+            return [
+                "message" => "Method parameter in array requests is required.",
+                "code" => self::HTTP_BAD_REQUEST
+            ];
+        }
+
+        if (!isset($request['path'])) {
+            return [
+                "message" => "Path parameter in array requests is required.",
+                "code" => self::HTTP_BAD_REQUEST
+            ];
+        }
+
+        if (!isset($request['params'])) {
+            return [
+                "message" => "Params parameter in array requests is required.",
+                "code" => self::HTTP_BAD_REQUEST
+            ];
+        }
+
+        return [
+            "message" => "Successfully validated.",
+            "code" => self::HTTP_OK
+        ];
+    }
+
+    private function executeCurl(int $key, array $request)
     {
         $method = $request['method'];
-        $apiUrl = $this->getChargeUrl() . $request['path'];
+        $apiUrl = $this->getApiBaseUrl() . $request['path'];
         $params = $request['params'];
 
         try {
             $this->curl->$method($apiUrl, $params);
-            $curlResponseRequest = $this->curl;
+            $curlResponse = $this->curl;
         }catch (\Exception $exception) {
-            throw new MagentoException(__($exception->getMessage()), 0, 500);
+            throw new MagentoException(
+                __($exception->getMessage()),
+                0,
+                self::HTTP_INTERNAL_SERVER_ERROR
+            );
         }
 
         $this->setFormatedResponse(
             $key,
-            $curlResponseRequest,
+            $curlResponse,
             $request
         );
     }
 
-    private function getChargeUrl(): string
+    private function getApiBaseUrl(): string
     {
         $defaultStoreViewCode = Magento2CoreSetup::getDefaultStoreViewCode();
         return $this->baseUrl . "rest/{$defaultStoreViewCode}/V1/pagarme";
@@ -92,15 +158,25 @@ class Bulk implements BulkApiInterface
 
     private function setFormatedResponse(
         int $index,
-        Curl $response,
+        $response,
         array $request
     ): void {
+        if ($response instanceof Curl) {
+            $body = json_decode($response->getBody(), true);
+            $status = $response->getStatus();
+        }
+
+        if (is_array($response)) {
+            $body = ["message " => $response['message']];
+            $status = $response['code'];
+        }
+
         $this->responseArray[] = array(
             "index" => $index,
-            "status" => $response->getStatus(),
-            "body" => json_decode($response->getBody(), true),
-            "path" => $request['path'],
-            "method" => $request['method'],
+            "status" => $status,
+            "body" => $body,
+            "path" => $request['path'] ?? null,
+            "method" => $request['method'] ?? null,
         );
     }
 
