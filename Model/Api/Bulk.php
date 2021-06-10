@@ -15,7 +15,7 @@ class Bulk implements BulkApiInterface
     /**
      * @var Request
      */
-    private Request $request;
+    private $request;
 
     /**
      * @var \Magento\Framework\HTTP\Client\Curl
@@ -25,7 +25,7 @@ class Bulk implements BulkApiInterface
     /**
      * @var StoreManagerInterface
      */
-    private StoreManagerInterface $storeManager;
+    private $storeManager;
 
     /**
      * @var string
