@@ -44,7 +44,7 @@ class Charge implements ChargeApiInterface
             throw new MagentoException(__($response->getMessage()), 0, 400);
 
         } catch (\Exception $exception) {
-            throw new MagentoException(__($exception->getMessage()), 0, 400);
+            throw new MagentoException(__($exception->getMessage()), 0, 500);
         }
     }
 }

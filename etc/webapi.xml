@@ -202,7 +202,7 @@
         <service class="Pagarme\Pagarme\Api\ChargeApiInterface"
                  method="cancel"/>
         <resources>
-            <resource ref="anonymous"/>
+            <resource ref="Magento_Sales::sales"/>
         </resources>
     </route>
 
