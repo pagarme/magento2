@@ -62,6 +62,8 @@ class Bulk implements BulkApiInterface
             $this->curl->addHeader("Authorization", "Bearer {$accessToken}");
         }
 
+        $this->curl->addHeader("Content-Type", "application/json");
+
         foreach ($bodyParams['requests'] as $key => $request) {
             $validationInfo = $this->validateSingleRequestParams($key, $request);
 
@@ -87,6 +89,14 @@ class Bulk implements BulkApiInterface
         if (!isset($bodyParams['requests'])) {
             throw new MagentoException(
                 __("Requests parameter is required."),
+                0,
+                self::HTTP_BAD_REQUEST
+            );
+        }
+
+        if (empty($bodyParams['requests'])) {
+            throw new MagentoException(
+                __("Requests parameter can not be empty."),
                 0,
                 self::HTTP_BAD_REQUEST
             );
@@ -136,7 +146,7 @@ class Bulk implements BulkApiInterface
     {
         $method = $request['method'];
         $apiUrl = $this->getApiBaseUrl() . $request['path'];
-        $params = $request['params'];
+        $params = json_encode($request['params']);
 
         try {
             $this->curl->$method($apiUrl, $params);

@@ -9,9 +9,15 @@ class BulkSingleResponseFactory
 {
     public function createFromCurlResponse(Curl $curlResponse): BulkSingleResponse
     {
+        $body = json_decode($curlResponse->getBody(), true);
+
+        if (!is_array($body)) {
+            $body = ['message' => $body];
+        }
+
         $bulkSingleResponse = new BulkSingleResponse;
         $bulkSingleResponse->setStatus($curlResponse->getStatus());
-        $bulkSingleResponse->setBody(json_decode($curlResponse->getBody(), true));
+        $bulkSingleResponse->setBody($body);
         return $bulkSingleResponse;
     }
 
