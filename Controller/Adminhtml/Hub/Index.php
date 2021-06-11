@@ -55,7 +55,9 @@ class Index extends \Magento\Backend\App\Action
     public function execute()
     {
         $params = $this->requestObject->getParams();
-        $websiteId = isset($params['website']) ? $params['website'] : null;
+        $websiteId = isset($params['website']) 
+            ? $params['website'] 
+            : $this->storeManager->getDefaultStoreView()->getWebsiteId();
         $this->storeManager->setCurrentStore($websiteId);
 
         Magento2CoreSetup::bootstrap();
@@ -98,7 +100,6 @@ class Index extends \Magento\Backend\App\Action
 
     private function updateStoreFields($websiteId)
     {
-
         $actualConfigurations = Magento2CoreSetup::getModuleConfiguration();
 
         $this->configWriter->save(
