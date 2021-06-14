@@ -6,6 +6,10 @@
         <field id="hub_integration" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="1" translate="label" type="label">
             <frontend_model>Pagarme\Pagarme\Block\Adminhtml\Form\Field\HubIntegration</frontend_model>
         </field>
+        <field id="hub_environment" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="2" translate="label" type="label">
+            <label>Integration Environment</label>
+            <config_path>pagarme_pagarme/hub/environment</config_path>
+        </field>        
         <field id="module_version" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label" type="label">
             <label>Module Version</label>
             <comment/>

@@ -90,7 +90,7 @@ class HubCommand implements HubCommandInterface
         );
 
         $this->configWriter->save(
-            "pagarme_pagarme/hub/access_token",
+            "pagarme_pagarme/hub/environment",
             null,
             'websites',
             $this->websiteId
@@ -105,6 +105,20 @@ class HubCommand implements HubCommandInterface
 
         $this->configWriter->save(
             "pagarme_pagarme/global/public_key",
+            null,
+            'websites',
+            $this->websiteId
+        );
+
+        $this->configWriter->save(
+            "pagarme_pagarme/global/secret_key_test",
+            null,
+            'websites',
+            $this->websiteId
+        );
+
+        $this->configWriter->save(
+            "pagarme_pagarme/global/public_key_test",
             null,
             'websites',
             $this->websiteId

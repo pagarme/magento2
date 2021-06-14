@@ -110,8 +110,8 @@ class Index extends \Magento\Backend\App\Action
         );
 
         $this->configWriter->save(
-            "pagarme_pagarme/hub/access_token",
-            $actualConfigurations->getSecretKey()->getValue(),
+            "pagarme_pagarme/hub/environment",
+            $actualConfigurations->getHubEnvironment()->getValue(),
             'websites',
             $websiteId
         );
@@ -133,6 +133,20 @@ class Index extends \Magento\Backend\App\Action
         $this->configWriter->save(
             "pagarme_pagarme/global/test_mode",
             0,
+            'websites',
+            $websiteId
+        );
+
+        $this->configWriter->save(
+            "pagarme_pagarme/global/secret_key_test",
+            null,
+            'websites',
+            $websiteId
+        );
+
+        $this->configWriter->save(
+            "pagarme_pagarme/global/public_key_test",
+            null,
             'websites',
             $websiteId
         );

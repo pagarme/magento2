@@ -323,7 +323,8 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
     static private function fillWithHubConfig(&$dataObj, $storeConfig)
     {
         $options = [
-            'hubInstallId' => 'install_id'
+            'hubInstallId' => 'install_id',
+            'hubEnvironment' => 'environment'
         ];
 
         $section = 'pagarme_pagarme/hub/';
@@ -331,6 +332,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         $dataObj = self::fillDataObj($storeConfig, $options, $dataObj, $section);
         if (!$dataObj->hubInstallId) {
             $dataObj->hubInstallId = null;
+            $dataObj->hubEnvironment = null;
         }
     }
 
