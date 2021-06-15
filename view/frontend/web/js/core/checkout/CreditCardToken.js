@@ -20,7 +20,7 @@ CreditCardToken.prototype.getDataToGenerateToken = function () {
     };
 }
 
-CreditCardToken.prototype.getToken = function (pkKey, isHubEnabled) {
+CreditCardToken.prototype.getToken = function (pkKey) {
     var data = this.getDataToGenerateToken();
 
     const url = 'https://api.mundipagg.com/core/v1/tokens?appId=';

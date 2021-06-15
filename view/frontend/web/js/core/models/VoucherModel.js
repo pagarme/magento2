@@ -1,7 +1,6 @@
-var VoucherModel = function (formObject, publicKey, isHubEnabled) {
+var VoucherModel = function (formObject, publicKey) {
     this.formObject = formObject;
     this.publicKey = publicKey;
-    this.isHubEnabled = isHubEnabled;
     this.errors = [];
 };
 
@@ -63,7 +62,7 @@ VoucherModel.prototype.getCreditCardToken = function (success, error) {
     }
 
     var modelToken = new CreditCardToken(this.formObject, documentNumber);
-    modelToken.getToken(this.publicKey, this.isHubEnabled)
+    modelToken.getToken(this.publicKey)
         .done(success)
         .fail(error);
 };
