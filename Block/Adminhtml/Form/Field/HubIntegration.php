@@ -2,8 +2,8 @@
 
 namespace Pagarme\Pagarme\Block\Adminhtml\Form\Field;
 
-use Magento\Framework\Data\Form\Element\AbstractElement;
 use Magento\Config\Block\System\Config\Form\Field;
+use Magento\Framework\Data\Form\Element\AbstractElement;
 use Pagarme\Core\Hub\Services\HubIntegrationService;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 
@@ -43,28 +43,28 @@ class HubIntegration extends Field
 
     private function getButtonText($installId)
     {
-        return $installId ?
-            __("View Integration") : __("Integrate With Pagar.me");
+        return $installId
+            ? __("View Integration") : __("Integrate With Pagar.me");
     }
 
     private function getHubUrl($installId)
     {
-        return $installId ?
-            $this->getBaseViewIntegrationUrl($installId->getValue()) :
-            $this->getBaseIntegrateUrl();
+        return $installId
+            ? $this->getBaseViewIntegrationUrl($installId->getValue())
+            : $this->getBaseIntegrateUrl();
     }
-
 
     private function getBaseIntegrateUrl()
     {
         $baseUrl = sprintf(
-            'https://stghub.mundipagg.com/apps/%s/authorize',
+            'https://hub.pagar.me/apps/%s/authorize',
             $this->getPublicAppKey()
         );
 
         $params = sprintf(
-            '?redirect=%s&install_token/%s',
+            '?redirect=%swebsite/%s/&install_token/%s',
             $this->getRedirectUrl(),
+            Magento2CoreSetup::getCurrentStoreId(),
             $this->getInstallToken()
         );
 
@@ -74,7 +74,7 @@ class HubIntegration extends Field
     private function getBaseViewIntegrationUrl($installId)
     {
         return sprintf(
-            'https://stghub.mundipagg.com/apps/%s/edit/%s',
+            'https://hub.pagar.me/apps/%s/edit/%s',
             $this->getPublicAppKey(),
             $installId
         );
@@ -99,4 +99,5 @@ class HubIntegration extends Field
 
         return $installToken->getValue();
     }
+
 }

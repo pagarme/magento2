@@ -52,7 +52,6 @@ abstract class GenericInstallmentsConfigProvider implements ConfigProviderInterf
                         'value' => 0,
                     ],
                     'pk_token' => $this->baseConfig->getPublicKey(),
-                    'hub_enabled' => $this->baseConfig->isHubEnabled(),
                     'icons' => [
                         'Visa' => [
                             'height' => 30,

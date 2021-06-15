@@ -1,7 +1,6 @@
-var DebitModel = function (formObject, publicKey, isHubEnabled) {
+var DebitModel = function (formObject, publicKey) {
     this.formObject = formObject;
     this.publicKey = publicKey;
-    this.isHubEnabled = isHubEnabled;
     this.errors = [];
 };
 
@@ -54,7 +53,7 @@ DebitModel.prototype.validate = function () {
 
 DebitModel.prototype.getCreditCardToken = function (success, error) {
     var modelToken = new CreditCardToken(this.formObject);
-    modelToken.getToken(this.publicKey, this.isHubEnabled)
+    modelToken.getToken(this.publicKey)
         .done(success)
         .fail(error);
 };

@@ -2,13 +2,14 @@
 
 namespace Pagarme\Pagarme\Model\Api;
 
-use Magento\Framework\Webapi\Rest\Request;
-use Magento\Framework\Webapi\Exception as MagentoException;
-use Magento\Framework\App\Config\Storage\WriterInterface;
 use Magento\Framework\App\Cache\Manager;
+use Magento\Framework\App\Config\Storage\WriterInterface;
+use Magento\Framework\Webapi\Exception as MagentoException;
+use Magento\Framework\Webapi\Rest\Request;
+use Magento\Store\Model\StoreManagerInterface;
+use Pagarme\Core\Hub\Services\HubIntegrationService;
 use Pagarme\Pagarme\Api\HubCommandInterface;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
-use Pagarme\Core\Hub\Services\HubIntegrationService;
 
 class HubCommand implements HubCommandInterface
 {
@@ -16,7 +17,6 @@ class HubCommand implements HubCommandInterface
      * @var Request
      */
     protected $request;
-
 
     /**
      * @var WriterInterface
@@ -28,16 +28,21 @@ class HubCommand implements HubCommandInterface
      */
     protected $cacheManager;
 
+    /**
+     * @var string
+     */
+    protected $websiteId;
+
     public function __construct(
         Request $request,
         WriterInterface $configWriter,
-        Manager $cacheManager
+        Manager $cacheManager,
+        StoreManagerInterface $storeManager
     ) {
         $this->request = $request;
         $this->configWriter = $configWriter;
         $this->cacheManager = $cacheManager;
-
-        Magento2CoreSetup::bootstrap();
+        $this->storeManager = $storeManager;
     }
 
     public function execute()
@@ -45,6 +50,14 @@ class HubCommand implements HubCommandInterface
         $params = json_decode(
             json_encode($this->request->getBodyParams())
         );
+
+        $paramsFromUrl = $this->request->getParams();
+        $this->websiteId = isset($paramsFromUrl['websiteId'])
+            ? $paramsFromUrl['websiteId']
+            : $this->storeManager->getDefaultStoreView()->getWebsiteId();
+
+        $this->storeManager->setCurrentStore($this->websiteId);
+        Magento2CoreSetup::bootstrap();
 
         $hubIntegrationService = new HubIntegrationService();
         try {
@@ -69,25 +82,32 @@ class HubCommand implements HubCommandInterface
 
     public function uninstallCommand()
     {
-
         $this->configWriter->save(
             "pagarme_pagarme/hub/install_id",
-            null
+            null,
+            'websites',
+            $this->websiteId
         );
 
         $this->configWriter->save(
             "pagarme_pagarme/hub/access_token",
-            null
+            null,
+            'websites',
+            $this->websiteId
         );
 
         $this->configWriter->save(
             "pagarme_pagarme/global/secret_key",
-            null
+            null,
+            'websites',
+            $this->websiteId
         );
 
         $this->configWriter->save(
             "pagarme_pagarme/global/public_key",
-            null
+            null,
+            'websites',
+            $this->websiteId
         );
 
         $this->cacheManager->clean(['config']);
