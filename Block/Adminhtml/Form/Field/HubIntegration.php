@@ -64,7 +64,7 @@ class HubIntegration extends Field
         $params = sprintf(
             '?redirect=%swebsite/%s/&install_token/%s',
             $this->getRedirectUrl(),
-            $this->getCurrentWebsiteId(),
+            Magento2CoreSetup::getCurrentStoreId(),
             $this->getInstallToken()
         );
 
@@ -100,13 +100,4 @@ class HubIntegration extends Field
         return $installToken->getValue();
     }
 
-    private function getCurrentWebsiteId()
-    {
-        $params = $this->getRequest()->getParams();
-        if (isset($params['website'])) {
-            return $params['website'];
-        }
-        $store = isset($params['store']) ? $params['store'] : null;
-        return $this->_storeManager->getStore($store)->getWebsiteId();
-    }
 }

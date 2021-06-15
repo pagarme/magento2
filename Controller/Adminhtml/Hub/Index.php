@@ -68,7 +68,7 @@ class Index extends \Magento\Backend\App\Action
                 $hubIntegrationService->endHubIntegration(
                     $params['&install_token'],
                     $params['authorization_code'],
-                    $this->getCallbackUrl() . '?websiteId=' . $websiteId,
+                    $this->getCallbackUrl($websiteId),
                     $this->getWebHookkUrl()
                 );
                 $this->updateStoreFields($websiteId);
@@ -86,10 +86,10 @@ class Index extends \Magento\Backend\App\Action
         exit;
     }
 
-    private function getCallbackUrl()
+    private function getCallbackUrl($websiteId)
     {
         $baseUrl = $this->storeManager->getStore()->getBaseUrl();
-        return $baseUrl . "rest/V1/pagarme/hub/command";
+        return $baseUrl . "rest/V1/pagarme/hub/command?websiteId=" . $websiteId;
     }
 
     private function getWebHookkUrl()
