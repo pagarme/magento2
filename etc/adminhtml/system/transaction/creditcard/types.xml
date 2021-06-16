@@ -9,6 +9,7 @@
     <group id="pagarme_pagarme_group_gateway" translate="label comment" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="90">
         <label>Card brands</label>
         <field id="cctypes" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="multiselect">
+            <label>&amp;nbsp;</label>
             <comment />
             <source_model>Pagarme\Pagarme\Model\Source\Cctype</source_model>
             <config_path>payment/pagarme_creditcard/cctypes</config_path>
@@ -20,6 +21,7 @@
     <group id="pagarme_pagarme_group_psp" translate="label comment" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="90">
         <label>Card brands</label>
         <field id="cctypes" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="multiselect">
+            <label>&amp;nbsp;</label>
             <comment />
             <source_model>Pagarme\Pagarme\Model\Source\CctypePSP</source_model>
             <config_path>payment/pagarme_creditcard/cctypes</config_path>
