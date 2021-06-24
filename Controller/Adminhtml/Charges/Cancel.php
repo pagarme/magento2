@@ -29,6 +29,8 @@ class Cancel extends ChargeAction
             return $this->responseFail($error);
         }
 
+        $this->setWebsiteConfiguration($params['chargeId']);
+
         $amount = str_replace([',', '.'], "", $params['amount']);
         $chargeId = $params['chargeId'];
 
