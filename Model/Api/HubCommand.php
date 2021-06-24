@@ -56,7 +56,9 @@ class HubCommand implements HubCommandInterface
             ? $paramsFromUrl['websiteId']
             : $this->storeManager->getDefaultStoreView()->getWebsiteId();
 
-        $this->storeManager->setCurrentStore($this->websiteId);
+        $storeId = $this->storeManager->getWebsite($this->websiteId)
+            ->getDefaultStore()->getId();
+        $this->storeManager->setCurrentStore($storeId);
         Magento2CoreSetup::bootstrap();
 
         $hubIntegrationService = new HubIntegrationService();

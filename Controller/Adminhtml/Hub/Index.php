@@ -55,10 +55,13 @@ class Index extends \Magento\Backend\App\Action
     public function execute()
     {
         $params = $this->requestObject->getParams();
-        $websiteId = isset($params['website']) 
-            ? $params['website'] 
+        $websiteId = isset($params['website'])
+            ? $params['website']
             : $this->storeManager->getDefaultStoreView()->getWebsiteId();
-        $this->storeManager->setCurrentStore($websiteId);
+
+        $storeId = $this->storeManager->getWebsite($websiteId)
+            ->getDefaultStore()->getId();
+        $this->storeManager->setCurrentStore($storeId);
 
         Magento2CoreSetup::bootstrap();
 
