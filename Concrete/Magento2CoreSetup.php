@@ -161,6 +161,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         );
 
         self::$moduleConfig = $config;
+        self::$instance->setApiBaseUrl();
     }
 
     /**
