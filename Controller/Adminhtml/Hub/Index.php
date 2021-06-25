@@ -101,6 +101,61 @@ class Index extends \Magento\Backend\App\Action
         return $baseUrl . "rest/V1/pagarme/webhook";
     }
 
+    private function allWebsitesIntegrated($currentWebsiteId)
+    {
+        $websites = $this->storeManager->getWebsites();
+        $magento2CoreSetup = new Magento2CoreSetup();
+
+        foreach ($websites as $websiteId => $website) {
+            $storeId = $this->storeManager->getWebsite($websiteId)
+                ->getDefaultStore()->getId();
+
+            $this->storeManager->setCurrentStore($storeId);
+
+            $magento2CoreSetup->loadModuleConfigurationFromPlatform();
+            $actualConfigurations = Magento2CoreSetup::getModuleConfiguration();
+
+            $sameWebsite = $websiteId === intval($currentWebsiteId);
+
+            if (!$sameWebsite && !$actualConfigurations->isHubEnabled()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private function removeDefaultConfigKeys()
+    {
+        $this->configWriter->save(
+            "pagarme_pagarme/global/secret_key",
+            null,
+            'default',
+            0
+        );
+
+        $this->configWriter->save(
+            "pagarme_pagarme/global/public_key",
+            null,
+            'default',
+            0
+        );
+
+        $this->configWriter->save(
+            "pagarme_pagarme/global/secret_key_test",
+            null,
+            'default',
+            0
+        );
+
+        $this->configWriter->save(
+            "pagarme_pagarme/global/public_key_test",
+            null,
+            'default',
+            0
+        );
+    }
+
     private function updateStoreFields($websiteId)
     {
         $actualConfigurations = Magento2CoreSetup::getModuleConfiguration();
@@ -153,6 +208,10 @@ class Index extends \Magento\Backend\App\Action
             'websites',
             $websiteId
         );
+
+        if ($this->allWebsitesIntegrated($websiteId)) {
+            $this->removeDefaultConfigKeys();
+        }
 
         $this->cacheManager->clean(['config']);
     }
