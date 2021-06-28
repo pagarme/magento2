@@ -101,34 +101,89 @@ class Index extends \Magento\Backend\App\Action
         return $baseUrl . "rest/V1/pagarme/webhook";
     }
 
+    private function allWebsitesIntegrated($currentWebsiteId)
+    {
+        $websites = $this->storeManager->getWebsites();
+        $magento2CoreSetup = new Magento2CoreSetup();
+
+        foreach ($websites as $websiteId => $website) {
+            $storeId = $this->storeManager->getWebsite($websiteId)
+                ->getDefaultStore()->getId();
+
+            $this->storeManager->setCurrentStore($storeId);
+
+            $magento2CoreSetup->loadModuleConfigurationFromPlatform();
+            $currentConfiguration = Magento2CoreSetup::getModuleConfiguration();
+
+            $isSameWebsite = $websiteId === intval($currentWebsiteId);
+
+            if (!$isSameWebsite && !$currentConfiguration->isHubEnabled()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private function removeDefaultConfigKeys()
+    {
+        $this->configWriter->save(
+            "pagarme_pagarme/global/secret_key",
+            null,
+            'default',
+            0
+        );
+
+        $this->configWriter->save(
+            "pagarme_pagarme/global/public_key",
+            null,
+            'default',
+            0
+        );
+
+        $this->configWriter->save(
+            "pagarme_pagarme/global/secret_key_test",
+            null,
+            'default',
+            0
+        );
+
+        $this->configWriter->save(
+            "pagarme_pagarme/global/public_key_test",
+            null,
+            'default',
+            0
+        );
+    }
+
     private function updateStoreFields($websiteId)
     {
-        $actualConfigurations = Magento2CoreSetup::getModuleConfiguration();
+        $currentConfiguration = Magento2CoreSetup::getModuleConfiguration();
 
         $this->configWriter->save(
             "pagarme_pagarme/hub/install_id",
-            $actualConfigurations->getHubInstallId()->getValue(),
+            $currentConfiguration->getHubInstallId()->getValue(),
             'websites',
             $websiteId
         );
 
         $this->configWriter->save(
             "pagarme_pagarme/hub/environment",
-            $actualConfigurations->getHubEnvironment()->getValue(),
+            $currentConfiguration->getHubEnvironment()->getValue(),
             'websites',
             $websiteId
         );
 
         $this->configWriter->save(
             "pagarme_pagarme/global/secret_key",
-            $actualConfigurations->getSecretKey()->getValue(),
+            $currentConfiguration->getSecretKey()->getValue(),
             'websites',
             $websiteId
         );
 
         $this->configWriter->save(
             "pagarme_pagarme/global/public_key",
-            $actualConfigurations->getPublicKey()->getValue(),
+            $currentConfiguration->getPublicKey()->getValue(),
             'websites',
             $websiteId
         );
@@ -153,6 +208,10 @@ class Index extends \Magento\Backend\App\Action
             'websites',
             $websiteId
         );
+
+        if ($this->allWebsitesIntegrated($websiteId)) {
+            $this->removeDefaultConfigKeys();
+        }
 
         $this->cacheManager->clean(['config']);
     }
