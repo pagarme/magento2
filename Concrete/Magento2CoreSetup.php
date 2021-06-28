@@ -73,19 +73,19 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
     {
         self::$config = [
             AbstractModuleCoreSetup::CONCRETE_DATABASE_DECORATOR_CLASS =>
-                Magento2DatabaseDecorator::class,
+            Magento2DatabaseDecorator::class,
             AbstractModuleCoreSetup::CONCRETE_PLATFORM_ORDER_DECORATOR_CLASS =>
-                Magento2PlatformOrderDecorator::class,
+            Magento2PlatformOrderDecorator::class,
             AbstractModuleCoreSetup::CONCRETE_PLATFORM_INVOICE_DECORATOR_CLASS =>
-                Magento2PlatformInvoiceDecorator::class,
+            Magento2PlatformInvoiceDecorator::class,
             AbstractModuleCoreSetup::CONCRETE_PLATFORM_CREDITMEMO_DECORATOR_CLASS =>
-                Magento2PlatformCreditmemoDecorator::class,
+            Magento2PlatformCreditmemoDecorator::class,
             AbstractModuleCoreSetup::CONCRETE_DATA_SERVICE =>
-                Magento2DataService::class,
+            Magento2DataService::class,
             AbstractModuleCoreSetup::CONCRETE_PLATFORM_PAYMENT_METHOD_DECORATOR_CLASS =>
-                Magento2PlatformPaymentMethodDecorator::class,
+            Magento2PlatformPaymentMethodDecorator::class,
             AbstractModuleCoreSetup::CONCRETE_PRODUCT_DECORATOR_CLASS =>
-                Magento2PlatformProductDecorator::class
+            Magento2PlatformProductDecorator::class
         ];
     }
 
@@ -98,8 +98,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
 
     static protected function getPlatformHubAppPublicAppKey()
     {
-        /** @todo get the correct key for magento2 */
-        return "2d2db409-fed0-4bd8-ac1e-43eeff33458d";
+        return '3470c63b-a233-4be0-9d2a-9ff56e349556';
     }
 
     public function _getDashboardLanguage()
@@ -154,7 +153,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         self::fillWithAddressConfig($configData, $storeConfig);
         self::fillWithMultiBuyerConfig($configData, $storeConfig);
         self::fillWithRecurrenceConfig($configData, $storeConfig);
-        $configData->hubInstallId = null;
+        self::fillWithHubConfig($configData, $storeConfig);
 
         $configurationFactory = new ConfigurationFactory();
         $config = $configurationFactory->createFromJsonData(
@@ -162,6 +161,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         );
 
         self::$moduleConfig = $config;
+        self::$instance->setApiBaseUrl();
     }
 
     /**
@@ -321,6 +321,22 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         $dataObj = self::fillDataObj($storeConfig, $options, $dataObj, $section);
     }
 
+    static private function fillWithHubConfig(&$dataObj, $storeConfig)
+    {
+        $options = [
+            'hubInstallId' => 'install_id',
+            'hubEnvironment' => 'environment'
+        ];
+
+        $section = 'pagarme_pagarme/hub/';
+
+        $dataObj = self::fillDataObj($storeConfig, $options, $dataObj, $section);
+        if (!$dataObj->hubInstallId) {
+            $dataObj->hubInstallId = null;
+            $dataObj->hubEnvironment = null;
+        }
+    }
+
     static private function fillWithPagarmeKeys(&$dataObj, $storeConfig)
     {
         $options = [
@@ -411,24 +427,22 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         $scope = ScopeInterface::SCOPE_WEBSITES;
         $storeId = self::getCurrentStoreId();
 
-        $brands = array_merge([''],explode(
+        $brands = array_merge([''], explode(
             ',',
             $storeConfig->getValue($section .  'cctypes', $scope, $storeId)
         ));
 
         $cardConfigs = [];
-        foreach ($brands as $brand)
-        {
+        foreach ($brands as $brand) {
             $brand = "_" . strtolower($brand);
-            $brandMethod = str_replace('_','', $brand);
+            $brandMethod = str_replace('_', '', $brand);
             $adapted = self::getBrandAdapter(strtoupper($brandMethod));
             if ($adapted !== false) {
                 $brand = "_" . strtolower($adapted);
-                $brandMethod = str_replace('_','', $brand);
+                $brandMethod = str_replace('_', '', $brand);
             }
 
-            if ($brandMethod == '')
-            {
+            if ($brandMethod == '') {
                 $brand = '';
                 $brandMethod = 'nobrand';
             }
@@ -441,7 +455,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
 
             $minValue =  $storeConfig->getValue($section . 'installment_min_amount' . $brand, $scope, $storeId);
             $initial =  $storeConfig->getValue($section . 'installments_interest_rate_initial' . $brand, $scope, $storeId);
-            $incremental =  $storeConfig->getValue($section . 'installments_interest_rate_incremental'. $brand, $scope, $storeId);
+            $incremental =  $storeConfig->getValue($section . 'installments_interest_rate_incremental' . $brand, $scope, $storeId);
             $maxWithout =  $storeConfig->getValue($section . 'installments_max_without_interest' . $brand, $scope, $storeId);
 
             $interestByBrand =  $storeConfig->getValue($section . 'installments_interest_by_issuer' . $brand, $scope, $storeId);

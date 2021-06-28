@@ -55,6 +55,7 @@ FormHandler.prototype.fillBrandList = function (brandsObject, formObject) {
     var html = '';
 
     for (var i = 0, len = brandsObject.length; i < len; i++) {
+        if (!brandsObject[i]) continue;
         html +=
             "<li class='item'>" +
             "<img src='" + brandsObject[i].image + "' " +

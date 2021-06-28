@@ -22,10 +22,13 @@ CreditCardToken.prototype.getDataToGenerateToken = function () {
 
 CreditCardToken.prototype.getToken = function (pkKey) {
     var data = this.getDataToGenerateToken();
+
+    const url = 'https://api.mundipagg.com/core/v1/tokens?appId=';
+
     return jQuery.ajax({
         type: 'POST',
         dataType: 'json',
-        url: 'https://api.mundipagg.com/core/v1/tokens?appId=' + pkKey,
+        url: url + pkKey,
         async: false,
         cache: true,
         data

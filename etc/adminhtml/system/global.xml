@@ -3,6 +3,13 @@
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
     <group id="pagarme_pagarme_global" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label">
         <label>General Settings</label>
+        <field id="hub_integration" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="1" translate="label" type="label">
+            <frontend_model>Pagarme\Pagarme\Block\Adminhtml\Form\Field\HubIntegration</frontend_model>
+        </field>
+        <field id="hub_environment" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="2" translate="label" type="label">
+            <label>Integration Environment</label>
+            <frontend_model>Pagarme\Pagarme\Block\Adminhtml\Form\Field\HubEnvironment</frontend_model>
+        </field>
         <field id="module_version" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label" type="label">
             <label>Module Version</label>
             <comment/>
@@ -13,48 +20,6 @@
             <comment />
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>pagarme_pagarme/global/active</config_path>
-        </field>
-        <field id="test_mode" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="select">
-            <label>Sandbox Mode Active</label>
-            <comment><![CDATA[<p><strong style='color:red'>Warning!</strong> Don't forget to add your store's domain on Pagar.me dashboard</p>]]></comment>
-            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-            <config_path>pagarme_pagarme/global/test_mode</config_path>
-        </field>
-        <field id="secret_key" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="30" translate="label" type="text">
-            <label>Secret Key</label>
-            <backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
-            <comment>Secret key for First Authentication Pagar.me. Contact Pagar.me to get your own Secret Key.</comment>
-            <config_path>pagarme_pagarme/global/secret_key</config_path>
-            <depends>
-                <field id="test_mode">0</field>
-            </depends>
-        </field>
-        <field id="public_key" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="40" translate="label" type="text">
-            <label>Public key</label>
-            <backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
-            <comment>Public key for Double Authentication Pagar.me. Contact Pagar.me to get your own Public key.</comment>
-            <config_path>pagarme_pagarme/global/public_key</config_path>
-            <depends>
-                <field id="test_mode">0</field>
-            </depends>
-        </field>
-        <field id="secret_key_test" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="30" translate="label" type="text">
-            <label>Secret Key Test</label>
-            <backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
-            <comment>Secret key Test for First Authentication Pagar.me.Contact Pagar.me to get your own Secret Key Test.</comment>
-            <config_path>pagarme_pagarme/global/secret_key_test</config_path>
-            <depends>
-                <field id="test_mode">1</field>
-            </depends>
-        </field>
-        <field id="public_key_test" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="40" translate="label" type="text">
-            <label>Public key Test</label>
-            <backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
-            <comment>Public key Test for Double Authentication Pagar.me. Contact Pagar.me to get your own Public key Test.</comment>
-            <config_path>pagarme_pagarme/global/public_key_test</config_path>
-            <depends>
-                <field id="test_mode">1</field>
-            </depends>
         </field>
         <field id="is_gateway_integration_type" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="50" translate="label" type="select">
             <label>Enable Advanced Settings</label>

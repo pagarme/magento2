@@ -94,7 +94,9 @@ PlatformConfig.getBrands = function (data, paymentMethodBrands) {
         var brands = Object.keys(paymentMethodBrands);
 
         for (var i = 0, len = brands.length; i < len; i++) {
-            url = data.payment.ccform.icons[brands[i]].url
+            brand = data.payment.ccform.icons[brands[i]];
+            if (!brand) continue;
+            url = brand.url;
             fixArray = [];
             imageUrl = fixArray.concat(url);
 

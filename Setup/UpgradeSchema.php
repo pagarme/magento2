@@ -17,6 +17,13 @@ class UpgradeSchema implements UpgradeSchemaInterface
         ModuleContextInterface $context
     ) {
         $setup->startSetup();
+        $version = $context->getVersion();
+        $installSchema = new InstallSchema();
+
+        if (version_compare($version, "1.1.0", "<")) {
+            $setup = $installSchema->installHubToken($setup);
+        }
+
         $setup->endSetup();
     }
 }

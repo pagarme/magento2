@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Class Config
  *
@@ -36,6 +37,16 @@ class Config extends AbstractConfig implements ConfigInterface
         }
 
         return $this->getConfig(static::PATH_PUBLIC_KEY);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isHubEnabled()
+    {
+        $hubInstallKey = $this->getConfig(static::PATH_HUB_INSTALL_ID);
+
+        return !empty($hubInstallKey);
     }
 
     /**

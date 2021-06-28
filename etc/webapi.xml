@@ -189,4 +189,28 @@
             <resource ref="Magento_Catalog::products"/>
         </resources>
     </route>
+
+    <route url="/V1/pagarme/hub/command" method="POST">
+        <service class="Pagarme\Pagarme\Api\HubCommandInterface"
+                 method="execute"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+
+    <route url="/V1/pagarme/charge/cancel/:id" method="POST">
+        <service class="Pagarme\Pagarme\Api\ChargeApiInterface"
+                 method="cancel"/>
+        <resources>
+            <resource ref="Magento_Sales::sales"/>
+        </resources>
+    </route>
+
+    <route url="/V1/pagarme/bulk" method="POST">
+        <service class="Pagarme\Pagarme\Api\BulkApiInterface"
+                 method="execute"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
 </routes>

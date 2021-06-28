@@ -38,6 +38,12 @@
     <preference for="Pagarme\Pagarme\Api\ProductPlanInterface"
                 type="Pagarme\Pagarme\Model\Api\ProductsPlan"/>
 
+    <preference for="Pagarme\Pagarme\Api\ChargeApiInterface"
+                type="Pagarme\Pagarme\Model\Api\Charge"/>
+
+    <preference for="Pagarme\Pagarme\Api\BulkApiInterface"
+                type="Pagarme\Pagarme\Model\Api\Bulk"/>
+
     <type name="Pagarme\Pagarme\Model\InstallmentsByBrandManagement">
         <arguments>
             <argument name="builder" xsi:type="object">Pagarme\Pagarme\Model\Installments\BuilderByBrand</argument>
@@ -648,6 +654,8 @@
 
     <preference for="Pagarme\Pagarme\Api\ObjectMapper\ProductSubscription\RepetitionInterface" type="Pagarme\Core\Recurrence\Aggregates\Repetition" />
 
+    <preference for="Pagarme\Pagarme\Api\HubCommandInterface"
+                type="Pagarme\Pagarme\Model\Api\HubCommand"/>
 
     <!-- Admin checkout -->
     <!--preference for="Magento\Payment\Block\Form" type="Pagarme\Pagarme\Block\Form"/-->

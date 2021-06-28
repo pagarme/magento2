@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Class GenericInstallmentConfigProvider
  *
@@ -33,8 +34,7 @@ abstract class GenericInstallmentsConfigProvider implements ConfigProviderInterf
         ConfigInterface $config,
         BaseConfig $baseConfig,
         StoreManagerInterface $storeManager
-    )
-    {
+    ) {
         $this->_assetRepo = $assetRepo;
         $this->baseConfig = $baseConfig;
         $this->storageManager = $storeManager;
@@ -193,7 +193,7 @@ abstract class GenericInstallmentsConfigProvider implements ConfigProviderInterf
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $states = $objectManager
             ->create('Magento\Directory\Model\RegionFactory')
-            ->create()->getCollection()->addFieldToFilter('country_id','BR');
+            ->create()->getCollection()->addFieldToFilter('country_id', 'BR');
 
         return $states->getData();
     }

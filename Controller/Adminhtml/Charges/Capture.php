@@ -2,10 +2,8 @@
 
 namespace Pagarme\Pagarme\Controller\Adminhtml\Charges;
 
-use Pagarme\Core\Kernel\Repositories\ChargeRepository;
 use Pagarme\Core\Kernel\Services\ChargeService;
 use Pagarme\Core\Kernel\Services\LogService;
-use Pagarme\Core\Kernel\ValueObjects\Id\ChargeId;
 
 class Capture extends ChargeAction
 {
@@ -30,6 +28,7 @@ class Capture extends ChargeAction
             return $this->responseFail($error);
         }
 
+        $this->setWebsiteConfiguration($params['chargeId']);
         $amount = str_replace([',', '.'], "", $params['amount']);
         $chargeId = $params['chargeId'];
 
