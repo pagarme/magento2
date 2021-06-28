@@ -113,11 +113,11 @@ class Index extends \Magento\Backend\App\Action
             $this->storeManager->setCurrentStore($storeId);
 
             $magento2CoreSetup->loadModuleConfigurationFromPlatform();
-            $actualConfigurations = Magento2CoreSetup::getModuleConfiguration();
+            $currentConfiguration = Magento2CoreSetup::getModuleConfiguration();
 
-            $sameWebsite = $websiteId === intval($currentWebsiteId);
+            $isSameWebsite = $websiteId === intval($currentWebsiteId);
 
-            if (!$sameWebsite && !$actualConfigurations->isHubEnabled()) {
+            if (!$isSameWebsite && !$currentConfiguration->isHubEnabled()) {
                 return false;
             }
         }
@@ -158,32 +158,32 @@ class Index extends \Magento\Backend\App\Action
 
     private function updateStoreFields($websiteId)
     {
-        $actualConfigurations = Magento2CoreSetup::getModuleConfiguration();
+        $currentConfiguration = Magento2CoreSetup::getModuleConfiguration();
 
         $this->configWriter->save(
             "pagarme_pagarme/hub/install_id",
-            $actualConfigurations->getHubInstallId()->getValue(),
+            $currentConfiguration->getHubInstallId()->getValue(),
             'websites',
             $websiteId
         );
 
         $this->configWriter->save(
             "pagarme_pagarme/hub/environment",
-            $actualConfigurations->getHubEnvironment()->getValue(),
+            $currentConfiguration->getHubEnvironment()->getValue(),
             'websites',
             $websiteId
         );
 
         $this->configWriter->save(
             "pagarme_pagarme/global/secret_key",
-            $actualConfigurations->getSecretKey()->getValue(),
+            $currentConfiguration->getSecretKey()->getValue(),
             'websites',
             $websiteId
         );
 
         $this->configWriter->save(
             "pagarme_pagarme/global/public_key",
-            $actualConfigurations->getPublicKey()->getValue(),
+            $currentConfiguration->getPublicKey()->getValue(),
             'websites',
             $websiteId
         );
