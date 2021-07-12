@@ -27,9 +27,9 @@ class ProductsPlan implements ProductPlanApiInterface
 
     public function __construct(Request $request)
     {
+        Magento2CoreSetup::bootstrap();
         $this->request = $request;
         $this->planService = new PlanService();
-        Magento2CoreSetup::bootstrap();
     }
 
     /**

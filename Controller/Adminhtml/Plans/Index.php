@@ -2,28 +2,10 @@
 
 namespace Pagarme\Pagarme\Controller\Adminhtml\Plans;
 
-use Magento\Backend\App\Action;
-use Magento\Backend\App\Action\Context;
-use Magento\Framework\View\Result\PageFactory;
+use Pagarme\Pagarme\Controller\Adminhtml\Plans\PlanAction;
 
-class Index extends Action
+class Index extends PlanAction
 {
-    protected $resultPageFactory = false;
-
-    /**
-     * Constructor
-     *
-     * @param Context $context
-     * @param PageFactory $resultPageFactory
-     */
-    public function __construct(
-        Context $context,
-        PageFactory $resultPageFactory
-    ) {
-        $this->resultPageFactory = $resultPageFactory;
-        parent::__construct($context);
-    }
-
     /**
      * Index action
      *
