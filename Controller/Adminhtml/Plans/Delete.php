@@ -2,47 +2,12 @@
 
 namespace Pagarme\Pagarme\Controller\Adminhtml\Plans;
 
-use Magento\Backend\App\Action;
-use Magento\Backend\App\Action\Context;
-use Magento\Framework\Message\Factory;
-use Magento\Framework\Registry;
-use Magento\Framework\View\Result\PageFactory;
+
+use Pagarme\Pagarme\Controller\Adminhtml\Plans\PlanAction;
 use Pagarme\Core\Recurrence\Services\PlanService;
-use Pagarme\Core\Recurrence\Services\ProductSubscriptionService;
-use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
-use Pagarme\Pagarme\Model\ProductsSubscriptionFactory;
 
-class Delete extends Action
+class Delete extends PlanAction
 {
-    protected $resultPageFactory;
-
-    /**
-     * @var Registry
-     */
-    protected $coreRegistry;
-
-    /**
-     * Constructor
-     *
-     * @param \Magento\Backend\App\Action\Context $context
-     * @param \Magento\Framework\View\Result\PageFactory $resultPageFactory
-     * @throws \Exception
-     */
-    public function __construct(
-        \Magento\Backend\App\Action\Context $context,
-        \Magento\Framework\View\Result\PageFactory $resultPageFactory,
-        Registry $coreRegistry,
-        Factory $messageFactory
-    )
-    {
-        $this->resultPageFactory = $resultPageFactory;
-        $this->coreRegistry = $coreRegistry;
-        $this->messageFactory = $messageFactory;
-        Magento2CoreSetup::bootstrap();
-
-        parent::__construct($context);
-    }
-
     /**
      * Index action
      *
