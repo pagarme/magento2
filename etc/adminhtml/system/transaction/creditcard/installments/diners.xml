@@ -9,6 +9,7 @@
     <group id="pagarme_pagarme_transaction_creditcard_installments_mastercard_diners" translate="label comment" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="24">
 		<depends>
 			<field id="installments_type">0</field>
+            <field id="installments_active">1</field>
 		</depends>
 		<label>Installments Diners</label>
 	    <field id="installments_number_diners" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">

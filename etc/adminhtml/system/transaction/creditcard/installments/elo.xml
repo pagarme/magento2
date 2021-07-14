@@ -9,6 +9,7 @@
     <group id="pagarme_pagarme_transaction_creditcard_installments_mastercard_elo" translate="label comment" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="25">
 		<depends>
 			<field id="installments_type">0</field>
+            <field id="installments_active">1</field>
 		</depends>
 		<label>Installments Elo</label>
 	    <field id="installments_number_elo" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
