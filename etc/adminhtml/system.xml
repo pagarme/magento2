@@ -28,6 +28,7 @@
                 <include path="Pagarme_Pagarme::system/customer.xml"/>
                 <include path="Pagarme_Pagarme::system/transaction.xml"/>
                 <include path="Pagarme_Pagarme::system/recurrence.xml"/>
+                <include path="Pagarme_Pagarme::system/marketplace.xml"/>
             </group>
         </section>
 	</system>
