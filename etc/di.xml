@@ -100,6 +100,21 @@
 
     <!-- Final Cards Pagarme -->
 
+    <!-- Recipients -->
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="pagarme_pagarme_recipients_listing_data_source" xsi:type="string">Pagarme\Pagarme\Model\ResourceModel\Recipients\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="Pagarme\Pagarme\Model\ResourceModel\Recipients\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">pagarme_module_core_recipients</argument>
+            <argument name="resourceModel" xsi:type="string">Pagarme\Pagarme\Model\ResourceModel\Recipients</argument>
+        </arguments>
+    </virtualType>
+
     <!-- Plans -->
     <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
         <arguments>
@@ -114,8 +129,6 @@
             <argument name="resourceModel" xsi:type="string">Pagarme\Pagarme\Model\ResourceModel\ProductsPlan</argument>
         </arguments>
     </virtualType>
-
-
 
     <!-- Recurrence Product -->
     <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
