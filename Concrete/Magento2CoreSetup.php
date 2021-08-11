@@ -154,6 +154,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         self::fillWithMultiBuyerConfig($configData, $storeConfig);
         self::fillWithRecurrenceConfig($configData, $storeConfig);
         self::fillWithHubConfig($configData, $storeConfig);
+        self::fillWithMarketplaceConfig($configData, $storeConfig);
 
         $configurationFactory = new ConfigurationFactory();
         $config = $configurationFactory->createFromJsonData(
@@ -600,5 +601,28 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
             $recurrenceConfig,
             $section
         );
+    }
+
+    static private function fillWithMarketplaceConfig(
+        stdClass $configData,
+        ScopeConfigInterface $storeConfig
+    ) {
+        $options = [
+            'enabled' => 'active',
+            'responsibilityForProcessingFees'
+            => 'responsibility_for_processing_fees',
+            'responsibilityForChargebacks'
+            => 'responsibility_for_chargebacks',
+            'responsibilityForReceivingSplitRemainder'
+            => 'responsibility_for_receiving_split_remainder',
+            'responsibilityForReceivingExtrasAndDiscounts'
+            => 'responsibility_for_receiving_extras_discounts'
+        ];
+
+        $section = 'pagarme_pagarme/marketplace/';
+
+        $marketplaceObject = new \stdClass();
+
+        $configData->marketplaceConfig = self::fillDataObj($storeConfig, $options, $marketplaceObject, $section);
     }
 }

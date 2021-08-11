@@ -9,5 +9,41 @@
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>pagarme_pagarme/marketplace/active</config_path>
         </field>
+        <field id="responsibility_for_processing_fees" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="40" translate="label" type="select">
+            <label>Responsibility for processing fees</label>
+            <comment />
+            <source_model>Pagarme\Pagarme\Model\Source\Marketplace\Recipient</source_model>
+            <config_path>pagarme_pagarme/marketplace/responsibility_for_processing_fees</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
+        <field id="responsibility_for_chargebacks" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="40" translate="label" type="select">
+            <label>Responsibility for chargebacks</label>
+            <comment />
+            <source_model>Pagarme\Pagarme\Model\Source\Marketplace\Recipient</source_model>
+            <config_path>pagarme_pagarme/marketplace/responsibility_for_chargebacks</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
+        <field id="responsibility_for_receiving_split_remainder" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="40" translate="label" type="select">
+            <label>Responsibility for receiving split remainder</label>
+            <comment />
+            <source_model>Pagarme\Pagarme\Model\Source\Marketplace\Recipient</source_model>
+            <config_path>pagarme_pagarme/marketplace/responsibility_for_receiving_split_remainder</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
+        <field id="responsibility_for_receiving_extras_and_discounts" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="40" translate="label" type="select">
+            <label>Responsibility for receiving extras and discounts</label>
+            <comment />
+            <source_model>Pagarme\Pagarme\Model\Source\Marketplace\Recipient</source_model>
+            <config_path>pagarme_pagarme/marketplace/responsibility_for_receiving_extras_and_discounts</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
     </group>
 </include>
