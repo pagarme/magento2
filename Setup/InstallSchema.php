@@ -1709,7 +1709,7 @@ class InstallSchema implements InstallSchemaInterface
                     [
                         'nullable' => false
                     ],
-                    'Id internal from WebKul'
+                    'Internal ID'
                 )
                 ->addColumn(
                     'name',
@@ -1745,7 +1745,7 @@ class InstallSchema implements InstallSchemaInterface
                     [
                         'nullable' => false
                     ],
-                    'format: si_xxxxxxxxxxxxxxxx'
+                    'format: rp_xxxxxxxxxxxxxxxx'
                 )
                 ->addColumn(
                     'created_at',
