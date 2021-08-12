@@ -24,7 +24,9 @@ class UpgradeSchema implements UpgradeSchemaInterface
             $setup = $installSchema->installHubToken($setup);
         }
 
-        $setup = $installSchema->installRecipients($setup);
+        if (version_compare($version, "1.2.0", "<")) {
+            $setup = $installSchema->installRecipients($setup);
+        }
 
         $setup->endSetup();
     }
