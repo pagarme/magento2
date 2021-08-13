@@ -7,6 +7,9 @@
 		<add action="pagarme_pagarme/cards/index" id="Pagarme::pagarme_pagarme_cards" module="Pagarme_Pagarme" parent="Pagarme::pagarme_pagarme_label" resource="Magento_Backend::content" sortOrder="10" title="Cards Pagar.me"/>
 		<add action="adminhtml/system_config/edit/section/payment" id="Pagarme::pagarme_pagarme_payment_methods" module="Pagarme_Pagarme" parent="Pagarme::pagarme_pagarme_label" resource="Magento_Config::config" sortOrder="1" title="Payment Methods"/>
 
+		<add id="Pagarme::pagarme_pagarme_marketplace" module="Pagarme_Pagarme" parent="Pagarme::top_level" resource="Magento_Config::config" sortOrder="30" title="Marketplace"/>
+		<add action="pagarme_pagarme/recipients/index" id="Pagarme::pagarme_pagarme_recipients_index" module="Pagarme_Pagarme" parent="Pagarme::pagarme_pagarme_marketplace" resource="Magento_Config::config" sortOrder="1" title="Recipients"/>
+
 		<add id="Pagarme::pagarme_pagarme_recurrence" module="Pagarme_Pagarme" parent="Pagarme::top_level" resource="Magento_Config::config" sortOrder="30" title="Recurrence"/>
 		<add action="pagarme_pagarme/recurrenceproducts/index" id="Pagarme::pagarme_pagarme_recurrenceproducts_index" module="Pagarme_Pagarme" parent="Pagarme::pagarme_pagarme_recurrence" resource="Magento_Config::config" sortOrder="1" title="Recurrence Products"/>
 		<add action="pagarme_pagarme/plans/index" id="Pagarme::pagarme_pagarme_plans_index" module="Pagarme_Pagarme" parent="Pagarme::pagarme_pagarme_recurrence" resource="Magento_Config::config" sortOrder="1" title="Plans"/>
