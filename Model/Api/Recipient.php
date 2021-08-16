@@ -77,12 +77,20 @@ class Recipient implements RecipientInterface
             $form['document_number'] = $form['document_number'];
         }
 
+        if (isset($form['type'])) {
+            $form['type'] = $form['type'];
+        }
+
         if (isset($form['holder_name'])) {
             $form['holder_name'] = $form['holder_name'];
         }
 
         if (isset($form['holder_document'])) {
             $form['holder_document'] = $form['holder_document'];
+        }
+
+        if (isset($form['type'])) {
+            $form['holder_type'] = $form['type'];
         }
 
         if (isset($form['bank'])) {
