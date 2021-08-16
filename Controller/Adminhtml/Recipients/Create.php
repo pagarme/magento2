@@ -7,9 +7,9 @@ use Magento\Backend\App\Action\Context;
 use Magento\Framework\View\Result\PageFactory;
 use Magento\Framework\Controller\ResultInterface;
 
-class Index extends Action
+class Create extends Action
 {
-    protected $resultPageFactory;
+    protected $resultPageFactory = false;
 
     /**
      * Constructor
@@ -21,8 +21,8 @@ class Index extends Action
         Context $context,
         PageFactory $resultPageFactory
     ) {
-        $this->resultPageFactory = $resultPageFactory;
         parent::__construct($context);
+        $this->resultPageFactory = $resultPageFactory;
     }
 
     /**
@@ -33,7 +33,7 @@ class Index extends Action
     public function execute()
     {
         $resultPage = $this->resultPageFactory->create();
-        $resultPage->getConfig()->getTitle()->prepend(__("Recipients"));
+        $resultPage->getConfig()->getTitle()->prepend(__("Create Recipient"));
 
         return $resultPage;
     }

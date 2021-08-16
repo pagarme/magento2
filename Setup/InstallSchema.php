@@ -1730,6 +1730,15 @@ class InstallSchema implements InstallSchemaInterface
                     'Email'
                 )
                 ->addColumn(
+                    'document_type',
+                    Table::TYPE_TEXT,
+                    255,
+                    [
+                        'nullable' => false
+                    ],
+                    'Document Type'
+                )
+                ->addColumn(
                     'document',
                     Table::TYPE_TEXT,
                     255,

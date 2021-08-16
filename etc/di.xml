@@ -38,6 +38,9 @@
     <preference for="Pagarme\Pagarme\Api\ProductPlanInterface"
                 type="Pagarme\Pagarme\Model\Api\ProductsPlan"/>
 
+    <preference for="Pagarme\Pagarme\Api\RecipientInterface"
+                type="Pagarme\Pagarme\Model\Api\Recipient"/>
+
     <preference for="Pagarme\Pagarme\Api\ChargeApiInterface"
                 type="Pagarme\Pagarme\Model\Api\Charge"/>
 
