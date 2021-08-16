@@ -49,6 +49,10 @@ require([
             fillTypeValueByDocumentType();
         });
 
+        $("#transfer-interval").on('change', function () {
+            fillTransferDayValuesByTransferInterval();
+        });
+
     });
 
     function formSubmit(e) {
@@ -118,10 +122,31 @@ require([
     function fillTypeValueByDocumentType()
     {
         var documentTypeValue = $("#document-type").val();
-        console.log(documentTypeValue);
-
         document.getElementById("type").value
             = documentTypeValue == 'cpf' ? 'individual' : 'company';
+    }
+
+    function fillTransferDayValuesByTransferInterval()
+    {
+        var transferDayValue = $("#transfer-interval").val();
+
+        if (transferDayValue == 'Weekly') {
+            $('#transfer-day').children().remove().end().append( '<option value="1">1</option>' );
+            for (var i = 2; i < 6; i++) {
+                $('#transfer-day').append( '<option value="' + i + '">' + i + '</option>' );
+            }
+        }
+
+        if (transferDayValue == 'Monthly') {
+            $('#transfer-day').children().remove().end().append( '<option value="1">1</option>' );
+            for (var i = 2; i < 32; i++) {
+                $('#transfer-day').append('<option value="' + i + '">' +  i + '</option>');
+            }
+        }
+
+        if (transferDayValue == 'Daily') {
+            $('#transfer-day').children().remove().end().append( '<option value="0">0</option>' );
+        }
     }
 
 });
