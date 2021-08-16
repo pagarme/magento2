@@ -7,25 +7,48 @@ require([
     $(document).ready(function(){
         $("#form-recipients").submit(formSubmit);
 
-        hiddenElementByMenuSelectValue($("#existing_recipient").val(), "pagarme_id");
+        hiddenElementByMenuSelectValue(
+            $("#existing_recipient").val(),
+            "pagarme_id"
+        );
 
         $("#existing_recipient").on('change', function () {
-            hiddenElementByMenuSelectValue($(this).val(), "pagarme_id")
+            hiddenElementByMenuSelectValue(
+                $(this).val(),
+                "pagarme_id"
+            )
         });
 
-        hiddenElementByMenuSelectValue($("#transfer-enabled").val(), "transfer-interval-div");
+        hiddenElementByMenuSelectValue(
+            $("#transfer-enabled").val(),
+            "transfer-interval-div"
+        );
 
         $("#transfer-enabled").on('change', function () {
-            hiddenElementByMenuSelectValue($(this).val(), "transfer-interval-div")
+            hiddenElementByMenuSelectValue(
+                $(this).val(),
+                "transfer-interval-div"
+            )
         });
 
-        hiddenElementByMenuSelectValue($("#transfer-enabled").val(), "transfer-day-div");
+        hiddenElementByMenuSelectValue(
+            $("#transfer-enabled").val(),
+            "transfer-day-div"
+        );
 
         $("#transfer-enabled").on('change', function () {
-            hiddenElementByMenuSelectValue($(this).val(), "transfer-day-div")
+            hiddenElementByMenuSelectValue(
+                $(this).val(),
+                "transfer-day-div"
+            )
         });
 
         fillFieldWithSameValue();
+
+        $("#document-type").on('change', function() {
+            fillTypeValueByDocumentType();
+        });
+
     });
 
     function formSubmit(e) {
@@ -92,6 +115,13 @@ require([
         $("#holder-document-type").attr("disabled", true);
     }
 
+    function fillTypeValueByDocumentType()
+    {
+        var documentTypeValue = $("#document-type").val();
+        console.log(documentTypeValue);
 
+        document.getElementById("type").value
+            = documentTypeValue == 'cpf' ? 'individual' : 'company';
+    }
 
 });
