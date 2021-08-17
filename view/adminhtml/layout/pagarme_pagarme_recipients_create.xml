@@ -3,7 +3,8 @@
     <head>
         <css src="Pagarme_Pagarme::css/jquery-ui.min.css" />
         <css src="Pagarme_Pagarme::css/pagarme_style.css" />
-        <script src="Pagarme_Pagarme::js/recipients.js"/>
+        <script src="Pagarme_Pagarme::js/jquery.mask.js"></script>
+        <script src="Pagarme_Pagarme::js/recipients.js" />
     </head>
     <body>
         <referenceContainer name="content">
