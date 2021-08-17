@@ -113,7 +113,7 @@
                                         <span><?php echo __('Document number') ?></span>
                                     </label>
                                     <div class="admin__field-control">
-                                        <input type="text" class="recipients_search" name="form[document]" id="document" required>
+                                        <input type="text" class="recipients_search" pattern="[0-9]+" maxlength="14" name="form[document]" id="document" required>
                                     </div>
                                 </div>
 

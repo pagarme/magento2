@@ -43,28 +43,18 @@ require([
             )
         });
 
-        fillFieldWithSameValue();
-
         $("#document-type").on('change', function() {
             fillTypeValueByDocumentType();
+            validadeDocumentSize();
         });
 
         $("#transfer-interval").on('change', function () {
             fillTransferDayValuesByTransferInterval();
         });
 
-        var CpfCnpjMask = function (val) {
-                return val.replace(/\D/g, '').length <= 11 ? '000.000.000-009' : '00.000.000/0000-00';
-        },
+        fillFieldWithSameValue();
 
-        options = {
-            onKeyPress: function(val, e, field, options) {
-                field.mask(CpfCnpjMask.apply({}, arguments), options);
-            }
-        };
-
-        $("#document").mask(CpfCnpjMask, options);
-
+        validadeDocumentSize();
     });
 
     function formSubmit(e) {
@@ -166,6 +156,18 @@ require([
     function validateEmail(email) {
         var validationExpression = /\S+@\S+\.\S+/;
         return validationExpression.test(email);
+    }
+
+    function validadeDocumentSize() {
+        var documentType = $("#document-type").val();
+
+        if (documentType == "cpf") {
+            $("#document").attr("maxlength", 11);
+        }
+
+        if (documentType == "cnpj") {
+            $("#document").attr("maxlength", 14);
+        }
     }
 
 });
