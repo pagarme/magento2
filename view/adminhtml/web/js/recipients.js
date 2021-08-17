@@ -53,16 +53,30 @@ require([
             fillTransferDayValuesByTransferInterval();
         });
 
+        var CpfCnpjMask = function (val) {
+                return val.replace(/\D/g, '').length <= 11 ? '000.000.000-009' : '00.000.000/0000-00';
+        },
+
+        options = {
+            onKeyPress: function(val, e, field, options) {
+                field.mask(CpfCnpjMask.apply({}, arguments), options);
+            }
+        };
+
+        $("#document").mask(CpfCnpjMask, options);
+
     });
 
     function formSubmit(e) {
         e.preventDefault();
 
-        // var errors = validateForm(e);
-        // if (errors.length > 0) {
-        //     alert(errors.join("\r\n"));
-        //     return;
-        // }
+        var isValidEmail = validateEmail($("#email-recipient").val());
+
+        if(!isValidEmail) {
+            alert("Invalid email");
+            return;
+        }
+
         toogleSaveButton();
 
         var dataSerialize = jQuery(this).serialize();
@@ -147,6 +161,11 @@ require([
         if (transferDayValue == 'Daily') {
             $('#transfer-day').children().remove().end().append( '<option value="0">0</option>' );
         }
+    }
+
+    function validateEmail(email) {
+        var validationExpression = /\S+@\S+\.\S+/;
+        return validationExpression.test(email);
     }
 
 });

@@ -28,7 +28,7 @@
                     <div class="fieldset-wrapper">
                         <div class="admin__fieldset-wrapper-content _hide">
                             <fieldset class="admin__fieldset">
-                                <div class="admin__field _required">
+                                <div class="admin__field">
                                     <label class="admin__field-label">
                                         <span><?php echo __('Select webkul seller') ?></span>
                                     </label>
@@ -44,7 +44,7 @@
                                     </div>
                                 </div>
 
-                                <div class="admin__field _required">
+                                <div class="admin__field">
                                     <label class="admin__field-label">
                                         <span><?php echo __('Use a existing Pagar.me recipient') ?></span>
                                     </label>
@@ -83,7 +83,7 @@
                                         <span><?php echo __('Name') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
-                                        <input type="text" class="recipients_search" name="form[name]" id="recipient-name" >
+                                        <input type="text" class="recipients_search" name="form[name]" id="recipient-name" required>
                                     </div>
                                 </div>
 
@@ -92,7 +92,7 @@
                                         <span><?php echo __('E-mail') ?></span>
                                     </label>
                                     <div class="admin__field-control">
-                                        <input type="text" class="recipients_search" name="form[email]" id="email-recipient" >
+                                        <input type="text" class="recipients_search" name="form[email]" id="email-recipient" required>
                                     </div>
                                 </div>
 
@@ -113,7 +113,7 @@
                                         <span><?php echo __('Document number') ?></span>
                                     </label>
                                     <div class="admin__field-control">
-                                        <input type="text" class="recipients_search" name="form[document]" id="document">
+                                        <input type="text" class="recipients_search" name="form[document]" id="document" required>
                                     </div>
                                 </div>
 
@@ -126,11 +126,11 @@
                                         <span><?php echo __('Holder name') ?></span>
                                     </label>
                                     <div class="admin__field-control">
-                                        <input type="text" class="recipients_search" name="form[holder_name]" id="holder-name" >
+                                        <input type="text" class="recipients_search" name="form[holder_name]" id="holder-name" required>
                                     </div>
                                 </div>
 
-                                <div class="admin__field _required">
+                                <div class="admin__field">
                                     <label class="admin__field-label">
                                         <span><?php echo __('Document type') ?></span>
                                     </label>
@@ -142,7 +142,7 @@
                                     </div>
                                 </div>
 
-                                <div class="admin__field _required">
+                                <div class="admin__field">
                                     <label class="admin__field-label">
                                         <span><?php echo __('Document number') ?></span>
                                     </label>
@@ -156,7 +156,7 @@
                                         <span><?php echo __('Bank code') ?></span>
                                     </label>
                                     <div class="admin__field-control">
-                                        <input type="text" class="recipients_search" name="form[bank]" id="bank" >
+                                        <input type="text" class="recipients_search" maxlength="3" name="form[bank]" id="bank" required>
                                     </div>
                                 </div>
 
@@ -165,7 +165,7 @@
                                         <span><?php echo __('Branch number') ?></span>
                                     </label>
                                     <div class="admin__field-control">
-                                        <input type="text" class="recipients_search" name="form[branch_number]" id="branch-number" >
+                                        <input type="text" class="recipients_search" maxlength="5" pattern="[0-9]{0,5}" name="form[branch_number]" id="branch-number" required>
                                     </div>
                                 </div>
 
@@ -178,21 +178,21 @@
                                     </div>
                                 </div>
 
-                                <div class="admin__field">
+                                <div class="admin__field _required">
                                     <label class="admin__field-label">
                                         <span><?php echo __('Account number') ?></span>
                                     </label>
                                     <div class="admin__field-control">
-                                        <input type="text" class="recipients_search" name="form[account_number]" id="account-number" >
+                                        <input type="text" class="recipients_search" maxlength="13" pattern="[0-9]{0,13}" name="form[account_number]" id="account-number" required>
                                     </div>
                                 </div>
 
-                                <div class="admin__field">
+                                <div class="admin__field _required">
                                     <label class="admin__field-label">
                                         <span><?php echo __('Account check digit') ?></span>
                                     </label>
                                     <div class="admin__field-control">
-                                        <input type="text" class="recipients_search" name="form[account_check_digit]" id="account-check-digit" >
+                                        <input type="text" class="recipients_search" maxlength="2" name="form[account_check_digit]" id="account-check-digit" required>
                                     </div>
                                 </div>
 
