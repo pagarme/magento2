@@ -26,7 +26,6 @@ class Recipient implements RecipientInterface
      */
     public function saveFormData()
     {
-
         $post = $this->request->getBodyParams();
         parse_str($post[0], $params);
 
@@ -57,80 +56,8 @@ class Recipient implements RecipientInterface
 
     public function getFormattedForm($form)
     {
-        if (isset($form['internal_id'])) {
-            $form['internal_id'] = $form['internal_id'];
-        }
-
-        if (isset($form['name'])) {
-            $form['name'] = $form['name'];
-        }
-
-        if (isset($form['email'])) {
-            $form['email'] = $form['email'];
-        }
-
-        if (isset($form['document_type'])) {
-            $form['document_type'] = $form['document_type'];
-        }
-
-        if (isset($form['document_number'])) {
-            $form['document_number'] = $form['document_number'];
-        }
-
-        if (isset($form['type'])) {
-            $form['type'] = $form['type'];
-        }
-
-        if (isset($form['holder_name'])) {
-            $form['holder_name'] = $form['holder_name'];
-        }
-
-        if (isset($form['holder_document'])) {
-            $form['holder_document'] = $form['holder_document'];
-        }
-
         if (isset($form['type'])) {
             $form['holder_type'] = $form['type'];
-        }
-
-        if (isset($form['bank'])) {
-            $form['bank'] = $form['bank'];
-        }
-
-        if (isset($form['branch_number'])) {
-            $form['branch_number'] = $form['branch_number'];
-        }
-
-        if (isset($form['branch_check_digit'])) {
-            $form['branch_check_digit'] = $form['branch_check_digit'];
-        }
-
-        if (isset($form['account_number'])) {
-            $form['account_number'] = $form['account_number'];
-        }
-
-        if (isset($form['account_check_digit'])) {
-            $form['account_check_digit'] = $form['account_check_digit'];
-        }
-
-        if (isset($form['account_type'])) {
-            $form['account_type'] = $form['account_type'];
-        }
-
-        if (isset($form['account_type'])) {
-            $form['account_type'] = $form['account_type'];
-        }
-
-        if (isset($form['transfer_enabled'])) {
-            $form['transfer_enabled'] = $form['transfer_enabled'];
-        }
-
-        if (isset($form['transfer_interval'])) {
-            $form['transfer_interval'] = $form['transfer_interval'];
-        }
-
-        if (isset($form['transfer_day'])) {
-            $form['transfer_day'] = $form['transfer_day'];
         }
 
         return $form;
