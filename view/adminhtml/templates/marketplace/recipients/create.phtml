@@ -33,7 +33,7 @@
                                         <span><?php echo __('Select webkul seller') ?></span>
                                     </label>
                                     <div class="admin__field-control">
-                                        <input type="text" class="recipients_search" name="" id="">
+                                        <input type="text" class="recipient-form-inputs" name="" id="">
                                         <button type="button" class="action-basic" id="" data-action="">
                                             <span><?php echo __('Search') ?></span>
                                         </button>
@@ -46,10 +46,10 @@
 
                                 <div class="admin__field">
                                     <label class="admin__field-label">
-                                        <span><?php echo __('Use a existing Pagar.me recipient') ?></span>
+                                        <span><?php echo __('Use an existing Pagar.me recipient') ?></span>
                                     </label>
                                     <div class="admin__field-control">
-                                        <select class="recipients_search admin__control-select" name="form[existing_recipient]" id="existing_recipient">
+                                        <select class="recipient-form-inputs admin__control-select" name="form[existing_recipient]" id="existing_recipient">
                                             <option value="0"><?php echo __('No') ?></option>
                                             <option value="1"><?php echo __('Yes') ?></option>
                                         </select>
@@ -61,7 +61,7 @@
                                         <span><?php echo __('ID Pagar.me') ?></span>
                                     </label>
                                     <div class="admin__field-control">
-                                        <input type="text" class="recipients_search" name="form[pagarme_id]" id="">
+                                        <input type="text" class="recipient-form-inputs" name="form[pagarme_id]" id="">
                                         <button type="button" class="action-basic" id="" data-action="">
                                             <span><?php echo __('Search') ?></span>
                                         </button>
@@ -74,7 +74,7 @@
                                         <span><?php echo __('Internal ID') ?></span>
                                     </label>
                                     <div class="admin__field-control">
-                                        <input type="text" class="recipients_search" name="form[internal_id]" id="internal-id" >
+                                        <input type="text" class="recipient-form-inputs" name="form[internal_id]" id="internal-id" >
                                     </div>
                                 </div>
 
@@ -83,7 +83,7 @@
                                         <span><?php echo __('Name') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
-                                        <input type="text" class="recipients_search" name="form[name]" id="recipient-name" required>
+                                        <input type="text" class="recipient-form-inputs" name="form[name]" id="recipient-name" required>
                                     </div>
                                 </div>
 
@@ -92,7 +92,7 @@
                                         <span><?php echo __('E-mail') ?></span>
                                     </label>
                                     <div class="admin__field-control">
-                                        <input type="text" class="recipients_search" name="form[email]" id="email-recipient" required>
+                                        <input type="text" class="recipient-form-inputs" name="form[email]" id="email-recipient" required>
                                     </div>
                                 </div>
 
@@ -101,7 +101,7 @@
                                         <span><?php echo __('Document type') ?></span>
                                     </label>
                                     <div class="admin__field-control">
-                                        <select class="recipients_search admin__control-select" name="form[document_type]" id="document-type">
+                                        <select class="recipient-form-inputs admin__control-select" name="form[document_type]" id="document-type">
                                             <option data-title="cpf" value="cpf"><?php echo __('CPF') ?></option>
                                             <option data-title="cnpj" value="cnpj"><?php echo __('CNPJ') ?></option>
                                         </select>
@@ -113,7 +113,7 @@
                                         <span><?php echo __('Document number') ?></span>
                                     </label>
                                     <div class="admin__field-control">
-                                        <input type="text" class="recipients_search" pattern="[0-9]+" maxlength="14" name="form[document]" id="document" required>
+                                        <input type="text" class="recipient-form-inputs" pattern="[0-9]+" maxlength="14" name="form[document]" id="document" required>
                                     </div>
                                 </div>
 
@@ -126,7 +126,7 @@
                                         <span><?php echo __('Holder name') ?></span>
                                     </label>
                                     <div class="admin__field-control">
-                                        <input type="text" class="recipients_search" name="form[holder_name]" id="holder-name" required>
+                                        <input type="text" class="recipient-form-inputs" name="form[holder_name]" id="holder-name" required>
                                     </div>
                                 </div>
 
@@ -135,7 +135,7 @@
                                         <span><?php echo __('Document type') ?></span>
                                     </label>
                                     <div class="admin__field-control">
-                                        <select class="recipients_search admin__control-select" name="form[holder_document_type]" id="holder-document-type">
+                                        <select class="recipient-form-inputs admin__control-select" name="form[holder_document_type]" id="holder-document-type">
                                             <option data-title="cpf" value="cpf"><?php echo __('CPF') ?></option>
                                             <option data-title="cnpj" value="cnpj"><?php echo __('CNPJ') ?></option>
                                         </select>
@@ -147,7 +147,7 @@
                                         <span><?php echo __('Document number') ?></span>
                                     </label>
                                     <div class="admin__field-control">
-                                        <input type="text" class="recipients_search" name="form[holder_document]" id="holder-document" >
+                                        <input type="text" class="recipient-form-inputs" name="form[holder_document]" id="holder-document" >
                                     </div>
                                 </div>
 
@@ -156,7 +156,7 @@
                                         <span><?php echo __('Bank code') ?></span>
                                     </label>
                                     <div class="admin__field-control">
-                                        <input type="text" class="recipients_search" maxlength="3" name="form[bank]" id="bank" required>
+                                        <input type="text" class="recipient-form-inputs" maxlength="3" name="form[bank]" id="bank" required>
                                     </div>
                                 </div>
 
@@ -165,7 +165,7 @@
                                         <span><?php echo __('Branch number') ?></span>
                                     </label>
                                     <div class="admin__field-control">
-                                        <input type="text" class="recipients_search" maxlength="5" pattern="[0-9]{0,5}" name="form[branch_number]" id="branch-number" required>
+                                        <input type="text" class="recipient-form-inputs" maxlength="5" pattern="[0-9]{0,5}" name="form[branch_number]" id="branch-number" required>
                                     </div>
                                 </div>
 
@@ -174,7 +174,7 @@
                                         <span><?php echo __('Branch check digit') ?></span>
                                     </label>
                                     <div class="admin__field-control">
-                                        <input type="text" class="recipients_search" name="form[branch_check_digit]" id="branch-check-digit" >
+                                        <input type="text" class="recipient-form-inputs" name="form[branch_check_digit]" id="branch-check-digit" >
                                     </div>
                                 </div>
 
@@ -183,7 +183,7 @@
                                         <span><?php echo __('Account number') ?></span>
                                     </label>
                                     <div class="admin__field-control">
-                                        <input type="text" class="recipients_search" maxlength="13" pattern="[0-9]{0,13}" name="form[account_number]" id="account-number" required>
+                                        <input type="text" class="recipient-form-inputs" maxlength="13" pattern="[0-9]{0,13}" name="form[account_number]" id="account-number" required>
                                     </div>
                                 </div>
 
@@ -192,7 +192,7 @@
                                         <span><?php echo __('Account check digit') ?></span>
                                     </label>
                                     <div class="admin__field-control">
-                                        <input type="text" class="recipients_search" maxlength="2" name="form[account_check_digit]" id="account-check-digit" required>
+                                        <input type="text" class="recipient-form-inputs" maxlength="2" name="form[account_check_digit]" id="account-check-digit" required>
                                     </div>
                                 </div>
 
@@ -201,7 +201,7 @@
                                         <span><?php echo __('Account type') ?></span>
                                     </label>
                                     <div class="admin__field-control">
-                                        <select class="recipients_search admin__control-select" name="form[account_type]" id="account-type">
+                                        <select class="recipient-form-inputs admin__control-select" name="form[account_type]" id="account-type">
                                             <option value="checking"><?php echo __('Checking') ?></option>
                                             <option value="savings"><?php echo __('Savings') ?></option>
                                             <option value="conjunct_checking"><?php echo __('Conjunct checking') ?></option>
@@ -217,7 +217,7 @@
                                         <span><?php echo __('Enable automatic transfer') ?></span>
                                     </label>
                                     <div class="admin__field-control">
-                                        <select class="recipients_search admin__control-select" name="form[transfer_enabled]" id="transfer-enabled">
+                                        <select class="recipient-form-inputs admin__control-select" name="form[transfer_enabled]" id="transfer-enabled">
                                             <option value="0"><?php echo __('No') ?></option>
                                             <option value="1"><?php echo __('Yes') ?></option>
                                         </select>
@@ -229,7 +229,7 @@
                                         <span><?php echo __('Transfer interval') ?></span>
                                     </label>
                                     <div class="admin__field-control">
-                                        <select class="recipients_search admin__control-select" name="form[transfer_interval]" id="transfer-interval">
+                                        <select class="recipient-form-inputs admin__control-select" name="form[transfer_interval]" id="transfer-interval">
                                             <option value="Daily"><?php echo __('Daily') ?></option>
                                             <option value="Weekly"><?php echo __('Weekly') ?></option>
                                             <option value="Monthly"><?php echo __('Monthly') ?></option>
@@ -242,7 +242,7 @@
                                         <span><?php echo __('Transfer day') ?></span>
                                     </label>
                                     <div class="admin__field-control">
-                                        <select class="recipients_search admin__control-select" name="form[transfer_day]" id="transfer-day">
+                                        <select class="recipient-form-inputs admin__control-select" name="form[transfer_day]" id="transfer-day">
                                             <option value="0">0</option>
                                         </select>
                                     </div>

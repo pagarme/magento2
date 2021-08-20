@@ -43,7 +43,7 @@ class Recipient implements RecipientInterface
             $recipient = $recipientService->saveFormRecipient($form);
         } catch (\Exception $exception) {
             return json_encode([
-                'code' => 404,
+                'code' => 400,
                 'message' => $exception->getMessage()
             ]);
         }

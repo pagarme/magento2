@@ -7,37 +7,37 @@ require([
     $(document).ready(function(){
         $("#form-recipients").submit(formSubmit);
 
-        hiddenElementByMenuSelectValue(
+        hideElementByMenuSelectValue(
             $("#existing_recipient").val(),
             "pagarme_id"
         );
 
         $("#existing_recipient").on('change', function () {
-            hiddenElementByMenuSelectValue(
+            hideElementByMenuSelectValue(
                 $(this).val(),
                 "pagarme_id"
             )
         });
 
-        hiddenElementByMenuSelectValue(
+        hideElementByMenuSelectValue(
             $("#transfer-enabled").val(),
             "transfer-interval-div"
         );
 
         $("#transfer-enabled").on('change', function () {
-            hiddenElementByMenuSelectValue(
+            hideElementByMenuSelectValue(
                 $(this).val(),
                 "transfer-interval-div"
             )
         });
 
-        hiddenElementByMenuSelectValue(
+        hideElementByMenuSelectValue(
             $("#transfer-enabled").val(),
             "transfer-day-div"
         );
 
         $("#transfer-enabled").on('change', function () {
-            hiddenElementByMenuSelectValue(
+            hideElementByMenuSelectValue(
                 $(this).val(),
                 "transfer-day-div"
             )
@@ -45,16 +45,16 @@ require([
 
         $("#document-type").on('change', function() {
             fillTypeValueByDocumentType();
-            validadeDocumentSize();
+            changeDocumentSizeByDocumentType();
         });
 
         $("#transfer-interval").on('change', function () {
             fillTransferDayValuesByTransferInterval();
         });
 
-        fillFieldWithSameValue();
+        fillFieldsWithSameValue();
 
-        validadeDocumentSize();
+        changeDocumentSizeByDocumentType();
     });
 
     function formSubmit(e) {
@@ -103,13 +103,13 @@ require([
         $("#save-button span").html("Saving");
     }
 
-    function hiddenElementByMenuSelectValue(value, elementIdToHide)
+    function hideElementByMenuSelectValue(value, elementIdToHide)
     {
         document.getElementById(elementIdToHide).style.display
             = value == 1 ? 'block' : 'none';
     }
 
-    function fillFieldWithSameValue()
+    function fillFieldsWithSameValue()
     {
         $("#document-type").on('change', function() {
             $("#holder-document-type").val($(this).val());
@@ -158,7 +158,7 @@ require([
         return validationExpression.test(email);
     }
 
-    function validadeDocumentSize() {
+    function changeDocumentSizeByDocumentType() {
         var documentType = $("#document-type").val();
 
         if (documentType == "cpf") {
