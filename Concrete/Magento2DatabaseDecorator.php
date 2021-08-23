@@ -52,7 +52,10 @@ final class Magento2DatabaseDecorator extends AbstractDatabaseDecorator
             $this->db->getTableName('pagarme_module_core_recurrence_subscription_items'),
 
             AbstractDatabaseDecorator::TABLE_HUB_INSTALL_TOKEN =>
-            $this->db->getTableName('pagarme_module_core_hub_install_token')
+            $this->db->getTableName('pagarme_module_core_hub_install_token'),
+
+            AbstractDatabaseDecorator::TABLE_RECIPIENTS =>
+            $this->db->getTableName('pagarme_module_core_recipients')
         ];
     }
 
