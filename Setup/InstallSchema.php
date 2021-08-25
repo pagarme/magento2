@@ -1703,13 +1703,13 @@ class InstallSchema implements InstallSchemaInterface
                     'ID'
                 )
                 ->addColumn(
-                    'internal_id',
+                    'external_id',
                     Table::TYPE_TEXT,
                     null,
                     [
                         'nullable' => false
                     ],
-                    'Internal ID'
+                    'External ID'
                 )
                 ->addColumn(
                     'name',
