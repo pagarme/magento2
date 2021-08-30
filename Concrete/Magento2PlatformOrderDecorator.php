@@ -53,6 +53,7 @@ use Magento\Sales\Model\ResourceModel\Order\Status\Collection;
 use Pagarme\Core\Kernel\Aggregates\Transaction;
 use Pagarme\Core\Kernel\ValueObjects\TransactionType;
 use Magento\Quote\Model\Quote;
+use Pagarme\Pagarme\Helper\Marketplace\WebkulHelper;
 
 class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 {
@@ -232,7 +233,8 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
     /**
      * @param Charge[] $charges
      */
-    public function addAdditionalInformation(array $charges) {
+    public function addAdditionalInformation(array $charges)
+    {
         $chargesAddtionalInformation = $this->extractAdditionalChargeInformation(
             $charges
         );
@@ -648,7 +650,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             $item->setQuantity($quoteItem->getQty());
             $item->setDescription(
                 $quoteItem->getName() . ' : ' .
-                $quoteItem->getDescription()
+                    $quoteItem->getDescription()
             );
 
             $item->setName($quoteItem->getName());
@@ -748,13 +750,11 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         return $paymentMethods;
     }
 
-    private function extractPaymentDataFromPagarmeCreditCard
-    (
+    private function extractPaymentDataFromPagarmeCreditCard(
         $additionalInformation,
         &$paymentData,
         $payment
-    )
-    {
+    ) {
         $newPaymentData = $this->extractBasePaymentData(
             $additionalInformation
         );
@@ -766,13 +766,11 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $paymentData[$creditCardDataIndex][] = $newPaymentData;
     }
 
-    private function extractPaymentDataFromPagarmeVoucher
-    (
+    private function extractPaymentDataFromPagarmeVoucher(
         $additionalInformation,
         &$paymentData,
         $payment
-    )
-    {
+    ) {
         $newPaymentData = $this->extractBasePaymentData(
             $additionalInformation
         );
@@ -784,13 +782,11 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $paymentData[$creditCardDataIndex][] = $newPaymentData;
     }
 
-    private function extractPaymentDataFromPagarmeDebit
-    (
+    private function extractPaymentDataFromPagarmeDebit(
         $additionalInformation,
         &$paymentData,
         $payment
-    )
-    {
+    ) {
         $newPaymentData = $this->extractBasePaymentData(
             $additionalInformation
         );
@@ -867,8 +863,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         return $newPaymentData;
     }
 
-    private function extractPaymentDataFromPagarmeTwoCreditCard
-    ($additionalInformation, &$paymentData, $payment)
+    private function extractPaymentDataFromPagarmeTwoCreditCard($additionalInformation, &$paymentData, $payment)
     {
         $moneyService = new MoneyService();
         $indexes = ['first', 'second'];
@@ -880,7 +875,6 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             try {
                 $brand = strtolower($additionalInformation["cc_type_{$index}"]);
             } catch (\Throwable $e) {
-
             }
 
             if (isset($additionalInformation["cc_token_credit_card_{$index}"])) {
@@ -936,8 +930,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $prefix,
         $additionalInformation,
         $index = null
-    )
-    {
+    ) {
         $index = $index !== null ? '_' . $index : null;
 
         if (
@@ -983,9 +976,9 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 
     private function extractPaymentDataFromPagarmeBilletCreditcard(
         $additionalInformation,
-        &$paymentData, $payment
-    )
-    {
+        &$paymentData,
+        $payment
+    ) {
         $moneyService = new MoneyService();
         $identifier = null;
         $customerId = null;
@@ -994,7 +987,6 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         try {
             $brand = strtolower($additionalInformation['cc_type']);
         } catch (\Throwable $e) {
-
         }
 
         if (isset($additionalInformation['cc_token_credit_card'])) {
@@ -1077,8 +1069,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $additionalInformation,
         &$paymentData,
         $payment
-    )
-    {
+    ) {
         $moneyService = new MoneyService();
         $newPaymentData = new \stdClass();
         $newPaymentData->amount =
@@ -1103,8 +1094,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $additionalInformation,
         &$paymentData,
         $payment
-    )
-    {
+    ) {
         $moneyService = new MoneyService();
         $newPaymentData = new \stdClass();
         $newPaymentData->amount =
@@ -1248,4 +1238,18 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         return $this->platformOrder->getTotalCanceled();
     }
 
+    public function handleSplitOrder()
+    {
+        //return true;
+        $webkullHelper = new WebkulHelper();
+        if (!$webkullHelper->isEnabled()) {
+            return;
+        }
+
+        $splitData = $webkullHelper->getSplitDataFromOrder($this->platformOrder);
+
+        if (!$splitData) {
+            return;
+        }
+    }
 }
