@@ -23,6 +23,7 @@ use Pagarme\Core\Kernel\ValueObjects\Id\OrderId;
 use Pagarme\Core\Kernel\ValueObjects\OrderState;
 use Pagarme\Core\Kernel\ValueObjects\OrderStatus;
 use Pagarme\Core\Kernel\ValueObjects\PaymentMethod;
+use Pagarme\Core\Marketplace\Aggregates\Split;
 use Pagarme\Core\Payment\Aggregates\Address;
 use Pagarme\Core\Payment\Aggregates\Customer;
 use Pagarme\Core\Payment\Aggregates\Item;
@@ -1250,16 +1251,22 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 
     public function handleSplitOrder()
     {
-        //return true;
         $webkullHelper = new WebkulHelper();
+
         if (!$webkullHelper->isEnabled()) {
-            return;
+            return null;
         }
 
-        $splitData = $webkullHelper->getSplitDataFromOrder($this->platformOrder);
+        $splitDataFromOrder = $webkullHelper->getSplitDataFromOrder($this->platformOrder);
 
-        if (!$splitData) {
-            return;
+        if (!$splitDataFromOrder) {
+            return null;
         }
+
+        $splitData = new Split();
+        $splitData->setSellersData($splitDataFromOrder['sellers']);
+        $splitData->setMarketplaceData($splitDataFromOrder['marketplace']);
+
+        return $splitData;
     }
 }
