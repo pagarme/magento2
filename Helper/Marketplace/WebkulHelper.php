@@ -74,20 +74,21 @@ class WebkulHelper
                 continue;
             }
 
-            $splitData = $this->sumSellersCommissionsIfArrayKeyExists(
+            $sellerDataForProduct = $this->getSellerData(
                 $itemPrice,
-                $splitData,
                 $sellerDetail
             );
 
-            $splitData = $this->setNewKeyIfArrayKeyNotExists(
-                $itemPrice,
-                $splitData,
-                $sellerDetail
-            );
+            if (array_key_exists($sellerId, $splitData['sellers'])) {
+                $splitData['sellers'][$sellerId]['sellerCommission']
+                    += $sellerDataForProduct['sellerCommission'];
+                continue;
+            }
+
+            $splitData['sellers'][$sellerId] = $sellerDataForProduct;
         }
 
-        if(!$sellerId && empty($splitData['sellers'])) {
+        if(empty($splitData['sellers'])) {
             return null;
         }
 
@@ -127,44 +128,5 @@ class WebkulHelper
         }
 
         return $totalCommission;
-    }
-
-    private function sumSellersCommissionsIfArrayKeyExists(
-        int $itemPrice,
-        array $splitData,
-        array $sellerDetail
-    )
-    {
-        $sellerId = $sellerDetail['id'];
-
-        if (array_key_exists($sellerId, $splitData['sellers'])) {
-            $commissionToAdd = $splitData['sellers'][$sellerId]['sellerCommission'];
-            $splitData['sellers'][$sellerId] = $this->getSellerData(
-                $itemPrice,
-                $sellerDetail
-            );
-            $splitData['sellers'][$sellerId]['sellerCommission']
-                = $splitData['sellers'][$sellerId]['sellerCommission'] + $commissionToAdd;
-        }
-
-        return $splitData;
-    }
-
-    public function setNewKeyIfArrayKeyNotExists(
-        int $itemPrice,
-        array $splitData,
-        array $sellerDetail
-    )
-    {
-        $sellerId = $sellerDetail['id'];
-
-        if (!array_key_exists($sellerId, $splitData['sellers'])) {
-            $splitData['sellers'][$sellerId] = $this->getSellerData(
-                $itemPrice,
-                $sellerDetail
-            );
-        }
-
-        return $splitData;
     }
 }
