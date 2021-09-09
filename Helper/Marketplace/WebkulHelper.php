@@ -108,6 +108,10 @@ class WebkulHelper
 
         $recipient = $this->recipientService->findRecipient($sellerDetail['id']);
 
+        if (!$recipient) {
+            throw new \Exception(__("The seller does not have a registered recipient"));
+        }
+
         return [
             "sellerCommission" => $sellerCommission,
             "pagarmeId" => $recipient['pagarme_id']
