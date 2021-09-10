@@ -13,6 +13,7 @@
 namespace Pagarme\Pagarme\Helper\Marketplace;
 
 use Magento\Framework\App\ObjectManager;
+use Magento\Framework\Exception\NotFoundException;
 use Pagarme\Core\Kernel\Services\LogService;
 use Pagarme\Core\Kernel\Services\MoneyService;
 use Pagarme\Core\Marketplace\Services\RecipientService;
@@ -108,7 +109,13 @@ class WebkulHelper
             $itemPrice - $marketplaceCommission
         );
 
-        $recipient = $this->recipientService->findRecipient($sellerDetail['id']);
+        try {
+            $recipient = $this->recipientService->findRecipient(
+                $sellerDetail['id']
+            );
+        } catch (\Exception $exception) {
+            throw new NotFoundException(__($exception->getMessage()));
+        }
 
         return [
             "sellerCommission" => $sellerCommission,
