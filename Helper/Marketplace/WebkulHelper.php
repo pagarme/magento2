@@ -13,6 +13,7 @@
 namespace Pagarme\Pagarme\Helper\Marketplace;
 
 use Magento\Framework\App\ObjectManager;
+use Pagarme\Core\Kernel\Services\LogService;
 use Pagarme\Core\Kernel\Services\MoneyService;
 use Pagarme\Core\Marketplace\Services\RecipientService;
 use Webkul\Marketplace\Helper\Payment;
@@ -108,10 +109,6 @@ class WebkulHelper
         );
 
         $recipient = $this->recipientService->findRecipient($sellerDetail['id']);
-
-        if (!$recipient) {
-            throw new \Exception(__("The seller does not have a registered recipient"));
-        }
 
         return [
             "sellerCommission" => $sellerCommission,
