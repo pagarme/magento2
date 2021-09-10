@@ -62,13 +62,10 @@ class WebkulHelper
         );
 
         foreach ($orderItems as $item) {
-
             $productId = $item->getProductId();
             $sellerDetail = $this->mpPaymentHelper->getSellerDetail($productId);
             $sellerId = $sellerDetail['id'];
-            $itemPrice = (int) $this->moneyService->floatToCents(
-                $item->getRowTotal()
-            );
+            $itemPrice = $item->getRowTotal();
 
             if(!$sellerId) {
                 continue;
@@ -105,7 +102,10 @@ class WebkulHelper
     private function getSellerData($itemPrice, $sellerDetail)
     {
         $percentageCommission = $sellerDetail['commission'] / 100;
-        $sellerCommission = $itemPrice * $percentageCommission;
+        $marketplaceCommission = $itemPrice * $percentageCommission;
+        $sellerCommission = $this->moneyService->floatToCents(
+            $itemPrice - $marketplaceCommission
+        );
 
         $recipient = $this->recipientService->findRecipient($sellerDetail['id']);
 
