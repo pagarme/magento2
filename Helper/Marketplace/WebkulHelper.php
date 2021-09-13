@@ -64,6 +64,7 @@ class WebkulHelper
         $totalPaid = $this->moneyService->floatToCents(
             $platformOrder->getSubTotal()
         );
+        $totalPaidProductWithoutSeller = 0;
 
         foreach ($orderItems as $item) {
             $productId = $item->getProductId();
@@ -72,6 +73,7 @@ class WebkulHelper
             $itemPrice = $item->getRowTotal();
 
             if (!$sellerId) {
+                $totalPaidProductWithoutSeller += $itemPrice;
                 continue;
             }
 
@@ -98,8 +100,8 @@ class WebkulHelper
         $totalSellerCommission = $this
             ->getTotalSellerCommission($splitData['sellers']);
         $totalMarketplaceCommission = $splitData['marketplace']['totalCommission'];
-        $remainder = $totalPaid - ($totalSellerCommission
-                + $totalMarketplaceCommission);
+        $remainder = $totalPaid - $totalPaidProductWithoutSeller
+            - ($totalSellerCommission + $totalMarketplaceCommission);
 
         if ($remainder == 0) {
             return $splitData;
@@ -112,6 +114,7 @@ class WebkulHelper
         );
 
         $splitData['marketplace']['totalCommission'] += $shippingAmount;
+        $splitData['marketplace']['totalCommission'] += $totalPaidProductWithoutSeller;
         return $splitData;
     }
 
