@@ -13,10 +13,9 @@
 namespace Pagarme\Pagarme\Helper\Marketplace;
 
 use Magento\Framework\App\ObjectManager;
-use Magento\Framework\Exception\NotFoundException;
-use Pagarme\Core\Kernel\Services\LogService;
 use Pagarme\Core\Kernel\Services\MoneyService;
 use Pagarme\Core\Marketplace\Services\RecipientService;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Webkul\Marketplace\Helper\Payment;
 use Webkul\Marketplace\Helper\Data;
 
@@ -26,6 +25,7 @@ class WebkulHelper
     private $salesPerPartnerCollectionFactory;
     private $objectManager;
     private $recipientService;
+    private $moduleConfig;
 
     private $enabled = false;
 
@@ -43,6 +43,7 @@ class WebkulHelper
 
         $this->recipientService = new RecipientService();
         $this->moneyService = new MoneyService();
+        $this->moduleConfig = Magento2CoreSetup::getModuleConfiguration();
     }
 
     public function isEnabled()
@@ -59,8 +60,9 @@ class WebkulHelper
     {
         $orderItems = $platformOrder->getAllItems();
         $splitData['sellers'] = [];
-        $totalPaid = (int) $this->moneyService->floatToCents(
-            $platformOrder->getGrandTotal()
+        $splitData['marketplace']['totalCommission'] = 0;
+        $totalPaid = $this->moneyService->floatToCents(
+            $platformOrder->getSubTotal()
         );
 
         foreach ($orderItems as $item) {
@@ -69,39 +71,51 @@ class WebkulHelper
             $sellerId = $sellerDetail['id'];
             $itemPrice = $item->getRowTotal();
 
-            if(!$sellerId) {
+            if (!$sellerId) {
                 continue;
             }
 
-            $sellerDataForProduct = $this->getSellerData(
+            $dataForProduct = $this->getProductData(
                 $itemPrice,
                 $sellerDetail
             );
 
             if (array_key_exists($sellerId, $splitData['sellers'])) {
-                $splitData['sellers'][$sellerId]['sellerCommission']
-                    += $sellerDataForProduct['sellerCommission'];
+                $splitData['sellers'][$sellerId]['commission']
+                    += $dataForProduct['sellerCommission'];
                 continue;
             }
 
-            $splitData['sellers'][$sellerId] = $sellerDataForProduct;
+            $splitData['sellers'][$sellerId] = $dataForProduct;
+            $splitData['marketplace']['totalCommission']
+                += $dataForProduct['marketplaceCommission'];
         }
 
-        if(empty($splitData['sellers'])) {
+        if (empty($splitData['sellers'])) {
             return null;
         }
 
-        $marketplaceCommission
-            = $totalPaid - $this->getTotalSellerCommission(
-                $splitData['sellers']
-            );
-        $splitData['marketplace']
-            = ['marketplaceCommission' => $marketplaceCommission];
+        $totalSellerCommission = $this
+            ->getTotalSellerCommission($splitData['sellers']);
+        $totalMarketplaceCommission = $splitData['marketplace']['totalCommission'];
+        $remainder = $totalPaid - ($totalSellerCommission
+                + $totalMarketplaceCommission);
 
+        if ($remainder == 0) {
+            return $splitData;
+        }
+
+        $splitData = $this->setRemainderToResponsible($remainder, $splitData);
+
+        $shippingAmount = $this->moneyService->floatToCents(
+            $platformOrder->getShippingAmount()
+        );
+
+        $splitData['marketplace']['totalCommission'] += $shippingAmount;
         return $splitData;
     }
 
-    private function getSellerData($itemPrice, $sellerDetail)
+    private function getProductData($itemPrice, $sellerDetail)
     {
         $percentageCommission = $sellerDetail['commission'] / 100;
         $marketplaceCommission = $itemPrice * $percentageCommission;
@@ -118,19 +132,76 @@ class WebkulHelper
         }
 
         return [
+            "marketplaceCommission" => $this->moneyService->floatToCents(
+                $marketplaceCommission
+            ),
             "sellerCommission" => $sellerCommission,
             "pagarmeId" => $recipient['pagarme_id']
         ];
     }
 
-    private function getTotalSellerCommission(array $splitData)
+    private function getTotalSellerCommission(array $sellersData)
     {
         $totalCommission = 0;
 
-        foreach ($splitData as $commission) {
+        foreach ($sellersData as $commission) {
             $totalCommission += $commission['sellerCommission'];
         }
 
         return $totalCommission;
+    }
+
+    private function setRemainderToResponsible($remainder, $splitData)
+    {
+        $responsible = $this->moduleConfig
+            ->getMarketplaceConfig()
+            ->getResponsibilityForReceivingSplitRemainder();
+
+        if ($responsible == 'marketplace') {
+            $splitData['marketplace']['totalCommission'] += $remainder;
+            return $splitData;
+        }
+
+        if ($responsible == 'marketplace_sellers') {
+            return $this->divideRemainderBetweenMarkeplaceAndSellers(
+                $remainder,
+                $splitData
+            );
+        }
+
+        if ($responsible == 'sellers') {
+            return $this->divideRemainderBetweenSellers(
+                $remainder,
+                $splitData
+            );
+        }
+    }
+
+    private function divideRemainderBetweenMarkeplaceAndSellers(
+        $remainder,
+        $splitData
+    ) {
+        $splitData['marketplace']['totalCommission'] += 1;
+        $remainder -= 1;
+        if ($remainder == 0) {
+            return $splitData;
+        }
+
+        return $this->divideRemainderBetweenSellers($remainder, $splitData);
+    }
+
+    private function divideRemainderBetweenSellers(
+        $remainder,
+        $splitData
+    ) {
+        foreach ($splitData['sellers'] as $key => $seller) {
+            $seller['sellerCommission'] += 1;
+            $remainder -= 1;
+
+            if ($remainder == 0) {
+                $splitData['sellers'][$key] = $seller;
+                return $splitData;
+            }
+        }
     }
 }
