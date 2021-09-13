@@ -82,7 +82,7 @@ class WebkulHelper
 
             if (array_key_exists($sellerId, $splitData['sellers'])) {
                 $splitData['sellers'][$sellerId]['commission']
-                    += $dataForProduct['sellerCommission'];
+                    += $dataForProduct['commission'];
                 continue;
             }
 
@@ -135,7 +135,7 @@ class WebkulHelper
             "marketplaceCommission" => $this->moneyService->floatToCents(
                 $marketplaceCommission
             ),
-            "sellerCommission" => $sellerCommission,
+            "commission" => $sellerCommission,
             "pagarmeId" => $recipient['pagarme_id']
         ];
     }
@@ -145,7 +145,7 @@ class WebkulHelper
         $totalCommission = 0;
 
         foreach ($sellersData as $commission) {
-            $totalCommission += $commission['sellerCommission'];
+            $totalCommission += $commission['commission'];
         }
 
         return $totalCommission;
@@ -195,13 +195,20 @@ class WebkulHelper
         $splitData
     ) {
         foreach ($splitData['sellers'] as $key => $seller) {
-            $seller['sellerCommission'] += 1;
+            $seller['commission'] += 1;
             $remainder -= 1;
 
             if ($remainder == 0) {
                 $splitData['sellers'][$key] = $seller;
                 return $splitData;
             }
+
+            $splitData['sellers'][$key] = $seller;
         }
+
+        return $this->divideRemainderBetweenMarkeplaceAndSellers(
+            $remainder,
+            $splitData
+        );
     }
 }
