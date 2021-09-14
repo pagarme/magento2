@@ -13,6 +13,7 @@
 namespace Pagarme\Pagarme\Helper\Marketplace;
 
 use Magento\Framework\App\ObjectManager;
+use Magento\Framework\Exception\NotFoundException;
 use Pagarme\Core\Kernel\Services\MoneyService;
 use Pagarme\Core\Marketplace\Services\RecipientService;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
