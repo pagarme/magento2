@@ -381,7 +381,7 @@
 "Search","Pesquisar"
 "Create","Criar"
 "Use an existing Pagar.me recipient","Usar um recipiente existente na Pagar.me"
-"Internal ID","ID interno"
+"External ID","ID externo"
 "Document type","Tipo do documento"
 "Document number","Número do documento"
 "Banking information","Informações de banco"
@@ -407,3 +407,4 @@
 "Save","Salvar"
 "Back","Voltar"
 "Can't create recipient. Please review the information and try again.","Não foi possível criar o recebedor. Por favor revise os dados e tente novamente."
+"Payment could not be made. Please contact the store administrator.", "Não foi possível realizar o pagamento. Por favor contate o administrador da loja."
