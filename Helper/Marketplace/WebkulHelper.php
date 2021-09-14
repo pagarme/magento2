@@ -61,9 +61,7 @@ class WebkulHelper
         $orderItems = $platformOrder->getAllItems();
         $splitData['sellers'] = [];
         $splitData['marketplace']['totalCommission'] = 0;
-        $totalPaid = $this->moneyService->floatToCents(
-            $platformOrder->getSubTotal()
-        );
+        $totalPaid = $platformOrder->getSubTotal();
         $totalPaidProductWithoutSeller = 0;
 
         foreach ($orderItems as $item) {
@@ -97,11 +95,22 @@ class WebkulHelper
             return null;
         }
 
-        $totalSellerCommission = $this
-            ->getTotalSellerCommission($splitData['sellers']);
-        $totalMarketplaceCommission = $splitData['marketplace']['totalCommission'];
+        $totalSellerCommission = $this->moneyService->floatToCents(
+            $this->getTotalSellerCommission($splitData['sellers'])
+        );
+
+        $totalMarketplaceCommission = $this->moneyService->floatToCents(
+            $splitData['marketplace']['totalCommission']
+        );
+
+        $totalPaid = $this->moneyService->floatToCents($totalPaid);
+
+        $totalPaidProductWithoutSeller = $this->moneyService->floatToCents(
+            $totalPaidProductWithoutSeller
+        );
+
         $remainder = $totalPaid - $totalPaidProductWithoutSeller
-            - ($totalSellerCommission + $totalMarketplaceCommission);
+            - $totalSellerCommission - $totalMarketplaceCommission;
 
         if ($remainder == 0) {
             return $splitData;
@@ -114,7 +123,9 @@ class WebkulHelper
         );
 
         $splitData['marketplace']['totalCommission'] += $shippingAmount;
-        $splitData['marketplace']['totalCommission'] += $totalPaidProductWithoutSeller;
+        $splitData['marketplace']['totalCommission']
+            += $totalPaidProductWithoutSeller;
+
         return $splitData;
     }
 
@@ -122,9 +133,8 @@ class WebkulHelper
     {
         $percentageCommission = $sellerDetail['commission'] / 100;
         $marketplaceCommission = $itemPrice * $percentageCommission;
-        $sellerCommission = $this->moneyService->floatToCents(
-            $itemPrice - $marketplaceCommission
-        );
+        $sellerCommission = $itemPrice - $marketplaceCommission;
+
 
         try {
             $recipient = $this->recipientService->findRecipient(
@@ -135,9 +145,7 @@ class WebkulHelper
         }
 
         return [
-            "marketplaceCommission" => $this->moneyService->floatToCents(
-                $marketplaceCommission
-            ),
+            "marketplaceCommission" => $marketplaceCommission,
             "commission" => $sellerCommission,
             "pagarmeId" => $recipient['pagarme_id']
         ];
@@ -156,6 +164,16 @@ class WebkulHelper
 
     private function setRemainderToResponsible($remainder, $splitData)
     {
+        foreach ($splitData['sellers'] as $key => $data) {
+            $splitData['sellers'][$key]['commission']
+                = $this->moneyService->floatToCents($data['commission']);
+        }
+
+        $splitData['marketplace']['totalCommission']
+            = $this->moneyService->floatToCents(
+                $splitData['marketplace']['totalCommission']
+        );
+
         $responsible = $this->moduleConfig
             ->getMarketplaceConfig()
             ->getResponsibilityForReceivingSplitRemainder();
