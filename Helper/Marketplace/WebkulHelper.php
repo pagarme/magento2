@@ -110,7 +110,7 @@ class WebkulHelper
             $totalPaidProductWithoutSeller
         );
 
-        $remainder = $this->setRemainder(
+        $remainder = $this->calculateRemainder(
             $splitData,
             $totalPaidProductWithoutSeller,
             $totalPaid
@@ -234,7 +234,7 @@ class WebkulHelper
         return $splitData;
     }
 
-    private function setRemainder(
+    private function calculateRemainder(
         $splitData,
         $totalPaidProductWithoutSeller,
         $totalPaid
