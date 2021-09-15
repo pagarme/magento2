@@ -110,7 +110,7 @@ jobs:
             docker exec -it newimage sh -c "cd /var/www/html && rm composer.lock"
             docker exec -it newimage sh -c "cd /var/www/html && composer selfupdate 1.10.22"
             docker exec -it newimage sh -c "cd /var/www/html && composer require pagarme/pagarme-magento2-module:dev-develop -vvv"
-            docker exec -it newimage sh -c "cd /var/www/html && composer remove pagarme/ecommerce-module-core"
+            docker exec -it newimage sh -c "cd /var/www/html/vendor/pagarme/pagarme-magento2-module && composer remove pagarme/ecommerce-module-core"
             docker exec -it newimage sh -c "cd /var/www/html && composer require pagarme/ecommerce-module-core:dev-develop -vvv"
             docker exec -it newimage sh -c "cd /var/www/html && composer update -vvv"
             docker exec -it newimage sh -c "cd /var/www/ && find html/ -type d -exec chmod 775 {} \;"
