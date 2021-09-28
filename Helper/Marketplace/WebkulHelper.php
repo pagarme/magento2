@@ -105,7 +105,8 @@ class WebkulHelper
             return null;
         }
 
-        $splitData = $this->floatToCentsSellersData($splitData);
+        $splitData = $this->floatToCentsSplitData($splitData);
+
         $totalPaidProductWithoutSeller = $this->moneyService->floatToCents(
             $totalPaidProductWithoutSeller
         );
@@ -148,9 +149,7 @@ class WebkulHelper
         }
 
         return [
-            "marketplaceCommission" => $this->moneyService->floatToCents(
-                $marketplaceCommission
-            ),
+            "marketplaceCommission" => $marketplaceCommission,
             "commission" => $sellerCommission,
             "pagarmeId" => $recipient['pagarme_id']
         ];
@@ -225,11 +224,16 @@ class WebkulHelper
         );
     }
 
-    private function floatToCentsSellersData($splitData) {
+    private function floatToCentsSplitData($splitData) {
         foreach ($splitData['sellers'] as $key => $data) {
             $splitData['sellers'][$key]['commission']
                 = $this->moneyService->floatToCents($data['commission']);
         }
+
+        $splitData['marketplace']['totalCommission']
+            = $this->moneyService->floatToCents(
+                $splitData['marketplace']['totalCommission']
+        );
 
         return $splitData;
     }
