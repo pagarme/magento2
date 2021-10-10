@@ -5,12 +5,12 @@
     <policies>
         <policy id="connect-src">
             <values>
-                <value id="mundipagg-api" type="host">https://api.mundipagg.com</value>
+                <value id="mundipagg-api" type="host">api.mundipagg.com</value>
             </values>
         </policy>
         <policy id="img-src">
             <values>
-                <value id="mundipagg-img" type="host">https://cdn.mundipagg.com</value>
+                <value id="mundipagg-img" type="host">cdn.mundipagg.com</value>
             </values>
         </policy>
     </policies>
