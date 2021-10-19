@@ -27,7 +27,6 @@
     <preference for="Pagarme\Pagarme\Api\WebhookManagementInterface" type="Pagarme\Pagarme\Model\WebhookManagement"/>
     <preference for="Pagarme\Pagarme\Api\InstallmentsByBrandManagementInterface" type="Pagarme\Pagarme\Model\InstallmentsByBrandManagement"/>
     <preference for="Pagarme\Pagarme\Api\InstallmentsByBrandAndAmountManagementInterface" type="Pagarme\Pagarme\Model\InstallmentsByBrandAndAmountManagement"/>
-    <preference for="Pagarme\Pagarme\Api\CustomerCreateManagementInterface" type="Pagarme\Pagarme\Model\CustomerCreateManagement" />
 
     <preference for="Pagarme\Pagarme\Api\MaintenanceInterface"
                 type="Pagarme\Pagarme\Model\Maintenance"/>
