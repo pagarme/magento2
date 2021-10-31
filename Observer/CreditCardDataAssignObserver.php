@@ -57,42 +57,19 @@ class CreditCardDataAssignObserver extends AbstractDataAssignObserver
         $info->setAdditionalInformation('cc_saved_card', '0');
 
         if ($additionalData->getCcSavedCard()) {
-            $cardId = $additionalData->getCcSavedCard();
-            $card = $this->cardsRepository->getById($cardId);
-
-            $info->setAdditionalInformation('cc_saved_card', $additionalData->getCcSavedCard());
-            $info->setAdditionalInformation('cc_type', $card->getBrand());
-            $info->setAdditionalInformation(
-                'cc_last_4',
-                (string) $card->getLastFourNumbers()
-            );
-            $info->addData([
-                'cc_type' => $card->getBrand(),
-                'cc_owner' => $card->getCardHolderName(),
-                'cc_last_4' => (string) $card->getLastFourNumbers()
-            ]);
-        }else{
-            $info->setAdditionalInformation('cc_saved_card', $additionalData->getCcSavedCard());
-            $info->setAdditionalInformation('cc_type', $additionalData->getCcType());
-            $info->setAdditionalInformation('cc_last_4', substr($additionalData->getCcLast4(),-4));
-            $info->setAdditionalInformation('cc_token_credit_card', $additionalData->getCcTokenCreditCard());
-            $info->addData([
-                'cc_type' => $additionalData->getCcType(),
-                'cc_owner' => $additionalData->getCcOwner(),
-                'cc_last_4' => $additionalData->getCcLast4(),
-                'cc_exp_month' => $additionalData->getCcExpMonth(),
-                'cc_exp_year' => $additionalData->getCcExpYear(),
-                'cc_token_credit_card' => $additionalData->getCcTokenCreditCard(),
-            ]);
-
-            $info->setAdditionalInformation('cc_savecard', $additionalData->getCcSavecard());
+            $this->fillSavedCardData($additionalData, $info);
+        } else {
+            $this->fillNotSavedCardData($info, $additionalData);
         }
 
         $this->setMultiBuyer($info, $additionalData);
         $info->setAdditionalInformation('cc_installments', 1);
 
         if ($additionalData->getCcInstallments()) {
-            $info->setAdditionalInformation('cc_installments', (int) $additionalData->getCcInstallments());
+            $info->setAdditionalInformation(
+                'cc_installments',
+                (int) $additionalData->getCcInstallments()
+            );
         }
 
         return $this;
@@ -119,5 +96,49 @@ class CreditCardDataAssignObserver extends AbstractDataAssignObserver
             $info->setAdditionalInformation('cc_buyer_home_phone', $additionalData->getCcBuyerHomePhone());
             $info->setAdditionalInformation('cc_buyer_mobile_phone', $additionalData->getCcBuyerMobilePhone());
         }
+    }
+
+    /**
+     * @param DataObject $additionalData
+     * @param $info
+     */
+    private function fillSavedCardData(DataObject $additionalData, $info)
+    {
+        $cardId = $additionalData->getCcSavedCard();
+        $card = $this->cardsRepository->getById($cardId);
+
+        $info->setAdditionalInformation('cc_saved_card', $additionalData->getCcSavedCard());
+        $info->setAdditionalInformation('cc_type', $card->getBrand());
+        $info->setAdditionalInformation(
+            'cc_last_4',
+            (string)$card->getLastFourNumbers()
+        );
+        $info->addData([
+            'cc_type' => $card->getBrand(),
+            'cc_owner' => $card->getCardHolderName(),
+            'cc_last_4' => (string)$card->getLastFourNumbers()
+        ]);
+    }
+
+    /**
+     * @param $info
+     * @param DataObject $additionalData
+     */
+    private function fillNotSavedCardData($info, DataObject $additionalData)
+    {
+        $info->setAdditionalInformation('cc_saved_card', $additionalData->getCcSavedCard());
+        $info->setAdditionalInformation('cc_type', $additionalData->getCcType());
+        $info->setAdditionalInformation('cc_last_4', substr($additionalData->getCcLast4(), -4));
+        $info->setAdditionalInformation('cc_token_credit_card', $additionalData->getCcTokenCreditCard());
+        $info->addData([
+            'cc_type' => $additionalData->getCcType(),
+            'cc_owner' => $additionalData->getCcOwner(),
+            'cc_last_4' => $additionalData->getCcLast4(),
+            'cc_exp_month' => $additionalData->getCcExpMonth(),
+            'cc_exp_year' => $additionalData->getCcExpYear(),
+            'cc_token_credit_card' => $additionalData->getCcTokenCreditCard(),
+        ]);
+
+        $info->setAdditionalInformation('cc_savecard', $additionalData->getCcSavecard());
     }
 }
