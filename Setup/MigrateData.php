@@ -9,9 +9,9 @@ $objectManager = $bootstrap->getObjectManager();
 $resourceConnection = $objectManager->get('Magento\Framework\App\ResourceConnection');
 $connection = $resourceConnection->getConnection();
 
-$writer = new \Zend\Log\Writer\Stream(BP . '/var/log/Pagarme_Migration.log');
-$logger = new \Zend\Log\Logger();
-$logger->addWriter($writer);
+
+$logger = new \Monolog\Logger('migration');
+$logger->pushHandler(new \Monolog\Handler\StreamHandler(BP .'/var/log/Pagarme_Migration.log'));
 
 if (isset($argv)) {
     $m = new MigrateData($connection, $logger, $argv);
@@ -48,7 +48,7 @@ class MigrateData
             $this->logger->info("\n" . $logs);
             echo "\n" . $logs . "\n";
             if (isset($exception)) {
-                $this->logger->err($exception . "\n\n");
+                $this->logger->error($exception . "\n\n");
                 $line = $this->fillLineWithDashes('-');
                 $errorMessage = $exception->getMessage();
                 echo "\n" . $line . "\n\e[0;31;43mERROR:\e[0m " . $errorMessage . "\n" . $line . "\n";
