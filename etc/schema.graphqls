@@ -1,0 +1,8 @@
+type PlaceOrderOutput {
+    pagarme_pix: PagarmePix
+}
+
+type PagarmePix {
+    qr_code: String,
+    qr_code_url: String
+}
