@@ -57,7 +57,7 @@ class HubIntegration extends Field
     private function getBaseIntegrateUrl()
     {
         $baseUrl = sprintf(
-            'https://hub.pagar.me/apps/%s/authorize',
+            'https://stghub.mundipagg.com/apps/%s/authorize',
             $this->getPublicAppKey()
         );
 
@@ -74,7 +74,7 @@ class HubIntegration extends Field
     private function getBaseViewIntegrationUrl($installId)
     {
         return sprintf(
-            'https://hub.pagar.me/apps/%s/edit/%s',
+            'https://stghub.mundipagg.com/apps/%s/edit/%s',
             $this->getPublicAppKey(),
             $installId
         );

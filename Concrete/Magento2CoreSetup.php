@@ -99,7 +99,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
 
     static protected function getPlatformHubAppPublicAppKey()
     {
-        return '3470c63b-a233-4be0-9d2a-9ff56e349556';
+        return '1e4679e9-5886-4d74-8e10-bbca1732b1fb';
     }
 
     public function _getDashboardLanguage()
