@@ -4,12 +4,21 @@ namespace Pagarme\Pagarme\Controller\Adminhtml\Recipients;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
+use Magento\Framework\Registry;
 use Magento\Framework\View\Result\PageFactory;
 use Magento\Framework\Controller\ResultInterface;
+use Pagarme\Core\Marketplace\Repositories\RecipientRepository;
+use Pagarme\Core\Marketplace\Services\RecipientService;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 
 class Create extends Action
 {
     protected $resultPageFactory = false;
+
+    /**
+     * @var Registry
+     */
+    protected $coreRegistry;
 
     /**
      * Constructor
@@ -19,10 +28,14 @@ class Create extends Action
      */
     public function __construct(
         Context $context,
+        Registry $coreRegistry,
         PageFactory $resultPageFactory
     ) {
-        parent::__construct($context);
         $this->resultPageFactory = $resultPageFactory;
+        $this->coreRegistry = $coreRegistry;
+        Magento2CoreSetup::bootstrap();
+
+        parent::__construct($context);
     }
 
     /**
@@ -32,8 +45,27 @@ class Create extends Action
      */
     public function execute()
     {
+        $recipientId = (int)$this->getRequest()->getParam('id');
+        if ($recipientId) {
+
+            $recipientService = new RecipientService();
+            $recipientData = $recipientService->findById($recipientId);
+            $recipientData = $recipientService->attachBankAccount($recipientData);
+            $recipientData = $recipientService->attachTransferSettings($recipientData);
+
+            if (!$recipientData || !$recipientData->getId()) {
+                $this->messageManager->addError(__('Recipient not exist.'));
+                $this->_redirect('pagarme_pagarme/recipients/index');
+                return;
+            }
+
+            $this->coreRegistry->register('recipient_data', json_encode($recipientData));
+        }
         $resultPage = $this->resultPageFactory->create();
-        $resultPage->getConfig()->getTitle()->prepend(__("Create Recipient"));
+
+        $title = $recipientId ? __('Edit Recipient') : __('Create Recipient');
+
+        $resultPage->getConfig()->getTitle()->prepend($title);
 
         return $resultPage;
     }

@@ -19,6 +19,12 @@
     <input id="url-post" value="<?php echo $block->getBaseUrl() . 'rest/V1/pagarme/marketplace/recipient/formData'; ?>" type="hidden" />
 
     <input type="hidden" name="form_key" value="<?php echo $block->getFormKey() ?>" />
+    <?php if (!empty($block->getId())): ?>
+    <!--  Id  -->
+    <input type="hidden" name="form[id]" value="<?php echo $block->getId() ?>">
+    <!--  RecipientId  -->
+    <input type="hidden" name="form[recipient_id]" value="<?php echo $block->getRecipientId() ?>">
+    <?php endif; ?>
 
     <div id="page:main-container" class="page-columns">
         <div class="admin__old">
@@ -27,7 +33,7 @@
                     <div class="fieldset-wrapper">
                         <div class="admin__fieldset-wrapper-content _hide">
                             <fieldset class="admin__fieldset">
-                                <div class="admin__field">
+                                <div class="admin__field" id="select-seller">
                                     <label class="admin__field-label">
                                         <span><?php echo __('Select webkul seller') ?></span>
                                     </label>
@@ -94,7 +100,6 @@
                                         <input type="text" class="recipient-form-inputs" name="form[email]" id="email-recipient" required>
                                     </div>
                                 </div>
-
                                 <div class="admin__field _required">
                                     <label class="admin__field-label">
                                         <span><?php echo __('Document type') ?></span>
@@ -254,3 +259,5 @@
         </div>
     </div>
 </form>
+<!-- Edit Recipient-->
+<input id="edit-recipient" name='form[edit_recipient_id]' value='<?php echo $block->getEditRecipient(); ?>' type="hidden"/>
