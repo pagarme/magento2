@@ -199,8 +199,6 @@ require([
         fillTransferDayValuesByTransferInterval();
         $("#transfer-day").val(recipient.transferDay);
 
-
-
         hideElementByMenuSelectValue(
             $("#transfer-enabled").val(),
             "transfer-day-div"
