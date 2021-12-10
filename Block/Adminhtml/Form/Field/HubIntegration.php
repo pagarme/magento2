@@ -99,5 +99,4 @@ class HubIntegration extends Field
 
         return $installToken->getValue();
     }
-
 }
