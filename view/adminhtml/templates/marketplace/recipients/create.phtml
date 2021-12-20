@@ -19,12 +19,6 @@
     <input id="url-post" value="<?php echo $block->getBaseUrl() . 'rest/V1/pagarme/marketplace/recipient/formData'; ?>" type="hidden" />
 
     <input type="hidden" name="form_key" value="<?php echo $block->getFormKey() ?>" />
-    <?php if (!empty($block->getId())): ?>
-    <!--  Id  -->
-    <input type="hidden" name="form[id]" value="<?php echo $block->getId() ?>">
-    <!--  RecipientId  -->
-    <input type="hidden" name="form[recipient_id]" value="<?php echo $block->getRecipientId() ?>">
-    <?php endif; ?>
 
     <div id="page:main-container" class="page-columns">
         <div class="admin__old">

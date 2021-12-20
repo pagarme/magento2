@@ -49,17 +49,17 @@ class Create extends Action
         if ($recipientId) {
 
             $recipientService = new RecipientService();
-            $recipientData = $recipientService->findById($recipientId);
-            $recipientData = $recipientService->attachBankAccount($recipientData);
-            $recipientData = $recipientService->attachTransferSettings($recipientData);
+            $recipient = $recipientService->findById($recipientId);
+            $recipient = $recipientService->attachBankAccount($recipient);
+            $recipient = $recipientService->attachTransferSettings($recipient);
 
-            if (!$recipientData || !$recipientData->getId()) {
+            if (!$recipient || !$recipient->getId()) {
                 $this->messageManager->addError(__('Recipient not exist.'));
                 $this->_redirect('pagarme_pagarme/recipients/index');
                 return;
             }
 
-            $this->coreRegistry->register('recipient_data', json_encode($recipientData));
+            $this->coreRegistry->register('recipient_data', json_encode($recipient));
         }
         $resultPage = $this->resultPageFactory->create();
 
