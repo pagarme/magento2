@@ -45,29 +45,10 @@ class Recipient extends Template
 
     public function getEditRecipient()
     {
-        $recipientData = $this->coreRegistry->registry('recipient_data');
-        if (empty($recipientData)) {
+        if (empty($this->recipient)) {
             return "";
         }
 
-        return $recipientData;
-    }
-
-    public function getId()
-    {
-        if (is_null($this->recipient)) {
-            return '';
-        }
-
-        return $this->recipient->id;
-    }
-
-    public function getRecipientId()
-    {
-        if (is_null($this->recipient)) {
-            return '';
-        }
-
-        return $this->recipient->recipientId;
+        return json_encode($this->recipient);
     }
 }
