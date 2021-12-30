@@ -107,7 +107,8 @@ jobs:
           command: |
             docker exec -it newimage sh -c "cd /var/www/html/vendor/magento && wget https://github.com/magento/inventory/archive/refs/tags/1.1.7.zip"
             docker exec -it newimage sh -c "cd /var/www/html/vendor/magento && unzip 1.1.7.zip"
-            docker exec -it newimage sh -c "cd /var/www/html/vendor/magento && mv inventory-1.1.7/ module-inventory/"
+            docker exec -it newimage sh -c "cd /var/www/html/vendor/magento && mv inventory-1.1.7/* ."
+            docker exec -it newimage sh -c "cd /var/www/html/vendor/magento && rm 1.1.7.zip"
       - run:
           name: Activate and setup Plugin
           command: |
