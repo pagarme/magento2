@@ -103,6 +103,12 @@ jobs:
              docker cp /app/wait-for-mysql.sh newimage:app/tmp/
              docker cp /app/magento2_module_install.sql newimage:app/tmp/
       - run:
+          name: Install Magento2 Inventory Module
+          command: |
+            docker exec -it newimage sh -c "cd /var/www/html/vendor/magento && wget https://github.com/magento/inventory/archive/refs/tags/1.1.7.zip"
+            docker exec -it newimage sh -c "cd /var/www/html/vendor/magento && unzip 1.1.7.zip"
+            docker exec -it newimage sh -c "cd /var/www/html/vendor/magento && mv inventory-1.1.7/ module-inventory/"
+      - run:
           name: Activate and setup Plugin
           command: |
             docker exec -it newimage sh -c "ls"
@@ -236,13 +242,7 @@ workflows:
           requires:
             - build
             - sonar
-          filters:
-              branches:
-                  only: develop
       - deploy_staging:
           context: acceptance
           requires:
             - publish
-          filters:
-              branches:
-                  only: develop
