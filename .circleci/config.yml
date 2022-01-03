@@ -102,6 +102,19 @@ jobs:
              docker exec -it newimage sh -c "mkdir /app/tmp"
              docker cp /app/wait-for-mysql.sh newimage:app/tmp/
              docker cp /app/magento2_module_install.sql newimage:app/tmp/
+      - run:
+          name: Temporary Workaround for new magento 2 image
+          command: |
+             docker exec -it newimage sh -c "sed -i 's/bind-address/#bind-address/g' /etc/mysql/mysql.conf.d/mysqld.cnf"
+             docker exec -it newimage sh -c "service mysql restart"
+             docker exec -it newimage sh -c "mysqladmin create magento2"
+             docker exec -it newimage sh -c "php -f /app/bin/magento setup:install --base-url=http://127.0.0.1 --backend-frontname=admin --db-host=localhost --db-name=magento2 --db-user=root --admin-firstname=Admin --admin-lastname=Test --admin-email=admin-magento2@mailinator.com --admin-user=admin --admin-password=Mudar123 --language=pt_BR --currency=BRL --timezone=America/Sao_Paulo --use-rewrites=1 --disable-modules=Magento_ConfigurableSampleData,Magento_GroupedProductSampleData,Magento_DownloadableSampleData,Magento_BundleSampleData,Magento_SalesSampleData,Magento_ProductLinksSampleData,Magento_CatalogRuleSampleData,Magento_SalesRuleSampleData,Magento_CatalogRuleSampleData,Magento_CatalogSampleData"
+             docker exec -it newimage sh -c "php /app/bin/magento setup:upgrade"
+             docker exec -it newimage sh -c "php /app/bin/magento setup:di:compile"
+             docker exec -it newimage sh -c "php /app/bin/magento indexer:reindex"
+             docker exec -it newimage sh -c "php /app/bin/magento cache:flush"
+             docker exec -it newimage sh -c "chmod -R 755 /var/www/html  && chmod -R 777 /var/www/html/var /var/www/html/pub /var/www/html/magento2-sample-data-2.3.1 && chmod u+x /app/bin/magento"
+             docker exec -it newimage sh -c "chmod 777 -R /app"
       #- run:
       #    name: Install Magento2 Inventory Module
       #    command: |
