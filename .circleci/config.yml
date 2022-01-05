@@ -103,6 +103,13 @@ jobs:
              docker cp /app/wait-for-mysql.sh newimage:app/tmp/
              docker cp /app/magento2_module_install.sql newimage:app/tmp/
       - run:
+          name: Install Magento2 Inventory Module
+          command: |
+             docker exec -it newimage sh -c "cd /var/www/html/vendor/magento && wget https://github.com/magento/inventory/archive/refs/tags/1.1.7.zip"
+             docker exec -it newimage sh -c "cd /var/www/html/vendor/magento && unzip 1.1.7.zip"
+             docker exec -it newimage sh -c "cd /var/www/html/vendor/magento && mv inventory-1.1.7/* ."
+             docker exec -it newimage sh -c "cd /var/www/html/vendor/magento && rm 1.1.7.zip"
+      - run:
           name: Temporary Workaround for new magento 2 image
           command: |
              docker exec -it newimage sh -c "sed -i 's/bind-address/#bind-address/g' /etc/mysql/mysql.conf.d/mysqld.cnf"
@@ -115,13 +122,6 @@ jobs:
              docker exec -it newimage sh -c "php /app/bin/magento cache:flush"
              docker exec -it newimage sh -c "chmod -R 755 /var/www/html  && chmod -R 777 /var/www/html/var /var/www/html/pub /var/www/html/magento2-sample-data-2.3.1 && chmod u+x /app/bin/magento"
              docker exec -it newimage sh -c "chmod 777 -R /app"
-      #- run:
-      #    name: Install Magento2 Inventory Module
-      #    command: |
-      #      docker exec -it newimage sh -c "cd /var/www/html/vendor/magento && wget https://github.com/magento/inventory/archive/refs/tags/1.1.7.zip"
-      #      docker exec -it newimage sh -c "cd /var/www/html/vendor/magento && unzip 1.1.7.zip"
-      #      docker exec -it newimage sh -c "cd /var/www/html/vendor/magento && mv inventory-1.1.7/* ."
-      #      docker exec -it newimage sh -c "cd /var/www/html/vendor/magento && rm 1.1.7.zip"
       - run:
           name: Activate and setup Plugin
           command: |
