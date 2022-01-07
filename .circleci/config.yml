@@ -105,10 +105,10 @@ jobs:
       - run:
           name: Install Magento2 Inventory Module
           command: |
-             docker exec -it newimage sh -c "cd /var/www/html/vendor/magento && wget https://github.com/magento/inventory/archive/refs/tags/1.1.7.zip"
-             docker exec -it newimage sh -c "cd /var/www/html/vendor/magento && unzip 1.1.7.zip"
-             docker exec -it newimage sh -c "cd /var/www/html/vendor/magento && mv inventory-1.1.7/* ."
-             docker exec -it newimage sh -c "cd /var/www/html/vendor/magento && rm 1.1.7.zip"
+             docker exec -it newimage sh -c "cd /app/app/code/Magento && wget https://github.com/magento/inventory/archive/refs/tags/1.1.7.zip"
+             docker exec -it newimage sh -c "cd /app/app/code/Magento && unzip 1.1.7.zip"
+             docker exec -it newimage sh -c "cd /app/app/code/Magento && mv inventory-1.1.7/* ."
+             docker exec -it newimage sh -c "cd /app/app/code/Magento && rm 1.1.7.zip"
       - run:
           name: Temporary Workaround for new magento 2 image
           command: |
@@ -172,6 +172,31 @@ jobs:
             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento cache:flush"
             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento setup:di:compile"
             docker exec -it newimage sh -c "cd /var/www/ && chown -R www-data:www-data html/"
+      - run:
+          name: Install Webkul Marketplace module
+          command: |
+             docker exec -it newimage sh -c "cd /app && wget ${WEBKUL_MARKETPLACE_URL}"
+
+             docker exec -it newimage sh -c "cd /app && unzip magento2_marketplace_62.zip"
+             docker exec -it newimage sh -c "cd /app && cp -rf src/app/* ./app/"
+             docker exec -it newimage sh -c "cd /app && rm -rf src/"
+
+             docker exec -it newimage sh -c "cd /app && unzip 'Patch For Magento-2.3.0.zip'"
+             docker exec -it newimage sh -c "cd /app/'Patch For Magento-2.3.0' && cp -rf src/app/* /app/app/"
+             docker exec -it newimage sh -c "cd /app && rm -rf ./'Patch For Magento-2.3.0'"
+
+             docker exec -it newimage sh -c "cd /app && unzip 'Patch For Magento-2.3.0-2.3.3.zip'"
+             docker exec -it newimage sh -c "cd /app/'Patch For Magento-2.3.0-2.3.3' && cp -rf src/app/* /app/app/"
+             docker exec -it newimage sh -c "cd /app && rm -rf ./'Patch For Magento-2.3.0-2.3.3.zip'"
+
+             docker exec -it newimage sh -c "cd /app && unzip 'Patch For Magento-2.3.4.zip'"
+             docker exec -it newimage sh -c "cd /app/'Patch For Magento-2.3.4' && cp -rf src/app/* /app/app/"
+             docker exec -it newimage sh -c "cd /app && rm -rf ./'Patch For Magento-2.3.4.zip'"
+
+             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento setup:upgrade"
+             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento setup:di:compile"
+
+             docker exec -it newimage sh -c "chmod -R 755 /var/www/html  && chmod -R 777 /var/www/html/var /var/www/html/pub /var/www/html/magento2-sample-data-2.3.1 && chmod u+x /app/bin/magento"
       - run:
           name: Clear useless files
           command: |
