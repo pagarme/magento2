@@ -248,7 +248,13 @@ workflows:
           requires:
             - build
             - sonar
+          filters:
+              branches:
+                  only: develop
       - deploy_staging:
           context: acceptance
           requires:
             - publish
+          filters:
+              branches:
+                  only: develop
