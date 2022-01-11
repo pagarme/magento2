@@ -38,10 +38,12 @@ class DiscountCyclesObserver implements ObserverInterface
      */
     public function execute(Observer $observer)
     {
-        $this->applyDiscountCycles(
-            $observer->getProduct()->getOptions()[0]->getValues(),
-            ProductHelper::getDiscountAmount($observer->getProduct())
-        );
+        if (isset($observer->getProduct()->getOptions()[0])) {
+            $this->applyDiscountCycles(
+                $observer->getProduct()->getOptions()[0]->getValues(),
+                ProductHelper::getDiscountAmount($observer->getProduct())
+            );
+        }
     }
 
     /**
