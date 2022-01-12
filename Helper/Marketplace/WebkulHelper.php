@@ -61,14 +61,24 @@ class WebkulHelper
         $this->enabled = $enabled;
     }
 
-    public function getSplitDataFromOrder($platformOrder)
+    public function getTotalPaid($corePlatformOrderDecorator){
+        $payments = $corePlatformOrderDecorator->getPaymentMethodCollection();
+        $totalPaid = 0;
+
+        foreach ($payments as $payment){
+            $totalPaid += $payment->getAmount();
+        }
+
+        return $totalPaid;
+    }
+
+    public function getSplitDataFromOrder($corePlatformOrderDecorator)
     {
+        $platformOrder = $corePlatformOrderDecorator->getPlatformOrder();
         $orderItems = $platformOrder->getAllItems();
         $splitData['sellers'] = [];
         $splitData['marketplace']['totalCommission'] = 0;
-        $totalPaid = $this->moneyService->floatToCents(
-            $platformOrder->getSubTotal()
-        );
+        $totalPaid = $this->getTotalPaid($corePlatformOrderDecorator);
         $totalPaidProductWithoutSeller = 0;
 
         foreach ($orderItems as $item) {
