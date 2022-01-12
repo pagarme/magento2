@@ -1257,7 +1257,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             return null;
         }
 
-        $splitDataFromOrder = $webkullHelper->getSplitDataFromOrder($this->platformOrder);
+        $splitDataFromOrder = $webkullHelper->getSplitDataFromOrder($this);
 
         if (!$splitDataFromOrder) {
             return null;
