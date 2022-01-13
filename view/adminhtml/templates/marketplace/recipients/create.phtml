@@ -27,7 +27,7 @@
                     <div class="fieldset-wrapper">
                         <div class="admin__fieldset-wrapper-content _hide">
                             <fieldset class="admin__fieldset">
-                                <div class="admin__field">
+                                <div class="admin__field" id="select-seller">
                                     <label class="admin__field-label">
                                         <span><?php echo __('Select webkul seller') ?></span>
                                     </label>
@@ -94,7 +94,6 @@
                                         <input type="text" class="recipient-form-inputs" name="form[email]" id="email-recipient" required>
                                     </div>
                                 </div>
-
                                 <div class="admin__field _required">
                                     <label class="admin__field-label">
                                         <span><?php echo __('Document type') ?></span>
@@ -254,3 +253,5 @@
         </div>
     </div>
 </form>
+<!-- Edit Recipient-->
+<input id="edit-recipient" name='form[edit_recipient_id]' value='<?php echo $block->getEditRecipient(); ?>' type="hidden"/>

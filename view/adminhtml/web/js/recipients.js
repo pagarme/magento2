@@ -55,6 +55,12 @@ require([
         fillFieldsWithSameValue();
 
         changeDocumentSizeByDocumentType();
+
+        var editRecipient = $("#edit-recipient").val();
+        if (editRecipient.length > 0) {
+            $("#select-seller").hide();
+            loadRecipient(JSON.parse(editRecipient));
+        }
     });
 
     function formSubmit(e) {
@@ -71,6 +77,8 @@ require([
 
         var dataSerialize = jQuery(this).serialize();
         var url =  $("#url-post").val();
+
+        console.log(JSON.stringify(dataSerialize));
 
         jQuery.ajax({
             method: "POST",
@@ -119,7 +127,7 @@ require([
             $("#holder-document").val($(this).val());
         });
 
-        $("#holder-document").prop("readonly", true);
+        $("#holder-document").attr("disabled", true);
         $("#holder-document-type").attr("disabled", true);
     }
 
@@ -168,6 +176,43 @@ require([
         if (documentType == "cnpj") {
             $("#document").attr("maxlength", 14);
         }
+    }
+
+    function loadRecipient(recipient) {
+        $("#external-id").val(recipient.externalId);
+        $("#recipient-name").val(recipient.name);
+        $("#email-recipient").val(recipient.email);
+        $("#document-type").val(recipient.documentType);
+        $("#type").val(recipient.documentType);
+        $("#holder-name").val(recipient.holderName);
+        $("#holder-document-type").val(recipient.documentType);
+        $("#holder-document").val(recipient.holderDocument);
+        $("#bank").val(recipient.bank);
+        $("#branch-number").val(recipient.branchNumber);
+        $("#branch-check-digit").val(recipient.branchCheckDigit);
+        $("#account-number").val(recipient.accountNumber);
+        $("#account-check-digit").val(recipient.accountCheckDigit);
+        $("#account-type").val(recipient.accountType);
+        $("#document").val(recipient.document);
+        $("#transfer-enabled").val(recipient.transferEnabled ? 1 : 0);
+        $("#transfer-interval").val(recipient.transferInterval);
+        fillTransferDayValuesByTransferInterval();
+        $("#transfer-day").val(recipient.transferDay);
+
+        hideElementByMenuSelectValue(
+            $("#transfer-enabled").val(),
+            "transfer-day-div"
+        );
+
+        hideElementByMenuSelectValue(
+            $("#transfer-enabled").val(),
+            "transfer-interval-div"
+        );
+
+        $("#document").attr("disabled", true);
+        $("#document-type").attr("disabled", true);
+
+        fillTypeValueByDocumentType();
     }
 
 });
