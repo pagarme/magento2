@@ -101,7 +101,7 @@ class WebkulHelper
         return $splitData;
     }
 
-    public function getTotalPaid($corePlatformOrderDecorator)
+    private function getTotalPaid($corePlatformOrderDecorator)
     {
         $payments = $corePlatformOrderDecorator->getPaymentMethodCollection();
         $totalPaid = 0;
@@ -115,6 +115,10 @@ class WebkulHelper
 
     public function getSplitDataFromOrder($corePlatformOrderDecorator)
     {
+        if (!$this->isEnabled()) {
+            return false;
+        }
+
         $platformOrder = $corePlatformOrderDecorator->getPlatformOrder();
         $orderItems = $platformOrder->getAllItems();
         $splitData['sellers'] = [];
