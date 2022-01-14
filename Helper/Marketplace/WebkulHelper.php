@@ -53,11 +53,49 @@ class WebkulHelper
         $this->enabled = $enabled;
     }
 
-    public function getTotalPaid($corePlatformOrderDecorator){
+    private function getProductData($itemPrice, $sellerDetail)
+    {
+        $percentageCommission = $sellerDetail['commission'] / 100;
+        $marketplaceCommission = $itemPrice * $percentageCommission;
+        $sellerCommission = $itemPrice - $marketplaceCommission;
+
+
+        try {
+            $recipient = $this->recipientService->findRecipient(
+                $sellerDetail['id']
+            );
+        } catch (\Exception $exception) {
+            throw new NotFoundException(__($exception->getMessage()));
+        }
+
+        return [
+            "marketplaceCommission" => $marketplaceCommission,
+            "commission" => $sellerCommission,
+            "pagarmeId" => $recipient['pagarme_id']
+        ];
+    }
+
+    private function floatToCentsSplitData($splitData)
+    {
+        foreach ($splitData['sellers'] as $key => $data) {
+            $splitData['sellers'][$key]['commission']
+                = $this->moneyService->floatToCents($data['commission']);
+        }
+
+        $splitData['marketplace']['totalCommission']
+            = $this->moneyService->floatToCents(
+                $splitData['marketplace']['totalCommission']
+            );
+
+        return $splitData;
+    }
+
+    public function getTotalPaid($corePlatformOrderDecorator)
+    {
         $payments = $corePlatformOrderDecorator->getPaymentMethodCollection();
         $totalPaid = 0;
 
-        foreach ($payments as $payment){
+        foreach ($payments as $payment) {
             $totalPaid += $payment->getAmount();
         }
 
