@@ -12,7 +12,8 @@
 
 namespace Pagarme\Pagarme\Helper\Marketplace;
 
-use Magento\Framework\App\ObjectManager;
+use Magento\Framework\App\ObjectManager as MagentoObjectManager;
+use Magento\Framework\Module\Manager as MagentoModuleManager;
 use Magento\Framework\Exception\NotFoundException;
 use Pagarme\Core\Kernel\Services\MoneyService;
 use Pagarme\Core\Marketplace\Services\RecipientService;
@@ -21,6 +22,7 @@ use Webkul\Marketplace\Helper\Payment;
 
 class WebkulHelper
 {
+    private const MODULE_MARKETPLACE_NAME = 'Webkul_Marketplace';
     private $objectManager;
     private $recipientService;
 
@@ -29,11 +31,12 @@ class WebkulHelper
     public function __construct()
     {
 
-        $this->objectManager = ObjectManager::getInstance();
+        $this->objectManager = MagentoObjectManager::getInstance();
 
-        if (!class_exists('Webkul\\Marketplace\\Helper\\Payment')) {
-            return null;
+        if ($this->isWebkulMarketplaceModuleDisabled()) {
+            return;
         }
+
         $this->splitRemainderHander = new SplitRemainderHandler();
         $this->mpPaymentHelper = $this->objectManager->get(Payment::class);
 
@@ -41,6 +44,14 @@ class WebkulHelper
 
         $this->recipientService = new RecipientService();
         $this->moneyService = new MoneyService();
+    }
+
+    private function isWebkulMarketplaceModuleDisabled()
+    {
+        $moduleManager = $moduleManager =
+            $this->objectManager->get(MagentoModuleManager::class);
+
+        return !$moduleManager->isEnabled(self::MODULE_MARKETPLACE_NAME);
     }
 
     public function isEnabled()
