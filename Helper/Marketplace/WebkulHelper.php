@@ -23,6 +23,7 @@ use Webkul\Marketplace\Helper\Payment;
 class WebkulHelper
 {
     private const MODULE_MARKETPLACE_NAME = 'Webkul_Marketplace';
+    private $webkulPaymentHelper;
     private $objectManager;
     private $recipientService;
 
@@ -38,7 +39,7 @@ class WebkulHelper
         }
 
         $this->splitRemainderHander = new SplitRemainderHandler();
-        $this->mpPaymentHelper = $this->objectManager->get(Payment::class);
+        $this->webkulPaymentHelper = $this->objectManager->get(Payment::class);
 
         $this->setEnabled(true);
 
@@ -128,7 +129,7 @@ class WebkulHelper
 
         foreach ($orderItems as $item) {
             $productId = $item->getProductId();
-            $sellerDetail = $this->mpPaymentHelper->getSellerDetail($productId);
+            $sellerDetail = $this->webkulPaymentHelper->getSellerDetail($productId);
             $sellerId = $sellerDetail['id'];
             $itemPrice = $item->getRowTotal();
 
