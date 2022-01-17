@@ -94,21 +94,6 @@ class WebkulHelper
         ];
     }
 
-    private function floatToCentsSplitData($splitData)
-    {
-        foreach ($splitData['sellers'] as $key => $data) {
-            $splitData['sellers'][$key]['commission']
-                = $this->moneyService->floatToCents($data['commission']);
-        }
-
-        $splitData['marketplace']['totalCommission']
-            = $this->moneyService->floatToCents(
-                $splitData['marketplace']['totalCommission']
-            );
-
-        return $splitData;
-    }
-
     private function getTotalPaid($corePlatformOrderDecorator)
     {
         $payments = $corePlatformOrderDecorator->getPaymentMethodCollection();
@@ -162,6 +147,15 @@ class WebkulHelper
         }
 
         return $this->splitRemainderHander->setRemainderToResponsible($remainder, $splitData);
+    }
+
+    private function handleExtrasAndDiscounts($platformOrderDecorator, &$splitData)
+    {
+        $items = $platformOrderDecorator->getPlatformOrder()->getAllItems();
+        $totalPaid = $this->getTotalPaid($platformOrderDecorator);
+        $productTotal = $this->getProductTotal($items);
+
+        $extraOrDiscountTotal = $productTotal - $totalPaid;
     }
 
     public function getSplitDataFromOrder($corePlatformOrderDecorator)

@@ -2,22 +2,10 @@
 
 namespace Pagarme\Pagarme\Helper\Marketplace;
 
-use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use Pagarme\Pagarme\Helper\Marketplace\MarketplaceHandler;
 
-class SplitRemainderHandler
+class SplitRemainderHandler extends MarketplaceHandler
 {
-
-    const ONLY_MARKETPLACE = 'marketplace';
-    const MARKETPLACE_SELLERS = 'marketplace_sellers';
-    const ONLY_SELLERS = 'sellers';
-
-    private $moduleConfig;
-
-    public function __construct()
-    {
-        $this->moduleConfig = Magento2CoreSetup::getModuleConfiguration();
-    }
-
     private function divideRemainderBetweenMarkeplaceAndSellers(
         $remainder,
         $splitData
