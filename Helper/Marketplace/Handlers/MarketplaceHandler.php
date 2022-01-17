@@ -1,13 +1,11 @@
 <?php
 
-namespace Pagarme\Pagarme\Helper\Marketplace;
+namespace Pagarme\Pagarme\Helper\Marketplace\Handlers;
 
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
-use Pagarme\Pagarme\Helper\Marketplace\SplitRuleTrait;
 
 abstract class MarketplaceHandler
 {
-    use SplitRuleTrait;
     const ONLY_MARKETPLACE = 'marketplace';
     const MARKETPLACE_SELLERS = 'marketplace_sellers';
     const ONLY_SELLERS = 'sellers';
@@ -18,4 +16,7 @@ abstract class MarketplaceHandler
     {
         $this->moduleConfig = Magento2CoreSetup::getModuleConfiguration();
     }
+
+    abstract protected function divideBetweenMarkeplaceAndSellers($amount, $arrayData);
+    abstract protected function divideBetweenSellers($amount, $arrayData);
 }

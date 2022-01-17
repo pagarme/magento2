@@ -1,11 +1,13 @@
 <?php
 
-namespace Pagarme\Pagarme\Helper\Marketplace;
+namespace Pagarme\Pagarme\Helper\Marketplace\Handlers;
 
-use Pagarme\Pagarme\Helper\Marketplace\MarketplaceHandler;
+use Pagarme\Pagarme\Helper\Marketplace\Handlers\MarketplaceHandler;
+use Pagarme\Pagarme\Helper\Marketplace\Traits\SplitExtrasAndDiscoutsRuleTrait;
 
 final class ExtrasAndDiscountsHandler extends MarketplaceHandler
 {
+    use SplitExtrasAndDiscoutsRuleTrait;
     public function calculateExtraOrDiscount($totalPaid, $productTotal)
     {
         return $totalPaid - $productTotal;

@@ -1,11 +1,13 @@
 <?php
 
-namespace Pagarme\Pagarme\Helper\Marketplace;
+namespace Pagarme\Pagarme\Helper\Marketplace\Handlers;
 
-use Pagarme\Pagarme\Helper\Marketplace\MarketplaceHandler;
+use Pagarme\Pagarme\Helper\Marketplace\Handlers\MarketplaceHandler;
+use Pagarme\Pagarme\Helper\Marketplace\Traits\SplitRemainderRuleTrait;
 
 final class SplitRemainderHandler extends MarketplaceHandler
 {
+    use SplitRemainderRuleTrait;
     private function getTotalSellerCommission(array $sellersData)
     {
         $totalCommission = 0;
