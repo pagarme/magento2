@@ -173,7 +173,7 @@ class WebkulHelper
             return $splitData;
         }
 
-        return $this->extraOrDiscountTotal->setExtraOrDiscountToResponsible(
+        return $this->extrasAndDiscountsHandler->setExtraOrDiscountToResponsible(
             $extraOrDiscountTotal,
             $splitData
         );
