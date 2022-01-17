@@ -1,8 +1,8 @@
 <?php
 
-namespace Pagarme\Pagarme\Helper\Marketplace;
+namespace Pagarme\Pagarme\Helper\Marketplace\Traits;
 
-trait SplitRuleTrait
+trait SplitRemainderRuleTrait
 {
     protected function divideBetweenMarkeplaceAndSellers(
         $amount,
