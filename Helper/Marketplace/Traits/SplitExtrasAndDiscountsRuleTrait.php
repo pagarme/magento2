@@ -2,40 +2,48 @@
 
 namespace Pagarme\Pagarme\Helper\Marketplace\Traits;
 
+use Pagarme\Pagarme\Helper\Marketplace\Handlers\SplitRemainderHandler;
+
 trait SplitExtrasAndDiscoutsRuleTrait
 {
+    private $splitRemainderHandler = null;
+
+    private function getSplitRemainder()
+    {
+        if (!$this->splitRemainderHandler) {
+            $this->splitRemainderHandler = new SplitRemainderHandler();
+        }
+
+        return $this->splitRemainderHandler;
+    }
+
+    private function getQuantityOfSellers($splitData)
+    {
+        $quantityOfSellers = 0;
+
+        foreach ($splitData['sellers'] as $key => $seller) {
+            $quantityOfSellers++;
+        }
+
+        return $quantityOfSellers;
+    }
+
     protected function divideBetweenMarkeplaceAndSellers(
         $amount,
         $splitData
     ) {
-        $splitData['marketplace']['totalCommission'] += 1;
-        $amount -= 1;
-        if ($amount == 0) {
-            return $splitData;
-        }
-
-        return $this->divideBetweenSellers($amount, $splitData);
+        return $splitData;
     }
 
     protected function divideBetweenSellers(
         $amount,
         $splitData
     ) {
-        foreach ($splitData['sellers'] as $key => $seller) {
-            $seller['commission'] += 1;
-            $amount -= 1;
+        return $splitData;
+    }
 
-            if ($amount == 0) {
-                $splitData['sellers'][$key] = $seller;
-                return $splitData;
-            }
-
-            $splitData['sellers'][$key] = $seller;
-        }
-
-        return $this->divideBetweenMarkeplaceAndSellers(
-            $amount,
-            $splitData
-        );
+    protected function divideBetweenNonZeroCommission($amount, $splitData)
+    {
+        return $splitData;
     }
 }
