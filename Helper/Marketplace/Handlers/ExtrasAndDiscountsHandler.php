@@ -8,6 +8,17 @@ use Pagarme\Pagarme\Helper\Marketplace\Traits\SplitExtrasAndDiscoutsRuleTrait;
 final class ExtrasAndDiscountsHandler extends MarketplaceHandler
 {
     use SplitExtrasAndDiscoutsRuleTrait;
+
+    private function handleMarketplaceNegativeCommission(&$splitData, $negativeAmount)
+    {
+        $splitData['marketplace']['totalCommission'] = 0;
+
+        return $this->divideBetweenNonZeroCommission(
+            -$negativeAmount,
+            $splitData
+        );
+    }
+
     public function calculateExtraOrDiscount($totalPaid, $productTotal)
     {
         return $totalPaid - $productTotal;
@@ -21,6 +32,16 @@ final class ExtrasAndDiscountsHandler extends MarketplaceHandler
 
         switch ($responsible) {
             case self::ONLY_MARKETPLACE:
+                $marketPlaceCommission = $splitData['marketplace']['totalCommission'];
+                $marketPlaceAndExtraOrDiscount = $marketPlaceCommission + $extraOrDiscount;
+
+                if ($marketPlaceAndExtraOrDiscount < 0) {
+                    return $this->handleMarketplaceNegativeCommission(
+                        $splitData,
+                        $marketPlaceAndExtraOrDiscount
+                    );
+                }
+
                 $splitData['marketplace']['totalCommission'] += $extraOrDiscount;
                 return $splitData;
             case self::ONLY_SELLERS:
