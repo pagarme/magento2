@@ -17,9 +17,10 @@ use Magento\Framework\Module\Manager as MagentoModuleManager;
 use Magento\Framework\Exception\NotFoundException;
 use Pagarme\Core\Kernel\Services\MoneyService;
 use Pagarme\Core\Marketplace\Services\RecipientService;
-use Pagarme\Pagarme\Helper\Marketplace\SplitRemainderHandler;
-use Pagarme\Pagarme\Helper\Marketplace\ExtrasAndDiscountsHandler;
+use Pagarme\Pagarme\Helper\Marketplace\Handlers\SplitRemainderHandler;
+use Pagarme\Pagarme\Helper\Marketplace\Handlers\ExtrasAndDiscountsHandler;
 use Webkul\Marketplace\Helper\Payment;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 
 class WebkulHelper
 {
@@ -35,7 +36,6 @@ class WebkulHelper
 
     public function __construct()
     {
-
         $moduleConfig = Magento2CoreSetup::getModuleConfiguration();
         $this->objectManager = MagentoObjectManager::getInstance();
 
@@ -123,7 +123,9 @@ class WebkulHelper
     {
         $total = 0;
         foreach ($items as $item) {
-            $total += $item->getRowTotal();
+            $total += $this->moneyService->floatToCents(
+                $item->getRowTotal()
+            );
         }
 
         return $total;

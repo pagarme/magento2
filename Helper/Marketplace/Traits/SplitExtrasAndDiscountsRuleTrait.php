@@ -4,7 +4,7 @@ namespace Pagarme\Pagarme\Helper\Marketplace\Traits;
 
 use Pagarme\Pagarme\Helper\Marketplace\Handlers\SplitRemainderHandler;
 
-trait SplitExtrasAndDiscoutsRuleTrait
+trait SplitExtrasAndDiscountsRuleTrait
 {
     private $splitRemainderHandler = null;
     protected $totalPaid;
