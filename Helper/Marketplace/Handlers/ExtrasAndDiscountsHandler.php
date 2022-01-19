@@ -3,11 +3,11 @@
 namespace Pagarme\Pagarme\Helper\Marketplace\Handlers;
 
 use Pagarme\Pagarme\Helper\Marketplace\Handlers\MarketplaceHandler;
-use Pagarme\Pagarme\Helper\Marketplace\Traits\SplitExtrasAndDiscoutsRuleTrait;
+use Pagarme\Pagarme\Helper\Marketplace\Traits\SplitExtrasAndDiscountsRuleTrait;
 
 final class ExtrasAndDiscountsHandler extends MarketplaceHandler
 {
-    use SplitExtrasAndDiscoutsRuleTrait;
+    use SplitExtrasAndDiscountsRuleTrait;
 
     private function handleMarketplaceNegativeCommission(&$splitData, $negativeAmount)
     {

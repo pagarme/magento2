@@ -17,6 +17,6 @@ abstract class MarketplaceHandler
         $this->moduleConfig = Magento2CoreSetup::getModuleConfiguration();
     }
 
-    abstract protected function divideBetweenMarkeplaceAndSellers($amount, $arrayData);
-    abstract protected function divideBetweenSellers($amount, $arrayData);
+    abstract protected function divideBetweenMarkeplaceAndSellers($amount, &$arrayData);
+    abstract protected function divideBetweenSellers($amount, &$arrayData);
 }
