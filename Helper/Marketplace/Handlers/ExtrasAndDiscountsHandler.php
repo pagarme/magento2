@@ -21,6 +21,9 @@ final class ExtrasAndDiscountsHandler extends MarketplaceHandler
 
     public function calculateExtraOrDiscount($totalPaid, $productTotal)
     {
+        $this->totalPaid = $totalPaid;
+        $this->productTotal = $productTotal;
+
         return $totalPaid - $productTotal;
     }
 
