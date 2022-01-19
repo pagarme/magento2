@@ -6,7 +6,7 @@ trait SplitRemainderRuleTrait
 {
     protected function divideBetweenMarkeplaceAndSellers(
         $amount,
-        $splitData
+        &$splitData
     ) {
         $splitData['marketplace']['totalCommission'] += 1;
         $amount -= 1;
@@ -19,7 +19,7 @@ trait SplitRemainderRuleTrait
 
     protected function divideBetweenSellers(
         $amount,
-        $splitData
+        &$splitData
     ) {
         foreach ($splitData['sellers'] as $key => $seller) {
             $seller['commission'] += 1;
