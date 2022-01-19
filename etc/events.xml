@@ -60,4 +60,10 @@
         <observer name="update_product_plan"
                   instance="Pagarme\Pagarme\Observer\UpdateProductPlanObserver" />
     </event>
+
+    <event name="catalog_controller_product_view">
+        <observer name="update_product_cycle_value"
+                  instance="Pagarme\Pagarme\Observer\DiscountCyclesObserver" />
+    </event>
+    
 </config>

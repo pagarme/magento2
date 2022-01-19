@@ -11,8 +11,8 @@
 
 namespace Pagarme\Pagarme\Block\Payment\Info;
 
+use Magento\Framework\DataObject;
 use Magento\Payment\Block\Info\Cc;
-
 use Pagarme\Core\Kernel\Aggregates\Charge;
 use Pagarme\Core\Kernel\Repositories\OrderRepository;
 use Pagarme\Core\Kernel\Services\OrderService;

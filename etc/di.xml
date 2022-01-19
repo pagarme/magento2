@@ -27,7 +27,6 @@
     <preference for="Pagarme\Pagarme\Api\WebhookManagementInterface" type="Pagarme\Pagarme\Model\WebhookManagement"/>
     <preference for="Pagarme\Pagarme\Api\InstallmentsByBrandManagementInterface" type="Pagarme\Pagarme\Model\InstallmentsByBrandManagement"/>
     <preference for="Pagarme\Pagarme\Api\InstallmentsByBrandAndAmountManagementInterface" type="Pagarme\Pagarme\Model\InstallmentsByBrandAndAmountManagement"/>
-    <preference for="Pagarme\Pagarme\Api\CustomerCreateManagementInterface" type="Pagarme\Pagarme\Model\CustomerCreateManagement" />
 
     <preference for="Pagarme\Pagarme\Api\MaintenanceInterface"
                 type="Pagarme\Pagarme\Model\Maintenance"/>
@@ -636,6 +635,10 @@
         <plugin name="Pagarme_Pagarme_change_template" type="Pagarme\Pagarme\Plugin\Princing\Render\FinalPricePlugin" />
     </type>
 
+    <type name="\Magento\Checkout\Block\Cart\Item\Renderer">
+        <plugin name="Pagarme_Pagarme_change_template_cycles" type="Pagarme\Pagarme\Plugin\Princing\Render\ProductPriceCyclesPlugin" />
+    </type>
+    
     <!-- Recurrence -->
 
     <preference for="Pagarme\Core\Recurrence\Interfaces\RepetitionInterface" type="Pagarme\Core\Recurrence\Aggregates\Repetition" />
