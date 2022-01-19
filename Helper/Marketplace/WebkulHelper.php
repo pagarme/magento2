@@ -36,7 +36,16 @@ class WebkulHelper
     public function __construct()
     {
 
+        $moduleConfig = Magento2CoreSetup::getModuleConfiguration();
         $this->objectManager = MagentoObjectManager::getInstance();
+
+        $marketplaceEnabled = $moduleConfig
+            ->getMarketplaceConfig()
+            ->isEnabled();
+
+        if (!$marketplaceEnabled) {
+            return;
+        }
 
         if ($this->isWebkulMarketplaceModuleDisabled()) {
             return;
