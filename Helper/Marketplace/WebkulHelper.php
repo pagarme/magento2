@@ -201,12 +201,15 @@ class WebkulHelper
         $splitData['sellers'] = [];
         $splitData['marketplace']['totalCommission'] = 0;
         $totalPaidProductWithoutSeller = 0;
+        $productTotal = 0;
 
         foreach ($orderItems as $item) {
             $productId = $item->getProductId();
             $itemPrice = $this->moneyService->floatToCents(
                 $item->getRowTotal()
             );
+
+            $productTotal += $itemPrice;
 
             $sellerAndCommisions = $this->getSellerAndCommissions(
                 $itemPrice,
@@ -231,17 +234,15 @@ class WebkulHelper
         $splitData['marketplace']['totalCommission']
             += $totalPaidProductWithoutSeller;
 
-        $splitData = $this->handleExtrasAndDiscounts(
-            $corePlatformOrderDecorator,
-            $splitData
-        );
-
-        $totalPaid = $this->getTotalPaid($corePlatformOrderDecorator);
-
-        return $this->handleRemainder(
+        $splitData = $this->handleRemainder(
             $splitData,
             $totalPaidProductWithoutSeller,
-            $totalPaid
+            $productTotal
+        );
+
+        return $this->handleExtrasAndDiscounts(
+            $corePlatformOrderDecorator,
+            $splitData
         );
     }
 }
