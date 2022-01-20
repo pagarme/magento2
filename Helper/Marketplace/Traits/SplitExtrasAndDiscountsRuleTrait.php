@@ -107,7 +107,7 @@ trait SplitExtrasAndDiscountsRuleTrait
 
         if ($amountTotal < $amount) {
             $remainder = $amount - $amountTotal;
-            $splitData = $this->splitRemainderHandler
+            $splitData = $this->getSplitRemainder()
                 ->setRemainderToResponsible($remainder, $splitData);
         }
 
@@ -129,7 +129,7 @@ trait SplitExtrasAndDiscountsRuleTrait
 
         if ($amountTotal < $amount) {
             $remainder = $amount - $amountTotal;
-            $splitData = $this->splitRemainderHandler
+            $splitData = $this->getSplitRemainder()
                 ->setRemainderToResponsible($remainder, $splitData);
         }
 
@@ -164,7 +164,7 @@ trait SplitExtrasAndDiscountsRuleTrait
 
         if ($amountTotal < $negativeAmount) {
             $remainder = $negativeAmount - $amountTotal;
-            $splitData = $this->splitRemainderHandler
+            $splitData = $this->getSplitRemainder()
                 ->setRemainderToResponsible($remainder, $splitData);
         }
 
