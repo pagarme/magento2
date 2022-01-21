@@ -21,7 +21,7 @@ trait SplitExtrasAndDiscountsRuleTrait
 
     private function getPercentageOfTotalPaidPerEntity($commission)
     {
-        return $commission / $this->totalPaid;
+        return $commission / $this->productTotal;
     }
 
     private function calculateAmountForMarketplace($splitData, $amount)
