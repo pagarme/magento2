@@ -616,7 +616,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
             'responsibilityForReceivingSplitRemainder'
             => 'responsibility_for_receiving_split_remainder',
             'responsibilityForReceivingExtrasAndDiscounts'
-            => 'responsibility_for_receiving_extras_discounts'
+            => 'responsibility_for_receiving_extras_and_discounts'
         ];
 
         $section = 'pagarme_pagarme/marketplace/';
