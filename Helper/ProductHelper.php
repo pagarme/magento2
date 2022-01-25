@@ -80,7 +80,7 @@ class ProductHelper
      */
     public static function extractValueFromTitle($title)
     {
-        return (float)preg_replace('/[^0-9,]/', '', $title);
+        return (float)preg_replace('/[^0-9,]/', '', ProductHelper::getStringBetween($title, '(', ')'));
     }
 
     /**
@@ -102,6 +102,22 @@ class ProductHelper
     {
         $amount = number_format($amount, 2, ',', '.');
         return $amount;
+    }
+
+    /**
+     * @param string $str
+     * @param string $starting_word
+     * @param string $ending_word
+     * @return string
+     */
+    public static function getStringBetween($str, $first_string, $second_string)
+    {
+        $arr = explode($first_string, $str);
+        if (isset($arr[1])) {
+            $arr = explode($second_string, $arr[1]);
+            return $arr[0];
+        }
+        return '';
     }
 
     /**
