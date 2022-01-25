@@ -177,7 +177,7 @@ jobs:
           command: |
              docker exec -it newimage sh -c "cd /app && wget ${WEBKUL_MARKETPLACE_URL}"
 
-             docker exec -it newimage sh -c "cd /app && unzip magento2_marketplace_62.zip"
+             docker exec -it newimage sh -c "cd /app && unzip magento2_marketplace_61.zip"
              docker exec -it newimage sh -c "cd /app && cp -rf src/app/* ./app/"
              docker exec -it newimage sh -c "cd /app && rm -rf src/"
 
