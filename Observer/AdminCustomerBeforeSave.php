@@ -51,7 +51,7 @@ class AdminCustomerBeforeSave implements ObserverInterface
             $customerService->updateCustomerAtPagarme($platformCustomer);
         } catch (\Exception $exception) {
             $log = new LogService('CustomerService');
-            $log->info($exception->getMessage());
+            $log->info($exception->getResponseBody());
 
             if ($exception->getCode() == 404) {
                 $log->info(
