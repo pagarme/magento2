@@ -84,8 +84,6 @@ class FinalPricePlugin
             ->load($productId);
 
         $currency = self::getLowestRecurrencePrice($subscriptionProduct, $product);
-        $discountAmount = ProductHelper::getDiscountAmount($product);
-        $currency['price'] = $currency['price'] - $discountAmount > 0 ? $currency['price'] - $discountAmount : $currency['price'];
         $currency['price'] = ProductHelper::applyMoneyFormat($currency['price']);
 
         return $currency;
@@ -109,10 +107,14 @@ class FinalPricePlugin
             }
 
             $price = $recurrencePrice / $repetition->getIntervalCount() / 100;
+            $discountAmount = ProductHelper::getDiscountAmount($product) / $repetition->getIntervalCount();
 
             if ($repetition->getInterval() == Repetition::INTERVAL_YEAR) {
                 $price = $recurrencePrice / (12 * $repetition->getIntervalCount());
+                $discountAmount = ProductHelper::getDiscountAmount($product) / (12 * $repetition->getIntervalCount());
             }
+
+            $price = $price - $discountAmount > 0 ? $price - $discountAmount : $price;
 
             $prices[$price] = [
                 'price' => $price,
