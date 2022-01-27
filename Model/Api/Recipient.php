@@ -24,7 +24,7 @@ class Recipient implements RecipientInterface
     /**
      * @return mixed
      */
-    public function saveFormData()
+    public function saveFormData(): string
     {
         $post = $this->request->getBodyParams();
         parse_str($post[0], $params);
@@ -54,7 +54,7 @@ class Recipient implements RecipientInterface
         ]);
     }
 
-    public function getFormattedForm($form)
+    public function getFormattedForm(array $form): array
     {
         if (isset($form['type'])) {
             $form['holder_type'] = $form['type'];
