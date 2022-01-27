@@ -54,7 +54,11 @@ final class SplitRemainderHandler extends MarketplaceHandler
             = $splitData['marketplace']['totalCommission'];
 
         $remainder = $totalPaid - $totalPaidProductWithoutSeller
-            - $totalSellerCommission - $totalMarketplaceCommission;
+            - intval($totalSellerCommission) - intval($totalMarketplaceCommission);
+
+        if ($remainder < 0) {
+            throw new \Exception("found negative remainder: $remainder");
+        }
 
         return $remainder;
     }
