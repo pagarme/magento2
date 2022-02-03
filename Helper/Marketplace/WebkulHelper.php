@@ -87,9 +87,16 @@ class WebkulHelper
             return [];
         }
 
-        $percentageCommission = $sellerDetail['commission'] / 100;
-        $marketplaceCommission = intval($itemPrice * $percentageCommission);
-        $sellerCommission = intval($itemPrice - $marketplaceCommission);
+        $marketplacePercentageCommission = $sellerDetail['commission'] / 100;
+        $sellerPercentageCommission = 1 - $marketplacePercentageCommission;
+
+        $marketplaceCommission = intval(
+            $itemPrice * $marketplacePercentageCommission
+        );
+
+        $sellerCommission = intval(
+            $itemPrice * $sellerPercentageCommission
+        );
 
         try {
             $recipient = $this->recipientService->findRecipient(
