@@ -31,9 +31,7 @@ trait SplitExtrasAndDiscountsRuleTrait
             $this->getPercentageOfTotalPaidPerEntity($marketplaceCommission);
 
         return intval(
-            floor(
-                $marketplaceExtrasAndDiscountsPercentage * $amount
-            )
+            $marketplaceExtrasAndDiscountsPercentage * $amount
         );
     }
 
@@ -43,9 +41,7 @@ trait SplitExtrasAndDiscountsRuleTrait
         $sellerExtrasAndDiscountsPercentage =
             $this->getPercentageOfTotalPaidPerEntity($sellerCommission);
 
-        return intval(
-            floor($sellerExtrasAndDiscountsPercentage * $amount)
-        );
+        return intval($sellerExtrasAndDiscountsPercentage * $amount);
     }
 
     private function getQuantityOfSellers($splitData)
@@ -57,6 +53,22 @@ trait SplitExtrasAndDiscountsRuleTrait
         }
 
         return $quantityOfSellers;
+    }
+
+    private function getRemainder(&$splitData, $extrasAndDiscounts, $extrasAndDiscountsTotal)
+    {
+        $splitData['marketplace']['totalCommission'] = intval(
+            $splitData['marketplace']['totalCommission']
+        );
+
+        $integerTotal = $splitData['marketplace']['totalCommission'];
+
+        foreach ($splitData['sellers'] as $key => &$seller) {
+            $seller['commission'] = intval($seller['commission']);
+            $integerTotal += $seller['commission'];
+        }
+
+        return ($this->productTotal + $extrasAndDiscounts) - $integerTotal;
     }
 
     private function verifyZeroCommission(&$splitData)
@@ -105,8 +117,9 @@ trait SplitExtrasAndDiscountsRuleTrait
             $amountTotal += $amountForSeller;
         }
 
-        if ($amountTotal < $amount) {
-            $remainder = $amount - $amountTotal;
+        $remainder = $this->getRemainder($splitData, $amountTotal, $amount);
+
+        if ($remainder) {
             $splitData = $this->getSplitRemainder()
                 ->setRemainderToResponsible($remainder, $splitData);
         }
@@ -127,8 +140,9 @@ trait SplitExtrasAndDiscountsRuleTrait
             $amountTotal += $amountForSeller;
         }
 
-        if ($amountTotal < $amount) {
-            $remainder = $amount - $amountTotal;
+        $remainder = $this->getRemainder($splitData, $amountTotal, $amount);
+
+        if ($remainder) {
             $splitData = $this->getSplitRemainder()
                 ->setRemainderToResponsible($remainder, $splitData);
         }
