@@ -17,8 +17,16 @@
 
     <!-- Url Post-->
     <input id="url-post" value="<?php echo $block->getBaseUrl() . 'rest/V1/pagarme/marketplace/recipient/formData'; ?>" type="hidden" />
+    <input id="url-search-recipient-id" value="<?php echo $block->getBaseUrl() . 'rest/V1/pagarme/marketplace/recipient/searchRecipient'; ?>" type="hidden" />
 
     <input type="hidden" name="form_key" value="<?php echo $block->getFormKey() ?>" />
+
+    <?php if (!empty($block->getRecipientId())): ?>
+        <!--  LocalId  -->
+        <input type="hidden" name="form[id]" value="<?php echo $block->getLocalId() ?>">
+        <!--  RecipientId  -->
+        <input type="hidden" name="form[recipient_id]" value="<?php echo $block->getRecipientId() ?>">
+    <?php endif; ?>
 
     <div id="page:main-container" class="page-columns">
         <div class="admin__old">
@@ -69,9 +77,9 @@
                                         <span><?php echo __('ID Pagar.me') ?></span>
                                     </label>
                                     <div class="admin__field-control">
-                                        <input type="text" class="recipient-form-inputs" name="form[pagarme_id]" id="">
-                                        <button type="button" class="action-basic" id="" data-action="">
-                                            <span><?php echo __('Search') ?></span>
+                                        <input type="text" class="recipient-form-inputs" name="form[pagarme_id]" id="recipient-id">
+                                        <button type="button" class="action-basic" id="search-recipient-id" data-action="">
+                                            <span><?php echo __('Get info') ?></span>
                                         </button>
                                         <p id="error-message" class="error-message"></p>
                                     </div>

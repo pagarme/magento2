@@ -10,4 +10,11 @@ interface RecipientInterface
      * @return mixed
      */
     public function saveFormData();
+
+    /**
+     *
+     * @param mixed $data
+     * @return string
+     */
+    public function searchRecipient(): string;
 }
