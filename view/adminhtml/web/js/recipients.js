@@ -61,7 +61,37 @@ require([
             $("#select-seller").hide();
             loadRecipient(JSON.parse(editRecipient));
         }
+
+        $("#search-recipient-id").on('click', searchRecipient);
     });
+
+    function searchRecipient(e) {
+        e.preventDefault();
+
+        var recipientId = $("#recipient-id").val();
+        var url =  $("#url-search-recipient-id").val();
+
+        console.log(JSON.stringify($("#recipient-id").serialize()));
+
+        fetch(url, {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({recipientId})
+        }).then(res => res.json())
+          .then(res => {
+              const response = JSON.parse(res);
+              if (response.code == 404) {
+                  alert(response.message);
+                  return;
+              }
+
+              loadRecipient(response.recipient);
+          });
+
+    }
 
     function formSubmit(e) {
         e.preventDefault();
@@ -77,8 +107,6 @@ require([
 
         var dataSerialize = jQuery(this).serialize();
         var url =  $("#url-post").val();
-
-        console.log(JSON.stringify(dataSerialize));
 
         jQuery.ajax({
             method: "POST",
@@ -182,22 +210,23 @@ require([
         $("#external-id").val(recipient.externalId);
         $("#recipient-name").val(recipient.name);
         $("#email-recipient").val(recipient.email);
-        $("#document-type").val(recipient.documentType);
-        $("#type").val(recipient.documentType);
-        $("#holder-name").val(recipient.holderName);
-        $("#holder-document-type").val(recipient.documentType);
-        $("#holder-document").val(recipient.holderDocument);
-        $("#bank").val(recipient.bank);
-        $("#branch-number").val(recipient.branchNumber);
-        $("#branch-check-digit").val(recipient.branchCheckDigit);
-        $("#account-number").val(recipient.accountNumber);
-        $("#account-check-digit").val(recipient.accountCheckDigit);
-        $("#account-type").val(recipient.accountType);
         $("#document").val(recipient.document);
-        $("#transfer-enabled").val(recipient.transferEnabled ? 1 : 0);
-        $("#transfer-interval").val(recipient.transferInterval);
+        $("#type").val(recipient.type);
+        // Bank Infos
+        $("#holder-name").val(recipient.default_bank_account.holder_name);
+        $("#holder-document-type").val(recipient.default_bank_account.holder_type == 'individual' ? 'cpf' : 'cnpj');
+        $("#holder-document").val(recipient.document);
+        $("#bank").val(recipient.default_bank_account.bank);
+        $("#branch-number").val(recipient.default_bank_account.branch_number);
+        $("#branch-check-digit").val(recipient.default_bank_account.branch_check_digit);
+        $("#account-number").val(recipient.default_bank_account.account_number);
+        $("#account-check-digit").val(recipient.default_bank_account.account_check_digit);
+        $("#account-type").val(recipient.default_bank_account.type);
+        // Transfer Infos
+        $("#transfer-enabled").val(recipient.transfer_settings.transfer_enabled ? 1 : 0);
+        $("#transfer-interval").val(recipient.transfer_settings.transfer_interval);
         fillTransferDayValuesByTransferInterval();
-        $("#transfer-day").val(recipient.transferDay);
+        $("#transfer-day").val(recipient.transfer_settings.transfer_day);
 
         hideElementByMenuSelectValue(
             $("#transfer-enabled").val(),
@@ -211,8 +240,6 @@ require([
 
         $("#document").attr("disabled", true);
         $("#document-type").attr("disabled", true);
-
-        fillTypeValueByDocumentType();
     }
 
 });

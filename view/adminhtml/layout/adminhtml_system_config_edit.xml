@@ -6,5 +6,6 @@
         <css src="Pagarme_Pagarme::css/hub_button.css" />
         <link src="Pagarme_Pagarme::js/integrationType.js"/>
         <link src="Pagarme_Pagarme::js/hubIntegration.js"/>
+        <link src="Pagarme_Pagarme::js/mainRecipient.js"/>
     </head>
 </page>
