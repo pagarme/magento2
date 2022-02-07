@@ -3,6 +3,7 @@
 namespace Pagarme\Pagarme\Model\Api;
 
 use Magento\Framework\Webapi\Rest\Request;
+use Pagarme\Core\Kernel\ValueObjects\Id\RecipientId;
 use Pagarme\Core\Marketplace\Services\RecipientService;
 use Pagarme\Core\Recurrence\Services\PlanService;
 use Pagarme\Pagarme\Api\RecipientInterface;
@@ -15,10 +16,16 @@ class Recipient implements RecipientInterface
      */
     protected $request;
 
+    /**
+     * @var RecipientService
+     */
+    protected $recipientService;
+
     public function __construct(Request $request)
     {
         Magento2CoreSetup::bootstrap();
         $this->request = $request;
+        $this->recipientService = new RecipientService();
     }
 
     /**
@@ -39,8 +46,7 @@ class Recipient implements RecipientInterface
         }
 
         try {
-            $recipientService = new RecipientService();
-            $recipient = $recipientService->saveFormRecipient($form);
+            $this->recipientService->saveFormRecipient($form);
         } catch (\Exception $exception) {
             return json_encode([
                 'code' => 400,
@@ -61,5 +67,28 @@ class Recipient implements RecipientInterface
         }
 
         return $form;
+    }
+
+    public function searchRecipient(): string
+    {
+        $post = $this->request->getBodyParams();
+
+        try {
+
+            $recipientId = new RecipientId($post['recipientId']);
+
+            $recipient = $this->recipientService->findByPagarmeId($recipientId);
+        } catch (\Exception $e) {
+            return json_encode([
+                'code' => 404,
+                'message' => 'Recipient not found'
+            ]);
+        }
+
+        return json_encode([
+            'code' => 200,
+            'message' => 'Recipient finded',
+            'recipient' => $recipient
+        ]);
     }
 }
