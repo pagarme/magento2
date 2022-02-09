@@ -55,7 +55,7 @@ trait SplitExtrasAndDiscountsRuleTrait
         return $quantityOfSellers;
     }
 
-    private function getRemainder(&$splitData, $extrasAndDiscounts, $extrasAndDiscountsTotal)
+    private function getRemainder(&$splitData, $extrasAndDiscountsTotal)
     {
         $splitData['marketplace']['totalCommission'] = intval(
             $splitData['marketplace']['totalCommission']
@@ -68,7 +68,7 @@ trait SplitExtrasAndDiscountsRuleTrait
             $integerTotal += $seller['commission'];
         }
 
-        return ($this->productTotal + $extrasAndDiscounts) - $integerTotal;
+        return ($this->productTotal + $extrasAndDiscountsTotal) - $integerTotal;
     }
 
     private function verifyZeroCommission(&$splitData)
@@ -107,17 +107,15 @@ trait SplitExtrasAndDiscountsRuleTrait
             $amount
         );
 
-        $amountTotal = $amountForMarketplace;
         $splitData['marketplace']['totalCommission'] += $amountForMarketplace;
 
         foreach ($splitData['sellers'] as $key => &$seller) {
             $amountForSeller = $this->calculateAmountForSeller($seller, $amount);
 
             $seller['commission'] += $amountForSeller;
-            $amountTotal += $amountForSeller;
         }
 
-        $remainder = $this->getRemainder($splitData, $amountTotal, $amount);
+        $remainder = $this->getRemainder($splitData, $amount);
 
         if ($remainder) {
             $splitData = $this->getSplitRemainder()
@@ -131,16 +129,13 @@ trait SplitExtrasAndDiscountsRuleTrait
         $amount,
         &$splitData
     ) {
-        $amountTotal = 0;
-
         foreach ($splitData['sellers'] as $key => &$seller) {
             $amountForSeller = $this->calculateAmountForSeller($seller, $amount);
 
             $seller['commission'] += $amountForSeller;
-            $amountTotal += $amountForSeller;
         }
 
-        $remainder = $this->getRemainder($splitData, $amountTotal, $amount);
+        $remainder = $this->getRemainder($splitData, $amount);
 
         if ($remainder) {
             $splitData = $this->getSplitRemainder()

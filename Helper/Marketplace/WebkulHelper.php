@@ -91,10 +91,10 @@ class WebkulHelper
         $sellerPercentageCommission = 1 - $marketplacePercentageCommission;
 
         $marketplaceCommission =
-            $itemPrice * $marketplacePercentageCommission;
+            (float) number_format($itemPrice * $marketplacePercentageCommission, 2, '.', '');
 
         $sellerCommission =
-            $itemPrice * $sellerPercentageCommission;
+            (float) number_format($itemPrice * $sellerPercentageCommission, 2, '.', '');
 
         try {
             $recipient = $this->recipientService->findRecipient(
