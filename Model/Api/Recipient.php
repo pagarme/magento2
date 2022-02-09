@@ -74,21 +74,32 @@ class Recipient implements RecipientInterface
         $post = $this->request->getBodyParams();
 
         try {
-
             $recipientId = new RecipientId($post['recipientId']);
+        } catch (\Exception $e) {
+            return json_encode([
+                'code' => 400,
+                'message' => 'Invalid Pagar.me ID'
+            ]);
+        }
 
+        try {
             $recipient = $this->recipientService->findByPagarmeId($recipientId);
+
+            if ($recipient->status != 'active') {
+                throw new \Exception('Recipient not active');
+            }
+
         } catch (\Exception $e) {
             return json_encode([
                 'code' => 404,
-                'message' => 'Recipient not found'
+                'message' => $e->getMessage(),
             ]);
         }
 
         return json_encode([
             'code' => 200,
             'message' => 'Recipient finded',
-            'recipient' => $recipient
+            'recipient' => $recipient,
         ]);
     }
 }
