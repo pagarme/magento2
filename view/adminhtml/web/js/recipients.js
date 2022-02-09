@@ -83,7 +83,7 @@ require([
         }).then(res => res.json())
           .then(res => {
               const response = JSON.parse(res);
-              if (response.code == 404) {
+              if (response.code != 200) {
                   alert(response.message);
                   return;
               }
