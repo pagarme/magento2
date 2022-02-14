@@ -19,6 +19,11 @@ class Recipient extends Template
     private $coreRegistry;
 
     /**
+     * @var array
+     */
+    private $sellers = [];
+
+    /**
      * @var stdClass
      */
     private $recipient = null;
@@ -46,6 +51,10 @@ class Recipient extends Template
             $this->recipient = $this->recipient->recipient;
         }
 
+        $sellerData = $this->coreRegistry->registry('sellers');
+        if (!empty($sellerData)) {
+            $this->sellers = unserialize($sellerData);
+        }
     }
 
     public function getEditRecipient()
@@ -75,4 +84,12 @@ class Recipient extends Template
         return $this->recipient->localId;
     }
 
+    public function getSellers()
+    {
+        if (is_null($this->sellers)) {
+            return [];
+        }
+
+        return $this->sellers;
+    }
 }

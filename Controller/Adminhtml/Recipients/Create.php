@@ -10,6 +10,7 @@ use Magento\Framework\Controller\ResultInterface;
 use Pagarme\Core\Marketplace\Repositories\RecipientRepository;
 use Pagarme\Core\Marketplace\Services\RecipientService;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use Webkul\Marketplace\Model\SellerFactory;
 
 class Create extends Action
 {
@@ -21,6 +22,11 @@ class Create extends Action
     protected $coreRegistry;
 
     /**
+     * @var SellerFactory
+     */
+    protected $sellerFactory;
+
+    /**
      * Constructor
      *
      * @param Context $context
@@ -30,8 +36,10 @@ class Create extends Action
     public function __construct(
         Context $context,
         Registry $coreRegistry,
-        PageFactory $resultPageFactory
+        PageFactory $resultPageFactory,
+        SellerFactory $sellerFactory
     ) {
+        $this->sellerFactory = $sellerFactory;
         $this->resultPageFactory = $resultPageFactory;
         $this->coreRegistry = $coreRegistry;
         Magento2CoreSetup::bootstrap();
@@ -46,6 +54,11 @@ class Create extends Action
      */
     public function execute()
     {
+        $sellers = $this->sellerFactory->create()->getCollection()->load();
+        $sellers = $sellers->getItems();
+
+        $this->coreRegistry->register('sellers', serialize($sellers));
+
         $recipientId = (int)$this->getRequest()->getParam('id');
         if ($recipientId) {
 
