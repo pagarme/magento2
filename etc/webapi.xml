@@ -80,6 +80,14 @@
         </resources>
     </route>
 
+    <route url="/V1/pagarme/marketplace/recipient/searchRecipient" method="POST">
+        <service class="Pagarme\Pagarme\Api\RecipientInterface"
+                 method="searchRecipient"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+
     <route url="/V1/pagarme/recurrence/product" method="POST">
         <service class="Pagarme\Pagarme\Api\ProductSubscriptionApiInterface"
                  method="save"/>

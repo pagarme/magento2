@@ -28,6 +28,7 @@ class Recipient extends Template
      */
     private $recipient = null;
 
+
     /**
      * Link constructor.
      * @param Context $context
@@ -45,6 +46,9 @@ class Recipient extends Template
         $recipientData = $this->coreRegistry->registry('recipient_data');
         if (!empty($recipientData)) {
             $this->recipient = json_decode($recipientData);
+            $this->recipient->recipient->externalId = $this->recipient->externalId;
+            $this->recipient->recipient->localId = $this->recipient->localId;
+            $this->recipient = $this->recipient->recipient;
         }
 
         $sellerData = $this->coreRegistry->registry('sellers');
@@ -60,6 +64,24 @@ class Recipient extends Template
         }
 
         return json_encode($this->recipient);
+    }
+
+    public function getRecipientId()
+    {
+        if (is_null($this->recipient)) {
+            return '';
+        }
+
+        return $this->recipient->id;
+    }
+
+    public function getLocalId()
+    {
+        if (is_null($this->recipient)) {
+            return '';
+        }
+
+        return $this->recipient->localId;
     }
 
     public function getSellers()

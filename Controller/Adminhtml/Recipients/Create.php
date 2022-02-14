@@ -32,6 +32,7 @@ class Create extends Action
      * @param Context $context
      * @param PageFactory $resultPageFactory
      */
+
     public function __construct(
         Context $context,
         Registry $coreRegistry,
@@ -63,17 +64,19 @@ class Create extends Action
 
             $recipientService = new RecipientService();
             $recipient = $recipientService->findById($recipientId);
-            $recipient = $recipientService->attachBankAccount($recipient);
-            $recipient = $recipientService->attachTransferSettings($recipient);
+            $externalId = $recipient->getExternalId();
+            $localId = $recipient->getId();
+            $recipient = $recipientService->findByPagarmeId($recipient->getPagarmeId());
 
-            if (!$recipient || !$recipient->getId()) {
+            if (!$recipient || !$recipient->id) {
                 $this->messageManager->addError(__('Recipient not exist.'));
                 $this->_redirect('pagarme_pagarme/recipients/index');
                 return;
             }
 
-            $this->coreRegistry->register('recipient_data', json_encode($recipient));
+            $this->coreRegistry->register('recipient_data', json_encode(['recipient' => $recipient, 'externalId' => $externalId, 'localId' => $localId]));
         }
+
         $resultPage = $this->resultPageFactory->create();
 
         $title = $recipientId ? __('Edit Recipient') : __('Create Recipient');
