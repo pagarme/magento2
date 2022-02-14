@@ -2,21 +2,22 @@
 
 namespace Pagarme\Pagarme\Block\Adminhtml\Marketplace;
 
-use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Registry;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory as CustomerCollectionFactory;
 use stdClass;
 
 class Recipient extends Template
 {
-    private $objectManager;
 
+    private $customerCollection;
     /**
      * @var Registry
      */
     private $coreRegistry;
+
 
     /**
      * @var array
@@ -35,10 +36,11 @@ class Recipient extends Template
      */
     public function __construct(
         Context $context,
-        Registry $registry
-    ){
+        Registry $registry,
+        CustomerCollectionFactory $customerCollectionFactory
+    ) {
         $this->coreRegistry = $registry;
-        $this->objectManager = ObjectManager::getInstance();
+        $this->customerCollection = $customerCollectionFactory->create();
 
         Magento2CoreSetup::bootstrap();
         parent::__construct($context, []);
@@ -51,6 +53,31 @@ class Recipient extends Template
             $this->recipient = $this->recipient->recipient;
         }
 
+        $sellerData = $this->coreRegistry->registry('sellers');
+        if (!empty($sellerData)) {
+            $this->sellers = $this->buildSellerData($sellerData);
+        }
+    }
+
+    private function buildSellerData($serializedSellerData)
+    {
+        $sellerData = unserialize($serializedSellerData);
+        $entityIds = [];
+
+        foreach ($sellerData as $seller) {
+            $entityIds[$seller->getEntityId()] = $seller->getSellerId();
+        }
+
+        $customers = $this->customerCollection
+            ->addAttributeToSelect('*')
+            ->addFieldToFilter('entity_id', array('in' => array_keys($entityIds)))
+            ->getData();
+
+        foreach ($customers as &$customer) {
+            $customer['seller_id'] = $entityIds[$customer['entity_id']];
+        }
+
+        return $customers;
     }
 
     public function getEditRecipient()
