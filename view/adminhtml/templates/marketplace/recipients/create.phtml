@@ -21,7 +21,7 @@
 
     <input type="hidden" name="form_key" value="<?php echo $block->getFormKey() ?>" />
 
-    <?php if (!empty($block->getRecipientId())): ?>
+    <?php if (!empty($block->getRecipientId())) : ?>
         <!--  LocalId  -->
         <input type="hidden" name="form[id]" value="<?php echo $block->getLocalId() ?>">
         <!--  RecipientId  -->
@@ -43,13 +43,12 @@
                                         <select class="recipient-form-inputs admin__control-select" name="form[external_id]" id="">
                                             <option value=""><?php echo __('Select a seller') ?></option>
                                             <?php
-                                            /** @var \Webkul\Marketplace\Model\Seller $seller */
                                             foreach ($block->getSellers() as $seller) {
-                                                ?>
-                                                <option value="<?php echo $seller->getData('seller_id') ?>">
-                                                    <?php echo $seller->getData('shop_title') ?: $seller->getData('shop_url') ?>
+                                            ?>
+                                                <option value="<?php echo $seller['seller_id'] ?>">
+                                                    <?php printf("%s %s (%s)", $seller['firstname'], $seller['lastname'], $seller['email']); ?>
                                                 </option>
-                                                <?php
+                                            <?php
                                             }
                                             ?>
                                         </select>
@@ -262,4 +261,4 @@
     </div>
 </form>
 <!-- Edit Recipient-->
-<input id="edit-recipient" name='form[edit_recipient_id]' value='<?php echo $block->getEditRecipient(); ?>' type="hidden"/>
+<input id="edit-recipient" name='form[edit_recipient_id]' value='<?php echo $block->getEditRecipient(); ?>' type="hidden" />
