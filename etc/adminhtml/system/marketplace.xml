@@ -45,5 +45,43 @@
                 <field id="active">1</field>
             </depends>
         </field>
+        <field id="main_recipient_id" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="40" translate="label" type="text">
+            <label>Marketplace main recipient</label>
+            <frontend_model>Pagarme\Pagarme\Block\Adminhtml\Form\Field\SearchRecipient</frontend_model>
+            <config_path>pagarme_pagarme/marketplace/main_recipient_id</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
+        <field id="main_recipient_name" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="40" translate="label" type="text">
+            <label>Name</label>
+            <config_path>pagarme_pagarme/marketplace/main_recipient_name</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
+        <field id="main_recipient_email" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="40" translate="label" type="text">
+            <label>E-mail</label>
+            <config_path>pagarme_pagarme/marketplace/main_recipient_email</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
+        <field id="main_recipient_document_type" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="40" translate="label" type="select">
+            <label>Document type</label>
+            <comment />
+            <source_model>Pagarme\Pagarme\Model\Source\DocumentType</source_model>
+            <config_path>pagarme_pagarme/marketplace/main_recipient_document_type</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
+        <field id="main_recipient_document_number" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="40" translate="label" type="text">
+            <label>Document number</label>
+            <config_path>pagarme_pagarme/marketplace/main_recipient_document_number</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
     </group>
 </include>
