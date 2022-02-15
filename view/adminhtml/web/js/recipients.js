@@ -19,6 +19,12 @@ require([
             )
         });
 
+        $("#select-webkul-seller").on('change', function () {
+            $('#external-id').val(
+                $('#select-webkul-seller').val()
+            );
+        });
+
         hideElementByMenuSelectValue(
             $("#transfer-enabled").val(),
             "transfer-interval-div"

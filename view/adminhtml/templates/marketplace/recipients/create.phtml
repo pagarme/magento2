@@ -40,7 +40,7 @@
                                         <span><?php echo __('Select webkul seller') ?></span>
                                     </label>
                                     <div class="admin__field-control">
-                                        <select class="recipient-form-inputs admin__control-select" name="form[external_id]" id="">
+                                        <select class="recipient-form-inputs admin__control-select" name="form[external_id]" id="select-webkul-seller">
                                             <option value=""><?php echo __('Select a seller') ?></option>
                                             <?php
                                             foreach ($block->getSellers() as $seller) {
@@ -81,6 +81,15 @@
                                             <span><?php echo __('Get info') ?></span>
                                         </button>
                                         <p id="error-message" class="error-message"></p>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field _required">
+                                    <label class="admin__field-label">
+                                        <span><?php echo __('External ID') ?></span>
+                                    </label>
+                                    <div class="admin__field-control">
+                                        <input type="text" class="recipient-form-inputs" name="form[external_id]" id="external-id">
                                     </div>
                                 </div>
 
