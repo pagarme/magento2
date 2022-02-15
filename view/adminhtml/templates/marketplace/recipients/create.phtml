@@ -41,20 +41,31 @@
                                     </label>
                                     <div class="admin__field-control">
                                         <select class="recipient-form-inputs admin__control-select" name="form[external_id]" id="select-webkul-seller">
-                                            <option value=""><?php echo __('Select a seller') ?></option>
-                                            <?php
-                                            foreach ($block->getSellers() as $seller) {
-                                            ?>
-                                                <option value="<?php echo $seller['seller_id'] ?>">
-                                                    <?php printf("%s %s (%s)", $seller['firstname'], $seller['lastname'], $seller['email']); ?>
-                                                </option>
-                                            <?php
-                                            }
-                                            ?>
+                                            <?php if (!empty($block->getSellers())) : ?>
+                                                <option value=""><?php echo __('Select a seller') ?></option>
+                                                <?php
+                                                foreach ($block->getSellers() as $seller) {
+                                                ?>
+                                                    <option value="<?php echo $seller['seller_id'] ?>">
+                                                        <?php printf("%s %s (%s)", $seller['firstname'], $seller['lastname'], $seller['email']); ?>
+                                                    </option>
+                                                <?php
+                                                }
+                                                ?>
+                                            <?php endif; ?>
+
+                                            <?php if (empty($block->getSellers())) : ?>
+                                                <option value=""><?php echo __('No valid sellers found.') ?></option>
+                                            <?php endif; ?>
+
+
                                         </select>
-                                        <button type="button" class="action-basic" onclick="location.href = '<?php echo $block->getUrl('customer/index/new') ?>'">
-                                            <span><?php echo __('Create') ?></span>
-                                        </button>
+                                        <?php if (empty($block->getSellers())) : ?>
+                                            <button type="button" class="action-basic" onclick="location.href = '<?php echo $block->getUrl('customer/index/new') ?>'">
+                                                <span><?php echo __('Create') ?></span>
+                                            </button>
+                                        <?php endif; ?>
+
                                         <p id="error-message" class="error-message"></p>
                                     </div>
                                 </div>
