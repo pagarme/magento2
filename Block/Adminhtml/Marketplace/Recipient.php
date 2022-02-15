@@ -7,12 +7,19 @@ use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory as CustomerCollectionFactory;
+use Pagarme\Core\Marketplace\Repositories\RecipientRepository;
 use stdClass;
 
 class Recipient extends Template
 {
 
     private $customerCollection;
+
+    /**
+     * @var RecipientRepository
+     */
+    private $recipientRepository;
+
     /**
      * @var Registry
      */
@@ -41,6 +48,7 @@ class Recipient extends Template
     ) {
         $this->coreRegistry = $registry;
         $this->customerCollection = $customerCollectionFactory->create();
+        $this->recipientRepository = new RecipientRepository();
 
         Magento2CoreSetup::bootstrap();
         parent::__construct($context, []);
@@ -65,7 +73,15 @@ class Recipient extends Template
         $entityIds = [];
 
         foreach ($sellerData as $seller) {
-            $entityIds[$seller->getEntityId()] = $seller->getSellerId();
+            $sellerId = $seller->getSellerId();
+
+            $recipient = $this->recipientRepository->findBySellerId($sellerId);
+
+            if (!empty($recipient)) {
+                continue;
+            }
+
+            $entityIds[$seller->getEntityId()] = $sellerId;
         }
 
         $customers = $this->customerCollection
