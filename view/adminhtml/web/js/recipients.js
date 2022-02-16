@@ -23,6 +23,24 @@ require([
             $('#external-id').val(
                 $('#select-webkul-seller').val()
             );
+
+            $('#recipient-name').val(
+                $('#select-webkul-seller').find(":selected").attr("sellername")
+            );
+
+            $('#email-recipient').val(
+                $('#select-webkul-seller').find(":selected").attr("email")
+            );
+
+            $('#email-recipient').val(
+                $('#select-webkul-seller').find(":selected").attr("email")
+            );
+
+            $("#document-type").val('cpf');
+
+            $("#document").val(
+                $('#select-webkul-seller').find(":selected").attr("document")
+            );
         });
 
         hideElementByMenuSelectValue(
