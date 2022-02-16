@@ -7,6 +7,7 @@ require([
     $(document).ready(function(){
         $("#form-recipients").submit(formSubmit);
 
+        hideMainInformations();
         hideElementByMenuSelectValue(
             $("#existing_recipient").val(),
             "pagarme_id"
@@ -20,27 +21,39 @@ require([
         });
 
         $("#select-webkul-seller").on('change', function () {
+            const externalId = $('#select-webkul-seller').val();
             $('#external-id').val(
-                $('#select-webkul-seller').val()
+                externalId
             );
+            $( "#external-id" ).prop( "disabled", !!externalId );
 
+            const recipientName = $('#select-webkul-seller')
+                .find(":selected")
+                .attr("sellername");
             $('#recipient-name').val(
-                $('#select-webkul-seller').find(":selected").attr("sellername")
+                recipientName
             );
+            $( "#recipient-name" ).prop( "disabled", !!recipientName );
 
+            const recipientEmail = $('#select-webkul-seller')
+                .find(":selected")
+                .attr("email");
             $('#email-recipient').val(
-                $('#select-webkul-seller').find(":selected").attr("email")
+                recipientEmail
             );
-
-            $('#email-recipient').val(
-                $('#select-webkul-seller').find(":selected").attr("email")
-            );
+            $( "#email-recipient" ).prop( "disabled", !!recipientEmail );
 
             $("#document-type").val('cpf');
+            $( "#document-type" ).prop( "disabled", true );
 
+            const recipientDocument = $('#select-webkul-seller')
+                .find(":selected")
+                .attr("document");
             $("#document").val(
-                $('#select-webkul-seller').find(":selected").attr("document")
+                recipientDocument
             );
+            $( "#document" ).prop( "disabled", !!recipientDocument );
+            showMainInformations();
         });
 
         hideElementByMenuSelectValue(
@@ -167,6 +180,46 @@ require([
     {
         document.getElementById(elementIdToHide).style.display
             = value == 1 ? 'block' : 'none';
+    }
+
+    function hideMainInformations(){
+        const mainInformationTags = [
+            '#document-div',
+            '#document-type-div',
+            '#email-recipient-div',
+            '#recipient-name-div',
+            '#external-id-div'
+        ];
+
+        mainInformationTags.forEach(tag => {
+            hideElement(
+                $(tag)
+            );
+        });
+    }
+
+    function showMainInformations(){
+        const mainInformationTags = [
+            '#document-div',
+            '#document-type-div',
+            '#email-recipient-div',
+            '#recipient-name-div',
+            '#external-id-div'
+        ];
+
+        mainInformationTags.forEach(tag => {
+            showElement(
+                $(tag)
+            );
+        });
+    }
+
+    function hideElement(element){
+        element.hide();
+    }
+
+    function showElement(element){
+        element.show();
     }
 
     function fillFieldsWithSameValue()
