@@ -15,6 +15,26 @@ require([
 
             button.onclick = this.getInfo;
             this.url = button.getAttribute('api-url');
+
+            const recipientElements = this.getRecipientElements();
+
+            recipientElements.forEach(recipientElement => {
+                if (recipientElement.length) recipientElement.hide();
+            });
+        }
+
+        this.getRecipientElements = function(){
+            const recipientNameInput = $('tr[id*="pagarme_marketplace_main_recipient_name"]');
+            const recipientDocumentType = $('tr[id*="pagarme_marketplace_main_recipient_document_type"]');
+            const recipientEmail = $('tr[id*="pagarme_marketplace_main_recipient_email"');
+            const recipientDocumentNumber = $('tr[id*="pagarme_marketplace_main_recipient_document_number"');
+
+            return [
+                recipientNameInput,
+                recipientDocumentType,
+                recipientEmail,
+                recipientDocumentNumber
+            ];
         }
 
         this.getInfo = e => {
@@ -43,10 +63,38 @@ require([
         }
 
         this.loadRecipient = function (recipient) {
-            document.querySelector("[id$=main_recipient_name][type=text]").value = recipient.name;
-            document.querySelector("[id$=main_recipient_email][type=text]").value = recipient.email;
-            document.querySelector("[id$=main_recipient_document_type] select").value = recipient.type;
-            document.querySelector("[id$=main_recipient_document_number][type=text]").value = recipient.document;
+            const recipientNameInput = document
+                .querySelector("[id$=main_recipient_name][type=text]");
+            const recipientEmailInput = document
+                .querySelector("[id$=main_recipient_email][type=text]");
+            const recipientDocumentTypeSelect = document
+                .querySelector("[id$=main_recipient_document_type] select");
+            const recipientDocumentInput = document
+                .querySelector("[id$=main_recipient_document_number][type=text]");
+
+
+            if (recipientNameInput) {
+                recipientNameInput.value = recipient.name;
+                recipientNameInput.setAttribute("disabled","disabled");
+            }
+            if (recipientEmailInput) {
+                recipientEmailInput.value = recipient.email;
+                recipientEmailInput.setAttribute("disabled","disabled");
+            }
+            if (recipientDocumentTypeSelect){
+                recipientDocumentTypeSelect.value = recipient.type;
+                recipientDocumentTypeSelect.setAttribute("disabled","disabled");
+            }
+            if (recipientDocumentInput){
+                recipientDocumentInput.value = recipient.document;
+                recipientDocumentInput.setAttribute("disabled","disabled");
+            }
+
+            const recipientElements = this.getRecipientElements();
+
+            recipientElements.forEach(recipientElement => {
+                if (recipientElement.length) recipientElement.show();
+            });
         }
 
         this.setup();
