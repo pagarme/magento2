@@ -46,7 +46,7 @@
                                                 <?php
                                                 foreach ($block->getSellers() as $seller) {
                                                 ?>
-                                                    <option sellername="<?php printf("%s %s", $seller['firstname'], $seller['lastname']); ?>" email="<?php echo $seller['email']; ?>" document="<?php echo !empty($seller['taxvat']) ? $seller['taxvat'] : ""; ?>" value="<?php echo $seller['seller_id'] ?>">
+                                                    <option sellername="<?php printf("%s %s", $seller['firstname'], $seller['lastname']); ?>" email="<?php echo $seller['email']; ?>" document="<?php echo !empty($seller['taxvat']) ? $seller['taxvat'] : ""; ?>" value="<?php echo $seller['entity_id'] ?>">
                                                         <?php printf("%s %s (%s)", $seller['firstname'], $seller['lastname'], $seller['email']); ?>
                                                     </option>
                                                 <?php
