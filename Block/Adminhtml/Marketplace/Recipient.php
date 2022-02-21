@@ -81,17 +81,13 @@ class Recipient extends Template
                 continue;
             }
 
-            $entityIds[$seller->getEntityId()] = $sellerId;
+            $entityIds[] = $sellerId;
         }
 
         $customers = $this->customerCollection
             ->addAttributeToSelect('*')
-            ->addFieldToFilter('entity_id', array('in' => array_keys($entityIds)))
+            ->addFieldToFilter('entity_id', array('in' => $entityIds))
             ->getData();
-
-        foreach ($customers as &$customer) {
-            $customer['seller_id'] = $entityIds[$customer['entity_id']];
-        }
 
         return $customers;
     }
