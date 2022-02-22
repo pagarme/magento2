@@ -284,11 +284,6 @@ require([
     }
 
     function loadRecipient(recipient) {
-        $("#external-id").val(recipient.externalId);
-        $("#recipient-name").val(recipient.name);
-        $("#email-recipient").val(recipient.email);
-        $("#document").val(recipient.document);
-        $("#type").val(recipient.type);
         // Bank Infos
         $("#holder-name").val(recipient.default_bank_account.holder_name);
         $("#holder-document-type").val(recipient.default_bank_account.holder_type == 'individual' ? 'cpf' : 'cnpj');
