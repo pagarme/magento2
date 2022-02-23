@@ -25,7 +25,7 @@ require([
             $('#external-id').val(
                 externalId
             );
-            $( "#external-id" ).prop( "disabled", !!externalId );
+            $( "#external-id" ).prop( "readonly", !!externalId );
 
             const recipientName = $('#select-webkul-seller')
                 .find(":selected")
@@ -33,7 +33,7 @@ require([
             $('#recipient-name').val(
                 recipientName
             );
-            $( "#recipient-name" ).prop( "disabled", !!recipientName );
+            $( "#recipient-name" ).prop( "readonly", !!recipientName );
 
             const recipientEmail = $('#select-webkul-seller')
                 .find(":selected")
@@ -41,10 +41,10 @@ require([
             $('#email-recipient').val(
                 recipientEmail
             );
-            $( "#email-recipient" ).prop( "disabled", !!recipientEmail );
+            $( "#email-recipient" ).prop( "readonly", !!recipientEmail );
 
             $("#document-type").val('cpf');
-            $( "#document-type" ).prop( "disabled", true );
+            $( "#document-type" ).prop( "readonly", true );
 
             const recipientDocument = $('#select-webkul-seller')
                 .find(":selected")
@@ -52,7 +52,7 @@ require([
             $("#document").val(
                 recipientDocument
             );
-            $( "#document" ).prop( "disabled", !!recipientDocument );
+            $( "#document" ).prop( "readonly", !!recipientDocument );
             showMainInformations();
         });
 
@@ -232,8 +232,8 @@ require([
             $("#holder-document").val($(this).val());
         });
 
-        $("#holder-document").attr("disabled", true);
-        $("#holder-document-type").attr("disabled", true);
+        $("#holder-document").attr("readonly", true);
+        $("#holder-document-type").attr("readonly", true);
     }
 
     function fillTypeValueByDocumentType()
@@ -283,22 +283,37 @@ require([
         }
     }
 
+    function buildRecipientObject(recipient){
+        return {
+            "#holder-name": recipient.default_bank_account.holder_name,
+            "#holder-document-type": recipient.default_bank_account.holder_type == 'individual' ? 'cpf' : 'cnpj',
+            "#holder-document":recipient.document,
+            "#bank": recipient.default_bank_account.bank,
+            "#branch-number": recipient.default_bank_account.branch_number,
+            "#branch-check-digit": recipient.default_bank_account.branch_check_digit,
+            "#account-number": recipient.default_bank_account.account_number,
+            "#account-check-digit": recipient.default_bank_account.account_check_digit,
+            "#account-type": recipient.default_bank_account.type,
+            "#transfer-enabled": recipient.transfer_settings.transfer_enabled ? 1 : 0,
+            "#transfer-interval": recipient.transfer_settings.transfer_interval,
+            "#transfer-day": recipient.transfer_settings.transfer_day
+        };
+    }
+
     function loadRecipient(recipient) {
-        // Bank Infos
-        $("#holder-name").val(recipient.default_bank_account.holder_name);
-        $("#holder-document-type").val(recipient.default_bank_account.holder_type == 'individual' ? 'cpf' : 'cnpj');
-        $("#holder-document").val(recipient.document);
-        $("#bank").val(recipient.default_bank_account.bank);
-        $("#branch-number").val(recipient.default_bank_account.branch_number);
-        $("#branch-check-digit").val(recipient.default_bank_account.branch_check_digit);
-        $("#account-number").val(recipient.default_bank_account.account_number);
-        $("#account-check-digit").val(recipient.default_bank_account.account_check_digit);
-        $("#account-type").val(recipient.default_bank_account.type);
-        // Transfer Infos
-        $("#transfer-enabled").val(recipient.transfer_settings.transfer_enabled ? 1 : 0);
-        $("#transfer-interval").val(recipient.transfer_settings.transfer_interval);
+        const recipientObject = buildRecipientObject(recipient);
+
+        for (const elementId in recipientObject) {
+            if (!Object.hasOwnProperty.call(recipientObject, elementId))
+                continue;
+
+            const recipientValue = recipientObject[elementId];
+            $(elementId).val(recipientValue);
+            $(elementId).attr("readonly", true);
+
+        }
+
         fillTransferDayValuesByTransferInterval();
-        $("#transfer-day").val(recipient.transfer_settings.transfer_day);
 
         hideElementByMenuSelectValue(
             $("#transfer-enabled").val(),
@@ -310,8 +325,8 @@ require([
             "transfer-interval-div"
         );
 
-        $("#document").attr("disabled", true);
-        $("#document-type").attr("disabled", true);
+        $("#document").attr("readonly", true);
+        $("#document-type").attr("readonly", true);
     }
 
 });
