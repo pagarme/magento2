@@ -2,51 +2,14 @@
 
 namespace Pagarme\Pagarme\Controller\Adminhtml\Recipients;
 
-use Magento\Backend\App\Action;
-use Magento\Backend\App\Action\Context;
 use Magento\Framework\Registry;
-use Magento\Framework\View\Result\PageFactory;
 use Magento\Framework\Controller\ResultInterface;
-use Pagarme\Core\Marketplace\Repositories\RecipientRepository;
 use Pagarme\Core\Marketplace\Services\RecipientService;
-use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Webkul\Marketplace\Model\SellerFactory;
+use Pagarme\Pagarme\Controller\Adminhtml\Recipients\RecipientAction;
 
-class Create extends Action
+class Create extends RecipientAction
 {
-    protected $resultPageFactory = false;
-
-    /**
-     * @var Registry
-     */
-    protected $coreRegistry;
-
-    /**
-     * @var SellerFactory
-     */
-    protected $sellerFactory;
-
-    /**
-     * Constructor
-     *
-     * @param Context $context
-     * @param PageFactory $resultPageFactory
-     */
-
-    public function __construct(
-        Context $context,
-        Registry $coreRegistry,
-        PageFactory $resultPageFactory,
-        SellerFactory $sellerFactory
-    ) {
-        $this->sellerFactory = $sellerFactory;
-        $this->resultPageFactory = $resultPageFactory;
-        $this->coreRegistry = $coreRegistry;
-        Magento2CoreSetup::bootstrap();
-
-        parent::__construct($context);
-    }
-
     /**
      * Index action
      *
