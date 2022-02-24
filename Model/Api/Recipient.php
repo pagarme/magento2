@@ -66,6 +66,10 @@ class Recipient implements RecipientInterface
             $form['holder_type'] = $form['type'];
         }
 
+        if (isset($form['pagarme_id'])) {
+            $form['recipient_id'] = $form['pagarme_id'];
+        }
+
         return $form;
     }
 
@@ -88,7 +92,6 @@ class Recipient implements RecipientInterface
             if ($recipient->status != 'active') {
                 throw new \Exception('Recipient not active');
             }
-
         } catch (\Exception $e) {
             return json_encode([
                 'code' => 404,
