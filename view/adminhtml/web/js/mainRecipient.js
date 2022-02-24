@@ -21,6 +21,14 @@ require([
             recipientElements.forEach(recipientElement => {
                 if (recipientElement.length) recipientElement.hide();
             });
+
+            const recipientElementInputs = this.getRecipientInputs();
+            for (const recipientAttribute in recipientElementInputs) {
+                const recipientAttributeElement = recipientElementInputs[recipientAttribute];
+
+                if (!recipientAttributeElement) continue;
+                recipientAttributeElement.setAttribute('readonly', true);
+            }
         }
 
         this.getRecipientElements = function(){
@@ -35,6 +43,25 @@ require([
                 recipientEmail,
                 recipientDocumentNumber
             ];
+        }
+
+        this.getRecipientInputs = function(){
+            const recipientNameInput = document
+                .querySelector("[id$=main_recipient_name][type=text]");
+            const recipientEmailInput = document
+                .querySelector("[id$=main_recipient_email][type=text]");
+            const recipientDocumentTypeSelect = document
+                .querySelector("[id$=main_recipient_document_type] select");
+            const recipientDocumentInput = document
+                .querySelector("[id$=main_recipient_document_number][type=text]");
+
+
+            return {
+                "name": recipientNameInput,
+                "email": recipientEmailInput,
+                "type": recipientDocumentTypeSelect,
+                "document": recipientDocumentInput
+            }
         }
 
         this.getInfo = e => {
@@ -63,31 +90,15 @@ require([
         }
 
         this.loadRecipient = function (recipient) {
-            const recipientNameInput = document
-                .querySelector("[id$=main_recipient_name][type=text]");
-            const recipientEmailInput = document
-                .querySelector("[id$=main_recipient_email][type=text]");
-            const recipientDocumentTypeSelect = document
-                .querySelector("[id$=main_recipient_document_type] select");
-            const recipientDocumentInput = document
-                .querySelector("[id$=main_recipient_document_number][type=text]");
 
+            const recipientInputs = this.getRecipientInputs();
 
-            if (recipientNameInput) {
-                recipientNameInput.value = recipient.name;
-                recipientNameInput.setAttribute("disabled","disabled");
-            }
-            if (recipientEmailInput) {
-                recipientEmailInput.value = recipient.email;
-                recipientEmailInput.setAttribute("disabled","disabled");
-            }
-            if (recipientDocumentTypeSelect){
-                recipientDocumentTypeSelect.value = recipient.type;
-                recipientDocumentTypeSelect.setAttribute("disabled","disabled");
-            }
-            if (recipientDocumentInput){
-                recipientDocumentInput.value = recipient.document;
-                recipientDocumentInput.setAttribute("disabled","disabled");
+            for (const recipientAttribute in recipientInputs) {
+                if (!Object.hasOwnProperty.call(recipientInputs, recipientAttribute)) continue;
+                const recipientAttributeElement = recipientInputs[recipientAttribute];
+
+                if (!recipientAttributeElement) continue;
+                recipientAttributeElement.value = recipient[recipientAttribute];
             }
 
             const recipientElements = this.getRecipientElements();
