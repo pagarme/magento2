@@ -96,7 +96,7 @@ require([
         var editRecipient = $("#edit-recipient").val();
         if (editRecipient.length > 0) {
             $("#select-seller").hide();
-            loadRecipient(JSON.parse(editRecipient));
+            loadRecipient(JSON.parse(editRecipient),false);
         }
 
         $("#search-recipient-id").on('click', searchRecipient);
@@ -125,7 +125,7 @@ require([
                   return;
               }
 
-              loadRecipient(response.recipient);
+              loadRecipient(response.recipient, true);
           });
 
     }
@@ -300,7 +300,7 @@ require([
         };
     }
 
-    function loadRecipient(recipient) {
+    function loadRecipient(recipient, wasSearched) {
         const recipientObject = buildRecipientObject(recipient);
 
         for (const elementId in recipientObject) {
@@ -327,6 +327,34 @@ require([
 
         $("#document").attr("readonly", true);
         $("#document-type").attr("readonly", true);
+
+        if (wasSearched) return;
+
+        $('#external-id').val(recipient.externalId);
+        $("#external-id").attr("readonly", true);
+        $("#external-id-div").show();
+
+        $('#existing_recipient').val('1');
+        $("#existing_recipient").attr("readonly", true);
+        $("#use_existing_pagarme_id").hide();
+
+        $('#pagarme_id').show();
+        $('#recipient-id').val(recipient.id);
+
+        $("#recipient-name").val(recipient.name);
+        $("#recipient-name").attr("readonly", true);
+
+        $('#email-recipient').val(recipient.email);
+        $('#email-recipient').attr("readonly", true);
+
+        $('#email-recipient').val(recipient.email);
+        $('#email-recipient').attr("readonly", true);
+
+        $('#email-recipient').val(recipient.email);
+        $('#email-recipient').attr("readonly", true);
+
+        $('#document').val(recipient.document);
+        $('#document').attr("readonly", true);
     }
 
 });
