@@ -99,6 +99,8 @@ require([
 
                 if (!recipientAttributeElement) continue;
                 recipientAttributeElement.value = recipient[recipientAttribute];
+                recipientAttributeElement.readOnly = true;
+                recipientAttributeElement.disabled = false;
             }
 
             const recipientElements = this.getRecipientElements();
