@@ -35,18 +35,10 @@ final class ExtrasAndDiscountsHandler extends MarketplaceHandler
 
         switch ($responsible) {
             case self::ONLY_MARKETPLACE:
-                $marketPlaceCommission = $splitData['marketplace']['totalCommission'];
-                $marketPlaceAndExtraOrDiscount = $marketPlaceCommission + $extraOrDiscount;
-
-                if ($marketPlaceAndExtraOrDiscount < 0) {
-                    return $this->handleMarketplaceNegativeCommission(
-                        $splitData,
-                        $marketPlaceAndExtraOrDiscount
-                    );
-                }
-
-                $splitData['marketplace']['totalCommission'] += $extraOrDiscount;
-                return $splitData;
+                return $this->onlyMarketplaceResponsible(
+                    $extraOrDiscount,
+                    $splitData
+                );
             case self::ONLY_SELLERS:
                 return $this->divideBetweenSellers(
                     $extraOrDiscount,

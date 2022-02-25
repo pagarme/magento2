@@ -27,8 +27,10 @@ final class SplitRemainderHandler extends MarketplaceHandler
 
         switch ($responsible) {
             case self::ONLY_MARKETPLACE:
-                $splitData['marketplace']['totalCommission'] += $remainder;
-                return $splitData;
+                return $this->onlyMarketplaceResponsible(
+                    $remainder,
+                    $splitData
+                );
             case self::ONLY_SELLERS:
                 return $this->divideBetweenSellers(
                     $remainder,

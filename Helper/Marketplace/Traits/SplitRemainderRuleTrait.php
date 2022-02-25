@@ -17,6 +17,12 @@ trait SplitRemainderRuleTrait
         return $this->divideBetweenSellers($amount, $splitData);
     }
 
+    protected function onlyMarketplaceResponsible($amount, &$splitData)
+    {
+        $splitData['marketplace']['totalCommission'] += $amount;
+        return $splitData;
+    }
+
     protected function divideBetweenSellers(
         $amount,
         &$splitData

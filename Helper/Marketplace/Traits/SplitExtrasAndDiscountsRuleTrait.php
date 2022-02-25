@@ -97,6 +97,30 @@ trait SplitExtrasAndDiscountsRuleTrait
         );
     }
 
+    protected function onlyMarketplaceResponsible($amount, &$splitData)
+    {
+        $marketPlaceCommission = $splitData['marketplace']['totalCommission'];
+        $marketPlaceAndExtraOrDiscount = $marketPlaceCommission + $amount;
+
+        if ($marketPlaceAndExtraOrDiscount < 0) {
+            return $this->handleMarketplaceNegativeCommission(
+                $splitData,
+                $marketPlaceAndExtraOrDiscount
+            );
+        }
+
+        $splitData['marketplace']['totalCommission'] += $amount;
+
+        $remainder = $this->getRemainder($splitData, $amount);
+
+        if ($remainder) {
+            $splitData = $this->getSplitRemainder()
+                ->setRemainderToResponsible($remainder, $splitData);
+        }
+
+        return $splitData;
+    }
+
     protected function divideBetweenMarkeplaceAndSellers(
         $amount,
         &$splitData
