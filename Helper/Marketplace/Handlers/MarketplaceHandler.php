@@ -19,4 +19,5 @@ abstract class MarketplaceHandler
 
     abstract protected function divideBetweenMarkeplaceAndSellers($amount, &$arrayData);
     abstract protected function divideBetweenSellers($amount, &$arrayData);
+    abstract protected function onlyMarketplaceResponsible($amount, &$arrayData);
 }
