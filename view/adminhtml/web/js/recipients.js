@@ -44,15 +44,31 @@ require([
             $( "#email-recipient" ).prop( "readonly", !!recipientEmail );
 
             $("#document-type").val('cpf');
-            $( "#document-type" ).prop( "readonly", true );
+            $( "#document-type" ).addClass('readonly');
 
             const recipientDocument = $('#select-webkul-seller')
                 .find(":selected")
                 .attr("document");
+
             $("#document").val(
                 recipientDocument
             );
-            $( "#document" ).prop( "readonly", !!recipientDocument );
+            
+            $("#holder-document-type").val('cpf');
+            $("#holder-document-type").addClass('readonly');
+
+            $("#holder-document").val(
+                recipientDocument
+            );
+
+            $("#document").prop( "readonly", !!recipientDocument );
+            $("#holder-document").prop( "readonly", !!recipientDocument );
+            
+            if (externalId == "") {
+                $("#document-type").removeClass('readonly');
+                $("#holder-document-type").removeClass('readonly');
+            }
+
             showMainInformations();
         });
 
@@ -355,6 +371,12 @@ require([
 
         $('#document').val(recipient.document);
         $('#document').attr("readonly", true);
+
+        $('#holder-document').val(recipient.document);
+        $('#holder-document').attr("readonly", true);
+
+        $('#holder-document-type').val(recipient.default_bank_account.holder_type == 'individual' ? 'cpf' : 'cnpj');
+        $('#holder-document-type').attr("readonly", true);
     }
 
 });
