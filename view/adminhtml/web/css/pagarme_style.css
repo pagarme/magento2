@@ -92,3 +92,9 @@ table.table-cycles {
     width: 50%;
     margin-left: 10px;
 }
+
+.readonly {
+    background: #eee;
+    pointer-events: none;
+    touch-action: none;
+}
