@@ -67,6 +67,8 @@ require([
             if (externalId == "") {
                 $("#document-type").removeClass('readonly');
                 $("#holder-document-type").removeClass('readonly');
+                hideMainInformations();
+                return;
             }
 
             showMainInformations();
