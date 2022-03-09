@@ -326,8 +326,12 @@ require([
                 continue;
 
             const recipientValue = recipientObject[elementId];
-            $(elementId).val(recipientValue);
-            $(elementId).attr("readonly", true);
+            const element = $(elementId);
+            element.val(recipientValue);
+            element.attr("readonly", true);
+            if (element.is('select')) {
+                element.addClass('readonly');
+            }
 
         }
 
