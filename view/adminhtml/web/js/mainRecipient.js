@@ -18,9 +18,14 @@ require([
 
             const recipientElements = this.getRecipientElements();
 
-            recipientElements.forEach(recipientElement => {
-                if (recipientElement.length) recipientElement.hide();
-            });
+            const recipientId = document.querySelector("[id$=main_recipient_id][type=text]").value;
+
+            if (recipientId == "") {
+                recipientElements.forEach(recipientElement => {
+                    if (recipientElement.length) recipientElement.hide();
+                });
+            }
+            
 
             const recipientElementInputs = this.getRecipientInputs();
             for (const recipientAttribute in recipientElementInputs) {
