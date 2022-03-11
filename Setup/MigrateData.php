@@ -7,14 +7,19 @@ require_once "app/bootstrap.php";
 $bootstrap = \Magento\Framework\App\Bootstrap::create(BP, $_SERVER);
 $objectManager = $bootstrap->getObjectManager();
 $resourceConnection = $objectManager->get('Magento\Framework\App\ResourceConnection');
-try {
-    $connection = $resourceConnection->getConnection();
-} catch (\Throwable $exception) {
-    return;
-}
 
 $logger = new \Monolog\Logger('migration');
 $logger->pushHandler(new \Monolog\Handler\StreamHandler(BP .'/var/log/Pagarme_Migration.log'));
+
+try {
+    $connection = $resourceConnection->getConnection();
+} catch (\Throwable $exception) {
+    $logger->warning($exception->getMessage());
+    echo "\n" . $line . "\n\e[0;31;43mERROR:\e[0m " . $exception->getMessage() . "\n";
+    return;
+}
+
+
 
 if (isset($argv)) {
     $m = new MigrateData($connection, $logger, $argv);
