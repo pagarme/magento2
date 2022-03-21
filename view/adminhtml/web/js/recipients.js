@@ -12,8 +12,11 @@ require([
             $("#existing_recipient").val(),
             "pagarme_id"
         );
+        $('#recipient-id').attr('disabled', true);
 
         $("#existing_recipient").on('change', function () {
+            $('#recipient-id').attr('disabled', $(this).val() == 0 ? true : false);
+
             hideElementByMenuSelectValue(
                 $(this).val(),
                 "pagarme_id"
@@ -358,6 +361,7 @@ require([
 
         $('#existing_recipient').val('1');
         $("#existing_recipient").attr("readonly", true);
+        $('#recipient-id').attr('disabled', true);
         $("#use_existing_pagarme_id").hide();
 
         $('#pagarme_id').show();
