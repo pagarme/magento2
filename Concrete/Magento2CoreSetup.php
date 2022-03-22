@@ -615,15 +615,6 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         stdClass $configData,
         ScopeConfigInterface $storeConfig
     ) {
-
-        $fp = fopen('/var/www/html/var/log/daniel.log', 'a');
-
-        $date = (new \DateTime('NOW'))->format('c');
-        $object = print_r($storeConfig->getValue('pagarme_pagarme/marketplace/main_recipient_id'), true);
-        fwrite($fp, "\033[36m[{$date}]\033[0m - $object\n");
-        fclose($fp);
-
-
         $options = [
             'enabled' => 'active',
             'responsibilityForProcessingFees'
