@@ -331,10 +331,13 @@ require([
             const recipientValue = recipientObject[elementId];
             const element = $(elementId);
             element.val(recipientValue);
-            element.attr("readonly", true);
-            if (element.is('select')) {
-                element.addClass('readonly');
+            if (wasSearched) {
+                element.attr("readonly", true);
+                if (element.is('select')) {
+                    element.addClass('readonly');
+                }
             }
+            
 
         }
 
@@ -350,6 +353,8 @@ require([
             "transfer-interval-div"
         );
 
+        $('#recipient-id').attr('disabled', false);
+
         $("#document").attr("readonly", true);
         $("#document-type").attr("readonly", true);
 
@@ -361,7 +366,7 @@ require([
 
         $('#existing_recipient').val('1');
         $("#existing_recipient").attr("readonly", true);
-        $('#recipient-id').attr('disabled', true);
+        
         $("#use_existing_pagarme_id").hide();
 
         $('#pagarme_id').show();
@@ -387,6 +392,7 @@ require([
 
         $('#holder-document-type').val(recipient.default_bank_account.holder_type == 'individual' ? 'cpf' : 'cnpj');
         $('#holder-document-type').attr("readonly", true);
+        $("#holder-document-type").addClass('readonly');
     }
 
 });
