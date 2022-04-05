@@ -4,6 +4,7 @@
     "version": "1.1.5",
     "type": "magento2-module",
     "description": "Magento 2 Module Pagar.me",
+    "minimum-stability": "dev",
     "require": {
         "php": ">=7.1.0",
         "mundipagg/mundiapi": "^3.0",
@@ -30,7 +31,6 @@
             "name":"Open Source Team"
         }
     ],
-    "minimum-stability": "dev",
     "scripts": {
         "test": "phpunit"
     },
