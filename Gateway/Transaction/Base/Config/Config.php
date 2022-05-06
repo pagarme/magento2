@@ -50,6 +50,29 @@ class Config extends AbstractConfig implements ConfigInterface
     }
 
     /**
+     * @return ?string|null
+     */
+    public function getHubEnvironment(): ?string
+    {
+        return $this->getConfig(static::PATH_HUB_ENVIRONMENT);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSandboxMode(): bool
+    {
+        if (
+            $this->getHubEnvironment() === static::HUB_SANDBOX_ENVIRONMENT ||
+            strpos($this->getSecretKey(), 'sk_test') !== false ||
+            strpos($this->getPublicKey(), 'pk_test') !== false
+        ) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * @return string
      */
     public function getTestMode()
