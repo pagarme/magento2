@@ -62,14 +62,10 @@ class Config extends AbstractConfig implements ConfigInterface
      */
     public function isSandboxMode(): bool
     {
-        if (
-            $this->getHubEnvironment() === static::HUB_SANDBOX_ENVIRONMENT ||
+        return ( $this->getHubEnvironment() === static::HUB_SANDBOX_ENVIRONMENT ||
             strpos($this->getSecretKey(), 'sk_test') !== false ||
             strpos($this->getPublicKey(), 'pk_test') !== false
-        ) {
-            return true;
-        }
-        return false;
+        );
     }
 
     /**

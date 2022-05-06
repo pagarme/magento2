@@ -25,8 +25,8 @@ use Pagarme\Pagarme\Gateway\Transaction\Base\Config\ConfigInterface;
 class Notifications extends Message
 {
 
-    /** @var array|null */
-    protected ?array $warnings = [];
+    /** @var array */
+    protected array $warnings = [];
 
     /**
      * @param ConfigInterface $config
