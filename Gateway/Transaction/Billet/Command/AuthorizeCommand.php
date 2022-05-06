@@ -14,7 +14,7 @@ namespace Pagarme\Pagarme\Gateway\Transaction\Billet\Command;
 
 use Pagarme\Pagarme\Gateway\Transaction\Base\Command\AbstractApiCommand;
 
-use MundiAPILib\Models\CreateOrderRequest;
+use PagarmeCoreApiLib\Models\CreateOrderRequest;
 
 class AuthorizeCommand extends AbstractApiCommand
 {

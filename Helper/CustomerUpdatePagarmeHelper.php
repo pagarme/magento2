@@ -9,9 +9,10 @@
 namespace Pagarme\Pagarme\Helper;
 
 use Magento\Customer\Api\CustomerRepositoryInterface;
-use MundiAPILib\Controllers;
-use MundiAPILib\Models\UpdateCustomerRequest;
+use PagarmeCoreApiLib\Controllers;
+use PagarmeCoreApiLib\Models\UpdateCustomerRequest;
 use Pagarme\Pagarme\Gateway\Transaction\Base\Config\Config;
+use PagarmeCoreApiLib\PagarmeCoreApiClient;
 
 class CustomerUpdatePagarmeHelper
 {
@@ -26,10 +27,11 @@ class CustomerUpdatePagarmeHelper
      * AdminCustomerSaveAfter constructor.
      */
     public function __construct(
-        UpdateCustomerRequest $updateCustomerRequest,
-        Config $config,
+        UpdateCustomerRequest       $updateCustomerRequest,
+        Config                      $config,
         CustomerRepositoryInterface $customerRepositoryInterface
-    ) {
+    )
+    {
         $this->updateCustomerRequest = $updateCustomerRequest;
         $this->config = $config;
         $this->customerRepositoryInterface = $customerRepositoryInterface;
@@ -42,10 +44,9 @@ class CustomerUpdatePagarmeHelper
      */
     public function updateEmailPagarme($customer)
     {
-
         $oldCustomer = $this->customerRepositoryInterface->getById($customer->getId());
 
-        if($oldCustomer->getCustomAttribute('customer_id_pagarme') && ($oldCustomer->getEmail() != $customer->getEmail())){
+        if ($oldCustomer->getCustomAttribute('customer_id_pagarme') && ($oldCustomer->getEmail() != $customer->getEmail())) {
 
             $customerIdPagarme = $oldCustomer->getCustomAttribute('customer_id_pagarme')->getValue();
 
@@ -55,9 +56,7 @@ class CustomerUpdatePagarmeHelper
             $this->updateCustomerRequest->type = 'individual';
 
             $this->getApi()->getCustomers()->updateCustomer($customerIdPagarme, $this->updateCustomerRequest);
-
         }
-
     }
 
     /**
@@ -70,11 +69,11 @@ class CustomerUpdatePagarmeHelper
     }
 
     /**
-     * @return \MundiAPILib\MundiAPIClient
+     * @return PagarmeCoreApiClient
      */
     public function getApi()
     {
-        return new \MundiAPILib\MundiAPIClient($this->config->getSecretKey(), '');
+        return new PagarmeCoreApiClient($this->config->getSecretKey(), '');
     }
 
 }
