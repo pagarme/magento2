@@ -103,6 +103,26 @@ jobs:
              docker cp /app/wait-for-mysql.sh newimage:app/tmp/
              docker cp /app/magento2_module_install.sql newimage:app/tmp/
       - run:
+          name: Install Magento2 Inventory Module
+          command: |
+             docker exec -it newimage sh -c "cd /app/app/code/Magento && wget https://github.com/magento/inventory/archive/refs/tags/1.1.7.zip"
+             docker exec -it newimage sh -c "cd /app/app/code/Magento && unzip 1.1.7.zip"
+             docker exec -it newimage sh -c "cd /app/app/code/Magento && mv inventory-1.1.7/* ."
+             docker exec -it newimage sh -c "cd /app/app/code/Magento && rm 1.1.7.zip"
+      - run:
+          name: Temporary Workaround for new magento 2 image
+          command: |
+             docker exec -it newimage sh -c "sed -i 's/bind-address/#bind-address/g' /etc/mysql/mysql.conf.d/mysqld.cnf"
+             docker exec -it newimage sh -c "service mysql restart"
+             docker exec -it newimage sh -c "mysqladmin create magento2"
+             docker exec -it newimage sh -c "php -f /app/bin/magento setup:install --base-url=http://127.0.0.1 --backend-frontname=admin --db-host=localhost --db-name=magento2 --db-user=root --admin-firstname=Admin --admin-lastname=Test --admin-email=admin-magento2@mailinator.com --admin-user=admin --admin-password=Mudar123 --language=pt_BR --currency=BRL --timezone=America/Sao_Paulo --use-rewrites=1 --disable-modules=Magento_ConfigurableSampleData,Magento_GroupedProductSampleData,Magento_DownloadableSampleData,Magento_BundleSampleData,Magento_SalesSampleData,Magento_ProductLinksSampleData,Magento_CatalogRuleSampleData,Magento_SalesRuleSampleData,Magento_CatalogRuleSampleData,Magento_CatalogSampleData"
+             docker exec -it newimage sh -c "php /app/bin/magento setup:upgrade"
+             docker exec -it newimage sh -c "php /app/bin/magento setup:di:compile"
+             docker exec -it newimage sh -c "php /app/bin/magento indexer:reindex"
+             docker exec -it newimage sh -c "php /app/bin/magento cache:flush"
+             docker exec -it newimage sh -c "chmod -R 755 /var/www/html  && chmod -R 777 /var/www/html/var /var/www/html/pub /var/www/html/magento2-sample-data-2.3.1 && chmod u+x /app/bin/magento"
+             docker exec -it newimage sh -c "chmod 777 -R /app"
+      - run:
           name: Activate and setup Plugin
           command: |
             docker exec -it newimage sh -c "ls"
@@ -110,6 +130,8 @@ jobs:
             docker exec -it newimage sh -c "cd /var/www/html && rm composer.lock"
             docker exec -it newimage sh -c "cd /var/www/html && composer selfupdate 1.10.22"
             docker exec -it newimage sh -c "cd /var/www/html && composer require pagarme/pagarme-magento2-module:dev-develop -vvv"
+            docker exec -it newimage sh -c "rm -rf /var/www/html/vendor/pagarme/ecommerce-module-core"
+            docker exec -it newimage sh -c "cd /var/www/html/vendor/pagarme && git clone --branch develop https://github.com/pagarme/ecommerce-module-core.git"
             docker exec -it newimage sh -c "cd /var/www/html && composer update -vvv"
             docker exec -it newimage sh -c "cd /var/www/ && find html/ -type d -exec chmod 775 {} \;"
             docker exec -it newimage sh -c "cd /var/www/ && find html/ -type f -exec chmod 664 {} \;"
@@ -123,13 +145,13 @@ jobs:
                         values ('default', 0, 'web/secure/base_url', '${STG_URL}');"
 
             docker exec -it newimage mysql magento2 -e \
-            "INSERT INTO magento2.core_config_data VALUES (null, 'default', 0, 'customer/address/taxvat_show', 1);"
+            "INSERT INTO magento2.core_config_data (scope, scope_id, path, value) VALUES ('default', 0, 'customer/address/taxvat_show', 1);"
 
             docker exec -it newimage mysql magento2 -e \
-            "INSERT INTO magento2.core_config_data VALUES (null, 'default', 0, 'customer/address/street_lines', 4);"
+            "INSERT INTO magento2.core_config_data (scope, scope_id, path, value) VALUES ('default', 0, 'customer/address/street_lines', 4);"
 
             docker exec -it newimage mysql magento2 -e \
-            "INSERT INTO magento2.core_config_data VALUES (null, 'default', 0, 'customer/create_account/vat_frontend_visibility', 1);"
+            "INSERT INTO magento2.core_config_data (scope, scope_id, path, value) VALUES ('default', 0, 'customer/create_account/vat_frontend_visibility', 1);"
 
             docker exec -it newimage mysql magento2 -e \
               "INSERT INTO magento2.core_config_data (scope, scope_id, path, value) VALUES \
@@ -151,38 +173,30 @@ jobs:
             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento setup:di:compile"
             docker exec -it newimage sh -c "cd /var/www/ && chown -R www-data:www-data html/"
       - run:
-          name: Install and run Functional Tests dependencies
+          name: Install Webkul Marketplace module
           command: |
-            docker exec -i newimage sh -c \
-              "wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
-              echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list && \
-              apt-get -y update && apt-get -y install google-chrome-unstable"
+             docker exec -it newimage sh -c "cd /app && wget ${WEBKUL_MARKETPLACE_URL}"
 
-            docker exec -it newimage sh -c "git clone https://github.com/mundipagg/ecommerce-test-package.git --branch behat-compatible-ci /behat-test"
+             docker exec -it newimage sh -c "cd /app && unzip magento2_marketplace_61.zip"
+             docker exec -it newimage sh -c "cd /app && cp -rf src/app/* ./app/"
+             docker exec -it newimage sh -c "cd /app && rm -rf src/"
 
-            docker exec -it newimage sh -c "cd /behat-test && rm -rf composer.lock && rm -rf failureScreenshots"
+             docker exec -it newimage sh -c "cd /app && unzip 'Patch For Magento-2.3.0.zip'"
+             docker exec -it newimage sh -c "cd /app/'Patch For Magento-2.3.0' && cp -rf src/app/* /app/app/"
+             docker exec -it newimage sh -c "cd /app && rm -rf ./'Patch For Magento-2.3.0'"
 
-            docker exec -it newimage sh -c "mkdir /behat-test/failureScreenshots && chmod ugo+rwx /behat-test/failureScreenshots"
+             docker exec -it newimage sh -c "cd /app && unzip 'Patch For Magento-2.3.0-2.3.3.zip'"
+             docker exec -it newimage sh -c "cd /app/'Patch For Magento-2.3.0-2.3.3' && cp -rf src/app/* /app/app/"
+             docker exec -it newimage sh -c "cd /app && rm -rf ./'Patch For Magento-2.3.0-2.3.3.zip'"
 
-            docker exec -it newimage sh -c "composer config -g github-oauth.github.com ${GIT_HUB_AUTH}"
+             docker exec -it newimage sh -c "cd /app && unzip 'Patch For Magento-2.3.4.zip'"
+             docker exec -it newimage sh -c "cd /app/'Patch For Magento-2.3.4' && cp -rf src/app/* /app/app/"
+             docker exec -it newimage sh -c "cd /app && rm -rf ./'Patch For Magento-2.3.4.zip'"
 
-            docker exec -it newimage sh -c "cd /behat-test && composer install --prefer-dist"
+             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento setup:upgrade"
+             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento setup:di:compile"
 
-            docker exec --detach newimage google-chrome-unstable --disable-gpu --no-sandbox --headless --remote-debugging-address=127.0.0.1 --remote-debugging-port=9222 --allow-insecure-localhost --disable-dev-shm-usage --disable-extensions -user-data-dir=/tmp/test
-
-            docker exec -it newimage bash -c "cd /behat-test && printf 'BASE_URL=\"http://127.0.0.1\"' > .env"
-
-            docker exec -it newimage sh -c "cd /behat-test && vendor/bin/behat --profile magento2"
-
-            mkdir -p /error
-
-            docker cp newimage:/behat-test/failureScreenshots/ /error
-
-            ls /error
-
-            if [ -z "$(ls -A -- "/error/failureScreenshots")" ]; then echo 'Behat OK'; else echo 'Behat fail'; fi
-      - store_artifacts:
-          path: /error
+             docker exec -it newimage sh -c "chmod -R 755 /var/www/html  && chmod -R 777 /var/www/html/var /var/www/html/pub /var/www/html/magento2-sample-data-2.3.1 && chmod u+x /app/bin/magento"
       - run:
           name: Clear useless files
           command: |

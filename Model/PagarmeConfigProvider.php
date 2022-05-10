@@ -2,14 +2,18 @@
 
 namespace Pagarme\Pagarme\Model;
 
-use \Magento\Store\Model\ScopeInterface;
+use Magento\Checkout\Model\ConfigProviderInterface;
+use Magento\Framework\App\Config\ConfigResource\ConfigInterface;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Store\Model\ScopeInterface;
+use Pagarme\Pagarme\Gateway\Transaction\Base\Config\ConfigInterface as PagarmeConfigInterface;
 
 /**
  * Class PagarmeConfigProvider
  *
  * @package Pagarme\Pagarme\Model
  */
-class PagarmeConfigProvider
+class PagarmeConfigProvider implements ConfigProviderInterface
 {
     /**
      * Contains if the module is active or not
@@ -38,22 +42,26 @@ class PagarmeConfigProvider
     /**
      * Contains the configurations
      *
-     * @var \Magento\Framework\App\Config\ConfigResource\ConfigInterface
+     * @var ConfigInterface
      */
     protected $config;
 
+    /** @var PagarmeConfigInterface */
+    private $pagarmeConfig;
+
     /**
-     * ConfigProvider constructor.
-     *
-     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param PagarmeConfigInterface $pagarmeConfig
+     * @param ScopeConfigInterface $scopeConfig
+     * @param ConfigInterface $config
      */
     public function __construct(
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
-        \Magento\Framework\App\Config\ConfigResource\ConfigInterface $config
-    )
-    {
+        PagarmeConfigInterface $pagarmeConfig,
+        ScopeConfigInterface $scopeConfig,
+        ConfigInterface $config
+    ) {
         $this->scopeConfig = $scopeConfig;
         $this->config = $config;
+        $this->pagarmeConfig = $pagarmeConfig;
     }
 
     /**
@@ -234,5 +242,13 @@ class PagarmeConfigProvider
             'default',
             0
         );
+    }
+
+    /**
+     * @return array
+     */
+    public function getConfig(): array
+    {
+        return ['pagarme_is_sandbox_mode' => $this->pagarmeConfig->isSandboxMode()] ;
     }
 }

@@ -60,25 +60,19 @@
             <argument name="configProviders" xsi:type="array">
                 <item name="pagarme_creditcard_config_provider" xsi:type="object">PagarmeCreditCardUiConfigProvider</item>
                 <item name="pagarme_creditcard_config_provider_unique" xsi:type="object">Pagarme\Pagarme\Model\Ui\CreditCard\ConfigProvider</item>
-
                 <item name="pagarme_billet_creditcard_config_provider" xsi:type="object">PagarmeBilletCreditCardUiConfigProvider</item>
                 <item name="pagarme_billet_creditcard_config_provider_unique" xsi:type="object">Pagarme\Pagarme\Model\Ui\BilletCreditCard\ConfigProvider</item>
-
                 <item name="pagarme_two_creditcard_config_provider" xsi:type="object">PagarmeTwoCreditCardUiConfigProvider</item>
                 <item name="pagarme_two_creditcard_config_provider_unique" xsi:type="object">Pagarme\Pagarme\Model\Ui\TwoCreditCard\ConfigProvider</item>
-
                 <item name="pagarme_voucher_config_provider" xsi:type="object">PagarmeVoucherUiConfigProvider</item>
                 <item name="pagarme_voucher_config_provider_unique" xsi:type="object">Pagarme\Pagarme\Model\Ui\Voucher\ConfigProvider</item>
-
                 <item name="pagarme_debit_config_provider" xsi:type="object">PagarmeDebitUiConfigProvider</item>
                 <item name="pagarme_debit_config_provider_unique" xsi:type="object">Pagarme\Pagarme\Model\Ui\Debit\ConfigProvider</item>
-
                 <item name="generic_config_provider" xsi:type="object">Magento\Payment\Model\CcGenericConfigProvider</item>
                 <item name="installments_creditcard" xsi:type="object">PagarmeCreditCardInstallmentsUiConfigProvider</item>
-
                 <item name="pagarme_billet_config_provider" xsi:type="object">Pagarme\Pagarme\Model\Ui\Billet\ConfigProvider</item>
-
                 <item name="pagarme_pix_config_provider" xsi:type="object">Pagarme\Pagarme\Model\Ui\Pix\ConfigProvider</item>
+                <item name="pagarme_config_provider" xsi:type="object">Pagarme\Pagarme\Model\PagarmeConfigProvider</item>
             </argument>
         </arguments>
     </type>

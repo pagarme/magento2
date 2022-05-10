@@ -98,6 +98,10 @@ define(
                 );
             },
 
+            isSandboxMode: function() {
+                return window.checkoutConfig.pagarme_is_sandbox_mode;
+            },
+
             getData: function() {
                 return {
                     "method": this.item.method
