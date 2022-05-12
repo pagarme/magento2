@@ -33,10 +33,10 @@ class ServicePayloadConverterInterface
     const PAGARME_TRANSACTION_ID = 'pagarme_transaction_id';
 
     /** @var OrderRepositoryInterface */
-    private OrderRepositoryInterface $_orderRepository;
+    private $_orderRepository;
 
     /** @var Logger */
-    private Logger $logger;
+    private $logger;
 
     /**
      * @param OrderRepositoryInterface $_orderRepository
