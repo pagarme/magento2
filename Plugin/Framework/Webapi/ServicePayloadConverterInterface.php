@@ -7,8 +7,6 @@
  * @link        https://pagar.me
  */
 
-declare(strict_types=1);
-
 namespace Pagarme\Pagarme\Plugin\Framework\Webapi;
 
 use Magento\Framework\Exception\InputException;
@@ -33,10 +31,10 @@ class ServicePayloadConverterInterface
     const PAGARME_TRANSACTION_ID = 'pagarme_transaction_id';
 
     /** @var OrderRepositoryInterface */
-    private OrderRepositoryInterface $_orderRepository;
+    private $_orderRepository;
 
     /** @var Logger */
-    private Logger $logger;
+    private $logger;
 
     /**
      * @param OrderRepositoryInterface $_orderRepository

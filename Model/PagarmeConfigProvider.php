@@ -47,7 +47,7 @@ class PagarmeConfigProvider implements ConfigProviderInterface
     protected $config;
 
     /** @var PagarmeConfigInterface */
-    private PagarmeConfigInterface $pagarmeConfig;
+    private $pagarmeConfig;
 
     /**
      * @param PagarmeConfigInterface $pagarmeConfig

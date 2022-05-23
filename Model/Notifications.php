@@ -7,8 +7,6 @@
  * @link        https://pagar.me
  */
 
-declare(strict_types=1);
-
 namespace Pagarme\Pagarme\Model;
 
 use Magento\AdminNotification\Model\System\Message;
@@ -26,7 +24,7 @@ class Notifications extends Message
 {
 
     /** @var array */
-    protected array $warnings = [];
+    protected $warnings = [];
 
     /**
      * @param ConfigInterface $config
