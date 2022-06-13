@@ -128,7 +128,6 @@ class MigrateData extends AbstractHelper
 
     private function getOptions($argv)
     {
-        var_dump($argv);
         if (!isset($argv[0])) {
             return null;
         }
