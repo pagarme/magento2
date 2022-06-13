@@ -36,8 +36,7 @@ class ProductHelper
 
         $productList = [];
         foreach ($productIdList as $productId) {
-            $product =
-                $objectManager
+            $product = $objectManager
                 ->create('Magento\Catalog\Model\Product')
                 ->load($productId);
 
@@ -80,7 +79,10 @@ class ProductHelper
      */
     public static function extractValueFromTitle($title)
     {
-        return (float)preg_replace('/[^0-9,]/', '', ProductHelper::getStringBetween($title, '(', ')'));
+        return (float)str_replace(',', '.',
+            preg_replace('/[^0-9,.]/', '',
+                ProductHelper::getStringBetween($title, '(', ')'))
+        );
     }
 
     /**
@@ -100,7 +102,7 @@ class ProductHelper
      */
     public static function convertDecimalMoney($amount)
     {
-        $amount = number_format($amount, 2, ',', '.');
+        $amount = number_format($amount, 2);
         return $amount;
     }
 

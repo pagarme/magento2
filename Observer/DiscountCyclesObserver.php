@@ -41,21 +41,19 @@ class DiscountCyclesObserver implements ObserverInterface
         if (isset($observer->getProduct()->getOptions()[0])) {
             $this->applyDiscountCycles(
                 $observer->getProduct()->getOptions()[0]->getValues(),
-                ProductHelper::getDiscountAmount($observer->getProduct())
+                $observer->getProduct()
             );
         }
     }
 
     /**
      * @param Cycles $cycles
-     * @param DiscountAmount $discountAmount
+     * @param Product $product
      */
-    private function applyDiscountCycles($cycles, $discountAmount)
+    private function applyDiscountCycles($cycles, $product)
     {
         foreach ($cycles as $cycle) {
-            $value         = ProductHelper::extractValueFromTitle($cycle->getTitle());
-            $discountValue = ProductHelper::calculateDiscount($value, $discountAmount);
-            $cycle->setTitle(strtok($cycle->getTitle(), '-') . ' - ' . ProductHelper::applyMoneyFormat($discountValue));
+            ProductHelper::applyDiscount($cycle->getTitle(), $product);
         }
     }
 }
