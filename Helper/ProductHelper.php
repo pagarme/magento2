@@ -54,9 +54,13 @@ class ProductHelper
      */
     public static function applyDiscount($title, $product)
     {
+        $value = ProductHelper::extractValueFromTitle($title);
+        if (!$value) {
+            return $title;
+        }
         $price = ProductHelper::applyMoneyFormat(
             ProductHelper::calculateDiscount(
-                ProductHelper::extractValueFromTitle($title),
+                $value,
                 ProductHelper::getDiscountAmount($product)
             )
         );
