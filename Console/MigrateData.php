@@ -1,39 +1,30 @@
 <?php
 
-namespace Pagarme\Pagarme\Setup;
+namespace Pagarme\Pagarme\Console;
 
-require_once "app/bootstrap.php";
+use Magento\Framework\App\Helper\AbstractHelper;
+use Magento\Framework\App\Helper\Context;
+use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\App\ObjectManager;
 
-$bootstrap = \Magento\Framework\App\Bootstrap::create(BP, $_SERVER);
-$objectManager = $bootstrap->getObjectManager();
-$resourceConnection = $objectManager->get('Magento\Framework\App\ResourceConnection');
-$connection = $resourceConnection->getConnection();
-
-
-$logger = new \Monolog\Logger('migration');
-$logger->pushHandler(new \Monolog\Handler\StreamHandler(BP .'/var/log/Pagarme_Migration.log'));
-
-if (isset($argv)) {
-    $m = new MigrateData($connection, $logger, $argv);
-    $m->run();
-}
-
-class MigrateData
+class MigrateData extends AbstractHelper
 {
-    public function __construct($connection, $logger, $argv)
+    protected $logger;
+
+    public function __construct(Context $context, ResourceConnection $resourceConnection)
     {
-        $this->connection = $connection;
-        $this->logger = $logger;
-        $this->options = $this->getOptions($argv);
+        parent::__construct($context);
+        $this->logger =  new \Monolog\Logger('migration');
+        $this->logger->pushHandler(new \Monolog\Handler\StreamHandler(BP .'/var/log/pagarme_migration.log'));
+        $this->connection = $resourceConnection->getConnection();
         $this->start = microtime(true);
     }
 
-    public function run()
+    public function run($options = [])
     {
-        echo 'Wait...' . "\n";
         try {
-            $options = json_encode($this->options);
-            $this->log[] = "\n" . $this->fillLineWithDashes('MigrateData, options: ' . $options . ' ');
+            $this->options = $this->getOptions($options);
+            $this->log[] = "\n" . $this->fillLineWithDashes('MigrateData, options: ' . json_encode($this->options) . ' ');
             if ($this->validate()) {
                 $this->populateQueries();
                 $this->getRowsCountUnmigrated();
@@ -46,15 +37,16 @@ class MigrateData
             $this->log[] = "\n" . $this->fillLineWithDashes('Finished in ' . $timeElapsed . ' ');
             $logs = join("\n", $this->log);
             $this->logger->info("\n" . $logs);
-            echo "\n" . $logs . "\n";
+            $result = "\n" . $logs . "\n";
             if (isset($exception)) {
                 $this->logger->error($exception . "\n\n");
                 $line = $this->fillLineWithDashes('-');
                 $errorMessage = $exception->getMessage();
-                echo "\n" . $line . "\n\e[0;31;43mERROR:\e[0m " . $errorMessage . "\n" . $line . "\n";
+                $result .= "\n" . $line . "\n\e[0;31;43mERROR:\e[0m " . $errorMessage . "\n" . $line . "\n";
             }
-            echo "\n";
+            $result .= "\n";
         }
+        return $result;
     }
 
     private function validate()
@@ -136,7 +128,7 @@ class MigrateData
 
     private function getOptions($argv)
     {
-        if (!isset($argv[1])) {
+        if (!isset($argv[0])) {
             return null;
         }
         $options = ['execute' => true, 'group' => null, 'limit' => null];
