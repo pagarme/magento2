@@ -53,7 +53,7 @@ class DiscountCyclesObserver implements ObserverInterface
     private function applyDiscountCycles($cycles, $product)
     {
         foreach ($cycles as $cycle) {
-            ProductHelper::applyDiscount($cycle->getTitle(), $product);
+            $cycle->setTitle(ProductHelper::applyDiscount($cycle->getTitle(), $product));
         }
     }
 }
