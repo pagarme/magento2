@@ -662,5 +662,15 @@
 
     <!-- Admin checkout -->
     <!--preference for="Magento\Payment\Block\Form" type="Pagarme\Pagarme\Block\Form"/-->
+    <!-- Comamand Migrate - bin/magento -->
+
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="MigrateList" xsi:type="object">Pagarme\Pagarme\Console\Command\MigrateList</item>
+                <item name="MigrateExecute" xsi:type="object">Pagarme\Pagarme\Console\Command\MigrateExecute</item>
+            </argument>
+        </arguments>
+    </type>
 
 </config>
