@@ -24,7 +24,7 @@ class MigrateList extends Command
     protected function configure()
     {
         $this->setName("pagarme:migrate:list");
-        $this->setDescription("Migrate Mundipagg databases to Pagarme");
+        $this->setDescription("List changes to migrate Mundipagg databases to Pagarme");
         parent::configure();
     }
 

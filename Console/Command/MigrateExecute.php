@@ -24,7 +24,7 @@ class MigrateExecute extends Command
     protected function configure()
     {
         $this->setName("pagarme:migrate:execute");
-        $this->setDescription("Migrate Mundipagg databases to Pagarme");
+        $this->setDescription("Execute migrate Mundipagg databases to Pagarme");
         $this->setDefinition([
             new InputArgument('group', InputArgument::OPTIONAL, "Migrating group of tables"),
             new InputArgument('limit', InputArgument::OPTIONAL, "Limit number of lines")
