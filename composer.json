@@ -5,7 +5,7 @@
     "type": "magento2-module",
     "description": "Magento 2 Module Pagar.me",
     "require": {
-        "php": ">=7.1.0",
+        "php": "~7.1",
         "mundipagg/mundiapi": "^3.0",
         "pagarme/ecommerce-module-core": "1.1.*"
     },
@@ -22,8 +22,7 @@
         "satooshi/php-coveralls": "^1.0",
         "phpdocumentor/phpdocumentor": "^2.8",
         "magento-ecg/coding-standard":"dev-master",
-        "rregeer/phpunit-coverage-check": "^0.1.3",
-        "mundipagg/mundiapi": "^3.0"
+        "rregeer/phpunit-coverage-check": "^0.1.3"
     },
     "authors":[
         {
