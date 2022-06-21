@@ -12,6 +12,7 @@ use Pagarme\Pagarme\Gateway\Transaction\Base\Config\Config;
 use Magento\Catalog\Pricing\Render\FinalPriceBox;
 use Magento\Catalog\Model\Product\Interceptor as ProductInterceptor;
 use Pagarme\Core\Recurrence\Aggregates\Repetition;
+use \Pagarme\Pagarme\Helper\ProductHelper;
 
 class FinalPricePlugin
 {
@@ -83,13 +84,7 @@ class FinalPricePlugin
             ->load($productId);
 
         $currency = self::getLowestRecurrencePrice($subscriptionProduct, $product);
-
-        $numberFormatter = new \NumberFormatter(
-            'pt-BR',
-            \NumberFormatter::CURRENCY
-        );
-
-        $currency['price'] = $numberFormatter->format($currency['price']);
+        $currency['price'] = ProductHelper::applyMoneyFormat($currency['price']);
 
         return $currency;
     }
@@ -112,10 +107,14 @@ class FinalPricePlugin
             }
 
             $price = $recurrencePrice / $repetition->getIntervalCount() / 100;
+            $discountAmount = ProductHelper::getDiscountAmount($product) / $repetition->getIntervalCount();
 
             if ($repetition->getInterval() == Repetition::INTERVAL_YEAR) {
                 $price = $recurrencePrice / (12 * $repetition->getIntervalCount());
+                $discountAmount = ProductHelper::getDiscountAmount($product) / (12 * $repetition->getIntervalCount());
             }
+
+            $price = $price - $discountAmount > 0 ? $price - $discountAmount : $price;
 
             $prices[$price] = [
                 'price' => $price,

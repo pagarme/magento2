@@ -635,6 +635,10 @@
         <plugin name="Pagarme_Pagarme_change_template" type="Pagarme\Pagarme\Plugin\Princing\Render\FinalPricePlugin" />
     </type>
 
+    <type name="\Magento\Checkout\Block\Cart\Item\Renderer">
+        <plugin name="Pagarme_Pagarme_change_template_cycles" type="Pagarme\Pagarme\Plugin\Princing\Render\ProductPriceCyclesPlugin" />
+    </type>
+    
     <!-- Recurrence -->
 
     <preference for="Pagarme\Core\Recurrence\Interfaces\RepetitionInterface" type="Pagarme\Core\Recurrence\Aggregates\Repetition" />
@@ -658,5 +662,15 @@
 
     <!-- Admin checkout -->
     <!--preference for="Magento\Payment\Block\Form" type="Pagarme\Pagarme\Block\Form"/-->
+    <!-- Comamand Migrate - bin/magento -->
+
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="MigrateList" xsi:type="object">Pagarme\Pagarme\Console\Command\MigrateList</item>
+                <item name="MigrateExecute" xsi:type="object">Pagarme\Pagarme\Console\Command\MigrateExecute</item>
+            </argument>
+        </arguments>
+    </type>
 
 </config>

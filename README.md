@@ -6,16 +6,17 @@ This is the official Magento2 module for Pagar.me integration
 
 ## Documentation
 Refer to [module documentation](https://github.com/pagarme/magento2-module/wiki)
+and [pagarme documentation](https://docs.pagar.me/docs/magento-2-overview)
 
 ## Plugin in Magento Marketplace
 Coming soon :construction:
 
 ## Installation
-Coming Soon in *Packagist*! :construction:
+composer require pagarme/pagarme-magento2-module
 
 ## Requirements
-* PHP >= 7.1
-* Magento >= 2.3
+* PHP >= 7.1 & <= 7.4
+* Magento2 >= 2.3 & <= 2.4.3
 
 ## Configuration
 
