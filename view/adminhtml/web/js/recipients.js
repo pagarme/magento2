@@ -46,9 +46,6 @@ require([
             );
             $( "#email-recipient" ).prop( "readonly", !!recipientEmail );
 
-            $("#document-type").val('cpf');
-            $( "#document-type" ).addClass('readonly');
-
             const recipientDocument = $('#select-webkul-seller')
                 .find(":selected")
                 .attr("document");
@@ -56,8 +53,11 @@ require([
             $("#document").val(
                 recipientDocument
             );
-            
-            $("#holder-document-type").val('cpf');
+
+            $("#document-type").val(getDocumentTypeByDocument(recipientDocument));
+            $( "#document-type" ).addClass('readonly');
+
+            $("#holder-document-type").val(getDocumentTypeByDocument(recipientDocument));
             $("#holder-document-type").addClass('readonly');
 
             $("#holder-document").val(
@@ -66,7 +66,7 @@ require([
 
             $("#document").prop( "readonly", !!recipientDocument );
             $("#holder-document").prop( "readonly", !!recipientDocument );
-            
+
             if (externalId == "") {
                 $("#document-type").removeClass('readonly');
                 $("#holder-document-type").removeClass('readonly');
@@ -122,6 +122,17 @@ require([
 
         $("#search-recipient-id").on('click', searchRecipient);
     });
+
+    function getDocumentTypeByDocument(document) {
+        let value = 'cpf';
+        if (document) {
+            document = document.toString().replace(/[^0-9]/g, '');
+            if ( document.length > 11 ) {
+                value = 'cnpj';
+            }
+        }
+        return value;
+    }
 
     function searchRecipient(e) {
         e.preventDefault();
@@ -337,7 +348,7 @@ require([
                     element.addClass('readonly');
                 }
             }
-            
+
 
         }
 
@@ -366,7 +377,7 @@ require([
 
         $('#existing_recipient').val('1');
         $("#existing_recipient").attr("readonly", true);
-        
+
         $("#use_existing_pagarme_id").hide();
 
         $('#pagarme_id').show();
