@@ -211,7 +211,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         if ($dataObj->voucherConfig->cardOperation === 'authorize_capture') {
             $operation  = Configuration::CARD_OPERATION_AUTH_AND_CAPTURE;
         }
-
+        $dataObj->saveVoucherCards = $dataObj->voucherConfig->saveCards;
         $dataObj->voucherConfig->cardOperation = $operation;
         $dataObj->voucherConfig->cardConfigs = self::getBrandConfig($storeConfig, $section);
     }
