@@ -6,7 +6,6 @@
     "description": "Magento 2 Module Pagar.me",
     "require": {
         "php": "^7.4",
-        "mundipagg/mundiapi": ">=dev-4.0",
         "pagarme/ecommerce-module-core": "dev-release/2.0.0"
     },
     "require-dev": {
