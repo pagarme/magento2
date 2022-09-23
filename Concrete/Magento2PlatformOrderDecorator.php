@@ -530,26 +530,24 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             $quote->getCustomerLastname(),
         ]);
 
-        $fullName = preg_replace("/  /", " ", $fullName);
+        if ($fullName && !is_null($fullName)) {
+            $fullName = preg_replace("/  /", " ", $fullName);
+        }
 
         $customer->setName($fullName);
         $customer->setEmail($quote->getCustomerEmail());
 
-        $cleanDocument = preg_replace(
-            '/\D/',
-            '',
-            $quote->getCustomer()->getTaxVat()
-        );
+        $customerDocument = $quote->getCustomer()->getTaxVat();
 
-        if (empty($cleanDocument)) {
-            $cleanDocument = preg_replace(
-                '/\D/',
-                '',
-                $address->getVatId()
-            );
+        if (!$customerDocument) {
+            $customerDocument =  $address->getVatId();
         }
 
-        $customer->setDocument($cleanDocument);
+        if (!is_null($customerDocument)) {
+            $customerDocument = $this->cleanCustomerDocument($customerDocument);
+        }
+
+        $customer->setDocument($customerDocument);
         $customer->setType(CustomerType::individual());
 
         $telephone = $address->getTelephone();
@@ -567,6 +565,19 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
     }
 
     /**
+     * @param string $document
+     * @return array|string|string[]|null
+     */
+    public function cleanCustomerDocument(string $document)
+    {
+        return preg_replace(
+            '/\D/',
+            '',
+            $document
+        );
+    }
+
+    /**
      * @param Quote $quote
      * @return Customer
      * @throws \Exception
@@ -580,21 +591,17 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $customer->setName($guestAddress->getName());
         $customer->setEmail($guestAddress->getEmail());
 
-        $cleanDocument = preg_replace(
-            '/\D/',
-            '',
-            $guestAddress->getVatId()
-        );
+        $customerDocument = $guestAddress->getVatId();
 
-        if (empty($cleanDocument)) {
-            $cleanDocument = preg_replace(
-                '/\D/',
-                '',
-                $quote->getCustomerTaxvat()
-            );
+        if (!$customerDocument) {
+            $customerDocument = $quote->getCustomerTaxvat();
         }
 
-        $customer->setDocument($cleanDocument);
+        if (!is_null($customerDocument)) {
+            $customerDocument = $this->cleanCustomerDocument($customerDocument);
+        }
+
+        $customer->setDocument($customerDocument);
         $customer->setType(CustomerType::individual());
 
         $telephone = $guestAddress->getTelephone();
@@ -967,7 +974,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         foreach ($fields as $key => $attribute) {
             $value = $additionalInformation[$key];
 
-            if ($attribute === 'document' || $attribute === 'zipCode') {
+            if (($attribute === 'document' || $attribute === 'zipCode') && !is_null($value)) {
                 $value = preg_replace(
                     '/\D/',
                     '',
