@@ -51,7 +51,13 @@ class CustomerUpdatePagarmeHelper
 
             $this->updateCustomerRequest->email = $customer->getEmail();
             $this->updateCustomerRequest->name = $oldCustomer->getFirstName() . ' ' . $oldCustomer->getLastName();
-            $this->updateCustomerRequest->document = preg_replace('/[\/.-]/', '', $oldCustomer->getTaxvat());
+            $customerDocument = $oldCustomer->getTaxvat();
+
+            if (is_null($customerDocument)) {
+                $customerDocument = '';
+            }
+
+            $this->updateCustomerRequest->document = preg_replace('/[\/.-]/', '', $customerDocument);
             $this->updateCustomerRequest->type = 'individual';
 
             $this->getApi()->getCustomers()->updateCustomer($customerIdPagarme, $this->updateCustomerRequest);
