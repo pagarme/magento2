@@ -114,11 +114,8 @@ jobs:
           command: |
             sleep 5 && docker stop magento2_bitnami
             docker login ${DOCKER_ACCOUNT} -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
-            docker commit magento2_bitnami ${DOCKER_ACCOUNT}/${PROJECT_NAME}:latest
-            docker tag ${DOCKER_ACCOUNT}/${PROJECT_NAME} "${DOCKER_ACCOUNT}/${PROJECT_NAME}:latest"
-            docker tag ${DOCKER_ACCOUNT}/${PROJECT_NAME} "${DOCKER_ACCOUNT}/${PROJECT_NAME}:${CIRCLE_BRANCH}"
-            docker tag ${DOCKER_ACCOUNT}/${PROJECT_NAME} "${DOCKER_ACCOUNT}/${PROJECT_NAME}:${CIRCLE_SHA1:0:8}"
-            docker push "${DOCKER_ACCOUNT}/${PROJECT_NAME}"
+            docker commit magento2_bitnami ${DOCKER_ACCOUNT}/${PROJECT_NAME}:${CIRCLE_BRANCH}
+            docker push "${DOCKER_ACCOUNT}/${PROJECT_NAME}:${CIRCLE_BRANCH}"
 
   deploy_staging:
     machine:
@@ -166,12 +163,8 @@ jobs:
           command: |
             sleep 5 && docker stop magento2_bitnami
             docker login ${DOCKER_ACCOUNT} -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
-            docker commit magento2_bitnami ${DOCKER_ACCOUNT}/${PROJECT_NAME}:${CIRCLE_BRANCH}"
-            docker tag ${DOCKER_ACCOUNT}/${PROJECT_NAME} "${DOCKER_ACCOUNT}/${PROJECT_NAME}:latest"
-            docker tag ${DOCKER_ACCOUNT}/${PROJECT_NAME} "${DOCKER_ACCOUNT}/${PROJECT_NAME}:${CIRCLE_BRANCH}"
-            docker tag ${DOCKER_ACCOUNT}/${PROJECT_NAME} "${DOCKER_ACCOUNT}/${PROJECT_NAME}:${CIRCLE_SHA1:0:8}"
-            docker push "${DOCKER_ACCOUNT}/${PROJECT_NAME}"
-
+            docker commit magento2_bitnami ${DOCKER_ACCOUNT}/${PROJECT_NAME}:${CIRCLE_BRANCH}
+            docker push "${DOCKER_ACCOUNT}/${PROJECT_NAME}:${CIRCLE_BRANCH}"
   deploy_staging_php8:
     machine:
       image: << pipeline.parameters.machine_image >>
