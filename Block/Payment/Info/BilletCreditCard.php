@@ -94,7 +94,10 @@ class BilletCreditCard extends Cc
         Magento2CoreSetup::bootstrap();
 
         $lastTransId = $info->getLastTransId();
-        $orderId = substr($lastTransId, 0, 19);
+        $orderId = null;
+        if ($lastTransId) {
+            $orderId = substr($lastTransId, 0, 19);
+        }
 
         $orderRepository = new OrderRepository();
         $order = $orderRepository->findByPagarmeId(new OrderId($orderId));
@@ -131,7 +134,10 @@ class BilletCreditCard extends Cc
     private function getBoletoLinkFromOrder($info)
     {
         $lastTransId = $info->getLastTransId();
-        $orderId = substr($lastTransId, 0, 19);
+        $orderId = null;
+        if ($lastTransId) {
+            $orderId = substr($lastTransId, 0, 19);
+        }
 
         if (!$orderId) {
             return null;
