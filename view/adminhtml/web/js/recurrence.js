@@ -27,7 +27,8 @@ require([
                 var arraySearch = [];
                 for (var index in products) {
 
-                    var productName = products[index].value.toLowerCase();
+                    var productNameValue = products[index].value ;
+                    var productName = typeof productNameValue === "string" ? productNameValue.toLowerCase() : "";
 
                     if (productName.indexOf(currentValue) >= 0) {
                         arraySearch.push(products[index]);
