@@ -80,7 +80,10 @@ class Pix extends Template
         }
 
         $lastTransId = $info->getLastTransId();
-        $orderId = substr($lastTransId, 0, 19);
+        $orderId = null;
+        if ($lastTransId) {
+            $orderId = substr($lastTransId, 0, 19);
+        }
 
         Magento2CoreSetup::bootstrap();
         $orderService= new \Pagarme\Core\Payment\Services\OrderService();

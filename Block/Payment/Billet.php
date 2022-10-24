@@ -94,7 +94,10 @@ class Billet extends Template
     private function getBoletoLinkFromOrder($info)
     {
         $lastTransId = $info->getLastTransId();
-        $orderId = substr($lastTransId, 0, 19);
+        $orderId = null;
+        if ($lastTransId) {
+            $orderId = substr($lastTransId, 0, 19);
+        }
 
         if (!$orderId) {
             return null;
