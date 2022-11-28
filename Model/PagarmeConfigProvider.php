@@ -96,7 +96,7 @@ class PagarmeConfigProvider implements ConfigProviderInterface
     public function validateSoftDescription()
     {
         $isGatewayIntegrationType = $this->isGatewayIntegrationType();
-        $softDescription = $this->getSoftDescription();
+        $softDescription = $this->getSoftDescription() ?? "";
         $maxSizeForGateway = 22;
         $maxSizeForPSP = 13;
 
