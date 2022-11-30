@@ -29,7 +29,7 @@ if (!empty($pixInfo)):
                           d="M320 448v40c0 13.255-10.745 24-24 24H24c-13.255 0-24-10.745-24-24V120c0-13.255 10.745-24 24-24h72v296c0 30.879 25.121 56 56 56h168zm0-344V0H152c-13.255 0-24 10.745-24 24v368c0 13.255 10.745 24 24 24h272c13.255 0 24-10.745 24-24V128H344c-13.2 0-24-10.8-24-24zm120.971-31.029L375.029 7.029A24 24 0 0 0 358.059 0H352v96h96v-6.059a24 24 0 0 0-7.029-16.97z">
                     </path>
                 </svg>
-                <a onclick="copyQrCode()" style="display: inline-block; vertical-align: middle; margin: 0 5px 0 0;">Copiar
+                <a onclick="copyQrCode()" style="display: inline-block; vertical-align: middle; margin: 0 5px 0 0; cursor: pointer;">Copiar
                     código PIX</a>
                 <input style="opacity: 0; user-select: none; pointer-events: none;" type="text" value="<?= $pixInfo['qr_code']?>" id="mp_qr_code" />
             </div>
@@ -61,14 +61,39 @@ if (!empty($pixInfo)):
     </div>
 
     <script>
-        function copyQrCode() {
-            var copyText = document.getElementById("mp_qr_code");
+        window.copyQrCode = async function() {
+            const qrCodeElement = document.getElementById("mp_qr_code");
 
-            copyText.select();
-            copyText.setSelectionRange(0, 99999);
-            document.execCommand("copy");
+            if (!qrCodeElement) {
+                return;
+            }
 
-            alert("Código Pix copiado");
+            const rawCode = qrCodeElement.getAttribute("value");
+            const alternativeCopyQrCode = (rawCode) => {
+                qrCodeElement.setAttribute("style", "margin: 1.5em 0;")
+                qrCodeElement.focus();
+                qrCodeElement.select();
+                alert("Falha ao copiar! Por favor, copie o código manualmente utilizando o campo abaixo do botão.");
+            };
+
+            if (window.isSecureContext && navigator.clipboard) {
+                try {
+                    await navigator.clipboard.writeText(rawCode);
+                    alert("Código PIX copiado!");
+                } catch (err) {
+                    alternativeCopyQrCode(rawCode);
+                }
+                return;
+            }
+            
+            qrCodeElement.select();
+            qrCodeElement.setSelectionRange(0, 99999);
+            try {
+                document.execCommand('copy', false);
+                alert("Código PIX copiado!");
+            } catch (err) {
+                alternativeCopyQrCode(rawCode);
+            }
         }
     </script>
 <?php endif ?>
