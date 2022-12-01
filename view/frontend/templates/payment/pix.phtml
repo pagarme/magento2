@@ -8,7 +8,7 @@ if (!empty($pixInfo)):
         <div style="margin: 0 auto 30px; text-align: center;">
             <img width="150" src="https://cdn.mundipagg.com/assets/images/site/illustrations/pix-bc-logo-2.png" alt=>
         </div>
-        <!-- ./PIX -->
+        <!-- /PIX -->
 
         <!-- QR Code -->
         <div style="margin: 0 auto 10px; text-align: center;">
@@ -16,7 +16,7 @@ if (!empty($pixInfo)):
             <img width="200" src="<?= $pixInfo['qr_code_url']?>" />
             <!-- ./SUBSTITUIR PELO QRCODE -->
         </div>
-        <!-- ./QR Code -->
+        <!-- /QR Code -->
 
         <!-- AÇÕES -->
         <div style="margin: 0 auto 0px; min-height: 10px; text-align: center;">
@@ -33,9 +33,9 @@ if (!empty($pixInfo)):
                     código PIX</a>
                 <input style="opacity: 0; user-select: none; pointer-events: none;" type="text" value="<?= $pixInfo['qr_code']?>" id="mp_qr_code" />
             </div>
-            <!-- ./COPIAR -->
+            <!-- /COPIAR -->
         </div>
-        <!-- ./AÇÕES -->
+        <!-- /AÇÕES -->
 
         <!-- INSTRUÇÕES -->
         <div style="margin: 0 auto 30px; text-align: center;">
@@ -57,7 +57,7 @@ if (!empty($pixInfo)):
                     3</div>
             </div>
         </div>
-        <!-- ./INSTRUÇÕES -->
+        <!-- /INSTRUÇÕES -->
     </div>
 
     <script>
@@ -85,7 +85,7 @@ if (!empty($pixInfo)):
                 }
                 return;
             }
-            
+
             qrCodeElement.select();
             qrCodeElement.setSelectionRange(0, 99999);
             try {
