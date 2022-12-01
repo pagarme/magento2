@@ -103,6 +103,8 @@ jobs:
           name: Activate and setup Plugin
           command: |
             docker ps
+            docker exec -it magento2_bitnami sh -c "cd /bitnami/magento && bin/magento config:set web/unsecure/base_url https://stg-magento2.mundipagg.com/"
+            docker exec -it magento2_bitnami sh -c "cd /bitnami/magento && bin/magento config:set web/secure/base_url https://stg-magento2.mundipagg.com/"
       - store_artifacts:
           path: /error
       - run:
