@@ -102,9 +102,9 @@ class PagarmeConfigProvider implements ConfigProviderInterface
 
         if (
             $isGatewayIntegrationType
-            && strlen($softDescription) > $maxSizeForGateway
+            && mb_trlen($softDescription) > $maxSizeForGateway
         ) {
-            $newResult = substr($softDescription, 0, $maxSizeForGateway);
+            $newResult = mb_substr($softDescription, 0, $maxSizeForGateway);
             $this->config->saveConfig(
                 self::XML_PATH_SOFT_DESCRIPTION,
                 $newResult,
@@ -117,9 +117,9 @@ class PagarmeConfigProvider implements ConfigProviderInterface
 
         if (
             !$isGatewayIntegrationType
-            && strlen($softDescription) > $maxSizeForPSP
+            && mb_strlen($softDescription) > $maxSizeForPSP
         ) {
-            $newResult = substr($softDescription, 0, $maxSizeForPSP);
+            $newResult = mb_substr($softDescription, 0, $maxSizeForPSP);
             $this->config->saveConfig(
                 self::XML_PATH_SOFT_DESCRIPTION,
                 $newResult,
