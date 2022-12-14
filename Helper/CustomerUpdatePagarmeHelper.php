@@ -9,8 +9,8 @@
 namespace Pagarme\Pagarme\Helper;
 
 use Magento\Customer\Api\CustomerRepositoryInterface;
-use MundiAPILib\Controllers;
-use MundiAPILib\Models\UpdateCustomerRequest;
+use PagarmeCoreApiLib\Controllers;
+use PagarmeCoreApiLib\Models\UpdateCustomerRequest;
 use Pagarme\Pagarme\Gateway\Transaction\Base\Config\Config;
 
 class CustomerUpdatePagarmeHelper
@@ -70,11 +70,11 @@ class CustomerUpdatePagarmeHelper
     }
 
     /**
-     * @return \MundiAPILib\MundiAPIClient
+     * @return \PagarmeCoreApiLib\PagarmeCoreApiClient
      */
     public function getApi()
     {
-        return new \MundiAPILib\MundiAPIClient($this->config->getSecretKey(), '');
+        return new \PagarmeCoreApiLib\PagarmeCoreApiClient($this->config->getSecretKey(), '');
     }
 
 }
