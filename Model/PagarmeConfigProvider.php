@@ -102,7 +102,7 @@ class PagarmeConfigProvider implements ConfigProviderInterface
 
         if (
             $isGatewayIntegrationType
-            && mb_trlen($softDescription) > $maxSizeForGateway
+            && mb_strlen($softDescription) > $maxSizeForGateway
         ) {
             $newResult = mb_substr($softDescription, 0, $maxSizeForGateway);
             $this->config->saveConfig(
