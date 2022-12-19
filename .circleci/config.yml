@@ -28,23 +28,23 @@ jobs:
         environment:
           APP_ENV: test
     steps:
-       - checkout
-       - run:
+      - checkout
+      - run:
           name: Install system packages
           command: apt-get update && apt-get -y install zip git zlib1g-dev wget
-       - run:
+      - run:
           name: Install PHP extensions
           command: |
             docker-php-ext-install pdo
             docker-php-ext-install zip
-       - run:
+      - run:
           name: Display PHP information
           command: |
             php -v
-       - run:
+      - run:
           name: Check PHP sintax
           command: find . -name \*.php -exec php -l "{}" \;
-       - persist_to_workspace:
+      - persist_to_workspace:
           root: /
           paths:
             - app
@@ -79,7 +79,7 @@ jobs:
   publish:
     working_directory: /
     docker:
-      - image: docker:17.05.0-ce-git
+      - image: docker:rc-git
     steps:
       - setup_remote_docker
       - attach_workspace:
@@ -87,116 +87,24 @@ jobs:
       - run:
           name: Copy CI files to root
           command: |
-             cd /app
-             cp .circleci/data/Dockerfile .
-             cp .circleci/data/wait-for-mysql.sh .
-             cp .circleci/data/magento2_module_install.sql .
+            cd /app
+            cp .circleci/data/auth.json .
+            cp .circleci/data/docker-compose.yml .
+            cp .circleci/data/Dockerfile .
+            cp .circleci/data/wait-for-mysql.sh .
+            cp .circleci/data/magento2_module_install.sql .
       - run:
           name: Build image base for modifications
           command: |
-             cd /app
-             ls
-             docker build -t ${DOCKER_ACCOUNT}/${PROJECT_NAME}:latest .
-             docker run --name newimage -d -p3306:3306 -p80:80 ${DOCKER_ACCOUNT}/${PROJECT_NAME}:latest
-             docker exec -it newimage ls
-             docker exec -it newimage sh -c "mkdir /app/tmp"
-             docker cp /app/wait-for-mysql.sh newimage:app/tmp/
-             docker cp /app/magento2_module_install.sql newimage:app/tmp/
-      - run:
-          name: Install Magento2 Inventory Module
-          command: |
-             docker exec -it newimage sh -c "cd /app/app/code/Magento && wget https://github.com/magento/inventory/archive/refs/tags/1.1.7.zip"
-             docker exec -it newimage sh -c "cd /app/app/code/Magento && unzip 1.1.7.zip"
-             docker exec -it newimage sh -c "cd /app/app/code/Magento && mv inventory-1.1.7/* ."
-             docker exec -it newimage sh -c "cd /app/app/code/Magento && rm 1.1.7.zip"
-      - run:
-          name: Temporary Workaround for new magento 2 image
-          command: |
-             docker exec -it newimage sh -c "sed -i 's/bind-address/#bind-address/g' /etc/mysql/mysql.conf.d/mysqld.cnf"
-             docker exec -it newimage sh -c "service mysql restart"
-             docker exec -it newimage sh -c "mysqladmin create magento2"
-             docker exec -it newimage sh -c "php -f /app/bin/magento setup:install --base-url=http://127.0.0.1 --backend-frontname=admin --db-host=localhost --db-name=magento2 --db-user=root --admin-firstname=Admin --admin-lastname=Test --admin-email=admin-magento2@mailinator.com --admin-user=admin --admin-password=Mudar123 --language=pt_BR --currency=BRL --timezone=America/Sao_Paulo --use-rewrites=1 --disable-modules=Magento_ConfigurableSampleData,Magento_GroupedProductSampleData,Magento_DownloadableSampleData,Magento_BundleSampleData,Magento_SalesSampleData,Magento_ProductLinksSampleData,Magento_CatalogRuleSampleData,Magento_SalesRuleSampleData,Magento_CatalogRuleSampleData,Magento_CatalogSampleData"
-             docker exec -it newimage sh -c "php /app/bin/magento setup:upgrade"
-             docker exec -it newimage sh -c "php /app/bin/magento setup:di:compile"
-             docker exec -it newimage sh -c "php /app/bin/magento indexer:reindex"
-             docker exec -it newimage sh -c "php /app/bin/magento cache:flush"
-             docker exec -it newimage sh -c "chmod -R 755 /var/www/html  && chmod -R 777 /var/www/html/var /var/www/html/pub /var/www/html/magento2-sample-data-2.3.1 && chmod u+x /app/bin/magento"
-             docker exec -it newimage sh -c "chmod 777 -R /app"
+            cd /app
+            ls
+            docker compose up -d
       - run:
           name: Activate and setup Plugin
           command: |
-            docker exec -it newimage sh -c "ls"
-            docker exec -it newimage sh -c "ls /app"
-            docker exec -it newimage sh -c "cd /var/www/html && rm composer.lock"
-            docker exec -it newimage sh -c "cd /var/www/html && composer selfupdate 1.10.22"
-            docker exec -it newimage sh -c "cd /var/www/html && composer require pagarme/pagarme-magento2-module:dev-develop -vvv"
-            docker exec -it newimage sh -c "rm -rf /var/www/html/vendor/pagarme/ecommerce-module-core"
-            docker exec -it newimage sh -c "cd /var/www/html/vendor/pagarme && git clone --branch develop https://github.com/pagarme/ecommerce-module-core.git"
-            docker exec -it newimage sh -c "cd /var/www/html && composer update -vvv"
-            docker exec -it newimage sh -c "cd /var/www/ && find html/ -type d -exec chmod 775 {} \;"
-            docker exec -it newimage sh -c "cd /var/www/ && find html/ -type f -exec chmod 664 {} \;"
-            docker exec -it newimage sh -c "cd /var/www/html && php bin/magento setup:upgrade"
-            docker exec -it newimage sh -c "cd /var/www/html && php bin/magento setup:di:compile"
-            docker exec -it newimage php index.php
-            docker exec -it newimage mysql magento2 -e \
-            "update core_config_data set value = '${STG_URL}' where path = 'web/unsecure/base_url';"
-            docker exec -it newimage mysql magento2 -e \
-                        "insert into core_config_data (scope, scope_id, path, value) \
-                        values ('default', 0, 'web/secure/base_url', '${STG_URL}');"
-
-            docker exec -it newimage mysql magento2 -e \
-            "INSERT INTO magento2.core_config_data (scope, scope_id, path, value) VALUES ('default', 0, 'customer/address/taxvat_show', 1);"
-
-            docker exec -it newimage mysql magento2 -e \
-            "INSERT INTO magento2.core_config_data (scope, scope_id, path, value) VALUES ('default', 0, 'customer/address/street_lines', 4);"
-
-            docker exec -it newimage mysql magento2 -e \
-            "INSERT INTO magento2.core_config_data (scope, scope_id, path, value) VALUES ('default', 0, 'customer/create_account/vat_frontend_visibility', 1);"
-
-            docker exec -it newimage mysql magento2 -e \
-              "INSERT INTO magento2.core_config_data (scope, scope_id, path, value) VALUES \
-              ('default', 0, 'pagarme_pagarme/global/secret_key_test', '${API_TEST_SECRET_KEY}'), \
-              ('default', 0, 'pagarme_pagarme/global/public_key_test', '${API_TEST_PUBLIC_KEY}');"
-
-            docker exec -it newimage /bin/sh -c "mysql magento2 < /app/tmp/magento2_module_install.sql"
-
-            docker exec -it newimage sh -c "cd /var/www/html && php bin/magento config:set admin/security/password_is_forced 0"
-            docker exec -it newimage sh -c "cd /var/www/html && php bin/magento config:set admin/security/password_lifetime 0"
-
-            docker exec -it newimage sh -c "cd /var/www/html && php bin/magento config:set payment/pagarme_creditcard/enabled_saved_cards 1"
-            docker exec -it newimage sh -c "cd /var/www/html && php bin/magento config:set customer/address/street_lines 4"
-            docker exec -it newimage sh -c "cd /var/www/html && php bin/magento config:set customer/address/taxvat_show opt"
-            docker exec -it newimage sh -c "cd /var/www/html && php bin/magento config:set pagarme_pagarme/global/active 1"
-            docker exec -it newimage sh -c "cd /var/www/html && php bin/magento config:set payment/pagarme_creditcard/payment_action authorize_capture"
-
-            docker exec -it newimage sh -c "cd /var/www/html && php bin/magento cache:flush"
-            docker exec -it newimage sh -c "cd /var/www/html && php bin/magento setup:di:compile"
-            docker exec -it newimage sh -c "cd /var/www/ && chown -R www-data:www-data html/"
-      - run:
-          name: Install Webkul Marketplace module
-          command: |
-             docker exec -it newimage sh -c "cd /app && wget ${WEBKUL_MARKETPLACE_URL}"
-
-             docker exec -it newimage sh -c "cd /app && unzip magento2_marketplace_61.zip"
-             docker exec -it newimage sh -c "cd /app && cp -rf src/app/* ./app/"
-             docker exec -it newimage sh -c "cd /app && rm -rf src/"
-
-             docker exec -it newimage sh -c "cd /app && unzip 'Patch For Magento-2.3.0.zip'"
-             docker exec -it newimage sh -c "cd /app/'Patch For Magento-2.3.0' && cp -rf src/app/* /app/app/"
-             docker exec -it newimage sh -c "cd /app && rm -rf ./'Patch For Magento-2.3.0'"
-
-             docker exec -it newimage sh -c "cd /app && unzip 'Patch For Magento-2.3.0-2.3.3.zip'"
-             docker exec -it newimage sh -c "cd /app/'Patch For Magento-2.3.0-2.3.3' && cp -rf src/app/* /app/app/"
-             docker exec -it newimage sh -c "cd /app && rm -rf ./'Patch For Magento-2.3.0-2.3.3.zip'"
-
-             docker exec -it newimage sh -c "cd /app && unzip 'Patch For Magento-2.3.4.zip'"
-             docker exec -it newimage sh -c "cd /app/'Patch For Magento-2.3.4' && cp -rf src/app/* /app/app/"
-             docker exec -it newimage sh -c "cd /app && rm -rf ./'Patch For Magento-2.3.4.zip'"
-
-             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento setup:upgrade"
-             docker exec -it newimage sh -c "cd /var/www/html && php bin/magento setup:di:compile"
-
-             docker exec -it newimage sh -c "chmod -R 755 /var/www/html  && chmod -R 777 /var/www/html/var /var/www/html/pub /var/www/html/magento2-sample-data-2.3.1 && chmod u+x /app/bin/magento"
+            docker ps
+      - store_artifacts:
+          path: /error
       - run:
           name: Clear useless files
           command: |
@@ -204,23 +112,61 @@ jobs:
       - deploy:
           name: Commit and push Docker image
           command: |
-             sleep 5 && docker stop newimage
-             docker login ${DOCKER_ACCOUNT} -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
-             docker commit newimage ${DOCKER_ACCOUNT}/${PROJECT_NAME}:latest
-             docker tag ${DOCKER_ACCOUNT}/${PROJECT_NAME} "${DOCKER_ACCOUNT}/${PROJECT_NAME}:latest"
-             docker tag ${DOCKER_ACCOUNT}/${PROJECT_NAME} "${DOCKER_ACCOUNT}/${PROJECT_NAME}:${CIRCLE_BRANCH}"
-             docker tag ${DOCKER_ACCOUNT}/${PROJECT_NAME} "${DOCKER_ACCOUNT}/${PROJECT_NAME}:${CIRCLE_SHA1:0:8}"
-             docker push "${DOCKER_ACCOUNT}/${PROJECT_NAME}"
+            sleep 5 && docker stop magento2_bitnami
+            docker login ${DOCKER_ACCOUNT} -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
+            docker commit magento2_bitnami ${DOCKER_ACCOUNT}/${PROJECT_NAME}:${CIRCLE_BRANCH}
+            docker push "${DOCKER_ACCOUNT}/${PROJECT_NAME}:${CIRCLE_BRANCH}"
 
   deploy_staging:
     machine:
       image: << pipeline.parameters.machine_image >>
     steps:
       - run:
-          name: Test Swagger
+          name: Send deployment webhook to Rancher
           command: |
-            response=$(curl -s -o /dev/null -I -w "%{http_code}" http://stg-magento2.mundipagg.com/rest/all/schema?services=all)
-            if [ "$response" = '200' ]; then echo 'Swagger Ok'; else echo 'Swagger invalid'; exit 1; fi
+            BODY='{"push_data":{"tag":"'"${CIRCLE_BRANCH}"'"},"repository":{"repo_name":"'"${DOCKER_ACCOUNT}/${PROJECT_NAME}"'"}}'
+            curl -X POST ${RANCHER_STG_DEPLOY_URL} -H 'Content-Type: application/json' -d "${BODY}"
+
+  publish_php8:
+    working_directory: /
+    docker:
+      - image: docker:rc-git
+    steps:
+      - setup_remote_docker
+      - attach_workspace:
+          at: /
+      - run:
+          name: Copy CI files to root
+          command: |
+            cd /app
+            cp .circleci/data/auth.json .
+            cp .circleci/data/docker-compose.yml .
+            cp .circleci/data/Dockerfile .
+      - run:
+          name: Build image base for modifications
+          command: |
+            cd /app
+            ls
+            docker compose up -d
+      - run:
+          name: Activate and setup Plugin
+          command: |
+            docker ps
+      - run:
+          name: Clear useless files
+          command: |
+            pwd
+      - deploy:
+          name: Commit and push Docker image
+          command: |
+            sleep 5 && docker stop magento2_bitnami
+            docker login ${DOCKER_ACCOUNT} -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
+            docker commit magento2_bitnami ${DOCKER_ACCOUNT}/${PROJECT_NAME}:${CIRCLE_BRANCH}
+            docker push "${DOCKER_ACCOUNT}/${PROJECT_NAME}:${CIRCLE_BRANCH}"
+  deploy_staging_php8:
+    machine:
+      image: << pipeline.parameters.machine_image >>
+    steps:
       - run:
           name: Send deployment webhook to Rancher
           command: |
@@ -234,6 +180,13 @@ workflows:
       - build
       - sonar:
           context: dockerhub
+          filters:
+            branches:
+              ignore:
+                - master
+                - develop
+                - 2.0.0
+                - test
       - check_quality_gate_sonar:
           context: dockerhub
           requires:
@@ -243,18 +196,45 @@ workflows:
               ignore:
                 - master
                 - develop
+                - 2.0.0
+                - test
+                - stg
       - publish:
           context: acceptance
           requires:
             - build
             - sonar
           filters:
-              branches:
-                  only: develop
+            branches:
+              only:
+                - develop
+                - test
+                - stg
+                - master
       - deploy_staging:
           context: acceptance
           requires:
             - publish
           filters:
-              branches:
-                  only: develop
+            branches:
+              only:
+                - develop
+                - test
+                - stg
+                - master
+      - publish_php8:
+          context: acceptance
+          requires:
+            - build
+            - sonar
+          filters:
+            branches:
+              only: 2.0.0
+      - deploy_staging_php8:
+          context: acceptance
+          requires:
+            - publish_php8
+          filters:
+            branches:
+              only: 2.0.0
+
