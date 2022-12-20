@@ -395,7 +395,7 @@ PaymentMethodController.prototype.addCreditCardNumberListener = function(formObj
         setTimeout(function() {
             paymentMethodController.setBin(binObj,  element, formObject);
         }, 300);
-    }).bind(this);
+    });
 };
 
 PaymentMethodController.prototype.twoCardsTotal = function (paymentMethod) {
