@@ -44,7 +44,6 @@ class AdminCustomerBeforeSave implements ObserverInterface
         }
 
         $event = $observer->getEvent();
-
         $platformCustomer = new Magento2PlatformCustomerDecorator($event->getCustomer());
 
         if (empty($platformCustomer->getPagarmeId())) {
@@ -56,7 +55,7 @@ class AdminCustomerBeforeSave implements ObserverInterface
             $customerService->updateCustomerAtPagarme($platformCustomer);
         } catch (\Exception $exception) {
             $log = new LogService('CustomerService');
-            $log->info("ola" . $exception->getMessage());
+            $log->info($exception->getMessage());
 
             if ($exception->getCode() == 404) {
                 $log->info(
