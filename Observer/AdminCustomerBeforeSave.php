@@ -46,6 +46,10 @@ class AdminCustomerBeforeSave implements ObserverInterface
         $event = $observer->getEvent();
         $platformCustomer = new Magento2PlatformCustomerDecorator($event->getCustomer());
 
+        if (empty($platformCustomer->getPagarmeId())) {
+            return $this;
+        }
+
         $customerService = new CustomerService();
         try {
             $customerService->updateCustomerAtPagarme($platformCustomer);
