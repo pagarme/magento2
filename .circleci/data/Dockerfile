@@ -1,4 +1,4 @@
-FROM bitnami/magento:2.4.5
+FROM bitnami/magento:2.4.5-p1-debian-11-r21
 MAINTAINER Open Source Team
 
 WORKDIR /opt/bitnami/magento
