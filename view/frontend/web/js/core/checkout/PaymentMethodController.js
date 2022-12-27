@@ -399,8 +399,8 @@ PaymentMethodController.prototype.addCreditCardNumberListener = function(formObj
 };
 
 PaymentMethodController.prototype.twoCardsTotal = function (paymentMethod) {
-    var card1 = paymentMethod.formObject[0].creditCardInstallments.selector;
-    var card2 = paymentMethod.formObject[1].creditCardInstallments.selector;
+    var card1 = paymentMethod.formObject[0].creditCardInstallments;
+    var card2 = paymentMethod.formObject[1].creditCardInstallments;
 
     var totalCard1 = paymentMethod.formObject[0].inputAmount.val().replace(platformConfig.currency.decimalSeparator, ".");
     var totalCard2 = paymentMethod.formObject[1].inputAmount.val().replace(platformConfig.currency.decimalSeparator, ".");
@@ -418,7 +418,7 @@ PaymentMethodController.prototype.twoCardsTotal = function (paymentMethod) {
 }
 
 PaymentMethodController.prototype.boletoCreditCardTotal = function (paymentMethod) {
-    var cardElement = paymentMethod.formObject[1].creditCardInstallments.selector;
+    var cardElement = paymentMethod.formObject[1].creditCardInstallments;
 
     var sumInterestTotal = jQuery(cardElement).find(":selected").attr("interest");
 
