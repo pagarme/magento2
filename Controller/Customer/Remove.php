@@ -163,10 +163,10 @@ class Remove extends Action
     }
 
     /**
-     * @return \MundiAPILib\MundiAPIClient
+     * @return \PagarmeCoreApiLib\PagarmeCoreApiClient
      */
     private function getApi()
     {
-        return new \MundiAPILib\MundiAPIClient($this->config->getSecretKey(), '');
+        return new \PagarmeCoreApiLib\PagarmeCoreApiClient($this->config->getSecretKey(), '');
     }
 }
