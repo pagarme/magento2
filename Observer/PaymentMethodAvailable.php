@@ -114,21 +114,19 @@ class PaymentMethodAvailable implements ObserverInterface
             return $pagarmePaymentsMethods;
         }
 
-        $pagarmePaymentsMethodsFlip = array_flip($pagarmePaymentsMethods);
-
         $methodsAvailable = [];
         foreach ($recurrenceProducts as $recurrenceProduct) {
 
             if (
                 $recurrenceProduct->getCreditCard() &&
-                in_array('pagarme_creditcard', $pagarmePaymentsMethodsFlip)
+                in_array('pagarme_creditcard', $pagarmePaymentsMethods)
             ) {
                 $methodsAvailable[] = 'pagarme_creditcard';
             }
 
             if (
                 $recurrenceProduct->getBoleto() &&
-                in_array('pagarme_billet', $pagarmePaymentsMethodsFlip)
+                in_array('pagarme_billet', $pagarmePaymentsMethods)
             ) {
                 $methodsAvailable[] = 'pagarme_billet';
             }
