@@ -9,8 +9,7 @@
 namespace Pagarme\Pagarme\Helper;
 
 use Magento\Customer\Api\CustomerRepositoryInterface;
-use PagarmeCoreApiLib\Controllers;
-use PagarmeCoreApiLib\Models\UpdateCustomerRequest;
+use Pagarme\Core\Payment\Services\CustomerService;
 use Pagarme\Pagarme\Gateway\Transaction\Base\Config\Config;
 
 class CustomerUpdatePagarmeHelper
@@ -26,13 +25,13 @@ class CustomerUpdatePagarmeHelper
      * AdminCustomerSaveAfter constructor.
      */
     public function __construct(
-        UpdateCustomerRequest $updateCustomerRequest,
         Config $config,
-        CustomerRepositoryInterface $customerRepositoryInterface
+        CustomerRepositoryInterface $customerRepositoryInterface,
+        CustomerService $customerService
     ) {
-        $this->updateCustomerRequest = $updateCustomerRequest;
         $this->config = $config;
         $this->customerRepositoryInterface = $customerRepositoryInterface;
+        $this->customerService = $customerService;
     }
 
 
@@ -42,45 +41,10 @@ class CustomerUpdatePagarmeHelper
      */
     public function updateEmailPagarme($customer)
     {
-
         $oldCustomer = $this->customerRepositoryInterface->getById($customer->getId());
-
         if($oldCustomer->getCustomAttribute('customer_id_pagarme') && ($oldCustomer->getEmail() != $customer->getEmail())){
-
-            $customerIdPagarme = $oldCustomer->getCustomAttribute('customer_id_pagarme')->getValue();
-
-            $this->updateCustomerRequest->email = $customer->getEmail();
-            $this->updateCustomerRequest->name = $oldCustomer->getFirstName() . ' ' . $oldCustomer->getLastName();
-            $customerDocument = $oldCustomer->getTaxvat();
-
-            if (is_null($customerDocument)) {
-                $customerDocument = '';
-            }
-
-            $this->updateCustomerRequest->document = preg_replace('/[\/.-]/', '', $customerDocument);
-            $this->updateCustomerRequest->type = 'individual';
-
-            $this->getApi()->getCustomers()->updateCustomer($customerIdPagarme, $this->updateCustomerRequest);
-
+            $this->customerService->updateCustomerAtPagarme($customer);
         }
-
-    }
-
-    /**
-     * Singleton access to Customers controller
-     * @return Controllers\CustomersController The *Singleton* instance
-     */
-    public function getCustomers()
-    {
-        return Controllers\CustomersController::getInstance();
-    }
-
-    /**
-     * @return \PagarmeCoreApiLib\PagarmeCoreApiClient
-     */
-    public function getApi()
-    {
-        return new \PagarmeCoreApiLib\PagarmeCoreApiClient($this->config->getSecretKey(), '');
     }
 
 }
