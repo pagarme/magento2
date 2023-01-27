@@ -87,10 +87,14 @@ class CreditCard extends Cc
          */
         $orderObject = $orderService->getOrderByPagarmeId(new OrderId($orderPagarmeId));
 
-        return array_merge(
-            $orderObject->getCharges()[0]->getAcquirerTidCapturedAndAutorize(),
-            ['tid' => $this->getTid($orderObject->getCharges()[0])]
-        );
+        if (is_object($orderObject->getCharges())) {
+            return array_merge(
+                $orderObject->getCharges()[0]->getAcquirerTidCapturedAndAutorize(),
+                ['tid' => $this->getTid($orderObject->getCharges()[0])]
+            );
+        } else {
+            return [];
+        }
     }
 
     private function getTid(Charge $charge)
