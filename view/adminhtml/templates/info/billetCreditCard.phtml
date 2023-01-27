@@ -4,7 +4,10 @@
  * @var \Pagarme\Core\Kernel\Aggregates\Transaction $lastTransaction
  */
 $lastTransactions = $this->getTransactionInfo();
-$postDataBillet = (json_decode($lastTransactions['billet']->getPostData()->tran_data, true));
+$postDataBillet = null;
+if (array_key_exists('billet', $lastTransactions)) {
+    $postDataBillet = (json_decode($lastTransactions['billet']->getPostData()->tran_data, true));
+}
 ?>
 <?php if ($this->getCcType()): ?>
     <span><?php echo __($this->getTitle()); ?></span>
@@ -32,7 +35,9 @@ $postDataBillet = (json_decode($lastTransactions['billet']->getPostData()->tran_
         <span><b><?= __('NSU from capture'); ?>: </b><?= $lastTransactions['creditCard']['captured'] ?></span>
         <br/>
     <?php } ?>
-    <span><b><?= __('TID'); ?>: </b><?= $lastTransactions['creditCard']['tid'] ?></span>
+    <?php if (!empty($lastTransactions['creditCard']['tid'])) {?>
+        <span><b><?= __('TID'); ?>: </b><?= $lastTransactions['creditCard']['tid'] ?></span>
+    <?php } ?>
 <?php endif ?>
 
     <br/>
