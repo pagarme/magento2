@@ -200,23 +200,25 @@ class BilletCreditCard extends Cc
          * @var \Pagarme\Core\Kernel\Aggregates\Order orderObject
          */
         $orderObject = $orderService->getOrderByPagarmeId(new OrderId($orderPagarmeId));
-
-        $lastTransaction = $orderObject->getCharges()[0]->getLastTransaction();
-        $secondLastTransaction = $orderObject->getCharges()[1]->getLastTransaction();
-
         $transactionList = [];
-        foreach ([$lastTransaction, $secondLastTransaction] as $item) {
-            if ($item->getAcquirerNsu() != 0) {
-                $transactionList['creditCard'] =
-                    array_merge(
-                        $orderObject->getCharges()[0]->getAcquirerTidCapturedAndAutorize(),
-                        ['tid' => $this->getTid($orderObject->getCharges()[0])]
-                    );
 
-                continue;
+        if (is_object($orderObject->getCharges())) {
+            $lastTransaction = $orderObject->getCharges()[0]->getLastTransaction();
+            $secondLastTransaction = $orderObject->getCharges()[1]->getLastTransaction();
+
+            foreach ([$lastTransaction, $secondLastTransaction] as $item) {
+                if ($item->getAcquirerNsu() != 0) {
+                    $transactionList['creditCard'] =
+                        array_merge(
+                            $orderObject->getCharges()[0]->getAcquirerTidCapturedAndAutorize(),
+                            ['tid' => $this->getTid($orderObject->getCharges()[0])]
+                        );
+
+                    continue;
+                }
+
+                $transactionList['billet'] = $item;
             }
-
-            $transactionList['billet'] = $item;
         }
 
         return $transactionList;
