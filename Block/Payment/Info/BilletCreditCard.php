@@ -201,7 +201,6 @@ class BilletCreditCard extends Cc
          * @var \Pagarme\Core\Kernel\Aggregates\Order orderObject
          */
         $orderObject = $orderService->getOrderByPagarmeId(new OrderId($orderPagarmeId));
-        $transactionList = [];
 
         if ($orderObject === null) {
             return [];
@@ -210,6 +209,7 @@ class BilletCreditCard extends Cc
         $lastTransaction = $orderObject->getCharges()[0]->getLastTransaction();
         $secondLastTransaction = $orderObject->getCharges()[1]->getLastTransaction();
 
+        $transactionList = [];
         foreach ([$lastTransaction, $secondLastTransaction] as $item) {
             if ($item->getAcquirerNsu() != 0) {
                 $transactionList['creditCard'] =
