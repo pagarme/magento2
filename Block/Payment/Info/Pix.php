@@ -75,10 +75,10 @@ class Pix extends Info
          */
         $orderObject = $orderService->getOrderByPagarmeId(new OrderId($orderPagarmeId));
 
-        if (is_object($orderObject->getCharges())) {
-            return $orderObject->getCharges()[0]->getLastTransaction();
-        } else {
+        if ($orderObject === null) {
             return [];
         }
+
+        return $orderObject->getCharges()[0]->getLastTransaction();
     }
 }

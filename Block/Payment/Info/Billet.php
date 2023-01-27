@@ -149,10 +149,11 @@ class Billet extends Info
          * @var \Pagarme\Core\Kernel\Aggregates\Order orderObject
          */
         $orderObject = $orderService->getOrderByPagarmeId(new OrderId($orderPagarmeId));
-        if (is_object($orderObject->getCharges())) {
-            return $orderObject->getCharges()[0]->getLastTransaction();
-        } else {
+
+        if ($orderObject === null) {
             return [];
         }
+        
+        return $orderObject->getCharges()[0]->getLastTransaction();
     }
 }
