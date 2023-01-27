@@ -145,6 +145,7 @@ class BilletCreditCard extends Cc
 
         $orderRepository = new OrderRepository();
         $order = $orderRepository->findByPagarmeId(new OrderId($orderId));
+        $boletoUrl = null;
 
         if ($order !== null) {
             $charges = $order->getCharges();
@@ -202,23 +203,25 @@ class BilletCreditCard extends Cc
         $orderObject = $orderService->getOrderByPagarmeId(new OrderId($orderPagarmeId));
         $transactionList = [];
 
-        if (is_object($orderObject->getCharges())) {
-            $lastTransaction = $orderObject->getCharges()[0]->getLastTransaction();
-            $secondLastTransaction = $orderObject->getCharges()[1]->getLastTransaction();
+        if ($orderObject === null) {
+            return [];
+        }
 
-            foreach ([$lastTransaction, $secondLastTransaction] as $item) {
-                if ($item->getAcquirerNsu() != 0) {
-                    $transactionList['creditCard'] =
-                        array_merge(
-                            $orderObject->getCharges()[0]->getAcquirerTidCapturedAndAutorize(),
-                            ['tid' => $this->getTid($orderObject->getCharges()[0])]
-                        );
+        $lastTransaction = $orderObject->getCharges()[0]->getLastTransaction();
+        $secondLastTransaction = $orderObject->getCharges()[1]->getLastTransaction();
 
-                    continue;
-                }
+        foreach ([$lastTransaction, $secondLastTransaction] as $item) {
+            if ($item->getAcquirerNsu() != 0) {
+                $transactionList['creditCard'] =
+                    array_merge(
+                        $orderObject->getCharges()[0]->getAcquirerTidCapturedAndAutorize(),
+                        ['tid' => $this->getTid($orderObject->getCharges()[0])]
+                    );
 
-                $transactionList['billet'] = $item;
+                continue;
             }
+
+            $transactionList['billet'] = $item;
         }
 
         return $transactionList;
