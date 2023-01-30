@@ -473,8 +473,7 @@ PaymentMethodController.prototype.addCreditCardInstallmentsListener = function (
 PaymentMethodController.prototype.addSavedCreditCardsListener = function(formObject) {
 
     var paymentMethodController = this;
-    var selector = formObject.savedCreditCardSelect;
-    var brand = jQuery(selector + ' option:selected').attr('brand');
+    var brand = jQuery('option:selected').attr('brand');
 
     if (brand == undefined) {
         brand = formObject.creditCardBrand.val();
@@ -485,7 +484,7 @@ PaymentMethodController.prototype.addSavedCreditCardsListener = function(formObj
 
     formObject.savedCreditCardSelect.on('change', function() {
         var value = jQuery(this).val();
-        var brand = jQuery(selector + ' option:selected').attr('brand');
+        var brand = jQuery('option:selected').attr('brand');
 
         formObject.creditCardBrand.val(brand);
         if (value === 'new') {
@@ -755,10 +754,9 @@ PaymentMethodController.prototype.fillSavedCreditCardsSelect = function (formObj
     formHandler.init(formObject);
     formHandler.fillSavedCreditCardsSelect(platformConfig, formObject);
 
-    if (typeof formObject.savedCreditCardSelect != 'undefined') {
+    if (typeof formObject.savedCreditCardSelect[0] != 'undefined') {
 
-        selector = formObject.savedCreditCardSelect;
-        var brand = jQuery(selector + ' option:selected').attr('brand');
+        var brand = jQuery('option:selected').attr('brand');
 
         if (brand == undefined) {
             brand = formObject.creditCardBrand.val();

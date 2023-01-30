@@ -116,6 +116,10 @@ class TwoCreditCard extends Cc
          */
         $orderObject = $orderService->getOrderByPagarmeId(new OrderId($orderPagarmeId));
 
+        if ($orderObject === null) {
+            return [];
+        }
+
         return [
             'card1' => array_merge(
                 $orderObject->getCharges()[0]->getAcquirerTidCapturedAndAutorize(),
