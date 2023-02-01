@@ -78,6 +78,7 @@ class Billet extends Info
 
         $orderRepository = new OrderRepository();
         $order = $orderRepository->findByPagarmeId(new OrderId($orderId));
+        $boletoUrl = null;
 
         if ($order !== null) {
             $charges = $order->getCharges();
@@ -145,6 +146,11 @@ class Billet extends Info
          * @var \Pagarme\Core\Kernel\Aggregates\Order orderObject
          */
         $orderObject = $orderService->getOrderByPagarmeId(new OrderId($orderPagarmeId));
+
+        if ($orderObject === null) {
+            return [];
+        }
+        
         return $orderObject->getCharges()[0]->getLastTransaction();
     }
 }
