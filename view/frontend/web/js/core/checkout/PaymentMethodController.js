@@ -473,8 +473,7 @@ PaymentMethodController.prototype.addCreditCardInstallmentsListener = function (
 PaymentMethodController.prototype.addSavedCreditCardsListener = function(formObject) {
 
     var paymentMethodController = this;
-    var selector = formObject.savedCreditCardSelect.selector;
-    var brand = jQuery(selector + ' option:selected').attr('brand');
+    var brand = jQuery('option:selected').attr('brand');
 
     if (brand == undefined) {
         brand = formObject.creditCardBrand.val();
@@ -485,7 +484,7 @@ PaymentMethodController.prototype.addSavedCreditCardsListener = function(formObj
 
     formObject.savedCreditCardSelect.on('change', function() {
         var value = jQuery(this).val();
-        var brand = jQuery(selector + ' option:selected').attr('brand');
+        var brand = jQuery('option:selected').attr('brand');
 
         formObject.creditCardBrand.val(brand);
         if (value === 'new') {
@@ -755,10 +754,9 @@ PaymentMethodController.prototype.fillSavedCreditCardsSelect = function (formObj
     formHandler.init(formObject);
     formHandler.fillSavedCreditCardsSelect(platformConfig, formObject);
 
-    if (typeof formObject.savedCreditCardSelect.selector != 'undefined') {
+    if (typeof formObject.savedCreditCardSelect[0] != 'undefined') {
 
-        selector = formObject.savedCreditCardSelect.selector;
-        var brand = jQuery(selector + ' option:selected').attr('brand');
+        var brand = jQuery('option:selected').attr('brand');
 
         if (brand == undefined) {
             brand = formObject.creditCardBrand.val();
@@ -791,7 +789,7 @@ PaymentMethodController.prototype.removeMultibuyerForm = function (formObject) {
 };
 
 PaymentMethodController.prototype.addShowMultibuyerListener = function(formObject) {
-    jQuery(formObject.multibuyer.showMultibuyer.selector).on('click', function () {
+    jQuery(formObject.multibuyer.showMultibuyer).on('click', function () {
         formHandler.init(formObject);
         formHandler.toggleMultibuyer(formObject);
     });
