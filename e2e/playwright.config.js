@@ -15,7 +15,7 @@ module.exports = {
       testMatch: '**/*.e2e.test.js',
       timeout: 60000,
       use: {
-        baseURL: 'https://stg-magento2.mundipagg.com',
+        baseURL: 'http://magento.test', //'https://stg-magento2.mundipagg.com',
         browsers: ['chromium'],
         viewport: { width: 1440, height: 900 },
         screenshot: 'only-on-failure',
