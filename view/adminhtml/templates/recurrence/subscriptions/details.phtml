@@ -89,7 +89,7 @@
                         <tr>
                             <th><?= __('Customer id') ?></th>
                             <td>
-                                <span><?= $subscription->getPlatformOrder()->getCustomer()->getPagarmeId()->getValue(); ?></span>
+                                <span><?= $subscription->getPlatformOrder()->getCustomer()->getPagarmeId(); ?></span>
                             </td>
                         </tr><tr>
                             <th><?= __('Customer name') ?></th>
@@ -234,7 +234,7 @@
                 </td>
                 <td>
                     <?php
-                        $cancelUrl = $charge->getBoletoUrl();
+                        $cancelUrl = $charge->getBoletoUrl() ?? "";
                         if (strlen($cancelUrl) > 0) {
                     ?>
                         <div class="data-grid-cell-content"> <?= $cancelUrl; ?> </div>
