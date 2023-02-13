@@ -14,14 +14,11 @@ namespace Pagarme\Pagarme\Block\Payment\Info;
 use Magento\Framework\DataObject;
 use Magento\Payment\Block\Info\Cc;
 use Pagarme\Core\Kernel\Aggregates\Charge;
-use Pagarme\Core\Kernel\Repositories\OrderRepository;
 use Pagarme\Core\Kernel\Services\OrderService;
 use Pagarme\Core\Kernel\ValueObjects\Id\OrderId;
-use Pagarme\Core\Kernel\ValueObjects\Id\SubscriptionId;
-use Pagarme\Core\Recurrence\Repositories\ChargeRepository as SubscriptionChargeRepository;
-use Pagarme\Core\Recurrence\Repositories\SubscriptionRepository;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Pagarme\Pagarme\Concrete\Magento2PlatformOrderDecorator;
+use Pagarme\Pagarme\Helper\Payment\Billet as BilletHelper;
 
 class BilletCreditCard extends Cc
 {
@@ -78,42 +75,9 @@ class BilletCreditCard extends Cc
 
     public function getBilletUrl()
     {
-        $method = $this->getInfo()->getMethod();
+        $billetHelper = new BilletHelper();
+        return $billetHelper->getBilletUrl($this->getInfo());
 
-        if (strpos($method, "pagarme_billet") === false) {
-            return;
-        }
-
-        $info = $this->getInfo();
-        $boletoUrl = $this->getBoletoLinkFromOrder($info);
-
-        if (!$boletoUrl) {
-            $boletoUrl = $this->getBoletoLinkFromSubscription($info);
-        }
-
-        Magento2CoreSetup::bootstrap();
-
-        $lastTransId = $info->getLastTransId();
-        $orderId = null;
-        if ($lastTransId) {
-            $orderId = substr($lastTransId, 0, 19);
-        }
-
-        $orderRepository = new OrderRepository();
-        $order = $orderRepository->findByPagarmeId(new OrderId($orderId));
-
-        if ($order !== null) {
-            $charges = $order->getCharges();
-            foreach ($charges as $charge) {
-                $transaction = $charge->getLastTransaction();
-                $savedBoletoUrl = $transaction->getBoletoUrl();
-                if ($savedBoletoUrl !== null) {
-                    $boletoUrl = $savedBoletoUrl;
-                }
-            }
-        }
-
-        return $boletoUrl;
     }
 
     public function getCcAmount()
@@ -129,58 +93,6 @@ class BilletCreditCard extends Cc
     public function getBilletAmount()
     {
         return (float)$this->getInfo()->getAdditionalInformation('cc_billet_amount');
-    }
-
-    private function getBoletoLinkFromOrder($info)
-    {
-        $lastTransId = $info->getLastTransId();
-        $orderId = null;
-        if ($lastTransId) {
-            $orderId = substr($lastTransId, 0, 19);
-        }
-
-        if (!$orderId) {
-            return null;
-        }
-
-        $orderRepository = new OrderRepository();
-        $order = $orderRepository->findByPagarmeId(new OrderId($orderId));
-        $boletoUrl = null;
-
-        if ($order !== null) {
-            $charges = $order->getCharges();
-            foreach ($charges as $charge) {
-                $transaction = $charge->getLastTransaction();
-                $savedBoletoUrl = $transaction->getBoletoUrl();
-                if ($savedBoletoUrl !== null) {
-                    $boletoUrl = $savedBoletoUrl;
-                }
-            }
-        }
-
-        return $boletoUrl;
-    }
-
-    private function getBoletoLinkFromSubscription($info)
-    {
-        $subscriptionRepository = new SubscriptionRepository();
-        $subscription = $subscriptionRepository->findByCode($info->getOrder()->getIncrementId());
-
-        if (!$subscription) {
-            return null;
-        }
-
-        $chargeRepository = new SubscriptionChargeRepository();
-        $subscriptionId =
-            new SubscriptionId(
-                $subscription->getPagarmeId()->getValue()
-            );
-
-        $charge = $chargeRepository->findBySubscriptionId($subscriptionId);
-
-        if (!empty($charge[0])) {
-            return $charge[0]->getBoletoLink();
-        }
     }
 
     public function getTransactionInfo()

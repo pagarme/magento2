@@ -6,6 +6,7 @@
     use Pagarme\Core\Kernel\ValueObjects\Id\SubscriptionId;
     use Pagarme\Core\Kernel\Repositories\OrderRepository;
     use Pagarme\Core\Recurrence\Repositories\ChargeRepository as SubscriptionChargeRepository;
+    use Pagarme\Core\Recurrence\Repositories\SubscriptionRepository;
 
     class Billet {
         
@@ -15,7 +16,7 @@
             if (strpos($method, "pagarme_billet") === false) {
                 return;
             }
-            $boletoUrl = $info->getAdditionalInformation('billet_url');
+            
             Magento2CoreSetup::bootstrap();
             $boletoUrl = $this->getBoletoLinkFromOrder($info);
 
