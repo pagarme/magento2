@@ -16,13 +16,7 @@ use Magento\Framework\View\Element\Template\Context;
 use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Sales\Api\Data\OrderInterface as Order;
 use Magento\Sales\Api\Data\OrderPaymentInterface as Payment;
-use Pagarme\Core\Kernel\Repositories\OrderRepository;
-use Pagarme\Core\Kernel\ValueObjects\Id\OrderId;
-use Pagarme\Core\Kernel\ValueObjects\Id\SubscriptionId;
-use Pagarme\Core\Recurrence\Repositories\SubscriptionRepository;
-use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
-use Pagarme\Core\Recurrence\Repositories\ChargeRepository as SubscriptionChargeRepository;
-
+use Pagarme\Pagarme\Helper\Payment\Pix as PixHelper;
 class Pix extends Template
 {
     protected $checkoutSession;
@@ -72,21 +66,7 @@ class Pix extends Template
      */
     public function getPixInfo()
     {
-        $info = $this->getPayment();
-        $method = $info->getMethod();
-
-        if (strpos($method, "pagarme_pix") === false) {
-            return null;
-        }
-
-        $lastTransId = $info->getLastTransId();
-        $orderId = null;
-        if ($lastTransId) {
-            $orderId = substr($lastTransId, 0, 19);
-        }
-
-        Magento2CoreSetup::bootstrap();
-        $orderService= new \Pagarme\Core\Payment\Services\OrderService();
-        return $orderService->getPixQrCodeInfoFromOrder(new OrderId($orderId));
+        $pixHelper = new PixHelper();
+        return $pixHelper->getQrCode($this->getPayment());
     }
 }

@@ -10,6 +10,7 @@ use Pagarme\Core\Kernel\Services\OrderService;
 use Pagarme\Core\Kernel\ValueObjects\Id\OrderId;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Pagarme\Pagarme\Concrete\Magento2PlatformOrderDecorator;
+use Pagarme\Pagarme\Helper\Payment\Pix as PixHelper;
 
 class Pix extends Info
 {
@@ -26,22 +27,8 @@ class Pix extends Info
      */
     public function getPixInfo()
     {
-        $info = $this->getInfo();
-        $method = $info->getMethod();
-
-        if (strpos($method, "pagarme_pix") === false) {
-            return null;
-        }
-
-        $lastTransId = $info->getLastTransId();
-        $orderId = null;
-        if ($lastTransId) {
-            $orderId = substr($lastTransId, 0, 19);
-        }
-
-        Magento2CoreSetup::bootstrap();
-        $orderService= new \Pagarme\Core\Payment\Services\OrderService();
-        return $orderService->getPixQrCodeInfoFromOrder(new OrderId($orderId));
+        $pixHelper = new PixHelper();
+        return $pixHelper->getQrCode($this->getInfo());
     }
 
     public function getTitle()
