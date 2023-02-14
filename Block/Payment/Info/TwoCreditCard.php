@@ -121,12 +121,11 @@ class TwoCreditCard extends Cc
         }
 
         if (is_object($orderObject->getCharges())) {
-                return [
-                    'card1' => array_merge(
-                        $orderObject->getCharges()[0]->getAcquirerTidCapturedAndAutorize(),
-                        ['tid' => $this->getTid($orderObject->getCharges()[0])]
-                    ),
-
+            return [
+                'card1' => array_merge(
+                    $orderObject->getCharges()[0]->getAcquirerTidCapturedAndAutorize(),
+                    ['tid' => $this->getTid($orderObject->getCharges()[0])]
+                ),
                 'card2' => array_merge(
                     $orderObject->getCharges()[1]->getAcquirerTidCapturedAndAutorize(),
                     ['tid' => $this->getTid($orderObject->getCharges()[1])]

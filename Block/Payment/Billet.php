@@ -25,7 +25,8 @@ class Billet extends Template
      * @param Context $context
      * @param CheckoutSession $checkoutSession
      */
-    public function __construct(Context $context, CheckoutSession $checkoutSession){
+    public function __construct(Context $context, CheckoutSession $checkoutSession)
+    {
         $this->checkoutSession = $checkoutSession;
         parent::__construct($context, []);
     }

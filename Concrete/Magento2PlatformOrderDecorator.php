@@ -537,14 +537,14 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $customer->setName($fullName);
         $customer->setEmail($quote->getCustomerEmail());
 
-        $customerDocument = $quote->getCustomer()->getTaxVat();
-
+        $customerDocument = $this->cleanCustomerDocument(
+                                $quote->getCustomer()->getTaxVat()
+                            );
+        
         if (!$customerDocument) {
-            $customerDocument =  $address->getVatId();
-        }
-
-        if (!is_null($customerDocument)) {
-            $customerDocument = $this->cleanCustomerDocument($customerDocument);
+            $customerDocument = $this->cleanCustomerDocument(
+                                    $address->getVatId()
+                                );
         }
 
         $customer->setDocument($customerDocument);
@@ -570,6 +570,9 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
      */
     public function cleanCustomerDocument(string $document)
     {
+        if(is_null($document)) {
+            return '';
+        }
         return preg_replace(
             '/\D/',
             '',
