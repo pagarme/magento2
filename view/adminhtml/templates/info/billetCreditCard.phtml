@@ -62,7 +62,7 @@ if (array_key_exists('billet', $lastTransactions)) {
     <br/>
 <?php } ?>
 
-<?php if ($this->getBilletUrl() && $this->getInfo()->getOrder()->getState() == 'pending_payment'): ?>
+<?php if ($this->getBilletUrl() && $this->getInfo()->getOrder()->getState() == 'new'): ?>
     <span><b><?php echo __('Amount') ?>: </b><?php echo 'R$ ' . number_format($this->getBilletAmount(), 2, ',', '.'); ?></span>
     <br/>
     <br/>

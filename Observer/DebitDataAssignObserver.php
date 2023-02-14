@@ -10,6 +10,7 @@ use Magento\Framework\Event\Observer;
 use Magento\Quote\Api\Data\PaymentInterface;
 use Pagarme\Core\Payment\Repositories\SavedCardRepository;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use Pagarme\Pagarme\Helper\MultiBuyerDataAssign;
 use Pagarme\Pagarme\Model\Cards;
 use Pagarme\Pagarme\Model\CardsRepository;
 
@@ -46,7 +47,9 @@ class DebitDataAssignObserver extends AbstractDataAssignObserver
 
         $info->setAdditionalInformation('cc_saved_card', '0');
         $info->setAdditionalInformation('cc_installments', 1);
-        $this->setMultiBuyer($info, $additionalData);
+        
+        $multiBuyerDataAssign = new MultiBuyerDataAssign();
+        $multiBuyerDataAssign->setCcMultiBuyer($info, $additionalData);
 
         if ($additionalData->getCcSavedCard()) {
             $this->setSavedCardAdditionalData($info, $additionalData);
@@ -61,7 +64,9 @@ class DebitDataAssignObserver extends AbstractDataAssignObserver
     {
         $info->setAdditionalInformation('cc_saved_card', $additionalData->getCcSavedCard());
         $info->setAdditionalInformation('cc_type', $additionalData->getCcType());
-        $info->setAdditionalInformation('cc_last_4', substr($additionalData->getCcLast4(),-4));
+        if ($additionalData->getCcLast4()) {
+            $info->setAdditionalInformation('cc_last_4', substr($additionalData->getCcLast4(),-4));
+        }
         $info->setAdditionalInformation('cc_token_credit_card', $additionalData->getCcTokenCreditCard());
         $info->addData([
             'cc_type' => $additionalData->getCcType(),
@@ -74,6 +79,7 @@ class DebitDataAssignObserver extends AbstractDataAssignObserver
 
         $info->setAdditionalInformation('cc_savecard', $additionalData->getCcSavecard());
     }
+
     protected function setSavedCardAdditionalData($info, $additionalData)
     {
         $cardId = $additionalData->getCcSavedCard();
@@ -92,26 +98,4 @@ class DebitDataAssignObserver extends AbstractDataAssignObserver
         ]);
     }
 
-    /**
-     * @param $info
-     * @param $additionalData
-     */
-    protected function setMultiBuyer($info, $additionalData)
-    {
-        $info->setAdditionalInformation('cc_buyer_checkbox', $additionalData->getCcBuyerCheckbox());
-        if ($additionalData->getCcBuyerCheckbox()) {
-            $info->setAdditionalInformation('cc_buyer_name', $additionalData->getCcBuyerName());
-            $info->setAdditionalInformation('cc_buyer_email', $additionalData->getCcBuyerEmail());
-            $info->setAdditionalInformation('cc_buyer_document', $additionalData->getCcBuyerDocument());
-            $info->setAdditionalInformation('cc_buyer_street_title', $additionalData->getCcBuyerStreetTitle());
-            $info->setAdditionalInformation('cc_buyer_street_number', $additionalData->getCcBuyerStreetNumber());
-            $info->setAdditionalInformation('cc_buyer_street_complement', $additionalData->getCcBuyerStreetComplement());
-            $info->setAdditionalInformation('cc_buyer_zipcode', $additionalData->getCcBuyerZipcode());
-            $info->setAdditionalInformation('cc_buyer_neighborhood', $additionalData->getCcBuyerNeighborhood());
-            $info->setAdditionalInformation('cc_buyer_city', $additionalData->getCcBuyerCity());
-            $info->setAdditionalInformation('cc_buyer_state', $additionalData->getCcBuyerState());
-            $info->setAdditionalInformation('cc_buyer_home_phone', $additionalData->getCcBuyerHomePhone());
-            $info->setAdditionalInformation('cc_buyer_mobile_phone', $additionalData->getCcBuyerMobilePhone());
-        }
-    }
 }

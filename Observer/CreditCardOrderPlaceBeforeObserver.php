@@ -51,13 +51,17 @@ class CreditCardOrderPlaceBeforeObserver implements ObserverInterface
         if($payment->getMethod() == 'pagarme_creditcard'){
             $tax = $this->getTaxOrder(
                 $payment->getAdditionalInformation('cc_installments'),
-                $payment->getAdditionalInformation('cc_type'),
-                $order
+                $order,
+                $payment->getAdditionalInformation('cc_type')
             );
         }
 
         if($payment->getMethod() == 'pagarme_billet_creditcard'){
-            $tax = $this->getTaxOrderByAmount($payment->getAdditionalInformation('cc_installments'), $payment->getCcType(), $payment->getAdditionalInformation('cc_cc_amount'));
+            $tax = $this->getTaxOrderByAmount(
+                $payment->getAdditionalInformation('cc_installments'),
+                $payment->getAdditionalInformation('cc_cc_amount'),
+                $payment->getCcType()
+            );
         }
 
         if($payment->getMethod() == 'pagarme_two_creditcard'){
@@ -71,7 +75,7 @@ class CreditCardOrderPlaceBeforeObserver implements ObserverInterface
         return $this;
     }
 
-    protected function getTaxOrder($installments, $type = null, $order)
+    protected function getTaxOrder($installments, $order, $type = null)
     {
         $installmentService = new InstallmentService();
 
@@ -98,7 +102,7 @@ class CreditCardOrderPlaceBeforeObserver implements ObserverInterface
         return $result;
     }
 
-    protected function getTaxOrderByAmount($installments, $type = null, $amount)
+    protected function getTaxOrderByAmount($installments, $amount, $type = null)
     {
         $returnInstallments = $this->getInstallmentsByBrandAndAmountInterface()->getInstallmentsByBrandAndAmount($type,$amount);
         $result = 0;
