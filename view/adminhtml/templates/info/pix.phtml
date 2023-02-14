@@ -34,7 +34,7 @@ if (!empty($lastTransaction)) {
 <?php if ($this->getPixInfo() && $this->getInfo()->getOrder()->getStatus() == 'pending'): ?>
     <span><?php echo __($this->getTitle()) ?></span>
     <hr/>
-    <img  width="100px" height="100px" src="<?php echo $this->getPixInfo()['qr_code_url'];?>"/>
+    <img alt="Pix QrCode" width="100px" height="100px" src="<?php echo $this->getPixInfo()['qr_code_url'];?>"/>
     <br/>
     <a class="action tocart primary" href="<?php echo $this->getPixInfo()['qr_code_url'] ?>"
        target="_blank"><?php echo __('Print QrCode') ?></a>
