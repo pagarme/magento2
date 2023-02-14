@@ -31,12 +31,13 @@ if (!empty($lastTransaction)) {
     <br/>
 <?php } ?>
 
-<?php if ($this->getPixUrl() && $this->getInfo()->getOrder()->getStatus() == 'pending'): ?>
+<?php if ($this->getPixInfo() && $this->getInfo()->getOrder()->getStatus() == 'pending'): ?>
     <span><?php echo __($this->getTitle()) ?></span>
     <hr/>
-    <a class="action tocart primary" href="<?php echo $this->getPixUrl() ?>"
+    <img  width="100px" height="100px" src="<?php echo $this->getPixInfo()['qr_code_url'];?>"/>
+    <br/>
+    <a class="action tocart primary" href="<?php echo $this->getPixInfo()['qr_code_url'] ?>"
        target="_blank"><?php echo __('Print QrCode') ?></a>
 <?php else: ?>
     <span><?php echo __($this->getTitle()) ?></span>
 <?php endif ?>
-
