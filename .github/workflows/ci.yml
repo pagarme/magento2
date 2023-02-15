@@ -1,0 +1,78 @@
+name: Build and Sonar
+
+on:
+  push:
+    branches:
+      - 'master'
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check_php7_sintax:
+    name: Check Sintaxe PHP v-7.1
+    runs-on: ubuntu-latest
+    container:
+      image: php:7.1-apache
+    steps:
+    - 
+      name: Checkout
+      uses: actions/checkout@v3
+    -
+      name: install system packages
+      run: apt-get update && apt-get -y install zip git zlib1g-dev wget
+    -
+      name: Install PHP extensions
+      run: |
+        docker-php-ext-install pdo
+        docker-php-ext-install zip
+    -
+      name: Display PHP Information
+      run: php -v
+    -
+      name: Check PHP sintax
+      run: find . -name \*.php -exec php -l "{}" \;
+
+  check_php8_sintax:
+    name: Check Sintaxe PHP v-8.1
+    runs-on: ubuntu-latest
+    container:
+      image: php:8.1.0alpha3-apache
+
+    steps:
+    - 
+      name: Checkout
+      uses: actions/checkout@v3  
+    -
+      name: install system packages
+      run: apt-get update && apt-get -y install libzip-dev
+    -
+      name: Install PHP extensions
+      run: |
+        docker-php-ext-install zip
+        docker-php-ext-install pdo
+    -
+      name: Display PHP Information
+      run: php -v
+    -
+      name: Check PHP sintax
+      run: find . -name \*.php -exec php -l "{}" \;
+      
+  sonar:
+    name: SonarCloud 
+    runs-on: ubuntu-latest
+    steps:
+    -
+      name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    -
+      name: Run Sonar
+      uses: sonarsource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        
