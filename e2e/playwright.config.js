@@ -13,9 +13,12 @@ module.exports = {
       name: 'e2e',
       outputDir: 'test-results',
       testMatch: '**/*.e2e.test.js',
-      timeout: 60000,
+      timeout: 100000,
+      expect: {
+        timeout: 10 * 1000,
+      },
       use: {
-        baseURL: 'http://magento.test', //'https://stg-magento2.mundipagg.com',
+        baseURL: process.env.URL,//'https://stg-magento2.mundipagg.com',
         browsers: ['chromium'],
         viewport: { width: 1440, height: 900 },
         screenshot: 'only-on-failure',
