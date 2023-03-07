@@ -18,7 +18,7 @@ module.exports = {
         timeout: 10 * 1000,
       },
       use: {
-        baseURL: process.env.URL,//'https://stg-magento2.mundipagg.com',
+        baseURL: process.env.URL,
         browsers: ['chromium'],
         viewport: { width: 1440, height: 900 },
         screenshot: 'only-on-failure',
