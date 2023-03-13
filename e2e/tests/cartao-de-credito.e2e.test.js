@@ -60,7 +60,7 @@ test.describe('Cartão de Crédito', () => {
         await expect(page.getByText('Thank you for your purchase!')).toBeVisible();  
     })
 
-    test.skip('Criar pedido com CNPJ', async ({page}) => {
+    test('Criar pedido com CNPJ', async ({page}) => {
         const user = user_information();
         const address = address_infomration();
         const credit_card = credit_card_information_valid();

@@ -5,6 +5,9 @@ Esse folder, contém os testes que foram pensados para validar fluxos de negóci
 
 ### Instalação
 É preciso ter node instalado na maquina, para instalar, basta executar no terminal, o seguinte comando: `npm install`
+Caso tenha docker instalado na máquina, Bastar efetuar o build da imagem e utilizar.
+Build: `docker build -t playwright_magento .`
+Executar os testes: `docker run -it --rm -e URL=http://site.para.teste.br -e PRODUCT=algum_produto playwright_magento`
 
 
 ### Execução dos Testes:
