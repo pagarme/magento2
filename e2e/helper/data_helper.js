@@ -28,7 +28,6 @@ const address_infomration = () => {
         state: '502', //O magento representa por numeros, então está selecionado o RJ no momento.
         city: 'Rio de Janeiro',
         zip_code: faker.address.zipCode('########')
-
     }
 }
 

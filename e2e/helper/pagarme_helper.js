@@ -5,7 +5,6 @@ const locators = {
     cc_exp_month: '#payment_form_pagarme_creditcard select[name="payment\\[cc_exp_month\\]"]',
     cc_exp_year: '#payment_form_pagarme_creditcard select[name="payment\\[cc_exp_year\\]"]',
     cc_cid: '#payment_form_pagarme_creditcard input[name="payment\\[cc_cid\\]"]'
-
 }
 
 

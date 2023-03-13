@@ -5,6 +5,6 @@ COPY . /e2e
 WORKDIR /e2e
 
 RUN npm install
-RUN npx npx playwright install --with-deps
+RUN npx playwright install --with-deps
 
 CMD [ "npx", "playwright", "test"]

@@ -83,7 +83,7 @@ test.describe('Cartão de Crédito', () => {
         await selectCreditCardOPtion(page)
         await informCreditCartNumber(page, credit_card.credit_card_number)
         await informCreditCartName(page, user.first_name)
-        await selectExpireDate(page, credit_card.credit_card_date_mounth, credit_card.credit_card_year)
+        await selectExpireDate(page, '3', credit_card.credit_card_year)
         await informCVV(page, credit_card.credit_card_cvv)
         await finalizeCheckout(page)
         await expect(page.getByText('Thank you for your purchase!')).toBeVisible();  

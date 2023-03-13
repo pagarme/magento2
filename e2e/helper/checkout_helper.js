@@ -15,7 +15,6 @@ const locators = {
 const informEmail = async (page, emailInfo) => {
     await page.click(locators.customer_email);
     await page.type(locators.customer_email, emailInfo);
-
 }
 
 const informFirstAndLastName = async (page, firstName, lastName) => {
@@ -60,7 +59,6 @@ const informCEP = async (page, cepNumber) => {
 const informCity = async (page, cityName) => {
     await page.getByLabel('Cidade').click();
     await page.getByLabel('Cidade').fill(cityName);
-
 }
 
 const informPhoneNumber = async (page, phoneNumber) => {
