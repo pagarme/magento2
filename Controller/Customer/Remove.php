@@ -16,6 +16,7 @@ use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Pagarme\Pagarme\Concrete\Magento2SavedCardAdapter;
 use Pagarme\Pagarme\Model\CardsRepository;
 use Pagarme\Pagarme\Gateway\Transaction\Base\Config\Config;
+use PagarmeCoreApiLib\PagarmeCoreApiClient;
 
 class Remove extends Action
 {
@@ -163,6 +164,7 @@ class Remove extends Action
     }
 
     /**
+
      * @return \PagarmeCoreApiLib\PagarmeCoreApiClient
      */
     private function getApi()

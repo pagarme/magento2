@@ -14,6 +14,7 @@ namespace Pagarme\Pagarme\Gateway\Transaction\Billet\Command;
 
 use Pagarme\Pagarme\Gateway\Transaction\Base\Command\AbstractApiCommand;
 
+
 class AuthorizeCommand extends AbstractApiCommand
 {
     /**
