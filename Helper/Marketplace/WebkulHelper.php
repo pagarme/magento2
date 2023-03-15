@@ -235,7 +235,7 @@ class WebkulHelper
                 $totalPaidProductWithoutSeller += $itemPrice;
                 continue;
             }
-            // 
+
             $this->addCommissionsToSplitData(
                 $sellerAndCommisions,
                 $splitData
