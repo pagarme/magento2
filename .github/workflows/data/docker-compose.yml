@@ -41,4 +41,3 @@ services:
     image: docker.io/bitnami/elasticsearch:7
     volumes:
       - 'elasticsearch_data:/bitnami/elasticsearch/data'
-
