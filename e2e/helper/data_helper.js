@@ -18,9 +18,9 @@ const vat_information = () => {
 }
 
 
-const address_infomration = () => {
+const address_information = () => {
     return {
-        fisrt_address_line: faker.address.street(),
+        first_address_line: faker.address.street(),
         second_address_line: faker.address.secondaryAddress(),
         third_address_line: faker.address.streetAddress(),
         four_address_line: faker.address.street(),
@@ -43,6 +43,6 @@ const credit_card_information_valid = () => {
 module.exports = {
     user_information,
     vat_information,
-    address_infomration,
+    address_information,
     credit_card_information_valid
 }

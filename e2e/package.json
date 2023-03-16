@@ -25,3 +25,4 @@
       "test:e2e:ci": "npx test:e2e --workers 2"
     }
   }
+  
