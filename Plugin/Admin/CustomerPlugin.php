@@ -54,7 +54,7 @@ class CustomerPlugin
         $customer->setId($userData['entity_id']);
         $customer->setEmail($userData['email']);
 
-        $this->customerUpdatePagarmeHelper->updateEmailPagarme($customer);
+        // $this->customerUpdatePagarmeHelper->updateEmailPagarme($customer);
 
         return $subject;
 
