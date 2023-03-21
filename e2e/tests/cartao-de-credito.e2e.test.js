@@ -65,7 +65,7 @@ test.describe('Cartão de Crédito', () => {
         const address = address_information();
         const credit_card = credit_card_information_valid();
         const vat = vat_information();
-        await searchProduct(page, 'Pastel')
+        await searchProduct(page, process.env.PRODUCT)
         await selectProduct(page)
         await addToCart(page)
         await proceedCheckout(page)
