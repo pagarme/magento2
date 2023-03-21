@@ -3,16 +3,17 @@ name: CD
 on:
   push:
     branches:
-      - 'master'
-      - 'develop'
-      - 'test'
-      - 'stg'
-
+      - master
+      - test
+      - stg
+      - develop
+      
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
+
   publish:
     name: Publish
     runs-on: ubuntu-latest
@@ -25,7 +26,6 @@ jobs:
     -
       name: Copy CI files to root
       run: |
-        cd /app
         cp .github/data/auth.json .
         cp .github/data/docker-compose.yml .
         cp .github/data/Dockerfile .
@@ -34,7 +34,6 @@ jobs:
     -
       name: Build image base for modifications
       run: |
-        cd /app
         ls
         docker compose up -d
     -
@@ -45,8 +44,8 @@ jobs:
       run: |
         sleep 5 && docker stop magento2_bitnami
         docker login ${{ secrets.DOCKER_ACCOUNT }} -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-        docker commit magento2_bitnami "${{ secrets.DOCKER_ACCOUNT }}/${{ github.repository }}:${{ github.ref }}"
-        docker push "${{ secrets.DOCKER_ACCOUNT }}/${{ github.repository }}:${{ github.ref }}"
+        docker commit magento2_bitnami "${{ secrets.DOCKER_ACCOUNT }}/${{ github.repository }}:${{ github.ref_name }}"
+        docker push "${{ secrets.DOCKER_ACCOUNT }}/${{ github.repository }}:${{ github.ref_name }}"
     # - 
     #   # name: Send deployment webhook to Rancher
     #   # run: |
