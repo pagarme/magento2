@@ -46,13 +46,14 @@ class AdminCustomerBeforeSave implements ObserverInterface
         }
 
         $event = $observer->getEvent();
-        $customer = $event->getCustomer();
-        $customer->setData('phones', $this->getPhoneNumbers($event->getRequest()));
-        $platformCustomer = new Magento2PlatformCustomerDecorator($customer);
-        if (empty($platformCustomer->getPagarmeId())) {
+        
+        if (!$this->canUpdateOnPagarme($event)) {
             return $this;
         }
 
+        $customer = $event->getCustomer();
+        $customer->setData('phones', $this->getPhoneNumbers($event->getRequest()));
+        $platformCustomer = new Magento2PlatformCustomerDecorator($customer);
         $customerService = new CustomerService();
         try {
             $customerService->updateCustomerAtPagarme($platformCustomer);
@@ -85,6 +86,18 @@ class AdminCustomerBeforeSave implements ObserverInterface
         return $pagarmeProvider->getModuleStatus();
     }
 
+    private function canUpdateOnPagarme ($event) 
+    {
+        $request = $event->getRequest();
+        $platformCustomer = new Magento2PlatformCustomerDecorator($event->getCustomer());
+        if (empty($platformCustomer->getPagarmeId())) {
+            return false;
+        }
+        if (empty($request->getParam('default_shipping_address')) && empty($request->getParam('default_billing_address'))) {
+            return false;
+        }
+        return true;
+    }
 
     private function getPhoneNumbers($request)
     {
