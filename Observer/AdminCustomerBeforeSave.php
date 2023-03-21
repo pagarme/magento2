@@ -12,6 +12,8 @@ use Pagarme\Pagarme\Helper\CustomerUpdatePagarmeHelper;
 use Pagarme\Pagarme\Model\PagarmeConfigProvider;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Exception\InputException;
+use Pagarme\Core\Payment\ValueObjects\CustomerPhones;
+use Pagarme\Core\Payment\ValueObjects\Phone;
 
 class AdminCustomerBeforeSave implements ObserverInterface
 {
@@ -44,8 +46,9 @@ class AdminCustomerBeforeSave implements ObserverInterface
         }
 
         $event = $observer->getEvent();
-        $platformCustomer = new Magento2PlatformCustomerDecorator($event->getCustomer());
-
+        $customer = $event->getCustomer();
+        $customer->setData('phones', $this->getPhoneNumbers($event->getRequest()));
+        $platformCustomer = new Magento2PlatformCustomerDecorator($customer);
         if (empty($platformCustomer->getPagarmeId())) {
             return $this;
         }
@@ -80,5 +83,16 @@ class AdminCustomerBeforeSave implements ObserverInterface
         $pagarmeProvider = $objectManager->get(PagarmeConfigProvider::class);
 
         return $pagarmeProvider->getModuleStatus();
+    }
+
+
+    private function getPhoneNumbers($request)
+    {
+        $shippingPhone = $request->getParam('default_shipping_address')['telephone'];
+        $billingPhone = $request->getParam('default_billing_address')['telephone'];
+        $shippingPhone = new Phone($shippingPhone);
+        $billingPhone = new Phone($billingPhone);
+        $phonesArray = [$shippingPhone, $billingPhone];
+        return CustomerPhones::create($phonesArray);
     }
 }
