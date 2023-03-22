@@ -15,8 +15,8 @@ Coming soon :construction:
 composer require pagarme/pagarme-magento2-module
 
 ## Requirements
-* PHP >= 7.1 & <= 7.4
-* Magento2 >= 2.3 & <= 2.4.3
+* PHP >= 7.1
+* Magento2 >= 2.3
 
 ## Configuration
 

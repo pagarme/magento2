@@ -368,3 +368,6 @@
 "Integrate With Pagar.me", "Integrar com Pagar.me"
 "<span style='background-color:red; color:white; padding:2px 5px'>Important!</span> This store is linked to the Pagar.me test environment. This environment is intended for integration validation and does not generate real financial transactions.","<span style='background-color:red; color:white; padding:2px 5px'>Importante!</span> Esta loja está vinculada ao ambiente de testes da Pagar.me. Este ambiente é destinado a validação de integração e não gera operações financeiras reais."
 "Important! This store is in the testing phase. Orders placed in this environment will not be carried out.","Importante! Esta loja está em fase de testes. Os pedidos realizados neste ambiente não serão efetivados."
+"Please enter a number greater than 0 in this field.", "Digite um número maior que 0 neste campo."
+"A installment times should be set between 1 and 24!", "Um prazo de parcelamento deve ser definido entre 1 e 24!"
+"Please enter a valid number in this field.", "Insira um número válido neste campo."

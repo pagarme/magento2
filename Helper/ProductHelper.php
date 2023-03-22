@@ -111,13 +111,14 @@ class ProductHelper
     }
 
     /**
-     * @param string $str
+     * @param string|array $title
      * @param string $starting_word
      * @param string $ending_word
      * @return string
      */
-    public static function getStringBetween($str, $first_string, $second_string)
+    public static function getStringBetween($title, $first_string, $second_string)
     {
+        $str = json_encode($title);
         $arr = explode($first_string, $str);
         if (isset($arr[1])) {
             $arr = explode($second_string, $arr[1]);
