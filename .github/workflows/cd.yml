@@ -26,11 +26,11 @@ jobs:
       name: Copy CI files to root
       run: |
         cd /app
-        cp Devops/auth.json .
-        cp Devops/docker-compose.yml .
-        cp Devops/Dockerfile .
-        cp Devops/wait-for-mysql.sh .
-        cp Devops/magento2_module_install.sql .
+        cp .github/data/auth.json .
+        cp .github/data/docker-compose.yml .
+        cp .github/data/Dockerfile .
+        cp .github/data/wait-for-mysql.sh .
+        cp .github/data/magento2_module_install.sql .
     -
       name: Build image base for modifications
       run: |
@@ -47,8 +47,8 @@ jobs:
         docker login ${{ secrets.DOCKER_ACCOUNT }} -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
         docker commit magento2_bitnami "${{ secrets.DOCKER_ACCOUNT }}/${{ github.repository }}:${{ github.ref }}"
         docker push "${{ secrets.DOCKER_ACCOUNT }}/${{ github.repository }}:${{ github.ref }}"
-    - 
-      # name: Send deployment webhook to Rancher
-      # run: |
-      #   BODY='{"push_data":{"tag":"'"${{ github.ref }}"'"},"repository":{"repo_name":"'"${{ secrets.DOCKER_ACCOUNT }}/${{ github.repository }}"'"}}'
-      #   curl -X POST ${{ secrets.RANCHER_STG_DEPLOY_URL }} -H 'Content-Type: application/json' -d "${BODY}"
+    # - 
+    #   # name: Send deployment webhook to Rancher
+    #   # run: |
+    #   #   BODY='{"push_data":{"tag":"'"${{ github.ref }}"'"},"repository":{"repo_name":"'"${{ secrets.DOCKER_ACCOUNT }}/${{ github.repository }}"'"}}'
+    #   #   curl -X POST ${{ secrets.RANCHER_STG_DEPLOY_URL }} -H 'Content-Type: application/json' -d "${BODY}"
