@@ -87,7 +87,8 @@ class Magento2PlatformCustomerDecorator implements PlatformCustomerInterface
 
     public function getPhones()
     {
-        /** @TODO */
+       $customerToArray = $this->platformCustomer->__toArray();
+       return $customerToArray["phones"]; 
     }
 
 }

@@ -3,7 +3,7 @@ name: Build and Sonar
 on:
   push:
     branches:
-      - 'master'
+      - master
   pull_request:
 
 concurrency:
@@ -40,7 +40,6 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: php:8.1.0alpha3-apache
-
     steps:
     - 
       name: Checkout
@@ -59,7 +58,7 @@ jobs:
     -
       name: Check PHP sintax
       run: find . -name \*.php -exec php -l "{}" \;
-      
+
   sonar:
     name: SonarCloud 
     runs-on: ubuntu-latest
