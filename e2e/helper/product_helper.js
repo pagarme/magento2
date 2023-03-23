@@ -7,7 +7,7 @@ const searchProduct = async (page, productName) => {
 }
 
 const selectProduct = async page => {
-    await page.click('#product-item-info_1')
+    await page.click('.product-item-info')
 }
 
 const addToCart = async page =>  {
