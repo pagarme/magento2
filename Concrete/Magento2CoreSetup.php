@@ -29,6 +29,7 @@ use Pagarme\Pagarme\Concrete\Magento2PlatformCreditmemoDecorator;
 use Pagarme\Pagarme\Concrete\Magento2DataService;
 use Pagarme\Pagarme\Concrete\Magento2PlatformPaymentMethodDecorator;
 use Pagarme\Pagarme\Concrete\Magento2PlatformProductDecorator;
+use Pagarme\Pagarme\Model\ConfigNotification;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Store\Model\Website\Interceptor;
 use stdClass;
@@ -126,42 +127,49 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
      */
     public function loadModuleConfigurationFromPlatform($storeConfig = null)
     {
-        $objectManager = ObjectManager::getInstance();
+        try {
+            $objectManager = ObjectManager::getInstance();
 
-        if ($storeConfig == null) {
-            $storeConfig = $objectManager->get(Magento2StoreConfig::class);
+            if ($storeConfig == null) {
+                $storeConfig = $objectManager->get(Magento2StoreConfig::class);
+            }
+
+            $configData = new \stdClass();
+
+            $storeId = self::getCurrentStoreId();
+
+            if (!self::checkWebSiteExists($storeId)) {
+                self::$moduleConfig = new Configuration();
+                return;
+            }
+
+            self::fillWithGeneralConfig($configData, $storeConfig);
+            self::fillWithPagarmeKeys($configData, $storeConfig);
+            self::fillWithCardConfig($configData, $storeConfig);
+            self::fillWithBoletoConfig($configData, $storeConfig);
+            self::fillWithPixConfig($configData, $storeConfig);
+            self::fillWithBoletoCreditCardConfig($configData, $storeConfig);
+            self::fillWithTwoCreditCardsConfig($configData, $storeConfig);
+            self::fillWithVoucherConfig($configData, $storeConfig);
+            self::fillWithDebitConfig($configData, $storeConfig);
+            self::fillWithAddressConfig($configData, $storeConfig);
+            self::fillWithMultiBuyerConfig($configData, $storeConfig);
+            self::fillWithRecurrenceConfig($configData, $storeConfig);
+            self::fillWithHubConfig($configData, $storeConfig);
+
+            $configurationFactory = new ConfigurationFactory();
+            $config = $configurationFactory->createFromJsonData(
+                json_encode($configData)
+            );
+
+            self::$moduleConfig = $config;
+            self::$instance->setApiBaseUrl();
+
+        } catch (\Throwable $error) {
+            $configErrorNotify = new ConfigNotification();
+            $configErrorNotify->addNotify($error);
         }
-
-        $configData = new \stdClass();
-
-        $storeId = self::getCurrentStoreId();
-
-        if (!self::checkWebSiteExists($storeId)) {
-            self::$moduleConfig = new Configuration();
-            return;
-        }
-
-        self::fillWithGeneralConfig($configData, $storeConfig);
-        self::fillWithPagarmeKeys($configData, $storeConfig);
-        self::fillWithCardConfig($configData, $storeConfig);
-        self::fillWithBoletoConfig($configData, $storeConfig);
-        self::fillWithPixConfig($configData, $storeConfig);
-        self::fillWithBoletoCreditCardConfig($configData, $storeConfig);
-        self::fillWithTwoCreditCardsConfig($configData, $storeConfig);
-        self::fillWithVoucherConfig($configData, $storeConfig);
-        self::fillWithDebitConfig($configData, $storeConfig);
-        self::fillWithAddressConfig($configData, $storeConfig);
-        self::fillWithMultiBuyerConfig($configData, $storeConfig);
-        self::fillWithRecurrenceConfig($configData, $storeConfig);
-        self::fillWithHubConfig($configData, $storeConfig);
-
-        $configurationFactory = new ConfigurationFactory();
-        $config = $configurationFactory->createFromJsonData(
-            json_encode($configData)
-        );
-
-        self::$moduleConfig = $config;
-        self::$instance->setApiBaseUrl();
+        
     }
 
     /**
@@ -426,10 +434,10 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
 
         $scope = ScopeInterface::SCOPE_WEBSITES;
         $storeId = self::getCurrentStoreId();
-
+        $selectedBrands = $storeConfig->getValue($section .  'cctypes', $scope, $storeId) ?? "";
         $brands = array_merge([''], explode(
             ',',
-            $storeConfig->getValue($section .  'cctypes', $scope, $storeId)
+            $selectedBrands
         ));
 
         $cardConfigs = [];

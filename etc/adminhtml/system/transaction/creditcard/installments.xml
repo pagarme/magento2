@@ -78,6 +78,7 @@
             <label>Number of installments without interest</label>
             <backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
             <comment />
+            <validate>required-entry validate-greater-than-zero validate-digits</validate>
             <config_path>payment/pagarme_creditcard/installments_max_without_interest</config_path>
             <depends>
                 <field id="installments_active">1</field>

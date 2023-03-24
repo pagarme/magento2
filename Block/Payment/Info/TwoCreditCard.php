@@ -120,17 +120,18 @@ class TwoCreditCard extends Cc
             return [];
         }
 
-        return [
-            'card1' => array_merge(
-                $orderObject->getCharges()[0]->getAcquirerTidCapturedAndAutorize(),
-                ['tid' => $this->getTid($orderObject->getCharges()[0])]
-            ),
-
-            'card2' => array_merge(
-                $orderObject->getCharges()[1]->getAcquirerTidCapturedAndAutorize(),
-                ['tid' => $this->getTid($orderObject->getCharges()[1])]
-            )
-        ];
+        if (is_object($orderObject->getCharges())) {
+            return [
+                'card1' => array_merge(
+                    $orderObject->getCharges()[0]->getAcquirerTidCapturedAndAutorize(),
+                    ['tid' => $this->getTid($orderObject->getCharges()[0])]
+                ),
+                'card2' => array_merge(
+                    $orderObject->getCharges()[1]->getAcquirerTidCapturedAndAutorize(),
+                    ['tid' => $this->getTid($orderObject->getCharges()[1])]
+                )
+            ];
+        }
     }
 
     private function getTid(Charge $charge)
