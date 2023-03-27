@@ -3,10 +3,7 @@ name: CD
 on:
   push:
     branches:
-      - develop
-      - test
-      - stg
-      - master
+      - QA-2788/migrate-cd-to-githubactions
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
