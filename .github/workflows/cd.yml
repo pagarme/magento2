@@ -3,8 +3,11 @@ name: CD
 on:
   push:
     branches:
-      - QA-2788/migrate-cd-to-githubactions
-
+      - develop
+      - test
+      - stg
+      - master
+      
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
