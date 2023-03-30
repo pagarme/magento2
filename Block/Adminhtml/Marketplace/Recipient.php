@@ -119,4 +119,12 @@ class Recipient extends Template
         return $this->recipient->localId;
     }
 
+    public function getSellers()
+    {
+        if (is_null($this->sellers)) {
+            return [];
+        }
+
+        return $this->sellers;
+    }
 }
