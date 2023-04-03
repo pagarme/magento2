@@ -23,7 +23,7 @@ class Delete extends RecipientAction
             $recipientData = $recipientService->findById($recipientId);
 
             if (!$recipientData || !$recipientData->getId()) {
-                $message = $this->messageFactory->create('error', __('Recipient not exist.'));
+                $message = $this->messageFactory->create('error', __('Recipient not found.'));
                 $this->messageManager->addErrorMessage($message);
                 $this->_redirect('pagarme_pagarme/recipients/index');
                 return;
