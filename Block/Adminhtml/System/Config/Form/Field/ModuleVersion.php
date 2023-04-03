@@ -1,6 +1,6 @@
 <?php
 
-namespace Pagarme\Pagarme\Block\Adminhtml\Form\Field;
+namespace Pagarme\Pagarme\Block\Adminhtml\System\Config\Form\Field;
 
 use Magento\Framework\Data\Form\Element\AbstractElement;
 use Pagarme\Core\Kernel\Services\VersionService;

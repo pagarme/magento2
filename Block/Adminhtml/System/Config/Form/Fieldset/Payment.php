@@ -9,7 +9,7 @@
  * @link        https://pagar.me
  */
 
-namespace Pagarme\Pagarme\Block\Adminhtml\System\Config\Fieldset;
+namespace Pagarme\Pagarme\Block\Adminhtml\System\Config\Form\Fieldset;
 
 use Magento\Config\Block\System\Config\Form\Fieldset;
 

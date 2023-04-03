@@ -4,16 +4,16 @@
     <group id="pagarme_pagarme_global" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label">
         <label>General Settings</label>
         <field id="hub_integration" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="1" translate="label" type="label">
-            <frontend_model>Pagarme\Pagarme\Block\Adminhtml\Form\Field\HubIntegration</frontend_model>
+            <frontend_model>Pagarme\Pagarme\Block\Adminhtml\System\Config\Form\Field\HubIntegration</frontend_model>
         </field>
         <field id="hub_environment" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="2" translate="label" type="label">
             <label>Integration Environment</label>
-            <frontend_model>Pagarme\Pagarme\Block\Adminhtml\Form\Field\HubEnvironment</frontend_model>
+            <frontend_model>Pagarme\Pagarme\Block\Adminhtml\System\Config\Form\Field\HubEnvironment</frontend_model>
         </field>
         <field id="module_version" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label" type="label">
             <label>Module Version</label>
             <comment/>
-            <frontend_model>Pagarme\Pagarme\Block\Adminhtml\Form\Field\ModuleVersion</frontend_model>
+            <frontend_model>Pagarme\Pagarme\Block\Adminhtml\System\Config\Form\Field\ModuleVersion</frontend_model>
         </field>
         <field id="active" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="select">
             <label>Enable this Solution</label>
