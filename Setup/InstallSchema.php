@@ -40,6 +40,7 @@ class InstallSchema implements InstallSchemaInterface
         $this->installRecurrenceCharge($setup);
         $this->installSubProducts($setup);
         $this->installProductsPlan($setup);
+        $this->installRecipients($setup);
 
         $setup->endSetup();
     }
@@ -1679,6 +1680,99 @@ class InstallSchema implements InstallSchemaInterface
                 ->setOption('charset', 'utf8');
 
             $installer->getConnection()->createTable($configTable);
+        }
+        return $installer;
+    }
+
+    public function installRecipients(SchemaSetupInterface $installer)
+    {
+        $tableName = $installer->getTable('pagarme_module_core_recipients');
+        if (!$installer->getConnection()->isTableExists($tableName)) {
+            $customer = $installer->getConnection()
+                ->newTable($tableName)
+                ->addColumn(
+                    'id',
+                    Table::TYPE_INTEGER,
+                    null,
+                    [
+                        'identity' => true,
+                        'unsigned' => true,
+                        'nullable' => false,
+                        'primary' => true
+                    ],
+                    'ID'
+                )
+                ->addColumn(
+                    'external_id',
+                    Table::TYPE_TEXT,
+                    null,
+                    [
+                        'nullable' => false
+                    ],
+                    'External ID'
+                )
+                ->addColumn(
+                    'name',
+                    Table::TYPE_TEXT,
+                    255,
+                    [
+                        'nullable' => false
+                    ],
+                    'Name'
+                )
+                ->addColumn(
+                    'email',
+                    Table::TYPE_TEXT,
+                    255,
+                    [
+                        'nullable' => false
+                    ],
+                    'Email'
+                )
+                ->addColumn(
+                    'document_type',
+                    Table::TYPE_TEXT,
+                    255,
+                    [
+                        'nullable' => false
+                    ],
+                    'Document Type'
+                )
+                ->addColumn(
+                    'document',
+                    Table::TYPE_TEXT,
+                    255,
+                    [
+                        'nullable' => false
+                    ],
+                    'Document'
+                )
+                ->addColumn(
+                    'pagarme_id',
+                    Table::TYPE_TEXT,
+                    null,
+                    [
+                        'nullable' => false
+                    ],
+                    'format: rp_xxxxxxxxxxxxxxxx'
+                )
+                ->addColumn(
+                    'created_at',
+                    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
+                    null,
+                    ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT],
+                    'Created At'
+                )
+                ->addColumn(
+                    'updated_at',
+                    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
+                    null,
+                    ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT_UPDATE],
+                    'Updated At'
+                )
+                ->setOption('charset', 'utf8');
+
+            $installer->getConnection()->createTable($customer);
         }
         return $installer;
     }

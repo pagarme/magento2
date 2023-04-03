@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <group id="pagarme_pagarme_marketplace" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="50" translate="label">
+        <label>Marketplace</label>
+        <field id="active" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="select">
+            <label>Enable this Solution</label>
+            <comment />
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>pagarme_pagarme/marketplace/active</config_path>
+        </field>
+        <field id="responsibility_for_processing_fees" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="40" translate="label" type="select">
+            <label>Responsibility for processing fees</label>
+            <comment />
+            <source_model>Pagarme\Pagarme\Model\Source\Marketplace\Recipient</source_model>
+            <config_path>pagarme_pagarme/marketplace/responsibility_for_processing_fees</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
+        <field id="responsibility_for_chargebacks" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="40" translate="label" type="select">
+            <label>Responsibility for chargebacks</label>
+            <comment />
+            <source_model>Pagarme\Pagarme\Model\Source\Marketplace\Recipient</source_model>
+            <config_path>pagarme_pagarme/marketplace/responsibility_for_chargebacks</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
+        <field id="responsibility_for_receiving_split_remainder" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="40" translate="label" type="select">
+            <label>Responsibility for receiving split remainder</label>
+            <comment />
+            <source_model>Pagarme\Pagarme\Model\Source\Marketplace\Recipient</source_model>
+            <config_path>pagarme_pagarme/marketplace/responsibility_for_receiving_split_remainder</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
+        <field id="responsibility_for_receiving_extras_and_discounts" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="40" translate="label" type="select">
+            <label>Responsibility for receiving extras and discounts</label>
+            <comment />
+            <source_model>Pagarme\Pagarme\Model\Source\Marketplace\Recipient</source_model>
+            <config_path>pagarme_pagarme/marketplace/responsibility_for_receiving_extras_and_discounts</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
+        <field id="main_recipient_id" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="40" translate="label" type="text">
+            <label>Marketplace main recipient</label>
+            <frontend_model>Pagarme\Pagarme\Block\Adminhtml\Form\Field\SearchRecipient</frontend_model>
+            <config_path>pagarme_pagarme/marketplace/main_recipient_id</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
+        <field id="main_recipient_name" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="40" translate="label" type="text">
+            <label>Name</label>
+            <config_path>pagarme_pagarme/marketplace/main_recipient_name</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
+        <field id="main_recipient_email" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="40" translate="label" type="text">
+            <label>E-mail</label>
+            <config_path>pagarme_pagarme/marketplace/main_recipient_email</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
+        <field id="main_recipient_document_type" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="40" translate="label" type="select">
+            <label>Document type</label>
+            <comment />
+            <source_model>Pagarme\Pagarme\Model\Source\DocumentType</source_model>
+            <config_path>pagarme_pagarme/marketplace/main_recipient_document_type</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
+        <field id="main_recipient_document_number" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="40" translate="label" type="text">
+            <label>Document number</label>
+            <config_path>pagarme_pagarme/marketplace/main_recipient_document_number</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
+        <depends>
+            <field id="*/*/pagarme_pagarme_global/is_gateway_integration_type">1</field>
+        </depends>
+    </group>
+</include>

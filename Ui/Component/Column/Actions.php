@@ -17,6 +17,7 @@ class Actions extends Column
     protected $actionUrlBuilder;
     /** @var UrlInterface */
     protected $urlBuilder;
+    protected $type;
     /**
      * @param ContextInterface $context
      * @param UiComponentFactory $uiComponentFactory
@@ -35,6 +36,7 @@ class Actions extends Column
     ) {
         $this->urlBuilder = $urlBuilder;
         $this->actionUrlBuilder = $actionUrlBuilder;
+        $this->type = $this->getType($context->getNamespace());
         parent::__construct($context, $uiComponentFactory, $components, $data);
     }
     /**
@@ -47,10 +49,9 @@ class Actions extends Column
     {
         if (isset($dataSource['data']['items'])) {
             foreach ($dataSource['data']['items'] as &$item) {
-                $type = array_key_exists('plan_id', $item) ? "plans" : "recurrenceproducts";
                 $name = $this->getData('name');
                 if (isset($item['id'])) {
-                    $actions = $this->getActions($name, $type, $item);
+                    $actions = $this->getActions($name, $this->type, $item);
                     $item = array_merge($item, $actions);
                 }
             }
@@ -83,5 +84,11 @@ class Actions extends Column
 
         $url = $this->urlBuilder->getUrl($path, ['id' => $item['id']]);
         return $url;
+    }
+
+    protected function getType($namespace)
+    {
+        preg_match('/pagarme_pagarme_(\w+)_listing/', $namespace, $type);
+        return $type[1];
     }
 }

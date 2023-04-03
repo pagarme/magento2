@@ -1,0 +1,284 @@
+<form id="form-recipients" method="post">
+    <div class="page-main-actions">
+        <div class="page-actions-placeholder"></div>
+        <div class="page-actions" data-ui-id="page-actions-toolbar-content-header">
+            <div class="page-actions-inner" data-title="New Recipient">
+                <div class="page-actions-buttons">
+                    <button id="save-button" title="Save" class="action-default primary" type="submit">
+                        <span><?php echo __('Save') ?></span>
+                    </button>
+                    <button id="back" title="Back" type="button" class="action- scalable back" onclick="location.href = '<?php echo $block->getUrl('pagarme_pagarme/recipients/index') ?>'" data-ui-id="back-button">
+                        <span><?php echo __('Back') ?></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Url Post-->
+    <input id="url-post" value="<?php echo $block->getBaseUrl() . 'rest/V1/pagarme/marketplace/recipient/formData'; ?>" type="hidden" />
+    <input id="url-search-recipient-id" value="<?php echo $block->getBaseUrl() . 'rest/V1/pagarme/marketplace/recipient/searchRecipient'; ?>" type="hidden" />
+
+    <input type="hidden" name="form_key" value="<?php echo $block->getFormKey() ?>" />
+
+    <?php if (!empty($block->getRecipientId())) : ?>
+        <!--  LocalId  -->
+        <input type="hidden" name="form[id]" value="<?php echo $block->getLocalId() ?>">
+        <!--  RecipientId  -->
+        <input type="hidden" name="form[recipient_id]" value="<?php echo $block->getRecipientId() ?>">
+    <?php endif; ?>
+
+    <div id="page:main-container" class="page-columns">
+        <div class="admin__old">
+            <div id="container" class="main-col">
+                <div class="entry-edit form-inline">
+                    <div class="fieldset-wrapper">
+                        <div class="admin__fieldset-wrapper-content _hide">
+                            <div class="admin__fieldset">
+                                <div class="admin__field" id="select-seller">
+                                    <label class="admin__field-label">
+                                        <span><?php echo __('Select webkul seller') ?></span>
+                                    </label>
+                                    <div class="admin__field-control">
+                                        <select class="recipient-form-inputs admin__control-select" name="form[external_id]" id="select-webkul-seller">
+                                            <?php if (!empty($block->getSellers())) : ?>
+                                                <option value=""><?php echo __('Select a seller') ?></option>
+                                                <?php
+                                                foreach ($block->getSellers() as $seller) {
+                                                ?>
+                                                    <option sellername="<?php printf("%s %s", $seller['firstname'], $seller['lastname']); ?>" email="<?php echo $seller['email']; ?>" document="<?php echo !empty($seller['taxvat']) ? $seller['taxvat'] : ""; ?>" value="<?php echo $seller['entity_id'] ?>">
+                                                        <?php printf("%s %s (%s)", $seller['firstname'], $seller['lastname'], $seller['email']); ?>
+                                                    </option>
+                                                <?php
+                                                }
+                                                ?>
+                                            <?php endif; ?>
+
+                                            <?php if (empty($block->getSellers())) : ?>
+                                                <option value=""><?php echo __('No valid sellers found.') ?></option>
+                                            <?php endif; ?>
+
+
+                                        </select>
+                                        <?php if (empty($block->getSellers())) : ?>
+                                            <button type="button" class="action-basic" onclick="location.href = '<?php echo $block->getUrl('customer/index/new') ?>'">
+                                                <span><?php echo __('Create') ?></span>
+                                            </button>
+                                        <?php endif; ?>
+
+                                        <p id="error-message" class="error-message"></p>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field" id="use_existing_pagarme_id">
+                                    <label class="admin__field-label">
+                                        <span><?php echo __('Use an existing Pagar.me recipient') ?></span>
+                                    </label>
+                                    <div class="admin__field-control">
+                                        <select class="recipient-form-inputs admin__control-select" name="form[existing_recipient]" id="existing_recipient">
+                                            <option value="0"><?php echo __('No') ?></option>
+                                            <option value="1"><?php echo __('Yes') ?></option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field" id="pagarme_id">
+                                    <label class="admin__field-label">
+                                        <span><?php echo __('ID Pagar.me') ?></span>
+                                    </label>
+                                    <div class="admin__field-control">
+                                        <input type="text" class="recipient-form-inputs" name="form[pagarme_id]" id="recipient-id">
+                                        <button type="button" class="action-basic" id="search-recipient-id" data-action="">
+                                            <span><?php echo __('Get info') ?></span>
+                                        </button>
+                                        <p id="error-message" class="error-message"></p>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field _required" id="external-id-div">
+                                    <label class="admin__field-label">
+                                        <span><?php echo __('External ID') ?></span>
+                                    </label>
+                                    <div class="admin__field-control">
+                                        <input type="text" class="recipient-form-inputs" name="form[external_id]" id="external-id">
+                                    </div>
+                                </div>
+
+                                <div class="admin__field _required" id="recipient-name-div">
+                                    <label class="admin__field-label">
+                                        <span><?php echo __('Name') ?></span>
+                                    </label>
+                                    <div class="admin__field-control ">
+                                        <input type="text" class="recipient-form-inputs" name="form[name]" id="recipient-name" required>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field _required" id="email-recipient-div">
+                                    <label class="admin__field-label">
+                                        <span><?php echo __('E-mail') ?></span>
+                                    </label>
+                                    <div class="admin__field-control">
+                                        <input type="text" class="recipient-form-inputs" name="form[email]" id="email-recipient" required>
+                                    </div>
+                                </div>
+                                <div class="admin__field _required" id="document-type-div">
+                                    <label class="admin__field-label">
+                                        <span><?php echo __('Document type') ?></span>
+                                    </label>
+                                    <div class="admin__field-control">
+                                        <select class="recipient-form-inputs admin__control-select" name="form[document_type]" id="document-type">
+                                            <option data-title="cpf" value="cpf"><?php echo __('CPF') ?></option>
+                                            <option data-title="cnpj" value="cnpj"><?php echo __('CNPJ') ?></option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field _required" id="document-div">
+                                    <label class="admin__field-label">
+                                        <span><?php echo __('Document number') ?></span>
+                                    </label>
+                                    <div class="admin__field-control">
+                                        <input type="text" class="recipient-form-inputs" pattern="[0-9]+" maxlength="14" name="form[document]" id="document" required>
+                                    </div>
+                                </div>
+
+                                <input id="type" name="form[type]" value="individual" type="hidden" />
+
+                                <h2><?php echo __('Banking information') ?></h2>
+
+                                <div class="admin__field _required">
+                                    <label class="admin__field-label">
+                                        <span><?php echo __('Holder name') ?></span>
+                                    </label>
+                                    <div class="admin__field-control">
+                                        <input type="text" class="recipient-form-inputs" name="form[holder_name]" id="holder-name" required>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field">
+                                    <label class="admin__field-label">
+                                        <span><?php echo __('Document type') ?></span>
+                                    </label>
+                                    <div class="admin__field-control">
+                                        <select class="recipient-form-inputs admin__control-select" name="form[holder_document_type]" id="holder-document-type">
+                                            <option data-title="cpf" value="cpf"><?php echo __('CPF') ?></option>
+                                            <option data-title="cnpj" value="cnpj"><?php echo __('CNPJ') ?></option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field">
+                                    <label class="admin__field-label">
+                                        <span><?php echo __('Document number') ?></span>
+                                    </label>
+                                    <div class="admin__field-control">
+                                        <input type="text" class="recipient-form-inputs" name="form[holder_document]" id="holder-document">
+                                    </div>
+                                </div>
+
+                                <div class="admin__field _required">
+                                    <label class="admin__field-label">
+                                        <span><?php echo __('Bank code') ?></span>
+                                    </label>
+                                    <div class="admin__field-control">
+                                        <input type="text" class="recipient-form-inputs" maxlength="3" name="form[bank]" id="bank" required>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field _required">
+                                    <label class="admin__field-label">
+                                        <span><?php echo __('Branch number') ?></span>
+                                    </label>
+                                    <div class="admin__field-control">
+                                        <input type="text" class="recipient-form-inputs" maxlength="5" pattern="[0-9]{0,5}" name="form[branch_number]" id="branch-number" required>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field">
+                                    <label class="admin__field-label">
+                                        <span><?php echo __('Branch check digit') ?></span>
+                                    </label>
+                                    <div class="admin__field-control">
+                                        <input type="text" class="recipient-form-inputs" name="form[branch_check_digit]" id="branch-check-digit">
+                                    </div>
+                                </div>
+
+                                <div class="admin__field _required">
+                                    <label class="admin__field-label">
+                                        <span><?php echo __('Account number') ?></span>
+                                    </label>
+                                    <div class="admin__field-control">
+                                        <input type="text" class="recipient-form-inputs" maxlength="13" pattern="[0-9]{0,13}" name="form[account_number]" id="account-number" required>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field _required">
+                                    <label class="admin__field-label">
+                                        <span><?php echo __('Account check digit') ?></span>
+                                    </label>
+                                    <div class="admin__field-control">
+                                        <input type="text" class="recipient-form-inputs" maxlength="2" name="form[account_check_digit]" id="account-check-digit" required>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field _required">
+                                    <label class="admin__field-label">
+                                        <span><?php echo __('Account type') ?></span>
+                                    </label>
+                                    <div class="admin__field-control">
+                                        <select class="recipient-form-inputs admin__control-select" name="form[account_type]" id="account-type">
+                                            <option value="checking"><?php echo __('Checking') ?></option>
+                                            <option value="savings"><?php echo __('Savings') ?></option>
+                                            <option value="conjunct_checking"><?php echo __('Conjunct checking') ?></option>
+                                            <option value="conjunct_savings"><?php echo __('Conjunct savings') ?></option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <h2><?php echo __('Transfer settings') ?></h2>
+
+                                <div class="admin__field _required">
+                                    <label class="admin__field-label">
+                                        <span><?php echo __('Enable automatic transfer') ?></span>
+                                    </label>
+                                    <div class="admin__field-control">
+                                        <select class="recipient-form-inputs admin__control-select" name="form[transfer_enabled]" id="transfer-enabled">
+                                            <option value="0"><?php echo __('No') ?></option>
+                                            <option value="1"><?php echo __('Yes') ?></option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field _required" id="transfer-interval-div">
+                                    <label class="admin__field-label">
+                                        <span><?php echo __('Transfer interval') ?></span>
+                                    </label>
+                                    <div class="admin__field-control">
+                                        <select class="recipient-form-inputs admin__control-select" name="form[transfer_interval]" id="transfer-interval">
+                                            <option value="Daily"><?php echo __('Daily') ?></option>
+                                            <option value="Weekly"><?php echo __('Weekly') ?></option>
+                                            <option value="Monthly"><?php echo __('Monthly') ?></option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field _required" id="transfer-day-div">
+                                    <label class="admin__field-label">
+                                        <span><?php echo __('Transfer day') ?></span>
+                                    </label>
+                                    <div class="admin__field-control">
+                                        <select class="recipient-form-inputs admin__control-select" name="form[transfer_day]" id="transfer-day">
+                                            <option value="0">0</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<!-- Edit Recipient-->
+<input id="edit-recipient" name='form[edit_recipient_id]' value='<?php echo $block->getEditRecipient(); ?>' type="hidden" />
