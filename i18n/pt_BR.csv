@@ -412,3 +412,4 @@
 "Back","Voltar"
 "Can't create recipient. Please review the information and try again.","Não foi possível criar o recebedor. Por favor revise os dados e tente novamente."
 "Payment could not be made. Please contact the store administrator.", "Não foi possível realizar o pagamento. Por favor contate o administrador da loja."
+"<p class='message message-notification'>You need to activate the <a href='https://store.webkul.com/magento2-multi-vendor-marketplace.html' target='_blank'>Webkul Marketplace</a> extension.</p>", "<p class='message message-notification'>Você precisa ter o módulo <a href='https://store.webkul.com/magento2-multi-vendor-marketplace.html' target='_blank'>Webkul Marketplace</a> ativo.</p>"
