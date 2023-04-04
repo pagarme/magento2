@@ -62,10 +62,11 @@ class Recipient implements RecipientInterface
 
     public function getFormattedForm(array $form): array
     {
+        $form['holder_document'] = preg_replace("/[^0-9]/", "", $form['holder_document']);
+        $form['document']  = preg_replace("/[^0-9]/", "", $form['document']);
         if (isset($form['type'])) {
             $form['holder_type'] = $form['type'];
         }
-
         if (isset($form['pagarme_id'])) {
             $form['recipient_id'] = $form['pagarme_id'];
         }

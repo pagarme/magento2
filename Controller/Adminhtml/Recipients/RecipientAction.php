@@ -7,12 +7,18 @@ use Magento\Backend\App\Action\Context;
 use Magento\Framework\Registry;
 use Magento\Framework\View\Result\PageFactory;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
-use Webkul\Marketplace\Model\SellerFactory;
+use Webkul\Marketplace\Model\SellerFactory; 
 use Magento\Framework\Message\Factory as MagentoMessageFactory;
+use Magento\Framework\Module\Manager as ModuleManager;
+
 
 class RecipientAction extends Action
 {
     protected $resultPageFactory = false;
+    /**
+     * @var WebkulHelper
+     */
+    protected $webkulHelper;
 
     /**
      * @var Registry
@@ -40,15 +46,24 @@ class RecipientAction extends Action
         Registry $coreRegistry,
         PageFactory $resultPageFactory,
         MagentoMessageFactory $messageFactory,
-        SellerFactory $sellerFactory
+        ModuleManager $moduleManager
     ) {
 
         parent::__construct($context);
-        $this->sellerFactory = $sellerFactory;
+        
         $this->resultPageFactory = $resultPageFactory;
         $this->coreRegistry = $coreRegistry;
         $this->messageFactory = $messageFactory;
+        $this->moduleManager = $moduleManager; 
+        $this->__init();
         Magento2CoreSetup::bootstrap();
+    }
+
+    private function __init()
+    {
+        if($this->moduleManager->isEnabled("Webkul_Marketplace")){
+            $this->sellerFactory = $this->_objectManager->create(SellerFactory::class);
+        }
     }
 
     /**

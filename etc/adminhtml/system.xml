@@ -23,7 +23,7 @@
                 <label>
                     <![CDATA[Pagar.me&nbsp;&nbsp;<i>Payment Solutions.</i>]]>
                 </label>
-                <frontend_model>Pagarme\Pagarme\Block\Adminhtml\System\Config\Fieldset\Group</frontend_model>
+                <frontend_model>Pagarme\Pagarme\Block\Adminhtml\System\Config\Form\Fieldset\Group</frontend_model>
                 <include path="Pagarme_Pagarme::system/global.xml"/>
                 <include path="Pagarme_Pagarme::system/customer.xml"/>
                 <include path="Pagarme_Pagarme::system/transaction.xml"/>

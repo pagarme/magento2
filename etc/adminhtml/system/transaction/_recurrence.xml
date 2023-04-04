@@ -91,7 +91,7 @@
 
             <field id="payment_recurence_global_cycle_discount" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="8" translate="label">
                 <label>Cycle Discount</label>
-                <frontend_model>Pagarme\Pagarme\Block\Adminhtml\System\Config\Fieldset\CycleDiscount</frontend_model>
+                <frontend_model>Pagarme\Pagarme\Block\Adminhtml\System\Config\Form\Fieldset\CycleDiscount</frontend_model>
                 <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
                 <config_path>payment/pagarme_recurrence/global_cycle_discount</config_path>
             </field>
