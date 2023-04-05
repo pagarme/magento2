@@ -30,7 +30,9 @@ trait SplitExtrasAndDiscountsRuleTrait
         $marketplaceExtrasAndDiscountsPercentage =
             $this->getPercentageOfTotalPaidPerEntity($marketplaceCommission);
         
-        return $marketplaceExtrasAndDiscountsPercentage * $amount;
+        return intval(
+            $marketplaceExtrasAndDiscountsPercentage * $amount
+        );
     }
 
     private function calculateAmountForSeller($seller, $amount)
@@ -39,7 +41,9 @@ trait SplitExtrasAndDiscountsRuleTrait
         $sellerExtrasAndDiscountsPercentage =
             $this->getPercentageOfTotalPaidPerEntity($sellerCommission);
 
-        return $sellerExtrasAndDiscountsPercentage * $amount;
+        return intval(
+            $sellerExtrasAndDiscountsPercentage * $amount
+        );
     }
 
     private function calculateAmountOnlyForSeller($seller, $amount, $marketplaceTotal){
