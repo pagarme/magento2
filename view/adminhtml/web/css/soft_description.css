@@ -1,0 +1,15 @@
+[id$="_soft_description_comment"] {
+    display: block;
+    position: relative;
+}
+
+[id$="_soft_description_counter"] {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+[id$="_soft_description_counter"].limit-reached {
+    color: red;
+}

@@ -6,7 +6,7 @@
  */
 -->
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
-    <group id="pagarme_pagarme_transaction_creditcard_antifraud" translate="label comment" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="200">
+    <group id="pagarme_pagarme_transaction_creditcard_antifraud" translate="label comment" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="90">
         <label>Anti fraud</label>
         <field id="antifraud_active" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="select">
             <label>Active</label>
@@ -19,6 +19,7 @@
             <label>Min Amount</label>
             <comment />
             <config_path>payment/pagarme_creditcard/antifraud_min_amount</config_path>
+            <validate>validate-currency-dollar</validate>
             <depends>
                 <field id="antifraud_active">1</field>
             </depends>

@@ -1,4 +1,4 @@
-#botao-hub button {
+#botao-hub span {
     background-color: #65a300;
     border-color: rgb(101, 163, 0);
     border-radius: 4px;
@@ -20,12 +20,12 @@
     transition: all .3s ease-in-out;
 }
 
-#botao-hub button:hover, #botao-hub button:active, #botao-hub button:focus {
+#botao-hub span:hover, #botao-hub span:active, #botao-hub span:focus {
     background-color: rgb(125, 163, 0);
     border-color: rgb(125, 163, 0);
 }
 
-#botao-hub button img {
+#botao-hub span img {
     width: 16px;
     margin-bottom: -3px;
     margin-top: -3px;
