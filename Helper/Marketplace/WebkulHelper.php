@@ -154,23 +154,6 @@ class WebkulHelper
             += $sellerAndCommisions['marketplaceCommission'];
     }
 
-    private function handleRemainder(&$splitData, $totalPaidProductWithoutSeller, $totalPaid)
-    {
-        $remainder = $this->splitRemainderHandler->calculateRemainder(
-            $splitData,
-            $totalPaidProductWithoutSeller,
-            $totalPaid
-        );
-
-        if ($remainder == 0) {
-            return $splitData;
-        }
-
-        return $this->splitRemainderHandler->setRemainderToResponsible(
-            $remainder,
-            $splitData
-        );
-    }
 
     private function forceIntegerValues(&$splitData)
     {
