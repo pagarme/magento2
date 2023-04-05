@@ -154,23 +154,6 @@ class WebkulHelper
             += $sellerAndCommisions['marketplaceCommission'];
     }
 
-    private function handleRemainder(&$splitData, $totalPaidProductWithoutSeller, $totalPaid)
-    {
-        $remainder = $this->splitRemainderHandler->calculateRemainder(
-            $splitData,
-            $totalPaidProductWithoutSeller,
-            $totalPaid
-        );
-
-        if ($remainder == 0) {
-            return $splitData;
-        }
-
-        return $this->splitRemainderHandler->setRemainderToResponsible(
-            $remainder,
-            $splitData
-        );
-    }
 
     private function forceIntegerValues(&$splitData)
     {
@@ -196,8 +179,8 @@ class WebkulHelper
                 $totalPaid,
                 $productTotal
             );
-
-        if (empty($extraOrDiscountTotal)) {
+            
+        if (empty($extraOrDiscountTotal) && $extraOrDiscountTotal != 0) {
             return $splitData;
         }
 
@@ -218,14 +201,12 @@ class WebkulHelper
         $splitData['sellers'] = [];
         $splitData['marketplace']['totalCommission'] = 0;
         $totalPaidProductWithoutSeller = 0;
-        $total = 0;
         foreach ($orderItems as $item) {
             $productId = $item->getProductId();
             $itemPrice = $this->moneyService->floatToCents(
                 $item->getRowTotal()
             );
 
-            $total += $itemPrice;
             $sellerAndCommisions = $this->getSellerAndCommissions(
                 $itemPrice,
                 $productId
@@ -235,7 +216,7 @@ class WebkulHelper
                 $totalPaidProductWithoutSeller += $itemPrice;
                 continue;
             }
-            // 
+
             $this->addCommissionsToSplitData(
                 $sellerAndCommisions,
                 $splitData
@@ -248,7 +229,6 @@ class WebkulHelper
         }
         $splitData['marketplace']['totalCommission']
         += $totalPaidProductWithoutSeller;
-        $splitData = $this->handleRemainder($splitData,  $totalPaidProductWithoutSeller, $total);
         
         $splitData = $this->handleExtrasAndDiscounts(
             $corePlatformOrderDecorator,
