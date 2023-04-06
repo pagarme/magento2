@@ -477,11 +477,11 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
             $cardConfigs[] = new CardConfig(
                 true,
                 CardBrand::$brandMethod(),
-                ($max !== null ? $max : 1),
-                ($maxWithout !== null ? $maxWithout : 1),
+                (($max !== null && $max !== "") ? $max : 1),
+                (($maxWithout !== null && $maxWithout !== "") ? $maxWithout : 1),
                 $initial,
                 $incremental,
-                ($minValue !== null ? $minValue : 0) * 100
+                (($minValue !== null && $minValue !== "") ? $minValue : 0) * 100
             );
         }
         return $cardConfigs;

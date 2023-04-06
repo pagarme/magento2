@@ -28,10 +28,12 @@ class HubIntegration extends Field
         $html .= $this->_getElementHtml($element);
 
         $html .= sprintf(
-            '<p
+            '<a
             id="botao-hub"
+            href="%s"
             hub-url="%s"
-            button-text="%s"></p>',
+            button-text="%s"></a>',
+            $hubUrl,
             $hubUrl,
             $buttonText
         );

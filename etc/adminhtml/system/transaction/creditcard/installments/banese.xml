@@ -6,24 +6,26 @@
  */
 -->
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
-    <group id="pagarme_pagarme_transaction_creditcard_installments_mastercard_banese" translate="label comment" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="20">
+    <group id="pagarme_creditcard_installments_banese" translate="label" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="190">
         <depends>
             <field id="installments_type">0</field>
             <field id="installments_active">1</field>
             <field id="*/*/pagarme_pagarme_global/is_gateway_integration_type">1</field>
         </depends>
         <label>Installments Banese</label>
-        <field id="installments_number_banese" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
+        <field id="installments_number_banese" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label comment" type="text">
             <label>Max number of installments</label>
             <backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
-            <comment />
+            <comment><![CDATA[<p>Insert a number between 1 and 22.</p>]]></comment>
             <config_path>payment/pagarme_creditcard/installments_number_banese</config_path>
+            <validate>required-entry validate-number-range number-range-1-12</validate>
         </field>
         <field id="installment_min_amount_banese" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
             <label>Min installment amount</label>
             <backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
             <comment />
             <config_path>payment/pagarme_creditcard/installment_min_amount_banese</config_path>
+            <validate>validate-currency-dollar</validate>
         </field>
         <field id="installments_interest_by_issuer_banese" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="select">
             <label>Enable interest</label>
@@ -36,6 +38,7 @@
             <backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
             <comment />
             <config_path>payment/pagarme_creditcard/installments_interest_rate_initial_banese</config_path>
+            <validate>required-entry validate-number validate-zero-or-greater</validate>
             <depends>
                 <field id="installments_interest_by_issuer_banese">1</field>
             </depends>
@@ -45,6 +48,7 @@
             <backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
             <comment />
             <config_path>payment/pagarme_creditcard/installments_interest_rate_incremental_banese</config_path>
+            <validate>required-entry validate-number validate-zero-or-greater</validate>
             <depends>
                 <field id="installments_interest_by_issuer_banese">1</field>
             </depends>
@@ -52,8 +56,9 @@
         <field id="installments_max_without_interest_banese" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
             <label>Number of installments without interest</label>
             <backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
-            <comment />
+            <comment><![CDATA[<p>Insert a number between 1 and the <b>Max number of installments</b>.</p>]]></comment>
             <config_path>payment/pagarme_creditcard/installments_max_without_interest_banese</config_path>
+            <validate>required-entry validate-number-range number-range-1-12</validate>
             <depends>
                 <field id="installments_interest_by_issuer_banese">1</field>
             </depends>

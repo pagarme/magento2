@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
-    <group id="pagarme_pagarme_global" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label">
+    <group id="pagarme_pagarme_global" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="1" translate="label">
         <label>General Settings</label>
         <field id="hub_integration" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="1" translate="label" type="label">
             <frontend_model>Pagarme\Pagarme\Block\Adminhtml\System\Config\Form\Field\HubIntegration</frontend_model>
@@ -20,6 +20,12 @@
             <comment />
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>pagarme_pagarme/global/active</config_path>
+        </field>
+        <field id="multibuyer" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="30" translate="label" type="select">
+            <label>Enable Multi Buyer</label>
+            <comment />
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>payment/pagarme_multibuyer/active</config_path>
         </field>
         <field id="is_gateway_integration_type" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="50" translate="label" type="select">
             <label>Enable Advanced Settings</label>
