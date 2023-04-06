@@ -1,6 +1,6 @@
 <?php
 
-namespace Pagarme\Pagarme\Block\Adminhtml\Form\Field;
+namespace Pagarme\Pagarme\Block\Adminhtml\System\Config\Form\Field;
 
 use Magento\Config\Block\System\Config\Form\Field;
 use Magento\Framework\Data\Form\Element\AbstractElement;
@@ -101,5 +101,4 @@ class HubIntegration extends Field
 
         return $installToken->getValue();
     }
-
 }

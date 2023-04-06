@@ -9,7 +9,7 @@
                 <label>
                     <![CDATA[Pagar.me&nbsp;&nbsp;<i>Payment Solutions.</i>]]>
                 </label>
-                <frontend_model>Pagarme\Pagarme\Block\Adminhtml\System\Config\Fieldset\Group</frontend_model>
+                <frontend_model>Pagarme\Pagarme\Block\Adminhtml\System\Config\Form\Fieldset\Group</frontend_model>
 				<attribute type="displayIn">recommended_solutions</attribute>
 				<fieldset_css>complex</fieldset_css>
                 <include path="Pagarme_Pagarme::system/global.xml"/>
@@ -22,6 +22,7 @@
 				<include path="Pagarme_Pagarme::system/transaction/voucher.xml"/>
 				<include path="Pagarme_Pagarme::system/transaction/debit.xml"/>
                 <include path="Pagarme_Pagarme::system/recurrence.xml"/>
+                <include path="Pagarme_Pagarme::system/marketplace.xml"/>
             </group>
         </section>
 	</system>

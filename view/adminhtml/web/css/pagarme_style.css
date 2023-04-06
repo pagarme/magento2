@@ -73,3 +73,28 @@ table.table-cycles {
     font-size: 10px;
     display: none;
 }
+
+.recipient-form-inputs {
+    border-color: #878787;
+    -webkit-appearance: none;
+    background-color: #fff;
+    border: 1px solid #adadad;
+    border-radius: 1px;
+    box-shadow: none;
+    color: #303030;
+    font-size: 1.4rem;
+    font-weight: 400;
+    height: auto;
+    line-height: 1.36;
+    padding: .6rem 1rem .6rem;
+    transition: border-color .1s linear;
+    vertical-align: baseline;
+    width: 50%;
+    margin-left: 10px;
+}
+
+.readonly {
+    background: #eee;
+    pointer-events: none;
+    touch-action: none;
+}
