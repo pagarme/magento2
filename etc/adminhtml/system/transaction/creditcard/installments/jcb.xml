@@ -17,7 +17,7 @@
             <backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
             <comment><![CDATA[<p>Insert a number between 1 and <span id='installments_max_size_jcb'></span>.</p>]]></comment>
             <config_path>payment/pagarme_creditcard/installments_number_jcb</config_path>
-            <validate>validate-number-range number-range-1-12</validate>
+            <validate>required-entry validate-number-range number-range-1-12</validate>
         </field>
         <field id="installment_min_amount_jcb" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
             <label>Min installments amount</label>
