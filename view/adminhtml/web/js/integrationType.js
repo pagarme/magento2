@@ -106,13 +106,13 @@ require([
         };
 
         function changeInstallmentsWithoutInterestValidation(val, element) {
-            var classList = null,
-                classList = element.attr('class').trim().split(/\s+/);
+            var classList = null;
+            classList = element.attr('class').trim().split(/\s+/);
             $.each(classList, function( index, value ) {
                 if (value) {
                     if (value.indexOf('number-range-1-') === 0) {
                         classList = $.grep(classList, function(remove){
-                            return remove != value;
+                            return remove !== value;
                         });
                         if (val !== '') {
                             classList.push('number-range-1-' + val);
