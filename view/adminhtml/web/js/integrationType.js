@@ -32,6 +32,7 @@ require([
                 if(softDescription !== '' &&  $(this).val() === '') {
                     $(this).val(softDescription);
                 }
+                $(this).keyup();
             });
         })
         .change();
