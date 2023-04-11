@@ -70,6 +70,18 @@
                 <installment_min_amount>10.00</installment_min_amount>
                 <installments_interest_rate>10</installments_interest_rate>
                 <installments_max_without_interest>6</installments_max_without_interest>
+                <installments_number_amex>12</installments_number_amex>
+                <installments_number_aura>12</installments_number_aura>
+                <installments_number_banese>12</installments_number_banese>
+                <installments_number_cabal>12</installments_number_cabal>
+                <installments_number_credz>12</installments_number_credz>
+                <installments_number_diners>12</installments_number_diners>
+                <installments_number_discover>12</installments_number_discover>
+                <installments_number_elo>12</installments_number_elo>
+                <installments_number_hipercard>12</installments_number_hipercard>
+                <installments_number_jcb>12</installments_number_jcb>
+                <installments_number_mastercard>12</installments_number_mastercard>
+                <installments_number_visa>12</installments_number_visa>
                 <can_initialize>1</can_initialize>
                 <allow_multiple_address>0</allow_multiple_address>
             </pagarme_creditcard>

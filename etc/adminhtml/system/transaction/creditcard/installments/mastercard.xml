@@ -20,7 +20,7 @@
             <validate>required-entry validate-number-range number-range-1-12</validate>
         </field>
         <field id="installment_min_amount_mastercard" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
-            <label>Min installments amount</label>
+            <label>Min installment amount</label>
             <backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
             <comment />
             <config_path>payment/pagarme_creditcard/installment_min_amount_mastercard</config_path>
