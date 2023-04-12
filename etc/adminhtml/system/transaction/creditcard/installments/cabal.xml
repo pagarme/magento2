@@ -16,7 +16,7 @@
         <field id="installments_number_cabal" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label comment" type="text">
             <label>Max number of installments</label>
             <backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
-            <comment><![CDATA[<p>Insert a number between 1 and 22.</p>]]></comment>
+            <comment><![CDATA[<p>Insert a number between 1 and 24.</p>]]></comment>
             <config_path>payment/pagarme_creditcard/installments_number_cabal</config_path>
             <validate>required-entry validate-number-range number-range-1-12</validate>
         </field>

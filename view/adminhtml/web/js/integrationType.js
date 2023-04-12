@@ -42,7 +42,9 @@ require([
                 installmentsWithoutInterestElement = $(this).closest('fieldset[id*="pagarme_creditcard_installments"]')
                     .find('input[id*="_pagarme_creditcard_installments_"][id*="_max_without_interest"]').first();
 
-            changeInstallmentsWithoutInterestValidation(installmentsNumberVal, installmentsWithoutInterestElement)
+            if (installmentsNumberVal !== '') {
+                changeInstallmentsWithoutInterestValidation(installmentsWithoutInterestElement, installmentsNumberVal)
+            }
         })
         .change();
 
@@ -105,26 +107,11 @@ require([
             }
         };
 
-        function changeInstallmentsWithoutInterestValidation(val, element) {
-            var classList = null;
-            classList = element.attr('class').trim().split(/\s+/);
-            $.each(classList, function( index, value ) {
-                if (value) {
-                    if (value.indexOf('number-range-1-') === 0) {
-                        classList = $.grep(classList, function(remove){
-                            return remove !== value;
-                        });
-                        if (val !== '') {
-                            classList.push('number-range-1-' + val);
-                        }
-                    }
-                }
-            });
-            if (val === '') {
-                element.val('');
-            }
-            var elementClass = classList.join(' ');
-            element.attr('class', elementClass);
+        function changeInstallmentsWithoutInterestValidation(element, maxRange) {
+            element.removeClass(function(index, classNames) {
+                return (classNames.match(/(^|\s)number-range-1-\S+/g) || []).join(' ');
+            })
+            .addClass('number-range-1-' + maxRange);
         };
     });
 });
