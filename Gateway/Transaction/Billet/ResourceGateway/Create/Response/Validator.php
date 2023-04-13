@@ -23,7 +23,7 @@ class Validator extends AbstractValidator implements ValidatorInterface
     public function validate(array $validationSubject)
     {
         if (!isset($validationSubject['response'])) {
-            throw new \InvalidArgumentException('Pagar.me Credit Card Authorize Response object should be provided');
+            throw new \InvalidArgumentException('Pagar.me Billet Authorize Response object should be provided');
         }
 
         $isValid = true;

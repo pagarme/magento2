@@ -1,0 +1,11 @@
+.admin__menu .level-0.item-pagarme > a:before {
+    content: url('../images/avatar-pagarme.svg');
+    height: 28px;
+    margin: 0 auto;
+    width: 30px;
+    opacity: 0.6;
+}
+
+.admin__menu .level-0.item-pagarme > a:hover:before {
+    opacity: 1;
+}

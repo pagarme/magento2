@@ -4,6 +4,7 @@
     "version": "2.1.0",
     "type": "magento2-module",
     "description": "Magento 2 Module Pagar.me",
+    "minimum-stability": "dev",
     "require": {
         "php": ">=7.1",
         "pagarme/ecommerce-module-core": "~2.1"
@@ -28,7 +29,6 @@
             "name":"Open Source Team"
         }
     ],
-    "minimum-stability": "dev",
     "scripts": {
         "test": "phpunit"
     },

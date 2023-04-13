@@ -1,33 +1,28 @@
 <?xml version="1.0" ?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
 	<system>
-		<tab id="pagarme" sortOrder="999" translate="label">
+		<tab id="pagarme" sortOrder="1" translate="label">
 			<label>Pagar.me</label>
 		</tab>
-		<!-- <include path="Pagarme_Pagarme::system/antifraud.xml"/> -->
-		<section id="pagarme" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label">
-			<label>Pagar.me</label>
-			<tab>pagarme</tab>
-			<resource>Pagarme_Pagarme::config_pagarme_pagarme</resource>
-			<group id="general" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label">
-				<label>General</label>
-				<field id="is_active" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="select">
-		            <label>Is Active</label>
-		            <comment />
-		            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-		        </field>
-			</group>
-		</section>
 		<section id="payment" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="1000" translate="label">
             <group id="pagarme_pagarme" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label">
                 <label>
                     <![CDATA[Pagar.me&nbsp;&nbsp;<i>Payment Solutions.</i>]]>
                 </label>
-                <frontend_model>Pagarme\Pagarme\Block\Adminhtml\System\Config\Fieldset\Group</frontend_model>
+                <frontend_model>Pagarme\Pagarme\Block\Adminhtml\System\Config\Form\Fieldset\Group</frontend_model>
+				<attribute type="displayIn">recommended_solutions</attribute>
+				<fieldset_css>complex</fieldset_css>
                 <include path="Pagarme_Pagarme::system/global.xml"/>
-                <include path="Pagarme_Pagarme::system/customer.xml"/>
-                <include path="Pagarme_Pagarme::system/transaction.xml"/>
+                <include path="Pagarme_Pagarme::system/customer-address.xml"/>
+				<include path="Pagarme_Pagarme::system/transaction/creditcard.xml"/>
+				<include path="Pagarme_Pagarme::system/transaction/pix.xml"/>
+				<include path="Pagarme_Pagarme::system/transaction/billet.xml"/>
+				<include path="Pagarme_Pagarme::system/transaction/multipleactionstwocreditcard.xml"/>
+				<include path="Pagarme_Pagarme::system/transaction/multipleactionscreditcardbillet.xml"/>
+				<include path="Pagarme_Pagarme::system/transaction/voucher.xml"/>
+				<include path="Pagarme_Pagarme::system/transaction/debit.xml"/>
                 <include path="Pagarme_Pagarme::system/recurrence.xml"/>
+                <include path="Pagarme_Pagarme::system/marketplace.xml"/>
             </group>
         </section>
 	</system>

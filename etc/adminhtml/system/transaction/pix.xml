@@ -6,7 +6,7 @@
  */
 -->
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
-    <group id="pagarme_pagarme_transaction_pix" translate="label comment" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="20">
+    <group id="pagarme_pix" translate="label comment" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="20">
         <label>Pix</label>
 	    <field id="active" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="select">
 	        <label>Enable this payment method</label>
@@ -17,11 +17,13 @@
 	    <field id="title" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
 	        <label>Payment label</label>
 	        <config_path>payment/pagarme_pix/title</config_path>
+            <validate>required-entry</validate>
 	    </field>
 	    <field id="expiration_qrcode" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
 	        <label>Qrcode expiration time (seconds)</label>
 	        <comment />
 	        <config_path>payment/pagarme_pix/expiration_qrcode</config_path>
+            <validate>required-number validate-greater-than-zero</validate>
             <depends>
                 <field id="active">1</field>
             </depends>
