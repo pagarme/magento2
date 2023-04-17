@@ -6,7 +6,7 @@
  */
 -->
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
-    <group id="pagarme_voucher" translate="label comment" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="20">
+    <group id="pagarme_voucher" translate="label" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="20">
         <label>Voucher</label>
         <field id="active" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label" type="select">
             <label>Enable this payment method</label>
@@ -17,41 +17,32 @@
         <field id="title" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
             <label>Payment label</label>
             <config_path>payment/pagarme_voucher/title</config_path>
+            <validate>required-entry</validate>
         </field>
-        <field id="soft_description" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
+        <field id="soft_description" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="30" translate="label comment" type="text">
             <label>Soft descriptor</label>
             <config_path>payment/pagarme_voucher/soft_description</config_path>
-            <comment>Max size 22.</comment>
+            <comment><![CDATA[<p id='voucher_soft_description_comment'>Max size: 22.<span id='voucher_soft_description_counter'><span id='voucher_soft_description_counter_current'></span> / 22</span></p>]]></comment>
         </field>
-<!--        <field id="payment_action" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="40" translate="label" type="select">-->
-<!--            <label>Payment Action</label>-->
-<!--            <comment />-->
-<!--            <source_model>Pagarme\Pagarme\Model\Source\PaymentAction</source_model>-->
-<!--            <config_path>payment/pagarme_voucher/payment_action</config_path>-->
-<!--        </field>-->
-        <field id="sort_order" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="70" translate="label" type="text">
+        <field id="sort_order" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="40" translate="label" type="text">
             <label>Payment method order</label>
             <comment />
             <config_path>payment/pagarme_voucher/sort_order</config_path>
         </field>
-        <field id="enabled_saved_cards" showInDefault="1" showInStore="1"
-               showInWebsite="1"
-               sortOrder="71" translate="label" type="select">
+        <field id="enabled_saved_cards" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="50" translate="label" type="select">
             <label>Enable voucher wallet</label>
             <comment />
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>payment/pagarme_voucher/enabled_saved_cards</config_path>
         </field>
-<!--        <field id="enabled_voucher_saved_cards" showInDefault="1" showInStore="1"-->
-<!--               showInWebsite="1"-->
-<!--               sortOrder="71" translate="label" type="select">-->
-<!--            <label>Enable Saved Voucher-Cards</label>-->
-<!--            <comment />-->
-<!--            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>-->
-<!--            <config_path>payment/pagarme_voucher/enabled_saved_cards</config_path>-->
-<!--        </field>-->
+	    <field id="vouchertypes" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="60" translate="label" type="multiselect">
+	        <label>Voucher brands</label>
+	        <comment />
+	        <source_model>Pagarme\Pagarme\Model\Source\Vouchertype</source_model>
+	        <config_path>payment/pagarme_voucher/cctypes</config_path>
+            <validate>validate-select</validate>
+	    </field>
 
-        <include path="Pagarme_Pagarme::system/transaction/voucher/types.xml"/>
         <depends>
             <field id="*/*/pagarme_pagarme_global/is_gateway_integration_type">1</field>
         </depends>

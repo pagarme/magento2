@@ -6,7 +6,7 @@
  */
 -->
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
-    <group id="pagarme_creditcard" translate="label comment" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="20">
+    <group id="pagarme_creditcard" translate="label" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="20">
         <label>Credit Card</label>
         <field id="active" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label" type="select">
             <label>Enable this payment method</label>
@@ -17,32 +17,25 @@
         <field id="title" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
             <label>Payment label</label>
             <config_path>payment/pagarme_creditcard/title</config_path>
+            <validate>required-entry</validate>
         </field>
-        <field id="soft_description" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
+        <field id="soft_description" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="30" translate="label comment" type="text">
             <label>Soft descriptor</label>
+            <comment><![CDATA[<p id='creditcard_soft_description_comment'>Max size: <span id='soft_description_max_size'></span>.<span id='creditcard_soft_description_counter'><span id='creditcard_soft_description_counter_current'></span> / <span id='creditcard_soft_description_counter_max_size'></span></span></p>]]></comment>
             <config_path>payment/pagarme_creditcard/soft_description</config_path>
-            <comment><![CDATA[<p>Max size <span id='soft_description_max_size'></span>.</p>]]></comment>
         </field>
-        <!-- <field id="customer_identity_attribute_code" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="30" translate="label" type="text">
-            <label>Customer Identity (CPF/CNPJ) Attribute</label>
-            <config_path>payment/pagarme_creditcard/customer_identity_attribute_code</config_path>
-            <comment>object from \Magento\Quote\Model\Quote</comment>
-        </field> -->
         <field id="payment_action" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="40" translate="label" type="select">
             <label>Payment action</label>
             <comment />
             <source_model>Pagarme\Pagarme\Model\Source\PaymentAction</source_model>
             <config_path>payment/pagarme_creditcard/payment_action</config_path>
         </field>
-        <field id="sort_order" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="70" translate="label" type="text">
+        <field id="sort_order" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="50" translate="label" type="text">
             <label>Payment method order</label>
             <comment />
             <config_path>payment/pagarme_creditcard/sort_order</config_path>
         </field>
-
-        <field id="enabled_saved_cards" showInDefault="1" showInStore="1"
-               showInWebsite="1"
-               sortOrder="71" translate="label" type="select">
+        <field id="enabled_saved_cards" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="60" translate="label" type="select">
             <label>Enable card wallet</label>
             <comment />
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -51,8 +44,27 @@
                 <field id="*/*/pagarme_pagarme_global/is_gateway_integration_type">1</field>
             </depends>
         </field>
+        <field id="cctypes_gateway" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="70" translate="label" type="multiselect">
+            <label>Card brands</label>
+            <comment />
+            <source_model>Pagarme\Pagarme\Model\Source\Cctype</source_model>
+            <config_path>payment/pagarme_creditcard/cctypes</config_path>
+            <validate>validate-select</validate>
+            <depends>
+                <field id="*/*/pagarme_pagarme_global/is_gateway_integration_type">1</field>
+            </depends>
+        </field>
+        <field id="cctypes_psp" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="70" translate="label" type="multiselect">
+            <label>Card brands</label>
+            <comment />
+            <source_model>Pagarme\Pagarme\Model\Source\CctypePSP</source_model>
+            <config_path>payment/pagarme_creditcard/cctypes</config_path>
+            <validate>validate-select</validate>
+            <depends>
+                <field id="*/*/pagarme_pagarme_global/is_gateway_integration_type">0</field>
+            </depends>
+        </field>
 
-	    <include path="Pagarme_Pagarme::system/transaction/creditcard/types.xml"/>
 	    <include path="Pagarme_Pagarme::system/transaction/creditcard/installments.xml"/>
 	    <include path="Pagarme_Pagarme::system/transaction/creditcard/antifraud.xml"/>
     </group>

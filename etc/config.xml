@@ -8,6 +8,13 @@
             </pagarme>
         </pagarme>
         <payment>
+            <pagarme_customer_address>
+                <street_attribute>street_1</street_attribute>
+                <number_attribute>street_2</number_attribute>
+                <complement_attribute>street_3</complement_attribute>
+                <district_attribute>street_4</district_attribute>
+            </pagarme_customer_address>
+
             <pagarme_billet>
                 <active>1</active>
                 <model>PagarmeBilletRemoteMethodAdapter</model>
@@ -30,6 +37,7 @@
                 <order_status>pending_payment</order_status>
                 <payment_action>authorize</payment_action>
                 <title>Pagar.me Pix</title>
+                <expiration_qrcode>3600</expiration_qrcode>
                 <can_authorize>1</can_authorize>
                 <can_capture>1</can_capture>
                 <can_use_checkout>1</can_use_checkout>
@@ -37,7 +45,6 @@
                 <is_gateway>1</is_gateway>
                 <sort_order>1</sort_order>
                 <can_initialize>1</can_initialize>
-                <expiration_days>5</expiration_days>
             </pagarme_pix>
 
             <pagarme_creditcard>
@@ -63,9 +70,58 @@
                 <installment_min_amount>10.00</installment_min_amount>
                 <installments_interest_rate>10</installments_interest_rate>
                 <installments_max_without_interest>6</installments_max_without_interest>
+                <installments_number_amex>12</installments_number_amex>
+                <installments_interest_rate_initial_amex>0</installments_interest_rate_initial_amex>
+                <installments_interest_rate_incremental_amex>0</installments_interest_rate_incremental_amex>
+                <installments_max_without_interest_amex>1</installments_max_without_interest_amex>
+                <installments_number_aura>12</installments_number_aura>
+                <installments_interest_rate_initial_aura>0</installments_interest_rate_initial_aura>
+                <installments_interest_rate_incremental_aura>0</installments_interest_rate_incremental_aura>
+                <installments_max_without_interest_aura>1</installments_max_without_interest_aura>
+                <installments_number_banese>12</installments_number_banese>
+                <installments_interest_rate_initial_banese>0</installments_interest_rate_initial_banese>
+                <installments_interest_rate_incremental_banese>0</installments_interest_rate_incremental_banese>
+                <installments_max_without_interest_banese>1</installments_max_without_interest_banese>
+                <installments_number_cabal>12</installments_number_cabal>
+                <installments_interest_rate_initial_cabal>0</installments_interest_rate_initial_cabal>
+                <installments_interest_rate_incremental_cabal>0</installments_interest_rate_incremental_cabal>
+                <installments_max_without_interest_cabal>1</installments_max_without_interest_cabal>
+                <installments_number_credz>12</installments_number_credz>
+                <installments_interest_rate_initial_credz>0</installments_interest_rate_initial_credz>
+                <installments_interest_rate_incremental_credz>0</installments_interest_rate_incremental_credz>
+                <installments_max_without_interest_credz>1</installments_max_without_interest_credz>
+                <installments_number_diners>12</installments_number_diners>
+                <installments_interest_rate_initial_diners>0</installments_interest_rate_initial_diners>
+                <installments_interest_rate_incremental_diners>0</installments_interest_rate_incremental_diners>
+                <installments_max_without_interest_diners>1</installments_max_without_interest_diners>
+                <installments_number_discover>12</installments_number_discover>
+                <installments_interest_rate_initial_discover>0</installments_interest_rate_initial_discover>
+                <installments_interest_rate_incremental_discover>0</installments_interest_rate_incremental_discover>
+                <installments_max_without_interest_discover>1</installments_max_without_interest_discover>
+                <installments_number_elo>12</installments_number_elo>
+                <installments_interest_rate_initial_elo>0</installments_interest_rate_initial_elo>
+                <installments_interest_rate_incremental_elo>0</installments_interest_rate_incremental_elo>
+                <installments_max_without_interest_elo>1</installments_max_without_interest_elo>
+                <installments_number_hipercard>12</installments_number_hipercard>
+                <installments_interest_rate_initial_hipercard>0</installments_interest_rate_initial_hipercard>
+                <installments_interest_rate_incremental_hipercard>0</installments_interest_rate_incremental_hipercard>
+                <installments_max_without_interest_hipercard>1</installments_max_without_interest_hipercard>
+                <installments_number_jcb>12</installments_number_jcb>
+                <installments_interest_rate_initial_jcb>0</installments_interest_rate_initial_jcb>
+                <installments_interest_rate_incremental_jcb>0</installments_interest_rate_incremental_jcb>
+                <installments_max_without_interest_jcb>1</installments_max_without_interest_jcb>
+                <installments_number_mastercard>12</installments_number_mastercard>
+                <installments_interest_rate_initial_mastercard>0</installments_interest_rate_initial_mastercard>
+                <installments_interest_rate_incremental_mastercard>0</installments_interest_rate_incremental_mastercard>
+                <installments_max_without_interest_mastercard>1</installments_max_without_interest_mastercard>
+                <installments_number_visa>12</installments_number_visa>
+                <installments_interest_rate_initial_visa>0</installments_interest_rate_initial_visa>
+                <installments_interest_rate_incremental_visa>0</installments_interest_rate_incremental_visa>
+                <installments_max_without_interest_visa>1</installments_max_without_interest_visa>
                 <can_initialize>1</can_initialize>
                 <allow_multiple_address>0</allow_multiple_address>
             </pagarme_creditcard>
+
             <pagarme_billet_creditcard>
                 <active>1</active>
                 <model>PagarmeBilletCreditCardsRemoteMethodAdapter</model>
@@ -92,6 +148,7 @@
                 <can_initialize>1</can_initialize>
                 <allow_multiple_address>0</allow_multiple_address>
             </pagarme_billet_creditcard>
+
             <pagarme_two_creditcard>
                 <active>1</active>
                 <model>PagarmeTwoCreditCardRemoteMethodAdapter</model>
@@ -118,6 +175,7 @@
                 <can_initialize>1</can_initialize>
                 <allow_multiple_address>0</allow_multiple_address>
             </pagarme_two_creditcard>
+
             <pagarme_voucher>
                 <active>1</active>
                 <model>PagarmeVoucherRemoteMethodAdapter</model>
@@ -144,12 +202,13 @@
                 <can_initialize>1</can_initialize>
                 <allow_multiple_address>0</allow_multiple_address>
             </pagarme_voucher>
+            
             <pagarme_debit>
                 <active>1</active>
                 <model>PagarmeDebitRemoteMethodAdapter</model>
                 <order_status>pending_payment</order_status>
                 <payment_action>authorize_capture</payment_action>
-                <title>Pagar.me Debit</title>
+                <title>Pagar.me Debit Card</title>
                 <can_authorize>1</can_authorize>
                 <can_capture_partial>1</can_capture_partial>
                 <can_capture>1</can_capture>

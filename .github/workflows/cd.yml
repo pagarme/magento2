@@ -7,12 +7,12 @@ on:
       - test
       - stg
       - master
-
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
+
   publish:
     name: Publish
     runs-on: ubuntu-latest

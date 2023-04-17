@@ -96,8 +96,11 @@ class ProductHelper
      */
     public static function calculateDiscount($value, $discountAmount)
     {
-        return ProductHelper::convertDecimalMoney($value - $discountAmount) > 0 ?
-            ProductHelper::convertDecimalMoney($value - $discountAmount) : $value;
+        $result = ProductHelper::convertDecimalMoney($value - $discountAmount);
+        if ($result > 0) {
+            $value = (float) $result;
+        }
+        return $value;
     }
 
     /**
@@ -106,8 +109,7 @@ class ProductHelper
      */
     public static function convertDecimalMoney($amount)
     {
-        $amount = number_format($amount, 2);
-        return $amount;
+        return number_format($amount, 2);
     }
 
     /**

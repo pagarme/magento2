@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Class InitializedCommand
  *
@@ -48,6 +49,7 @@ class InitializeCommand implements CommandInterface
             throw new \LogicException('Order Payment should be provided');
         }
         $orderResult = $this->doCoreDetour($payment);
+
         if ($orderResult !== false) {
             $orderResult->loadByIncrementId(
                 $orderResult->getIncrementId()
@@ -88,7 +90,7 @@ class InitializeCommand implements CommandInterface
         return $this;
     }
 
-     /** @return AbstractPlatformOrderDecorator */
+    /** @return AbstractPlatformOrderDecorator */
     private function doCoreDetour($payment)
     {
         $order =  $payment->getOrder();
