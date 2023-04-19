@@ -16,7 +16,7 @@ namespace Pagarme\Pagarme\Gateway\Transaction\Base\Config;
 class Config extends AbstractConfig implements ConfigInterface
 {
     /**
-     * @return string
+     * @return bool
      */
     public function isEnabled()
     {
