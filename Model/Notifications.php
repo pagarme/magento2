@@ -54,11 +54,11 @@ class Notifications extends Message
         $customerConfigs = $config->getPagarmeCustomerConfigs();
 
         if ($customerConfigs['showVatNumber'] != 1) {
-            $this->warnings[] = __("<b>Show VAT Number on Storefront</b> must be defined as <b>'Yes'</b> on <b>Customer</b> > <b>Customer Configuration</b> > <b>Create New Account Options</b> for Pagar.me module to work on your store.");
+            $this->warnings[] = __("<b>Show VAT Number on Storefront</b> must be defined as <b>'Yes'</b> on <b>Stores</b> > <b>Configuration</b> > <b>Customer</b> > <b>Customer Configuration</b> > <b>Create New Account Options</b> for Pagar.me module to work on your store.");
         }
 
         if ($customerConfigs['streetLinesNumber'] != 4) {
-            $this->warnings[] = __("<b>Number of Lines in a Street Address</b> must be defined as <b>'4'</b> on <b>Customer</b> > <b>Customer Configuration</b> > <b>Name and Address Options</b> for Pagar.me module to work on your store.");
+            $this->warnings[] = __("<b>Number of Lines in a Street Address</b> must be defined as <b>'4'</b> on <b>Stores</b> > <b>Configuration</b> > <b>Customer</b> > <b>Customer Configuration</b> > <b>Name and Address Options</b> for Pagar.me module to work on your store.");
         }
     }
 
