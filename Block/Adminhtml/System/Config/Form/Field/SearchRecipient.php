@@ -12,7 +12,7 @@ class SearchRecipient extends Field
     {
         $html = '<td class="value">';
         $html .= $this->_getElementHtml($element);
-        $html .= '<p>Pagar.me recipient id that represents your marketplace</p>';
+        $html .= __('<p>Pagar.me recipient id that represents your marketplace</p>');
         $html .= '</td>';
         $html .= '<td>';
         $html .= sprintf(

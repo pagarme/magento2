@@ -44,7 +44,7 @@
     <type name="Magento\Framework\Notification\MessageList">
         <arguments>
             <argument name="messages" xsi:type="array">
-                <item name="indexer" xsi:type="string">Pagarme\Pagarme\Model\Notifications</item>
+                <item name="pagarme_notifications" xsi:type="string">Pagarme\Pagarme\Model\Notifications</item>
             </argument>
         </arguments>
     </type>

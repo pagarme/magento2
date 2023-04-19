@@ -9,14 +9,14 @@ Refer to [module documentation](https://github.com/pagarme/magento2-module/wiki)
 and [pagarme documentation](https://docs.pagar.me/docs/magento-2-overview)
 
 ## Plugin in Magento Marketplace
-Coming soon :construction:
+Refer to [marketplace documentation](https://docs.pagar.me/docs/split-de-pagamentos-magento-2)
 
 ## Installation
 composer require pagarme/pagarme-magento2-module
 
 ## Requirements
 * PHP >= 7.1
-* Magento2 >= 2.3
+* Magento2 >= 2.3 & < 2.4.6
 
 ## Configuration
 
