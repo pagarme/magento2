@@ -8,13 +8,6 @@
             </pagarme>
         </pagarme>
         <payment>
-            <pagarme_customer_address>
-                <street_attribute>street_1</street_attribute>
-                <number_attribute>street_2</number_attribute>
-                <complement_attribute>street_3</complement_attribute>
-                <district_attribute>street_4</district_attribute>
-            </pagarme_customer_address>
-
             <pagarme_billet>
                 <active>1</active>
                 <model>PagarmeBilletRemoteMethodAdapter</model>
@@ -202,7 +195,7 @@
                 <can_initialize>1</can_initialize>
                 <allow_multiple_address>0</allow_multiple_address>
             </pagarme_voucher>
-            
+
             <pagarme_debit>
                 <active>1</active>
                 <model>PagarmeDebitRemoteMethodAdapter</model>
