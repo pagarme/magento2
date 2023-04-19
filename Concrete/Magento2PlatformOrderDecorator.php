@@ -539,10 +539,15 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 
         $customer->setName($fullName);
         $customer->setEmail($quote->getCustomerEmail());
-        if (!$value = $quote->getCustomer()->getTaxVat()) {
-            $value = $address->getVatId();
+        $customerDocument = $this->cleanCustomerDocument(
+            $address->getVatId() ?? ""
+        );
+
+        if (!$customerDocument) {
+            $customerDocument = $this->cleanCustomerDocument(
+                $quote->getCustomer()->getTaxVat() ?? ""
+            );
         }
-        $customerDocument = $this->cleanCustomerDocument($value ?? '');
         $customer->setDocument($customerDocument);
         $customer->setType(CustomerType::individual());
 
