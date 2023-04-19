@@ -47,6 +47,10 @@ class Notifications extends Message
             return;
         }
 
+        if (!$config->isHubEnabled()) {
+            $this->warnings[] = __('Pagar.me module is not yet integrated to the HUB. The module will not work on your store. Integrate now and start your sellings!');
+        }
+
         if ($config->isSandboxMode()) {
             $this->warnings[] = __('This store is linked to the Pagar.me test environment. This environment is intended for integration validation and does not generate real financial transactions.');
         }
