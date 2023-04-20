@@ -401,7 +401,7 @@
 "<p><strong style='color:red'>Warning!</strong> Don't forget to add your store's domain on Pagar.me dashboard</p>", "<p><strong style='color:red'>Aviso!</strong> Não se esqueça de adicionar o domínio da sua loja no painel do Pagar.me</p>"
 "View Integration", "Ver Integração"
 "Integrate With Pagar.me", "Integrar com Pagar.me"
-"<span style='background-color:red; color:white; padding:2px 5px'>Important!</span> ","<span style='background-color:red; color:white; padding:2px 5px'>Importante!</span> "
+"Important!","Importante!"
 "This store is linked to the Pagar.me test environment. This environment is intended for integration validation and does not generate real financial transactions.","Esta loja está vinculada ao ambiente de testes da Pagar.me. Este ambiente é destinado a validação de integração e não gera operações financeiras reais."
 "<b>Show VAT Number on Storefront</b> must be defined as <b>'Yes'</b> on <b>Stores</b> > <b>Configuration</b> > <b>Customer</b> > <b>Customer Configuration</b> > <b>Create New Account Options</b> for Pagar.me module to work on your store.","<b>Mostrar Número VAT na Vitrine</b> deve ser definido como <b>'Sim'</b> em <b>Cliente</b> > <b>Configurações de cliente</b> > <b>Criar Novas Opções de Conta</b> para que o módulo da Pagar.me funcione na sua loja."
 "<b>Number of Lines in a Street Address</b> must be defined as <b>'4'</b> on <b>Stores</b> > <b>Configuration</b> > <b>Customer</b> > <b>Customer Configuration</b> > <b>Name and Address Options</b> for Pagar.me module to work on your store.","<b>Numero de Linhas em Endereço</b> deve ser definido como <b>'4'</b> em <b>Cliente</b> > <b>Configurações de cliente</b> > <b>Opções de Nome e Endereço</b> para que o módulo da Pagar.me funcione na sua loja."
