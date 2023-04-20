@@ -33,6 +33,11 @@
                 <!-- ko i18n: 'Important! This store is in the testing phase. Orders placed in this environment will not be carried out.'--><!-- /ko -->
             </div>
             <!--/ko-->
+            <!-- ko if: (isCustomerConfigInvalid()) -->
+            <div class="message-warning warning message">
+                <!-- ko i18n: 'Important! There are configurations that need to be fixed. If you are an administrator, check the admin for more details. This order will fail!'--><!-- /ko -->
+            </div>
+            <!--/ko-->
             <!-- ko template: getBase() --><!-- /ko -->
         </form>
 
