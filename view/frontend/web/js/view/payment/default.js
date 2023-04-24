@@ -98,8 +98,19 @@ define(
                 );
             },
 
+            isHubEnabled: function() {
+                return window.checkoutConfig.pagarme_is_hub_enabled;
+            },
+
             isSandboxMode: function() {
                 return window.checkoutConfig.pagarme_is_sandbox_mode;
+            },
+
+            isCustomerConfigInvalid: function() {
+                return (
+                    window.checkoutConfig.pagarme_customer_configs.showVatNumber != 1 ||
+                    window.checkoutConfig.pagarme_customer_configs.streetLinesNumber != 4
+                );
             },
 
             getData: function() {

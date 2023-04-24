@@ -249,6 +249,10 @@ class PagarmeConfigProvider implements ConfigProviderInterface
      */
     public function getConfig(): array
     {
-        return ['pagarme_is_sandbox_mode' => $this->pagarmeConfig->isSandboxMode()] ;
+        return [
+            'pagarme_is_sandbox_mode' => $this->pagarmeConfig->isSandboxMode(),
+            'pagarme_is_hub_enabled' => $this->pagarmeConfig->isHubEnabled(),
+            'pagarme_customer_configs' => $this->pagarmeConfig->getPagarmeCustomerConfigs(),
+        ] ;
     }
 }
