@@ -65,7 +65,7 @@ class Notifications extends Message
         $count = count($this->warnings);
 
         for ($i = 0; $i < $count; $i++) {
-            $html .= '<div style="padding-bottom: 10px;' . (($i !== 0) ? 'margin-top: 10px;' : '') . (($i < $count - 1) ? 'border-bottom: 1px dashed #d1d1d1' : '') . '">' . (($i === 0) ? "<b style='display:block; margin-bottom:8px'> Pagar.me </b>" : '') . __("<span style='background-color:red; color:white; padding:2px 5px'>Important!</span> ") . $this->warnings[$i] . '</div>';
+            $html .= '<div style="padding-bottom: 10px;' . (($i !== 0) ? 'margin-top: 10px;' : '') . (($i < $count - 1) ? 'border-bottom: 1px dashed #d1d1d1' : '') . '">' . (($i === 0) ? "<b style='display:block; margin-bottom:8px'> Pagar.me </b>" : '') . "<span style='background-color:red; color:white; padding:2px 5px'>" . __('Important!') . "</span> " . $this->warnings[$i] . '</div>';
         }
         return $html;
     }
