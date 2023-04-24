@@ -91,7 +91,7 @@ class Notifications extends Message
     private function addEnvorimentMessages()
     {
         if (!$this->config->isHubEnabled()) {
-            $this->warnings[] = __('Pagar.me module is not yet integrated to the HUB. The module will not work on your store. Integrate now and start your sellings!');
+            $this->warnings[] = __('Pagar.me module is not yet integrated to the HUB. Complete the integration to start selling!');
         }
 
         if ($this->config->isSandboxMode()) {

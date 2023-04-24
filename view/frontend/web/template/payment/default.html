@@ -25,7 +25,7 @@
         <form class="form" data-bind="attr: {'id': getCode() + '-form'}">
             <!-- ko ifnot: isHubEnabled() -->
             <div class="message-warning warning message">
-                <!-- ko i18n: 'Important! This store is not yet integrated to Pagar.me HUB. Orders placed now will not be concluded.'--><!-- /ko -->
+                <!-- ko i18n: 'Important! This store is not yet integrated to Pagar.me HUB. Orders placed now will not be carried out.'--><!-- /ko -->
             </div>
             <!--/ko-->
             <!-- ko if: isSandboxMode() -->
@@ -35,7 +35,7 @@
             <!--/ko-->
             <!-- ko if: (isCustomerConfigInvalid()) -->
             <div class="message-warning warning message">
-                <!-- ko i18n: 'Important! There are configurations that need to be fixed. If you are an administrator, check the admin for more details. This order will fail!'--><!-- /ko -->
+                <!-- ko i18n: 'Important! There are configurations that need to be fixed. If you are an administrator, check the admin for more details. This order will not be carried out!'--><!-- /ko -->
             </div>
             <!--/ko-->
             <!-- ko template: getBase() --><!-- /ko -->
