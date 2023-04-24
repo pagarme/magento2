@@ -24,8 +24,8 @@ class Notifications extends Message
 {
 
     /** @var array */
-    protected $warnings = [];
-    protected $config;
+    private $warnings = [];
+    private $config;
 
     /**
      * @param ConfigInterface $config
