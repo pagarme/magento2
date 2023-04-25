@@ -115,7 +115,7 @@ class FinalPricePlugin
             }
 
             $price = $price - $discountAmount > 0 ? $price - $discountAmount : $price;
-
+            $price = ProductHelper::convertDecimalMoney($price);
             $prices[$price] = [
                 'price' => $price,
                 'interval' => $repetition->getInterval(),
