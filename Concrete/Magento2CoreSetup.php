@@ -435,10 +435,10 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
 
         $scope = ScopeInterface::SCOPE_WEBSITES;
         $storeId = self::getCurrentStoreId();
-        $selectedBrands = $storeConfig->getValue($section .  'cctypes', $scope, $storeId) ?? "";
+        $selectedBrands = $storeConfig->getValue($section .  'cctypes', $scope, $storeId) ?? '';
         $brands = array_merge([''], explode(
             ',',
-            $selectedBrands ?? ''
+            $selectedBrands
         ));
 
         $cardConfigs = [];
