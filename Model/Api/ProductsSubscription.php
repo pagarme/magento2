@@ -226,7 +226,7 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
             $repetition['recurrence_price'] = str_replace(
                 [',', '.'],
                 '',
-                $repetition['recurrence_price']
+                $repetition['recurrence_price'] ?? ''
             );
         }
 

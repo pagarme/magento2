@@ -438,17 +438,17 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         $selectedBrands = $storeConfig->getValue($section .  'cctypes', $scope, $storeId) ?? "";
         $brands = array_merge([''], explode(
             ',',
-            $selectedBrands
+            $selectedBrands ?? ''
         ));
 
         $cardConfigs = [];
         foreach ($brands as $brand) {
             $brand = "_" . strtolower($brand);
-            $brandMethod = str_replace('_', '', $brand);
+            $brandMethod = str_replace('_', '', $brand ?? '');
             $adapted = self::getBrandAdapter(strtoupper($brandMethod));
             if ($adapted !== false) {
                 $brand = "_" . strtolower($adapted);
-                $brandMethod = str_replace('_', '', $brand);
+                $brandMethod = str_replace('_', '', $brand ?? '');
             }
 
             if ($brandMethod == '') {

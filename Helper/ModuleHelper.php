@@ -67,7 +67,7 @@ class ModuleHelper extends \Magento\Framework\App\Helper\AbstractHelper
         }
 
         if(($format ==  true) and (!is_null($this->taxVat))){
-             $this->taxVat = preg_replace("/[^0-9]/", "", $this->taxVat);
+             $this->taxVat = preg_replace("/[^0-9]/", "", $this->taxVat ?? '');
         }
         return $this->taxVat;
 

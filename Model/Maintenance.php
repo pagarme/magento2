@@ -15,11 +15,11 @@ class Maintenance
      */
     public function index($params)
     {
-        $baseParams = explode ('&', $params);
+        $baseParams = explode ('&', $params ?? '');
         $coreParams = [];
         foreach ($baseParams as $baseParam) {
 
-            $pair = explode('=' ,$baseParam);
+            $pair = explode('=' ,$baseParam ?? '');
             $key = array_shift($pair);
             $value = implode('=', $pair);
 

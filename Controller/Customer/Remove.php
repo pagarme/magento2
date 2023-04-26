@@ -69,7 +69,7 @@ class Remove extends Action
             $mask = '****.****.****.' . $card->getLastFourNumbers();
 
             $matchIds = [];
-            preg_match('/mp_core_\d*/', $idCard, $matchIds);
+            preg_match('/mp_core_\d*/', $idCard ?? '', $matchIds);
             $deleteService = $this->cardsRepository;
             $deleteMethod = 'deleteById';
 
@@ -133,14 +133,14 @@ class Remove extends Action
         $savedCardRepository = new SavedCardRepository();
 
         $matchIds = [];
-        preg_match('/mp_core_\d*/', $coreCardId, $matchIds);
+        preg_match('/mp_core_\d*/', $coreCardId ?? '', $matchIds);
 
 
         if (!isset($matchIds[0])) {
             throw $baseException;
         }
 
-        $savedCardId = preg_replace('/\D/', '', $matchIds[0]);
+        $savedCardId = preg_replace('/\D/', '', $matchIds[0] ?? '');
         $savedCard = $savedCardRepository->find($savedCardId);
         if ($savedCard === null) {
             throw $baseException;

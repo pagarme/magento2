@@ -104,7 +104,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
      */
     public function getState()
     {
-        $baseState = explode('_', $this->getPlatformOrder()->getState());
+        $baseState = explode('_', $this->getPlatformOrder()->getState() ?? '');
         $state = '';
         foreach ($baseState as $st) {
             $state .= ucfirst($st);
@@ -740,7 +740,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $paymentData = [];
 
         foreach ($payments as $payment) {
-            $handler = explode('_', $payment['method']);
+            $handler = explode('_', $payment['method'] ?? '');
             array_walk($handler, function (&$part) {
                 $part = ucfirst($part);
             });
@@ -857,8 +857,8 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 
         $amount = $this->getGrandTotal() - $this->getBaseTaxAmount();
         $amount = number_format($amount, 2, '.', '');
-        $amount = str_replace('.', '', $amount);
-        $amount = str_replace(',', '', $amount);
+        $amount = str_replace('.', '', $amount ?? '');
+        $amount = str_replace(',', '', $amount ?? '');
 
         $newPaymentData->amount = $amount;
 
@@ -1032,7 +1032,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $amount = str_replace(
             ['.', ','],
             "",
-            $additionalInformation["cc_cc_amount"]
+            $additionalInformation["cc_cc_amount"] ?? ''
         );
         $newPaymentData->amount = $moneyService->floatToCents($amount / 100);
 
@@ -1055,7 +1055,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $amount = str_replace(
             ['.', ','],
             "",
-            $additionalInformation["cc_billet_amount"]
+            $additionalInformation["cc_billet_amount"] ?? ''
         );
 
         $newPaymentData->amount =
@@ -1177,7 +1177,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         foreach ($addressAttributes as $attribute => $value) {
             $value = $value === null ? 1 : $value;
 
-            $street = explode("_", $value);
+            $street = explode("_", $value ?? '');
             if (count($street) > 1) {
                 $value = intval($street[1]) - 1;
             }

@@ -121,7 +121,7 @@ class ProductHelper
     public static function getStringBetween($title, $first_string, $second_string)
     {
         $str = json_encode($title);
-        $arr = explode($first_string, $str);
+        $arr = explode($first_string, $str ?? '');
         if (isset($arr[1])) {
             $arr = explode($second_string, $arr[1]);
             return $arr[0];

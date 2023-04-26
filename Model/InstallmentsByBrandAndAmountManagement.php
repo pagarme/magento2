@@ -80,7 +80,7 @@ class InstallmentsByBrandAndAmountManagement
         $baseAmount = str_replace(
             [",", "."],
             "",
-            $baseAmount
+            $baseAmount ?? ''
         );
 
         $baseAmount = $moneyService->centsToFloat($baseAmount);
