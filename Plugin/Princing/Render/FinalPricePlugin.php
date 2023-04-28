@@ -14,6 +14,9 @@ use Magento\Catalog\Model\Product\Interceptor as ProductInterceptor;
 use Pagarme\Core\Recurrence\Aggregates\Repetition;
 use \Pagarme\Pagarme\Helper\ProductHelper;
 
+/**
+ * @deprecated
+ */
 class FinalPricePlugin
 {
     /**
@@ -115,7 +118,7 @@ class FinalPricePlugin
             }
 
             $price = $price - $discountAmount > 0 ? $price - $discountAmount : $price;
-            $price = ProductHelper::convertDecimalMoney($price);
+            $price = 0;
             $prices[$price] = [
                 'price' => $price,
                 'interval' => $repetition->getInterval(),
