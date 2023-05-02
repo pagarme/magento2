@@ -21,13 +21,13 @@ interface RecurrenceSubscriptionRepetitionsSearchResultsInterface extends Search
 {
     /**
      * Get recurrence_subscription_repetitions list.
-     * @return \Pagarme\Pagarme\Api\Data\RecurrenceSubscriptionRepetitionsInterface[]
+     * @return RecurrenceSubscriptionRepetitionsInterface[]
      */
     public function getItems();
 
     /**
      * Set id list.
-     * @param \Pagarme\Pagarme\Api\Data\RecurrenceSubscriptionRepetitionsInterface[] $items
+     * @param RecurrenceSubscriptionRepetitionsInterface[] $items
      * @return $this
      */
     public function setItems(array $items);

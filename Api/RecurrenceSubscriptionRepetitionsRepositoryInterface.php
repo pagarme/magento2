@@ -12,6 +12,10 @@ declare(strict_types=1);
 namespace Pagarme\Pagarme\Api;
 
 use Magento\Framework\Api\SearchCriteriaInterface;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Pagarme\Pagarme\Api\Data\RecurrenceSubscriptionRepetitionsInterface;
+use Pagarme\Pagarme\Api\Data\RecurrenceSubscriptionRepetitionsSearchResultsInterface;
 
 /**
  * Class RecurrenceProductsSubscriptionRepositoryInterface
@@ -21,48 +25,48 @@ interface RecurrenceSubscriptionRepetitionsRepositoryInterface
 {
     /**
      * Save recurrence_subscription_repetitions
-     * @param \Pagarme\Pagarme\Api\Data\RecurrenceSubscriptionRepetitionsInterface $recurrenceSubscriptionRepetitions
-     * @return \Pagarme\Pagarme\Api\Data\RecurrenceSubscriptionRepetitionsInterface
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @param RecurrenceSubscriptionRepetitionsInterface $recurrenceSubscriptionRepetitions
+     * @return RecurrenceSubscriptionRepetitionsInterface
+     * @throws LocalizedException
      */
     public function save(
-        \Pagarme\Pagarme\Api\Data\RecurrenceSubscriptionRepetitionsInterface $recurrenceSubscriptionRepetitions
+        RecurrenceSubscriptionRepetitionsInterface $recurrenceSubscriptionRepetitions
     );
 
     /**
      * Retrieve recurrence_subscription_repetitions
      * @param string $recurrenceSubscriptionRepetitionsId
-     * @return \Pagarme\Pagarme\Api\Data\RecurrenceSubscriptionRepetitionsInterface
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @return RecurrenceSubscriptionRepetitionsInterface
+     * @throws LocalizedException
      */
     public function get($recurrenceSubscriptionRepetitionsId);
 
     /**
      * Retrieve recurrence_subscription_repetitions matching the specified criteria.
-     * @param \Magento\Framework\Api\SearchCriteriaInterface $searchCriteria
-     * @return \Pagarme\Pagarme\Api\Data\RecurrenceSubscriptionRepetitionsSearchResultsInterface
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @param SearchCriteriaInterface $searchCriteria
+     * @return RecurrenceSubscriptionRepetitionsSearchResultsInterface
+     * @throws LocalizedException
      */
     public function getList(
-        \Magento\Framework\Api\SearchCriteriaInterface $searchCriteria
+        SearchCriteriaInterface $searchCriteria
     );
 
     /**
      * Delete recurrence_subscription_repetitions
-     * @param \Pagarme\Pagarme\Api\Data\RecurrenceSubscriptionRepetitionsInterface $recurrenceSubscriptionRepetitions
+     * @param RecurrenceSubscriptionRepetitionsInterface $recurrenceSubscriptionRepetitions
      * @return bool true on success
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws LocalizedException
      */
     public function delete(
-        \Pagarme\Pagarme\Api\Data\RecurrenceSubscriptionRepetitionsInterface $recurrenceSubscriptionRepetitions
+        RecurrenceSubscriptionRepetitionsInterface $recurrenceSubscriptionRepetitions
     );
 
     /**
      * Delete recurrence_subscription_repetitions by ID
      * @param string $recurrenceSubscriptionRepetitionsId
      * @return bool true on success
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws NoSuchEntityException
+     * @throws LocalizedException
      */
     public function deleteById($recurrenceSubscriptionRepetitionsId);
 }

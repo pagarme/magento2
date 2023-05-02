@@ -21,13 +21,13 @@ interface RecurrenceProductsSubscriptionInterface
     const CREDIT_CARD = 'credit_card';
 
     /** @var string */
-    const RECURRENCE_PRODUCTS_SUBSCRIPTION_ID = 'recurrence_products_subscription_id';
+    const BOLETO = 'boleto';
+
+    /** @var string */
+    const BILLING_TYPE = 'billing_type';
 
     /** @var string */
     const ALLOW_INSTALLMENTS = 'allow_installments';
-
-    /** @var string */
-    const UPDATED_AT = 'updated_at';
 
     /** @var string */
     const ID = 'id';
@@ -42,10 +42,7 @@ interface RecurrenceProductsSubscriptionInterface
     const CREATED_AT = 'created_at';
 
     /** @var string */
-    const BOLETO = 'boleto';
-
-    /** @var string */
-    const BILLING_TYPE = 'billing_type';
+    const UPDATED_AT = 'updated_at';
 
     /**
      * Get product_id
@@ -56,9 +53,9 @@ interface RecurrenceProductsSubscriptionInterface
     /**
      * Set product_id
      * @param int $productId
-     * @return \Pagarme\Pagarme\Api\Data\RecurrenceProductsSubscriptionInterface
+     * @return RecurrenceProductsSubscriptionInterface
      */
-    public function setProductId(int $productId): \Pagarme\Pagarme\Api\Data\RecurrenceProductsSubscriptionInterface;
+    public function setProductId(int $productId): RecurrenceProductsSubscriptionInterface;
 
     /**
      * Get credit_card
@@ -69,9 +66,9 @@ interface RecurrenceProductsSubscriptionInterface
     /**
      * Set credit_card
      * @param string $creditCard
-     * @return \Pagarme\Pagarme\Api\Data\RecurrenceProductsSubscriptionInterface
+     * @return RecurrenceProductsSubscriptionInterface
      */
-    public function setCreditCard(string $creditCard): \Pagarme\Pagarme\Api\Data\RecurrenceProductsSubscriptionInterface;
+    public function setCreditCard(string $creditCard): RecurrenceProductsSubscriptionInterface;
 
     /**
      * Get allow_installments
@@ -82,9 +79,9 @@ interface RecurrenceProductsSubscriptionInterface
     /**
      * Set allow_installments
      * @param string $allowInstallments
-     * @return \Pagarme\Pagarme\Api\Data\RecurrenceProductsSubscriptionInterface
+     * @return RecurrenceProductsSubscriptionInterface
      */
-    public function setAllowInstallments(string $allowInstallments): \Pagarme\Pagarme\Api\Data\RecurrenceProductsSubscriptionInterface;
+    public function setAllowInstallments(string $allowInstallments): RecurrenceProductsSubscriptionInterface;
 
     /**
      * Get boleto
@@ -95,9 +92,9 @@ interface RecurrenceProductsSubscriptionInterface
     /**
      * Set boleto
      * @param string $boleto
-     * @return \Pagarme\Pagarme\Api\Data\RecurrenceProductsSubscriptionInterface
+     * @return RecurrenceProductsSubscriptionInterface
      */
-    public function setBoleto(string $boleto): \Pagarme\Pagarme\Api\Data\RecurrenceProductsSubscriptionInterface;
+    public function setBoleto(string $boleto): RecurrenceProductsSubscriptionInterface;
 
     /**
      * Get sell_as_normal_product
@@ -108,9 +105,9 @@ interface RecurrenceProductsSubscriptionInterface
     /**
      * Set sell_as_normal_product
      * @param string $sellAsNormalProduct
-     * @return \Pagarme\Pagarme\Api\Data\RecurrenceProductsSubscriptionInterface
+     * @return RecurrenceProductsSubscriptionInterface
      */
-    public function setSellAsNormalProduct(string $sellAsNormalProduct): \Pagarme\Pagarme\Api\Data\RecurrenceProductsSubscriptionInterface;
+    public function setSellAsNormalProduct(string $sellAsNormalProduct): RecurrenceProductsSubscriptionInterface;
 
     /**
      * Get billing_type
@@ -121,9 +118,9 @@ interface RecurrenceProductsSubscriptionInterface
     /**
      * Set billing_type
      * @param string $billingType
-     * @return \Pagarme\Pagarme\Api\Data\RecurrenceProductsSubscriptionInterface
+     * @return RecurrenceProductsSubscriptionInterface
      */
-    public function setBillingType(string $billingType): \Pagarme\Pagarme\Api\Data\RecurrenceProductsSubscriptionInterface;
+    public function setBillingType(string $billingType): RecurrenceProductsSubscriptionInterface;
 
     /**
      * Get created_at
@@ -134,9 +131,9 @@ interface RecurrenceProductsSubscriptionInterface
     /**
      * Set created_at
      * @param string $createdAt
-     * @return \Pagarme\Pagarme\Api\Data\RecurrenceProductsSubscriptionInterface
+     * @return RecurrenceProductsSubscriptionInterface
      */
-    public function setCreatedAt(string $createdAt): \Pagarme\Pagarme\Api\Data\RecurrenceProductsSubscriptionInterface;
+    public function setCreatedAt(string $createdAt): RecurrenceProductsSubscriptionInterface;
 
     /**
      * Get updated_at
@@ -147,7 +144,7 @@ interface RecurrenceProductsSubscriptionInterface
     /**
      * Set updated_at
      * @param string $updatedAt
-     * @return \Pagarme\Pagarme\Api\Data\RecurrenceProductsSubscriptionInterface
+     * @return RecurrenceProductsSubscriptionInterface
      */
-    public function setUpdatedAt(string $updatedAt): \Pagarme\Pagarme\Api\Data\RecurrenceProductsSubscriptionInterface;
+    public function setUpdatedAt(string $updatedAt): RecurrenceProductsSubscriptionInterface;
 }
