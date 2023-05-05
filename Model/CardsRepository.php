@@ -103,10 +103,10 @@ class CardsRepository implements CardsRepositoryInterface
             $savedCardRepository = new SavedCardRepository();
 
             $matchIds = [];
-            preg_match('/mp_core_\d*/', $cardsId, $matchIds);
+            preg_match('/mp_core_\d*/', $cardsId ?? '', $matchIds);
 
             if (isset($matchIds[0])) {
-                $savedCardId = preg_replace('/\D/', '', $matchIds[0]);
+                $savedCardId = preg_replace('/\D/', '', $matchIds[0] ?? '');
                 $savedCard = $savedCardRepository->find($savedCardId);
                 if ($savedCard !== null) {
                     $objectManager = ObjectManager::getInstance();

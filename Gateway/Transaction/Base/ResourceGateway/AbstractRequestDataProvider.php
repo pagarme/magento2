@@ -98,7 +98,7 @@ abstract class AbstractRequestDataProvider
      */
     public function getDocumentType()
     {
-        $identity = (int) preg_replace('/[^0-9]/','', $this->getDocumentNumber());
+        $identity = (int) preg_replace('/[^0-9]/','', $this->getDocumentNumber() ?? '');
         return (strlen($identity) === 14) ?
             \Pagarme\Pagarme\Model\Enum\DocumentTypeEnum::CNPJ :
             \Pagarme\Pagarme\Model\Enum\DocumentTypeEnum::CPF;
@@ -182,7 +182,7 @@ abstract class AbstractRequestDataProvider
      */
     public function getBillingAddressZipCode()
     {
-        return preg_replace('/[^0-9]/','', $this->getBillingAddressAttribute('postcode'));
+        return preg_replace('/[^0-9]/','', $this->getBillingAddressAttribute('postcode') ?? '');
     }
 
     /**
@@ -254,7 +254,7 @@ abstract class AbstractRequestDataProvider
      */
     public function getShippingAddressZipCode()
     {
-        return preg_replace('/[^0-9]/','', $this->getShippingAddressAttribute('postcode'));
+        return preg_replace('/[^0-9]/','', $this->getShippingAddressAttribute('postcode') ?? '');
     }
 
     /**
@@ -428,8 +428,8 @@ abstract class AbstractRequestDataProvider
      */
     protected function getBillingAddressAttribute($attribute)
     {
-        if (preg_match('/^street_/', $attribute)) {
-            $line = (int) str_replace('street_', '', $attribute);
+        if (preg_match('/^street_/', $attribute ?? '')) {
+            $line = (int) str_replace('street_', '', $attribute ?? '');
             return $this->getQuoteBillingAddress()->getStreetLine($line);
         }
         return $this->getQuoteBillingAddress()->getData($attribute);
@@ -441,8 +441,8 @@ abstract class AbstractRequestDataProvider
      */
     protected function getShippingAddressAttribute($attribute)
     {
-        if (preg_match('/^street_/', $attribute)) {
-            $line = (int) str_replace('street_', '', $attribute);
+        if (preg_match('/^street_/', $attribute ?? '')) {
+            $line = (int) str_replace('street_', '', $attribute ?? '');
             return $this->getQuoteShippingAddress()->getStreetLine($line);
         }
         return $this->getQuoteShippingAddress()->getData($attribute);

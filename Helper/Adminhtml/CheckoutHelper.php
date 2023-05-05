@@ -27,7 +27,7 @@ class CheckoutHelper extends AbstractHelper
 
     public function getPaymentMethodConfig($code)
     {
-        $method = explode('_', $code);
+        $method = explode('_', $code ?? '');
         $moduleConfigurations = Magento2CoreSetup::getModuleConfiguration();
 
         $methods = [

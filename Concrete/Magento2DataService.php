@@ -21,7 +21,7 @@ class Magento2DataService extends AbstractDataService
         $orderId = $platformOrder->getPayment()->getParentId();
 
         $transactionAuth = $transactionRepository->getByTransactionId(
-            str_replace('-capture', '', $lastTransId),
+            str_replace('-capture', '', $lastTransId ?? ''),
             $paymentId,
             $orderId
         );
@@ -112,7 +112,7 @@ class Magento2DataService extends AbstractDataService
         $additionalInformation = $transactionAuth->getAdditionalInformation();
         foreach ($additionalInformation as $key => $value) {
             if ($value == $lastNsu) {
-                return str_replace('_acquirer_nsu', '', $key);
+                return str_replace('_acquirer_nsu', '', $key ?? '');
             }
         }
 

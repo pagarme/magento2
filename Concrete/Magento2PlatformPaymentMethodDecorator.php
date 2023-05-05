@@ -23,7 +23,7 @@ class Magento2PlatformPaymentMethodDecorator implements PlatformPaymentMethodInt
     {
         $platformOrder = $platformOrder->getPlatformOrder();
         $payment = $platformOrder->getPayment();
-        $paymentMethod = explode('_', $payment->getMethod());
+        $paymentMethod = explode('_', $payment->getMethod() ?? '');
 
         if (!isset($paymentMethod[1])) {
             return $this->paymentMethod = $paymentMethod;

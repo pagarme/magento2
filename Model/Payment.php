@@ -158,7 +158,7 @@ class Payment
 
     public function formatPhone($phone)
     {
-        $phone = preg_replace("/[^0-9]/", "", $phone);
+        $phone = preg_replace("/[^0-9]/", "", $phone ?? '');
 
         return array('ddd' => $phone[0] . $phone[1], 'number' => substr($phone, 2));
     }
