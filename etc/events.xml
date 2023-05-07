@@ -65,5 +65,10 @@
         <observer name="update_product_cycle_value"
                   instance="Pagarme\Pagarme\Observer\DiscountCyclesObserver" />
     </event>
-    
+
+    <event name="customer_login">
+        <observer name="Pagarme::customer_login"
+                  instance="Pagarme\Pagarme\Observer\CustomerLogin" />
+    </event>
+
 </config>

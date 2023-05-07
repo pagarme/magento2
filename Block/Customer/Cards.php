@@ -1,156 +1,217 @@
 <?php
 /**
- * Class Billet
- *
  * @author      Open Source Team
- * @copyright   2021 Pagar.me (https://pagar.me)
+ * @copyright   2023 Pagar.me (https://pagar.me)
  * @license     https://pagar.me Copyright
  *
  * @link        https://pagar.me
  */
 
+declare(strict_types=1);
+
 namespace Pagarme\Pagarme\Block\Customer;
 
-
+use Magento\Customer\Model\Session;
+use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Phrase;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
-use Pagarme\Core\Payment\Repositories\CustomerRepository;
-use Pagarme\Core\Payment\Repositories\SavedCardRepository;
-use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
-use Pagarme\Pagarme\Concrete\Magento2SavedCardAdapter;
-use Pagarme\Pagarme\Model\CardsRepository;
-use Magento\Framework\Api\SearchCriteriaBuilder;
-use \Magento\Customer\Model\Session;
+use Magento\Theme\Block\Html\Pager;
+use Pagarme\Pagarme\Api\CustomerRepositoryInterface;
+use Pagarme\Pagarme\Api\Data\CustomerInterface;
+use Pagarme\Pagarme\Api\Data\SavedCardInterface;
+use Pagarme\Pagarme\Api\SavedCardRepositoryInterface;
+use Pagarme\Pagarme\Model\ResourceModel\SavedCard\Collection;
+use Pagarme\Pagarme\Model\ResourceModel\SavedCard\CollectionFactoryInterface;
 
+/**
+ * Class Cards
+ * @package Pagarme\Pagarme\Block\Customer
+ */
 class Cards extends Template
 {
-    protected $customerSession;
+    /** @var string */
+    protected $_template = 'Pagarme_Pagarme::customer/cards.phtml';
 
-    protected $cardsRepository;
+    /** @var Session */
+    private $_customerSession;
 
-    protected $criteria;
+    /** @var SavedCardRepositoryInterface */
+    private $savedCardRepository;
+
+    /** @var CustomerRepositoryInterface */
+    private $customerRepository;
+
+    /** @var SearchCriteriaBuilder */
+    private $_searchCriteriaBuilder;
+
+    /** @var CollectionFactoryInterface */
+    private $collectionFactory;
 
     /**
-     * Link constructor.
+     * @var \Pagarme\Pagarme\Model\ResourceModel\SavedCard\Collection
+     */
+    protected $cards;
+
+    /**
+     * @param CollectionFactoryInterface $collectionFactory
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param CustomerRepositoryInterface $customerRepository
+     * @param SavedCardRepositoryInterface $savedCardRepository
+     * @param Session $customerSession
      * @param Context $context
-     * @param CheckoutSession $checkoutSession
+     * @param array $data
      */
     public function __construct(
-        Context $context,
-        CardsRepository $cardsRepository,
-        SearchCriteriaBuilder $criteria,
-        Session $customerSession
-    ){
-        parent::__construct($context, []);
-        $this->setCardsRepository($cardsRepository);
-        $this->setCriteria($criteria);
-        $this->setCustomerSession($customerSession);
+        CollectionFactoryInterface $collectionFactory,
+        SearchCriteriaBuilder $searchCriteriaBuilder,
+        CustomerRepositoryInterface $customerRepository,
+        SavedCardRepositoryInterface $savedCardRepository,
+        Session $customerSession,
+        Template\Context $context,
+        array $data = []
+    ) {
+        parent::__construct(
+            $context,
+            $data
+        );
+        $this->_customerSession = $customerSession;
+        $this->savedCardRepository = $savedCardRepository;
+        $this->customerRepository = $customerRepository;
+        $this->_searchCriteriaBuilder = $searchCriteriaBuilder;
+        $this->collectionFactory = $collectionFactory;
     }
 
-    public function addFilterCriteria($fieldName, $fieldValue, $filterType = 'eq')
+    /**
+     * @inheritDoc
+     */
+    protected function _construct()
     {
-        $searchCriteria = $this->getCriteria()->addFilter($fieldName, $fieldValue, $filterType)->create();
-
-        return $searchCriteria;
+        parent::_construct();
+        $this->pageConfig->getTitle()->set(__('My Cards'));
     }
 
-    public function getCardsList()
+    /**
+     * @return false|Collection
+     * @throws LocalizedException
+     */
+    public function getCards()
     {
-        $customerId = $this->getIdCustomer();
-        $searchCriteria = $this->addFilterCriteria('customer_id', $customerId);
-        $listCards = $this->getCardsRepository()->getList($searchCriteria);
-
-        $cards = $listCards->getItems();
-
-        foreach ($cards as &$card) {
-            $card->setMaskedNumber('****.****.****.' . $card->getLastFourNumbers());
+        if (!($customerId = $this->_customerSession->getCustomerId())) {
+            return false;
         }
-
-        return array_merge($cards, $this->getCoreCards($customerId));
+        if (!$this->cards) {
+            $this->cards = $this->collectionFactory
+                ->create(
+                    $this->getCustomerPagarmeId()
+                )->addFieldToSelect(
+                    '*'
+                )->setOrder(
+                SavedCardInterface::CREATED_AT,
+                'desc'
+            );
+        }
+        return $this->cards;
     }
 
-    private function getCoreCards($idCustomer)
+    /**
+     * @inheritDoc
+     */
+    protected function _prepareLayout()
     {
-        Magento2CoreSetup::bootstrap();
+        parent::_prepareLayout();
+        if ($this->getCards()) {
+            $pager = $this->getLayout()->createBlock(
+                Pager::class,
+                'pagarme.customer.cards.pager'
+            )->setCollection(
+                $this->getCards()
+            );
+            $this->setChild('pager', $pager);
+            $this->getCards()->load();
+        }
+        return $this;
+    }
 
-        $customerRepository = new CustomerRepository();
-        $savedCardRepository = new SavedCardRepository();
+    /**
+     * Get Pager child block output
+     * @return string
+     */
+    public function getPagerHtml()
+    {
+        return $this->getChildHtml('pager');
+    }
 
-        $customer = $customerRepository->findByCode($idCustomer);
-        $cards = [];
-        if ($customer !== null) {
-            $coreCards =
-                $savedCardRepository->findByOwnerId($customer->getPagarmeId());
-
-            foreach ($coreCards as $coreCard) {
-                $cards[] = new Magento2SavedCardAdapter($coreCard);
+    /**
+     * @return string
+     * @throws LocalizedException
+     */
+    protected function getCustomerPagarmeId()
+    {
+        if (!$pagarmeId = $this->_customerSession->getPagarmeId()) {
+            $pagarmeCustomer = current(
+                $this->customerRepository->getList(
+                    $this->_searchCriteriaBuilder->addFilter(
+                        CustomerInterface::CODE, $this->_customerSession->getCustomer()->getId()
+                    )->create()
+                )->getItems()
+            );
+            if ($pagarmeCustomer && $pagarmeCustomer instanceof CustomerInterface) {
+                $pagarmeId = $pagarmeCustomer->getPagarmeId();
             }
         }
-        return $cards;
-    }
-
-    public function getIdCustomer()
-    {
-        return $this->getCustomerSession()->getId();
+        return $pagarmeId;
     }
 
     /**
-     * @return mixed
+     * @param SavedCardInterface $card
+     * @return string
      */
-    public function getCardsRepository()
+    public function getCardNumber(SavedCardInterface $card): string
     {
-        return $this->cardsRepository;
+        return number_format(
+            $card->getFirstSixDigits()/100,
+            2,
+            '.',
+            ''
+            ) . '**.****.' . $card->getLastFourDigits();
     }
 
     /**
-     * @param mixed $cardsRepository
-     *
-     * @return self
+     * @param SavedCardInterface $card
+     * @return Phrase
      */
-    public function setCardsRepository($cardsRepository)
+    public function getCardType(SavedCardInterface $card)
     {
-        $this->cardsRepository = $cardsRepository;
-
-        return $this;
+        return __(ucwords(str_replace('_',' ', $card->getType())));
     }
 
     /**
-     * @return mixed
+     * @param SavedCardInterface $card
+     * @return string
      */
-    public function getCriteria()
+    public function getRemoveUrl(SavedCardInterface $card): string
     {
-        return $this->criteria;
+        return $this->getUrl('pagarme/cards/remove', ['card_id' => $card->getId()]);
     }
 
     /**
-     * @param mixed $criteria
-     *
-     * @return self
+     * Get customer account URL
+     * @return string
      */
-    public function setCriteria($criteria)
+    public function getBackUrl()
     {
-        $this->criteria = $criteria;
-
-        return $this;
+        return $this->getUrl('customer/account/');
     }
 
     /**
-     * @return mixed
+     * Get message for no cards.
+     * @return \Magento\Framework\Phrase
+     * @since 102.1.0
      */
-    public function getCustomerSession()
+    public function getEmptyCardsMessage()
     {
-        return $this->customerSession;
-    }
-
-    /**
-     * @param mixed $customerSession
-     *
-     * @return self
-     */
-    public function setCustomerSession($customerSession)
-    {
-        $this->customerSession = $customerSession;
-
-        return $this;
+        return __('You have saved no cards.');
     }
 }
