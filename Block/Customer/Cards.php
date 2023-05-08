@@ -98,7 +98,7 @@ class Cards extends Template
      */
     public function getCards()
     {
-        if (!($customerId = $this->_customerSession->getCustomerId())) {
+        if (!($this->_customerSession->getCustomerId())) {
             return false;
         }
         if (!$this->cards) {
@@ -161,7 +161,7 @@ class Cards extends Template
                 $pagarmeId = $pagarmeCustomer->getPagarmeId();
             }
         }
-        return $pagarmeId;
+        return $pagarmeId ?? ' ';
     }
 
     /**
