@@ -32,6 +32,7 @@ class Path
     /** @var string */
     const TEST = 'test';
 
+    /** @var string */
     const TEST_MODE = 'test_mode';
 
     /** @var string */

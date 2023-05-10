@@ -70,5 +70,4 @@
         <observer name="Pagarme::customer_login"
                   instance="Pagarme\Pagarme\Observer\CustomerLogin" />
     </event>
-
 </config>

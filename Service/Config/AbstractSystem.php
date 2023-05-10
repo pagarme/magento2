@@ -27,7 +27,6 @@ abstract class AbstractSystem
     private $_scopeConfig;
 
     /** @var string */
-
     protected string $_scopeType = ScopeConfigInterface::SCOPE_TYPE_DEFAULT;
 
     /** @var int|string|null */
