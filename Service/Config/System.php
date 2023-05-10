@@ -41,7 +41,7 @@ class System extends AbstractSystem implements SystemInterface
      * @param $scopeCode
      * @return string
      */
-    public function getkey(string $type = Path::PUBLIC_KEY, $scopeType = null, $scopeCode = null): string
+    public function getKey(string $type = Path::PUBLIC_KEY, $scopeType = null, $scopeCode = null): string
     {
         $path = Path::PAGARME_PAGARME . DIRECTORY_SEPARATOR . Path::GLOBAL . DIRECTORY_SEPARATOR . $type;
         if ($scopeType) {

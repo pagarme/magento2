@@ -48,7 +48,7 @@ class Api implements PagarmeServiceApiInterface
     {
         return $this->pagarmeCoreApiClientFactory->create(
             [
-                $this->system->getkey(Path::SECRET_KEY),
+                $this->system->getKey(Path::SECRET_KEY),
                 ''
             ]
         );

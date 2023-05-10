@@ -32,5 +32,5 @@ interface SystemInterface
      * @param $scopeCode
      * @return string
      */
-    public function getkey(string $type = Path::PUBLIC_KEY, $scopeType = null, $scopeCode = null): string;
+    public function getKey(string $type = Path::PUBLIC_KEY, $scopeType = null, $scopeCode = null): string;
 }
