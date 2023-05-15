@@ -21,7 +21,7 @@ class BuildChargeAddtionalInformationHelper
         $methodName = str_replace(
             ['_', 'Pagarme'],
             '',
-            ucwords($paymentMethodPlatform, "_")
+            ucwords($paymentMethodPlatform ?? '', "_")
         );
 
         $methodName = "build{$methodName}";

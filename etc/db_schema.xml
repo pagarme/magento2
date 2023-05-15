@@ -22,4 +22,31 @@
         <column name="code" nullable="false" xsi:type="varchar" comment="Code" length="100"/>
         <column name="pagarme_id" nullable="false" xsi:type="varchar" comment="Pagarme Id" length="20"/>
     </table>
+    <table name="pagarme_module_core_recurrence_products_subscription" resource="default" engine="innodb" comment="Pagarme Recurrence Products Subscription Table">
+        <column xsi:type="bigint" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="Entity Id"/>
+        <column name="product_id" nullable="true" xsi:type="int" padding="11" comment="Product Id" identity="false"/>
+        <column name="credit_card" nullable="false" xsi:type="varchar" comment="Credit Card" length="1"/>
+        <column name="allow_installments" nullable="false" xsi:type="varchar" comment="Allow Installments" length="1"/>
+        <column name="boleto" nullable="false" xsi:type="varchar" comment="Boleto" length="1"/>
+        <column name="sell_as_normal_product" nullable="false" xsi:type="varchar" comment="Sell As Normal Product" length="1"/>
+        <column name="billing_type" nullable="false" xsi:type="varchar" comment="Billing Type" length="11"/>
+        <column name="created_at" nullable="false" xsi:type="timestamp" comment="created_at" default="CURRENT_TIMESTAMP"/>
+        <column name="updated_at" nullable="false" xsi:type="timestamp" comment="updated_at" default="CURRENT_TIMESTAMP" on_update="true"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+    </table>
+    <table name="pagarme_module_core_recurrence_subscription_repetitions" resource="default" engine="innodb" comment="Pagarme Recurrence Subscription Repetitions Table">
+        <column xsi:type="bigint" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="Entity Id"/>
+        <column name="subscription_id" nullable="false" xsi:type="int" padding="11" comment="Subscription Id" identity="false"/>
+        <column name="interval" nullable="false" xsi:type="varchar" comment="Interval" length="15"/>
+        <column name="interval_count" nullable="false" xsi:type="smallint" comment="Interval Count" padding="6" identity="false"/>
+        <column name="recurrence_price" nullable="true" xsi:type="int" padding="11" comment="Recurrence Price" identity="false"/>
+        <column name="cycles" nullable="true" xsi:type="int" padding="11" comment="Cycles" identity="false"/>
+        <column name="created_at" nullable="false" xsi:type="timestamp" comment="created_at" default="CURRENT_TIMESTAMP"/>
+        <column name="updated_at" nullable="false" xsi:type="timestamp" comment="updated_at" default="CURRENT_TIMESTAMP" on_update="true"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+    </table>
 </schema>

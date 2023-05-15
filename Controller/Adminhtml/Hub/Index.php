@@ -85,7 +85,7 @@ class Index extends \Magento\Backend\App\Action
         }
 
         $url = $this->getUrl('adminhtml/system_config/edit/section/payment');
-        header('Location: ' . explode('?', $url)[0] . 'website/' . $websiteId);
+        header('Location: ' . explode('?', $url ?? '')[0] . 'website/' . $websiteId);
         exit;
     }
 

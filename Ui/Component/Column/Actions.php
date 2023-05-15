@@ -80,7 +80,7 @@ class Actions extends Column
 
     protected function getUrlPagarme($type, $item, $path)
     {
-        $path = str_replace("*", $type, $path);
+        $path = str_replace("*", $type, $path ?? '');
 
         $url = $this->urlBuilder->getUrl($path, ['id' => $item['id']]);
         return $url;
@@ -88,7 +88,7 @@ class Actions extends Column
 
     protected function getType($namespace)
     {
-        preg_match('/pagarme_pagarme_(\w+)_listing/', $namespace, $type);
+        preg_match('/pagarme_pagarme_(\w+)_listing/', $namespace ?? '', $type);
         return $type[1];
     }
 }

@@ -1,0 +1,22 @@
+<?php
+/**
+ * @author      Open Source Team
+ * @copyright   2023 Pagar.me (https://pagar.me)
+ * @license     https://pagar.me Copyright
+ *
+ * @link        https://pagar.me
+ */
+
+declare(strict_types=1);
+
+/** @var $block \Pagarme\Pagarme\Block\Product\View\Price\Recurrence */
+
+use Pagarme\Pagarme\Api\Data\RecurrencePriceInterface;
+?>
+<?php if ($recurrencePrice = $block->getRecurrencePrice($block->getProduct())) : ?>
+    <div class="price-box pagarme-price_recurrence">
+        <?php if ($recurrencePrice instanceof RecurrencePriceInterface) : ?>
+            <b><?= __('Or %1 per', $block->formatPrice($recurrencePrice->getPrice())) . ' ' . __($recurrencePrice->getInterval()) ?> </b>
+        <?php endif; ?>
+    </div>
+<?php endif; ?>

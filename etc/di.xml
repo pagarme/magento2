@@ -647,9 +647,9 @@
 
 <!--    <preference for="Magento\CatalogWidget\Block\Product\ProductsList" type="Pagarme\Pagarme\Block\Web\ProductsList" />-->
 
-    <type name="\Magento\Catalog\Pricing\Render\FinalPriceBox">
-        <plugin name="Pagarme_Pagarme_change_template" type="Pagarme\Pagarme\Plugin\Princing\Render\FinalPricePlugin" />
-    </type>
+<!--    <type name="\Magento\Catalog\Pricing\Render\FinalPriceBox">-->
+<!--        <plugin name="Pagarme_Pagarme_change_template" type="Pagarme\Pagarme\Plugin\Princing\Render\FinalPricePlugin" />-->
+<!--    </type>-->
 
     <type name="\Magento\Checkout\Block\Cart\Item\Renderer">
         <plugin name="Pagarme_Pagarme_change_template_cycles" type="Pagarme\Pagarme\Plugin\Princing\Render\ProductPriceCyclesPlugin" />
@@ -729,5 +729,17 @@
         <arguments>
             <argument name="logger" xsi:type="object">Pagarme\Pagarme\Logger\Logger</argument>
         </arguments>
+    <preference for="Pagarme\Pagarme\Api\Data\RecurrencePriceInterface" type="Pagarme\Pagarme\Service\Data\RecurrencePrice" />
+    <preference for="Pagarme\Pagarme\Api\RecurrenceProductsSubscriptionRepositoryInterface" type="Pagarme\Pagarme\Model\RecurrenceProductsSubscriptionRepository"/>
+    <preference for="Pagarme\Pagarme\Api\Data\RecurrenceProductsSubscriptionInterface" type="Pagarme\Pagarme\Model\RecurrenceProductsSubscription"/>
+    <preference for="Pagarme\Pagarme\Api\Data\RecurrenceProductsSubscriptionSearchResultsInterface" type="Magento\Framework\Api\SearchResults"/>
+    <preference for="Pagarme\Pagarme\Api\RecurrenceSubscriptionRepetitionsRepositoryInterface" type="Pagarme\Pagarme\Model\RecurrenceSubscriptionRepetitionsRepository"/>
+    <preference for="Pagarme\Pagarme\Api\Data\RecurrenceSubscriptionRepetitionsInterface" type="Pagarme\Pagarme\Model\RecurrenceSubscriptionRepetitions"/>
+    <preference for="Pagarme\Pagarme\Api\Data\RecurrenceSubscriptionRepetitionsSearchResultsInterface" type="Magento\Framework\Api\SearchResults"/>
+    <type name="Magento\CatalogWidget\Block\Product\ProductsList">
+        <plugin name="Pagarme_Pagarme::Magento_CatalogWidget:ProductsList"
+                type="Pagarme\Pagarme\Plugin\CatalogWidget\Block\Product\ProductsList"
+                sortOrder="10"
+                disabled="false"/>
     </type>
 </config>
