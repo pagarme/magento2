@@ -729,6 +729,7 @@
         <arguments>
             <argument name="logger" xsi:type="object">Pagarme\Pagarme\Logger\Logger</argument>
         </arguments>
+    </type>
     <preference for="Pagarme\Pagarme\Api\Data\RecurrencePriceInterface" type="Pagarme\Pagarme\Service\Data\RecurrencePrice" />
     <preference for="Pagarme\Pagarme\Api\RecurrenceProductsSubscriptionRepositoryInterface" type="Pagarme\Pagarme\Model\RecurrenceProductsSubscriptionRepository"/>
     <preference for="Pagarme\Pagarme\Api\Data\RecurrenceProductsSubscriptionInterface" type="Pagarme\Pagarme\Model\RecurrenceProductsSubscription"/>
