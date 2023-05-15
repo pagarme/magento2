@@ -1,7 +1,28 @@
 {
     "pagarme_module_core_saved_card": {
         "column": {
-            "type": true
+            "type": true,
+            "id": true,
+            "pagarme_id": true,
+            "owner_id": true,
+            "first_six_digits": true,
+            "last_four_digits": true,
+            "brand": true,
+            "owner_name": true,
+            "created_at": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "pagarme_module_core_customer": {
+        "column": {
+            "id": true,
+            "code": true,
+            "pagarme_id": true
+        },
+        "constraint": {
+            "PRIMARY": true
         }
     },
     "pagarme_module_core_recurrence_products_subscription": {

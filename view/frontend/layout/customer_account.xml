@@ -1,14 +1,17 @@
 <?xml version="1.0"?>
 <!--
 /**
- * Copyright © 2013-2017 Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * @author      Open Source Team
+ * @copyright   2023 Pagar.me (https://pagar.me)
+ * @license     https://pagar.me Copyright
+ *
+ * @link        https://pagar.me
  */
 -->
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd" label="Customer My Account (All Pages)" design_abstraction="custom">
     <body>
 	    <referenceBlock name="customer_account_navigation">
-	        <block class="Magento\Framework\View\Element\Html\Link\Current" name="customer-account-navigation-about-me">
+	        <block class="Magento\Framework\View\Element\Html\Link\Current" name="customer-account-navigation-cards-link">
 	            <arguments>
 	                <argument name="path" xsi:type="string">pagarme/customer/cards</argument>
 	                <argument name="label" xsi:type="string" translate="true">My Cards</argument>

@@ -1,45 +1,88 @@
 <?php
+/**
+ * @author      Open Source Team
+ * @copyright   2023 Pagar.me (https://pagar.me)
+ * @license     https://pagar.me Copyright
+ *
+ * @link        https://pagar.me
+ */
+
+declare(strict_types=1);
+
 namespace Pagarme\Pagarme\Controller\Customer;
 
-use Magento\Framework\App\Action\Action;
-use Magento\Framework\App\Action\Context;
-use Magento\Framework\Controller\Result\JsonFactory;
-use Magento\Framework\View\Result\PageFactory;
 use Magento\Customer\Model\Session;
+use Magento\Framework\App\Action\HttpGetActionInterface;
+use Magento\Framework\App\Response\RedirectInterface;
+use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\Controller\Result\Redirect;
+use Magento\Framework\Controller\Result\RedirectFactory;
+use Magento\Framework\Controller\ResultFactory;
+use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\Message\ManagerInterface;
+use Magento\Framework\View\Result\Page;
+use Magento\Framework\View\Result\PageFactory;
 
-class Cards extends Action
+/**
+ * Class Cards
+ * @package Pagarme\Pagarme\Controller\Customer
+ */
+class Cards implements HttpGetActionInterface
 {
-    protected $jsonFactory;
+    /** @var Session */
+    private $_customerSession;
 
-    protected $pageFactory;
+    /** @var RedirectFactory */
+    private RedirectFactory $_resultRedirectFactory;
 
-    protected $context;
+    /** @var ManagerInterface */
+    private ManagerInterface $_messageManager;
 
-    protected $customerSession;
+    /** @var PageFactory */
+    private PageFactory $_resultPageFactory;
 
+    /** @var RedirectInterface */
+    private $_redirect;
+
+    /**
+     * @param RedirectInterface $redirect
+     * @param PageFactory $resultPageFactory
+     * @param ManagerInterface $messageManager
+     * @param RedirectFactory $resultRedirectFactory
+     * @param Session $customerSession
+     */
     public function __construct(
-        \Magento\Framework\App\Action\Context $context,
-        JsonFactory $jsonFactory,
-        PageFactory $pageFactory,
+        RedirectInterface $redirect,
+        PageFactory $resultPageFactory,
+        ManagerInterface $messageManager,
+        RedirectFactory $resultRedirectFactory,
         Session $customerSession
-    ){
-        parent::__construct($context);
-        $this->jsonFactory = $jsonFactory;
-        $this->pageFactory = $pageFactory;
-        $this->customerSession = $customerSession;
+    ) {
+        $this->_customerSession = $customerSession;
+        $this->_resultRedirectFactory = $resultRedirectFactory;
+        $this->_messageManager = $messageManager;
+        $this->_resultPageFactory = $resultPageFactory;
+        $this->_redirect = $redirect;
     }
 
+    /**
+     * @return ResponseInterface|Redirect|ResultInterface|Page
+     */
     public function execute()
     {
-        if (!$this->customerSession->isLoggedIn()) {
-            $this->_redirect('customer/account/login');
-
-            return; # code...
+        /** @var Redirect $resultRedirect */
+        $resultRedirect = $this->_resultRedirectFactory->create([ResultFactory::TYPE_REDIRECT]);
+        if (!$this->_customerSession->isLoggedIn()) {
+            $this->_messageManager->addNoticeMessage(__('You must be logged in.'));
+            return $resultRedirect->setPath('customer/account/login');
         }
-        $result = $this->pageFactory->create();
-        $result->getConfig()->getTitle()->set("My Cards");
-
-        return $result;
+        /** @var \Magento\Framework\View\Result\Page $resultPage */
+        $resultPage = $this->_resultPageFactory->create();
+        $resultPage->getConfig()->getTitle()->set(__('My Cards'));
+        $block = $resultPage->getLayout()->getBlock('customer.account.link.back');
+        if ($block) {
+            $block->setRefererUrl($this->_redirect->getRefererUrl());
+        }
+        return $resultPage;
     }
-
 }

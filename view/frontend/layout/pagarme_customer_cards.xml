@@ -1,15 +1,26 @@
 <?xml version="1.0"?>
 <!--
 /**
- * Copyright © 2013-2017 Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * @author      Open Source Team
+ * @copyright   2023 Pagar.me (https://pagar.me)
+ * @license     https://pagar.me Copyright
+ *
+ * @link        https://pagar.me
  */
 -->
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd" label="Customer My Account (All Pages)" design_abstraction="custom">
     <update handle="customer_account"/>
 	<body>
 	    <referenceContainer name="content">
-	        <block class="Pagarme\Pagarme\Block\Customer\Cards" name="pagarme.customer.cards.list" template="customer/cards.phtml" cacheable="false"/>
-	    </referenceContainer>
+            <block class="Pagarme\Pagarme\Block\Customer\Cards" name="pagarme.customer.cards.list" template="customer/cards.phtml" cacheable="false">
+                <container name="pagarme.customer.cards.list.info" as="info" label="Customer Cards Info"/>
+                <container name="pagarme.customer.cards.list.extra.column.header" as="extra.column.header" label="Customer Cards Extra Column Header"/>
+                <block class="Pagarme\Pagarme\Block\Customer\Cards\Container"
+                       name="pagarme.customer.cards.list.extra.container" as="extra.container">
+                    <block name="pagarme.customer.cards.list.extra.container.data" as="extra.container.data"/>
+                </block>
+            </block>
+            <block class="Magento\Customer\Block\Account\Dashboard" name="customer.account.link.back" template="Magento_Customer::account/link/back.phtml" cacheable="false"/>
+        </referenceContainer>
 	</body>
 </page>

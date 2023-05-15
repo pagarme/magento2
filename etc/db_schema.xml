@@ -1,7 +1,26 @@
 <?xml version="1.0" ?>
 <schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
     <table name="pagarme_module_core_saved_card" resource="default" engine="innodb" comment="Pagar.me Card Tokens">
+        <column xsi:type="bigint" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="Entity Id"/>
         <column name="type" nullable="true" xsi:type="varchar" comment="Card type"/>
+        <column name="pagarme_id" nullable="false" xsi:type="varchar" comment="Pagarme Id" length="21"/>
+        <column name="owner_id" nullable="false" xsi:type="varchar" comment="Owner Id" length="21"/>
+        <column name="first_six_digits" nullable="false" xsi:type="varchar" comment="First Six Digits" length="6"/>
+        <column name="last_four_digits" nullable="false" xsi:type="varchar" comment="Last Four Digits" length="4"/>
+        <column name="brand" nullable="false" xsi:type="varchar" comment="Brand" length="30"/>
+        <column name="owner_name" nullable="true" xsi:type="varchar" comment="Owner Name" length="50"/>
+        <column name="created_at" nullable="false" xsi:type="timestamp" comment="created_at" default="CURRENT_TIMESTAMP"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+    </table>
+    <table name="pagarme_module_core_customer" resource="default" engine="innodb" comment="Pagar.me Customers">
+        <column xsi:type="bigint" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="Entity Id"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+        <column name="code" nullable="false" xsi:type="varchar" comment="Code" length="100"/>
+        <column name="pagarme_id" nullable="false" xsi:type="varchar" comment="Pagarme Id" length="20"/>
     </table>
     <table name="pagarme_module_core_recurrence_products_subscription" resource="default" engine="innodb" comment="Pagarme Recurrence Products Subscription Table">
         <column xsi:type="bigint" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="Entity Id"/>

@@ -688,7 +688,47 @@
             </argument>
         </arguments>
     </type>
-
+    <preference for="Pagarme\Pagarme\Api\CardsManagementInterface"
+                type="Pagarme\Pagarme\Service\Customer\CardsManagement"/>
+    <preference for="Pagarme\Pagarme\Api\PagarmeServiceApiInterface"
+                type="Pagarme\Pagarme\Service\Client\Api"/>
+    <preference for="Pagarme\Pagarme\Api\CustomerRepositoryInterface"
+                type="Pagarme\Pagarme\Model\CustomerRepository"/>
+    <preference for="Pagarme\Pagarme\Api\SystemInterface"
+                type="Pagarme\Pagarme\Service\Config\System"/>
+    <preference for="Pagarme\Pagarme\Api\SavedCardRepositoryInterface"
+                type="Pagarme\Pagarme\Model\SavedCardRepository"/>
+    <preference for="Pagarme\Pagarme\Api\Data\CustomerInterface"
+                type="Pagarme\Pagarme\Model\Customer"/>
+    <preference for="Pagarme\Pagarme\Api\Data\SavedCardInterface"
+                type="Pagarme\Pagarme\Model\SavedCard"/>
+    <preference for="Pagarme\Pagarme\Api\Data\CustomerSearchResultsInterface"
+                type="Magento\Framework\Api\SearchResults"/>
+    <preference for="Pagarme\Pagarme\Api\Data\SavedCardSearchResultsInterface"
+                type="Magento\Framework\Api\SearchResults"/>
+    <preference for="Pagarme\Pagarme\Model\ResourceModel\SavedCard\CollectionFactoryInterface"
+                type="Pagarme\Pagarme\Model\ResourceModel\SavedCard\CollectionFactory"/>
+    <virtualType name="Pagarme\Pagarme\Logger\Handler" type="Magento\Framework\Logger\Handler\Base">
+        <arguments>
+            <argument name="fileName" xsi:type="string">/var/log/pagarme.log</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Pagarme\Pagarme\Logger\Logger" type="Magento\Framework\Logger\Monolog">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="debug" xsi:type="object">Pagarme\Pagarme\Logger\Handler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Pagarme\Pagarme\Observer\CustomerLogin">
+        <arguments>
+            <argument name="logger" xsi:type="object">Pagarme\Pagarme\Logger\Logger</argument>
+        </arguments>
+    </type>
+    <type name="Pagarme\Pagarme\Controller\Cards\Remove">
+        <arguments>
+            <argument name="logger" xsi:type="object">Pagarme\Pagarme\Logger\Logger</argument>
+        </arguments>
     <preference for="Pagarme\Pagarme\Api\Data\RecurrencePriceInterface" type="Pagarme\Pagarme\Service\Data\RecurrencePrice" />
     <preference for="Pagarme\Pagarme\Api\RecurrenceProductsSubscriptionRepositoryInterface" type="Pagarme\Pagarme\Model\RecurrenceProductsSubscriptionRepository"/>
     <preference for="Pagarme\Pagarme\Api\Data\RecurrenceProductsSubscriptionInterface" type="Pagarme\Pagarme\Model\RecurrenceProductsSubscription"/>
