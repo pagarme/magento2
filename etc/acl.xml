@@ -9,12 +9,18 @@
 					<resource id="Pagarme_Pagarme::Charges_update" sortOrder="30" title="Update Charges"/>
 					<resource id="Pagarme_Pagarme::Charges_view" sortOrder="40" title="View Charges"/>
 				</resource>
-				<resource id="Pagarme_Pagarme::Cards" sortOrder="10" title="Cards">
+				<resource id="Pagarme_Pagarme::Cards" sortOrder="20" title="Cards">
 					<resource id="Pagarme_Pagarme::Cards_save" sortOrder="10" title="Save Cards"/>
 					<resource id="Pagarme_Pagarme::Cards_delete" sortOrder="20" title="Delete Cards"/>
 					<resource id="Pagarme_Pagarme::Cards_update" sortOrder="30" title="Update Cards"/>
 					<resource id="Pagarme_Pagarme::Cards_view" sortOrder="40" title="View Cards"/>
 				</resource>
+                <resource id="Pagarme_Pagarme::recurrence_products_subscription" sortOrder="30" title="Recurrence Products Subscription">
+                    <resource id="Pagarme_Pagarme::recurrence_products_subscription_save" sortOrder="10" title="Save Recurrence Products Subscription"/>
+                    <resource id="Pagarme_Pagarme::recurrence_products_subscription_delete" sortOrder="20" title="Delete Recurrence Products Subscription"/>
+                    <resource id="Pagarme_Pagarme::recurrence_products_subscription_update" sortOrder="30" title="Update Recurrence Products Subscription"/>
+                    <resource id="Pagarme_Pagarme::recurrence_products_subscription_view" sortOrder="40" title="View Recurrence Products Subscription"/>
+                </resource>
 			</resource>
 		</resources>
 	</acl>

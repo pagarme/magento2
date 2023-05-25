@@ -76,7 +76,7 @@ class ServicePayloadConverterInterface
         try {
             $order = $this->_orderRepository->get($result[OrderInterface::ENTITY_ID]);
             if ($lastTransId = $order->getPayment()->getData(self::PAGARME_TRANSACTION_ID_FIELD)) {
-                $exploded = explode('-', $lastTransId);
+                $exploded = explode('-', $lastTransId ?? '');
                 $result['payment'][self::PAGARME_TRANSACTION_ID] = array_shift($exploded);
             }
         } catch (InputException | NoSuchEntityException $e) {

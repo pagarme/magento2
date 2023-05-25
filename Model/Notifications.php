@@ -24,7 +24,8 @@ class Notifications extends Message
 {
 
     /** @var array */
-    protected $warnings = [];
+    private $warnings = [];
+    private $config;
 
     /**
      * @param ConfigInterface $config
@@ -43,23 +44,8 @@ class Notifications extends Message
         array $data = []
     ) {
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
-        if (!$config->isEnabled()) {
-            return;
-        }
-
-        if ($config->isSandboxMode()) {
-            $this->warnings[] = __('This store is linked to the Pagar.me test environment. This environment is intended for integration validation and does not generate real financial transactions.');
-        }
-
-        $customerConfigs = $config->getPagarmeCustomerConfigs();
-
-        if ($customerConfigs['showVatNumber'] != 1) {
-            $this->warnings[] = __("<b>Show VAT Number on Storefront</b> must be defined as <b>'Yes'</b> on <b>Stores</b> > <b>Configuration</b> > <b>Customer</b> > <b>Customer Configuration</b> > <b>Create New Account Options</b> for Pagar.me module to work on your store.");
-        }
-
-        if ($customerConfigs['streetLinesNumber'] != 4) {
-            $this->warnings[] = __("<b>Number of Lines in a Street Address</b> must be defined as <b>'4'</b> on <b>Stores</b> > <b>Configuration</b> > <b>Customer</b> > <b>Customer Configuration</b> > <b>Name and Address Options</b> for Pagar.me module to work on your store.");
-        }
+        $this->config = $config;
+        $this->addMessages();
     }
 
     /**
@@ -79,7 +65,7 @@ class Notifications extends Message
         $count = count($this->warnings);
 
         for ($i = 0; $i < $count; $i++) {
-            $html .= '<div style="padding-bottom: 10px;' . (($i !== 0) ? 'margin-top: 10px;' : '') . (($i < $count - 1) ? 'border-bottom: 1px dashed #d1d1d1' : '') . '">' . (($i === 0) ? "<b style='display:block; margin-bottom:8px'> Pagar.me </b>" : '') . __("<span style='background-color:red; color:white; padding:2px 5px'>Important!</span> ") . $this->warnings[$i] . '</div>';
+            $html .= '<div style="padding-bottom: 10px;' . (($i !== 0) ? 'margin-top: 10px;' : '') . (($i < $count - 1) ? 'border-bottom: 1px dashed #d1d1d1' : '') . '">' . (($i === 0) ? "<b style='display:block; margin-bottom:8px'> Pagar.me </b>" : '') . "<span style='background-color:red; color:white; padding:2px 5px'>" . __('Important!') . "</span> " . $this->warnings[$i] . '</div>';
         }
         return $html;
     }
@@ -89,6 +75,40 @@ class Notifications extends Message
      */
     public function isDisplayed(): bool
     {
+        if (!$this->config->isEnabled()) {
+            return false;
+        }
+
         return count($this->warnings) > 0;
+    }
+
+    private function addMessages()
+    {
+        $this->addEnvorimentMessages();
+        $this->addConfigMessages();
+    }
+
+    private function addEnvorimentMessages()
+    {
+        if (!$this->config->isHubEnabled()) {
+            $this->warnings[] = __('Pagar.me module is not yet integrated to the HUB. Complete the integration to start selling!');
+        }
+
+        if ($this->config->isSandboxMode()) {
+            $this->warnings[] = __('This store is linked to the Pagar.me test environment. This environment is intended for integration validation and does not generate real financial transactions.');
+        }
+    }
+
+    private function addConfigMessages()
+    {
+        $customerConfigs = $this->config->getPagarmeCustomerConfigs();
+
+        if ($customerConfigs['showVatNumber'] != 1) {
+            $this->warnings[] = __("<b>Show VAT Number on Storefront</b> must be defined as <b>'Yes'</b> on <b>Stores</b> > <b>Configuration</b> > <b>Customer</b> > <b>Customer Configuration</b> > <b>Create New Account Options</b> for Pagar.me module to work on your store.");
+        }
+
+        if ($customerConfigs['streetLinesNumber'] != 4) {
+            $this->warnings[] = __("<b>Number of Lines in a Street Address</b> must be defined as <b>'4'</b> on <b>Stores</b> > <b>Configuration</b> > <b>Customer</b> > <b>Customer Configuration</b> > <b>Name and Address Options</b> for Pagar.me module to work on your store.");
+        }
     }
 }

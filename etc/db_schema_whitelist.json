@@ -1,7 +1,59 @@
 {
     "pagarme_module_core_saved_card": {
         "column": {
-            "type": true
+            "type": true,
+            "id": true,
+            "pagarme_id": true,
+            "owner_id": true,
+            "first_six_digits": true,
+            "last_four_digits": true,
+            "brand": true,
+            "owner_name": true,
+            "created_at": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "pagarme_module_core_customer": {
+        "column": {
+            "id": true,
+            "code": true,
+            "pagarme_id": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "pagarme_module_core_recurrence_products_subscription": {
+        "column": {
+            "id": true,
+            "product_id": true,
+            "credit_card": true,
+            "allow_installments": true,
+            "boleto": true,
+            "sell_as_normal_product": true,
+            "billing_type": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "pagarme_module_core_recurrence_subscription_repetitions": {
+        "column": {
+            "id": true,
+            "subscription_id": true,
+            "interval": true,
+            "interval_count": true,
+            "recurrence_price": true,
+            "cycles": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "constraint": {
+            "PRIMARY": true
         }
     }
 }

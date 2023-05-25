@@ -31,7 +31,7 @@ class Cancel extends ChargeAction
 
         $this->setWebsiteConfiguration($params['chargeId']);
 
-        $amount = str_replace([',', '.'], "", $params['amount']);
+        $amount = str_replace([',', '.'], "", $params['amount'] ?? '');
         $chargeId = $params['chargeId'];
 
         $chargeService = new ChargeService();

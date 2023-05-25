@@ -1,43 +1,64 @@
 <?php
 /**
- * Phtml List Cards
- *
  * @author      Open Source Team
- * @copyright   2021 Pagar.me (https://pagar.me)
+ * @copyright   2023 Pagar.me (https://pagar.me)
  * @license     https://pagar.me Copyright
  *
  * @link        https://pagar.me
  */
 
-$i = 0;
+declare(strict_types=1);
+
+use Magento\Framework\Escaper;
+use Pagarme\Pagarme\Block\Customer\Cards;
+
+/** @var Cards $block */
+/** @var Escaper $escaper */
 ?>
+<?php $cards = $block->getCards(); ?>
+<?= $block->getChildHtml('info') ?>
+<?php if ($cards && count($cards)) : ?>
+    <div class="table-wrapper pargame-cards-list">
+        <table class="data table table-card-items list" id="pargame-my-cards-table">
+            <caption class="table-caption"><?= $escaper->escapeHtml(__('Cards')) ?></caption>
+            <thead>
+            <tr>
+                <th scope="col" class="col id"><?= $escaper->escapeHtml(__('Card #')) ?></th>
+                <th scope="col" class="col number"><?= $escaper->escapeHtml(__('Number')) ?></th>
+                <?= $block->getChildHtml('extra.column.header') ?>
+                <th scope="col" class="col type"><?= $escaper->escapeHtml(__('Type')) ?></th>
+                <th scope="col" class="col brand"><?= $escaper->escapeHtml(__('Brand')) ?></th>
+                <th scope="col" class="col col-created_at"><?= $escaper->escapeHtml(__('Created At')) ?></th>
+                <th scope="col" class="col actions"><?= $escaper->escapeHtml(__('Action')) ?></th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($cards as $card) : ?>
+                <tr>
+                    <td data-th="<?= $escaper->escapeHtml(__('Card #')) ?>" class="col id"><?= $escaper->escapeHtml($card->getId()) ?></td>
+                    <td data-th="<?= $escaper->escapeHtml(__('Number')) ?>" class="col number"><?= /* @noEscape */ $escaper->escapeHtml($block->getCardNumber($card)) ?></td>
+                    <?php $extra = $block->getChildBlock('extra.container'); ?>
+                    <?php if ($extra) : ?>
+                        <?php $extra->setCard($card); ?>
+                        <?= $extra->getChildHtml() ?>
+                    <?php endif; ?>
+                    <td data-th="<?= $escaper->escapeHtml(__('Type')) ?>" class="col type"><?= /* @noEscape */ $block->getCardType($card) ?></td>
+                    <td data-th="<?= $escaper->escapeHtml(__('Brand')) ?>" class="col brand"><?= /* @noEscape */ $escaper->escapeHtml($card->getBrand()) ?></td>
+                    <td data-th="<?= $escaper->escapeHtml(__('Created At')) ?>" class="col col-created_at"><?= $block->formatDate($card->getCreatedAt()) ?></td>
+                    <td data-th="<?= $escaper->escapeHtml(__('Actions')) ?>" class="col actions">
+                        <a href="<?= $block->escapeUrl($block->getRemoveUrl($card)) ?>" class="action remove">
+                            <span><?= $escaper->escapeHtml(__('Remove')) ?></span>
+                        </a>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+    <?php if ($block->getPagerHtml()) : ?>
+        <div class="pagarme-cards-toolbar toolbar bottom"><?= $block->getPagerHtml() ?></div>
+    <?php endif ?>
+<?php else : ?>
+    <div class="message info empty"><span><?= $escaper->escapeHtml($block->getEmptyCardsMessage()) ?></span></div>
+<?php endif ?>
 
-<div>
-	<table class="table">
-
-		<thead>
-		  <tr>
-		    <th><?php echo __('Id') ?></th>
-		    <th><?php echo __('Credit Card') ?></th>
-		    <th><?php echo __('Brand') ?></th>
-		    <th><?php echo __('Created At') ?></th>
-		    <th><?php echo __('Remove') ?></th>
-		  </tr>
-		</thead>
-
-		<tbody>
-			<?php foreach ($block->getCardsList() as $item): ?>
-				<?php $i++; ?>
-				<?php $url = $this->getBaseUrl() . 'pagarme/customer/remove/id/'. $item->getId() ?>
-				<tr>
-					<td><?php echo $i ?></td>
-					<td><?php echo $item->getMaskedNumber() ?></td>
-					<td><?php echo $item->getBrand() ?></td>
-					<td><?php echo $item->getCreatedAt() ?></td>
-					<td><button onclick="location.href = '<?php echo $url ?>';" id="remove"><?php echo __('Remove') ?></button></td>
-				</tr>
-
-			<?php endforeach; ?>
-		</tbody>
-	</table>
-</div>
