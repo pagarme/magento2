@@ -1,12 +1,12 @@
 {
     "name": "pagarme/pagarme-magento2-module",
     "license": "MIT",
-    "version": "2.2.1",
+    "version": "2.2.2",
     "type": "magento2-module",
     "description": "Magento 2 Module Pagar.me",
     "require": {
         "php": ">=7.1",
-        "pagarme/ecommerce-module-core": "~2.2"
+        "pagarme/ecommerce-module-core": "2.2.*"
     },
     "require-dev": {
         "phpunit/phpunit": "4.1.0",
