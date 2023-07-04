@@ -27,13 +27,13 @@ abstract class AbstractSystem
     private $_scopeConfig;
 
     /** @var string */
-    protected string $_scopeType = ScopeConfigInterface::SCOPE_TYPE_DEFAULT;
+    protected $_scopeType = ScopeConfigInterface::SCOPE_TYPE_DEFAULT;
 
     /** @var int|string|null */
     protected $_scopeCode = null;
 
     /** @var int */
-    protected int $_scopeId = 0;
+    protected $_scopeId = 0;
 
     /**
      * SystemAbstract constructor.

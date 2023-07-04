@@ -24,10 +24,10 @@ use PagarmeCoreApiLib\PagarmeCoreApiClient;
 class Api implements PagarmeServiceApiInterface
 {
     /** @var SystemInterface  */
-    private SystemInterface $system;
+    private $system;
 
     /** @var PagarmeCoreApiClientFactory */
-    private PagarmeCoreApiClientFactory $pagarmeCoreApiClientFactory;
+    private $pagarmeCoreApiClientFactory;
 
     /**
      * @param PagarmeCoreApiClientFactory $pagarmeCoreApiClient
