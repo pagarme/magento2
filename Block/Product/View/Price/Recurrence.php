@@ -35,25 +35,25 @@ use Pagarme\Pagarme\Api\RecurrenceSubscriptionRepetitionsRepositoryInterface;
 class Recurrence extends Template
 {
     /** @var RecurrencePriceInterfaceFactory */
-    private RecurrencePriceInterfaceFactory $recurrencePriceInterfaceFactory;
+    private $recurrencePriceInterfaceFactory;
 
     /** @var RecurrenceProductsSubscriptionRepositoryInterface */
-    private RecurrenceProductsSubscriptionRepositoryInterface $recurrenceProductsSubscriptionRepository;
+    private $recurrenceProductsSubscriptionRepository;
 
     /** @var RecurrenceSubscriptionRepetitionsRepositoryInterface */
-    private RecurrenceSubscriptionRepetitionsRepositoryInterface $recurrenceSubscriptionRepetitionsRepository;
+    private $recurrenceSubscriptionRepetitionsRepository;
 
     /** @var SearchCriteriaBuilder */
-    private SearchCriteriaBuilder $_searchCriteriaBuilder;
+    private $_searchCriteriaBuilder;
 
     /** @var Data */
-    private Data $_priceHelper;
+    private $_priceHelper;
 
     /** @var ProductRepositoryInterface */
-    private ProductRepositoryInterface $_productRepository;
+    private $_productRepository;
 
     /** @var ProductInterfaceFactory */
-    private ProductInterfaceFactory $_productFactory;
+    private $_productFactory;
 
     /**
      * @param ProductInterfaceFactory $productFactory

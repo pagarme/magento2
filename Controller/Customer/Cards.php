@@ -33,13 +33,13 @@ class Cards implements HttpGetActionInterface
     private $_customerSession;
 
     /** @var RedirectFactory */
-    private RedirectFactory $_resultRedirectFactory;
+    private $_resultRedirectFactory;
 
     /** @var ManagerInterface */
-    private ManagerInterface $_messageManager;
+    private $_messageManager;
 
     /** @var PageFactory */
-    private PageFactory $_resultPageFactory;
+    private $_resultPageFactory;
 
     /** @var RedirectInterface */
     private $_redirect;
