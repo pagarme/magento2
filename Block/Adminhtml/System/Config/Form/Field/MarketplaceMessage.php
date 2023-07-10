@@ -27,15 +27,9 @@ class MarketplaceMessage extends Field
     {
         $html = "";
         if(!$this->moduleManager->isEnabled("Webkul_Marketplace")){
-            $html = __(<<<MSG
-                    <p class='message message-notification'>
-                        You need to activate the 
-                            <a href='https://store.webkul.com/magento2-multi-vendor-marketplace.html' target='_blank'>
-                                Webkul Marketplace
-                            </a>
-                        extension.
-                    </p>
-                MSG);    
+            $html = __("<p class='message message-notification'>You need to activate the " .
+                "<a href='https://store.webkul.com/magento2-multi-vendor-marketplace.html' target='_blank'>" .
+                "Webkul Marketplace</a> extension.</p>");
             }
         return $html;
     }
