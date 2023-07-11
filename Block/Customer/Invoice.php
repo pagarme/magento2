@@ -148,7 +148,7 @@ class Invoice extends Template
         $button = '<td>';
         if (!empty($item->getBoletoLink())) {
             $button .= sprintf(
-                '<button target="_blank" onclick="location.href = \'%s\';" id="details">%s</button>',
+                '<button onclick="location.href = \'%s\';" id="details">%s</button>',
                 $item->getBoletoLink(),
                 __("download")
             );
