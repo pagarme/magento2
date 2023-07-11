@@ -12,11 +12,14 @@
 
 namespace Pagarme\Pagarme\Block\Customer;
 
+use Magento\Framework\Exception\AuthorizationException;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
 use Magento\Framework\Registry;
 use Magento\Customer\Model\Session;
+use NumberFormatter;
 use Pagarme\Core\Kernel\ValueObjects\Id\SubscriptionId;
+use Pagarme\Pagarme\Api\Data\RecurrenceProductsSubscriptionInterface;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Pagarme\Core\Recurrence\Repositories\SubscriptionRepository;
 use Pagarme\Core\Kernel\Exceptions\InvalidParamException;
@@ -47,6 +50,11 @@ class Invoice extends Template
     protected $coreRegistry;
 
     /**
+     * @var NumberFormatter
+     */
+    private $numberFormatter;
+
+    /**
      * Link constructor.
      * @param Context $context
      * @param CheckoutSession $checkoutSession
@@ -66,6 +74,8 @@ class Invoice extends Template
         $this->subscriptionRepository = new SubscriptionRepository();
 
         $this->validateUserInvoice($this->coreRegistry->registry('code'));
+
+        $this->numberFormatter = new NumberFormatter('pt-BR', NumberFormatter::CURRENCY);
     }
 
     /**
@@ -95,9 +105,82 @@ class Invoice extends Template
         return $subscription->getPaymentMethod();
     }
 
+    public function getBoletoHeader(): string
+    {
+        if (!$this->isBoleto()) {
+            return "";
+        }
+
+        return sprintf('<th>%s</th>', __('Boleto'));
+    }
+
+    /**
+     * @throws InvalidParamException
+     */
+    public function getInvoicesTableBody(): string
+    {
+        $tbody = "";
+
+        foreach ($this->getAllChargesByCodeOrder() as $id => $item) {
+            $tbody .= "<tr>";
+            $visualId = $id + 1;
+            $tbody .= $this->formatTableDataCell($visualId);
+            $tbody .= $this->formatNumberTableDataCell($item->getAmount());
+            $tbody .= $this->formatNumberTableDataCell($item->getPaidAmount());
+            $tbody .= $this->formatNumberTableDataCell($item->getCanceledAmount());
+            $tbody .= $this->formatNumberTableDataCell($item->getRefundedAmount());
+            $tbody .= $this->formatTableDataCell($item->getStatus()->getStatus());
+            $tbody .= $this->formatTableDataCell($item->getPaymentMethod()->getPaymentMethod());
+            $tbody .= $this->addBoletoButton($item);
+            $tbody .= '</tr>';
+        }
+
+        return $tbody;
+    }
+
+    private function addBoletoButton($item): string
+    {
+        $button = '';
+        if (!$this->isBoleto()) {
+            return $button;
+        }
+
+        $button = '<td>';
+        if (!empty($item->getBoletoLink())) {
+            $button .= sprintf(
+                '<button target="_blank" onclick="location.href = \'%s\';" id="details">%s</button>',
+                $item->getBoletoLink(),
+                __("download")
+            );
+        }
+        $button .= '</td>';
+
+        return $button;
+    }
+
+    private function formatTableDataCell($text): string
+    {
+        return sprintf('<td>%s</td>', $text);
+    }
+
+    private function formatNumberTableDataCell($number): string
+    {
+        return $this->formatTableDataCell($this->formatNumber($number));
+    }
+
+    private function formatNumber($number)
+    {
+        return $this->numberFormatter->format(($number) / 100);
+    }
+
+    private function isBoleto(): bool
+    {
+        return $this->getSubscriptionPaymentMethod() === RecurrenceProductsSubscriptionInterface::BOLETO;
+    }
+
     /**
      * @param string $codeOrder
-     * @throws InvalidParamException
+     * @throws InvalidParamException|AuthorizationException
      */
     private function validateUserInvoice($codeOrder)
     {
@@ -112,8 +195,9 @@ class Invoice extends Template
         }
 
         if (!in_array($codeOrder, $listSubscriptionCode)) {
-            throw new \Exception(
-                'Esse pedido não pertence a esse usuário',
+            throw new AuthorizationException(
+                __('Esse pedido não pertence a esse usuário'),
+                null,
                 403
             );
         }
