@@ -105,13 +105,13 @@ class Invoice extends Template
         return $subscription->getPaymentMethod();
     }
 
-    public function getBoletoHeader(): string
+    public function getBilletHeader(): string
     {
-        if (!$this->isBoleto()) {
+        if (!$this->isBillet()) {
             return "";
         }
 
-        return sprintf('<th>%s</th>', __('Boleto'));
+        return sprintf('<th>%s</th>', __('Billet'));
     }
 
     /**
@@ -131,26 +131,27 @@ class Invoice extends Template
             $tbody .= $this->formatNumberTableDataCell($item->getRefundedAmount());
             $tbody .= $this->formatTableDataCell($item->getStatus()->getStatus());
             $tbody .= $this->formatTableDataCell($item->getPaymentMethod()->getPaymentMethod());
-            $tbody .= $this->addBoletoButton($item);
+            $tbody .= $this->addBilletButton($item);
             $tbody .= '</tr>';
         }
 
         return $tbody;
     }
 
-    private function addBoletoButton($item): string
+    private function addBilletButton($item): string
     {
         $button = '';
-        if (!$this->isBoleto()) {
+        if (!$this->isBillet()) {
             return $button;
         }
 
         $button = '<td>';
-        if (!empty($item->getBoletoLink())) {
+        $hasBilletLink = !empty($item->getBoletoLink());
+        if ($hasBilletLink) {
             $button .= sprintf(
                 '<button onclick="location.href = \'%s\';" id="details">%s</button>',
                 $item->getBoletoLink(),
-                __("download")
+                'download'
             );
         }
         $button .= '</td>';
@@ -173,7 +174,7 @@ class Invoice extends Template
         return $this->numberFormatter->format(($number) / 100);
     }
 
-    private function isBoleto(): bool
+    private function isBillet(): bool
     {
         return $this->getSubscriptionPaymentMethod() === RecurrenceProductsSubscriptionInterface::BOLETO;
     }
@@ -196,7 +197,7 @@ class Invoice extends Template
 
         if (!in_array($codeOrder, $listSubscriptionCode)) {
             throw new AuthorizationException(
-                __('Esse pedido não pertence a esse usuário'),
+                __('This order does not belong to this user'),
                 null,
                 403
             );

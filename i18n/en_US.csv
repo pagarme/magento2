@@ -291,3 +291,4 @@
 "<span style='background-color:red; color:white; padding:2px 5px'>Important!</span> This store is linked to the Pagar.me test environment. This environment is intended for integration validation and does not generate real financial transactions.","<span style='background-color:red; color:white; padding:2px 5px'>Important!</span> This store is linked to the Pagar.me test environment. This environment is intended for integration validation and does not generate real financial transactions."
 "Important! This store is in the testing phase. Orders placed in this environment will not be carried out.","Important! This store is in the testing phase. Orders placed in this environment will not be carried out."
 "Please enter a valid $ amount. For example $100.00.", "Please enter a valid $ amount. For example: 1000.00"
+"This order does not belong to this user","This order does not belong to this user"
