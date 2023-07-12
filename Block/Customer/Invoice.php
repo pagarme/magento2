@@ -17,7 +17,6 @@ use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
 use Magento\Framework\Registry;
 use Magento\Customer\Model\Session;
-use NumberFormatter;
 use Pagarme\Core\Kernel\ValueObjects\Id\SubscriptionId;
 use Pagarme\Pagarme\Api\Data\RecurrenceProductsSubscriptionInterface;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
@@ -26,6 +25,7 @@ use Pagarme\Core\Kernel\Exceptions\InvalidParamException;
 use Pagarme\Core\Kernel\Abstractions\AbstractEntity;
 use Pagarme\Core\Recurrence\Repositories\ChargeRepository;
 use Pagarme\Core\Recurrence\Aggregates\Charge;
+use Pagarme\Pagarme\Helper\NumberFormatHelper;
 
 class Invoice extends Template
 {
@@ -50,32 +50,34 @@ class Invoice extends Template
     protected $coreRegistry;
 
     /**
-     * @var NumberFormatter
+     * @var NumberFormatHelper
      */
     private $numberFormatter;
 
     /**
-     * Link constructor.
      * @param Context $context
-     * @param CheckoutSession $checkoutSession
+     * @param Session $customerSession
+     * @param Registry $coreRegistry
+     * @param NumberFormatHelper $numberFormatter
+     * @throws AuthorizationException
      * @throws InvalidParamException
      */
     public function __construct(
         Context $context,
         Session $customerSession,
-        Registry $coreRegistry
+        Registry $coreRegistry,
+        NumberFormatHelper $numberFormatter
     ) {
         parent::__construct($context, []);
         Magento2CoreSetup::bootstrap();
 
         $this->coreRegistry = $coreRegistry;
         $this->customerSession = $customerSession;
+        $this->numberFormatter = $numberFormatter;
         $this->chargeRepository = new ChargeRepository();
         $this->subscriptionRepository = new SubscriptionRepository();
 
         $this->validateUserInvoice($this->coreRegistry->registry('code'));
-
-        $this->numberFormatter = new NumberFormatter('pt-BR', NumberFormatter::CURRENCY);
     }
 
     /**
@@ -171,7 +173,7 @@ class Invoice extends Template
 
     private function formatNumber($number)
     {
-        return $this->numberFormatter->format(($number) / 100);
+        return $this->numberFormatter->formatToLocalCurrency(($number) / 100);
     }
 
     private function isBillet(): bool
