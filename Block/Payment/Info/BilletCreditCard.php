@@ -185,8 +185,7 @@ class BilletCreditCard extends Cc
             return $creditCardInformation;
         }
 
-        $creditCardInformation .= sprintf('<span>%s</span>', __($this->getTitle()));
-        $creditCardInformation .= '<br/><br/>';
+        $creditCardInformation .= sprintf('<p>%s</p>', __($this->getTitle()));
         $creditCardInformation .= sprintf(
             '<strong class="box-title"><span>%s</span></strong>',
             __('Credit Card')
@@ -211,7 +210,6 @@ class BilletCreditCard extends Cc
             return $printBillet;
         }
 
-        $printBillet .= '<br/><br/>';
         $printBillet .= sprintf(
             '<a class="action tocart primary" id="pagarme-link-boleto" href="%s" target="_blank">%s</a>',
             $this->getBilletUrl(),
@@ -222,7 +220,7 @@ class BilletCreditCard extends Cc
 
     private function formatCreditCardData($title, $information): string
     {
-        return sprintf('<br/><span><b>%s: </b>%s</span>', $title, $information);
+        return sprintf('<p><b>%s: </b>%s</p>', $title, $information);
     }
 
     private function getTid(Charge $charge): ?string
