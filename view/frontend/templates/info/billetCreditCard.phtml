@@ -1,29 +1,13 @@
-<?php if ($this->getCcType()): ?>
-    <span><?php echo __($this->getTitle()); ?></span>
-    <br/>
-    <br/>
-    <strong class="box-title">
-        <span><?php echo __('Credit Card'); ?></span>
-    </strong>
-    <br/>
-    <span><b><?php echo __('Amount') ?>: </b><?php echo 'R$ ' . number_format($this->getCcAmountWithTax(),2,',', '.'); ?></span>
-    <br/>
-    <span><b><?php echo __('Brand'); ?>: </b><?php echo $this->getCcBrand(); ?></span>
-    <br/>
-    <span><b><?php echo __('Number'); ?>: </b><?php echo $this->getCardLast4(); ?></span>
-    <br/>
-    <span><b><?php echo __('Installments'); ?>: </b><?php echo $this->getInstallments(); ?></span>
-
-<?php endif ?>
-
+<?php
+/**
+ * @var Pagarme\Pagarme\Block\Payment\Info\BilletCreditCard $block
+ */
+?>
+    <?= $block->getCreditCardInformation() ?>
     <hr />
     <strong class="box-title">
-        <span><?php echo __('Billet'); ?></span>
+        <span><?= __('Billet'); ?></span>
     </strong>
     <br/>
-    <span><b><?php echo __('Amount') ?>: </b><?php echo 'R$ ' . number_format($this->getBilletAmount(),2,',', '.'); ?></span>
-<?php if ($this->getBilletUrl() && $this->getInfo()->getOrder()->getStatus() == 'pending'): ?>
-    <br/>
-    <br/>
-    <a class="action tocart primary" id="pagarme-link-boleto" href="<?php echo $this->getBilletUrl() ?>" target="_blank"><?php echo __('Print Billet') ?></a>
-<?php endif ?>
+    <span><b><?= __('Amount') ?>: </b><?= $block->getBilletAmount(); ?></span>
+    <?= $block->getPrintBillet() ?>
