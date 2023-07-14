@@ -107,7 +107,10 @@ class Invoice extends Template
         return $subscription->getPaymentMethod();
     }
 
-    public function getBilletHeader(): string
+    /**
+     * @return string
+     */
+    public function getBilletHeader()
     {
         if (!$this->isBillet()) {
             return "";
@@ -117,9 +120,10 @@ class Invoice extends Template
     }
 
     /**
+     * @return string
      * @throws InvalidParamException
      */
-    public function getInvoicesTableBody(): string
+    public function getInvoicesTableBody()
     {
         $tbody = "";
 
@@ -140,7 +144,11 @@ class Invoice extends Template
         return $tbody;
     }
 
-    private function addBilletButton($item): string
+    /**
+     * @param mixed $item
+     * @return string
+     */
+    private function addBilletButton($item)
     {
         $button = '';
         if (!$this->isBillet()) {
@@ -161,22 +169,37 @@ class Invoice extends Template
         return $button;
     }
 
-    private function formatTableDataCell($text): string
+    /**
+     * @param mixed $text
+     * @return string
+     */
+    private function formatTableDataCell($text)
     {
         return sprintf('<td>%s</td>', $text);
     }
 
-    private function formatNumberTableDataCell($number): string
+    /**
+     * @param mixed $number
+     * @return string
+     */
+    private function formatNumberTableDataCell($number)
     {
         return $this->formatTableDataCell($this->formatNumber($number));
     }
 
+    /**
+     * @param mixed $number
+     * @return false|string
+     */
     private function formatNumber($number)
     {
         return $this->numberFormatter->formatToLocalCurrency(($number) / 100);
     }
 
-    private function isBillet(): bool
+    /**
+     * @return bool
+     */
+    private function isBillet()
     {
         return $this->getSubscriptionPaymentMethod() === RecurrenceProductsSubscriptionInterface::BOLETO;
     }
