@@ -50,7 +50,7 @@ class BilletCreditCard extends Cc
      * {@inheritdoc}
      * @throws LocalizedException
      */
-    protected function _prepareSpecificInformation($transport = null): DataObject
+    protected function _prepareSpecificInformation($transport = null)
     {
         $specificInformation = new DataObject([
             (string)__('Print Billet') => $this->getInfo()->getAdditionalInformation('billet_url')
@@ -69,9 +69,10 @@ class BilletCreditCard extends Cc
     }
 
     /**
+     * @return string
      * @throws LocalizedException
      */
-    public function getCardLast4(): string
+    public function getCardLast4()
     {
         return '**** **** **** ' . $this->getInfo()->getAdditionalInformation('cc_last_4');
     }
@@ -101,6 +102,7 @@ class BilletCreditCard extends Cc
     }
 
     /**
+     * @return string|null
      * @throws LocalizedException
      */
     public function getBilletUrl()
@@ -111,6 +113,7 @@ class BilletCreditCard extends Cc
     }
 
     /**
+     * @return false|string
      * @throws LocalizedException
      */
     public function getCcAmountWithTax()
@@ -121,6 +124,7 @@ class BilletCreditCard extends Cc
     }
 
     /**
+     * @return false|string
      * @throws LocalizedException
      */
     public function getBilletAmount()
@@ -131,6 +135,7 @@ class BilletCreditCard extends Cc
     }
 
     /**
+     * @return array
      * @throws InvalidParamException
      * @throws LocalizedException
      */
@@ -178,7 +183,10 @@ class BilletCreditCard extends Cc
         return $transactionList;
     }
 
-    public function getCreditCardInformation(): string
+    /**
+     * @return string
+     */
+    public function getCreditCardInformation()
     {
         $creditCardInformation = '';
         if (empty($this->getCcTypeName())) {
@@ -199,9 +207,10 @@ class BilletCreditCard extends Cc
     }
 
     /**
+     * @return string
      * @throws LocalizedException
      */
-    public function getPrintBillet(): string
+    public function getPrintBillet()
     {
         $printBillet = '';
 
@@ -218,12 +227,21 @@ class BilletCreditCard extends Cc
         return $printBillet;
     }
 
-    private function formatCreditCardData($title, $information): string
+    /**
+     * @param mixed $title
+     * @param mixed $information
+     * @return string
+     */
+    private function formatCreditCardData($title, $information)
     {
         return sprintf('<p><b>%s: </b>%s</p>', $title, $information);
     }
 
-    private function getTid(Charge $charge): ?string
+    /**
+     * @param mixed $charge
+     * @return string|null
+     */
+    private function getTid($charge)
     {
         $transaction = $charge->getLastTransaction();
 
