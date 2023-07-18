@@ -12,7 +12,7 @@
 ?>
 <p><?= __($this->getTitle()); ?></p>
 <p>
-    <b><?= __('Brand'); ?>:</b> <?= $this->getCcBrand(); ?><br/>
+    <b><?= __('Brand'); ?>:</b> <?= ucfirst($this->getCcBrand()); ?><br/>
     <b><?= __('Number'); ?>:</b> <?= $this->getCardLast4(); ?><br/>
     <b><?= __('Installments'); ?>:</b> <?= $this->getInstallments(); ?>
 </p>

@@ -94,28 +94,47 @@ class CreditCard extends Cc
         $orderService = new OrderService();
 
         $orderEntityId = $this->getInfo()->getOrder()->getIncrementId();
-
-        $platformOrder = new Magento2PlatformOrderDecorator();
-        $platformOrder->loadByIncrementId($orderEntityId);
+        $platformOrder = $this->loadPlatformOrderByIncrementId($orderEntityId);
 
         $orderPagarmeId = $platformOrder->getPagarmeId();
         if ($orderPagarmeId === null) {
             return [];
         }
 
-        /**
-         * @var Order orderObject
-         */
-        $orderObject = $orderService->getOrderByPagarmeId(new OrderId($orderPagarmeId));
+        $orderObject = $this->getOrderObjectByPagarmeId($orderService, $orderPagarmeId);
 
         if ($orderObject === null) {
             return [];
         }
+
+        $charge = $orderObject->getCharges()[0];
         
         return array_merge(
-            $orderObject->getCharges()[0]->getAcquirerTidCapturedAndAutorize(),
-            ['tid' => $this->getTid($orderObject->getCharges()[0])]
+            $charge->getAcquirerTidCapturedAndAutorize(),
+            ['tid' => $this->getTid($charge)]
         );
+    }
+
+    /**
+     * @param mixed $incrementId
+     * @return Magento2PlatformOrderDecorator
+     */
+    private function loadPlatformOrderByIncrementId($incrementId)
+    {
+        $platformOrder = new Magento2PlatformOrderDecorator();
+        $platformOrder->loadByIncrementId($incrementId);
+        return $platformOrder;
+    }
+
+    /**
+     * @param mixed $orderService
+     * @param mixed $pagarmeId
+     * @return mixed
+     */
+    private function getOrderObjectByPagarmeId($orderService, $pagarmeId)
+    {
+        $orderId = new OrderId($pagarmeId);
+        return $orderService->getOrderByPagarmeId($orderId);
     }
 
     /**
