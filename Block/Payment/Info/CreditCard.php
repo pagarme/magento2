@@ -26,36 +26,57 @@ class CreditCard extends Cc
 {
     const TEMPLATE = 'Pagarme_Pagarme::info/creditCard.phtml';
 
+    /**
+     * @return void
+     */
     public function _construct()
     {
         $this->setTemplate(self::TEMPLATE);
     }
 
+    /**
+     * @return string
+     */
     public function getCcType()
     {
         return $this->getCcTypeName();
     }
 
+    /**
+     * @return string
+     */
     public function getCardNumber()
     {
         return '**** **** **** ' . $this->getInfo()->getCcLast4();
     }
 
+    /**
+     * @return string
+     */
     public function getCardLast4()
     {
         return '**** **** **** ' . $this->getInfo()->getAdditionalInformation('cc_last_4');
     }
 
+    /**
+     * @return mixed
+     */
     public function getCcBrand()
     {
         return $this->getInfo()->getAdditionalInformation('cc_type');
     }
 
+    /**
+     * @return mixed
+     */
     public function getTitle()
     {
         return $this->getInfo()->getAdditionalInformation('method_title');
     }
 
+    /**
+     * @return mixed
+     */
     public function getInstallments()
     {
         return $this->getInfo()->getAdditionalInformation('cc_installments');
@@ -97,6 +118,10 @@ class CreditCard extends Cc
         );
     }
 
+    /**
+     * @param \Pagarme\Core\Kernel\Aggregates\Charge $charge
+     * @return string|null
+     */
     private function getTid(Charge $charge)
     {
         $transaction = $charge->getLastTransaction();

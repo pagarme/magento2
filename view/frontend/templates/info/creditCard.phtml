@@ -1,6 +1,6 @@
 <?php
 /**
- * Class billet
+ * Class creditCard
  *
  * @author      Open Source Team
  * @copyright   2021 Pagar.me (https://pagar.me)
@@ -10,13 +10,9 @@
  */
 
 ?>
-<?php if ($this->getCcType()): ?>
-    <span><?php echo __($this->getTitle()); ?></span>
-    <br/>
-    <br/>
-    <span><b><?php echo __('Brand'); ?>: </b><?php echo $this->getCcBrand(); ?></span>
-    <br/>
-    <span><b><?php echo __('Number'); ?>: </b><?php echo $this->getCardLast4(); ?></span>
-    <br/>
-    <span><b><?php echo __('Installments'); ?>: </b><?php echo $this->getInstallments(); ?></span>
-<?php endif ?>
+<p><?= __($this->getTitle()); ?></p>
+<p>
+    <b><?= __('Brand'); ?>:</b> <?= $this->getCcBrand(); ?><br/>
+    <b><?= __('Number'); ?>:</b> <?= $this->getCardLast4(); ?><br/>
+    <b><?= __('Installments'); ?>:</b> <?= $this->getInstallments(); ?>
+</p>
