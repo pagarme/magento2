@@ -107,7 +107,7 @@ class CreditCard extends Cc
             return [];
         }
 
-        $charge = $orderObject->getCharges()[0];
+        $charge = current($orderObject->getCharges());
         
         return array_merge(
             $charge->getAcquirerTidCapturedAndAutorize(),
