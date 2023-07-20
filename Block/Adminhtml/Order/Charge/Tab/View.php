@@ -2,79 +2,150 @@
 
 namespace Pagarme\Pagarme\Block\Adminhtml\Order\Charge\Tab;
 
+use Exception;
+use Magento\Backend\Block\Template;
+use Magento\Backend\Block\Template\Context;
+use Magento\Backend\Block\Widget\Tab\TabInterface;
+use Magento\Framework\Registry;
+use Magento\Sales\Model\Order;
+use Pagarme\Core\Kernel\Aggregates\Charge;
+use Pagarme\Core\Kernel\Exceptions\InvalidParamException;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use Pagarme\Pagarme\Helper\HtmlTableHelper;
+use Pagarme\Pagarme\Service\Order\ChargeService;
 
-use Pagarme\Core\Kernel\Repositories\ChargeRepository;
-use Pagarme\Core\Kernel\Repositories\OrderRepository;
-use Pagarme\Core\Kernel\ValueObjects\Id\OrderId;
-
-class View  extends \Magento\Backend\Block\Template implements \Magento\Backend\Block\Widget\Tab\TabInterface
+class View  extends Template implements TabInterface
 {
+    // @codingStandardsIgnoreLine
     protected $_template = 'tab/view/order_charge.phtml';
 
     /**
-     * View constructor.
-     * @param \Magento\Backend\Block\Template\Context $context
-     * @param \Magento\Framework\Registry $registry
+     * @var Registry
+     */
+    private $registry;
+
+    /**
+     * @var HtmlTableHelper
+     */
+    private $htmlTableHelper;
+
+    /**
+     * @var ChargeService
+     */
+    private $chargeService;
+
+    /**
+     * @param Context $context
+     * @param Registry $registry
+     * @param HtmlTableHelper $htmlTableHelper
+     * @param ChargeService $chargeService
      * @param array $data
+     * @throws Exception
      */
     public function __construct(
-        \Magento\Backend\Block\Template\Context $context,
-        \Magento\Framework\Registry $registry,
-        array $data = []
+        Context         $context,
+        Registry        $registry,
+        HtmlTableHelper $htmlTableHelper,
+        ChargeService   $chargeService,
+        array           $data = []
     ) {
         Magento2CoreSetup::bootstrap();
 
-        $this->_coreRegistry = $registry;
+        $this->registry = $registry;
+        $this->htmlTableHelper = $htmlTableHelper;
+        $this->chargeService = $chargeService;
 
         parent::__construct($context, $data);
     }
 
     /**
-     * Retrieve order model instance
-     *
-     * @return \Magento\Sales\Model\Order
+     * @return string
+     * @throws InvalidParamException
      */
-    public function getOrder()
+    public function getChargesTableBody()
     {
-        return $this->_coreRegistry->registry('current_order');
-    }
+        $tbody = '';
 
-    public function getCharges()
-    {
-        //@todo Create service to return the charges
-        $platformOrderID = $this->getOrderIncrementId();
-        $pagarmeOrder = (new OrderRepository)->findByPlatformId($platformOrderID);
-
-        if ($pagarmeOrder === null) {
-            return [];
+        foreach ($this->getCharges() as $charge) {
+            $tbody .= '<tr>';
+            $tbody .= $this->htmlTableHelper->formatTableDataCell($charge->getPagarmeId()->getValue());
+            $tbody .= $this->htmlTableHelper->formatNumberTableDataCell($charge->getAmount());
+            $tbody .= $this->htmlTableHelper->formatNumberTableDataCell($charge->getPaidAmount());
+            $tbody .= $this->htmlTableHelper->formatNumberTableDataCell($charge->getCanceledAmount());
+            $tbody .= $this->htmlTableHelper->formatNumberTableDataCell($charge->getRefundedAmount());
+            $tbody .= $this->htmlTableHelper->formatTableDataCell($charge->getStatus()->getStatus());
+            $tbody .= $this->htmlTableHelper->formatTableDataCell($this->getAmountInput($charge), 'amount');
+            $tbody .= $this->getCaptureChargeButtonDataCell($charge);
+            $tbody .= $this->getCancelChargeButtonDataCell($charge);
+            $tbody .= '</tr>';
         }
 
-        $charges = (new ChargeRepository)->findByOrderId(
-            new OrderId($pagarmeOrder->getPagarmeId()->getValue())
-        );
-
-        return $charges;
+        return $tbody;
     }
 
     /**
-     * Retrieve order model instance
-     *
-     * @return \Magento\Sales\Model\Order
-     */
-    public function getOrderId()
-    {
-        return $this->getOrder()->getEntityId();
-    }
-
-    /**
-     * Retrieve order increment id
-     *
+     * @param Charge $charge
      * @return string
      */
-    public function getOrderIncrementId()
+    public function getAmountInput($charge)
     {
-        return $this->getOrder()->getIncrementId();
+        return sprintf('<input class="amount-value" value="%s" />', $charge->getAmount());
+    }
+
+    /**
+     * @param Charge $charge
+     * @return string
+     */
+    public function getCaptureChargeButtonDataCell($charge)
+    {
+        $buttonTableDataCell = '';
+
+        if ($charge->getCanceledAmount() <= 0) {
+            $button = $this->getActionChargeButton(
+                $charge,
+                'capture',
+                __('Do you want to capture this charge?'),
+                __('Capture')
+            );
+            $buttonTableDataCell .= $this->htmlTableHelper->formatTableDataCell($button);
+        }
+
+        return $buttonTableDataCell;
+    }
+
+    /**
+     * @param Charge $charge
+     * @return string
+     */
+    public function getCancelChargeButtonDataCell($charge)
+    {
+        $button = $this->getActionChargeButton(
+            $charge,
+            'cancel',
+            __('Do you want to cancel this charge?'),
+            __('Cancel')
+        );
+        return $this->htmlTableHelper->formatTableDataCell($button);
+    }
+
+    /**
+     * @param Charge $charge
+     * @param string $action
+     * @param string $message
+     * @param string $label
+     * @return string
+     */
+    public function getActionChargeButton($charge, $action, $message, $label)
+    {
+        return sprintf(
+            '<button class="action charge-button" data-action="%s" data-order="%s"' .
+            ' data-charge="%s" data-message="%s">%s</button>',
+            $action,
+            $charge->getOrderId()->getValue(),
+            $charge->getPagarmeId()->getValue(),
+            $message,
+            $label
+        );
     }
 
     /**
@@ -90,7 +161,7 @@ class View  extends \Magento\Backend\Block\Template implements \Magento\Backend\
      */
     public function getTabTitle()
     {
-        return __('Charges');
+        return $this->getTabLabel();
     }
 
     /**
@@ -117,5 +188,36 @@ class View  extends \Magento\Backend\Block\Template implements \Magento\Backend\
     public function getChargeCaptureUrl()
     {
         return $this->_urlBuilder->getUrl('pagarme_pagarme/charges/capture');
+    }
+
+    /**
+     * Retrieve order model instance
+     *
+     * @return Order
+     */
+    private function getOrder()
+    {
+        return $this->registry->registry('current_order');
+    }
+
+    /**
+     * @return array
+     * @throws InvalidParamException
+     */
+    private function getCharges()
+    {
+        return $this->chargeService->findChargesByIncrementId(
+            $this->getOrderIncrementId()
+        );
+    }
+
+    /**
+     * Retrieve order increment id
+     *
+     * @return string
+     */
+    private function getOrderIncrementId()
+    {
+        return $this->getOrder()->getIncrementId();
     }
 }

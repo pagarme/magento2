@@ -25,7 +25,7 @@ use Pagarme\Core\Kernel\Exceptions\InvalidParamException;
 use Pagarme\Core\Kernel\Abstractions\AbstractEntity;
 use Pagarme\Core\Recurrence\Repositories\ChargeRepository;
 use Pagarme\Core\Recurrence\Aggregates\Charge;
-use Pagarme\Pagarme\Helper\NumberFormatHelper;
+use Pagarme\Pagarme\Helper\HtmlTableHelper;
 
 class Invoice extends Template
 {
@@ -50,30 +50,28 @@ class Invoice extends Template
     protected $coreRegistry;
 
     /**
-     * @var NumberFormatHelper
+     * @var HtmlTableHelper
      */
-    private $numberFormatter;
+    private $htmlTableHelper;
 
     /**
      * @param Context $context
      * @param Session $customerSession
      * @param Registry $coreRegistry
-     * @param NumberFormatHelper $numberFormatter
-     * @throws AuthorizationException
-     * @throws InvalidParamException
+     * @param HtmlTableHelper $htmlTableHelper
      */
     public function __construct(
         Context $context,
         Session $customerSession,
         Registry $coreRegistry,
-        NumberFormatHelper $numberFormatter
+        HtmlTableHelper $htmlTableHelper
     ) {
         parent::__construct($context, []);
         Magento2CoreSetup::bootstrap();
 
         $this->coreRegistry = $coreRegistry;
         $this->customerSession = $customerSession;
-        $this->numberFormatter = $numberFormatter;
+        $this->htmlTableHelper = $htmlTableHelper;
         $this->chargeRepository = new ChargeRepository();
         $this->subscriptionRepository = new SubscriptionRepository();
 
@@ -130,13 +128,13 @@ class Invoice extends Template
         foreach ($this->getAllChargesByCodeOrder() as $id => $item) {
             $tbody .= "<tr>";
             $visualId = $id + 1;
-            $tbody .= $this->formatTableDataCell($visualId);
-            $tbody .= $this->formatNumberTableDataCell($item->getAmount());
-            $tbody .= $this->formatNumberTableDataCell($item->getPaidAmount());
-            $tbody .= $this->formatNumberTableDataCell($item->getCanceledAmount());
-            $tbody .= $this->formatNumberTableDataCell($item->getRefundedAmount());
-            $tbody .= $this->formatTableDataCell($item->getStatus()->getStatus());
-            $tbody .= $this->formatTableDataCell($item->getPaymentMethod()->getPaymentMethod());
+            $tbody .= $this->htmlTableHelper->formatTableDataCell($visualId);
+            $tbody .= $this->htmlTableHelper->formatNumberTableDataCell($item->getAmount());
+            $tbody .= $this->htmlTableHelper->formatNumberTableDataCell($item->getPaidAmount());
+            $tbody .= $this->htmlTableHelper->formatNumberTableDataCell($item->getCanceledAmount());
+            $tbody .= $this->htmlTableHelper->formatNumberTableDataCell($item->getRefundedAmount());
+            $tbody .= $this->htmlTableHelper->formatTableDataCell($item->getStatus()->getStatus());
+            $tbody .= $this->htmlTableHelper->formatTableDataCell($item->getPaymentMethod()->getPaymentMethod());
             $tbody .= $this->addBilletButton($item);
             $tbody .= '</tr>';
         }
@@ -167,33 +165,6 @@ class Invoice extends Template
         $button .= '</td>';
 
         return $button;
-    }
-
-    /**
-     * @param mixed $text
-     * @return string
-     */
-    private function formatTableDataCell($text)
-    {
-        return sprintf('<td>%s</td>', $text);
-    }
-
-    /**
-     * @param mixed $number
-     * @return string
-     */
-    private function formatNumberTableDataCell($number)
-    {
-        return $this->formatTableDataCell($this->formatNumber($number));
-    }
-
-    /**
-     * @param mixed $number
-     * @return false|string
-     */
-    private function formatNumber($number)
-    {
-        return $this->numberFormatter->formatToLocalCurrency(($number) / 100);
     }
 
     /**
