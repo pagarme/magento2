@@ -18,7 +18,7 @@ define(['jquery', 'numberFormatter'], ($, numberFormatter) => {
                 }
                 serviceUrl += `amount/${amount}/chargeId/${charge}/orderId/${order}`;
 
-                return $.ajax({
+                $.ajax({
                     method: 'GET',
                     beforeSend: function(request) {
                         request.setRequestHeader('Content-type', 'application/json');
