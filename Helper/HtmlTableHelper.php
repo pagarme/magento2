@@ -29,9 +29,9 @@ class HtmlTableHelper extends AbstractHelper
     {
         $classAttribute = '';
         if (!empty($className)) {
-            $classAttribute = sprintf('class="%s"', $className);
+            $classAttribute = sprintf(' class="%s"', $className);
         }
-        return sprintf('<td %s>%s</td>', $classAttribute, $text);
+        return sprintf('<td%s>%s</td>', $classAttribute, $text);
     }
 
     /**
