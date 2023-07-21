@@ -14,17 +14,16 @@ namespace Pagarme\Pagarme\Block\Payment\Info;
 use Exception;
 use Magento\Framework\DataObject;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Pricing\Helper\Data;
 use Magento\Framework\View\Element\Template\Context;
 use Magento\Payment\Block\Info\Cc;
 use Magento\Payment\Model\Config;
-use Pagarme\Core\Kernel\Aggregates\Charge;
 use Pagarme\Core\Kernel\Aggregates\Order;
 use Pagarme\Core\Kernel\Exceptions\InvalidParamException;
 use Pagarme\Core\Kernel\Services\OrderService;
 use Pagarme\Core\Kernel\ValueObjects\Id\OrderId;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Pagarme\Pagarme\Concrete\Magento2PlatformOrderDecorator;
-use Pagarme\Pagarme\Helper\NumberFormatHelper;
 use Pagarme\Pagarme\Helper\Payment\Billet as BilletHelper;
 
 class BilletCreditCard extends Cc
@@ -32,17 +31,23 @@ class BilletCreditCard extends Cc
     const TEMPLATE = 'Pagarme_Pagarme::info/billetCreditCard.phtml';
 
     /**
-     * @var NumberFormatHelper
+     * @var Data
      */
-    private $numberFormatter;
+    private $priceHelper;
 
+    /**
+     * @param Context $context
+     * @param Config $paymentConfig
+     * @param Data $priceHelper
+     * @param array $data
+     */
     public function __construct(
         Context $context,
         Config $paymentConfig,
-        NumberFormatHelper $numberFormatter,
+        Data $priceHelper,
         array $data = []
     ) {
-        $this->numberFormatter = $numberFormatter;
+        $this->priceHelper = $priceHelper;
         parent::__construct($context, $paymentConfig, $data);
     }
 
@@ -113,23 +118,23 @@ class BilletCreditCard extends Cc
     }
 
     /**
-     * @return false|string
+     * @return float|string
      * @throws LocalizedException
      */
     public function getCcAmountWithTax()
     {
         $ccAmountWithTax = (float) $this->getInfo()->getAdditionalInformation('cc_cc_amount') +
         (float) $this->getInfo()->getAdditionalInformation('cc_cc_tax_amount');
-        return $this->numberFormatter->formatToLocalCurrency($ccAmountWithTax);
+        return $this->priceHelper->currency($ccAmountWithTax);
     }
 
     /**
-     * @return false|string
+     * @return float|string
      * @throws LocalizedException
      */
     public function getBilletAmount()
     {
-        return $this->numberFormatter->formatToLocalCurrency(
+        return $this->priceHelper->currency(
             $this->getInfo()->getAdditionalInformation('cc_billet_amount')
         );
     }

@@ -1,14 +1,8 @@
 <?xml version="1.0"?>
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
-        <referenceBlock name="content">
-            <action method="setTemplate">
-                <argument name="template" translate="true" xsi:type="string">Pagarme_Pagarme::order/view/info.phtml</argument>
-            </action>
-        </referenceBlock>
         <referenceBlock name="sales_order_tabs">
             <action method="addTab">
-                <!--<uiComponent name="pagarme_pagarme_charges_index"/>-->
                 <argument name="name" xsi:type="string">charges</argument>
                 <argument name="block" xsi:type="string">Pagarme\Pagarme\Block\Adminhtml\Order\Charge\Tab\View</argument>
             </action>
