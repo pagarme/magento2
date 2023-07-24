@@ -13,7 +13,15 @@
 <?php if ($this->getInfo()->getOrder()->getStatus() == 'pending'): ?>
     <p><?php echo __($this->getTitle()) ?></p>
     <hr />
-    <p><a class="action tocart primary" id="pagarme-link-boleto" href="<?php echo $this->getBilletUrl() ?>" target="_blank"><?php echo __('Print Billet') ?></a></p>
+    <p>
+        <a class="action tocart primary"
+            id="pagarme-link-boleto"
+            href="<?php echo $this->getBilletUrl() ?>"
+            target="_blank"
+            rel="noopener">
+            <?php echo __('Print Billet') ?>
+        </a>
+    </p>
 <?php else: ?>
 	<p><?php echo __($this->getTitle()) ?></p>
 <?php endif ?>
