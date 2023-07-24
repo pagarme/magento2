@@ -61,6 +61,14 @@ class Billet extends Info
         return $this->getInfo()->getAdditionalInformation('method_title');
     }
 
+    public function showBilletUrl()
+    {
+        if($this->getInfo()->getOrder()->getStatus() !== 'pending'){
+            return false;
+        }
+        return true;
+    }
+
     /**
      * @return mixed
      * @throws \Magento\Framework\Exception\LocalizedException

@@ -10,18 +10,16 @@
  */
 ?>
 
-<?php if ($this->getInfo()->getOrder()->getStatus() == 'pending'): ?>
-    <p><?php echo __($this->getTitle()) ?></p>
+<p><?= __($this->getTitle()) ?></p>
+<?php if ($this->showBilletUrl()): ?>
     <hr />
     <p>
         <a class="action tocart primary"
             id="pagarme-link-boleto"
-            href="<?php echo $this->getBilletUrl() ?>"
+            href="<?= $this->getBilletUrl() ?>"
             target="_blank"
             rel="noopener">
-            <?php echo __('Print Billet') ?>
+            <?= __('Print Billet') ?>
         </a>
     </p>
-<?php else: ?>
-	<p><?php echo __($this->getTitle()) ?></p>
 <?php endif ?>
