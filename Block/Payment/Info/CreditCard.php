@@ -97,13 +97,14 @@ class CreditCard extends Cc
         $platformOrder = $this->loadPlatformOrderByIncrementId($orderEntityId);
 
         $orderPagarmeId = $platformOrder->getPagarmeId();
+
         if ($orderPagarmeId === null) {
             return [];
         }
 
         $orderObject = $this->getOrderObjectByPagarmeId($orderService, $orderPagarmeId);
 
-        if ($orderObject === null) {
+        if ($orderObject === null || !is_object($orderObject)) {
             return [];
         }
 
