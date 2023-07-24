@@ -19,7 +19,16 @@ use Magento\Sales\Api\Data\OrderPaymentInterface as Payment;
 use Pagarme\Pagarme\Helper\Payment\Pix as PixHelper;
 class Pix extends Template
 {
+    /**
+     * @var CheckoutSession
+     */
     protected $checkoutSession;
+
+    /**
+     * @var array
+     */
+    private $pixInfo;
+
     /**
      * Link constructor.
      * @param Context $context
@@ -62,11 +71,55 @@ class Pix extends Template
     }
 
     /**
+     * @return bool
+     */
+    public function showPixInformation()
+    {
+        return !empty($this->getPixInfo());
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPixUrl()
+    {
+        return $this->getPixInfo()['qr_code_url'] ?? '';
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPixQrCode()
+    {
+        return $this->getPixInfo()['qr_code'] ?? '';
+    }
+
+    /**
      * @return string
      */
-    public function getPixInfo()
+    public function getErrorCopyMessage()
     {
-        $pixHelper = new PixHelper();
-        return $pixHelper->getQrCode($this->getPayment());
+        return __('Failed to copy! Please, manually copy the code using the field bellow the button.');
+    }
+
+    /**
+     * @return string
+     */
+    public function getSuccessMessage()
+    {
+        return __('Copied PIX code!');
+    }
+
+    /**
+     * @return array
+     */
+    private function getPixInfo()
+    {
+        if (empty($this->pixInfo)) {
+            $pixHelper = new PixHelper();
+            $this->pixInfo = $pixHelper->getQrCode($this->getPayment());
+        }
+
+        return $this->pixInfo;
     }
 }
