@@ -20,7 +20,7 @@ define(['jquery'], ($) => {
                     await navigator.clipboard.writeText(rawCode);
                     alert(config.successCopyMessage);
                 } catch (err) {
-                    alternativeCopyQrCode(rawCode);
+                    alternativeCopyQrCode();
                 }
                 return;
             }
@@ -32,7 +32,7 @@ define(['jquery'], ($) => {
                 document.execCommand('copy', false);
                 alert(config.successCopyMessage);
             } catch (err) {
-                alternativeCopyQrCode(rawCode);
+                alternativeCopyQrCode();
             }
         });
     };
