@@ -17,6 +17,7 @@ use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Sales\Api\Data\OrderInterface as Order;
 use Magento\Sales\Api\Data\OrderPaymentInterface as Payment;
 use Pagarme\Pagarme\Helper\Payment\Pix as PixHelper;
+
 class Pix extends Template
 {
     /**
@@ -113,7 +114,7 @@ class Pix extends Template
      */
     public function getSuccessMessage()
     {
-        return __('Copied PIX code!');
+        return __('PIX code copied!');
     }
 
     /**
