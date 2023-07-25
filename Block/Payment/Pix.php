@@ -30,13 +30,19 @@ class Pix extends Template
     private $pixInfo;
 
     /**
+     * @var PixHelper
+     */
+    private $pixHelper;
+
+    /**
      * Link constructor.
      * @param Context $context
      * @param CheckoutSession $checkoutSession
      */
-    public function __construct(Context $context, CheckoutSession $checkoutSession)
+    public function __construct(Context $context, CheckoutSession $checkoutSession, PixHelper $pixHelper)
     {
         $this->checkoutSession = $checkoutSession;
+        $this->pixHelper = $pixHelper;
         parent::__construct($context, []);
     }
 
@@ -116,8 +122,7 @@ class Pix extends Template
     private function getPixInfo()
     {
         if (empty($this->pixInfo)) {
-            $pixHelper = new PixHelper();
-            $this->pixInfo = $pixHelper->getQrCode($this->getPayment());
+            $this->pixInfo = $this->pixHelper->getQrCode($this->getPayment());
         }
 
         return $this->pixInfo;
