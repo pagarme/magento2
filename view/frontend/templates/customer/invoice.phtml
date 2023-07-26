@@ -22,7 +22,7 @@
         <tbody>
             <?php foreach ($block->getAllChargesByCodeOrder() as $id => $item): ?>
                 <tr>
-                    <td><?= $block->getVisualChargeId($id) ?></td>
+                    <td><?= $block->getVisualChargeId($id); ?></td>
                     <td><?= $block->formatToCurrency($item->getAmount()); ?></td>
                     <td><?= $block->formatToCurrency($item->getPaidAmount()); ?></td>
                     <td><?= $block->formatToCurrency($item->getCanceledAmount()); ?></td>
@@ -32,7 +32,7 @@
                 <?php if ($block->isBillet()): ?>
                     <td>
                         <button
-                            onclick="location.href = '<?= $item->getBoletoLink() ?>';"
+                            onclick="location.href = '<?= $item->getBoletoLink(); ?>';"
                             id="details"
                         >
                             download

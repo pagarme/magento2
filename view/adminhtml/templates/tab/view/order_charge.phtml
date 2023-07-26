@@ -33,7 +33,7 @@
                     <td>
                         <button class="action charge-button"
                                 data-action="capture"
-                                data-order="<?= $charge->getOrderId()->getValue() ?>>"
+                                data-order="<?= $charge->getOrderId()->getValue(); ?>"
                                 data-charge="<?= $charge->getPagarmeId()->getValue(); ?>"
                                 data-message="<?= __('Do you want to capture this charge?'); ?>"
                         >
@@ -43,7 +43,7 @@
                     <td>
                         <button class="action charge-button"
                                 data-action="cancel"
-                                data-order="<?= $charge->getOrderId()->getValue() ?>"
+                                data-order="<?= $charge->getOrderId()->getValue(); ?>"
                                 data-charge="<?= $charge->getPagarmeId()->getValue(); ?>"
                                 data-message="<?= __('Do you want to cancel this charge?'); ?>"
                         >
