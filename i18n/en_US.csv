@@ -300,4 +300,10 @@
 "Canceled Amount","Canceled Amount"
 "Refunded Amount","Refunded Amount"
 "Capture","Capture"
-"Cancel","Cancel"
+"Cancel","Cancel",
+"Failed to copy! Please, manually copy the code using the field bellow the button.","Failed to copy! Please, manually copy the code using the field bellow the button."
+"PIX code copied!","PIX code copied!"
+"Copy PIX code","Copy PIX code"
+"Open your bank app","Open your bank app"
+"Scan the QR Code","Scan the QR Code"
+"Confirm the payment","Confirm the payment"
