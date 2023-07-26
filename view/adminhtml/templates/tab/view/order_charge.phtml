@@ -21,7 +21,37 @@
             <th></th>
         </thead>
         <tbody>
-            <?= $block->getChargesTableBody() ?>
+            <?php foreach ($block->getCharges() as $charge): ?>
+                <tr>
+                    <td><?= $charge->getPagarmeId()->getValue(); ?></td>
+                    <td><?= $block->formatToCurrency($charge->getAmount()); ?></td>
+                    <td><?= $block->formatToCurrency($charge->getPaidAmount()); ?></td>
+                    <td><?= $block->formatToCurrency($charge->getCanceledAmount()); ?></td>
+                    <td><?= $block->formatToCurrency($charge->getRefundedAmount()); ?></td>
+                    <td><?= $charge->getStatus()->getStatus(); ?></td>
+                    <td class="amount"><input class="amount-value" value="<?= $charge->getAmount(); ?>" /></td>
+                    <td>
+                        <button class="action charge-button"
+                                data-action="capture"
+                                data-order="<?= $charge->getOrderId()->getValue() ?>>"
+                                data-charge="<?= $charge->getPagarmeId()->getValue(); ?>"
+                                data-message="<?= __('Do you want to capture this charge?'); ?>"
+                        >
+                            <?= __('Capture'); ?>
+                        </button>
+                    </td>
+                    <td>
+                        <button class="action charge-button"
+                                data-action="cancel"
+                                data-order="<?= $charge->getOrderId()->getValue() ?>"
+                                data-charge="<?= $charge->getPagarmeId()->getValue(); ?>"
+                                data-message="<?= __('Do you want to cancel this charge?'); ?>"
+                        >
+                            <?= __('Cancel'); ?>
+                        </button>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
         </tbody>
     </table>
 </div>

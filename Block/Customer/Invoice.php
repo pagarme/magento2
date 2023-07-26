@@ -13,21 +13,21 @@
 namespace Pagarme\Pagarme\Block\Customer;
 
 use Magento\Framework\Exception\AuthorizationException;
-use Magento\Framework\View\Element\Template;
+use Magento\Framework\Pricing\Helper\Data;
 use Magento\Framework\View\Element\Template\Context;
 use Magento\Framework\Registry;
 use Magento\Customer\Model\Session;
 use Pagarme\Core\Kernel\ValueObjects\Id\SubscriptionId;
 use Pagarme\Pagarme\Api\Data\RecurrenceProductsSubscriptionInterface;
+use Pagarme\Pagarme\Block\BaseTemplateWithCurrency;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Pagarme\Core\Recurrence\Repositories\SubscriptionRepository;
 use Pagarme\Core\Kernel\Exceptions\InvalidParamException;
 use Pagarme\Core\Kernel\Abstractions\AbstractEntity;
 use Pagarme\Core\Recurrence\Repositories\ChargeRepository;
 use Pagarme\Core\Recurrence\Aggregates\Charge;
-use Pagarme\Pagarme\Helper\HtmlTableHelper;
 
-class Invoice extends Template
+class Invoice extends BaseTemplateWithCurrency
 {
     /**
      * @var Session
@@ -50,28 +50,22 @@ class Invoice extends Template
     protected $coreRegistry;
 
     /**
-     * @var HtmlTableHelper
-     */
-    private $htmlTableHelper;
-
-    /**
      * @param Context $context
      * @param Session $customerSession
      * @param Registry $coreRegistry
-     * @param HtmlTableHelper $htmlTableHelper
+     * @param Data $priceHelper
      */
     public function __construct(
         Context $context,
         Session $customerSession,
         Registry $coreRegistry,
-        HtmlTableHelper $htmlTableHelper
+        Data $priceHelper
     ) {
-        parent::__construct($context, []);
+        parent::__construct($context, $priceHelper, []);
         Magento2CoreSetup::bootstrap();
 
         $this->coreRegistry = $coreRegistry;
         $this->customerSession = $customerSession;
-        $this->htmlTableHelper = $htmlTableHelper;
         $this->chargeRepository = new ChargeRepository();
         $this->subscriptionRepository = new SubscriptionRepository();
 
@@ -106,71 +100,18 @@ class Invoice extends Template
     }
 
     /**
-     * @return string
+     * @param int $id
+     * @return int
      */
-    public function getBilletHeader()
+    public function getVisualChargeId($id)
     {
-        if (!$this->isBillet()) {
-            return "";
-        }
-
-        return sprintf('<th>%s</th>', __('Billet'));
-    }
-
-    /**
-     * @return string
-     * @throws InvalidParamException
-     */
-    public function getInvoicesTableBody()
-    {
-        $tbody = "";
-
-        foreach ($this->getAllChargesByCodeOrder() as $id => $item) {
-            $tbody .= "<tr>";
-            $visualId = $id + 1;
-            $tbody .= $this->htmlTableHelper->formatTableDataCell($visualId);
-            $tbody .= $this->htmlTableHelper->formatNumberTableDataCell($item->getAmount());
-            $tbody .= $this->htmlTableHelper->formatNumberTableDataCell($item->getPaidAmount());
-            $tbody .= $this->htmlTableHelper->formatNumberTableDataCell($item->getCanceledAmount());
-            $tbody .= $this->htmlTableHelper->formatNumberTableDataCell($item->getRefundedAmount());
-            $tbody .= $this->htmlTableHelper->formatTableDataCell($item->getStatus()->getStatus());
-            $tbody .= $this->htmlTableHelper->formatTableDataCell($item->getPaymentMethod()->getPaymentMethod());
-            $tbody .= $this->addBilletButton($item);
-            $tbody .= '</tr>';
-        }
-
-        return $tbody;
-    }
-
-    /**
-     * @param mixed $item
-     * @return string
-     */
-    private function addBilletButton($item)
-    {
-        $button = '';
-        if (!$this->isBillet()) {
-            return $button;
-        }
-
-        $button = '<td>';
-        $hasBilletLink = !empty($item->getBoletoLink());
-        if ($hasBilletLink) {
-            $button .= sprintf(
-                '<button onclick="location.href = \'%s\';" id="details">%s</button>',
-                $item->getBoletoLink(),
-                'download'
-            );
-        }
-        $button .= '</td>';
-
-        return $button;
+        return $id + 1;
     }
 
     /**
      * @return bool
      */
-    private function isBillet()
+    public function isBillet()
     {
         return $this->getSubscriptionPaymentMethod() === RecurrenceProductsSubscriptionInterface::BOLETO;
     }
