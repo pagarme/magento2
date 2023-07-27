@@ -18,7 +18,6 @@ use Magento\Framework\View\Element\Template\Context;
 use Magento\Framework\Registry;
 use Magento\Customer\Model\Session;
 use Pagarme\Core\Kernel\ValueObjects\Id\SubscriptionId;
-use Pagarme\Pagarme\Api\Data\RecurrenceProductsSubscriptionInterface;
 use Pagarme\Pagarme\Block\BaseTemplateWithCurrency;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Pagarme\Core\Recurrence\Repositories\SubscriptionRepository;
@@ -109,11 +108,12 @@ class Invoice extends BaseTemplateWithCurrency
     }
 
     /**
+     * @param Charge $item
      * @return bool
      */
-    public function isBillet()
+    public function isBillet($item)
     {
-        return $this->getSubscriptionPaymentMethod() === RecurrenceProductsSubscriptionInterface::BOLETO;
+        return !empty($item->getBoletoLink());
     }
 
     /**

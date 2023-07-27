@@ -14,9 +14,7 @@
                 <th><?= __('Refunded amount') ?></th>
                 <th><?= __('Status') ?></th>
                 <th><?= __('Payement method') ?></th>
-                <?php if ($block->isBillet()): ?>
-                    <th><?= __('Billet') ?></th>
-                <?php endif; ?>
+                <th><?= __('Action') ?></th>
             </tr>
         </thead>
         <tbody>
@@ -29,16 +27,16 @@
                     <td><?= $block->formatToCurrency($item->getRefundedAmount()); ?></td>
                     <td><?= $item->getStatus()->getStatus(); ?></td>
                     <td><?= $item->getPaymentMethod()->getPaymentMethod(); ?></td>
-                <?php if ($block->isBillet()): ?>
                     <td>
-                        <button
-                            onclick="location.href = '<?= $item->getBoletoLink(); ?>';"
-                            id="details"
-                        >
-                            download
-                        </button>
+                        <?php if ($block->isBillet($item)): ?>
+                            <button
+                                onclick="location.href = '<?= $item->getBoletoLink(); ?>';"
+                                id="details"
+                            >
+                                <?= __('View Billet') ?>
+                            </button>
+                        <?php endif; ?>
                     </td>
-                <?php endif; ?>
                 </tr>
             <?php endforeach; ?>
         </tbody>
