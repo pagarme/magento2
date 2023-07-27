@@ -11,9 +11,8 @@
 
 namespace Pagarme\Pagarme\Block\Payment\Info;
 
-
-use Magento\Payment\Block\Info;
 use Magento\Framework\DataObject;
+use Magento\Payment\Block\Info;
 use Pagarme\Core\Kernel\Services\OrderService;
 use Pagarme\Core\Kernel\ValueObjects\Id\OrderId;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
@@ -24,6 +23,9 @@ class Billet extends Info
 {
     const TEMPLATE = 'Pagarme_Pagarme::info/billet.phtml';
 
+    /**
+     * @return void
+     */
     public function _construct()
     {
         $this->setTemplate(self::TEMPLATE);
@@ -42,15 +44,29 @@ class Billet extends Info
         return $transport;
     }
 
+    /**
+     * @return string|null
+     */
     public function getBilletUrl()
     {
         $billetHelper = new BilletHelper();
         return $billetHelper->getBilletUrl($this->getInfo());
     }
 
+    /**
+     * @return mixed
+     */
     public function getTitle()
     {
         return $this->getInfo()->getAdditionalInformation('method_title');
+    }
+
+    public function showBilletUrl()
+    {
+        if($this->getInfo()->getOrder()->getStatus() !== 'pending'){
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -64,9 +80,7 @@ class Billet extends Info
         $orderService = new OrderService();
 
         $orderEntityId = $this->getInfo()->getOrder()->getIncrementId();
-
-        $platformOrder = new Magento2PlatformOrderDecorator();
-        $platformOrder->loadByIncrementId($orderEntityId);
+        $platformOrder = $this->loadPlatformOrderByIncrementId($orderEntityId);
 
         $orderPagarmeId = $platformOrder->getPagarmeId();
 
@@ -74,15 +88,34 @@ class Billet extends Info
             return [];
         }
 
-        /**
-         * @var \Pagarme\Core\Kernel\Aggregates\Order orderObject
-         */
-        $orderObject = $orderService->getOrderByPagarmeId(new OrderId($orderPagarmeId));
+        $orderObject = $this->getOrderObjectByPagarmeId($orderService, $orderPagarmeId);
 
         if ($orderObject === null) {
             return [];
         }
         
-        return $orderObject->getCharges()[0]->getLastTransaction();
+        return current($orderObject->getCharges())->getLastTransaction();
+    }
+
+    /**
+     * @param mixed $incrementId
+     * @return Magento2PlatformOrderDecorator
+     */
+    private function loadPlatformOrderByIncrementId($incrementId)
+    {
+        $platformOrder = new Magento2PlatformOrderDecorator();
+        $platformOrder->loadByIncrementId($incrementId);
+        return $platformOrder;
+    }
+
+    /**
+     * @param mixed $orderService
+     * @param mixed $pagarmeId
+     * @return mixed
+     */
+    private function getOrderObjectByPagarmeId($orderService, $pagarmeId)
+    {
+        $orderId = new OrderId($pagarmeId);
+        return $orderService->getOrderByPagarmeId($orderId);
     }
 }

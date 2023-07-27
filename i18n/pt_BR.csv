@@ -479,5 +479,11 @@
 "Canceled Amount","Valor Cancelado"
 "Refunded Amount","Valor Reembolsado"
 "Capture","Capturar"
-"Cancel","Cancelar"
+"Cancel","Cancelar",
+"Failed to copy! Please, manually copy the code using the field bellow the button.","Falha ao copiar! Por favor, copie o código manualmente utilizando o campo abaixo do botão."
+"PIX code copied!","Código PIX copiado!"
+"Copy PIX code","Copiar código PIX"
+"Open your bank app","Abra o app do seu banco"
+"Scan the QR Code","Escaneie o QR Code"
+"Confirm the payment","Confirme o pagamento"
 "View Billet","Visualizar Boleto"

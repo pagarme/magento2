@@ -1,7 +1,25 @@
-<?php if ($this->getBilletUrl() && $this->getInfo()->getOrder()->getStatus() == 'pending'): ?>
-    <span><?php echo __($this->getTitle()) ?></span>
+<?php
+/**
+ * var Pagarme\Pagarme\Block\Payment\Info\Billet $this
+ *
+ * @author      Open Source Team
+ * @copyright   2021 Pagar.me (https://pagar.me)
+ * @license     https://pagar.me Copyright
+ *
+ * @link        https://pagar.me
+ */
+?>
+
+<p><?= __($this->getTitle()) ?></p>
+<?php if ($this->showBilletUrl()): ?>
     <hr />
-    <a class="action tocart primary" id="pagarme-link-boleto" href="<?php echo $this->getBilletUrl() ?>" target="_blank"><?php echo __('Print Billet') ?></a>
-<?php else: ?>
-	<span><?php echo __($this->getTitle()) ?></span>
+    <p>
+        <a class="action tocart primary"
+            id="pagarme-link-boleto"
+            href="<?= $this->getBilletUrl() ?>"
+            target="_blank"
+            rel="noopener">
+            <?= __('Print Billet') ?>
+        </a>
+    </p>
 <?php endif ?>
