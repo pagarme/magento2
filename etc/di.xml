@@ -647,10 +647,6 @@
 
 <!--    <preference for="Magento\CatalogWidget\Block\Product\ProductsList" type="Pagarme\Pagarme\Block\Web\ProductsList" />-->
 
-<!--    <type name="\Magento\Catalog\Pricing\Render\FinalPriceBox">-->
-<!--        <plugin name="Pagarme_Pagarme_change_template" type="Pagarme\Pagarme\Plugin\Princing\Render\FinalPricePlugin" />-->
-<!--    </type>-->
-
     <type name="\Magento\Checkout\Block\Cart\Item\Renderer">
         <plugin name="Pagarme_Pagarme_change_template_cycles" type="Pagarme\Pagarme\Plugin\Princing\Render\ProductPriceCyclesPlugin" />
     </type>
