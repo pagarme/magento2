@@ -1,43 +1,11 @@
 <?php
-
-use Pagarme\Core\Kernel\Aggregates\Transaction;
-use Pagarme\Pagarme\Block\Payment\Info\Pix;
-
-$postData = [];
-
-/* @var Pix $this */
-
 /**
- * @var Transaction $lastTransaction
+ * @var Pagarme\Pagarme\Block\Payment\Info\Pix $this
  */
-$lastTransaction = $this->getTransactionInfo();
-if (!empty($lastTransaction)) {
-    $postData = (json_decode($lastTransaction->getPostData()->tran_data, true));
-}
 ?>
 
-<?php if ($postData !== null && isset($postData['nosso_numero'])) { ?>
-    <span>
-        <b><?= __('Our Number'); ?>: </b><?= $postData['nosso_numero'] ?>
-    </span>
-    <br/>
-<?php } ?>
-
-<?php if ($postData !== null && isset($postData['document_number'])) { ?>
-    <span>
-        <b><?= __('Document Number'); ?>: </b><?= $postData['document_number'] ?>
-    </span>
-    <br/>
-    <br/>
-<?php } ?>
-
-<?php if ($this->getPixInfo() && $this->getInfo()->getOrder()->getStatus() == 'pending'): ?>
-    <span><?php echo __($this->getTitle()) ?></span>
-    <hr/>
-    <img alt="Pix QrCode" width="100px" height="100px" src="<?php echo $this->getPixInfo()['qr_code_url'];?>"/>
-    <br/>
-    <a class="action tocart primary" href="<?php echo $this->getPixInfo()['qr_code_url'] ?>"
-       target="_blank"><?php echo __('Print QrCode') ?></a>
-<?php else: ?>
-    <span><?php echo __($this->getTitle()) ?></span>
+<p><?=__($this->getTitle())?></p>
+<?php if ($this->showPrintButton()) : ?>
+    <img width="145px" src="<?=$this->getPixInfo()->getQrCodeUrl()?>" />
+    <p><?=$this->getPixInfo()->getQrCode()?></p>
 <?php endif ?>

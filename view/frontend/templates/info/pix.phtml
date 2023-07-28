@@ -1,16 +1,12 @@
 <?php
-    $pixInfo = $this->getPixInfo();
-    if (!empty($pixInfo) && $this->getInfo()->getOrder()->getStatus() == 'pending'):
+/**
+ * @var Pagarme\Pagarme\Block\Payment\Pix $this
+ *
+ */
+
 ?>
-    <span><?php echo __($this->getTitle()) ?></span>
-    <hr />
-    <div style="text-align: center">
-        <img width="130" style="margin-bottom: 10px" src="https://cdn.mundipagg.com/assets/images/site/illustrations/pix-bc-logo-2.png" />
-        <img width="130" style="margin-bottom: 10px" src="<?= $pixInfo['qr_code_url']?>" />
-        <span style="word-wrap: break-word;"><?= $pixInfo['qr_code']?></span>
-    </div>
-<?php else: ?>
-	<span><?php echo __($this->getTitle()) ?></span>
-    <br />
-    <img width="130" style="margin-bottom: 10px" src="https://cdn.mundipagg.com/assets/images/site/illustrations/pix-bc-logo-2.png" />
+<p><?=__($this->getTitle())?></p>
+<?php if ($this->showPrintButton()) : ?>
+    <img width="145px" src="<?=$this->getPixInfo()->getQrCodeUrl()?>" />
+    <p><?=$this->getPixInfo()->getQrCode()?></p>
 <?php endif ?>

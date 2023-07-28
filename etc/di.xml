@@ -221,7 +221,20 @@
             <argument name="infoBlockType" xsi:type="string">Pagarme\Pagarme\Block\Payment\Info\Pix</argument>
         </arguments>
     </virtualType>
-
+    <virtualType name="PagarmePixCommandResponseHandlerPool" type="Magento\Payment\Gateway\Response\HandlerChain">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="general" xsi:type="string">Pagarme\Pagarme\Gateway\Transaction\Pix\ResourceGateway\Create\Response\GeneralHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PagarmePixAuthorizeCommand" type="Pagarme\Pagarme\Gateway\Transaction\Base\Command\AuthorizeCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">Pagarme\Pagarme\Gateway\Transaction\Pix\ResourceGateway\Create\RequestBuilder</argument>
+            <argument name="responseHandler" xsi:type="object">PagarmePixCommandResponseHandlerPool</argument>
+            <argument name="validator" xsi:type="object">Pagarme\Pagarme\Gateway\Transaction\Pix\ResourceGateway\Create\Response\Validator</argument>
+        </arguments>
+    </virtualType>
     <virtualType name="PagarmePixValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
         <arguments>
             <argument name="handlers" xsi:type="array">
@@ -246,8 +259,7 @@
         <arguments>
             <argument name="commands" xsi:type="array">
                 <item name="initialize" xsi:type="string">Pagarme\Pagarme\Gateway\Transaction\Base\Command\InitializeCommand</item>
-<!--                <item name="authorize" xsi:type="string">PagarmePixAuthorizeCommand</item>-->
-                <item name="authorize" xsi:type="string">PagarmeBilletAuthorizeCommand</item>
+                <item name="authorize" xsi:type="string">PagarmePixAuthorizeCommand</item>
             </argument>
         </arguments>
     </virtualType>
@@ -293,15 +305,15 @@
         </arguments>
     </virtualType>
 
-    <virtualType name="PagarmeBilletAuthorizeCommand" type="Pagarme\Pagarme\Gateway\Transaction\Billet\Command\AuthorizeCommand">
+    <virtualType name="PagarmeBilletAuthorizeCommand" type="Pagarme\Pagarme\Gateway\Transaction\Base\Command\AuthorizeCommand">
         <arguments>
             <argument name="requestBuilder" xsi:type="object">Pagarme\Pagarme\Gateway\Transaction\Billet\ResourceGateway\Create\RequestBuilder</argument>
-            <argument name="responseHandler" xsi:type="object">PagarmeBilletAuthorizeCommandResponseHandlerPool</argument>
+            <argument name="responseHandler" xsi:type="object">PagarmebilletCommandResponseHandlerPool</argument>
             <argument name="validator" xsi:type="object">Pagarme\Pagarme\Gateway\Transaction\Billet\ResourceGateway\Create\Response\Validator</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="PagarmeBilletAuthorizeCommandResponseHandlerPool" type="Magento\Payment\Gateway\Response\HandlerChain">
+    <virtualType name="PagarmeBilletCommandResponseHandlerPool" type="Magento\Payment\Gateway\Response\HandlerChain">
         <arguments>
             <argument name="handlers" xsi:type="array">
                 <item name="general" xsi:type="string">Pagarme\Pagarme\Gateway\Transaction\Billet\ResourceGateway\Create\Response\GeneralHandler</item>
