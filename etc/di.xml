@@ -308,7 +308,7 @@
     <virtualType name="PagarmeBilletAuthorizeCommand" type="Pagarme\Pagarme\Gateway\Transaction\Base\Command\AuthorizeCommand">
         <arguments>
             <argument name="requestBuilder" xsi:type="object">Pagarme\Pagarme\Gateway\Transaction\Billet\ResourceGateway\Create\RequestBuilder</argument>
-            <argument name="responseHandler" xsi:type="object">PagarmebilletCommandResponseHandlerPool</argument>
+            <argument name="responseHandler" xsi:type="object">PagarmeBilletCommandResponseHandlerPool</argument>
             <argument name="validator" xsi:type="object">Pagarme\Pagarme\Gateway\Transaction\Billet\ResourceGateway\Create\Response\Validator</argument>
         </arguments>
     </virtualType>

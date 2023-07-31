@@ -39,10 +39,10 @@ abstract class AbstractAddressDataProvider extends AbstractRequestDataProvider
     public function getCustomerAddressComplement($shipping)
     {
         if ($shipping) {
-            return !$this->getShippingAddressAttribute($this->getConfig()->getCustomerAddressDistrict()) ? '' : $this->getShippingAddressAttribute($this->getConfig()->getCustomerAddressComplement());
+            return !$this->getShippingAddressAttribute($this->getConfig()->getCustomerAddressComplement()) ? 'street_4' : $this->getConfig()->getCustomerAddressComplement();
         }
         
-        return !$this->getBillingAddressAttribute($this->getConfig()->getCustomerAddressDistrict()) ? '' : $this->getShippingAddressAttribute($this->getConfig()->getCustomerAddressComplement());
+        return !$this->getBillingAddressAttribute($this->getConfig()->getCustomerAddressComplement()) ? 'street_4' : $this->getConfig()->getCustomerAddressComplement();
     }
 
     /**
