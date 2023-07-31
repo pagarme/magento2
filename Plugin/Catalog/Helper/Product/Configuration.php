@@ -64,13 +64,15 @@ class Configuration
             return $result;
         }
 
-        return array_map(function ($item) use ($product) {
+        $updateCycleValueCallback = function ($item) use ($product) {
             if (ucfirst(RecurrenceSubscriptionRepetitionsInterface::CYCLES) !== $item['label']) {
                 return $item;
             }
 
             $item['value'] = ProductHelper::applyDiscount($item['value'], $product);
             return $item;
-        }, $result);
+        };
+
+        return array_map($updateCycleValueCallback, $result);
     }
 }
