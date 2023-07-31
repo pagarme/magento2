@@ -39,10 +39,10 @@ abstract class AbstractAddressDataProvider extends AbstractRequestDataProvider
     public function getCustomerAddressComplement($shipping)
     {
         if ($shipping) {
-            return !$this->getShippingAddressAttribute($this->getConfig()->getCustomerAddressComplement()) ? 'street_4' : $this->getConfig()->getCustomerAddressComplement();
+            return !$this->getShippingAddressAttribute($this->getConfig()->getCustomerAddressComplement()) ? 'street_3' : $this->getConfig()->getCustomerAddressComplement();
         }
         
-        return !$this->getBillingAddressAttribute($this->getConfig()->getCustomerAddressComplement()) ? 'street_4' : $this->getConfig()->getCustomerAddressComplement();
+        return !$this->getBillingAddressAttribute($this->getConfig()->getCustomerAddressComplement()) ? 'street_3' : $this->getConfig()->getCustomerAddressComplement();
     }
 
     /**
@@ -51,10 +51,10 @@ abstract class AbstractAddressDataProvider extends AbstractRequestDataProvider
     public function getCustomerAddressDistrict($shipping)
     {
         if ($shipping) {
-            $streetLine = !$this->getShippingAddressAttribute($this->getConfig()->getCustomerAddressDistrict()) ? 'street_3' : $this->getConfig()->getCustomerAddressDistrict();
+            $streetLine = !$this->getShippingAddressAttribute($this->getConfig()->getCustomerAddressDistrict()) ? 'street_4' : $this->getConfig()->getCustomerAddressDistrict();
             return $this->getShippingAddressAttribute($streetLine);
         }
-        $streetLine = !$this->getBillingAddressAttribute($this->getConfig()->getCustomerAddressDistrict()) ? 'street_3' : $this->getConfig()->getCustomerAddressDistrict();
+        $streetLine = !$this->getBillingAddressAttribute($this->getConfig()->getCustomerAddressDistrict()) ? 'street_4' : $this->getConfig()->getCustomerAddressDistrict();
         return $this->getBillingAddressAttribute($streetLine);
     }
 
