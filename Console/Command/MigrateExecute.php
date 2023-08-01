@@ -12,11 +12,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 class MigrateExecute extends Command
 {
 
-    /**
-     * @var MigrateData
-     */
-    private $migrateData;
-
     public function __construct(MigrateData $migrateData)
     {
         $this->migrateData = $migrateData;

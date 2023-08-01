@@ -16,29 +16,23 @@ use Pagarme\Core\Kernel\ValueObjects\Id\ChargeId;
 
 class ChargeAction extends \Magento\Backend\App\Action
 {
-    /**
-     * @var JsonFactory
-     */
-    private $resultJsonFactory;
-
-    /**
-     * @var StoreManagerInterface
-     */
-    private $storeManager;
+    protected $resultPageFactory;
 
     /**
      * Constructor
      *
-     * @param Context $context
-     * @param JsonFactory $resultJsonFactory
-     * @param StoreManagerInterface $storeManager
+     * @param \Magento\Backend\App\Action\Context $context
+     * @param \Magento\Framework\Controller\Result\JsonFactory $resultJsonFactory
      */
     public function __construct(
         Context $context,
         JsonFactory $resultJsonFactory,
+        Http $request,
         StoreManagerInterface $storeManager
     ) {
         Magento2CoreSetup::bootstrap();
+
+        $this->request = $request;
         $this->resultJsonFactory = $resultJsonFactory;
         $this->storeManager = $storeManager;
         parent::__construct($context);

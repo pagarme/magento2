@@ -21,16 +21,6 @@ class Subscription implements SubscriptionApiInterface
      */
     protected $subscriptionService;
 
-    /**
-     * @var LocalizationService
-     */
-    protected $i18n;
-
-    /**
-     * @var MoneyService
-     */
-    protected $moneyService;
-
     public function __construct(Request $request)
     {
         $this->request = $request;

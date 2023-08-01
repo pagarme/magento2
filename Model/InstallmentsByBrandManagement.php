@@ -22,20 +22,9 @@ class InstallmentsByBrandManagement
     extends AbstractInstallmentManagement
     implements InstallmentsByBrandManagementInterface
 {
-    /**
-     * @var SimpleBuilderInterface
-     */
     protected $builder;
-
-    /**
-     * @var Session
-     */
     protected $session;
-
-    /**
-     * @var Config
-     */
-    protected $config;
+    protected $cardBrand;
 
     /**
      * @param SimpleBuilderInterface $builder

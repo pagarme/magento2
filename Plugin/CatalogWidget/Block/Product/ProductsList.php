@@ -14,7 +14,6 @@ namespace Pagarme\Pagarme\Plugin\CatalogWidget\Block\Product;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\Product;
 use Magento\CatalogWidget\Block\Product\ProductsList as BaseProductsList;
-use Magento\Framework\View\Element\BlockInterface;
 use Magento\Framework\View\LayoutFactory;
 use Magento\Framework\View\LayoutInterface;
 
@@ -29,11 +28,6 @@ class ProductsList
 
     /** @var ProductInterface */
     protected $product = null;
-
-    /**
-     * @var bool|BlockInterface
-     */
-    protected $rendererListBlock;
 
     /**
      * @param LayoutFactory $layoutFactory
