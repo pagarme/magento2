@@ -86,22 +86,6 @@ class Pix extends Template
     }
 
     /**
-     * @return mixed
-     */
-    public function getPixUrl()
-    {
-        return $this->getPixInfo()['qr_code_url'] ?? '';
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPixQrCode()
-    {
-        return $this->getPixInfo()['qr_code'] ?? '';
-    }
-
-    /**
      * @return string
      */
     public function getErrorCopyMessage()
@@ -118,12 +102,12 @@ class Pix extends Template
     }
 
     /**
-     * @return array
+     * @return PixHelper
      */
-    private function getPixInfo()
+    public function getPixInfo()
     {
         if (empty($this->pixInfo)) {
-            $this->pixInfo = $this->pixHelper->getQrCode($this->getPayment());
+            $this->pixInfo = $this->pixHelper->getInfo($this->getPayment());
         }
 
         return $this->pixInfo;

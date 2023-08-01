@@ -9,20 +9,17 @@
  * @link        https://pagar.me
  */
 
-namespace Pagarme\Pagarme\Gateway\Transaction\Billet\ResourceGateway\Create;
+namespace Pagarme\Pagarme\Gateway\Transaction\Pix\ResourceGateway\Create;
 
-use Pagarme\Pagarme\Gateway\Transaction\Base\ResourceGateway\AbstractAddressDataProvider;
+
 use Magento\Checkout\Model\Session;
 use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Payment\Model\InfoInterface;
-use Pagarme\Pagarme\Api\BilletRequestDataProviderInterface;
-use Pagarme\Pagarme\Gateway\Transaction\Base\ResourceGateway\AbstractRequestDataProvider;
-use Pagarme\Pagarme\Gateway\Transaction\Billet\Config\ConfigInterface;
+use Pagarme\Pagarme\Gateway\Transaction\Base\Config\ConfigInterface;
 use Pagarme\Pagarme\Helper\CustomerAddressInterface;
+use Pagarme\Pagarme\Gateway\Transaction\Base\ResourceGateway\AbstractAddressDataProvider;
 
-class RequestDataProvider
-    extends AbstractAddressDataProvider
-    implements BilletRequestDataProviderInterface
+class RequestDataProvider extends AbstractAddressDataProvider
 {
     /**
      * @var ConfigInterface
@@ -42,30 +39,6 @@ class RequestDataProvider
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function getBankType()
-    {
-        return $this->getConfig()->getTypeBank();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getInstructions()
-    {
-        return $this->getConfig()->getInstructions();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getDaysToAddInBoletoExpirationDate()
-    {
-        return $this->getConfig()->getExpirationDays();
-    }
-
-    /**
      * @return ConfigInterface
      */
     protected function getConfig()
@@ -77,7 +50,7 @@ class RequestDataProvider
      * @param ConfigInterface $config
      * @return $this
      */
-    protected function setConfig(ConfigInterface $config)
+    protected function setConfig($config)
     {
         $this->config = $config;
         return $this;
