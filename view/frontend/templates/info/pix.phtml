@@ -7,6 +7,6 @@
 ?>
 <p><?=__($this->getTitle())?></p>
 <?php if ($this->showPrintButton()) : ?>
-    <img width="145px" src="<?=$this->getPixInfo()->getQrCodeUrl()?>" />
+    <img alt="pix qrcode" width="145px" src="<?=$this->getPixInfo()->getQrCodeUrl()?>" />
     <p><?=$this->getPixInfo()->getQrCode()?></p>
 <?php endif ?>
