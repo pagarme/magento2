@@ -31,6 +31,16 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
      */
     protected $productSubscriptionHelper;
 
+    /**
+     * @var LocalizationService
+     */
+    protected $i18n;
+
+    /**
+     * @var MoneyService
+     */
+    protected $moneyService;
+
     public function __construct(Request $request)
     {
         $this->request = $request;

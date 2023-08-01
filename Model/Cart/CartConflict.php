@@ -2,6 +2,7 @@
 
 namespace Pagarme\Pagarme\Model\Cart;
 
+use Exception;
 use Magento\Checkout\Model\Cart;
 use Magento\Framework\Exception\LocalizedException;
 use Pagarme\Core\Kernel\Services\LocalizationService;
@@ -59,8 +60,13 @@ class CartConflict
     private $pagarmeConfig;
 
     /**
+     * @var RulesCartRun
+     */
+    private $rulesCartRun;
+
+    /**
      * CartConflict constructor.
-     * @throws \Exception
+     * @throws Exception
      */
     public function __construct()
     {

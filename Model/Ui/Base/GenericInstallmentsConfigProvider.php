@@ -12,7 +12,7 @@
 
 namespace Pagarme\Pagarme\Model\Ui\Base;
 
-use Pagarme\Core\Kernel\Services\LocalizationService;
+use Magento\Framework\View\Asset\Repository;
 use Pagarme\Pagarme\Model\Installments\Config\ConfigInterface;
 use Pagarme\Pagarme\Gateway\Transaction\Base\Config\ConfigInterface as BaseConfig;
 use Magento\Checkout\Model\ConfigProviderInterface;
@@ -22,20 +22,38 @@ abstract class GenericInstallmentsConfigProvider implements ConfigProviderInterf
 {
     const CODE = null;
 
+    /**
+     * @var array
+     */
     protected $installments = [];
-    protected $installmentsBuilder;
-    protected $installmentsConfig;
+
+    /**
+     * @var ConfigInterface
+     */
     protected $config;
-    protected $_assetRepo;
+
+    /**
+     * @var Repository
+     */
+    protected $assetRepo;
+
+    /**
+     * @var BaseConfig
+     */
     protected $baseConfig;
 
+    /**
+     * @var StoreManagerInterface
+     */
+    protected $storageManager;
+
     public function __construct(
-        \Magento\Framework\View\Asset\Repository $assetRepo,
+        Repository $assetRepo,
         ConfigInterface $config,
         BaseConfig $baseConfig,
         StoreManagerInterface $storeManager
     ) {
-        $this->_assetRepo = $assetRepo;
+        $this->assetRepo = $assetRepo;
         $this->baseConfig = $baseConfig;
         $this->storageManager = $storeManager;
         $this->setConfig($config);
@@ -43,7 +61,7 @@ abstract class GenericInstallmentsConfigProvider implements ConfigProviderInterf
 
     public function getConfig()
     {
-        $config = [
+        return [
             'payment' => [
                 'ccform' => [
                     'base_url' => $this->storageManager->getStore()->getBaseUrl(),
@@ -56,107 +74,107 @@ abstract class GenericInstallmentsConfigProvider implements ConfigProviderInterf
                         'Visa' => [
                             'height' => 30,
                             'width' => 46,
-                            'url' => $this->_assetRepo->getUrl("Pagarme_Pagarme::images/cc/Visa.png")
+                            'url' => $this->assetRepo->getUrl("Pagarme_Pagarme::images/cc/Visa.png")
                         ],
                         'Elo' => [
                             'height' => 30,
                             'width' => 46,
-                            'url' => $this->_assetRepo->getUrl("Pagarme_Pagarme::images/cc/Elo.png")
+                            'url' => $this->assetRepo->getUrl("Pagarme_Pagarme::images/cc/Elo.png")
                         ],
                         'Discover' => [
                             'height' => 30,
                             'width' => 46,
-                            'url' => $this->_assetRepo->getUrl("Pagarme_Pagarme::images/cc/Discover.png")
+                            'url' => $this->assetRepo->getUrl("Pagarme_Pagarme::images/cc/Discover.png")
                         ],
                         'Diners' => [
                             'height' => 30,
                             'width' => 46,
-                            'url' => $this->_assetRepo->getUrl("Pagarme_Pagarme::images/cc/Diners.png")
+                            'url' => $this->assetRepo->getUrl("Pagarme_Pagarme::images/cc/Diners.png")
                         ],
                         'Credz' => [
                             'height' => 30,
                             'width' => 46,
-                            'url' => $this->_assetRepo->getUrl("Pagarme_Pagarme::images/cc/Credz.png")
+                            'url' => $this->assetRepo->getUrl("Pagarme_Pagarme::images/cc/Credz.png")
                         ],
                         'Hipercard' => [
                             'height' => 30,
                             'width' => 46,
-                            'url' => $this->_assetRepo->getUrl("Pagarme_Pagarme::images/cc/Hipercard.png")
+                            'url' => $this->assetRepo->getUrl("Pagarme_Pagarme::images/cc/Hipercard.png")
                         ],
                         'HiperCard' => [
                             'height' => 30,
                             'width' => 46,
-                            'url' => $this->_assetRepo->getUrl("Pagarme_Pagarme::images/cc/Hipercard.png")
+                            'url' => $this->assetRepo->getUrl("Pagarme_Pagarme::images/cc/Hipercard.png")
                         ],
                         'Mastercard' => [
                             'height' => 30,
                             'width' => 46,
-                            'url' => $this->_assetRepo->getUrl("Pagarme_Pagarme::images/cc/Mastercard.png")
+                            'url' => $this->assetRepo->getUrl("Pagarme_Pagarme::images/cc/Mastercard.png")
                         ],
                         'Sodexo' => [
                             'height' => 30,
                             'width' => 46,
-                            'url' => $this->_assetRepo->getUrl("Pagarme_Pagarme::images/cc/Sodexo.png")
+                            'url' => $this->assetRepo->getUrl("Pagarme_Pagarme::images/cc/Sodexo.png")
                         ],
                         'SodexoAlimentacao' => [
                             'height' => 30,
                             'width' => 46,
-                            'url' => $this->_assetRepo->getUrl("Pagarme_Pagarme::images/cc/SodexoAlimentacao.png")
+                            'url' => $this->assetRepo->getUrl("Pagarme_Pagarme::images/cc/SodexoAlimentacao.png")
                         ],
                         'SodexoCombustivel' => [
                             'height' => 30,
                             'width' => 46,
-                            'url' => $this->_assetRepo->getUrl("Pagarme_Pagarme::images/cc/SodexoCombustivel.png")
+                            'url' => $this->assetRepo->getUrl("Pagarme_Pagarme::images/cc/SodexoCombustivel.png")
                         ],
                         'SodexoCultura' => [
                             'height' => 30,
                             'width' => 46,
-                            'url' => $this->_assetRepo->getUrl("Pagarme_Pagarme::images/cc/SodexoCultura.png")
+                            'url' => $this->assetRepo->getUrl("Pagarme_Pagarme::images/cc/SodexoCultura.png")
                         ],
                         'SodexoGift' => [
                             'height' => 30,
                             'width' => 46,
-                            'url' => $this->_assetRepo->getUrl("Pagarme_Pagarme::images/cc/SodexoGift.png")
+                            'url' => $this->assetRepo->getUrl("Pagarme_Pagarme::images/cc/SodexoGift.png")
                         ],
                         'SodexoPremium' => [
                             'height' => 30,
                             'width' => 46,
-                            'url' => $this->_assetRepo->getUrl("Pagarme_Pagarme::images/cc/SodexoPremium.png")
+                            'url' => $this->assetRepo->getUrl("Pagarme_Pagarme::images/cc/SodexoPremium.png")
                         ],
                         'SodexoRefeicao' => [
                             'height' => 30,
                             'width' => 46,
-                            'url' => $this->_assetRepo->getUrl("Pagarme_Pagarme::images/cc/SodexoRefeicao.png")
+                            'url' => $this->assetRepo->getUrl("Pagarme_Pagarme::images/cc/SodexoRefeicao.png")
                         ],
                         'Cabal' => [
                             'height' => 30,
                             'width' => 46,
-                            'url' => $this->_assetRepo->getUrl("Pagarme_Pagarme::images/cc/Cabal.png")
+                            'url' => $this->assetRepo->getUrl("Pagarme_Pagarme::images/cc/Cabal.png")
                         ],
                         'Aura' => [
                             'height' => 30,
                             'width' => 46,
-                            'url' => $this->_assetRepo->getUrl("Pagarme_Pagarme::images/cc/Aura.png")
+                            'url' => $this->assetRepo->getUrl("Pagarme_Pagarme::images/cc/Aura.png")
                         ],
                         'Amex' => [
                             'height' => 30,
                             'width' => 46,
-                            'url' => $this->_assetRepo->getUrl("Pagarme_Pagarme::images/cc/Amex.png")
+                            'url' => $this->assetRepo->getUrl("Pagarme_Pagarme::images/cc/Amex.png")
                         ],
                         'Alelo' => [
                             'height' => 30,
                             'width' => 46,
-                            'url' => $this->_assetRepo->getUrl("Pagarme_Pagarme::images/cc/Alelo.png")
+                            'url' => $this->assetRepo->getUrl("Pagarme_Pagarme::images/cc/Alelo.png")
                         ],
                         'VR' => [
                             'height' => 30,
                             'width' => 46,
-                            'url' => $this->_assetRepo->getUrl("Pagarme_Pagarme::images/cc/VR.png")
+                            'url' => $this->assetRepo->getUrl("Pagarme_Pagarme::images/cc/VR.png")
                         ],
                         'Banese' => [
                             'height' => 30,
                             'width' => 46,
-                            'url' => $this->_assetRepo->getUrl("Pagarme_Pagarme::images/cc/Banese.png")
+                            'url' => $this->assetRepo->getUrl("Pagarme_Pagarme::images/cc/Banese.png")
                         ],
                     ],
                 ]
@@ -164,8 +182,6 @@ abstract class GenericInstallmentsConfigProvider implements ConfigProviderInterf
             'is_multi_buyer_enabled' => $this->_getConfig()->getMultiBuyerActive(),
             'region_states' => $this->getRegionStates()
         ];
-
-        return $config;
     }
 
 
