@@ -6,15 +6,40 @@ use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\App\ObjectManager;
+use Magento\Framework\DB\Adapter\AdapterInterface;
+use Monolog\Logger;
 
 class MigrateData extends AbstractHelper
 {
+    /**
+     * @var Logger
+     */
     protected $logger;
+
+    /**
+     * @var AdapterInterface
+     */
+    protected $connection;
+
+    /**
+     * @var mixed
+     */
+    protected $start;
+
+    /**
+     * @var array|null
+     */
+    protected $options;
+
+    /**
+     * @var array|null
+     */
+    protected $log;
 
     public function __construct(Context $context, ResourceConnection $resourceConnection)
     {
         parent::__construct($context);
-        $this->logger =  new \Monolog\Logger('migration');
+        $this->logger =  new Logger('migration');
         $this->logger->pushHandler(new \Monolog\Handler\StreamHandler(BP .'/var/log/pagarme_migration.log'));
         $this->connection = $resourceConnection->getConnection();
         $this->start = microtime(true);

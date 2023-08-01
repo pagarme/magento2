@@ -26,13 +26,24 @@ class InstallmentsByBrandAndAmountManagement
     extends AbstractInstallmentManagement
     implements InstallmentsByBrandAndAmountManagementInterface
 {
+    /**
+     * @var SimpleBuilderInterface
+     */
     protected $builder;
+
+    /**
+     * @var Session
+     */
     protected $session;
-    protected $cardBrand;
     /**
      * @var RecurrenceProductHelper
      */
     protected $recurrenceProductHelper;
+
+    /**
+     * @var Config
+     */
+    protected $config;
 
     /**
      * @param SimpleBuilderInterface $builder

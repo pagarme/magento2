@@ -14,15 +14,25 @@ use Pagarme\Pagarme\Gateway\Transaction\Base\Config\Config;
 
 class CustomerUpdatePagarmeHelper
 {
-
-    protected $updateCustomerRequest;
-
+    /**
+     * @var Config
+     */
     protected $config;
 
+    /**
+     * @var CustomerRepositoryInterface
+     */
     protected $customerRepositoryInterface;
 
     /**
-     * AdminCustomerSaveAfter constructor.
+     * @var CustomerService
+     */
+    protected $customerService;
+
+    /**
+     * @param Config $config
+     * @param CustomerRepositoryInterface $customerRepositoryInterface
+     * @param CustomerService $customerService
      */
     public function __construct(
         Config $config,
