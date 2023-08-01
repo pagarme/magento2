@@ -22,13 +22,13 @@ class Pix extends Info
     }
 
     /**
-     * @return string|null
+     * @return PixHelper
      * @throws LocalizedException
      */
     public function getPixInfo()
     {
         $pixHelper = new PixHelper();
-        return $pixHelper->getQrCode($this->getInfo());
+        return $pixHelper->getInfo($this->getInfo());
     }
 
     public function getTitle()
@@ -65,7 +65,15 @@ class Pix extends Info
         if ($orderObject === null) {
             return [];
         }
+        $charge = current($orderObject->getCharges());
+        return $charge->getLastTransaction();
+    }
 
-        return $orderObject->getCharges()[0]->getLastTransaction();
+    public function showPrintButton()
+    {
+        if (!empty($this->getPixInfo()) && $this->getInfo()->getOrder()->getStatus() == 'pending') {
+            return true;
+        }
+        return false;
     }
 }

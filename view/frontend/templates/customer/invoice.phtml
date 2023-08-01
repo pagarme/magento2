@@ -5,7 +5,6 @@
 ?>
 <div>
     <table class="table">
-
         <thead>
             <tr>
                 <th><?= __('Id') ?></th>
@@ -15,11 +14,31 @@
                 <th><?= __('Refunded amount') ?></th>
                 <th><?= __('Status') ?></th>
                 <th><?= __('Payement method') ?></th>
-                <?= $block->getBilletHeader() ?>
+                <th><?= __('Action') ?></th>
             </tr>
         </thead>
         <tbody>
-            <?= $block->getInvoicesTableBody() ?>
+            <?php foreach ($block->getAllChargesByCodeOrder() as $id => $item): ?>
+                <tr>
+                    <td><?= $block->getVisualChargeId($id); ?></td>
+                    <td><?= $block->formatToCurrency($item->getAmount()); ?></td>
+                    <td><?= $block->formatToCurrency($item->getPaidAmount()); ?></td>
+                    <td><?= $block->formatToCurrency($item->getCanceledAmount()); ?></td>
+                    <td><?= $block->formatToCurrency($item->getRefundedAmount()); ?></td>
+                    <td><?= $item->getStatus()->getStatus(); ?></td>
+                    <td><?= $item->getPaymentMethod()->getPaymentMethod(); ?></td>
+                    <td>
+                        <?php if ($block->isBillet($item)): ?>
+                            <button
+                                onclick="location.href = '<?= $item->getBoletoLink(); ?>';"
+                                id="details"
+                            >
+                                <?= __('View Billet') ?>
+                            </button>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
         </tbody>
     </table>
 </div>

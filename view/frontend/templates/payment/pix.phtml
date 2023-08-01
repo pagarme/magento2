@@ -14,7 +14,7 @@ if ($block->showPixInformation()):
             />
         </div>
         <div class="qr-code-wrapper">
-            <img width="200" src="<?= $block->getPixUrl(); ?>" alt="pix qr code" />
+            <img width="200" src="<?= $block->getPixInfo()->getQrCodeUrl(); ?>" alt="pix qr code" />
         </div>
         <div class="copy-qr-code-wrapper">
             <div class="copy-inline">
@@ -31,7 +31,7 @@ if ($block->showPixInformation()):
                     </path>
                 </svg>
                 <a class="copy-pix"><?= __('Copy PIX code'); ?></a>
-                <input id="pagarme_qr_code" type="text" value="<?= $block->getPixQrCode() ?>" />
+                <input id="pagarme_qr_code" type="text" value="<?= $block->getPixInfo()->getQrCode() ?>" />
             </div>
         </div>
         <div class="pix-instructions-wrapper">
