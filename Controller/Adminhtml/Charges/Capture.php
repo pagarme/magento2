@@ -15,7 +15,7 @@ class Capture extends ChargeAction
     public function execute()
     {
         parent::execute();
-        $params = $this->request->getParams();
+        $params = $this->getRequest()->getParams();
 
         $logService = new LogService(
             'Capture on module',
