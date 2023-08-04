@@ -6,14 +6,18 @@ on:
       - develop
       - test
       - stg
-      - master
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
-
+    
 jobs:
-
+  
   publish:
+    -
+    strategy:
+      matrix:
+        tags: [php8, stg, test]
+    -
     name: Publish
     runs-on: ubuntu-latest
     steps:
@@ -25,7 +29,7 @@ jobs:
       run: |
         cp .github/data/auth.json .
         cp .github/data/docker-compose.yml .
-        cp .github/data/Dockerfile .
+        cp .github/data/${{ matrix.tags }}/Dockerfile .
         cp .github/data/wait-for-mysql.sh .
         cp .github/data/magento2_module_install.sql .
     -
@@ -55,7 +59,7 @@ jobs:
       with:
         context: .
         push: true
-        tags: ${{ steps.meta.outputs.tags }}
+        tags: mpdockerregistry.azurecr.io/magento2-pagarme:${{ matrix.tags }}
         labels: ${{ steps.meta.outputs.labels }}
       # name: Commit and push Docker image
       # run: |
