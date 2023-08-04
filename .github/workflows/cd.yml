@@ -1,23 +1,18 @@
 name: CD
 
 on:
-  push:
-    branches:
-      - develop
-      - test
-      - stg
+  pull_request:
+    branches: ["stg", "develop"]
+    types: closed
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
     
 jobs:
-  
   publish:
-    -
     strategy:
       matrix:
-        tags: [php8, stg, test]
-    -
+        tags: [php8, stg]
     name: Publish
     runs-on: ubuntu-latest
     steps:
