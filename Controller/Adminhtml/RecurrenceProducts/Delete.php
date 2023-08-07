@@ -41,10 +41,10 @@ class Delete extends Action
      * @param Factory $messageFactory
      */
     public function __construct(
-        Context     $context,
+        Context $context,
         PageFactory $resultPageFactory,
-        Registry    $coreRegistry,
-        Factory     $messageFactory
+        Registry $coreRegistry,
+        Factory $messageFactory
     )
     {
         $this->resultPageFactory = $resultPageFactory;
