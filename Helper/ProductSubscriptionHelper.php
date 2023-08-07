@@ -26,6 +26,11 @@ class ProductSubscriptionHelper extends AbstractHelper
      */
     protected $objectManager;
 
+    /**
+     * @var MoneyService
+     */
+    protected $moneyService;
+
     public function __construct()
     {
         Magento2CoreSetup::bootstrap();

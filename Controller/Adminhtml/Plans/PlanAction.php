@@ -15,28 +15,40 @@ use Magento\Store\Model\StoreManagerInterface;
 
 class PlanAction extends Action
 {
-
+    /**
+     * @var bool|PageFactory
+     */
     protected $resultPageFactory = false;
+
     /**
      * @var CollectionFactory
      */
     protected $productCollectionFactory;
+
     /**
      * @var JsonFactory
      */
     protected $resultJsonFactory;
+
     /**
      * @var ProductHelper
      */
     protected $productHelper;
+
     /**
      * @var Registry
      */
     protected $coreRegistry;
+
     /**
      * @var Factory
      */
     protected $messageFactory;
+
+    /**
+     * @var StoreManagerInterface
+     */
+    protected $storeManager;
 
 
     /**

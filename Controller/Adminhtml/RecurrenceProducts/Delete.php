@@ -4,6 +4,7 @@ namespace Pagarme\Pagarme\Controller\Adminhtml\RecurrenceProducts;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
+use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Message\Factory;
 use Magento\Framework\Registry;
 use Magento\Framework\View\Result\PageFactory;
@@ -22,15 +23,26 @@ class Delete extends Action
     protected $coreRegistry;
 
     /**
+     * @var Factory
+     */
+    protected $messageFactory;
+
+    /**
+     * @var ProductSubscriptionHelper
+     */
+    protected $productSubscriptionHelper;
+
+    /**
      * Constructor
      *
-     * @param \Magento\Backend\App\Action\Context $context
-     * @param \Magento\Framework\View\Result\PageFactory $resultPageFactory
-     * @throws \Exception
+     * @param Context $context
+     * @param PageFactory $resultPageFactory
+     * @param Registry $coreRegistry
+     * @param Factory $messageFactory
      */
     public function __construct(
-        \Magento\Backend\App\Action\Context $context,
-        \Magento\Framework\View\Result\PageFactory $resultPageFactory,
+        Context $context,
+        PageFactory $resultPageFactory,
         Registry $coreRegistry,
         Factory $messageFactory
     )
@@ -48,7 +60,7 @@ class Delete extends Action
     /**
      * Index action
      *
-     * @return \Magento\Framework\Controller\ResultInterface
+     * @return ResponseInterface
      */
     public function execute()
     {
@@ -61,8 +73,7 @@ class Delete extends Action
             if (!$productData || !$productData->getId()) {
                 $message = $this->messageFactory->create('error', __('Product subscription not exist.'));
                 $this->messageManager->addErrorMessage($message);
-                $this->_redirect('pagarme_pagarme/recurrenceproducts/index');
-                return;
+                return $this->_redirect('pagarme_pagarme/recurrenceproducts/index');
             }
         }
 
@@ -73,7 +84,6 @@ class Delete extends Action
         $message = $this->messageFactory->create('success', __("Product subscription deleted."));
         $this->messageManager->addMessage($message);
 
-        $this->_redirect('pagarme_pagarme/recurrenceproducts/index');
-        return;
+        return $this->_redirect('pagarme_pagarme/recurrenceproducts/index');
     }
 }
