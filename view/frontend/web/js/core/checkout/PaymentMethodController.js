@@ -181,6 +181,7 @@ PaymentMethodController.prototype.pixInit = function () {
     if (this.platformConfig.isMultibuyerEnabled) {
         this.fillMultibuyerStateSelect(this.formObject);
         this.addShowMultibuyerListener(this.formObject);
+        this.addValidatorListener(this.formObject);
     }
 };
 
@@ -202,6 +203,7 @@ PaymentMethodController.prototype.boletoInit = function () {
     if (this.platformConfig.isMultibuyerEnabled) {
         this.fillMultibuyerStateSelect(this.formObject);
         this.addShowMultibuyerListener(this.formObject);
+        this.addValidatorListener(this.formObject);
     }
 };
 
@@ -263,6 +265,7 @@ PaymentMethodController.prototype.addCreditCardListeners = function (formObject)
         return;
     }
 
+    this.addValidatorListener(formObject);
     this.addCreditCardNumberListener(formObject);
     this.addCreditCardInstallmentsListener(formObject);
     this.addCreditCardHolderNameListener(formObject);
@@ -371,6 +374,33 @@ PaymentMethodController.prototype.addCreditCardHolderNameListener = function(for
         paymentMethodController.clearNumbers(element);
     });
 }
+
+PaymentMethodController.prototype.addValidatorListener = function(formObject) {
+    var paymentMethodController = this;
+
+    jQuery(formObject.containerSelector).on('change', function (event) {
+        var element = jQuery(event.target);
+        if (
+            element.attr('name').startsWith('payment[cc_type]')
+            && element.val() !== 'default'
+        ) {
+            paymentMethodController.validateBrandField(formObject);
+            return;
+        }
+        if (element.attr('name').startsWith('payment[cc_number]')) {
+            paymentMethodController.validateCcNumberField(element, formObject);
+            return;
+        }
+        if (
+            element.attr('name').startsWith('payment[cc_exp_month]')
+            || element.attr('name').startsWith('payment[cc_exp_year]')
+        ) {
+            paymentMethodController.validateCcExpDateField(formObject);
+            return;
+        }
+        paymentMethodController.validateDefaultField(element);
+    });
+};
 
 PaymentMethodController.prototype.addCreditCardNumberListener = function(formObject) {
 
@@ -683,6 +713,81 @@ PaymentMethodController.prototype.fillCardAmount = function (formObject, count, 
     }
 
     formObject.inputAmount.val(amount);
+};
+
+PaymentMethodController.prototype.validateCcNumberField = function (element, formObject) {
+    if (element.val() === '') {
+        formObject.creditCardBrand.val('');
+
+        formHandler = new FormHandler();
+        formHandler.init(formObject);
+        formHandler.switchBrand('');
+    }
+    this.validateDefaultField(element);
+    this.validateBrandField(formObject);
+};
+
+PaymentMethodController.prototype.validateCcExpDateField = function (formObject) {
+    var cardExpirationMonth = formObject.creditCardExpMonth;
+    var cardExpirationYear = formObject.creditCardExpYear;
+
+    var cardDate = new Date (cardExpirationYear.val(), cardExpirationMonth.val() -1);
+    var dateNow = new Date();
+
+    var monthParentsElements = cardExpirationMonth.parent().parent();
+    var yearParentsElements = cardExpirationYear.parent().parent();
+    var parentsElements = yearParentsElements.parents('.field');
+
+    if (cardDate < dateNow) {
+        monthParentsElements.addClass('_error');
+        yearParentsElements.addClass('_error');
+        parentsElements.find('.field-error').show();
+        return true;
+    }
+
+    monthParentsElements.removeClass('_error');
+    yearParentsElements.removeClass('_error');
+    parentsElements.find('.field-error').hide();
+    return false;
+};
+
+PaymentMethodController.prototype.validateDefaultField = function (element) {
+    var requiredElement = element.parent().parent();
+
+    if (element.val() == '') {
+        requiredElement.addClass('_error');
+        requiredElement.children('.field-error').show();
+        return true;
+    }
+
+    requiredElement.removeClass('_error');
+    requiredElement.children('.field-error').hide();
+    return false;
+};
+
+PaymentMethodController.prototype.validateBrandField = function (formObject) {
+    var element = formObject.creditCardBrand;
+    var requiredElement = element.parent().parent();
+
+    var brands = [];
+    PlatformConfig.PlatformConfig.avaliableBrands[formObject.savedCardSelectUsed].forEach(function (item) {
+        brands.push(item.title.toUpperCase());
+    });
+
+    if (
+        !brands.includes(element.val().toUpperCase())
+        || element.val === ''
+    ) {
+        requiredElement.addClass('_error');
+        requiredElement.find('.field-error').show();
+        requiredElement.find('.nobrand').hide();
+        return true;
+    }
+
+    requiredElement.removeClass('_error');
+    requiredElement.find('.field-error').hide();
+
+    return false;
 };
 
 PaymentMethodController.prototype.setBin = function (binObj, creditCardNumberElement, formObject) {

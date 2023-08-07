@@ -8,8 +8,9 @@ FormHandler.prototype.init = function (formObject) {
 
 FormHandler.prototype.switchBrand = function (brand) {
     var brandsSelector = this.formObject.containerSelector + ' .brands';
+    var brandElement = this.formObject.creditCardBrand;
 
-    jQuery(brandsSelector).css('filter', 'grayscale(100%)');
+    jQuery(brandsSelector).css('filter', 'grayscale(100%) opacity(60%)');
 
     if(typeof brand != 'undefined' && brand.length > 0){
         var brandSelector =
@@ -17,13 +18,16 @@ FormHandler.prototype.switchBrand = function (brand) {
             brand.toLowerCase();
 
         jQuery(brandSelector).css('filter', 'none');
-        this.formObject.creditCardBrand.val(brand);
+        brandElement.val(brand);
+
+        if (brandElement.val() !== 'default' && brandElement.val() !== '') {
+            brandElement.change();
+        }
 
         return;
     }
 
-    this.formObject.creditCardBrand.val('');
-    this.formObject.creditCardNumber.change();
+    brandElement.val('');
 };
 
 FormHandler.prototype.updateInstallmentSelect = function (installmentsObj, element, installmentSelected = null) {
