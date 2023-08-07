@@ -7,13 +7,13 @@ FormHandler.prototype.init = function (formObject) {
 };
 
 FormHandler.prototype.switchBrand = function (brand) {
-    var brandsSelector = this.formObject.containerSelector + ' .brands';
-    var brandElement = this.formObject.creditCardBrand;
+    const brandsSelector = this.formObject.containerSelector + ' .brands';
+    const brandElement = this.formObject.creditCardBrand;
 
     jQuery(brandsSelector).css('filter', 'grayscale(100%) opacity(60%)');
 
     if(typeof brand != 'undefined' && brand.length > 0){
-        var brandSelector =
+        const brandSelector =
             this.formObject.containerSelector + ' .' +
             brand.toLowerCase();
 

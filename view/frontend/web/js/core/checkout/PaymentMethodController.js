@@ -376,10 +376,10 @@ PaymentMethodController.prototype.addCreditCardHolderNameListener = function(for
 }
 
 PaymentMethodController.prototype.addValidatorListener = function(formObject) {
-    var paymentMethodController = this;
+    const paymentMethodController = this;
 
     jQuery(formObject.containerSelector).on('change', function (event) {
-        var element = jQuery(event.target);
+        const element = jQuery(event.target);
         if (
             element.attr('name').startsWith('payment[cc_type]')
             && element.val() !== 'default'
@@ -728,15 +728,15 @@ PaymentMethodController.prototype.validateCcNumberField = function (element, for
 };
 
 PaymentMethodController.prototype.validateCcExpDateField = function (formObject) {
-    var cardExpirationMonth = formObject.creditCardExpMonth;
-    var cardExpirationYear = formObject.creditCardExpYear;
+    const cardExpirationMonth = formObject.creditCardExpMonth;
+    const cardExpirationYear = formObject.creditCardExpYear;
 
-    var cardDate = new Date (cardExpirationYear.val(), cardExpirationMonth.val() -1);
-    var dateNow = new Date();
+    const cardDate = new Date (cardExpirationYear.val(), cardExpirationMonth.val() -1);
+    const dateNow = new Date();
 
-    var monthParentsElements = cardExpirationMonth.parent().parent();
-    var yearParentsElements = cardExpirationYear.parent().parent();
-    var parentsElements = yearParentsElements.parents('.field');
+    const monthParentsElements = cardExpirationMonth.parent().parent();
+    const yearParentsElements = cardExpirationYear.parent().parent();
+    const parentsElements = yearParentsElements.parents('.field');
 
     if (cardDate < dateNow) {
         monthParentsElements.addClass('_error');
@@ -752,9 +752,9 @@ PaymentMethodController.prototype.validateCcExpDateField = function (formObject)
 };
 
 PaymentMethodController.prototype.validateDefaultField = function (element) {
-    var requiredElement = element.parent().parent();
+    const requiredElement = element.parent().parent();
 
-    if (element.val() == '') {
+    if (element.val() === '') {
         requiredElement.addClass('_error');
         requiredElement.children('.field-error').show();
         return true;
@@ -766,8 +766,8 @@ PaymentMethodController.prototype.validateDefaultField = function (element) {
 };
 
 PaymentMethodController.prototype.validateBrandField = function (formObject) {
-    var element = formObject.creditCardBrand;
-    var requiredElement = element.parent().parent();
+    const element = formObject.creditCardBrand;
+    const requiredElement = element.parent().parent();
 
     var brands = [];
     PlatformConfig.PlatformConfig.avaliableBrands[formObject.savedCardSelectUsed].forEach(function (item) {
