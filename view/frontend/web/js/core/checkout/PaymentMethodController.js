@@ -727,6 +727,9 @@ PaymentMethodController.prototype.validateCcNumberField = function (element, for
     this.validateBrandField(formObject);
 };
 
+const fieldError = '.field-error';
+const errorClass = '_error';
+
 PaymentMethodController.prototype.validateCcExpDateField = function (formObject) {
     const cardExpirationMonth = formObject.creditCardExpMonth;
     const cardExpirationYear = formObject.creditCardExpYear;
@@ -737,39 +740,42 @@ PaymentMethodController.prototype.validateCcExpDateField = function (formObject)
     const monthParentsElements = cardExpirationMonth.parent().parent();
     const yearParentsElements = cardExpirationYear.parent().parent();
     const parentsElements = yearParentsElements.parents('.field');
+    const parentsElementsError = parentsElements.find(fieldError);
 
     if (cardDate < dateNow) {
-        monthParentsElements.addClass('_error');
-        yearParentsElements.addClass('_error');
-        parentsElements.find('.field-error').show();
+        monthParentsElements.addClass(errorClass);
+        yearParentsElements.addClass(errorClass);
+        parentsElementsError.show();
         return true;
     }
 
-    monthParentsElements.removeClass('_error');
-    yearParentsElements.removeClass('_error');
-    parentsElements.find('.field-error').hide();
+    monthParentsElements.removeClass(errorClass);
+    yearParentsElements.removeClass(errorClass);
+    parentsElementsError.hide();
     return false;
 };
 
 PaymentMethodController.prototype.validateDefaultField = function (element) {
     const requiredElement = element.parent().parent();
+    const requiredElementError = requiredElement.children(fieldError);
 
     if (element.val() === '') {
-        requiredElement.addClass('_error');
-        requiredElement.children('.field-error').show();
+        requiredElement.addClass(errorClass);
+        requiredElementError.show();
         return true;
     }
 
-    requiredElement.removeClass('_error');
-    requiredElement.children('.field-error').hide();
+    requiredElement.removeClass(errorClass);
+    requiredElementError.hide();
     return false;
 };
 
 PaymentMethodController.prototype.validateBrandField = function (formObject) {
     const element = formObject.creditCardBrand;
     const requiredElement = element.parent().parent();
+    const requiredElementError = requiredElement.find(fieldError);
 
-    var brands = [];
+    const brands = [];
     PlatformConfig.PlatformConfig.avaliableBrands[formObject.savedCardSelectUsed].forEach(function (item) {
         brands.push(item.title.toUpperCase());
     });
@@ -778,14 +784,14 @@ PaymentMethodController.prototype.validateBrandField = function (formObject) {
         !brands.includes(element.val().toUpperCase())
         || element.val === ''
     ) {
-        requiredElement.addClass('_error');
-        requiredElement.find('.field-error').show();
+        requiredElement.addClass(errorClass);
+        requiredElementError.show();
         requiredElement.find('.nobrand').hide();
         return true;
     }
 
-    requiredElement.removeClass('_error');
-    requiredElement.find('.field-error').hide();
+    requiredElement.removeClass(errorClass);
+    requiredElementError.hide();
 
     return false;
 };
