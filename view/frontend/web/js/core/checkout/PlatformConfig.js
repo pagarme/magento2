@@ -13,12 +13,10 @@ define([], () => {
                 const brand = data.payment.ccform.icons[brands[i]];
                 if (!brand) continue;
                 const url = brand.url;
-                const fixArray = [];
-                const imageUrl = fixArray.concat(url);
 
                 availableBrands[i] = {
                     'title': brands[i],
-                    'image': imageUrl[0]
+                    'image': url
 
                 };
             }
