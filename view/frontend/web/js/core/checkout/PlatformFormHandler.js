@@ -8,8 +8,9 @@ define(['jquery'], ($) => {
         }
         switchBrand(brand) {
             const brandsSelector = this.formObject.containerSelector + ' .brands';
+            const brandElement = this.formObject.creditCardBrand;
 
-            $(brandsSelector).css('filter', 'grayscale(100%)');
+            $(brandsSelector).css('filter', 'grayscale(100%) opacity(60%)');
 
             if(typeof brand != 'undefined' && brand.length > 0){
                 const brandSelector =
@@ -17,13 +18,16 @@ define(['jquery'], ($) => {
                     brand.toLowerCase();
 
                 $(brandSelector).css('filter', 'none');
-                this.formObject.creditCardBrand.val(brand);
+                brandElement.val(brand);
+
+                if (brandElement.val() !== 'default' && brandElement.val() !== '') {
+                    brandElement.change();
+                }
 
                 return;
             }
 
-            this.formObject.creditCardBrand.val('');
-            this.formObject.creditCardNumber.change();
+            brandElement.val('');
         }
         updateInstallmentSelect(installmentsObj, element, installmentSelected = null) {
             let content = "";

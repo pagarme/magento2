@@ -153,8 +153,9 @@ class TwoCreditCard extends Cc
             return [];
         }
 
-        $chargeOne = current($orderObject->getCharges());
-        $chargeTwo = next($chargeOne);
+        $charges = $orderObject->getCharges();
+        $chargeOne = current($charges);
+        $chargeTwo = next($charges);
 
         return [
             'card1' => array_merge(

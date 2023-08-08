@@ -659,10 +659,6 @@
 
 <!--    <preference for="Magento\CatalogWidget\Block\Product\ProductsList" type="Pagarme\Pagarme\Block\Web\ProductsList" />-->
 
-    <type name="\Magento\Checkout\Block\Cart\Item\Renderer">
-        <plugin name="Pagarme_Pagarme_change_template_cycles" type="Pagarme\Pagarme\Plugin\Princing\Render\ProductPriceCyclesPlugin" />
-    </type>
-
     <!-- Recurrence -->
 
     <preference for="Pagarme\Core\Recurrence\Interfaces\RepetitionInterface" type="Pagarme\Core\Recurrence\Aggregates\Repetition" />

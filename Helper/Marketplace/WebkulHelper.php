@@ -25,14 +25,41 @@ use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 class WebkulHelper
 {
     private const MODULE_MARKETPLACE_NAME = 'Webkul_Marketplace';
+
+    /**
+     * @var mixed
+     */
     private $webkulPaymentHelper;
+
+    /**
+     * @var MagentoObjectManager
+     */
     private $objectManager;
+
+    /**
+     * @var RecipientService
+     */
     private $recipientService;
 
+    /**
+     * @var bool
+     */
     private $enabled = false;
 
+    /**
+     * @var SplitRemainderHandler
+     */
     private $splitRemainderHandler;
+
+    /**
+     * @var ExtrasAndDiscountsHandler
+     */
     private $extrasAndDiscountsHandler;
+
+    /**
+     * @var MoneyService
+     */
+    private $moneyService;
 
     public function __construct()
     {
@@ -86,7 +113,7 @@ class WebkulHelper
         if (empty($sellerId)) {
             return [];
         }
-        
+
         $marketplacePercentageCommission = $sellerDetail['commission'] / 100;
         $sellerPercentageCommission = 1 - $marketplacePercentageCommission;
 
@@ -179,7 +206,7 @@ class WebkulHelper
                 $totalPaid,
                 $productTotal
             );
-            
+
         if (empty($extraOrDiscountTotal) && $extraOrDiscountTotal != 0) {
             return $splitData;
         }
@@ -211,7 +238,7 @@ class WebkulHelper
                 $itemPrice,
                 $productId
             );
-            
+
             if (empty($sellerAndCommisions)) {
                 $totalPaidProductWithoutSeller += $itemPrice;
                 continue;
@@ -221,15 +248,15 @@ class WebkulHelper
                 $sellerAndCommisions,
                 $splitData
             );
-            
+
         }
-        
+
         if (empty($splitData['sellers'])) {
             return null;
         }
         $splitData['marketplace']['totalCommission']
         += $totalPaidProductWithoutSeller;
-        
+
         $splitData = $this->handleExtrasAndDiscounts(
             $corePlatformOrderDecorator,
             $splitData

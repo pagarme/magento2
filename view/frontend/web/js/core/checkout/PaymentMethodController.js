@@ -29,6 +29,9 @@ define([
     BoletoCreditcardModel,
     CustomerValidator,
 ) => {
+
+    const fieldError = '.field-error';
+    const errorClass = '_error';
     return class PaymentMethodController {
         constructor(methodCode, platformConfig) {
             this.methodCode = methodCode;
@@ -212,6 +215,7 @@ define([
             if (this.platformConfig.isMultibuyerEnabled) {
                 this.fillMultibuyerStateSelect(this.formObject);
                 this.addShowMultibuyerListener(this.formObject);
+                this.addValidatorListener(this.formObject);
             }
         }
 
@@ -233,6 +237,7 @@ define([
             if (this.platformConfig.isMultibuyerEnabled) {
                 this.fillMultibuyerStateSelect(this.formObject);
                 this.addShowMultibuyerListener(this.formObject);
+                this.addValidatorListener(this.formObject);
             }
         }
 
@@ -292,6 +297,7 @@ define([
                 return;
             }
 
+            this.addValidatorListener(formObject);
             this.addCreditCardNumberListener(formObject);
             this.addCreditCardInstallmentsListener(formObject);
             this.addCreditCardHolderNameListener(formObject);
@@ -370,6 +376,32 @@ define([
             });
         }
 
+        addValidatorListener(formObject) {
+            const paymentMethodController = this;
+
+            $(formObject.containerSelector).on('change', function (event) {
+                const element = $(event.target);
+                if (
+                    element.attr('name').startsWith('payment[cc_type]')
+                    && element.val() !== 'default'
+                ) {
+                    paymentMethodController.validateBrandField(formObject);
+                    return;
+                }
+                if (element.attr('name').startsWith('payment[cc_number]')) {
+                    paymentMethodController.validateCcNumberField(element, formObject);
+                    return;
+                }
+                if (
+                    element.attr('name').startsWith('payment[cc_exp_month]')
+                    || element.attr('name').startsWith('payment[cc_exp_year]')
+                ) {
+                    paymentMethodController.validateCcExpDateField(formObject);
+                    return;
+                }
+                paymentMethodController.validateDefaultField(element);
+            });
+        }
         addCreditCardNumberListener(formObject) {
 
             const paymentMethodController = this;
@@ -680,7 +712,80 @@ define([
 
             formObject.inputAmount.val(amount);
         }
+        validateCcNumberField(element, formObject) {
+            if (element.val() === '') {
+                formObject.creditCardBrand.val('');
 
+                const formHandler = new FormHandler();
+                formHandler.init(formObject);
+                formHandler.switchBrand('');
+            }
+            this.validateDefaultField(element);
+            this.validateBrandField(formObject);
+        }
+        validateCcExpDateField(formObject) {
+            const cardExpirationMonth = formObject.creditCardExpMonth;
+            const cardExpirationYear = formObject.creditCardExpYear;
+
+            const cardDate = new Date(cardExpirationYear.val(), cardExpirationMonth.val() -1);
+            const dateNow = new Date();
+
+            const monthParentsElements = cardExpirationMonth.parent().parent();
+            const yearParentsElements = cardExpirationYear.parent().parent();
+            const parentsElements = yearParentsElements.parents('.field');
+            const parentsElementsError = parentsElements.find(fieldError);
+
+            if (cardDate < dateNow) {
+                monthParentsElements.addClass(errorClass);
+                yearParentsElements.addClass(errorClass);
+                parentsElementsError.show();
+                return true;
+            }
+
+            monthParentsElements.removeClass(errorClass);
+            yearParentsElements.removeClass(errorClass);
+            parentsElementsError.hide();
+            return false;
+        }
+        validateDefaultField(element) {
+            const requiredElement = element.parent().parent();
+            const requiredElementError = requiredElement.children(fieldError);
+
+            if (element.val() === '') {
+                requiredElement.addClass(errorClass);
+                requiredElementError.show();
+                return true;
+            }
+
+            requiredElement.removeClass(errorClass);
+            requiredElementError.hide();
+            return false;
+        }
+        validateBrandField(formObject) {
+            const element = formObject.creditCardBrand;
+            const requiredElement = element.parent().parent();
+            const requiredElementError = requiredElement.find(fieldError);
+
+            const brands = [];
+            PlatformConfig.PlatformConfig.avaliableBrands[formObject.savedCardSelectUsed].forEach(function (item) {
+                brands.push(item.title.toUpperCase());
+            });
+
+            if (
+                !brands.includes(element.val().toUpperCase())
+                || element.val === ''
+            ) {
+                requiredElement.addClass(errorClass);
+                requiredElementError.show();
+                requiredElement.find('.nobrand').hide();
+                return true;
+            }
+
+            requiredElement.removeClass(errorClass);
+            requiredElementError.hide();
+
+            return false;
+        }
         setBin(binObj, creditCardNumberElement, formObject) {
 
             const bin = binObj;
