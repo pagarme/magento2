@@ -123,6 +123,7 @@ class Subscription extends Template
         return [
             'interval_count' => range(1, 12),
             'interval_type' => [
+                IntervalValueObject::INTERVAL_TYPE_DAY => __('day'),
                 IntervalValueObject::INTERVAL_TYPE_WEEK => __('week'),
                 IntervalValueObject::INTERVAL_TYPE_MONTH => __('month'),
                 IntervalValueObject::INTERVAL_TYPE_YEAR => __('year')
