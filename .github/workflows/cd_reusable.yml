@@ -1,19 +1,17 @@
-name: CD
+name: CD REUSABLE
 
 on:
-  push:
-    branches:
-      - develop
-      - test
-      - stg
-      - master
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  workflow_call:
+    inputs:
+      matrix_tags:
+        required: true
+        type: string
 
 jobs:
-
   publish:
+    strategy:
+      matrix:
+        tags: ${{ fromJson(  inputs.matrix_tags ) }} 
     name: Publish
     runs-on: ubuntu-latest
     steps:
@@ -25,7 +23,7 @@ jobs:
       run: |
         cp .github/data/auth.json .
         cp .github/data/docker-compose.yml .
-        cp .github/data/Dockerfile .
+        cp .github/data/${{ matrix.tags }}/Dockerfile .
         cp .github/data/wait-for-mysql.sh .
         cp .github/data/magento2_module_install.sql .
     -
@@ -55,15 +53,15 @@ jobs:
       with:
         context: .
         push: true
-        tags: ${{ steps.meta.outputs.tags }}
+        tags: mpdockerregistry.azurecr.io/magento2-pagarme:${{ matrix.tags }}
         labels: ${{ steps.meta.outputs.labels }}
-      # name: Commit and push Docker image
-      # run: |
-      #   sleep 5 && docker stop magento2_bitnami
-      #   docker login ${{ secrets.DOCKER_ACCOUNT }} -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-      #   docker commit magento2_bitnami "magento2-pagarme:${{ github.ref_name }}"
-      #   docker push "magento2-pagarme:${{ github.ref_name }}"
-      # name: Send deployment webhook to Rancher
-      # run: |
-      #   BODY='{"push_data":{"tag":"'"${{ github.ref }}"'"},"repository":{"repo_name":"'"${{ secrets.DOCKER_ACCOUNT }}/${{ github.repository }}"'"}}'
-      #   curl -X POST ${{ secrets.RANCHER_STG_DEPLOY_URL }} -H 'Content-Type: application/json' -d "${BODY}"
+    # name: Commit and push Docker image
+    # run: |
+    #   sleep 5 && docker stop magento2_bitnami
+    #   docker login ${{ secrets.DOCKER_ACCOUNT }} -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+    #   docker commit magento2_bitnami "magento2-pagarme:${{ github.ref_name }}"
+    #   docker push "magento2-pagarme:${{ github.ref_name }}"
+    # name: Send deployment webhook to Rancher
+    # run: |
+    #   BODY='{"push_data":{"tag":"'"${{ github.ref }}"'"},"repository":{"repo_name":"'"${{ secrets.DOCKER_ACCOUNT }}/${{ github.repository }}"'"}}'
+    #   curl -X POST ${{ secrets.RANCHER_STG_DEPLOY_URL }} -H 'Content-Type: application/json' -d "${BODY}"
