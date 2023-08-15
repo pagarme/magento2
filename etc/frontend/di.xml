@@ -76,11 +76,4 @@
             </argument>
         </arguments>
     </type>
-
-    <type name="Magento\Catalog\Helper\Product\Configuration">
-        <plugin name="Pagarme_Pagarme::Magento_Catalog:Configuration"
-                type="Pagarme\Pagarme\Plugin\Catalog\Helper\Product\Configuration"
-                sortOrder="10"
-                disabled="false"/>
-    </type>
 </config>
