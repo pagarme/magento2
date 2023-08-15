@@ -54,7 +54,9 @@ class CreditCardDataAssignObserver extends AbstractDataAssignObserver
 
         if ($additionalData->getCcSavedCard()) {
             $this->fillSavedCardData($additionalData, $info);
-        }else{
+        }
+        
+        if (!$additionalData->getCcSavedCard()) {
             $this->fillNotSavedCardData($info, $additionalData);
         }
 
