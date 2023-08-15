@@ -79,7 +79,7 @@ class UpgradeData implements UpgradeDataInterface
         $this->state->setAreaCode(Area::AREA_ADMINHTML);
         $productSubscriptions = $this->productSubscriptionService->findAll();
         foreach ($productSubscriptions as $productSubscription) {
-            $this->applyTitleWithoutCurlyBraces($productSubscription);
+            $this->applyTitleWithoutParentheses($productSubscription);
         }
     }
 
@@ -88,7 +88,7 @@ class UpgradeData implements UpgradeDataInterface
      * @param ProductSubscription $productSubscription
      * @return void
      */
-    private function applyTitleWithoutCurlyBraces($productSubscription)
+    private function applyTitleWithoutParentheses($productSubscription)
     {
         $productId = $productSubscription->getProductId();
         try {
@@ -101,12 +101,12 @@ class UpgradeData implements UpgradeDataInterface
                 if ($isCyclesOption) {
                     $productOptionValues = $productOption->getValues();
                     foreach ($productOptionValues as $productOptionValue) {
-                        $titleWithoutCurlyBraces = str_replace(
+                        $titleWithoutParentheses = str_replace(
                             ['(', ')'],
                             '',
                             $productOptionValue->getTitle()
                         );
-                        $productOptionValue->setTitle($titleWithoutCurlyBraces);
+                        $productOptionValue->setTitle($titleWithoutParentheses);
                     }
 
                     try {
