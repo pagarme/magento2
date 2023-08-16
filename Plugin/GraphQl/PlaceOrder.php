@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Pagarme\Pagarme\Plugin\GraphQl;
 
 use Magento\Sales\Api\OrderRepositoryInterface;
+use Magento\Sales\Model\OrderFactory;
 use Pagarme\Core\Kernel\ValueObjects\Id\OrderId;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 
@@ -20,16 +21,24 @@ class PlaceOrder
      */
     private $orderFactory;
 
+    /**
+     * @param \Magento\Sales\Api\OrderRepositoryInterface $orderRepository
+     * @param \Magento\Sales\Model\OrderFactory $orderFactory
+     */
     public function __construct(
         OrderRepositoryInterface $orderRepository,
-        \Magento\Sales\Model\OrderFactory $orderFactory
+        OrderFactory $orderFactory
     ) {
         $this->orderRepository = $orderRepository;
         $this->orderFactory = $orderFactory;
     }
 
+    /**
+     * @param \Magento\QuoteGraphQl\Model\Resolver\PlaceOrder $subject
+     * @param mixed $result
+     * @return mixed
+     */
     public function afterResolve(
-        \Magento\QuoteGraphQl\Model\Resolver\PlaceOrder $subject,
         $result
     ) {
         $order = $this->orderFactory->create()->loadByIncrementId($result['order']['order_number']);
