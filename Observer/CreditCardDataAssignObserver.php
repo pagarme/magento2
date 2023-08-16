@@ -52,13 +52,7 @@ class CreditCardDataAssignObserver extends AbstractDataAssignObserver
 
         $info->setAdditionalInformation('cc_saved_card', '0');
 
-        if ($additionalData->getCcSavedCard()) {
-            $this->fillSavedCardData($additionalData, $info);
-        }
-        
-        if (!$additionalData->getCcSavedCard()) {
-            $this->fillNotSavedCardData($info, $additionalData);
-        }
+        $this->fillCardData($additionalData, $info);
 
         $multiBuyerDataAssign = new MultiBuyerDataAssign();
         $multiBuyerDataAssign->setCcMultiBuyer($info, $additionalData);
@@ -75,7 +69,20 @@ class CreditCardDataAssignObserver extends AbstractDataAssignObserver
         return $this;
     }
 
-        /**
+    /**
+     * @param \Magento\Framework\DataObject $additionalData
+     * @param mixed $info
+     * @return void
+     */
+    public function fillCardData(DataObject $additionalData, $info) {
+        if ($additionalData->getCcSavedCard()) {
+              $this->fillSavedCardData($additionalData, $info);
+              return;
+        }
+        $this->fillNotSavedCardData($info, $additionalData);
+    }
+
+    /**
      * @param DataObject $additionalData
      * @param $info
      */
