@@ -74,7 +74,8 @@ class CreditCardDataAssignObserver extends AbstractDataAssignObserver
      * @param mixed $info
      * @return void
      */
-    public function fillCardData(DataObject $additionalData, $info) {
+    public function fillCardData(DataObject $additionalData, $info)
+    {
         if ($additionalData->getCcSavedCard()) {
               $this->fillSavedCardData($additionalData, $info);
               return;
