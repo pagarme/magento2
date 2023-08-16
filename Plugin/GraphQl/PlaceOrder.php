@@ -37,8 +37,10 @@ class PlaceOrder
      * @param \Magento\QuoteGraphQl\Model\Resolver\PlaceOrder $subject
      * @param mixed $result
      * @return mixed
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function afterResolve(
+        \Magento\QuoteGraphQl\Model\Resolver\PlaceOrder $subject,
         $result
     ) {
         $order = $this->orderFactory->create()->loadByIncrementId($result['order']['order_number']);
