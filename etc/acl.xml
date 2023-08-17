@@ -3,23 +3,23 @@
 	<acl>
 		<resources>
 			<resource id="Magento_Backend::admin">
-				<resource id="Pagarme_Pagarme::Charges" sortOrder="10" title="Charges">
-					<resource id="Pagarme_Pagarme::Charges_save" sortOrder="10" title="Save Charges"/>
-					<resource id="Pagarme_Pagarme::Charges_delete" sortOrder="20" title="Delete Charges"/>
-					<resource id="Pagarme_Pagarme::Charges_update" sortOrder="30" title="Update Charges"/>
-					<resource id="Pagarme_Pagarme::Charges_view" sortOrder="40" title="View Charges"/>
+				<resource id="Pagarme_Pagarme::Charges" sortOrder="10" title="Charges" translate="title">
+					<resource id="Pagarme_Pagarme::Charges_save" sortOrder="10" title="Save Charges" translate="title" />
+					<resource id="Pagarme_Pagarme::Charges_delete" sortOrder="20" title="Delete Charges" translate="title" />
+					<resource id="Pagarme_Pagarme::Charges_update" sortOrder="30" title="Update Charges" translate="title" />
+					<resource id="Pagarme_Pagarme::Charges_view" sortOrder="40" title="View Charges" translate="title" />
 				</resource>
-				<resource id="Pagarme_Pagarme::Cards" sortOrder="20" title="Cards">
-					<resource id="Pagarme_Pagarme::Cards_save" sortOrder="10" title="Save Cards"/>
-					<resource id="Pagarme_Pagarme::Cards_delete" sortOrder="20" title="Delete Cards"/>
-					<resource id="Pagarme_Pagarme::Cards_update" sortOrder="30" title="Update Cards"/>
-					<resource id="Pagarme_Pagarme::Cards_view" sortOrder="40" title="View Cards"/>
+				<resource id="Pagarme_Pagarme::Cards" sortOrder="20" title="Cards" translate="title">
+					<resource id="Pagarme_Pagarme::Cards_save" sortOrder="10" title="Save Cards" translate="title" />
+					<resource id="Pagarme_Pagarme::Cards_delete" sortOrder="20" title="Delete Cards" translate="title" />
+					<resource id="Pagarme_Pagarme::Cards_update" sortOrder="30" title="Update Cards" translate="title" />
+					<resource id="Pagarme_Pagarme::Cards_view" sortOrder="40" title="View Cards" translate="title" />
 				</resource>
-                <resource id="Pagarme_Pagarme::recurrence_products_subscription" sortOrder="30" title="Recurrence Products Subscription">
-                    <resource id="Pagarme_Pagarme::recurrence_products_subscription_save" sortOrder="10" title="Save Recurrence Products Subscription"/>
-                    <resource id="Pagarme_Pagarme::recurrence_products_subscription_delete" sortOrder="20" title="Delete Recurrence Products Subscription"/>
-                    <resource id="Pagarme_Pagarme::recurrence_products_subscription_update" sortOrder="30" title="Update Recurrence Products Subscription"/>
-                    <resource id="Pagarme_Pagarme::recurrence_products_subscription_view" sortOrder="40" title="View Recurrence Products Subscription"/>
+                <resource id="Pagarme_Pagarme::recurrence_products_subscription" sortOrder="30" title="Recurrence Products Subscription" translate="title">
+                    <resource id="Pagarme_Pagarme::recurrence_products_subscription_save" sortOrder="10" title="Save Recurrence Products Subscription" translate="title" />
+                    <resource id="Pagarme_Pagarme::recurrence_products_subscription_delete" sortOrder="20" title="Delete Recurrence Products Subscription" translate="title" />
+                    <resource id="Pagarme_Pagarme::recurrence_products_subscription_update" sortOrder="30" title="Update Recurrence Products Subscription" translate="title" />
+                    <resource id="Pagarme_Pagarme::recurrence_products_subscription_view" sortOrder="40" title="View Recurrence Products Subscription" translate="title" />
                 </resource>
 			</resource>
 		</resources>
