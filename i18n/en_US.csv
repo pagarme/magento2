@@ -308,3 +308,5 @@
 "Scan the QR Code","Scan the QR Code"
 "Confirm the payment","Confirm the payment"
 "View Billet","View Billet"
+"Error updating cycles options for product with id %s. Error message: %s","Error updating cycles options for product with id %s. Error message: %s"
+"Subscription product with id %s not founded","Subscription product with id %s not founded"

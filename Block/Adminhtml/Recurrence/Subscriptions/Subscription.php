@@ -2,6 +2,7 @@
 
 namespace Pagarme\Pagarme\Block\Adminhtml\Recurrence\Subscriptions;
 
+use Exception;
 use Magento\Catalog\Api\ProductRepositoryInterfaceFactory;
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
 use Magento\Cms\Block\Adminhtml\Page\Grid\Renderer\Action\UrlBuilder;
@@ -19,8 +20,6 @@ use Pagarme\Core\Recurrence\Services\SubscriptionService;
 use Pagarme\Core\Recurrence\ValueObjects\IntervalValueObject;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Pagarme\Pagarme\Helper\RecurrenceProductHelper;
-use Pagarme\Pagarme\Ui\Component\Column\Invoices\Actions;
-use Pagarme\Pagarme\Ui\Component\Recurrence\Column\TotalCyclesByProduct;
 use Magento\Catalog\Model\ResourceModel\Product\Collection as ProductCollection;
 use Magento\Catalog\Model\Product\Interceptor as ProductInterceptor;
 
@@ -47,7 +46,7 @@ class Subscription extends Template
      * @param Context $context
      * @param CollectionFactory $productCollectionFactory
      * @param Registry $registry
-     * @param ProductHelper $productHelper
+     * @throws Exception
      */
     public function __construct(
         Context $context,

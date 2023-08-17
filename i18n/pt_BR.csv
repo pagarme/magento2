@@ -487,3 +487,5 @@
 "Scan the QR Code","Escaneie o QR Code"
 "Confirm the payment","Confirme o pagamento"
 "View Billet","Visualizar Boleto"
+"Error updating cycles options for product with id %s. Error message: %s","Erro ao atualizar as opções de ciclos para o produto com o id %s. Mensagem de erro: %s"
+"Subscription product with id %s not founded","Produto de assinatura com id %s não encontrado"
