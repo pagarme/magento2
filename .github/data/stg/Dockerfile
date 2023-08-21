@@ -12,7 +12,7 @@ ARG MARKETPLACE_REPO
 ARG MARKETPLACE_NAME
 ARG MARKETPLACE_VERSION
 ARG MARKETPLACE_REPO_URL
-
+RUN composer config minimum-stability dev
 RUN composer config -g http-basic.repo.magento.com ${MAGENTO_KEY} ${MAGENTO_SECRET}
 RUN composer require pagarme/pagarme-magento2-module:dev-stg
 

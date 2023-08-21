@@ -21,25 +21,7 @@ jobs:
     -
       name: Copy CI files to root
       run: |
-        cp .github/data/docker-compose.yml .
         cp .github/data/${{ matrix.tags }}/Dockerfile .
-        cp .github/data/wait-for-mysql.sh .
-        cp .github/data/magento2_module_install.sql .
-    -
-      name: Build image base for modifications
-      run: |
-        export MAGENTO_KEY=${{ secrets.MAGENTO_KEY }}
-        export MAGENTO_SECRET=${{ secrets.MAGENTO_SECRET }}
-        export MARKETPLACE_KEY=${{ secrets.MARKETPLACE_KEY }}
-        export MARKETPLACE_SECRET=${{ secrets.MARKETPLACE_SECRET }}
-        export MARKETPLACE_REPO=${{ secrets.MARKETPLACE_REPO }}
-        export MARKETPLACE_NAME=${{ secrets.MARKETPLACE_NAME }}
-        export MARKETPLACE_VERSION=${{ secrets.MARKETPLACE_VERSION }}
-        export MARKETPLACE_REPO_URL=${{ secrets.MARKETPLACE_REPO_URL }}
-        docker compose up -d
-    -
-      name: Activate and setup Plugin
-      run: docker ps
     -
       name: Log in to Docker Hub
       uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
@@ -57,6 +39,15 @@ jobs:
       name: Build and push Docker image
       uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
       with:
+        build-args: |
+          MAGENTO_KEY=${{ secrets.MAGENTO_KEY }}
+          MAGENTO_SECRET=${{ secrets.MAGENTO_SECRET }}
+          MARKETPLACE_KEY=${{ secrets.MARKETPLACE_KEY }}
+          MARKETPLACE_SECRET=${{ secrets.MARKETPLACE_SECRET }}
+          MARKETPLACE_REPO=${{ secrets.MARKETPLACE_REPO }}
+          MARKETPLACE_NAME=${{ secrets.MARKETPLACE_NAME }}
+          MARKETPLACE_VERSION=${{ secrets.MARKETPLACE_VERSION }}
+          MARKETPLACE_REPO_URL=${{ secrets.MARKETPLACE_REPO_URL }}
         context: .
         push: true
         tags: ${{ secrets.DOCKER_ACCOUNT }}/magento2-pagarme:${{ matrix.tags }}
