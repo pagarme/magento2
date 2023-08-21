@@ -76,7 +76,9 @@ class UpgradeData implements UpgradeDataInterface
      */
     private function updateProductSubscriptionOptionsTitle()
     {
-        $this->state->setAreaCode(Area::AREA_ADMINHTML);
+        if (empty($this->state->getAreaCode())) {
+            $this->state->setAreaCode(Area::AREA_ADMINHTML);
+        }
         $productSubscriptions = $this->productSubscriptionService->findAll();
         foreach ($productSubscriptions as $productSubscription) {
             $this->applyTitleWithoutParentheses($productSubscription);
