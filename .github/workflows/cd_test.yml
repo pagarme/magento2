@@ -1,0 +1,17 @@
+name: CD TEST
+
+on:
+  pull_request:
+    branches: ["develop"]
+    types: closed
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+    
+jobs:
+  call-workflow-cd:
+    uses: pagarme/magento2/.github/workflows/cd_reusable.yml@master
+    with:
+      matrix_tags: "['test']"
+    secrets:
+      inherit

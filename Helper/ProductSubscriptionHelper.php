@@ -53,6 +53,9 @@ class ProductSubscriptionHelper extends AbstractHelper
 
         $customOptions = [];
         $options = $product->getOptions();
+        if (empty($options)) {
+            return;
+        }
         foreach ($options as $option) {
             if ($option->getSku() == "recurrence") {
                 continue;
