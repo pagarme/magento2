@@ -487,7 +487,7 @@
             <argument name="code" xsi:type="const">Pagarme\Pagarme\Model\Ui\CreditCard\ConfigProvider::CODE</argument>
             <argument name="valueHandlerPool" xsi:type="object">PagarmeCreditCardValueHandlerPool</argument>
             <argument name="commandPool" xsi:type="object">PagarmeCreditCardCommandPool</argument>
-            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="formBlockType" xsi:type="string">Pagarme\Pagarme\Block\Form\CreditCard</argument>
             <argument name="infoBlockType" xsi:type="string">Pagarme\Pagarme\Block\Payment\Info\CreditCard</argument>
         </arguments>
     </virtualType>
