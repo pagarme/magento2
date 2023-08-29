@@ -1,0 +1,15 @@
+.fieldset-credit-card-pagarme {
+    margin-top:15px;
+}
+
+.fieldset-credit-card-pagarme .admin__field .admin__field-control .cc_type,
+.fieldset-credit-card-pagarme .admin__field .admin__field-control .cc_number,
+.fieldset-credit-card-pagarme .admin__field .admin__field-control .cc_owner,
+.fieldset-credit-card-pagarme .admin__field .admin__field-control .cc_installments {
+    width: 335px;
+}
+
+.fieldset-credit-card-pagarme .admin__field .admin__field-control .cc_exp_month,
+.fieldset-credit-card-pagarme .admin__field .admin__field-control .cc_exp_year {
+    width: auto;
+}

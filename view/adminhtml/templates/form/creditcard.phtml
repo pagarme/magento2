@@ -1,141 +1,116 @@
 <?php
-$code = $block->escapeHtml($block->getMethodCode());
-
-$helper = $this->helper('\Pagarme\Pagarme\Helper\Adminhtml\CheckoutHelper');
-$brandsAvailables = $helper->getBrandsAvailables($code);
-$publicKey = $helper->getPublicKey();
+/**
+ * @var \Pagarme\Pagarme\Block\Form\CreditCard $block
+ * @var \Magento\Sales\Block\Adminhtml\Order\Create\Billing\Method\Form $tmpBlock
+ */
 
 $quote = $tmpBlock->getQuote();
-$baseGrandTotal = $helper->formatGrandTotal($quote->getBaseGrandTotal());
-
-$months = $helper->getMonths();
-$years = $helper->getYears();
-
-$installmentUrl = $helper->getInstallmentsUrl($block->getBaseUrl());
-
+$baseGrandTotal = $block->getGrandTotal($quote);
+$code = $block->getMethodCode();
 ?>
-        <fieldset class="admin__fieldset payment-method" id="payment_form_<?= $code ?>" style="display:none; margin-top:15px;">
-            <input type="hidden" value="<?= $publicKey?>" class="public_key">
-            <input type="hidden" name="payment[cc_token_credit_card]" class="input-text cc_token" value="">
-            <input type="hidden" class="cc_amount" name="payment[cc_amount]" value="<?= $baseGrandTotal ?>"/>
-            <input type="hidden" class="cc_amount_without_tax" value="<?= $baseGrandTotal ?>"/>
-            <div class="admin__field _required installments">
-                <label class="label admin__field-label">
-                    <span>Brands</span>
-                </label>
-                <div class="admin__field-control control installments">
-                    <div class="control">
-                        <select name="payment[cc_type]"
-                                style="width: 335px;"
-                                class="select select-type cc_type"
-                        >
-                            <option value="">Select a brand</option>
-                            <?php foreach ($brandsAvailables as $brand) :?>
-                            <option value="<?= $brand?>"><?= $brand?></option>
-                            <?php endforeach;?>
-                        </select>
-                        <div class="hosted-error" >Please, select a brand</div>
-                    </div>
-                </div>
+<fieldset class="admin__fieldset payment-method fieldset-credit-card-pagarme"
+          id="payment_form_<?= $code; ?>"
+          style="display:none;"
+          data-mage-init='{
+                "creditCardAdminPagarme": {
+                    "code": "<?= $code; ?>",
+                    "installmentUrl": "<?= $block->getInstallmentsUrl(); ?>"
+                }
+          }'
+>
+    <legend></legend>
+    <input type="hidden" value="<?= $block->getPublicKey(); ?>" class="public_key">
+    <input type="hidden" name="payment[cc_token_credit_card]" class="input-text cc_token" value="">
+    <input type="hidden" class="cc_amount" name="payment[cc_amount]" value="<?= $baseGrandTotal ?>"/>
+    <input type="hidden" class="cc_amount_without_tax" value="<?= $baseGrandTotal ?>"/>
+    <div class="admin__field _required installments">
+        <label class="label admin__field-label">
+            <span><?= __('Brands'); ?></span>
+        </label>
+        <div class="admin__field-control control installments">
+            <div class="control">
+                <select name="payment[cc_type]"
+                        class="select select-type cc_type">
+                    <option value=""><?= __('Select a brand'); ?></option>
+                    <?php foreach ($block->getAvailableBrands() as $brand) : ?>
+                        <option value="<?= $brand ?>"><?= $brand ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <div class="hosted-error"><?= __('Please, select a brand'); ?></div>
             </div>
-            <div class="admin__field _required">
-                <label class="label admin__field-label">
-                    <span>Credit Card Number</span>
-                </label>
-                <div class="admin__field-control control">
-                    <input id="pagarme_cc_number"  name="payment[cc_number]" style="width: 335px;" class="hosted-control cc_number" />
-                    <div class="hosted-error">Please, enter valid Credit Card Number</div>
-                </div>
+        </div>
+    </div>
+    <div class="admin__field _required">
+        <label class="label admin__field-label">
+            <span><?= __('Credit Card Number'); ?></span>
+        </label>
+        <div class="admin__field-control control">
+            <input id="pagarme_cc_number" name="payment[cc_number]" class="hosted-control cc_number"/>
+            <div class="hosted-error"><?= __('Please, enter valid Credit Card Number'); ?></div>
+        </div>
+    </div>
+    <div class="admin__field _required">
+        <label class="label admin__field-label">
+            <span><?= __('Name on Card') ?></span>
+        </label>
+        <div class="admin__field-control control">
+            <input id="pagarme_cc_name" name="payment[cc_owner]" class="hosted-control cc_owner"/>
+            <div class="hosted-error"><?= __('Please, enter valid Name on Card'); ?></div>
+        </div>
+    </div>
+
+    <div class="admin__field _required">
+        <label class="label admin__field-label">
+            <span><?= __('Expiration Date'); ?></span>
+        </label>
+        <div class="admin__field-control control">
+            <div class="hosted-date-wrap">
+                <select name="payment[cc_exp_month]"
+                        class="select select-type cc_exp_month">
+                    <?php foreach ($block->getMonths() as $index => $month) : ?>
+                        <option value="<?= $index ?>"><?= $index . " - " . $month ?></option>
+                    <?php endforeach; ?>
+                </select>
+
+                <select name="payment[cc_exp_year]"
+                        class="select select-type cc_exp_year">
+                    <?php foreach ($block->getYears() as $year) : ?>
+                        <option value="<?= $year ?>"><?= $year ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <div class="hosted-error"><?= __('Please, enter valid Expiration Date'); ?></div>
             </div>
-            <div class="admin__field _required">
-                <label class="label admin__field-label">
-                    <span>Credit Card Name</span>
-                </label>
-                <div class="admin__field-control control">
-                    <input id="pagarme_cc_name" name="payment[cc_owner]" style="width: 335px;" class="hosted-control cc_owner" />
-                    <div class="hosted-error">Please, enter valid Credit Card Name</div>
-                </div>
+        </div>
+    </div>
+    <div class="admin__field _required">
+        <label class="label admin__field-label">
+            <span><?= __('CVV'); ?></span>
+        </label>
+        <div class="admin__field-control control">
+            <input id="pagarme_cc_cid"
+                   type="number"
+                   min="0"
+                   name="payment[cc_cid]"
+                   class="hosted-control hosted-cid cc_cid"/>
+
+            <div class="hosted-error">
+                <?= __('The cvv field must be a minimum length of 3 and a maximum length of 4.'); ?>
             </div>
+        </div>
+    </div>
 
-            <div class="admin__field _required">
-                <label class="label admin__field-label">
-                    <span>Expiration Date</span>
-                </label>
-                <div class="admin__field-control control">
-                    <div class="hosted-date-wrap">
-                        <select name="payment[cc_exp_month]"
-                                style="width: 170px;"
-                                class="select select-type cc_exp_month"
-                        >
-                            <?php foreach ($months as $index => $month) :?>
-                                <option value="<?= $index?>"><?= $index ." - " .$month?></option>
-                            <?php endforeach;?>
-                        </select>
-
-                        <select name="payment[cc_exp_year]"
-                                style="width: 90px;"
-                                class="select select-type cc_exp_year"
-                        >
-                            <?php foreach ($years as  $year) :?>
-                                <option value="<?= $year?>"><?= $year?></option>
-                            <?php endforeach;?>
-                        </select>
-                        <div class="hosted-error">Please, enter valid Expiration Date</div>
-                    </div>
-                </div>
+    <div class="admin__field _required installments">
+        <label class="label admin__field-label">
+            <span><?= __('Installments'); ?></span>
+        </label>
+        <div class="admin__field-control control installments">
+            <div class="control">
+                <select name="payment[cc_installments]"
+                        class="select select-installments cc_installments">
+                    <option value=""><?= __('Select a brand'); ?></option>
+                </select>
+                <div class="hosted-error"><?= __('This field is required'); ?></div>
             </div>
-            <div class="admin__field _required">
-                <label class="label admin__field-label">
-                    <span>CVV</span>
-                </label>
-                <div class="admin__field-control control">
-                    <input id="pagarme_cc_cid" type="number" min="0" name="payment[cc_cid]" class="hosted-control hosted-cid cc_cid"/>
-
-                    <div class="hosted-error">The cvv field must be a minimum length of 3 and a maximum length of 4.</div>
-                </div>
-            </div>
-
-            <div class="admin__field _required installments">
-                <label class="label admin__field-label">
-                    <span>Installments</span>
-                </label>
-                <div class="admin__field-control control installments">
-                    <div class="control">
-                        <select name="payment[cc_installments]"
-                                style="width: 335px;"
-                                class="select select-installments cc_installments"
-                        >
-                            <option value="">Select a brand</option>
-                        </select>
-                        <div class="hosted-error">This field is required</div>
-                    </div>
-                </div>
-            </div>
-        </fieldset>
-
-<script>
-    require([
-        "jquery",
-        'Pagarme_Pagarme/js/core/models/creditCardModel',
-        "jquery/ui"
-    ], function (
-        $,
-        CreditCardModel
-    ) {
-        'use strict';
-
-        $(document).ready(function(){
-            var code = "<?= $code ?>";
-            var installmenUrl = "<?= $installmentUrl ?>";
-
-            var config = {
-                isMultibuyerEnabled: false,
-                order : window.order,
-                payment : window.payment,
-                installmenUrl: installmenUrl
-            };
-
-            CreditCardModel.init(code, config);
-        });
-    });
-</script>
+        </div>
+    </div>
+</fieldset>
