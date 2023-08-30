@@ -65,7 +65,10 @@ class UpgradeData implements UpgradeDataInterface
         $setup->startSetup();
 
         if (version_compare($context->getVersion(), '2.2.5', '<')) {
-            $this->updateProductSubscriptionOptionsTitle();
+            $this->state->emulateAreaCode(Area::AREA_ADMINHTML, [
+                $this,
+                'updateProductSubscriptionOptionsTitle'
+            ]);
         }
 
         $setup->endSetup();
@@ -74,11 +77,8 @@ class UpgradeData implements UpgradeDataInterface
     /**
      * @throws LocalizedException
      */
-    private function updateProductSubscriptionOptionsTitle()
+    public function updateProductSubscriptionOptionsTitle()
     {
-        if (empty($this->state->getAreaCode())) {
-            $this->state->setAreaCode(Area::AREA_ADMINHTML);
-        }
         $productSubscriptions = $this->productSubscriptionService->findAll();
         foreach ($productSubscriptions as $productSubscription) {
             $this->applyTitleWithoutParentheses($productSubscription);
