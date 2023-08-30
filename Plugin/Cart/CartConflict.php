@@ -163,16 +163,18 @@ class CartConflict
 
         $currentProduct->setQuantity($quantity);
 
+        $changedCurrentProduct = false;
         if ($productPlan !== null) {
             $currentProduct->setIsNormalProduct(false);
             $currentProduct->setProductPlanSelected($productPlan);
-            return $currentProduct;
+            $changedCurrentProduct = true;
         }
 
-        $isNormalProduct = $this->checkIsNormalProduct($requestInfo);
+        $isNormalProduct = $this->checkIsNormalProduct($requestInfo)
+            && $productPlan === null;
         if ($isNormalProduct) {
             $currentProduct->setIsNormalProduct($isNormalProduct);
-            return $currentProduct;
+            $changedCurrentProduct = true;
         }
 
         $repetitionSelected = $this->getOptionRecurrenceSelected(
@@ -180,8 +182,14 @@ class CartConflict
             $requestInfo['options']
         );
 
-        if (!$repetitionSelected) {
+        $hasNotRepetitionSelected = !$repetitionSelected && !$isNormalProduct;
+
+        if ($hasNotRepetitionSelected) {
             $currentProduct->setIsNormalProduct(true);
+            $changedCurrentProduct = true;
+        }
+
+        if ($changedCurrentProduct) {
             return $currentProduct;
         }
 
