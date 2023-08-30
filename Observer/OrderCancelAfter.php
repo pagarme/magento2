@@ -68,7 +68,7 @@ class OrderCancelAfter implements ObserverInterface
             throw new M2WebApiException(
                 new Phrase($e->getMessage()),
                 0,
-                $e->getCode()
+                M2WebApiException::HTTP_BAD_REQUEST
             );
         }
     }

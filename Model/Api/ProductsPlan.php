@@ -116,7 +116,7 @@ class ProductsPlan implements ProductPlanApiInterface
             throw new MagentoException(
                 __($exception->getMessage()),
                 0,
-                $exception->getCode()
+                MagentoException::HTTP_BAD_REQUEST
             );
         }
 
@@ -141,7 +141,7 @@ class ProductsPlan implements ProductPlanApiInterface
             throw new MagentoException(
                 __($exception->getMessage()),
                 0,
-                $exception->getCode()
+                MagentoException::HTTP_BAD_REQUEST
             );
         }
     }
@@ -168,7 +168,7 @@ class ProductsPlan implements ProductPlanApiInterface
             throw new MagentoException(
                 __($exception->getMessage()),
                 0,
-                $exception->getCode()
+                MagentoException::HTTP_BAD_REQUEST
             );
         }
 
@@ -194,7 +194,7 @@ class ProductsPlan implements ProductPlanApiInterface
             throw new MagentoException(
                 __($exception->getMessage()),
                 0,
-                $exception->getCode()
+                MagentoException::HTTP_BAD_REQUEST
             );
         }
     }
@@ -220,7 +220,7 @@ class ProductsPlan implements ProductPlanApiInterface
             throw new MagentoException(
                 __($exception->getMessage()),
                 0,
-                $exception->getCode()
+                MagentoException::HTTP_BAD_REQUEST
             );
         }
     }
