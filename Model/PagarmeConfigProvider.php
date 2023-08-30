@@ -194,26 +194,6 @@ class PagarmeConfigProvider implements ConfigProviderInterface
         ];
     }
 
-    /**
-     * @return mixed
-     */
-    public function isRecurrenceEnabled()
-    {
-        return $this->scopeConfig->getValue(
-            self::XML_PATH_RECURRENCE_ACTIVE,
-            ScopeInterface::SCOPE_STORE
-        );
-    }
-
-    /**
-     * @return bool
-     */
-    public function isModuleOrRecurrenceDisabled()
-    {
-        return !$this->getModuleStatus()
-            || !$this->isRecurrenceEnabled();
-    }
-
     public function disableVoucher()
     {
         $this->config->saveConfig(

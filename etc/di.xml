@@ -53,7 +53,7 @@
     </type>
 
     <type name="Magento\Checkout\Model\Cart">
-        <plugin name="prevent_add_to" type="Pagarme\Pagarme\Plugin\Cart\CartConflict"/>
+        <plugin name="prevent_add_to" type="Pagarme\Pagarme\Model\Cart\CartConflict"/>
     </type>
 
     <type name="Pagarme\Pagarme\Model\InstallmentsByBrandAndAmountManagement">

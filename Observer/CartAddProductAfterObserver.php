@@ -15,15 +15,13 @@ use Pagarme\Core\Kernel\Services\MoneyService;
 use Pagarme\Core\Recurrence\Services\ProductSubscriptionService;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Pagarme\Pagarme\Helper\RecurrenceProductHelper;
+use Pagarme\Core\Kernel\Aggregates\Configuration;
 use Magento\Quote\Model\Quote\Item;
 use Pagarme\Core\Kernel\Exceptions\InvalidParamException;
 use Pagarme\Core\Recurrence\Aggregates\ProductSubscription;
-use Pagarme\Pagarme\Model\PagarmeConfigProvider;
 
 class CartAddProductAfterObserver implements ObserverInterface
 {
-    const RULE_CATALOG_DISCOUNT_FIXED = 'to_fixed';
-
     /**
      * @var RecurrenceProductHelper
      */
@@ -35,9 +33,9 @@ class CartAddProductAfterObserver implements ObserverInterface
     protected $moneyService;
 
     /**
-     * @var PagarmeConfigProvider
+     * @var Configuration
      */
-    protected $pagarmeConfigProvider;
+    protected $pagarmeConfig;
 
     /**
      * @var TimezoneInterface
@@ -64,6 +62,8 @@ class CartAddProductAfterObserver implements ObserverInterface
      */
     private $ruleModel;
 
+    const RULE_CATALOG_DISCOUNT_FIXED = 'to_fixed';
+
     /**
      * CartAddProductAfterObserver constructor.
      * @param RecurrenceProductHelper $recurrenceProductHelper
@@ -80,13 +80,12 @@ class CartAddProductAfterObserver implements ObserverInterface
         StoreManagerInterface $storeManager,
         Session $customerSession,
         Rule $catalogRule,
-        RuleModel $ruleModel,
-        PagarmeConfigProvider $pagarmeConfigProvider
+        RuleModel $ruleModel
     ) {
         Magento2CoreSetup::bootstrap();
         $this->recurrenceProductHelper = $recurrenceProductHelper;
         $this->moneyService = new MoneyService();
-        $this->pagarmeConfigProvider = $pagarmeConfigProvider;
+        $this->pagarmeConfig = Magento2CoreSetup::getModuleConfiguration();
         $this->timeZone = $timeZone;
         $this->storeManager = $storeManager;
         $this->customerSession = $customerSession;
@@ -100,7 +99,10 @@ class CartAddProductAfterObserver implements ObserverInterface
      */
     public function execute(Observer $observer)
     {
-        if ($this->pagarmeConfigProvider->isModuleOrRecurrenceDisabled()) {
+        if (
+            !$this->pagarmeConfig->isEnabled() ||
+            !$this->pagarmeConfig->getRecurrenceConfig()->isEnabled()
+        ) {
             return;
         }
 

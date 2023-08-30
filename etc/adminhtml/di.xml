@@ -21,7 +21,7 @@
         </arguments>
     </type>
     <type name="Magento\Sales\Model\AdminOrder\Product\Quote\Initializer">
-        <plugin name="sales_adminorder_quote_initializer_plugin" type="Pagarme\Pagarme\Plugin\Sales\AdminOrder\Product\Quote\Initializer" sortOrder="100"/>
+        <plugin name="sales_adminorder_quote_initializer_plugin" type="Pagarme\Pagarme\Model\Sales\AdminOrder\Product\Quote\Plugin\Initializer" sortOrder="100"/>
     </type>
     <virtualType name="Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\Pool">
         <arguments>

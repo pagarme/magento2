@@ -11,7 +11,6 @@ use Pagarme\Core\Recurrence\Services\RecurrenceService;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Pagarme\Pagarme\Helper\ProductPlanHelper;
 use Pagarme\Pagarme\Helper\RecurrenceProductHelper;
-use Pagarme\Pagarme\Model\PagarmeConfigProvider;
 
 class UpdateProductPlanObserver implements ObserverInterface
 {
@@ -20,18 +19,10 @@ class UpdateProductPlanObserver implements ObserverInterface
      */
     protected $recurrenceProductHelper;
 
-    /**
-     * @var PagarmeConfigProvider
-     */
-    protected $pagarmeConfigProvider;
-
-    public function __construct(
-        RecurrenceProductHelper $recurrenceProductHelper,
-        PagarmeConfigProvider $pagarmeConfigProvider
-    ) {
+    public function __construct(RecurrenceProductHelper $recurrenceProductHelper)
+    {
         Magento2CoreSetup::bootstrap();
         $this->recurrenceProductHelper = $recurrenceProductHelper;
-        $this->pagarmeConfigProvider = $pagarmeConfigProvider;
     }
 
     public function execute(Observer $observer)
@@ -39,9 +30,7 @@ class UpdateProductPlanObserver implements ObserverInterface
        $event = $observer->getEvent();
        $product = $event->getProduct();
 
-       $cannotExecuteObserver = !$product
-           || !$this->pagarmeConfigProvider->isRecurrenceEnabled();
-       if ($cannotExecuteObserver) {
+       if (!$product) {
            return $this;
        }
 
@@ -53,12 +42,12 @@ class UpdateProductPlanObserver implements ObserverInterface
            return $this;
        }
 
-       return $this->updatePlan($recurrence);
+       return $this->updatePlan($recurrence, $product);
     }
 
     protected function updatePlan(RecurrenceEntityInterface $recurrence)
     {
-        try {
+        try{
             ProductPlanHelper::mapperProductPlan($recurrence);
             $service = new PlanService();
             $service->updatePlanAtPagarme($recurrence);

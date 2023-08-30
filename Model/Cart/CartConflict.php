@@ -1,34 +1,34 @@
 <?php
 
-namespace Pagarme\Pagarme\Plugin\Cart;
+namespace Pagarme\Pagarme\Model\Cart;
 
 use Exception;
-use Magento\Catalog\Api\Data\ProductCustomOptionValuesInterface;
-use Magento\Catalog\Model\Product\Interceptor;
-use Magento\Catalog\Model\Product\Option;
-use Magento\Catalog\Model\Product\Option\Value;
 use Magento\Checkout\Model\Cart;
 use Magento\Framework\Exception\LocalizedException;
 use Pagarme\Core\Kernel\Services\LocalizationService;
-use Pagarme\Core\Recurrence\Aggregates\Repetition;
+use Pagarme\Core\Recurrence\Interfaces\ProductPlanInterface;
 use Pagarme\Core\Recurrence\Services\CartRules\CurrentProduct;
-use Pagarme\Core\Recurrence\Services\CartRules\ProductListInCart;
-use Pagarme\Core\Recurrence\Services\PlanService;
-use Pagarme\Core\Recurrence\Services\ProductSubscriptionService;
 use Pagarme\Core\Recurrence\Services\RecurrenceService;
 use Pagarme\Core\Recurrence\Services\RepetitionService;
+use Pagarme\Core\Recurrence\Services\CartRules\MoreThanOneRecurrenceProduct;
+use Pagarme\Core\Recurrence\Services\CartRules\NormalWithRecurrenceProduct;
+use Pagarme\Core\Recurrence\Services\CartRules\ProductListInCart;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use Pagarme\Core\Recurrence\Aggregates\Repetition;
+use Magento\Catalog\Model\Product\Interceptor;
 use Pagarme\Pagarme\Helper\RecurrenceProductHelper;
+use Magento\Catalog\Model\Product\Option;
+use Magento\Catalog\Api\Data\ProductCustomOptionValuesInterface;
+use Magento\Catalog\Model\Product\Option\Value;
+use Pagarme\Core\Recurrence\Services\ProductSubscriptionService;
+use Pagarme\Core\Recurrence\Services\PlanService;
+use Pagarme\Core\Recurrence\Services\CartRules\JustProductPlanInCart;
+use Pagarme\Core\Recurrence\Services\CartRules\JustSelfProductPlanInCart;
 use Pagarme\Pagarme\Helper\RulesCartRun;
-use Pagarme\Pagarme\Model\PagarmeConfigProvider;
+use Pagarme\Core\Kernel\Aggregates\Configuration;
 
 class CartConflict
 {
-    /**
-     * @var PagarmeConfigProvider
-     */
-    protected $pagarmeConfigProvider;
-
     /**
      * @var RepetitionService
      */
@@ -55,6 +55,11 @@ class CartConflict
     private $planService;
 
     /**
+     * @var Configuration
+     */
+    private $pagarmeConfig;
+
+    /**
      * @var RulesCartRun
      */
     private $rulesCartRun;
@@ -63,7 +68,7 @@ class CartConflict
      * CartConflict constructor.
      * @throws Exception
      */
-    public function __construct(PagarmeConfigProvider $pagarmeConfigProvider)
+    public function __construct()
     {
         Magento2CoreSetup::bootstrap();
         $this->repetitionService = new RepetitionService();
@@ -72,7 +77,7 @@ class CartConflict
         $this->productSubscriptionService = new ProductSubscriptionService();
         $this->planService = new PlanService();
         $this->rulesCartRun = new RulesCartRun();
-        $this->pagarmeConfigProvider = $pagarmeConfigProvider;
+        $this->pagarmeConfig = Magento2CoreSetup::getModuleConfiguration();
     }
 
     /**
@@ -82,7 +87,10 @@ class CartConflict
      */
     public function beforeUpdateItems(Cart $cart, $dataQty)
     {
-        if ($this->pagarmeConfigProvider->isModuleOrRecurrenceDisabled()) {
+        if (
+            !$this->pagarmeConfig->isEnabled() ||
+            !$this->pagarmeConfig->getRecurrenceConfig()->isEnabled()
+        ) {
             return;
         }
 
@@ -119,7 +127,10 @@ class CartConflict
         Interceptor $productInfo,
         $requestInfo = null
     ) {
-        if ($this->pagarmeConfigProvider->isModuleOrRecurrenceDisabled()) {
+        if (
+            !$this->pagarmeConfig->isEnabled() ||
+            !$this->pagarmeConfig->getRecurrenceConfig()->isEnabled()
+        ) {
             return [$productInfo, $requestInfo];
         }
 

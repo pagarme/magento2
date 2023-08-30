@@ -1,8 +1,8 @@
 <?php
 
-namespace Pagarme\Pagarme\Plugin\Sales\AdminOrder\Product\Quote;
+namespace Pagarme\Pagarme\Model\Sales\AdminOrder\Product\Quote\Plugin;
 
-use Pagarme\Pagarme\Model\Product\ProductPlan\Plan;
+use \Pagarme\Pagarme\Model\Product\ProductPlan\Plan;
 
 class Initializer
 {
