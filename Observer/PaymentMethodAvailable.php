@@ -4,6 +4,7 @@ namespace Pagarme\Pagarme\Observer;
 
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
+use Pagarme\Core\Kernel\Aggregates\Configuration;
 use Pagarme\Core\Recurrence\Aggregates\Plan;
 use Pagarme\Core\Recurrence\Services\RecurrenceService;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
@@ -22,6 +23,11 @@ class PaymentMethodAvailable implements ObserverInterface
      */
     protected $recurrenceProductHelper;
 
+    /**
+     * @var Configuration
+     */
+    protected $pagarmeConfig;
+
     public function __construct(
         RecurrenceProductHelper $recurrenceProductHelper,
         PagarmeConfigProvider $pagarmeConfigProvider
@@ -29,6 +35,7 @@ class PaymentMethodAvailable implements ObserverInterface
         Magento2CoreSetup::bootstrap();
         $this->recurrenceProductHelper = $recurrenceProductHelper;
         $this->pagarmeConfigProvider = $pagarmeConfigProvider;
+        $this->pagarmeConfig = Magento2CoreSetup::getModuleConfiguration();
     }
 
     /**
