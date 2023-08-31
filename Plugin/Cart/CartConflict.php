@@ -179,7 +179,7 @@ class CartConflict
 
         $repetitionSelected = $this->getOptionRecurrenceSelected(
             $productInfo->getOptions(),
-            $requestInfo['options']
+            $requestInfo['options'] ?? []
         );
 
         $hasNotRepetitionSelected = !$repetitionSelected && !$isNormalProduct;
