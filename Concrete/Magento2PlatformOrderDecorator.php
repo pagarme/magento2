@@ -717,15 +717,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
     }
     private function mountRepetition($value, $selectedRepetition)
     {
-        $selectedRepit = new Repetition();
-        $selectedRepit->setId($selectedRepetition->getId());
-        $selectedRepit->setRecurrencePrice($this->moneyService->floatToCents($value));
-        $selectedRepit->setIntervalCount($selectedRepetition->getIntervalCount());
-        $selectedRepit->setInterval($selectedRepetition->getInterval());
-        $selectedRepit->setSubscriptionId($selectedRepetition->getSubscriptionId());
-        $selectedRepit->setCycles($selectedRepetition->getCycles());
-        $selectedRepit->setCreatedAt(new \Datetime($selectedRepetition->getCreatedAt()));
-        $selectedRepit->setUpdatedAt(new \Datetime($selectedRepetition->getUpdatedAt()));
+        $selectedRepetition->setRecurrencePrice($this->moneyService->floatToCents($value));
         return $selectedRepetition;
     }
 
