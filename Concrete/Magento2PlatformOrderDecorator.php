@@ -726,6 +726,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $selectedRepit->setCycles($selectedRepetition->getCycles());
         $selectedRepit->setCreatedAt(new \Datetime($selectedRepetition->getCreatedAt()));
         $selectedRepit->setUpdatedAt(new \Datetime($selectedRepetition->getUpdatedAt()));
+        return $selectedRepetition;
     }
 
     public function setRecurrenceInfo($item, $quoteItem)
