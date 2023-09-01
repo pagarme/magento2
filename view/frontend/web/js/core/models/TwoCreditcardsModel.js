@@ -150,7 +150,7 @@ define([
 
            let saveFirstCard = 0;
            let saveSecondCard = 0;
-           
+
            if (this.formObject[0].saveThisCard?.prop('checked') == true) {
                saveFirstCard = 1;
            }
