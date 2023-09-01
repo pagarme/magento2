@@ -41,6 +41,7 @@ use Pagarme\Core\Payment\ValueObjects\CustomerPhones;
 use Pagarme\Core\Payment\ValueObjects\CustomerType;
 use Pagarme\Core\Payment\ValueObjects\Phone;
 use Pagarme\Core\Recurrence\Aggregates\Plan;
+use Pagarme\Core\Recurrence\Aggregates\Repetition;
 use Pagarme\Core\Recurrence\Services\RecurrenceService;
 use Pagarme\Pagarme\Helper\BuildChargeAddtionalInformationHelper;
 use Pagarme\Pagarme\Helper\RecurrenceProductHelper;
@@ -55,6 +56,7 @@ use Pagarme\Core\Kernel\Aggregates\Transaction;
 use Pagarme\Core\Kernel\ValueObjects\TransactionType;
 use Magento\Quote\Model\Quote;
 use Pagarme\Pagarme\Helper\Marketplace\WebkulHelper;
+use Pagarme\Pagarme\Model\PagarmeConfigProvider;
 
 class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 {
@@ -72,12 +74,21 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
      * @var OrderService
      */
     private $orderService;
+    /**
+     * @var PagarmeConfigProvider
+     */
+    private $config;
+    /**
+     * @var MoneyService
+     */
+    private $moneyService;
 
     public function __construct()
     {
         $this->i18n = new LocalizationService();
         $objectManager = ObjectManager::getInstance();
-
+        $this->moneyService = new MoneyService();
+        $this->config = $objectManager->get('Pagarme\Pagarme\Model\PagarmeConfigProvider');
         $this->orderFactory = $objectManager->get('Magento\Sales\Model\Order');
         $this->orderService = new OrderService();
         parent::__construct();
@@ -624,9 +635,9 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
     /** @return Item[] */
     public function getItemCollection()
     {
-        $moneyService = new MoneyService();
         $quote = $this->getQuote();
         $itemCollection = $quote->getItemsCollection();
+        $hasSubscriptionItem = false;
         $items = [];
         foreach ($itemCollection as $quoteItem) {
             //adjusting price.
@@ -649,7 +660,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 
             $item = new Item;
             $item->setAmount(
-                $moneyService->floatToCents($price)
+                $this->moneyService->floatToCents($price)
             );
 
             if ($quoteItem->getProductId()) {
@@ -663,16 +674,58 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             );
 
             $item->setName($quoteItem->getName());
-
-            $helper = new RecurrenceProductHelper();
-            $selectedRepetition = $helper->getSelectedRepetition($quoteItem);
-            $item->setSelectedOption($selectedRepetition);
-
-            $this->setRecurrenceInfo($item, $quoteItem);
-
+            if ($this->getRecurrenceService()->getRecurrenceProductByProductId($quoteItem->getProductId())) {
+                $hasSubscriptionItem = true;
+                $helper = new RecurrenceProductHelper();
+                $selectedRepetition = $helper->getSelectedRepetition($quoteItem);
+                $item->setSelectedOption($selectedRepetition);
+                $this->setRecurrenceInfo($item, $quoteItem);
+            }
             $items[] = $item;
         }
+
+        if($hasSubscriptionItem) {
+            if($this->getPlatformOrder()->getShippingAmount() && $this->config->canAddShippingInItemsOnRecurrence()) {
+                $items[] = $this->addCustomItem(
+                                $this->getPlatformOrder()->getShippingAmount(), 
+                                $this->getPlatformOrder()->getShippingDescription(),
+                                $selectedRepetition
+                            );
+            }
+            if($this->getPlatformOrder()->getBaseTaxAmount() && $this->config->canAddTaxInItemsOnRecurrence()) {
+                $items[] = $this->addCustomItem(
+                                $this->getPlatformOrder()->getBaseTaxAmount(), 
+                                __("Taxas"),
+                                $selectedRepetition
+                            );
+            }
+        }
         return $items;
+    }
+
+    private function addCustomItem($value, $name, $selectedRepetition)
+    {
+        $product = new Item();
+        $product->setName($name);
+        $product->setDescription($name);
+        $product->setQuantity(1);
+        $product->setCode(0);
+        $product->setSelectedOption($this->mountRepetition($value, $selectedRepetition));
+        $product->setType("subscription");
+        $product->setAmount($this->moneyService->floatToCents($value));
+        return $product;
+    }
+    private function mountRepetition($value, $selectedRepetition)
+    {
+        $selectedRepit = new Repetition();
+        $selectedRepit->setId($selectedRepetition->getId());
+        $selectedRepit->setRecurrencePrice($this->moneyService->floatToCents($value));
+        $selectedRepit->setIntervalCount($selectedRepetition->getIntervalCount());
+        $selectedRepit->setInterval($selectedRepetition->getInterval());
+        $selectedRepit->setSubscriptionId($selectedRepetition->getSubscriptionId());
+        $selectedRepit->setCycles($selectedRepetition->getCycles());
+        $selectedRepit->setCreatedAt(new \Datetime($selectedRepetition->getCreatedAt()));
+        $selectedRepit->setUpdatedAt(new \Datetime($selectedRepetition->getUpdatedAt()));
     }
 
     public function setRecurrenceInfo($item, $quoteItem)
@@ -809,7 +862,6 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 
     private function extractBasePaymentData($additionalInformation)
     {
-        $moneyService = new MoneyService();
         $identifier = null;
         $customerId = null;
         $brand = null;
@@ -874,7 +926,6 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 
     private function extractPaymentDataFromPagarmeTwoCreditCard($additionalInformation, &$paymentData, $payment)
     {
-        $moneyService = new MoneyService();
         $indexes = ['first', 'second'];
         foreach ($indexes as $index) {
             $identifier = null;
@@ -918,11 +969,11 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
                 $index
             );
 
-            $amount = $moneyService->removeSeparators(
+            $amount = $this->moneyService->removeSeparators(
                 $additionalInformation["cc_{$index}_card_amount"]
             );
 
-            $newPaymentData->amount = $moneyService->floatToCents($amount / 100);
+            $newPaymentData->amount = $this->moneyService->floatToCents($amount / 100);
             $newPaymentData->saveOnSuccess =
                 isset($additionalInformation["cc_savecard_{$index}"]) &&
                 $additionalInformation["cc_savecard_{$index}"] === '1';
@@ -988,7 +1039,6 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         &$paymentData,
         $payment
     ) {
-        $moneyService = new MoneyService();
         $identifier = null;
         $customerId = null;
 
@@ -1034,7 +1084,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             "",
             $additionalInformation["cc_cc_amount"] ?? ''
         );
-        $newPaymentData->amount = $moneyService->floatToCents($amount / 100);
+        $newPaymentData->amount = $this->moneyService->floatToCents($amount / 100);
 
         $creditCardDataIndex = AbstractCreditCardPayment::getBaseCode();
         if (!isset($paymentData[$creditCardDataIndex])) {
@@ -1059,7 +1109,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         );
 
         $newPaymentData->amount =
-            $moneyService->floatToCents($amount / 100);
+            $this->moneyService->floatToCents($amount / 100);
 
         $boletoDataIndex = BoletoPayment::getBaseCode();
         if (!isset($paymentData[$boletoDataIndex])) {
@@ -1079,10 +1129,9 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         &$paymentData,
         $payment
     ) {
-        $moneyService = new MoneyService();
         $newPaymentData = new \stdClass();
         $newPaymentData->amount =
-            $moneyService->floatToCents($this->platformOrder->getGrandTotal());
+            $this->moneyService->floatToCents($this->platformOrder->getGrandTotal());
 
         $boletoDataIndex = BoletoPayment::getBaseCode();
         if (!isset($paymentData[$boletoDataIndex])) {
@@ -1104,10 +1153,9 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         &$paymentData,
         $payment
     ) {
-        $moneyService = new MoneyService();
         $newPaymentData = new \stdClass();
         $newPaymentData->amount =
-            $moneyService->floatToCents($this->platformOrder->getGrandTotal());
+            $this->moneyService->floatToCents($this->platformOrder->getGrandTotal());
 
         $pixDataIndex = PixPayment::getBaseCode();
         if (!isset($paymentData[$pixDataIndex])) {
@@ -1126,7 +1174,6 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 
     public function getShipping()
     {
-        $moneyService = new MoneyService();
         /** @var Shipping $shipping */
         $shipping = null;
         $quote = $this->getQuote();
@@ -1141,7 +1188,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $shipping = new Shipping();
 
         $shipping->setAmount(
-            $moneyService->floatToCents($platformShipping->getShippingAmount())
+            $this->moneyService->floatToCents($platformShipping->getShippingAmount())
         );
         $shipping->setDescription($platformShipping->getShippingDescription());
         $shipping->setRecipientName($platformShipping->getName());
