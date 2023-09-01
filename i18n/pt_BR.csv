@@ -498,3 +498,4 @@
 "The cvv field must be a minimum length of 3 and a maximum length of 4.","O campo de cvv deve ter um tamanho mínimo de 3 e um tamanho máximo de 4."
 "Add shipping values in items","Realizar a cobrança do frete"
 "Add tax values in items","Realizar a cobrança das taxas"
+"Taxs","Taxas"

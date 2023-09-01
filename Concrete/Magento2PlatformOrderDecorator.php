@@ -695,7 +695,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             if($this->getPlatformOrder()->getBaseTaxAmount() && $this->config->canAddTaxInItemsOnRecurrence()) {
                 $items[] = $this->addCustomItem(
                                 $this->getPlatformOrder()->getBaseTaxAmount(), 
-                                __("Taxas"),
+                                __("Taxs"),
                                 $selectedRepetition
                             );
             }
