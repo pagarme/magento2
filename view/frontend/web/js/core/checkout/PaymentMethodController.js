@@ -770,10 +770,9 @@ define([
             PlatformConfig.PlatformConfig.avaliableBrands[formObject.savedCardSelectUsed].forEach(function (item) {
                 brands.push(item.title.toUpperCase());
             });
-
             if (
                 !brands.includes(element.val().toUpperCase())
-                || element.val === ''
+                && element.val() != 'default'
             ) {
                 requiredElement.addClass(errorClass);
                 requiredElementError.show();
