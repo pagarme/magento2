@@ -151,11 +151,11 @@ define([
            let saveFirstCard = 0;
            let saveSecondCard = 0;
 
-           if (this.formObject[0].saveThisCard.prop('checked') == true) {
+           if (this.formObject[0].saveThisCard?.prop('checked') == true) {
                saveFirstCard = 1;
            }
 
-           if (this.formObject[1].saveThisCard.prop('checked') == true) {
+           if (this.formObject[1].saveThisCard?.prop('checked') == true) {
                saveSecondCard = 1;
            }
 
