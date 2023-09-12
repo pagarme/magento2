@@ -57,8 +57,8 @@ define(['jquery'], ($) => {
                 this.checkedBins = [];
             }
 
-            this.checkedBins[this.binValue] = data.status != 404 ? data.brand : '';
-            this.selectedBrand = data.status != 404 ? data.brand : '';
+            this.checkedBins[this.binValue] = data.status !== 404 ? data.brand : '';
+            this.selectedBrand = data.status !== 404 ? data.brand : '';
         }
     };
 });
