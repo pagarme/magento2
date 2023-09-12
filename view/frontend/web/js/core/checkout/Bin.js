@@ -21,10 +21,10 @@ define(['jquery'], ($) => {
 
             if (this.validate(formattedNewValue)) {
                 this.binValue = formattedNewValue;
-                this.getBrand().done(function (data) {
+                this.getBrand().always(function (data) {
                     this.saveBinInformation(data);
                 }.bind(this));
-
+                
                 return;
             }
 
@@ -57,8 +57,8 @@ define(['jquery'], ($) => {
                 this.checkedBins = [];
             }
 
-            this.checkedBins[this.binValue] = data.brand;
-            this.selectedBrand = data.brand;
+            this.checkedBins[this.binValue] = data.status != 404 ? data.brand : '';
+            this.selectedBrand = data.status != 404 ? data.brand : '';
         }
     };
 });
