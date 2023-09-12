@@ -24,7 +24,7 @@ define(['jquery'], ($) => {
                 this.getBrand().always(function (data) {
                     this.saveBinInformation(data);
                 }.bind(this));
-                
+
                 return;
             }
 
