@@ -69,7 +69,7 @@
             <comment />
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>pagarme_pagarme/recurrence/add_shipping_in_items</config_path>
-            <tooltip>To plans if this options is enabled it will apply to all charges even with products with different cycles.</tooltip>
+            <tooltip>For plans, when enabling this options, the shipping it will apply to all charges even if the products have different cycles..</tooltip>
             <depends>
                 <field id="active">1</field>
             </depends>
@@ -79,7 +79,7 @@
             <comment />
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>pagarme_pagarme/recurrence/add_tax_in_items</config_path>
-            <tooltip>To plans if this options is enabled it will apply to all charges even with products with different cycles.</tooltip>
+            <tooltip>For plans, when enabling this options, the taxes it will apply to all charges even if the products have different cycles.</tooltip>
             <depends>
                 <field id="active">1</field>
             </depends>

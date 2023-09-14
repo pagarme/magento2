@@ -6,6 +6,7 @@ require([
     'use strict';
 
     let productBundleMaxIndex = -1;
+    const saveButtonElement = "#save-button";
     $(document).ready(function(){
         $("#allow_installments_div").hide();
         const editProduct = $("#edit-product").val();
@@ -38,7 +39,7 @@ require([
 
                 $(this).autocomplete('option', 'source', arraySearch);
 
-                if (arraySearch.length == 0) {
+                if (arraySearch.length === 0) {
                     const message = $.mage.__('No product founded with name: %1').replace('%1', currentValue);
                     showErrorMessage(message);
                 }
@@ -46,7 +47,7 @@ require([
         });
 
         $("#add-product").on('click', function() {
-            if ($("#product_id").val() == "") {
+            if ($("#product_id").val() === "") {
                 return;
             }
             updateTableProduct($(this));
@@ -80,7 +81,7 @@ require([
             alert(errors.join("\r\n"));
             return;
         }
-        toogleSaveButton();
+        toggleSaveButton();
 
         const dataSerialize = jQuery(this).serialize();
         const url =  $("#url-post").val();
@@ -99,21 +100,21 @@ require([
                 alert(data.message);
             },
             complete: function () {
-                toogleSaveButton()
+                toggleSaveButton()
             }
         });
     }
 
-    function toogleSaveButton()
+    function toggleSaveButton()
     {
-        const disabled = $("#save-button").prop('disabled');
+        const disabled = $(saveButtonElement).prop('disabled');
         if (disabled) {
-            $("#save-button").attr('disabled', false);
-            $("#save-button span").html("Save");
+            $(saveButtonElement).attr('disabled', false);
+            $(`${saveButtonElement} span`).html("Save");
             return;
         }
-        $("#save-button").attr('disabled', true);
-        $("#save-button span").html("Saving");
+        $(saveButtonElement).attr('disabled', true);
+        $(`${saveButtonElement} span`).html("Saving");
     }
 
     function validateForm(e) {
@@ -216,21 +217,23 @@ require([
             productBundleMaxIndex = index;
         }
 
-        const id = data.id == undefined ? "" : data.id;
-        const cycles = data.cycles == undefined ? "" : data.cycles;
-        const quantity = data.quantity == undefined ? 1 : data.quantity;
-        const pagarme_id = data.pagarme_id == undefined ? "" : data.pagarme_id;
+        const id = data.id === undefined ? "" : data.id;
+        const cycles = data.cycles === undefined ? "" : data.cycles;
+        const quantity = data.quantity === undefined ? 1 : data.quantity;
+        const pagarmeId = data.pagarme_id === undefined ? "" : data.pagarme_id;
+        const inputFormItem = `<input type='hidden' name='form[items][${index}`;
+        const closeTag = "'/>";
 
-        const inputsHidden = "<input type='hidden' name='form[items][" + index + "][product_id]' value='" + data.code + "'/>" +
-            "<input type='hidden' name='form[items][" + index + "][name]' value='" + data.name + "'/>" +
-            "<input type='hidden' name='form[items][" + index + "][price]' value='" + data.price + "'/>" +
-            "<input type='hidden' name='form[items][" + index + "][quantity]' value='" + quantity + "'/>" +
-            "<input type='hidden' name='form[items][" + index + "][pagarme_id]' value='" + pagarme_id + "'/>" +
-            "<input type='hidden' name='form[items][" + index + "][id]' value='" + id + "'/>";
+        const inputsHidden = `${inputFormItem}][product_id]' value='${data.code}${closeTag}
+            ${inputFormItem}][name]' value='${data.name}${closeTag}
+            ${inputFormItem}][price]' value='${data.price}${closeTag}
+            ${inputFormItem}][quantity]' value='${quantity}${closeTag}
+            ${inputFormItem}][pagarme_id]' value='${pagarmeId}${closeTag}
+            ${inputFormItem}][id]' value='${id}${closeTag}`;
 
-        const quantityColumn = "<input type='number' disabled name='form[items][" + index + "][quantity]' value='" + quantity + "'/>";
-        const priceColumn = "<input type='number' disabled value='" + (data.price / 100).toFixed(2) + "' />" +
-            "<input type='hidden' name='form[items][" + index + "][quantity]' value='" + quantity + "'/>";
+        const quantityColumn = `<input type='number' disabled name='form[items][${index}][quantity]' value='${quantity}'/>`;
+        const priceColumn = `<input type='number' disabled value='${(data.price / 100).toFixed(2)}' />
+            <input type='hidden' name='form[items][${index}][quantity]' value='${quantity}'/>`;
 
         const type = $("#recurrence-type").val();
 
@@ -291,7 +294,7 @@ require([
     }
 
     function fillRepetitionTable(reptitions) {
-        if (reptitions == undefined) {
+        if (reptitions === undefined) {
             return;
         }
 

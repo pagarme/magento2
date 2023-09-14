@@ -6,7 +6,6 @@ use Magento\Customer\Model\ResourceModel\CustomerRepository;
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\ObjectManager;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Quote\Model\QuoteFactory;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment\Transaction\Repository as TransactionRepository;
@@ -15,14 +14,12 @@ use Pagarme\Core\Kernel\Abstractions\AbstractModuleCoreSetup as MPSetup;
 use Pagarme\Core\Kernel\Abstractions\AbstractPlatformOrderDecorator;
 use Pagarme\Core\Kernel\Aggregates\Charge;
 use Pagarme\Core\Kernel\Interfaces\PlatformInvoiceInterface;
-use Pagarme\Core\Kernel\Interfaces\PlatformOrderInterface;
 use Pagarme\Core\Kernel\Services\MoneyService;
 use Pagarme\Core\Kernel\Services\OrderService;
 use Pagarme\Core\Kernel\ValueObjects\Id\CustomerId;
 use Pagarme\Core\Kernel\ValueObjects\Id\OrderId;
 use Pagarme\Core\Kernel\ValueObjects\OrderState;
 use Pagarme\Core\Kernel\ValueObjects\OrderStatus;
-use Pagarme\Core\Kernel\ValueObjects\PaymentMethod;
 use Pagarme\Core\Marketplace\Aggregates\Split;
 use Pagarme\Core\Payment\Aggregates\Address;
 use Pagarme\Core\Payment\Aggregates\Customer;
@@ -36,7 +33,6 @@ use Pagarme\Core\Payment\Aggregates\Payments\PixPayment;
 use Pagarme\Core\Payment\Aggregates\Shipping;
 use Pagarme\Core\Payment\Factories\PaymentFactory;
 use Pagarme\Core\Payment\Repositories\CustomerRepository as CoreCustomerRepository;
-use Pagarme\Core\Payment\Repositories\SavedCardRepository;
 use Pagarme\Core\Payment\ValueObjects\CustomerPhones;
 use Pagarme\Core\Payment\ValueObjects\CustomerType;
 use Pagarme\Core\Payment\ValueObjects\Phone;
@@ -45,15 +41,11 @@ use Pagarme\Core\Recurrence\Aggregates\Repetition;
 use Pagarme\Core\Recurrence\Services\RecurrenceService;
 use Pagarme\Pagarme\Helper\BuildChargeAddtionalInformationHelper;
 use Pagarme\Pagarme\Helper\RecurrenceProductHelper;
-use Pagarme\Pagarme\Gateway\Transaction\Base\Config\Config;
-use Pagarme\Pagarme\Model\Cards;
 use Pagarme\Pagarme\Model\CardsRepository;
 use Pagarme\Core\Kernel\Services\LocalizationService;
 use Pagarme\Core\Kernel\Services\LogService;
 use Magento\Sales\Model\Order\Email\Sender\OrderCommentSender;
 use Magento\Sales\Model\ResourceModel\Order\Status\Collection;
-use Pagarme\Core\Kernel\Aggregates\Transaction;
-use Pagarme\Core\Kernel\ValueObjects\TransactionType;
 use Magento\Quote\Model\Quote;
 use Pagarme\Pagarme\Helper\Marketplace\WebkulHelper;
 use Pagarme\Pagarme\Model\PagarmeConfigProvider;
@@ -639,6 +631,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $itemCollection = $quote->getItemsCollection();
         $hasSubscriptionItem = false;
         $items = [];
+        $selectedRepetition = null;
         foreach ($itemCollection as $quoteItem) {
             //adjusting price.
             $price = $quoteItem->getPrice();
@@ -694,22 +687,30 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             $items[] = $item;
         }
 
-        if($hasSubscriptionItem) {
-            if($this->getPlatformOrder()->getShippingAmount() && $this->config->canAddShippingInItemsOnRecurrence()) {
-                $items[] = $this->addCustomItem(
-                                $this->getPlatformOrder()->getShippingAmount(),
-                                $this->getPlatformOrder()->getShippingDescription(),
-                                $selectedRepetition
-                            );
-            }
-            if($this->getPlatformOrder()->getBaseTaxAmount() && $this->config->canAddTaxInItemsOnRecurrence()) {
-                $items[] = $this->addCustomItem(
-                                $this->getPlatformOrder()->getBaseTaxAmount(),
-                                __("Taxs"),
-                                $selectedRepetition
-                            );
-            }
+        return $this->addShippingAndTaxToSubscription($hasSubscriptionItem, $selectedRepetition, $items);
+    }
+
+    private function addShippingAndTaxToSubscription($hasSubscriptionItem, $selectedRepetition, $items)
+    {
+        if (!$hasSubscriptionItem) {
+            return $items;
         }
+
+        if ($this->getPlatformOrder()->getShippingAmount() && $this->config->canAddShippingInItemsOnRecurrence()) {
+            $items[] = $this->addCustomItem(
+                $this->getPlatformOrder()->getShippingAmount(),
+                $this->getPlatformOrder()->getShippingDescription(),
+                $selectedRepetition
+            );
+        }
+        if ($this->getPlatformOrder()->getBaseTaxAmount() && $this->config->canAddTaxInItemsOnRecurrence()) {
+            $items[] = $this->addCustomItem(
+                $this->getPlatformOrder()->getBaseTaxAmount(),
+                __("Taxs"),
+                $selectedRepetition
+            );
+        }
+
         return $items;
     }
 

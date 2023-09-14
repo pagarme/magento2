@@ -515,4 +515,6 @@
 "It was not possible to find the subproducts for this bundle. Check your configuration and try again","Não foi possível encontrar os subprodutos deste bundle. Verifique sua configuração e tente novamente"
 "Cart Discount","Desconto de Carrinho"
 "Apply cart discount to all subscription charges","Aplicar desconto de carrinho para todas as cobranças da assinatura"
-"To plans if this options is enabled it will apply to all charges even with products with different cycles.","Para planos se esta opção for habilitada irá aplicar para todas as cobranças mesmo que os produtos possuam ciclos diferentes."
+"For plans, when enabling this options, the discount will apply to all charges even if the products have different cycles.","Para planos, ao habilitar essa opção, o desconto será aplicado a todas as cobranças da assinatura mesmo que os produtos tenham ciclos diferentes."
+"For plans, when enabling this options, the shipping it will apply to all charges even if the products have different cycles.","Para planos, ao habilitar essa opção, o frete será aplicado a todas as cobranças da assinatura mesmo que os produtos tenham ciclos diferentes."
+"For plans, when enabling this options, the taxes it will apply to all charges even if the products have different cycles.","Para planos, ao habilitar essa opção, as taxas será aplicado a todas as cobranças da assinatura mesmo que os produtos tenham ciclos diferentes."
