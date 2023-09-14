@@ -674,12 +674,22 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             );
 
             $item->setName($quoteItem->getName());
-            if ($this->getRecurrenceService()->getRecurrenceProductByProductId($quoteItem->getProductId())) {
+            $recurrenceItem = $this->getRecurrenceService()
+                ->getRecurrenceProductByProductId($quoteItem->getProductId());
+            if ($recurrenceItem) {
                 $hasSubscriptionItem = true;
                 $helper = new RecurrenceProductHelper();
                 $selectedRepetition = $helper->getSelectedRepetition($quoteItem);
                 $item->setSelectedOption($selectedRepetition);
                 $this->setRecurrenceInfo($item, $quoteItem);
+
+                if ($item->getType() === Plan::RECURRENCE_TYPE) {
+                    $planItems = $recurrenceItem->getItems();
+                    $cycles = $this->getRecurrenceService()
+                        ->getGreatestCyclesFromItems($planItems);
+                    $selectedRepetition = new Repetition();
+                    $selectedRepetition->setCycles($cycles);
+                }
             }
             $items[] = $item;
         }
@@ -687,14 +697,14 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         if($hasSubscriptionItem) {
             if($this->getPlatformOrder()->getShippingAmount() && $this->config->canAddShippingInItemsOnRecurrence()) {
                 $items[] = $this->addCustomItem(
-                                $this->getPlatformOrder()->getShippingAmount(), 
+                                $this->getPlatformOrder()->getShippingAmount(),
                                 $this->getPlatformOrder()->getShippingDescription(),
                                 $selectedRepetition
                             );
             }
             if($this->getPlatformOrder()->getBaseTaxAmount() && $this->config->canAddTaxInItemsOnRecurrence()) {
                 $items[] = $this->addCustomItem(
-                                $this->getPlatformOrder()->getBaseTaxAmount(), 
+                                $this->getPlatformOrder()->getBaseTaxAmount(),
                                 __("Taxs"),
                                 $selectedRepetition
                             );
@@ -717,6 +727,9 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
     }
     private function mountRepetition($value, $selectedRepetition)
     {
+        if (empty($selectedRepetition)) {
+            return $selectedRepetition;
+        }
         $selectedRepetition->setRecurrencePrice($this->moneyService->floatToCents($value));
         return $selectedRepetition;
     }

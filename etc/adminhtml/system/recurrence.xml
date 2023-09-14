@@ -2,7 +2,7 @@
 
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
     <group id="pagarme_recurrence" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="40" translate="label">
-        <label>Recurrence Settings</label>
+        <label>Recurrence Settings (Beta)</label>
         <field id="active" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="select">
             <label>Enable this Solution</label>
             <comment />
@@ -64,20 +64,22 @@
                 <field id="active">1</field>
             </depends>
         </field>
-        <field id="add_shipping_in_items" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="select">
+        <field id="add_shipping_in_items" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label tooltip" type="select">
             <label>Add shipping values in items</label>
             <comment />
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>pagarme_pagarme/recurrence/add_shipping_in_items</config_path>
+            <tooltip>To plans if this options is enabled it will apply to all charges even with products with different cycles.</tooltip>
             <depends>
                 <field id="active">1</field>
             </depends>
         </field>
-        <field id="add_tax_in_items" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="select">
+        <field id="add_tax_in_items" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label tooltip" type="select">
             <label>Add tax values in items</label>
             <comment />
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>pagarme_pagarme/recurrence/add_tax_in_items</config_path>
+            <tooltip>To plans if this options is enabled it will apply to all charges even with products with different cycles.</tooltip>
             <depends>
                 <field id="active">1</field>
             </depends>

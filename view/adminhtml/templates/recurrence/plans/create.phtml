@@ -1,4 +1,8 @@
-
+<?php
+/**
+ * @var \Pagarme\Pagarme\Block\Adminhtml\Recurrence\Plans\Plan $block
+ */
+?>
 <form id="form-product" method="post">
     <div class="page-main-actions">
         <div class="page-actions-placeholder"></div>
@@ -8,7 +12,12 @@
                     <button id="save-button" title="Save" class="action-default primary" type="submit">
                         <span><?php echo __('Save') ?></span>
                     </button>
-                    <button id="back" title="Back" type="button" class="action- scalable back" onclick="location.href = '<?php echo $block->getUrl('pagarme_pagarme/plans/index')?>'" data-ui-id="back-button">
+                    <button id="back"
+                            title="Back"
+                            type="button"
+                            class="action- scalable back"
+                            onclick="location.href = '<?php echo $block->getUrl('pagarme_pagarme/plans/index')?>'"
+                            data-ui-id="back-button"/>
                         <span><?php echo __('Back') ?></span>
                     </button>
                 </div>
@@ -20,7 +29,10 @@
     <input id="products-bundle" value='<?php echo $block->getBundleProducts();?>' type="hidden" />
 
     <!-- Edit Product-->
-    <input id="edit-product" name='form[edit_product_id]' value='<?php echo $block->getEditProduct();?>' type="hidden" />
+    <input id="edit-product"
+           name='form[edit_product_id]'
+           value='<?php echo $block->getEditProduct();?>'
+           type="hidden" />
 
     <!-- Product Id-->
     <input id="product-recurrence-id" name='form[id]' value='<?php echo $block->getProductId(); ?>' type="hidden"/>
@@ -38,7 +50,9 @@
     <input id="url-search" value="<?php echo $block->getUrl('*/plans/searchproduct');?>" type="hidden" />
 
     <!-- Url Post-->
-    <input id="url-post" value="<?php echo $block->getBaseUrl() . 'rest/V1/pagarme/recurrence/plan/product/formData'; ?>" type="hidden"/>
+    <input id="url-post"
+           value="<?php echo $block->getBaseUrl() . 'rest/V1/pagarme/recurrence/plan/product/formData'; ?>"
+           type="hidden"/>
 
     <input type="hidden" name="form_key" value="<?php echo $block->getFormKey() ?>" />
 
@@ -49,31 +63,41 @@
                     <div class="fieldset-wrapper">
                         <div class="admin__fieldset-wrapper-content _hide">
                             <fieldset class="admin__fieldset">
+                                <legend></legend>
 
-                                <div class="fieldset-wrapper admin__collapsible-block-wrapper products-wrapper" data-role="collapsible" >
+                                <div class="fieldset-wrapper admin__collapsible-block-wrapper products-wrapper"
+                                     data-role="collapsible" >
                                     <h1><?php echo __('Products') ?></h1>
                                     <div class="select-product">
                                         <h2>
                                             <?php echo __('Add a bundle product') ?>
                                             <div class="admin__field-tooltip" style="margin-top: -1px">
-                                                <a class="admin__field-tooltip-action action-help" target="_blank" title="
-                                                    <?php echo __('Add a product with the following characteristics to create a plan product:') ?>
+                                                <a class="admin__field-tooltip-action action-help"
+                                                   target="_blank"
+                                                   title="
+                                                    <?php echo __('Add a product with the following characteristics to '
+                                                        . 'create a plan product:'); ?>
 
-                                                    <?php echo __('- No main price') ?>
+                                                    <?php echo __('- No main price'); ?>
 
-                                                    <?php echo __('- Dynamic price: no') ?>
+                                                    <?php echo __('- Dynamic price: no'); ?>
 
-                                                    <?php echo __('- Subproducts') ?>
+                                                    <?php echo __('- Subproducts'); ?>
 
-                                                    <?php echo __('See the documentation on https://github.com/pagarme/magento2-module/wiki/Plan-products') ?>
+                                                    <?php echo __('See the documentation on ' .
+                                                       'https://github.com/pagarme/magento2-module/wiki/Plan-products');
+                                                   ?>
                                                 " ></a>
                                             </div>
                                         </h2>
                                         <label><?php echo __('Product search') ?></label>
-                                        <input type="text" class="product_search" name="product_search" id="product-search">
-                                        <input type="hidden" id="product_id" name="form[product_id]">
-                                        <input type="hidden" id="product_name" name="form[name]">
-                                        <input type="hidden" id="product_description" name="form[description]">
+                                        <input type="text"
+                                               class="product_search"
+                                               name="product_search"
+                                               id="product-search"/>
+                                        <input type="hidden" id="product_id" name="form[product_id]"/>
+                                        <input type="hidden" id="product_name" name="form[name]"/>
+                                        <input type="hidden" id="product_description" name="form[description]"/>
                                         <input type="hidden" id="product_image">
                                         <button type="button" class="action-basic" id="add-product" data-action="add">
                                             <span><?php echo __('Add Product') ?></span>
@@ -88,6 +112,7 @@
                                             </div>
                                         </div>
                                         <table id="product-info" class="admin__dynamic-rows admin__control-table">
+                                            <caption></caption>
                                             <thead>
                                                 <tr>
                                                     <th></th>
@@ -108,8 +133,13 @@
                                     </label>
                                     <div class="admin__field-control _with-tooltip">
                                         <div class="admin__field admin__field-option">
-                                            <input type="checkbox" class="admin__control-checkbox" name="form[credit_card]" id="credit-card" >
-                                            <label class="admin__field-label" for="credit-card"><?php echo __('Credit Card') ?></label>
+                                            <input type="checkbox"
+                                                   class="admin__control-checkbox"
+                                                   name="form[credit_card]" id="credit-card" />
+                                            <label class="admin__field-label"
+                                                   for="credit-card">
+                                                    <?php echo __('Credit Card') ?>
+                                            </label>
                                         </div>
                                     </div>
                                 </div>
@@ -120,11 +150,41 @@
                                     </label>
                                     <div class="admin__field-control">
                                         <div class="admin__field admin__field-option">
-                                            <input type="checkbox" class="admin__control-checkbox" name="form[boleto]" id="boleto" >
-                                            <label class="admin__field-label" for="boleto"><?php echo __('Boleto') ?></label>
+                                            <input type="checkbox"
+                                                   class="admin__control-checkbox"
+                                                   name="form[boleto]"
+                                                   id="boleto" />
+                                            <label class="admin__field-label"
+                                                   for="boleto">
+                                                    <?php echo __('Boleto') ?>
+                                            </label>
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="admin__field">
+                                    <label class="admin__field-label">
+                                        <span><?php echo __('Cart Discount') ?></span>
+                                    </label>
+                                    <div class="admin__field-control _with-tooltip">
+                                        <div class="admin__field admin__field-option">
+                                            <input
+                                                type="checkbox"
+                                                class="admin__control-checkbox"
+                                                name="form[apply_products_cycle_to_discount]"
+                                                id="apply-products-cycle-to-discount"/>
+                                            <label class="admin__field-label"
+                                                   for="apply-products-cycle-to-discount">
+                                                    <?php echo __('Apply cart discount to all subscription charges') ?>
+                                            </label>
+                                            <div class="tooltip">
+                                                <span class="help"><span></span></span>
+                                                <div class="tooltip-content"><?= __('To plans if this options is enabled it will apply to all charges even with products with different cycles.') ?></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
 
                                 <div class="admin__field" id="allow_installments_div">
                                     <label class="admin__field-label">
@@ -132,7 +192,10 @@
                                     </label>
                                     <div class="admin__field-control _with-tooltip">
                                         <div class="admin__field admin__field-option">
-                                            <input type="checkbox" class="admin__control-checkbox" name="form[installments]" id="allow_installments" >
+                                            <input type="checkbox"
+                                                   class="admin__control-checkbox"
+                                                   name="form[installments]"
+                                                   id="allow_installments" />
                                             <label class="admin__field-label" for="allow_installments"></label>
                                         </div>
                                     </div>
@@ -143,7 +206,9 @@
                                         <span><?php echo __('Interval') ?></span>
                                     </label>
                                     <div class="admin__field-control">
-                                        <select class="admin__control-select" name="form[interval_type]" id="interval_type">
+                                        <select class="admin__control-select"
+                                                name="form[interval_type]"
+                                                id="interval_type" />
                                             <option data-title="Week" value="week"><?php echo __('Week') ?></option>
                                             <option data-title="Month" value="month"><?php echo __('Month') ?></option>
                                             <option data-title="Year" value="year"><?php echo __('Year') ?></option>
@@ -156,7 +221,9 @@
                                         <span><?php echo __('Interval Count') ?></span>
                                     </label>
                                     <div class="admin__field-control">
-                                        <select class="admin__control-select" name="form[interval_count]" id="interval_count">
+                                        <select class="admin__control-select"
+                                                name="form[interval_count]"
+                                                id="interval_count" />
                                             <?php for($i = 1;$i <= 12; $i++):?>
                                             <option value="<?php echo $i?>"><?php echo $i?></option>
                                             <?php endfor;?>
