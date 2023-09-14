@@ -7,6 +7,7 @@ require([
 
     let productBundleMaxIndex = -1;
     const saveButtonElement = "#save-button";
+    const recurrenceTypeElement = "#recurrence-type";
     $(document).ready(function(){
         $("#allow_installments_div").hide();
         const editProduct = $("#edit-product").val();
@@ -120,7 +121,7 @@ require([
     function validateForm(e) {
         const errors = [];
 
-        const type = $("#recurrence-type").val();
+        const type = $(recurrenceTypeElement).val();
 
         const productId = $("#product_id").val();
         if (productId.length <= 0) {
@@ -163,7 +164,7 @@ require([
     function updateTableProduct(element) {
         const data = {
             productId: $("#product_id").val(),
-            recurrenceType: $("#recurrence-type").val(),
+            recurrenceType: $(recurrenceTypeElement).val(),
             recurrenceProductId: $("#product-recurrence-id").val()
         }
 
@@ -235,19 +236,19 @@ require([
         const priceColumn = `<input type='number' disabled value='${(data.price / 100).toFixed(2)}' />
             <input type='hidden' name='form[items][${index}][quantity]' value='${quantity}'/>`;
 
-        const type = $("#recurrence-type").val();
+        const type = $(recurrenceTypeElement).val();
 
         let lastColumn = quantityColumn;
         if (type === 'subscription') {
             lastColumn = priceColumn;
         }
         const tr = $('<tr>').append(
-            $('<td>').html("<img src='" + data.image + "' width='70px' height='70px'>"),
+            $('<td>').html(`<img src='${data.image}' width='70px' height='70px'>`),
             $('<td>').text(data.name),
             $('<td>').html(lastColumn + inputsHidden),
         );
 
-        const cycleColumn = "<input type='number' name='form[items][" + index + "][cycles]' value='" + cycles + "' step='1' min='0'/>";
+        const cycleColumn = `<input type='number' name='form[items][${index}][cycles]' value='${cycles}' step='1' min='0'/>`;
         if (type !== 'subscription') {
             tr.append($('<td>').html(cycleColumn))
         }
@@ -304,11 +305,11 @@ require([
             recurrencePrice = (recurrencePrice / 100).toFixed(2);
             recurrencePrice = recurrencePrice.toString().replace('.',',');
 
-            $("#interval_count_" + count).val(reptitions[index].intervalCount);
-            $("#interval_" + count).val(reptitions[index].interval);
-            $("#recurrence_price_" + count).val(recurrencePrice);
-            $("#cycles_" + count).val(reptitions[index].cycles || 0);
-            $("#repetition_id_" + count).val(reptitions[index].id);
+            $(`#interval_count_${count}`).val(reptitions[index].intervalCount);
+            $(`#interval_${count}`).val(reptitions[index].interval);
+            $(`#recurrence_price_${count}`).val(recurrencePrice);
+            $(`#cycles_${count}`).val(reptitions[index].cycles || 0);
+            $(`#repetition_id_${count}`).val(reptitions[index].id);
         }
     }
 
