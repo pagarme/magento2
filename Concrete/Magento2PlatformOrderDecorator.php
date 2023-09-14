@@ -670,11 +670,12 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             $recurrenceItem = $this->getRecurrenceService()
                 ->getRecurrenceProductByProductId($quoteItem->getProductId());
             if ($recurrenceItem) {
-                $hasSubscriptionItem = true;
                 $helper = new RecurrenceProductHelper();
                 $selectedRepetition = $helper->getSelectedRepetition($quoteItem);
                 $item->setSelectedOption($selectedRepetition);
                 $this->setRecurrenceInfo($item, $quoteItem);
+
+                $hasSubscriptionItem = $hasSubscriptionItem || !empty($item->getType());
 
                 if ($item->getType() === Plan::RECURRENCE_TYPE) {
                     $planItems = $recurrenceItem->getItems();
