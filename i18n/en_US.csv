@@ -333,6 +333,6 @@
 "It was not possible to find the subproducts for this bundle. Check your configuration and try again","It was not possible to find the subproducts for this bundle. Check your configuration and try again"
 "Cart Discount","Cart Discount"
 "Apply cart discount to all subscription charges","Apply cart discount to all subscription charges"
-"For plans, when enabling this options, the discount will apply to all charges, even when the products have different cycles.","For plans, when enabling this options, the discount will apply to all charges, even when the products have different cycles."
-"For plans, when enabling this options, the shipping it will apply to all charges, even when the products have different cycles.","For plans, when enabling this options, the shipping it will apply to all charges, even when the products have different cycles."
+"For plans, when enabling this options, the discount will be applied to all charges, even when the products have different cycles.","For plans, when enabling this options, the discount will be applied to all charges, even when the products have different cycles."
+"For plans, when enabling this options, the shipping will be applied to all charges, even when the products have different cycles.","For plans, when enabling this options, the shipping will be applied to all charges, even when the products have different cycles."
 "For plans, when enabling this options, the taxes will be applied to all charges, even when the products have different cycles.","For plans, when enabling this options, the taxes will be applied to all charges, even when the products have different cycles."
