@@ -318,7 +318,7 @@
 "Please, enter valid Expiration Date","Please, enter valid Expiration Date"
 "The cvv field must be a minimum length of 3 and a maximum length of 4.","The cvv field must be a minimum length of 3 and a maximum length of 4."
 "Error in trying to create a plan type product","Error in trying to create a plan type product"
-"Please add subproducts before plan saving","Please add subproducts before plan saving"
+"Please add subproducts before saving the plan","Please add subproducts before saving the plan"
 "Plan product not found","Plan product not found"
 "List of plan products not found","List of plan products not found"
 "Plan Product saved","Plan Product saved"

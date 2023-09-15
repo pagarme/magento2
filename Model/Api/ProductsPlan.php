@@ -237,7 +237,7 @@ class ProductsPlan implements ProductPlanApiInterface
         }
 
         if (empty($errorMessages) && !$data['items']) {
-            $errorMessages[] = __('Please add subproducts before plan saving');
+            $errorMessages[] = __('Please add subproducts before saving the plan');
         }
 
         return $errorMessages;
