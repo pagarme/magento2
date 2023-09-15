@@ -45,14 +45,14 @@
         <column name="cycles" nullable="true" xsi:type="int" padding="11" comment="Cycles" identity="false"/>
         <column name="created_at" nullable="false" xsi:type="timestamp" comment="created_at" default="CURRENT_TIMESTAMP"/>
         <column name="updated_at" nullable="false" xsi:type="timestamp" comment="updated_at" default="CURRENT_TIMESTAMP" on_update="true"/>
-        <column name="apply_products_cycle_to_discount" nullable="true" xsi:type="smallint" comment="Apply products cycle to discount" padding="6"/>
+        <column name="apply_discount_in_all_product_cycles" nullable="true" xsi:type="smallint" comment="Apply discount in all product cycles" padding="6"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="id"/>
         </constraint>
     </table>
     <table name="pagarme_module_core_recurrence_products_plan" resource="default" engine="innodb" comment="Pagarme Recurrence Products Plan Table">
         <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="ID"/>
-        <column name="interval_type" nullable="false" xsi:type="varchar" comment="Day, week, month ou year" length="15"/>
+        <column name="interval_type" nullable="false" xsi:type="varchar" comment="Day, week, month or year" length="15"/>
         <column name="interval_count" nullable="false" xsi:type="smallint" comment="Interval Count" padding="6" identity="false"/>
         <column name="name" nullable="true" xsi:type="varchar" comment="Product name" length="255"/>
         <column name="description" nullable="true" xsi:type="text" comment="Product description"/>
@@ -61,12 +61,12 @@
         <column name="credit_card" nullable="false" xsi:type="char" comment="Accepts credit card" length="1"/>
         <column name="installments" nullable="false" xsi:type="char" comment="Accepts installments" length="1"/>
         <column name="boleto" nullable="false" xsi:type="char" comment="Accepts boleto" length="1"/>
-        <column name="billing_type" nullable="false" xsi:type="varchar" comment="Prepaid, postpaid ou exact_day" length="11"/>
-        <column name="status" nullable="false" xsi:type="varchar" comment="Active, inactive ou deleted" length="11"/>
+        <column name="billing_type" nullable="false" xsi:type="varchar" comment="Prepaid, postpaid or exact_day" length="11"/>
+        <column name="status" nullable="false" xsi:type="varchar" comment="Active, inactive or deleted" length="11"/>
         <column name="trial_period_days" nullable="true" xsi:type="varchar" comment="Trial period in days" length="11"/>
         <column name="created_at" nullable="false" xsi:type="timestamp" comment="Created At" default="CURRENT_TIMESTAMP"/>
         <column name="updated_at" nullable="false" xsi:type="timestamp" comment="Updated At" default="CURRENT_TIMESTAMP" on_update="true"/>
-        <column name="apply_products_cycle_to_discount" nullable="true" xsi:type="smallint" comment="Apply products cycle to discount" padding="6"/>
+        <column name="apply_discount_in_all_product_cycles" nullable="true" xsi:type="smallint" comment="Apply discount in all product cycles" padding="6"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="id"/>
         </constraint>

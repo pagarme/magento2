@@ -90,8 +90,8 @@ class ProductsPlan implements ProductPlanApiInterface
             $form['installments'] = (bool)$form['installments'];
         }
 
-        if (isset($form['apply_products_cycle_to_discount'])) {
-            $form['apply_products_cycle_to_discount'] = (bool)$form['apply_products_cycle_to_discount'];
+        if (isset($form['apply_discount_in_all_product_cycles'])) {
+            $form['apply_discount_in_all_product_cycles'] = (bool)$form['apply_discount_in_all_product_cycles'];
         }
 
         return $form;

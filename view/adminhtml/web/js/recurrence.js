@@ -281,7 +281,7 @@ require([
         $("#plan-id").val(product.pagarmeId);
         $("#status").val(product.status);
         $("#trial_period_days").val(product.trialPeriodDays);
-        $("#apply-products-cycle-to-discount").prop('checked', product.applyProductsCycleToDiscount)
+        $("#apply-discount-in-all-product-cycles").prop('checked', product.applyDiscountInAllProductCycles)
 
 
         if (product.creditCard) {

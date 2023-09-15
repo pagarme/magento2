@@ -177,7 +177,7 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
             if (empty($form)) {
                 return json_encode([
                     'code' => 404,
-                    'message' => __('Error on save subscription product')
+                    'message' => __('Error saving the subscription product')
                 ]);
             }
 
@@ -227,8 +227,8 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
             );
         }
 
-        if (isset($form['apply_products_cycle_to_discount'])) {
-            $form['apply_products_cycle_to_discount'] = (bool)$form['apply_products_cycle_to_discount'];
+        if (isset($form['apply_discount_in_all_product_cycles'])) {
+            $form['apply_discount_in_all_product_cycles'] = (bool)$form['apply_discount_in_all_product_cycles'];
         }
 
         return $form;

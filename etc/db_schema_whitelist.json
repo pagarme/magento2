@@ -51,7 +51,7 @@
             "cycles": true,
             "created_at": true,
             "updated_at": true,
-            "apply_products_cycle_to_discount": true
+            "apply_discount_in_all_product_cycles": true
         },
         "constraint": {
             "PRIMARY": true
@@ -74,7 +74,7 @@
             "trial_period_days": true,
             "created_at": true,
             "updated_at": true,
-            "apply_products_cycle_to_discount": true
+            "apply_discount_in_all_product_cycles": true
         },
         "constraint": {
             "PRIMARY": true

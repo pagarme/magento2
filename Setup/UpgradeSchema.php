@@ -33,7 +33,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
             $connection = $setup->getConnection();
             $connection->addColumn(
                 $setup->getTable('pagarme_module_core_recurrence_products_plan'),
-                'apply_products_cycle_to_discount',
+                'apply_discount_in_all_product_cycles',
                 [
                     'type' => Table::TYPE_SMALLINT,
                     'length' => 1,
@@ -44,7 +44,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
 
             $connection->addColumn(
                 $setup->getTable('pagarme_module_core_recurrence_products_subscription'),
-                'apply_products_cycle_to_discount',
+                'apply_discount_in_all_product_cycles',
                 [
                     'type' => Table::TYPE_SMALLINT,
                     'length' => 1,
