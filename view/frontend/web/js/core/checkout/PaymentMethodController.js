@@ -399,7 +399,6 @@ define([
                     paymentMethodController.validateCcExpDateField(formObject);
                     return;
                 }
-                paymentMethodController.validateDefaultField(element);
             });
         }
         addCreditCardNumberListener(formObject) {
@@ -720,8 +719,6 @@ define([
                 formHandler.init(formObject);
                 formHandler.switchBrand('');
             }
-            this.validateDefaultField(element);
-            this.validateBrandField(formObject);
         }
         validateCcExpDateField(formObject) {
             const cardExpirationMonth = formObject.creditCardExpMonth;
@@ -747,20 +744,7 @@ define([
             parentsElementsError.hide();
             return false;
         }
-        validateDefaultField(element) {
-            const requiredElement = element.parent().parent();
-            const requiredElementError = requiredElement.children(fieldError);
-
-            if (element.val() === '') {
-                requiredElement.addClass(errorClass);
-                requiredElementError.show();
-                return true;
-            }
-
-            requiredElement.removeClass(errorClass);
-            requiredElementError.hide();
-            return false;
-        }
+    
         validateBrandField(formObject) {
             const element = formObject.creditCardBrand;
             const requiredElement = element.parent().parent();
@@ -772,7 +756,7 @@ define([
             });
             if (
                 !brands.includes(element.val().toUpperCase())
-                && element.val() != 'default'
+                && element.val() !== 'default' || element.val() === ''
             ) {
                 requiredElement.addClass(errorClass);
                 requiredElementError.show();
@@ -802,6 +786,7 @@ define([
             formHandler.init(formObject);
             formHandler.switchBrand(bin.selectedBrand);
             if (isNewBrand) {
+                this.validateBrandField(formObject);
                 this.fillInstallments(formObject);
             }
 
