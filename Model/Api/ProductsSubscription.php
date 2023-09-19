@@ -2,20 +2,19 @@
 
 namespace Pagarme\Pagarme\Model\Api;
 
-use Magento\Framework\App\ObjectManager;
 use Pagarme\Core\Kernel\Services\LocalizationService;
 use Pagarme\Core\Kernel\Services\MoneyService;
-use Pagarme\Core\Recurrence\Aggregates\ProductSubscription;
-use Pagarme\Core\Recurrence\Aggregates\Repetition;
 use Pagarme\Core\Recurrence\Services\ProductSubscriptionService;
 use Pagarme\Pagarme\Api\ProductSubscriptionApiInterface;
 use Magento\Framework\Webapi\Rest\Request;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Pagarme\Pagarme\Helper\ProductSubscriptionHelper;
 use Pagarme\Pagarme\Api\ObjectMapper\ProductSubscription\ProductSubscriptionMapperInterface;
+use Throwable;
 
 class ProductsSubscription implements ProductSubscriptionApiInterface
 {
+    const SUBSCRIPTION_NOT_FOUND_MESSAGE = "Subscription Product not found";
     /**
      * @var Request
      */
@@ -56,7 +55,7 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
      *
      * @param ProductSubscriptionInterface $productSubscription
      * @param int $id
-     * @return ProductSubscriptionMapperInterface|array
+     * @return array|\Pagarme\Core\Recurrence\Aggregates\ProductSubscription|string
      */
     public function save($productSubscription, $id = null)
     {
@@ -64,7 +63,7 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
             if (!empty($id)) {
                 $product = $this->productSubscriptionService->findById($id);
                 if (empty($product)) {
-                    return "Subscription Product not found";
+                    return __(self::SUBSCRIPTION_NOT_FOUND_MESSAGE);
                 }
 
                 $productSubscription->setId($id);
@@ -80,12 +79,7 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
             $this->productSubscriptionHelper
                 ->setCustomOption($productSubscription);
 
-        } catch (\Exception $exception) {
-            return [
-                'code' => 404,
-                'message' => $exception->getMessage()
-            ];
-        } catch (\Throwable $exception) {
+        } catch (Throwable $exception) {
             return [
                 'code' => 404,
                 'message' => $exception->getMessage()
@@ -98,13 +92,13 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
     /**
      * List products subscription
      *
-     * @return ProductSubscriptionMapperInterface[]|array
+     * @return ProductSubscriptionMapperInterface[]|array|string
      */
     public function list()
     {
         $products = $this->productSubscriptionService->findAll();
         if (empty($products)) {
-            return "Subscription Products not found";
+            return __("Subscription Products not found");
         }
 
         return $products;
@@ -114,13 +108,13 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
      * Get a product subscription
      *
      * @param int $id
-     * @return ProductSubscriptionMapperInterface|null
+     * @return ProductSubscriptionMapperInterface|null|string
      */
     public function getProductSubscription($id)
     {
         $product = $this->productSubscriptionService->findById($id);
         if (empty($product)) {
-            return "Subscription Product not found";
+            return __(self::SUBSCRIPTION_NOT_FOUND_MESSAGE);
         }
 
         return $product;
@@ -150,7 +144,7 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
             $productSubscription = $this->productSubscriptionService->findById($id);
 
             if ($productSubscription === null) {
-                return "Subscription Product not found";
+                return __(self::SUBSCRIPTION_NOT_FOUND_MESSAGE);
             }
 
             $this->productSubscriptionHelper->deleteRecurrenceCustomOption(
@@ -158,13 +152,11 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
             );
 
             $this->productSubscriptionService->delete($id);
-        } catch (\Exception $exception) {
-            return [$exception->getMessage()];
-        } catch (\Throwable $exception) {
+        } catch (Throwable $exception) {
             return [$exception->getMessage()];
         }
 
-        return "Subscription Product deleted with success";
+        return __("Subscription Product deleted with success");
     }
 
     /**
@@ -185,7 +177,7 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
             if (empty($form)) {
                 return json_encode([
                     'code' => 404,
-                    'message' => 'Error on save product subscription'
+                    'message' => __('Error saving the subscription product')
                 ]);
             }
 
@@ -198,15 +190,10 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
 
             return json_encode([
                 'code' => 200,
-                'message' => 'Product subscription saved'
+                'message' => __('Subscription product saved')
             ]);
 
-        } catch (\Exception $exception) {
-            return json_encode([
-                'code' => 404,
-                'message' => $exception->getMessage()
-            ]);
-        } catch (\Throwable $exception) {
+        } catch (Throwable $exception) {
             return json_encode([
                 'code' => 404,
                 'message' => $exception->getMessage()
@@ -238,6 +225,10 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
                 '',
                 $repetition['recurrence_price'] ?? ''
             );
+        }
+
+        if (isset($form['apply_discount_in_all_product_cycles'])) {
+            $form['apply_discount_in_all_product_cycles'] = (bool)$form['apply_discount_in_all_product_cycles'];
         }
 
         return $form;
