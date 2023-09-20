@@ -4,8 +4,9 @@
 
 define([
     'Pagarme_Pagarme/js/core/checkout/PaymentMethodController',
-    'Pagarme_Pagarme/js/core/checkout/PlatformPlaceOrder'
-], (PaymentMethodController, PlatformPlaceOrder) => {
+    'Pagarme_Pagarme/js/core/checkout/PlatformPlaceOrder',
+    'Magento_Ui/js/model/messageList'
+], (PaymentMethodController, PlatformPlaceOrder, messageList) => {
     const PagarmeCore = {
         paymentMethod : []
     };
@@ -50,10 +51,9 @@ define([
         const errors = PagarmeCore.paymentMethod[model].model.errors;
         if (errors.length > 0) {
             for (let index in errors) {
-                this.messageList.addErrorMessage(errors[index]);
+                messageList.addErrorMessage(errors[index]);
             }
             jQuery("html, body").animate({scrollTop: 0}, 600);
-            console.log(errors);
         }
     };
 
