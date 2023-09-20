@@ -63,7 +63,7 @@ if (array_key_exists('billet', $lastTransactions)) {
 <?php } ?>
 
 <?php if ($this->getBilletUrl() && $this->getInfo()->getOrder()->getState() == 'new'): ?>
-    <span><b><?php echo __('Amount') ?>: </b><?php echo 'R$ ' . number_format($this->getBilletAmount(), 2, ',', '.'); ?></span>
+    <span><b><?php echo __('Amount') ?>: </b><?php echo 'R$ ' . number_format(floatval($this->getBilletAmount()), 2, ',', '.'); ?></span>
     <br/>
     <br/>
     <a class="action tocart primary" href="<?php echo $this->getBilletUrl() ?>"
