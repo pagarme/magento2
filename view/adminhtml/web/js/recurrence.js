@@ -62,7 +62,7 @@ require([
 
     function formatPriceValue(e) {
         let value = $(this).val();
-        value = value.replace(/\D]/g, '');
+        value = value.replace(/[^0-9]/g, '');
         value = (value / 100).toFixed(2);
         $(this).val(value.toString().replace('.',","));
     }
