@@ -656,7 +656,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
                 $item->setCode($quoteItem->getProductId());
             }
 
-            $item->setQuantity($quoteItem->getQty());
+            $item->setQuantity(intval($quoteItem->getQty()));
             $item->setDescription(
                 $quoteItem->getName() . ' : ' .
                     $quoteItem->getDescription()
