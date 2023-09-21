@@ -29,7 +29,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
             $setup = $installSchema->installRecipients($setup);
         }
 
-        if (version_compare($version, '2.2.6', '<')) {
+        if (version_compare($version, '2.2.5', '<')) {
             $connection = $setup->getConnection();
             $connection->addColumn(
                 $setup->getTable('pagarme_module_core_recurrence_products_plan'),
