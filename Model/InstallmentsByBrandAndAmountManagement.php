@@ -72,6 +72,7 @@ class InstallmentsByBrandAndAmountManagement
     {
         $baseBrand = 'nobrand';
         if (
+            !empty($brand) &&
             strlen($brand) > 0 &&
             $brand !== "null" &&
             method_exists(CardBrand::class, $brand)
