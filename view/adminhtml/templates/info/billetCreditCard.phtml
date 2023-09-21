@@ -17,7 +17,10 @@ if (array_key_exists('billet', $lastTransactions)) {
         <span><?php echo __('Credit Card'); ?></span>
     </strong>
     <br/>
-    <span><b><?php echo __('Amount') ?>: </b><?php echo 'R$ ' . number_format($this->getCcAmountWithTax(), 2, ',', '.'); ?></span>
+    <span>
+        <b><?php echo __('Amount') ?>: </b>
+        <?php echo 'R$ ' . number_format(floatval($this->getCcAmountWithTax()), 2, ',', '.'); ?>
+    </span>
     <br/>
     <span><b><?php echo __('Brand'); ?>: </b><?php echo $this->getCcBrand(); ?></span>
     <br/>
