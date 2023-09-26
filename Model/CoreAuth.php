@@ -2,21 +2,16 @@
 
 namespace Pagarme\Pagarme\Model;
 
+use Magento\Framework\App\ObjectManager;
 use Pagarme\Core\Middle\Client;
 use Pagarme\Pagarme\Gateway\Transaction\Base\Config\Config;
 
 class CoreAuth extends Client
 {
-    private Config $config;
-    
-    public function _construct(
-        Config $config
-    ) {
-        $this->config = $config;
-    }
-
     public function getHubToken()
     {
-        return $this->config->getSecretKey();
+        $objectManager = ObjectManager::getInstance();
+        $config = $objectManager->get(\Pagarme\Pagarme\Gateway\Transaction\Base\Config\Config::class);
+        return $config->getSecretKey();
     }
 }

@@ -10,6 +10,8 @@
 		<add id="Pagarme::pagarme_pagarme_marketplace" module="Pagarme_Pagarme" parent="Pagarme::pagarme" resource="Magento_Config::config" sortOrder="20"  dependsOnConfig="pagarme_pagarme/marketplace/active" title="Marketplace" translate="title" />
 		<add action="pagarme_pagarme/recipients/index" id="Pagarme::pagarme_pagarme_recipients_index" module="Pagarme_Pagarme" parent="Pagarme::pagarme_pagarme_marketplace" resource="Magento_Config::config" sortOrder="1" title="Recipients" translate="title" />
 
+		<add action="pagarme_pagarme/hub/teste" id="Pagarme::pagarme_hub_teste" module="Pagarme_Pagarme" parent="Pagarme::pagarme_label" resource="Magento_Config::config" sortOrder="0" title="Temporario" translate="title" />
+		
 		<add id="Pagarme::pagarme_recurrence" module="Pagarme_Pagarme" parent="Pagarme::pagarme" resource="Magento_Config::config" sortOrder="30" title="Recurrence" translate="title" />
 		<add action="pagarme_pagarme/recurrenceproducts/index" id="Pagarme::pagarme_recurrenceproducts_index" module="Pagarme_Pagarme" parent="Pagarme::pagarme_recurrence" resource="Magento_Config::config" sortOrder="1" title="Recurrence Products" translate="title" />
 		<add action="pagarme_pagarme/plans/index" id="Pagarme::pagarme_plans_index" module="Pagarme_Pagarme" parent="Pagarme::pagarme_recurrence" resource="Magento_Config::config" sortOrder="1" title="Plans" translate="title" />
