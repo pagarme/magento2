@@ -154,6 +154,19 @@ class Index extends \Magento\Backend\App\Action
             'default',
             0
         );
+        $this->configWriter->save(
+            "pagarme_pagarme/global/account_id",
+            null,
+            'default',
+            0
+        );
+
+        $this->configWriter->save(
+            "pagarme_pagarme/global/merchant_id",
+            null,
+            'default',
+            0
+        );
     }
 
     private function updateStoreFields($websiteId)
@@ -184,6 +197,20 @@ class Index extends \Magento\Backend\App\Action
         $this->configWriter->save(
             "pagarme_pagarme/global/public_key",
             $currentConfiguration->getPublicKey()->getValue(),
+            'websites',
+            $websiteId
+        );
+
+        $this->configWriter->save(
+            "pagarme_pagarme/global/account_id",
+            $currentConfiguration->getAccountId()->getValue(),
+            'websites',
+            $websiteId
+        );
+
+        $this->configWriter->save(
+            "pagarme_pagarme/global/merchant_id",
+            $currentConfiguration->getMerchantId()->getValue(),
             'websites',
             $websiteId
         );
