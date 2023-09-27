@@ -502,7 +502,9 @@ define([
         addSavedCreditCardsListener(formObject) {
 
             const paymentMethodController = this;
-            let brand = $('option:selected').attr('brand');
+            let brand = formObject.savedCreditCardSelect
+                .find('option:selected')
+                .attr('brand');
 
             if (brand == undefined) {
                 brand = formObject.creditCardBrand.val();
@@ -510,12 +512,15 @@ define([
 
 
             formObject.creditCardBrand.val(brand);
+            const formHandler = new FormHandler();
+            formHandler.init(formObject);
+
 
             formObject.savedCreditCardSelect.on('change', function() {
                 const value = $(this).val();
-                const brand = $('option:selected').attr('brand');
+                const brand = $(this).find('option:selected').attr('brand');
 
-                formObject.creditCardBrand.val(brand);
+                formHandler.switchBrand(brand);
                 if (value === 'new') {
                     $(formObject.containerSelector + ' .new').show();
 
@@ -525,7 +530,7 @@ define([
                     ) {
                         formObject.multibuyer.showMultibuyer.parent().show();
                     }
-                    return;
+                    return paymentMethodController.fillInstallments(formObject);
                 }
 
                 paymentMethodController.fillInstallments(formObject);
@@ -653,8 +658,8 @@ define([
             let selectedBrand = form.creditCardBrand.val();
 
             let amount = form.inputAmount.val();
-            if (typeof selectedBrand == "undefined") {
-                selectedBrand = 'default';
+            if (!selectedBrand || selectedBrand === 'default') {
+                return formHandler.updateInstallmentSelect([], form.creditCardInstallments);
             }
 
             if (typeof amount == "undefined") {
@@ -744,7 +749,7 @@ define([
             parentsElementsError.hide();
             return false;
         }
-    
+
         validateBrandField(formObject) {
             const element = formObject.creditCardBrand;
             const requiredElement = element.parent().parent();
@@ -841,7 +846,9 @@ define([
 
             if (typeof formObject.savedCreditCardSelect[0] != 'undefined') {
 
-                let brand = $('option:selected').attr('brand');
+                let brand = formObject.savedCreditCardSelect
+                    .find('option:selected')
+                    .attr('brand');
 
                 if (brand == undefined) {
                     brand = formObject.creditCardBrand.val();

@@ -133,6 +133,7 @@ define(['jquery'], ($) => {
         fillSavedCreditCardsSelect = function (platformConfig, formObject) {
             let html = '';
             const cards = platformConfig.savedAllCards[formObject.savedCardSelectUsed]
+            let firstOptionValue = null;
 
             const brands = [];
             platformConfig.avaliableBrands[formObject.savedCardSelectUsed].forEach(function (item) {
@@ -151,11 +152,15 @@ define(['jquery'], ($) => {
                         continue;
                     }
 
+                    if (!firstOptionValue) {
+                        firstOptionValue = cards[i].id;
+                    }
+
                     html +=
                         "<option value='" +
                         cards[i].id +
                         "'" +
-                        " brand='" + cards[i].brand  + "'" +
+                        " brand='" + cards[i].brand?.toLowerCase()  + "'" +
                         ">" +
                         cards[i].brand + " " +
                         cards[i].first_six_digits +
@@ -172,6 +177,7 @@ define(['jquery'], ($) => {
 
                 html += "<option value='new'>Preencher dados</option>";
                 $(formObject.savedCreditCardSelect).html(html);
+                $(formObject.savedCreditCardSelect).val(firstOptionValue);
             }
         }
         fillMultibuyerStateSelect(platformConfig, formObject) {
