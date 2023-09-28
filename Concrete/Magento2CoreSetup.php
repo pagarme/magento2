@@ -170,7 +170,6 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
             $configErrorNotify = new ConfigNotification();
             $configErrorNotify->addNotify($error);
         }
-        
     }
 
     /**
@@ -334,7 +333,9 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
     {
         $options = [
             'hubInstallId' => 'install_id',
-            'hubEnvironment' => 'environment'
+            'hubEnvironment' => 'environment',
+            'merchantId' => 'merchant_id',
+            'accountId' => 'account_id'
         ];
 
         $section = 'pagarme_pagarme/hub/';

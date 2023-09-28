@@ -155,14 +155,14 @@ class Index extends \Magento\Backend\App\Action
             0
         );
         $this->configWriter->save(
-            "pagarme_pagarme/global/account_id",
+            "pagarme_pagarme/hub/account_id",
             null,
             'default',
             0
         );
 
         $this->configWriter->save(
-            "pagarme_pagarme/global/merchant_id",
+            "pagarme_pagarme/hub/merchant_id",
             null,
             'default',
             0
@@ -202,14 +202,14 @@ class Index extends \Magento\Backend\App\Action
         );
 
         $this->configWriter->save(
-            "pagarme_pagarme/global/account_id",
+            "pagarme_pagarme/hub/account_id",
             $currentConfiguration->getAccountId()->getValue(),
             'websites',
             $websiteId
         );
 
         $this->configWriter->save(
-            "pagarme_pagarme/global/merchant_id",
+            "pagarme_pagarme/hub/merchant_id",
             $currentConfiguration->getMerchantId()->getValue(),
             'websites',
             $websiteId

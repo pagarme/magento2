@@ -11,6 +11,7 @@
 		<add action="pagarme_pagarme/recipients/index" id="Pagarme::pagarme_pagarme_recipients_index" module="Pagarme_Pagarme" parent="Pagarme::pagarme_pagarme_marketplace" resource="Magento_Config::config" sortOrder="1" title="Recipients" translate="title" />
 
 		<add action="pagarme_pagarme/hub/account" id="Pagarme::pagarme_hub_account" module="Pagarme_Pagarme" parent="Pagarme::pagarme_label" resource="Magento_Config::config" sortOrder="0" title="Account" translate="title" />
+		<add action="pagarme_pagarme/hub/uninstall" id="Pagarme::pagarme_hub_uninstall" module="Pagarme_Pagarme" parent="Pagarme::pagarme_label" resource="Magento_Config::config" sortOrder="0" title="Uninstall" translate="title" />
 
 		<add id="Pagarme::pagarme_recurrence" module="Pagarme_Pagarme" parent="Pagarme::pagarme" resource="Magento_Config::config" sortOrder="30" title="Recurrence" translate="title" />
 		<add action="pagarme_pagarme/recurrenceproducts/index" id="Pagarme::pagarme_recurrenceproducts_index" module="Pagarme_Pagarme" parent="Pagarme::pagarme_recurrence" resource="Magento_Config::config" sortOrder="1" title="Recurrence Products" translate="title" />
