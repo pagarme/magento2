@@ -4,19 +4,19 @@ kind: Component
 metadata:
   name: MAGENTO 2
   title: MAGENTO 2
-  description: Módulo fechado para integração com o sistema de e-commerce Magento versão 2 para a P&G
+  description: Módulo opensource para integração com o sistema de e-commerce Magento 2 para a P&G
   namespace: pagarme-psp
   annotations:
-    legacy.stone.tech/owner-email: CHANGE_ME
-    legacy.stone.tech/prod-date: CHANGE_ME
+    legacy.stone.tech/owner-email: opensource@pagar.me
+    legacy.stone.tech/prod-date: 2021-05-14
     stone.tech/on-prem-sites: *
   labels:
-    legacy.stone.tech/internal-user-auth-base: CHANGE_ME
-    legacy.stone.tech/access-request-type:  CHANGE_ME
-    legacy.stone.tech/handle-lgpd:  CHANGE_ME
-    legacy.stone.tech/customer-auth-method:  CHANGE_ME
-    stone.tech/endpoint-type:  CHANGE_ME
+    legacy.stone.tech/internal-user-auth-base: not-applicable
+    legacy.stone.tech/access-request-type: not-applicable
+    legacy.stone.tech/handle-lgpd: false
+    legacy.stone.tech/customer-auth-method: not-applicable
+    stone.tech/endpoint-type: none
 spec:
-  type: service
+  type: library
   lifecycle: production
-  owner: pagarme/ADD_OWNER_TEAM #CHANGE IF NOT OWNER TEAM IS CORRECTLY
+  owner: pagarme/opensource-apps-team
