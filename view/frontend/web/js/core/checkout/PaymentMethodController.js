@@ -32,6 +32,7 @@ define([
 
     const fieldError = '.field-error';
     const errorClass = '_error';
+    const optionSelectedSelector = 'option:selected';
     return class PaymentMethodController {
         constructor(methodCode, platformConfig) {
             this.methodCode = methodCode;
@@ -503,7 +504,7 @@ define([
 
             const paymentMethodController = this;
             let brand = formObject.savedCreditCardSelect
-                .find('option:selected')
+                .find(optionSelectedSelector)
                 .attr('brand');
 
             if (brand == undefined) {
@@ -518,9 +519,9 @@ define([
 
             formObject.savedCreditCardSelect.on('change', function() {
                 const value = $(this).val();
-                const brand = $(this).find('option:selected').attr('brand');
+                const currentSavedCardBrand = $(this).find(optionSelectedSelector).attr('brand');
 
-                formHandler.switchBrand(brand);
+                formHandler.switchBrand(currentSavedCardBrand);
                 if (value === 'new') {
                     $(formObject.containerSelector + ' .new').show();
 
@@ -530,7 +531,8 @@ define([
                     ) {
                         formObject.multibuyer.showMultibuyer.parent().show();
                     }
-                    return paymentMethodController.fillInstallments(formObject);
+                    paymentMethodController.fillInstallments(formObject);
+                    return
                 }
 
                 paymentMethodController.fillInstallments(formObject);
@@ -659,7 +661,8 @@ define([
 
             let amount = form.inputAmount.val();
             if (!selectedBrand || selectedBrand === 'default') {
-                return formHandler.updateInstallmentSelect([], form.creditCardInstallments);
+                formHandler.updateInstallmentSelect([], form.creditCardInstallments);
+                return
             }
 
             if (typeof amount == "undefined") {
@@ -847,7 +850,7 @@ define([
             if (typeof formObject.savedCreditCardSelect[0] != 'undefined') {
 
                 let brand = formObject.savedCreditCardSelect
-                    .find('option:selected')
+                    .find(optionSelectedSelector)
                     .attr('brand');
 
                 if (brand == undefined) {
