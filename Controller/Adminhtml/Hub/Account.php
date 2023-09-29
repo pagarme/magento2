@@ -56,7 +56,7 @@ class Account extends \Magento\Backend\App\Action
         //return $this->handleResult(200, $message);
 
         $resultPage = $this->resultPageFactory->create();
-        $resultPage->getConfig()->getTitle()->prepend(__("Get Agcount"));
+        $resultPage->getConfig()->getTitle()->prepend(__("Get Account"));
 
         var_dump($this->getAccountInfoOnPagarme());
         exit();
@@ -93,6 +93,19 @@ class Account extends \Magento\Backend\App\Action
             }
             return false;
         }
+    }
+
+    public function getAccountIdFromWebhook($account)
+    {
+        if ($this->getAccountId() || empty($account) || empty($account['id'])){
+            return;
+        }
+
+        $this->config->setData(
+            'account_id',
+            $account['id']
+        );
+        $this->config->save();
     }
 
     public function getAccountId()
