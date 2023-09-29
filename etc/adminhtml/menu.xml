@@ -18,9 +18,13 @@
 		<add action="pagarme_pagarme/plans/index" id="Pagarme::pagarme_plans_index" module="Pagarme_Pagarme" parent="Pagarme::pagarme_recurrence" resource="Magento_Config::config" sortOrder="1" title="Plans" translate="title" />
 		<add action="pagarme_pagarme/subscriptions/index" id="Pagarme::pagarme_subscriptions_index" module="Pagarme_Pagarme" parent="Pagarme::pagarme_recurrence" resource="Magento_Config::config" sortOrder="1" title="Subscriptions" translate="title" />
 
-		<!-- Add recurence items in catalog menu -->
+		<!-- Add recurrence items in catalog menu -->
 		<add id="Pagarme::pagarme_recurrence_catalog" module="Pagarme_Pagarme" parent="Magento_Catalog::catalog" resource="Magento_Config::config" dependsOnConfig="pagarme_pagarme/recurrence/active" sortOrder="30" title="Recurrence" translate="title" />
 		<add action="pagarme_pagarme/recurrenceproducts/index" id="Pagarme::pagarme_recurrenceproducts_catalog" module="Pagarme_Pagarme" parent="Pagarme::pagarme_recurrence_catalog" resource="Magento_Config::config" sortOrder="1" title="Recurrence Products" translate="title" />
 		<add action="pagarme_pagarme/plans/index" id="Pagarme::pagarme_plans_catalog" module="Pagarme_Pagarme" parent="Pagarme::pagarme_recurrence_catalog" resource="Magento_Config::config" sortOrder="1" title="Plans" translate="title" />
+
+        <!-- Add recurrence items in order menu -->
+        <add id="Pagarme::pagarme_recurrence_order" module="Pagarme_Pagarme" parent="Magento_Sales::sales" resource="Magento_Config::config" dependsOnConfig="pagarme_pagarme/recurrence/active" sortOrder="30" title="Recurrence" translate="title" />
+        <add action="pagarme_pagarme/subscriptions/index" id="Pagarme::pagarme_subscriptions_order" module="Pagarme_Pagarme" parent="Pagarme::pagarme_recurrence_order" resource="Magento_Config::config" sortOrder="1" title="Subscriptions" translate="title" />
 	</menu>
 </config>
