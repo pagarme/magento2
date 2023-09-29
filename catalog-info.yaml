@@ -9,7 +9,6 @@ metadata:
   annotations:
     legacy.stone.tech/owner-email: opensource@pagar.me
     legacy.stone.tech/prod-date: 2021-05-14
-    stone.tech/on-prem-sites: *
   labels:
     legacy.stone.tech/internal-user-auth-base: not-applicable
     legacy.stone.tech/access-request-type: not-applicable
