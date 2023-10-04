@@ -1140,19 +1140,6 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $newPaymentData = new \stdClass();
         $newPaymentData->amount =
             $this->moneyService->floatToCents($this->platformOrder->getGrandTotal());
-        $moduleConfiguration = MPSetup::getModuleConfiguration();
-        $newPaymentData->instructions = $moduleConfiguration->getBoletoInstructions();
-        $bankConfig = new Bank();
-        $bankNumber = $bankConfig->getBankNumber(MPSetup::getModuleConfiguration()->getBoletoBankCode());
-        if ($bankNumber) {
-            $newPaymentData->bank = $bankNumber;
-        }
-        $expirationDate = new \DateTime();
-        $days = MPSetup::getModuleConfiguration()->getBoletoDueDays();
-        if ($days) {
-            $expirationDate->modify("+{$days} day");
-        }
-        $newPaymentData->due_at = $expirationDate->format('c');
 
         $boletoDataIndex = BoletoPayment::getBaseCode();
         if (!isset($paymentData[$boletoDataIndex])) {
