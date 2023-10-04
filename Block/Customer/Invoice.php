@@ -12,11 +12,13 @@
 
 namespace Pagarme\Pagarme\Block\Customer;
 
-use Magento\Framework\View\Element\Template;
+use Magento\Framework\Exception\AuthorizationException;
+use Magento\Framework\Pricing\Helper\Data;
 use Magento\Framework\View\Element\Template\Context;
 use Magento\Framework\Registry;
 use Magento\Customer\Model\Session;
 use Pagarme\Core\Kernel\ValueObjects\Id\SubscriptionId;
+use Pagarme\Pagarme\Block\BaseTemplateWithCurrency;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Pagarme\Core\Recurrence\Repositories\SubscriptionRepository;
 use Pagarme\Core\Kernel\Exceptions\InvalidParamException;
@@ -24,7 +26,7 @@ use Pagarme\Core\Kernel\Abstractions\AbstractEntity;
 use Pagarme\Core\Recurrence\Repositories\ChargeRepository;
 use Pagarme\Core\Recurrence\Aggregates\Charge;
 
-class Invoice extends Template
+class Invoice extends BaseTemplateWithCurrency
 {
     /**
      * @var Session
@@ -47,17 +49,18 @@ class Invoice extends Template
     protected $coreRegistry;
 
     /**
-     * Link constructor.
      * @param Context $context
-     * @param CheckoutSession $checkoutSession
-     * @throws InvalidParamException
+     * @param Session $customerSession
+     * @param Registry $coreRegistry
+     * @param Data $priceHelper
      */
     public function __construct(
         Context $context,
         Session $customerSession,
-        Registry $coreRegistry
+        Registry $coreRegistry,
+        Data $priceHelper
     ) {
-        parent::__construct($context, []);
+        parent::__construct($context, $priceHelper, []);
         Magento2CoreSetup::bootstrap();
 
         $this->coreRegistry = $coreRegistry;
@@ -96,8 +99,26 @@ class Invoice extends Template
     }
 
     /**
+     * @param int $id
+     * @return int
+     */
+    public function getVisualChargeId($id)
+    {
+        return $id + 1;
+    }
+
+    /**
+     * @param Charge $item
+     * @return bool
+     */
+    public function isBillet($item)
+    {
+        return !empty($item->getBoletoLink());
+    }
+
+    /**
      * @param string $codeOrder
-     * @throws InvalidParamException
+     * @throws InvalidParamException|AuthorizationException
      */
     private function validateUserInvoice($codeOrder)
     {
@@ -112,8 +133,9 @@ class Invoice extends Template
         }
 
         if (!in_array($codeOrder, $listSubscriptionCode)) {
-            throw new \Exception(
-                'Esse pedido não pertence a esse usuário',
+            throw new AuthorizationException(
+                __('This order does not belong to this user'),
+                null,
                 403
             );
         }

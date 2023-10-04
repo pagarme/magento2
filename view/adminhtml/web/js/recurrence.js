@@ -1,18 +1,22 @@
 require([
     'jquery',
-    'jquery/ui'
+    'jquery/ui',
+    'mage/translate'
 ], function ($) {
     'use strict';
 
+    let productBundleMaxIndex = -1;
+    const saveButtonElement = "#save-button";
+    const recurrenceTypeElement = "#recurrence-type";
     $(document).ready(function(){
         $("#allow_installments_div").hide();
-        var editProduct = $("#edit-product").val();
+        const editProduct = $("#edit-product").val();
         if (editProduct.length > 0) {
             $(".select-product").hide();
             loadProduct(JSON.parse(editProduct));
         }
 
-        var products = Object.values(
+        const products = Object.values(
             JSON.parse($("#products-bundle").val())
         );
 
@@ -23,11 +27,11 @@ require([
                 $("#product_id").val(ui.item.id);
             },
             search: function(event, oUi) {
-                var currentValue = $(event.target).val().toLowerCase();
-                var arraySearch = [];
-                for (var index in products) {
+                const currentValue = $(event.target).val().toLowerCase();
+                const arraySearch = [];
+                for (const index in products) {
 
-                    var productName = products[index].value.toLowerCase();
+                    const productName = products[index].value.toLowerCase();
 
                     if (productName.indexOf(currentValue) >= 0) {
                         arraySearch.push(products[index]);
@@ -36,15 +40,15 @@ require([
 
                 $(this).autocomplete('option', 'source', arraySearch);
 
-                if (arraySearch.length == 0) {
-                    var message = 'Nenhum produto encontrado com nome: ' + currentValue;
+                if (arraySearch.length === 0) {
+                    const message = $.mage.__('No product founded with name: %1').replace('%1', currentValue);
                     showErrorMessage(message);
                 }
             }
         });
 
         $("#add-product").on('click', function() {
-            if ($("#product_id").val() == "") {
+            if ($("#product_id").val() === "") {
                 return;
             }
             updateTableProduct($(this));
@@ -57,7 +61,7 @@ require([
     });
 
     function formatPriceValue(e) {
-        var value = $(this).val();
+        let value = $(this).val();
         value = value.replace(/[^0-9]/g, '');
         value = (value / 100).toFixed(2);
         $(this).val(value.toString().replace('.',","));
@@ -73,15 +77,15 @@ require([
     function formSubmit(e) {
         e.preventDefault();
 
-        var errors = validateForm(e);
+        const errors = validateForm(e);
         if (errors.length > 0) {
             alert(errors.join("\r\n"));
             return;
         }
-        toogleSaveButton();
+        toggleSaveButton();
 
-        var dataSerialize = jQuery(this).serialize();
-        var url =  $("#url-post").val();
+        const dataSerialize = jQuery(this).serialize();
+        const url =  $("#url-post").val();
 
         jQuery.ajax({
             method: "POST",
@@ -97,60 +101,60 @@ require([
                 alert(data.message);
             },
             complete: function () {
-                toogleSaveButton()
+                toggleSaveButton()
             }
         });
     }
 
-    function toogleSaveButton()
+    function toggleSaveButton()
     {
-        var disabled = $("#save-button").prop('disabled');
+        const disabled = $(saveButtonElement).prop('disabled');
         if (disabled) {
-            $("#save-button").attr('disabled', false);
-            $("#save-button span").html("Save");
+            $(saveButtonElement).attr('disabled', false);
+            $(`${saveButtonElement} span`).html("Save");
             return;
         }
-        $("#save-button").attr('disabled', true);
-        $("#save-button span").html("Saving");
+        $(saveButtonElement).attr('disabled', true);
+        $(`${saveButtonElement} span`).html("Saving");
     }
 
     function validateForm(e) {
-        var errors = [];
+        const errors = [];
 
-        var type = $("#recurrence-type").val();
+        const type = $(recurrenceTypeElement).val();
 
-        var productId = $("#product_id").val();
+        const productId = $("#product_id").val();
         if (productId.length <= 0) {
-            errors.push("Bundle product not selected");
+            errors.push($.mage.__("Bundle product not selected"));
         }
 
-        var paymentMethod = [
+        const paymentMethod = [
             $("#boleto").prop("checked"),
             $("#credit-card").prop("checked")
         ];
 
-        var paymentsSelecteds = paymentMethod.filter(function (item) {
+        const selectedPayments = paymentMethod.filter(function (item) {
            return item !== false;
         });
 
-        if (paymentsSelecteds.length <= 0) {
-            errors.push("Select at last one payment method");
+        if (selectedPayments.length <= 0) {
+            errors.push($.mage.__("Select at last one payment method"));
         }
 
-        if (type == 'subscription') {
-            var cycles = [
+        if (type === 'subscription') {
+            const cycles = [
                 $("#interval_count_1").val(),
                 $("#interval_count_2").val(),
                 $("#interval_count_3").val(),
                 $("#interval_count_4").val()
             ];
 
-            var cyclesSelecteds = cycles.filter(function (item) {
+            const selectedCycles = cycles.filter(function (item) {
                 return item !== "";
             });
 
-            if (cyclesSelecteds.length <= 0) {
-                errors.push("Fill at last one cycle option");
+            if (selectedCycles.length <= 0) {
+                errors.push($.mage.__("Fill at last one cycle option"));
             }
         }
 
@@ -158,19 +162,19 @@ require([
     }
 
     function updateTableProduct(element) {
-        var data = {
+        const data = {
             productId: $("#product_id").val(),
-            recurrenceType: $("#recurrence-type").val(),
+            recurrenceType: $(recurrenceTypeElement).val(),
             recurrenceProductId: $("#product-recurrence-id").val()
         }
 
-        if (data.productId.length == 0) {
+        if (data.productId.length === 0) {
             return;
         }
 
         element.attr('disabled', true);
-        if (element.data('action') == 'add') {
-            var url = $("#url-search").val();
+        if (element.data('action') === 'add') {
+            const url = $("#url-search").val();
             $.getJSON(url, data, showData);
             return;
         }
@@ -179,20 +183,18 @@ require([
         $("#table-products tbody").empty();
         $("#product-search").val("");
         changeButton();
-        return;
     }
 
     function showData(data) {
         if (!data || data.length == 0) {
-            var msg =
-                'Não foi possível encontrar os subprodutos deste bundle. ' +
-                'Verifique sua configuração e tente novamente';
+            const msg = $.mage.__('It was not possible to find the subproducts for this bundle. ' +
+                'Check your configuration and try again');
             changeButton();
             showErrorMessage(msg);
             return;
         }
         $("#table-products").show();
-        for (var index in data) {
+        for (const index in data) {
             addRow(data[index], index);
         }
         fillProductBundle(data['productBundle']);
@@ -212,48 +214,54 @@ require([
             return;
         }
 
-        var id = data.id == undefined ? "" : data.id;
-        var cycles = data.cycles == undefined ? "" : data.cycles;
-        var quantity = data.quantity == undefined ? 1 : data.quantity;
-        var pagarme_id = data.pagarme_id == undefined ? "" : data.pagarme_id;
+        if (index > productBundleMaxIndex) {
+            productBundleMaxIndex = index;
+        }
 
-        var inputsHidden = "<input type='hidden' name='form[items][" + index + "][product_id]' value='" + data.code + "'/>" +
-            "<input type='hidden' name='form[items][" + index + "][name]' value='" + data.name + "'/>" +
-            "<input type='hidden' name='form[items][" + index + "][price]' value='" + data.price + "'/>" +
-            "<input type='hidden' name='form[items][" + index + "][quantity]' value='" + quantity + "'/>" +
-            "<input type='hidden' name='form[items][" + index + "][pagarme_id]' value='" + pagarme_id + "'/>" +
-            "<input type='hidden' name='form[items][" + index + "][id]' value='" + id + "'/>";
+        const id = data.id === undefined ? "" : data.id;
+        const cycles = data.cycles === undefined ? "" : data.cycles;
+        const quantity = data.quantity === undefined ? 1 : data.quantity;
+        const pagarmeId = data.pagarme_id === undefined ? "" : data.pagarme_id;
+        const inputFormItem = `<input type='hidden' name='form[items][${index}`;
+        const closeTag = "'/>";
 
-        var quantityColumn = "<input type='number' disabled name='form[items][" + index + "][quantity]' value='" + quantity + "'/>";
-        var priceColumn = "<input type='number' disabled value='" + (data.price / 100).toFixed(2) + "' />" +
-            "<input type='hidden' name='form[items][" + index + "][quantity]' value='" + quantity + "'/>";
+        const inputsHidden = `${inputFormItem}][product_id]' value='${data.code}${closeTag}
+            ${inputFormItem}][name]' value='${data.name}${closeTag}
+            ${inputFormItem}][price]' value='${data.price}${closeTag}
+            ${inputFormItem}][quantity]' value='${quantity}${closeTag}
+            ${inputFormItem}][pagarme_id]' value='${pagarmeId}${closeTag}
+            ${inputFormItem}][id]' value='${id}${closeTag}`;
 
-        var type = $("#recurrence-type").val();
+        const quantityColumn = `<input type='number' disabled name='form[items][${index}][quantity]' value='${quantity}'/>`;
+        const priceColumn = `<input type='number' disabled value='${(data.price / 100).toFixed(2)}' />
+            <input type='hidden' name='form[items][${index}][quantity]' value='${quantity}'/>`;
 
-        var lastColumn = quantityColumn;
-        if (type == 'subscription') {
+        const type = $(recurrenceTypeElement).val();
+
+        let lastColumn = quantityColumn;
+        if (type === 'subscription') {
             lastColumn = priceColumn;
         }
-        var tr = $('<tr>').append(
-            $('<td>').html("<img src='" + data.image + "' width='70px' height='70px'>"),
+        const tr = $('<tr>').append(
+            $('<td>').html(`<img src='${data.image}' width='70px' height='70px'>`),
             $('<td>').text(data.name),
             $('<td>').html(lastColumn + inputsHidden),
         );
 
-        var cycleColumn = "<input type='number' name='form[items][" + index + "][cycles]' value='" + cycles + "' step='1' min='0'/>";
+        const cycleColumn = `<input type='number' name='form[items][${index}][cycles]' value='${cycles}' step='1' min='0'/>`;
         if (type !== 'subscription') {
             tr.append($('<td>').html(cycleColumn))
         }
 
-        var table = $('#table-products tbody');
+        const table = $('#table-products tbody');
         table.append(tr);
     }
 
     function changeButton() {
-        var button = $("#add-product");
+        const button = $("#add-product");
         button.attr('disabled', false);
 
-        if (button.data('action') == 'add') {
+        if (button.data('action') === 'add') {
             $('#product-search').attr('disabled', true);
             button.data('action', 'remove');
             button.find('span').html("Remove Product");
@@ -262,7 +270,6 @@ require([
         $('#product-search').attr('disabled', false);
         button.data('action', 'add');
         button.find('span').html("Add Product");
-        return;
     }
 
     function loadProduct(product) {
@@ -274,6 +281,7 @@ require([
         $("#plan-id").val(product.pagarmeId);
         $("#status").val(product.status);
         $("#trial_period_days").val(product.trialPeriodDays);
+        $("#apply-discount-in-all-product-cycles").prop('checked', product.applyDiscountInAllProductCycles)
 
 
         if (product.creditCard) {
@@ -287,26 +295,25 @@ require([
     }
 
     function fillRepetitionTable(reptitions) {
-        if (reptitions == undefined) {
+        if (reptitions === undefined) {
             return;
         }
 
-        for (var index in reptitions) {
-            var count = parseInt(index) + 1;
-            var recurrencePrice = reptitions[index].recurrencePrice;
+        for (const index in reptitions) {
+            const count = parseInt(index) + 1;
+            let recurrencePrice = reptitions[index].recurrencePrice;
             recurrencePrice = (recurrencePrice / 100).toFixed(2);
             recurrencePrice = recurrencePrice.toString().replace('.',',');
 
-            $("#interval_count_" + count).val(reptitions[index].intervalCount);
-            $("#interval_" + count).val(reptitions[index].interval);
-            $("#recurrence_price_" + count).val(recurrencePrice);
-            $("#cycles_" + count).val(reptitions[index].cycles || 0);
-            $("#repetition_id_" + count).val(reptitions[index].id);
+            $(`#interval_count_${count}`).val(reptitions[index].intervalCount);
+            $(`#interval_${count}`).val(reptitions[index].interval);
+            $(`#recurrence_price_${count}`).val(recurrencePrice);
+            $(`#cycles_${count}`).val(reptitions[index].cycles || 0);
+            $(`#repetition_id_${count}`).val(reptitions[index].id);
         }
     }
 
     function showErrorMessage(message) {
-        var message = message;
         $('#error-message').html(message).show();
 
         setTimeout(function(){ $('#error-message').fadeOut() }, 3000);

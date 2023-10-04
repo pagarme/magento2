@@ -53,7 +53,7 @@
     </type>
 
     <type name="Magento\Checkout\Model\Cart">
-        <plugin name="prevent_add_to" type="Pagarme\Pagarme\Model\Cart\CartConflict"/>
+        <plugin name="prevent_add_to" type="Pagarme\Pagarme\Plugin\Cart\CartConflict"/>
     </type>
 
     <type name="Pagarme\Pagarme\Model\InstallmentsByBrandAndAmountManagement">
@@ -221,7 +221,20 @@
             <argument name="infoBlockType" xsi:type="string">Pagarme\Pagarme\Block\Payment\Info\Pix</argument>
         </arguments>
     </virtualType>
-
+    <virtualType name="PagarmePixCommandResponseHandlerPool" type="Magento\Payment\Gateway\Response\HandlerChain">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="general" xsi:type="string">Pagarme\Pagarme\Gateway\Transaction\Pix\ResourceGateway\Create\Response\GeneralHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PagarmePixAuthorizeCommand" type="Pagarme\Pagarme\Gateway\Transaction\Base\Command\AuthorizeCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">Pagarme\Pagarme\Gateway\Transaction\Pix\ResourceGateway\Create\RequestBuilder</argument>
+            <argument name="responseHandler" xsi:type="object">PagarmePixCommandResponseHandlerPool</argument>
+            <argument name="validator" xsi:type="object">Pagarme\Pagarme\Gateway\Transaction\Pix\ResourceGateway\Create\Response\Validator</argument>
+        </arguments>
+    </virtualType>
     <virtualType name="PagarmePixValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
         <arguments>
             <argument name="handlers" xsi:type="array">
@@ -246,8 +259,7 @@
         <arguments>
             <argument name="commands" xsi:type="array">
                 <item name="initialize" xsi:type="string">Pagarme\Pagarme\Gateway\Transaction\Base\Command\InitializeCommand</item>
-<!--                <item name="authorize" xsi:type="string">PagarmePixAuthorizeCommand</item>-->
-                <item name="authorize" xsi:type="string">PagarmeBilletAuthorizeCommand</item>
+                <item name="authorize" xsi:type="string">PagarmePixAuthorizeCommand</item>
             </argument>
         </arguments>
     </virtualType>
@@ -293,15 +305,15 @@
         </arguments>
     </virtualType>
 
-    <virtualType name="PagarmeBilletAuthorizeCommand" type="Pagarme\Pagarme\Gateway\Transaction\Billet\Command\AuthorizeCommand">
+    <virtualType name="PagarmeBilletAuthorizeCommand" type="Pagarme\Pagarme\Gateway\Transaction\Base\Command\AuthorizeCommand">
         <arguments>
             <argument name="requestBuilder" xsi:type="object">Pagarme\Pagarme\Gateway\Transaction\Billet\ResourceGateway\Create\RequestBuilder</argument>
-            <argument name="responseHandler" xsi:type="object">PagarmeBilletAuthorizeCommandResponseHandlerPool</argument>
+            <argument name="responseHandler" xsi:type="object">PagarmeBilletCommandResponseHandlerPool</argument>
             <argument name="validator" xsi:type="object">Pagarme\Pagarme\Gateway\Transaction\Billet\ResourceGateway\Create\Response\Validator</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="PagarmeBilletAuthorizeCommandResponseHandlerPool" type="Magento\Payment\Gateway\Response\HandlerChain">
+    <virtualType name="PagarmeBilletCommandResponseHandlerPool" type="Magento\Payment\Gateway\Response\HandlerChain">
         <arguments>
             <argument name="handlers" xsi:type="array">
                 <item name="general" xsi:type="string">Pagarme\Pagarme\Gateway\Transaction\Billet\ResourceGateway\Create\Response\GeneralHandler</item>
@@ -475,7 +487,7 @@
             <argument name="code" xsi:type="const">Pagarme\Pagarme\Model\Ui\CreditCard\ConfigProvider::CODE</argument>
             <argument name="valueHandlerPool" xsi:type="object">PagarmeCreditCardValueHandlerPool</argument>
             <argument name="commandPool" xsi:type="object">PagarmeCreditCardCommandPool</argument>
-            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="formBlockType" xsi:type="string">Pagarme\Pagarme\Block\Form\CreditCard</argument>
             <argument name="infoBlockType" xsi:type="string">Pagarme\Pagarme\Block\Payment\Info\CreditCard</argument>
         </arguments>
     </virtualType>
@@ -646,14 +658,6 @@
     </type>
 
 <!--    <preference for="Magento\CatalogWidget\Block\Product\ProductsList" type="Pagarme\Pagarme\Block\Web\ProductsList" />-->
-
-<!--    <type name="\Magento\Catalog\Pricing\Render\FinalPriceBox">-->
-<!--        <plugin name="Pagarme_Pagarme_change_template" type="Pagarme\Pagarme\Plugin\Princing\Render\FinalPricePlugin" />-->
-<!--    </type>-->
-
-    <type name="\Magento\Checkout\Block\Cart\Item\Renderer">
-        <plugin name="Pagarme_Pagarme_change_template_cycles" type="Pagarme\Pagarme\Plugin\Princing\Render\ProductPriceCyclesPlugin" />
-    </type>
 
     <!-- Recurrence -->
 

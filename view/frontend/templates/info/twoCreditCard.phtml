@@ -1,26 +1,26 @@
-<?php if ($this->getCcTypeFirst() && $this->getCcTypeSecond()): ?>
-    <span><?php echo __($this->getTitle()); ?></span>
-    <br/>
-    <br/>
-    <span style="font-size: initial;"><b><?php echo __('First Card'); ?></b></span>
-    <br/>
-    <span><b><?php echo __('Brand'); ?>: </b><?php echo $this->getCcTypeFirst(); ?></span>
-    <br/>
-    <span><b><?php echo __('Number'); ?>: </b><?php echo $this->getFirstCardLast4(); ?></span>
-    <br/>
-    <span><b><?php echo __('Installments'); ?>: </b><?php echo $this->getInstallmentsFirstCard(); ?></span>
-    <br/>
-    <span><b><?php echo __('Amount'); ?>: </b><?php echo number_format($this->getFirstCardAmount(),2,',','.'); ?></span>
-    <br/>
-    <br/>
-    <span style="font-size: initial;"><b><?php echo __('Second Card'); ?></b></span>
-    <br/>
-    <span><b><?php echo __('Brand'); ?>: </b><?php echo $this->getCcTypeSecond(); ?></span>
-    <br/>
-    <span><b><?php echo __('Number'); ?>: </b><?php echo $this->getSecondCardLast4(); ?></span>
-    <br/>
-    <span><b><?php echo __('Installments'); ?>: </b><?php echo $this->getInstallmentsSecondCard(); ?></span>
-    <br/>
-    <span><b><?php echo __('Amount'); ?>: </b><?php echo number_format($this->getSecondCardAmount(),2,',','.'); ?></span>
-
-<?php endif ?>
+<?php
+/**
+ * var Pagarme\Pagarme\Block\Payment\Info\TwoCreditCard $this
+ *
+ * @author      Open Source Team
+ * @copyright   2021 Pagar.me (https://pagar.me)
+ * @license     https://pagar.me Copyright
+ *
+ * @link        https://pagar.me
+ */
+?>
+<p><?= __($this->getTitle()); ?></p>
+<h3><?= __('First Card'); ?></h3>
+<p>
+    <b><?= __('Brand'); ?>:</b> <?= ucfirst($this->getCcTypeFirst()); ?><br/>
+    <b><?= __('Number'); ?>:</b> <?= $this->getFirstCardLast4(); ?><br/>
+    <b><?= __('Installments'); ?>:</b> <?= $this->getInstallmentsFirstCard(); ?><br/>
+    <b><?= __('Amount'); ?>:</b> <?= number_format(floatval($this->getFirstCardAmount()),2,',','.'); ?>
+</p>
+<h3><?= __('Second Card'); ?></h3>
+<p>
+    <b><?= __('Brand'); ?>:</b> <?= ucfirst($this->getCcTypeSecond()); ?><br/>
+    <b><?= __('Number'); ?>:</b> <?= $this->getSecondCardLast4(); ?><br/>
+    <b><?= __('Installments'); ?>:</b> <?= $this->getInstallmentsSecondCard(); ?><br/>
+    <b><?= __('Amount'); ?>:</b> <?= number_format(floatval($this->getSecondCardAmount()),2,',','.'); ?>
+</p>

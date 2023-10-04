@@ -2,79 +2,64 @@
 
 namespace Pagarme\Pagarme\Block\Adminhtml\Order\Charge\Tab;
 
+use Exception;
+use Magento\Backend\Block\Template\Context;
+use Magento\Backend\Block\Widget\Tab\TabInterface;
+use Magento\Framework\Pricing\Helper\Data;
+use Magento\Framework\Registry;
+use Magento\Sales\Model\Order;
+use Pagarme\Core\Kernel\Exceptions\InvalidParamException;
+use Pagarme\Pagarme\Block\BaseTemplateWithCurrency;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use Pagarme\Pagarme\Service\Order\ChargeService;
 
-use Pagarme\Core\Kernel\Repositories\ChargeRepository;
-use Pagarme\Core\Kernel\Repositories\OrderRepository;
-use Pagarme\Core\Kernel\ValueObjects\Id\OrderId;
-
-class View  extends \Magento\Backend\Block\Template implements \Magento\Backend\Block\Widget\Tab\TabInterface
+class View  extends BaseTemplateWithCurrency implements TabInterface
 {
+    // @codingStandardsIgnoreLine
     protected $_template = 'tab/view/order_charge.phtml';
 
     /**
-     * View constructor.
-     * @param \Magento\Backend\Block\Template\Context $context
-     * @param \Magento\Framework\Registry $registry
+     * @var Registry
+     */
+    private $registry;
+
+    /**
+     * @var ChargeService
+     */
+    private $chargeService;
+
+    /**
+     * @param Context $context
+     * @param Registry $registry
+     * @param Data $priceHelper
+     * @param ChargeService $chargeService
      * @param array $data
+     * @throws Exception
      */
     public function __construct(
-        \Magento\Backend\Block\Template\Context $context,
-        \Magento\Framework\Registry $registry,
-        array $data = []
+        Context         $context,
+        Registry        $registry,
+        Data            $priceHelper,
+        ChargeService   $chargeService,
+        array           $data = []
     ) {
         Magento2CoreSetup::bootstrap();
 
-        $this->_coreRegistry = $registry;
+        $this->registry = $registry;
+        $this->chargeService = $chargeService;
 
-        parent::__construct($context, $data);
+        parent::__construct($context, $priceHelper, $data);
     }
 
     /**
-     * Retrieve order model instance
-     *
-     * @return \Magento\Sales\Model\Order
+     * @return array
+     * @throws InvalidParamException
      */
-    public function getOrder()
-    {
-        return $this->_coreRegistry->registry('current_order');
-    }
-
     public function getCharges()
     {
-        //@todo Create service to return the charges
-        $platformOrderID = $this->getOrderIncrementId();
-        $pagarmeOrder = (new OrderRepository)->findByPlatformId($platformOrderID);
-
-        if ($pagarmeOrder === null) {
-            return [];
-        }
-
-        $charges = (new ChargeRepository)->findByOrderId(
-            new OrderId($pagarmeOrder->getPagarmeId()->getValue())
+        return $this->chargeService->findChargesByIncrementId(
+            $this->getOrderIncrementId()
         );
-
-        return $charges;
-    }
-
-    /**
-     * Retrieve order model instance
-     *
-     * @return \Magento\Sales\Model\Order
-     */
-    public function getOrderId()
-    {
-        return $this->getOrder()->getEntityId();
-    }
-
-    /**
-     * Retrieve order increment id
-     *
-     * @return string
-     */
-    public function getOrderIncrementId()
-    {
-        return $this->getOrder()->getIncrementId();
     }
 
     /**
@@ -90,7 +75,7 @@ class View  extends \Magento\Backend\Block\Template implements \Magento\Backend\
      */
     public function getTabTitle()
     {
-        return __('Charges');
+        return $this->getTabLabel();
     }
 
     /**
@@ -117,5 +102,25 @@ class View  extends \Magento\Backend\Block\Template implements \Magento\Backend\
     public function getChargeCaptureUrl()
     {
         return $this->_urlBuilder->getUrl('pagarme_pagarme/charges/capture');
+    }
+
+    /**
+     * Retrieve order model instance
+     *
+     * @return Order
+     */
+    private function getOrder()
+    {
+        return $this->registry->registry('current_order');
+    }
+
+    /**
+     * Retrieve order increment id
+     *
+     * @return string
+     */
+    private function getOrderIncrementId()
+    {
+        return $this->getOrder()->getIncrementId();
     }
 }

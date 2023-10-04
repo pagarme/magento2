@@ -2,10 +2,21 @@
 
 namespace Pagarme\Pagarme\Concrete;
 
+use Magento\Framework\App\ResourceConnection;
 use Pagarme\Core\Kernel\Abstractions\AbstractDatabaseDecorator;
 
 final class Magento2DatabaseDecorator extends AbstractDatabaseDecorator
 {
+    /**
+     * @var ResourceConnection
+     */
+    protected $db;
+
+    /**
+     * @var mixed
+     */
+    private $lastInsertId;
+
     protected function setTableArray()
     {
         $this->tableArray = [
@@ -87,7 +98,7 @@ final class Magento2DatabaseDecorator extends AbstractDatabaseDecorator
 
     public function getLastId()
     {
-        return $this->db->lastInsertId;
+        return $this->lastInsertId;
     }
 
     protected function setTablePrefix()
@@ -98,6 +109,6 @@ final class Magento2DatabaseDecorator extends AbstractDatabaseDecorator
 
     protected function setLastInsertId($lastInsertId)
     {
-        $this->db->lastInsertId = $lastInsertId;
+        $this->lastInsertId = $lastInsertId;
     }
 }

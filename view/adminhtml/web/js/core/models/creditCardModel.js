@@ -56,7 +56,7 @@ define([
     CreditCardModel.addListeners = function(config) {
         Listeners.addCreditCardNumberListener(this.formObject);
         Listeners.addCreditCardHolderNameListener(this.formObject);
-        Listeners.addCreditCardBrandListener(this.formObject, config.installmenUrl);
+        Listeners.addCreditCardBrandListener(this.formObject, config.installmentUrl);
         Listeners.addCreditCardInstallmentsListener(this.formObject);
     };
 

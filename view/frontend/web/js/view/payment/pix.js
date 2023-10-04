@@ -3,9 +3,10 @@
 define(
     [
         "Pagarme_Pagarme/js/view/payment/default",
+        "Pagarme_Pagarme/js/core/checkout/PaymentModuleBootstrap",
         "Pagarme_Pagarme/js/core/models/PixModel"
     ],
-    function (Component, $t) {
+    function (Component, PagarmeCore, $t) {
 
         return Component.extend({
             defaults: {
@@ -38,7 +39,7 @@ define(
             },
 
             getData: function () {
-                var paymentMethod = window.PagarmeCore.paymentMethod[this.getModel()];
+                var paymentMethod = PagarmeCore.paymentMethod[this.getModel()];
                 if (paymentMethod == undefined) {
                     return paymentMethod;
                 }

@@ -33,6 +33,11 @@ class HubCommand implements HubCommandInterface
      */
     protected $websiteId;
 
+    /**
+     * @var StoreManagerInterface
+     */
+    protected $storeManager;
+
     public function __construct(
         Request $request,
         WriterInterface $configWriter,

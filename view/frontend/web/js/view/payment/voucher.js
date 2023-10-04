@@ -63,7 +63,7 @@ define(
             },
 
             getData: function () {
-                var paymentMethod = window.PagarmeCore.paymentMethod[this.getModel()];
+                var paymentMethod = PagarmeCore.paymentMethod[this.getModel()];
                 if (paymentMethod == undefined) {
                     return paymentMethod;
                 }

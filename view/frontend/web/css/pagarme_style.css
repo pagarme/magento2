@@ -22,3 +22,17 @@
     width: 335px;
     display: none;
 }
+
+.hidden-element {
+    display: none;
+}
+
+.field .control .fields .field .control .cc_saved_creditcards,
+.field .control .fields .field .control .cc_installments {
+    width: 335px;
+}
+
+.field .control .cc_amount,
+.field .control .cc_owner {
+    width: 225px;
+}

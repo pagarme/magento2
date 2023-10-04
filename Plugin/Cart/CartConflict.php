@@ -1,33 +1,34 @@
 <?php
 
-namespace Pagarme\Pagarme\Model\Cart;
+namespace Pagarme\Pagarme\Plugin\Cart;
 
+use Exception;
+use Magento\Catalog\Api\Data\ProductCustomOptionValuesInterface;
+use Magento\Catalog\Model\Product\Interceptor;
+use Magento\Catalog\Model\Product\Option;
+use Magento\Catalog\Model\Product\Option\Value;
 use Magento\Checkout\Model\Cart;
 use Magento\Framework\Exception\LocalizedException;
 use Pagarme\Core\Kernel\Services\LocalizationService;
-use Pagarme\Core\Recurrence\Interfaces\ProductPlanInterface;
+use Pagarme\Core\Recurrence\Aggregates\Repetition;
 use Pagarme\Core\Recurrence\Services\CartRules\CurrentProduct;
+use Pagarme\Core\Recurrence\Services\CartRules\ProductListInCart;
+use Pagarme\Core\Recurrence\Services\PlanService;
+use Pagarme\Core\Recurrence\Services\ProductSubscriptionService;
 use Pagarme\Core\Recurrence\Services\RecurrenceService;
 use Pagarme\Core\Recurrence\Services\RepetitionService;
-use Pagarme\Core\Recurrence\Services\CartRules\MoreThanOneRecurrenceProduct;
-use Pagarme\Core\Recurrence\Services\CartRules\NormalWithRecurrenceProduct;
-use Pagarme\Core\Recurrence\Services\CartRules\ProductListInCart;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
-use Pagarme\Core\Recurrence\Aggregates\Repetition;
-use Magento\Catalog\Model\Product\Interceptor;
 use Pagarme\Pagarme\Helper\RecurrenceProductHelper;
-use Magento\Catalog\Model\Product\Option;
-use Magento\Catalog\Api\Data\ProductCustomOptionValuesInterface;
-use Magento\Catalog\Model\Product\Option\Value;
-use Pagarme\Core\Recurrence\Services\ProductSubscriptionService;
-use Pagarme\Core\Recurrence\Services\PlanService;
-use Pagarme\Core\Recurrence\Services\CartRules\JustProductPlanInCart;
-use Pagarme\Core\Recurrence\Services\CartRules\JustSelfProductPlanInCart;
 use Pagarme\Pagarme\Helper\RulesCartRun;
-use Pagarme\Core\Kernel\Aggregates\Configuration;
+use Pagarme\Pagarme\Model\PagarmeConfigProvider;
 
 class CartConflict
 {
+    /**
+     * @var PagarmeConfigProvider
+     */
+    protected $pagarmeConfigProvider;
+
     /**
      * @var RepetitionService
      */
@@ -54,15 +55,15 @@ class CartConflict
     private $planService;
 
     /**
-     * @var Configuration
+     * @var RulesCartRun
      */
-    private $pagarmeConfig;
+    private $rulesCartRun;
 
     /**
      * CartConflict constructor.
-     * @throws \Exception
+     * @throws Exception
      */
-    public function __construct()
+    public function __construct(PagarmeConfigProvider $pagarmeConfigProvider)
     {
         Magento2CoreSetup::bootstrap();
         $this->repetitionService = new RepetitionService();
@@ -71,7 +72,7 @@ class CartConflict
         $this->productSubscriptionService = new ProductSubscriptionService();
         $this->planService = new PlanService();
         $this->rulesCartRun = new RulesCartRun();
-        $this->pagarmeConfig = Magento2CoreSetup::getModuleConfiguration();
+        $this->pagarmeConfigProvider = $pagarmeConfigProvider;
     }
 
     /**
@@ -81,10 +82,7 @@ class CartConflict
      */
     public function beforeUpdateItems(Cart $cart, $dataQty)
     {
-        if (
-            !$this->pagarmeConfig->isEnabled() ||
-            !$this->pagarmeConfig->getRecurrenceConfig()->isEnabled()
-        ) {
+        if ($this->pagarmeConfigProvider->isModuleOrRecurrenceDisabled()) {
             return;
         }
 
@@ -121,10 +119,7 @@ class CartConflict
         Interceptor $productInfo,
         $requestInfo = null
     ) {
-        if (
-            !$this->pagarmeConfig->isEnabled() ||
-            !$this->pagarmeConfig->getRecurrenceConfig()->isEnabled()
-        ) {
+        if ($this->pagarmeConfigProvider->isModuleOrRecurrenceDisabled()) {
             return [$productInfo, $requestInfo];
         }
 
@@ -168,25 +163,33 @@ class CartConflict
 
         $currentProduct->setQuantity($quantity);
 
+        $changedCurrentProduct = false;
         if ($productPlan !== null) {
             $currentProduct->setIsNormalProduct(false);
             $currentProduct->setProductPlanSelected($productPlan);
-            return $currentProduct;
+            $changedCurrentProduct = true;
         }
 
-        $isNormalProduct = $this->checkIsNormalProduct($requestInfo);
+        $isNormalProduct = $this->checkIsNormalProduct($requestInfo)
+            && $productPlan === null;
         if ($isNormalProduct) {
             $currentProduct->setIsNormalProduct($isNormalProduct);
-            return $currentProduct;
+            $changedCurrentProduct = true;
         }
 
         $repetitionSelected = $this->getOptionRecurrenceSelected(
             $productInfo->getOptions(),
-            $requestInfo['options']
+            $requestInfo['options'] ?? []
         );
 
-        if (!$repetitionSelected) {
+        $hasNotRepetitionSelected = !$repetitionSelected && !$isNormalProduct;
+
+        if ($hasNotRepetitionSelected) {
             $currentProduct->setIsNormalProduct(true);
+            $changedCurrentProduct = true;
+        }
+
+        if ($changedCurrentProduct) {
             return $currentProduct;
         }
 

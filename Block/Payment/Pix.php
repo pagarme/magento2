@@ -17,17 +17,33 @@ use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Sales\Api\Data\OrderInterface as Order;
 use Magento\Sales\Api\Data\OrderPaymentInterface as Payment;
 use Pagarme\Pagarme\Helper\Payment\Pix as PixHelper;
+
 class Pix extends Template
 {
+    /**
+     * @var CheckoutSession
+     */
     protected $checkoutSession;
+
+    /**
+     * @var array
+     */
+    private $pixInfo;
+
+    /**
+     * @var PixHelper
+     */
+    private $pixHelper;
+
     /**
      * Link constructor.
      * @param Context $context
      * @param CheckoutSession $checkoutSession
      */
-    public function __construct(Context $context, CheckoutSession $checkoutSession)
+    public function __construct(Context $context, CheckoutSession $checkoutSession, PixHelper $pixHelper)
     {
         $this->checkoutSession = $checkoutSession;
+        $this->pixHelper = $pixHelper;
         parent::__construct($context, []);
     }
 
@@ -62,11 +78,38 @@ class Pix extends Template
     }
 
     /**
+     * @return bool
+     */
+    public function showPixInformation()
+    {
+        return !empty($this->getPixInfo());
+    }
+
+    /**
      * @return string
+     */
+    public function getErrorCopyMessage()
+    {
+        return __('Failed to copy! Please, manually copy the code using the field bellow the button.');
+    }
+
+    /**
+     * @return string
+     */
+    public function getSuccessMessage()
+    {
+        return __('PIX code copied!');
+    }
+
+    /**
+     * @return PixHelper
      */
     public function getPixInfo()
     {
-        $pixHelper = new PixHelper();
-        return $pixHelper->getQrCode($this->getPayment());
+        if (empty($this->pixInfo)) {
+            $this->pixInfo = $this->pixHelper->getInfo($this->getPayment());
+        }
+
+        return $this->pixInfo;
     }
 }

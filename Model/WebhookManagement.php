@@ -2,17 +2,11 @@
 
 namespace Pagarme\Pagarme\Model;
 
-use Magento\Framework\DB\Transaction;
 use Magento\Framework\Phrase;
 use Magento\Framework\Webapi\Exception as M2WebApiException;
-use Magento\Sales\Api\OrderRepositoryInterface;
-use Magento\Sales\Model\Order;
-use Magento\Sales\Model\Order\CreditmemoFactory;
-use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
-use Magento\Sales\Model\Service\CreditmemoService;
-use Magento\Sales\Model\Service\InvoiceService;
-use Magento\Sales\Model\Service\OrderService;
+use Magento\Sales\Model\OrderFactory;
 use Pagarme\Core\Kernel\Exceptions\AbstractPagarmeCoreException;
+use Pagarme\Core\Kernel\Services\LogService;
 use Pagarme\Core\Webhook\Exceptions\WebhookAlreadyHandledException;
 use Pagarme\Core\Webhook\Exceptions\WebhookHandlerNotFoundException;
 use Pagarme\Core\Webhook\Services\WebhookReceiverService;
@@ -21,6 +15,14 @@ use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 
 class WebhookManagement implements WebhookManagementInterface
 {
+
+    protected OrderFactory $orderFactory;
+
+    public function __construct(
+        OrderFactory $orderFactory
+    ) {
+        $this->orderFactory = $orderFactory;
+    }
     /**
      * @api
      * @param mixed $id
@@ -38,6 +40,14 @@ class WebhookManagement implements WebhookManagementInterface
             $postData->type = $type;
             $postData->data = $data;
 
+            if($this->hasMagentoOrder($data) === false) {
+                $this->logWebhookIdCaseExistsMetadata($data, $id);
+                return [
+                    "message" => "Webhook Received",
+                    "code" => 200
+                ];
+            }
+
             $webhookReceiverService = new WebhookReceiverService();
             return $webhookReceiverService->handle($postData);
         } catch (WebhookHandlerNotFoundException $e) {
@@ -54,8 +64,48 @@ class WebhookManagement implements WebhookManagementInterface
             throw new M2WebApiException(
                 new Phrase($e->getMessage()),
                 0,
-                $e->getCode()
+                M2WebApiException::HTTP_BAD_REQUEST
             );
         }
+    }
+    private function logWebhookIdCaseExistsMetadata($webhookData, $webhookId)
+    {
+        $metadata = $this->getMetadata($webhookData);
+        if($metadata === false || !array_key_exists('platformVersion', $metadata)) {
+            return;
+        }
+        if(strpos($metadata['platformVersion'], "Magento") !== false) {
+            $logService = new LogService(
+                'Webhook',
+                true
+            );
+            $logService->info(
+                "Webhook Received but not proccessed",
+                (object)['webhookId' => $webhookId
+            ]);
+        }
+    }
+    private function getMetadata($data)
+    {
+        $metadata = false;
+        if(!array_key_exists('order', $data) && !array_key_exists('subscription', $data)) {
+            return false;
+        }
+        if(array_key_exists('metadata', $data)) {
+            $metadata = $data['metadata'];
+        }
+        return $metadata;
+    }
+    private function hasMagentoOrder($data)
+    {
+        $code = 0;
+        if(array_key_exists('subscription', $data)) {
+            $code = $data['subscription']['code'];
+        }
+        if(array_key_exists('order', $data)) {
+            $code = $data['order']['code'];
+        }
+        $order = $this->orderFactory->create()->loadByIncrementId($code);
+        return $order->getId() ?? false;
     }
 }

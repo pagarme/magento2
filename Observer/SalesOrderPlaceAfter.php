@@ -18,49 +18,60 @@ use Magento\Framework\App\ObjectManager;
 
 class SalesOrderPlaceAfter implements ObserverInterface
 {
-    /** session factory */
-    protected $_session;
-
-    /** @var CustomerFactoryInterface */
+    /**
+     * @var CustomerFactory
+     */
     protected $customerFactory;
     /**
-     * @var \Magento\Checkout\Model\Session
+     * @var Session
      */
     protected $checkoutSession;
 
     /**
-     * \Magento\Sales\Model\Service\OrderService
+     * @var OrderService
      */
     protected $orderService;
 
     /**
-     * \Magento\Customer\Api\CustomerRepositoryInterface
+     * @var CustomerRepositoryInterface
      */
     protected $customerRepository;
 
     /**
-     * \Magento\Sales\Model\Service\InvoiceService
+     * @var InvoiceService
      */
     protected $invoiceService;
 
     /**
-     * \Magento\Framework\DB\Transaction
+     * @var Transaction
      */
     protected $transaction;
 
     /**
-     * \Magento\Sales\Model\Order\Email\Sender\InvoiceSender
+     * @var InvoiceSender
      */
     protected $invoiceSender;
 
     /**
-     * \Pagarme\Pagarme\Gateway\Transaction\CreditCard\Config\Config
+     * @var ConfigCreditCard
      */
     protected $configCreditCard;
 
     /**
-     * @param \Magento\Checkout\Model\Session $checkoutSession
-     * @param Api $api
+     * @var SessionFactory
+     */
+    protected $sessionFactory;
+
+    /**
+     * @param Session $checkoutSession
+     * @param OrderService $orderService
+     * @param CustomerFactory $customerFactory
+     * @param SessionFactory $sessionFactory
+     * @param CustomerRepositoryInterface $customerRepository
+     * @param InvoiceService $invoiceService
+     * @param Transaction $transaction
+     * @param InvoiceSender $invoiceSender
+     * @param ConfigCreditCard $configCreditCard
      */
     public function __construct(
         Session $checkoutSession,
@@ -149,7 +160,7 @@ class SalesOrderPlaceAfter implements ObserverInterface
     }
 
     /**
-     * @return \Magento\Checkout\Model\Session
+     * @return Session
      */
     public function getCheckoutSession()
     {
@@ -157,11 +168,11 @@ class SalesOrderPlaceAfter implements ObserverInterface
     }
 
     /**
-     * @param \Magento\Checkout\Model\Session $checkoutSession
+     * @param Session $checkoutSession
      *
      * @return self
      */
-    public function setCheckoutSession(\Magento\Checkout\Model\Session $checkoutSession)
+    public function setCheckoutSession(Session $checkoutSession)
     {
         $this->checkoutSession = $checkoutSession;
 

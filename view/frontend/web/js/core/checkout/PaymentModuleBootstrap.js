@@ -2,56 +2,60 @@
  * This code should be migrated to core_module
  */
 
-var PagarmeCore = {
-    paymentMethod : []
-};
+define([
+    'Pagarme_Pagarme/js/core/checkout/PaymentMethodController',
+    'Pagarme_Pagarme/js/core/checkout/PlatformPlaceOrder',
+    'Magento_Ui/js/model/messageList'
+], (PaymentMethodController, PlatformPlaceOrder, messageList) => {
+    const PagarmeCore = {
+        paymentMethod : []
+    };
 
-PagarmeCore.initPaymentMethod = function (methodCode, platformConfig) {
-    var _self = this;
-    setTimeout(function() {
-        _self.init(methodCode, platformConfig);
-    }, 1000);
-};
+    PagarmeCore.init = (methodCode, platformConfig) => {
+        PagarmeCore.paymentMethod[methodCode] = new PaymentMethodController(methodCode, platformConfig);
+        PagarmeCore.paymentMethod[methodCode].init();
+    };
 
-PagarmeCore.init = function (methodCode, platformConfig) {
-    this.paymentMethod[methodCode] = new PaymentMethodController(methodCode, platformConfig);
-    this.paymentMethod[methodCode].init();
-}
-PagarmeCore.initBin = function (methodCode, obj) {
-    this.paymentMethod[methodCode].initBin(obj);
-};
+    PagarmeCore.initPaymentMethod = (methodCode, platformConfig) => {
+        setTimeout(function() {
+            PagarmeCore.init(methodCode, platformConfig);
+        }, 1000);
+    };
 
-PagarmeCore.validatePaymentMethod = function (methodCode) {
-    this.paymentMethod =
-        new PaymentMethodController(methodCode);
+    PagarmeCore.initBin = (methodCode, obj) => {
+        PagarmeCore.paymentMethod[methodCode].initBin(obj);
+    };
 
-    this.paymentMethod.init();
-    return this.paymentMethod.formValidation();
-};
+    PagarmeCore.validatePaymentMethod = (methodCode) => {
+        PagarmeCore.paymentMethod =
+            new PaymentMethodController(methodCode);
 
-PagarmeCore.placeOrder = function(platformObject, model) {
+        PagarmeCore.paymentMethod.init();
+        return PagarmeCore.paymentMethod.formValidation();
+    };
 
-    if (this.paymentMethod[model].model.validate()) {
-        try {
-            //This object should be injected on this method, not instantiated here
-            var platformOrderPlace = new PlatformPlaceOrder(
-                platformObject.obj,
-                platformObject.data,
-                platformObject.event
-            );
-
-            this.paymentMethod[model].placeOrder(platformOrderPlace);
-        } catch (e) {
-            console.log(e)
+    PagarmeCore.placeOrder = (platformObject, model) => {
+        if (PagarmeCore.paymentMethod[model].model.validate()) {
+            try {
+                const platformOrderPlace = new PlatformPlaceOrder(
+                    platformObject.obj,
+                    platformObject.data,
+                    platformObject.event
+                );
+                PagarmeCore.paymentMethod[model].placeOrder(platformOrderPlace);
+            } catch (e) {
+                console.log(e)
+            }
         }
-    }
 
-    var errors = this.paymentMethod[model].model.errors;
-    if (errors.length > 0) {
-        for (index in errors) {
-            this.messageList.addErrorMessage(errors[index]);
+        const errors = PagarmeCore.paymentMethod[model].model.errors;
+        if (errors.length > 0) {
+            for (let index in errors) {
+                messageList.addErrorMessage(errors[index]);
+            }
+            jQuery("html, body").animate({scrollTop: 0}, 600);
         }
-        jQuery("html, body").animate({scrollTop: 0}, 600);
-        console.log(errors);
-    }
-}
+    };
+
+    return PagarmeCore;
+});

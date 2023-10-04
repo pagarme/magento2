@@ -1,4 +1,7 @@
 <?php
+/**
+ * @var $block
+ */
 $cicleSelectOption = $this->getCicleSelectOption();
 $quantityOptionCicle = 4;
 ?>
@@ -15,7 +18,9 @@ $quantityOptionCicle = 4;
                     </button>
                     <button id="back" title="Back" type="button"
                             class="action- scalable back"
-                            onclick="location.href = '<?php echo $block->getUrl('pagarme_pagarme/recurrenceproducts/index') ?>'"
+                            onclick="location.href = '<?php
+                                echo $block->getUrl('pagarme_pagarme/recurrenceproducts/index')
+                            ?>'"
                             data-ui-id="back-button">
                         <span><?php echo __('Back') ?></span>
                     </button>
@@ -28,7 +33,10 @@ $quantityOptionCicle = 4;
     <input id="products-bundle" value='<?php echo $block->getBundleProducts(); ?>' type="hidden"/>
 
     <!-- Edit Product-->
-    <input id="edit-product" name='form[edit_product_id]' value='<?php echo $block->getEditProduct(); ?>' type="hidden"/>
+    <input id="edit-product"
+           name='form[edit_product_id]'
+           value='<?php echo $block->getEditProduct(); ?>'
+           type="hidden" />
 
     <!-- Product Id-->
     <input id="product-recurrence-id" name='form[id]' value='<?php echo $block->getProductId(); ?>' type="hidden"/>
@@ -40,7 +48,9 @@ $quantityOptionCicle = 4;
     <input id="url-search" value="<?php echo $block->getUrl('*/plans/searchproduct'); ?>" type="hidden"/>
 
     <!-- Url Post-->
-    <input id="url-post" value="<?php echo $block->getBaseUrl() . 'rest/V1/pagarme/recurrence/product/formData'; ?>" type="hidden"/>
+    <input id="url-post"
+           value="<?php echo $block->getBaseUrl() . 'rest/V1/pagarme/recurrence/product/formData'; ?>"
+           type="hidden" />
 
     <input type="hidden" name="form_key" value="<?php echo $block->getFormKey() ?>" />
 
@@ -51,13 +61,17 @@ $quantityOptionCicle = 4;
                     <div class="fieldset-wrapper">
                         <div class="admin__fieldset-wrapper-content _hide">
                             <fieldset class="admin__fieldset">
-
-                                <div class="fieldset-wrapper admin__collapsible-block-wrapper products-wrapper" data-role="collapsible">
+                                <legend></legend>
+                                <div class="fieldset-wrapper admin__collapsible-block-wrapper products-wrapper"
+                                     data-role="collapsible">
                                     <h1><?php echo __('Products') ?></h1>
                                     <div class="select-product">
                                         <h2><?php echo __('Add a product') ?></h2>
                                         <label><?php echo __('Product Search') ?></label>
-                                        <input type="text" class="product_search" name="product_search" id="product-search">
+                                        <input type="text"
+                                               class="product_search"
+                                               name="product_search"
+                                               id="product-search" />
                                         <input type="hidden" id="product_id" name="form[product_id]">
                                         <input type="hidden" id="product_name" name="form[name]">
                                         <input type="hidden" id="product_image">
@@ -74,6 +88,7 @@ $quantityOptionCicle = 4;
                                             </div>
                                         </div>
                                         <table id="product-info" class="admin__dynamic-rows admin__control-table">
+                                            <caption></caption>
                                             <thead>
                                                 <tr>
                                                     <th></th>
@@ -93,8 +108,14 @@ $quantityOptionCicle = 4;
                                     </label>
                                     <div class="admin__field-control">
                                         <div class="admin__field admin__field-option">
-                                            <input type="checkbox" class="admin__control-checkbox" name="form[credit_card]" id="credit-card" >
-                                            <label class="admin__field-label" for="credit-card"><?php echo __('Credit Card') ?></label>
+                                            <input type="checkbox"
+                                                   class="admin__control-checkbox"
+                                                   name="form[credit_card]"
+                                                   id="credit-card" />
+                                            <label class="admin__field-label"
+                                                   for="credit-card">
+                                                    <?php echo __('Credit Card') ?>
+                                            </label>
                                         </div>
                                     </div>
                                 </div>
@@ -105,8 +126,13 @@ $quantityOptionCicle = 4;
                                     </label>
                                     <div class="admin__field-control">
                                         <div class="admin__field admin__field-option">
-                                            <input type="checkbox" class="admin__control-checkbox" name="form[boleto]" id="boleto" >
-                                            <label class="admin__field-label" for="boleto"><?php echo __('Boleto') ?></label>
+                                            <input type="checkbox"
+                                                   class="admin__control-checkbox"
+                                                   name="form[boleto]" id="boleto" />
+                                            <label class="admin__field-label"
+                                                   for="boleto">
+                                                    <?php echo __('Boleto') ?>
+                                            </label>
                                         </div>
                                     </div>
                                 </div>
@@ -117,7 +143,10 @@ $quantityOptionCicle = 4;
                                     </label>
                                     <div class="admin__field-control _with-tooltip">
                                         <div class="admin__field admin__field-option">
-                                            <input type="checkbox" class="admin__control-checkbox" name="form[allow_installments]" id="allow_installments" >
+                                            <input type="checkbox"
+                                                   class="admin__control-checkbox"
+                                                   name="form[allow_installments]"
+                                                   id="allow_installments" />
                                             <label class="admin__field-label" for="allow_installments"></label>
                                         </div>
                                     </div>
@@ -129,8 +158,29 @@ $quantityOptionCicle = 4;
                                     </label>
                                     <div class="admin__field-control">
                                         <div class="admin__field admin__field-option">
-                                            <input type="checkbox" class="admin__control-checkbox" name="form[sell_as_normal_product]" id="sell_as_normal_product" >
+                                            <input type="checkbox"
+                                                   class="admin__control-checkbox"
+                                                   name="form[sell_as_normal_product]"
+                                                   id="sell_as_normal_product" />
                                             <label class="admin__field-label" for="sell_as_normal_product"></label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field">
+                                    <label class="admin__field-label">
+                                        <span><?php echo __('Cart Discount') ?></span>
+                                    </label>
+                                    <div class="admin__field-control _with-tooltip">
+                                        <div class="admin__field admin__field-option">
+                                            <input type="checkbox"
+                                                   class="admin__control-checkbox"
+                                                   name="form[apply_discount_in_all_product_cycles]"
+                                                   id="apply-discount-in-all-product-cycles" />
+                                            <label class="admin__field-label"
+                                                   for="apply-discount-in-all-product-cycles">
+                                                    <?php echo __('Apply cart discount to all subscription charges') ?>
+                                            </label>
                                         </div>
                                     </div>
                                 </div>
@@ -141,6 +191,7 @@ $quantityOptionCicle = 4;
                                     </label>
                                     <div class="admin__field-control">
                                         <table class="table-cycles">
+                                            <caption></caption>
                                             <tr>
                                                 <th><?php echo __('Interval') ?></th>
                                                 <th><?php echo __('Type') ?></th>
@@ -150,29 +201,49 @@ $quantityOptionCicle = 4;
                                             <?php for ($i = 1; $i <= $quantityOptionCicle; $i++) : ?>
                                                 <tr>
                                                     <td>
-                                                        <select class="admin__control-select" name="form[repetitions][<?php echo $i ?>][interval_count]" id="interval_count_<?php echo $i ?>">
+                                                        <select class="admin__control-select"
+                                                                name="form[repetitions][<?= $i; ?>][interval_count]"
+                                                                id="interval_count_<?php echo $i ?>">
                                                             <option value="">Select Interval</option>
-                                                            <?php foreach ($cicleSelectOption['interval_count'] as $interval) : ?>
+                                                            <?php foreach (
+                                                                $cicleSelectOption['interval_count'] as $interval
+                                                            ) : ?>
                                                                 <option><?= $interval ?></option>
                                                             <?php endforeach; ?>
                                                         </select>
                                                     </td>
                                                     <td>
-                                                        <select class="admin__control-select" name="form[repetitions][<?php echo $i ?>][interval]" id="interval_<?php echo $i ?>">
+                                                        <select class="admin__control-select"
+                                                                name="form[repetitions][<?php echo $i ?>][interval]"
+                                                                id="interval_<?php echo $i ?>">
                                                             <option value="">Select Type</option>
-                                                            <?php foreach ($cicleSelectOption['interval_type'] as $key => $intervalType) : ?>
-                                                                <option value="<?= $key ?>"><?= $intervalType ?></option>
+                                                            <?php foreach (
+                                                                $cicleSelectOption['interval_type']
+                                                                    as $key => $intervalType
+                                                            ) : ?>
+                                                                <option value="<?= $key ?>">
+                                                                    <?= $intervalType ?>
+                                                                </option>
                                                             <?php endforeach; ?>
                                                         </select>
                                                     </td>
                                                     <td>
-                                                        <input type="text" class="recurrence_price ui-autocomplete-input" name="form[repetitions][<?php echo $i ?>][recurrence_price]" id="recurrence_price_<?php echo $i ?>" value="0,00">
+                                                        <input type="text"
+                                                               class="recurrence_price ui-autocomplete-input"
+                                                               name="form[repetitions][<?= $i; ?>][recurrence_price]"
+                                                               id="recurrence_price_<?php echo $i ?>"
+                                                               value="0,00" />
                                                     </td>
 
                                                     <td>
-                                                        <input type="text" class="cycles ui-autocomplete-input" name="form[repetitions][<?php echo $i ?>][cycles]" id="cycles_<?php echo $i ?>" value="0">
+                                                        <input type="text"
+                                                               class="cycles ui-autocomplete-input"
+                                                               name="form[repetitions][<?php echo $i ?>][cycles]"
+                                                               id="cycles_<?php echo $i ?>" value="0">
                                                     </td>
-                                                    <input type="hidden" id="repetition_id_<?php echo $i ?>" name="form[repetitions][<?php echo $i ?>][id]"/>
+                                                    <input type="hidden"
+                                                           id="repetition_id_<?php echo $i ?>"
+                                                           name="form[repetitions][<?php echo $i ?>][id]" />
                                                 </tr>
                                             <?php endfor; ?>
                                         </table>

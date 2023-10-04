@@ -1,204 +1,204 @@
-var TwoCreditcardsModel= function (formObject, publicKey) {
-    this.formObject = formObject;
-    this.publicKey = publicKey;
-    this.modelToken = new CreditCardToken(this.formObject);
-    this.errors = [];
-    this.formIds = [0, 1];
-};
-
-TwoCreditcardsModel.prototype.validate = function () {
-
-    var formsInvalid = [];
-
-    for (id in this.formObject) {
-
-        if (id.length > 1) {
-            continue;
+define([
+    'Pagarme_Pagarme/js/core/checkout/CreditCardToken',
+    'Pagarme_Pagarme/js/core/validators/CreditCardValidator',
+    'Pagarme_Pagarme/js/core/validators/MultibuyerValidator',
+], (CreditCardToken, CreditCardValidator, MultibuyerValidator) => {
+   return class TwoCreditcardsModel {
+        constructor(formObject, publicKey) {
+            this.formObject = formObject;
+            this.publicKey = publicKey;
+            this.modelToken = new CreditCardToken(this.formObject);
+            this.errors = [];
+            this.formIds = [0, 1];
         }
-        var creditCardValidator = new CreditCardValidator(this.formObject[id]);
-        var isCreditCardValid = creditCardValidator.validate();
+       validate() {
 
-        var multibuyerValidator = new MultibuyerValidator(this.formObject[id]);
-        var isMultibuyerValid = multibuyerValidator.validate();
+           const formsInvalid = [];
 
-        if (isCreditCardValid && isMultibuyerValid) {
-            continue;
-        }
+           for (const id in this.formObject) {
 
-        formsInvalid.push(true);
-    }
+               if (id.length > 1) {
+                   continue;
+               }
+               const creditCardValidator = new CreditCardValidator(this.formObject[id]);
+               const isCreditCardValid = creditCardValidator.validate();
 
-    var hasFormInvalid = formsInvalid.filter(function (item) {
-        return item;
-    });
+               const multibuyerValidator = new MultibuyerValidator(this.formObject[id]);
+               const isMultibuyerValid = multibuyerValidator.validate();
 
-    if (hasFormInvalid.length > 0) {
-        return false;
-    }
+               if (isCreditCardValid && isMultibuyerValid) {
+                   continue;
+               }
 
-    return true;
-};
+               formsInvalid.push(true);
+           }
 
-TwoCreditcardsModel.prototype.placeOrder = function (placeOrderObject) {
-    this.placeOrderObject = placeOrderObject;
-    var _self = this;
-    var errors = false;
+           const hasFormInvalid = formsInvalid.filter(function (item) {
+               return item;
+           });
 
-    for (id in this.formObject) {
+           if (hasFormInvalid.length > 0) {
+               return false;
+           }
 
-        if (id.length > 1) {
-            continue;
-        }
+           return true;
+       }
+       placeOrder(placeOrderObject) {
+           this.placeOrderObject = placeOrderObject;
+           const _self = this;
+           let errors = false;
 
-        if (
-            typeof this.formObject[id].savedCreditCardSelect.val() != 'undefined' &&
-            this.formObject[id].savedCreditCardSelect.val() != 'new' &&
-            this.formObject[id].savedCreditCardSelect.val() != '' &&
-            this.formObject[id].savedCreditCardSelect.html().length > 1
-        ) {
-            continue;
-        }
+           for (const id in this.formObject) {
 
-        this.getCreditCardToken(
-            this.formObject[id],
-            function (data) {
-                _self.formObject[id].creditCardToken.val(data.id);
-            },
-            function (error) {
-                errors = true;
-                _self.addErrors("Cartão inválido. Por favor, verifique os dados digitados e tente novamente");
-            }
-        );
-    }
+               if (id.length > 1) {
+                   continue;
+               }
 
-    if (!errors) {
-        _self.placeOrderObject.placeOrder();
-    }
-};
+               if (
+                   typeof this.formObject[id].savedCreditCardSelect.val() != 'undefined' &&
+                   this.formObject[id].savedCreditCardSelect.val() != 'new' &&
+                   this.formObject[id].savedCreditCardSelect.val() != '' &&
+                   this.formObject[id].savedCreditCardSelect.html().length > 1
+               ) {
+                   continue;
+               }
 
-TwoCreditcardsModel.prototype.getFormIdInverted = function (id) {
-    var ids = this.formIds.slice(0);
-    var index = ids.indexOf(id);
-    ids.splice(index, 1);
+               this.getCreditCardToken(
+                   this.formObject[id],
+                   function (data) {
+                       _self.formObject[id].creditCardToken.val(data.id);
+                   },
+                   function (error) {
+                       errors = true;
+                       _self.addErrors("Cartão inválido. Por favor, verifique os dados digitados e tente novamente");
+                   }
+               );
+           }
 
-    return ids[0];
-}
+           if (!errors) {
+               _self.placeOrderObject.placeOrder();
+           }
+       }
+       getFormIdInverted(id) {
+           const ids = this.formIds.slice(0);
+           const index = ids.indexOf(id);
+           ids.splice(index, 1);
 
-TwoCreditcardsModel.prototype.addErrors = function (error) {
-    this.errors.push({
-        message: error
-    })
-}
+           return ids[0];
+       }
+       addErrors(error) {
+           this.errors.push({
+               message: error
+           })
+       }
+       getCreditCardToken(formObject, success, error) {
+           const modelToken = new CreditCardToken(formObject);
+           modelToken.getToken(this.publicKey)
+               .done(success)
+               .fail(error);
+       }
+       getData() {
+           const data = this.fillData();
 
-TwoCreditcardsModel.prototype.getCreditCardToken = function (formObject, success, error) {
-    var modelToken = new CreditCardToken(formObject);
-    modelToken.getToken(this.publicKey)
-        .done(success)
-        .fail(error);
-};
+           if (
+               typeof this.formObject[0].multibuyer.showMultibuyer != 'undefined' &&
+               this.formObject[0].multibuyer.showMultibuyer.prop( "checked" ) == true
+           ) {
+               const multibuyer = this.formObject[0].multibuyer;
+               const fullName = multibuyer.firstname.val() + ' ' + multibuyer.lastname.val();
 
-TwoCreditcardsModel.prototype.getData = function () {
-    var data = this.fillData();
+               data.additional_data.cc_buyer_checkbox_first = 1;
+               data.additional_data.cc_buyer_name_first = fullName;
+               data.additional_data.cc_buyer_email_first = multibuyer.email.val();
+               data.additional_data.cc_buyer_document_first = multibuyer.document.val();
+               data.additional_data.cc_buyer_street_title_first = multibuyer.street.val();
+               data.additional_data.cc_buyer_street_number_first = multibuyer.number.val();
+               data.additional_data.cc_buyer_street_complement_first = multibuyer.complement.val();
+               data.additional_data.cc_buyer_zipcode_first = multibuyer.zipcode.val();
+               data.additional_data.cc_buyer_neighborhood_first = multibuyer.neighborhood.val();
+               data.additional_data.cc_buyer_city_first = multibuyer.city.val();
+               data.additional_data.cc_buyer_state_first = multibuyer.state.val();
+               data.additional_data.cc_buyer_home_phone_first = multibuyer.homePhone.val();
+               data.additional_data.cc_buyer_mobile_phone_first = multibuyer.mobilePhone.val();
+           }
 
-    if (
-        typeof this.formObject[0].multibuyer.showMultibuyer != 'undefined' &&
-        this.formObject[0].multibuyer.showMultibuyer.prop( "checked" ) == true
-    ) {
-        multibuyer = this.formObject[0].multibuyer;
-        fullName = multibuyer.firstname.val() + ' ' + multibuyer.lastname.val();
+           if (
+               typeof this.formObject[1].multibuyer.showMultibuyer != 'undefined' &&
+               this.formObject[1].multibuyer.showMultibuyer.prop( "checked" ) == true
+           ) {
+               const multibuyer = this.formObject[1].multibuyer;
+               const fullName = multibuyer.firstname.val() + ' ' + multibuyer.lastname.val();
 
-        data.additional_data.cc_buyer_checkbox_first = 1;
-        data.additional_data.cc_buyer_name_first = fullName;
-        data.additional_data.cc_buyer_email_first = multibuyer.email.val();
-        data.additional_data.cc_buyer_document_first = multibuyer.document.val();
-        data.additional_data.cc_buyer_street_title_first = multibuyer.street.val();
-        data.additional_data.cc_buyer_street_number_first = multibuyer.number.val();
-        data.additional_data.cc_buyer_street_complement_first = multibuyer.complement.val();
-        data.additional_data.cc_buyer_zipcode_first = multibuyer.zipcode.val();
-        data.additional_data.cc_buyer_neighborhood_first = multibuyer.neighborhood.val();
-        data.additional_data.cc_buyer_city_first = multibuyer.city.val();
-        data.additional_data.cc_buyer_state_first = multibuyer.state.val();
-        data.additional_data.cc_buyer_home_phone_first = multibuyer.homePhone.val();
-        data.additional_data.cc_buyer_mobile_phone_first = multibuyer.mobilePhone.val();
-    }
+               data.additional_data.cc_buyer_checkbox_second = 1;
+               data.additional_data.cc_buyer_name_second = fullName;
+               data.additional_data.cc_buyer_email_second = multibuyer.email.val();
+               data.additional_data.cc_buyer_document_second = multibuyer.document.val();
+               data.additional_data.cc_buyer_street_title_second = multibuyer.street.val();
+               data.additional_data.cc_buyer_street_number_second = multibuyer.number.val();
+               data.additional_data.cc_buyer_street_complement_second = multibuyer.complement.val();
+               data.additional_data.cc_buyer_zipcode_second = multibuyer.zipcode.val();
+               data.additional_data.cc_buyer_neighborhood_second = multibuyer.neighborhood.val();
+               data.additional_data.cc_buyer_city_second = multibuyer.city.val();
+               data.additional_data.cc_buyer_state_second = multibuyer.state.val();
+               data.additional_data.cc_buyer_home_phone_second = multibuyer.homePhone.val();
+               data.additional_data.cc_buyer_mobile_phone_second = multibuyer.mobilePhone.val();
+           }
 
-    if (
-        typeof this.formObject[1].multibuyer.showMultibuyer != 'undefined' &&
-        this.formObject[1].multibuyer.showMultibuyer.prop( "checked" ) == true
-    ) {
-        multibuyer = this.formObject[1].multibuyer;
-        fullName = multibuyer.firstname.val() + ' ' + multibuyer.lastname.val();
+           return data;
+       }
+       fillData() {
 
-        data.additional_data.cc_buyer_checkbox_second = 1;
-        data.additional_data.cc_buyer_name_second = fullName;
-        data.additional_data.cc_buyer_email_second = multibuyer.email.val();
-        data.additional_data.cc_buyer_document_second = multibuyer.document.val();
-        data.additional_data.cc_buyer_street_title_second = multibuyer.street.val();
-        data.additional_data.cc_buyer_street_number_second = multibuyer.number.val();
-        data.additional_data.cc_buyer_street_complement_second = multibuyer.complement.val();
-        data.additional_data.cc_buyer_zipcode_second = multibuyer.zipcode.val();
-        data.additional_data.cc_buyer_neighborhood_second = multibuyer.neighborhood.val();
-        data.additional_data.cc_buyer_city_second = multibuyer.city.val();
-        data.additional_data.cc_buyer_state_second = multibuyer.state.val();
-        data.additional_data.cc_buyer_home_phone_second = multibuyer.homePhone.val();
-        data.additional_data.cc_buyer_mobile_phone_second = multibuyer.mobilePhone.val();
-    }
+           let saveFirstCard = 0;
+           let saveSecondCard = 0;
 
-    return data;
-};
+           if (this.formObject[0].saveThisCard?.prop('checked') == true) {
+               saveFirstCard = 1;
+           }
 
-TwoCreditcardsModel.prototype.fillData = function () {
+           if (this.formObject[1].saveThisCard?.prop('checked') == true) {
+               saveSecondCard = 1;
+           }
 
-    var saveFirstCard = 0;
-    var saveSecondCard = 0;
-
-    if (this.formObject[0].saveThisCard.prop('checked') == true) {
-        saveFirstCard = 1;
-    }
-
-    if (this.formObject[1].saveThisCard.prop('checked') == true) {
-        saveSecondCard = 1;
-    }
-
-    return {
-        'method': "pagarme_two_creditcard",
-        'additional_data': {
-            //first
-            'cc_first_card_amount': this.formObject[0].inputAmount.val(),
-            'cc_first_card_tax_amount': this.formObject[0].creditCardInstallments.find(':selected').attr('interest'),
-            'cc_type_first': this.formObject[0].creditCardBrand.val(),
-            'cc_last_4_first': this.getLastFourNumbers(0),
-            'cc_cid_first': this.formObject[0].creditCardCvv.val(),
-            'cc_exp_year_first': this.formObject[0].creditCardExpYear.val(),
-            'cc_exp_month_first': this.formObject[0].creditCardExpMonth.val(),
-            'cc_number_first': this.formObject[0].creditCardNumber.val(),
-            'cc_owner_first': this.formObject[0].creditCardHolderName.val(),
-            'cc_savecard_first' : saveFirstCard,
-            'cc_saved_card_first' : this.formObject[0].savedCreditCardSelect.val(),
-            'cc_installments_first': this.formObject[0].creditCardInstallments.val(),
-            'cc_token_credit_card_first' : this.formObject[0].creditCardToken.val(),
-            //second
-            'cc_second_card_amount': this.formObject[1].inputAmount.val(),
-            'cc_second_card_tax_amount': this.formObject[1].creditCardInstallments.find(':selected').attr('interest'),
-            'cc_type_second': this.formObject[1].creditCardBrand.val(),
-            'cc_last_4_second': this.getLastFourNumbers(1),
-            'cc_cid_second': this.formObject[1].creditCardCvv.val(),
-            'cc_exp_year_second': this.formObject[1].creditCardExpYear.val(),
-            'cc_exp_month_second': this.formObject[1].creditCardExpMonth.val(),
-            'cc_number_second': this.formObject[1].creditCardNumber.val(),
-            'cc_owner_second': this.formObject[1].creditCardHolderName.val(),
-            'cc_savecard_second' : saveSecondCard,
-            'cc_saved_card_second' : this.formObject[1].savedCreditCardSelect.val(),
-            'cc_installments_second': this.formObject[1].creditCardInstallments.val(),
-            'cc_token_credit_card_second' : this.formObject[1].creditCardToken.val()
-        }
-    };
-};
-
-TwoCreditcardsModel.prototype.getLastFourNumbers = function(id) {
-    var number = this.formObject[id].creditCardNumber.val();
-    if (number !== undefined) {
-        return number.slice(-4);
-    }
-    return "";
-};
+           return {
+               'method': "pagarme_two_creditcard",
+               'additional_data': {
+                   //first
+                   'cc_first_card_amount': this.formObject[0].inputAmount.val(),
+                   'cc_first_card_tax_amount': this.formObject[0].creditCardInstallments.find(':selected').attr('interest'),
+                   'cc_type_first': this.formObject[0].creditCardBrand.val(),
+                   'cc_last_4_first': this.getLastFourNumbers(0),
+                   'cc_cid_first': this.formObject[0].creditCardCvv.val(),
+                   'cc_exp_year_first': this.formObject[0].creditCardExpYear.val(),
+                   'cc_exp_month_first': this.formObject[0].creditCardExpMonth.val(),
+                   'cc_number_first': this.formObject[0].creditCardNumber.val(),
+                   'cc_owner_first': this.formObject[0].creditCardHolderName.val(),
+                   'cc_savecard_first' : saveFirstCard,
+                   'cc_saved_card_first' : this.formObject[0].savedCreditCardSelect.val(),
+                   'cc_installments_first': this.formObject[0].creditCardInstallments.val(),
+                   'cc_token_credit_card_first' : this.formObject[0].creditCardToken.val(),
+                   //second
+                   'cc_second_card_amount': this.formObject[1].inputAmount.val(),
+                   'cc_second_card_tax_amount': this.formObject[1].creditCardInstallments.find(':selected').attr('interest'),
+                   'cc_type_second': this.formObject[1].creditCardBrand.val(),
+                   'cc_last_4_second': this.getLastFourNumbers(1),
+                   'cc_cid_second': this.formObject[1].creditCardCvv.val(),
+                   'cc_exp_year_second': this.formObject[1].creditCardExpYear.val(),
+                   'cc_exp_month_second': this.formObject[1].creditCardExpMonth.val(),
+                   'cc_number_second': this.formObject[1].creditCardNumber.val(),
+                   'cc_owner_second': this.formObject[1].creditCardHolderName.val(),
+                   'cc_savecard_second' : saveSecondCard,
+                   'cc_saved_card_second' : this.formObject[1].savedCreditCardSelect.val(),
+                   'cc_installments_second': this.formObject[1].creditCardInstallments.val(),
+                   'cc_token_credit_card_second' : this.formObject[1].creditCardToken.val()
+               }
+           };
+       }
+       getLastFourNumbers(id) {
+           const number = this.formObject[id].creditCardNumber.val();
+           if (number !== undefined) {
+               return number.slice(-4);
+           }
+           return "";
+       }
+   };
+});

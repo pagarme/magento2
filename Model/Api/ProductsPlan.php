@@ -6,7 +6,6 @@ use Magento\Framework\Webapi\Exception as MagentoException;
 use Magento\Framework\Webapi\Rest\Request;
 use Pagarme\Core\Recurrence\Services\PlanService;
 use Pagarme\Core\Recurrence\Aggregates\Plan;
-use Pagarme\Core\Recurrence\Interfaces\ProductPlanInterface;
 use Pagarme\Core\Recurrence\Factories\PlanFactory;
 use Pagarme\Pagarme\Api\ProductPlanApiInterface;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
@@ -45,17 +44,13 @@ class ProductsPlan implements ProductPlanApiInterface
         $form = $this->gerFormattedForm($params['form']);
         $form['status'] = 'ACTIVE';
 
-        if (empty($form)) {
-            return json_encode([
-                'code' => 404,
-                'message' => 'Erro ao tentar criar um produto do tipo plano'
-            ]);
-        }
+        $validationErrorMessages = $this->validateData($form);
 
-        if (!$form['items']) {
+        if (!empty($validationErrorMessages)) {
+            $message = implode(' | ', $validationErrorMessages);
             return json_encode([
-                'code' => 404,
-                'message' => 'Please add subproducts before product saving'
+                'code' => 400,
+                'message' => $message
             ]);
         }
 
@@ -67,13 +62,13 @@ class ProductsPlan implements ProductPlanApiInterface
         } catch (\Exception $exception) {
             return json_encode([
                 'code' => 404,
-                'message' => 'Erro ao tentar criar um produto do tipo plano'
+                'message' => __('Error in trying to create a plan type product')
             ]);
         }
 
         return json_encode([
             'code' => 200,
-            'message' => 'Product Plan saved'
+            'message' => __('Plan Product saved')
         ]);
     }
 
@@ -93,6 +88,10 @@ class ProductsPlan implements ProductPlanApiInterface
 
         if (isset($form['installments'])) {
             $form['installments'] = (bool)$form['installments'];
+        }
+
+        if (isset($form['apply_discount_in_all_product_cycles'])) {
+            $form['apply_discount_in_all_product_cycles'] = (bool)$form['apply_discount_in_all_product_cycles'];
         }
 
         return $form;
@@ -116,7 +115,7 @@ class ProductsPlan implements ProductPlanApiInterface
             throw new MagentoException(
                 __($exception->getMessage()),
                 0,
-                $exception->getCode()
+                MagentoException::HTTP_BAD_REQUEST
             );
         }
 
@@ -133,7 +132,7 @@ class ProductsPlan implements ProductPlanApiInterface
             $products = $this->planService->findAll();
 
             if (empty($products)) {
-                throw new \Exception('List Product plan not found', 404);
+                throw new \Exception(__('List of plan products not found'), 404);
             }
 
             return $products;
@@ -141,7 +140,7 @@ class ProductsPlan implements ProductPlanApiInterface
             throw new MagentoException(
                 __($exception->getMessage()),
                 0,
-                $exception->getCode()
+                MagentoException::HTTP_BAD_REQUEST
             );
         }
     }
@@ -158,7 +157,7 @@ class ProductsPlan implements ProductPlanApiInterface
             $planOriginal = $this->planService->findById($id);
 
             if (empty($planOriginal)) {
-                throw new \Exception('Plan not found', 404);
+                throw new \Exception(__('Plan not found'), 404);
             }
 
             ProductPlanHelper::mapperProductPlanUpdate($planOriginal, $productPlan);
@@ -168,7 +167,7 @@ class ProductsPlan implements ProductPlanApiInterface
             throw new MagentoException(
                 __($exception->getMessage()),
                 0,
-                $exception->getCode()
+                MagentoException::HTTP_BAD_REQUEST
             );
         }
 
@@ -186,7 +185,7 @@ class ProductsPlan implements ProductPlanApiInterface
             $plan = $this->planService->findById($id);
 
             if (empty($plan)) {
-                throw new \Exception('Product plan not found', 400);
+                throw new \Exception(__('Plan product not found'), 400);
             }
 
             return $plan;
@@ -194,7 +193,7 @@ class ProductsPlan implements ProductPlanApiInterface
             throw new MagentoException(
                 __($exception->getMessage()),
                 0,
-                $exception->getCode()
+                MagentoException::HTTP_BAD_REQUEST
             );
         }
     }
@@ -210,7 +209,7 @@ class ProductsPlan implements ProductPlanApiInterface
             $productData = $this->planService->findById($id);
 
             if (!$productData || !$productData->getId()) {
-                throw new \Exception('Product plan not found', 404);
+                throw new \Exception(__('Plan product not found'), 404);
             }
 
             $this->planService->delete($id);
@@ -220,8 +219,27 @@ class ProductsPlan implements ProductPlanApiInterface
             throw new MagentoException(
                 __($exception->getMessage()),
                 0,
-                $exception->getCode()
+                MagentoException::HTTP_BAD_REQUEST
             );
         }
+    }
+
+    /**
+     * @param mixed $data
+     * @return array
+     */
+    private function validateData($data)
+    {
+        $errorMessages = [];
+
+        if (empty($data)) {
+            $errorMessages[] = __('Error in trying to create a plan type product');
+        }
+
+        if (empty($errorMessages) && !$data['items']) {
+            $errorMessages[] = __('Please add subproducts before saving the plan');
+        }
+
+        return $errorMessages;
     }
 }

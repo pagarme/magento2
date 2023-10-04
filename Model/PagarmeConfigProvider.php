@@ -18,7 +18,9 @@ class PagarmeConfigProvider implements ConfigProviderInterface
     /**
      * Contains if the module is active or not
      */
-    const XML_PATH_IS_GATEWAY_INTEGRATION_TYPE  = 'pagarme_pagarme/global/is_gateway_integration_type';
+    const XML_PATH_IS_GATEWAY_INTEGRATION_TYPE      = 'pagarme_pagarme/global/is_gateway_integration_type';
+    const XML_PATH_RECURRENCE_ADD_SHIPPING_IN_ITEMS = 'pagarme_pagarme/recurrence/add_shipping_in_items';
+    const XML_PATH_RECURRENCE_ADD_TAX_IN_ITEMS      = 'pagarme_pagarme/recurrence/add_tax_in_items';
     const XML_PATH_IS_ENABLE_SAVED_CARDS = 'payment/pagarme_creditcard/enabled_saved_cards';
     const XML_PATH_SOFT_DESCRIPTION      = 'payment/pagarme_creditcard/soft_description';
     const XML_PATH_MAX_INSTALLMENT       = 'payment/pagarme_creditcard/installments_number';
@@ -91,6 +93,21 @@ class PagarmeConfigProvider implements ConfigProviderInterface
             self::XML_PATH_IS_GATEWAY_INTEGRATION_TYPE,
             ScopeInterface::SCOPE_STORE
         );
+    }
+
+    public function canAddShippingInItemsOnRecurrence()
+    {
+        return $this->scopeConfig->getValue(
+            self::XML_PATH_RECURRENCE_ADD_SHIPPING_IN_ITEMS,
+            ScopeInterface::SCOPE_STORE
+        ) ?? false;
+    }
+    public function canAddTaxInItemsOnRecurrence()
+    {
+        return $this->scopeConfig->getValue(
+            self::XML_PATH_RECURRENCE_ADD_TAX_IN_ITEMS,
+            ScopeInterface::SCOPE_STORE
+        ) ?? false;
     }
 
     public function validateSoftDescription()
@@ -192,6 +209,26 @@ class PagarmeConfigProvider implements ConfigProviderInterface
             'number' => $number,
             'district' => $district
         ];
+    }
+
+    /**
+     * @return mixed
+     */
+    public function isRecurrenceEnabled()
+    {
+        return $this->scopeConfig->getValue(
+            self::XML_PATH_RECURRENCE_ACTIVE,
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    /**
+     * @return bool
+     */
+    public function isModuleOrRecurrenceDisabled()
+    {
+        return !$this->getModuleStatus()
+            || !$this->isRecurrenceEnabled();
     }
 
     public function disableVoucher()

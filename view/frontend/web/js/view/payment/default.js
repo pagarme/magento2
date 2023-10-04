@@ -28,10 +28,8 @@ define(
         "Pagarme_Pagarme/js/core/checkout/PaymentMethodController",
         "Pagarme_Pagarme/js/core/checkout/PlatformPlaceOrder",
         "Pagarme_Pagarme/js/core/checkout/Bin",
-        "Pagarme_Pagarme/js/core/checkout/PlatformFormBiding",
         "Pagarme_Pagarme/js/core/checkout/PlatformFormHandler",
         "Pagarme_Pagarme/js/core/checkout/CreditCardToken",
-        "Pagarme_Pagarme/js/core/checkout/Installments",
         "Pagarme_Pagarme/js/core/validators/CreditCardValidator",
         "Pagarme_Pagarme/js/core/validators/CustomerValidator",
         "Pagarme_Pagarme/js/core/validators/MultibuyerValidator",
@@ -58,17 +56,16 @@ define(
         PlatformPlaceOrder
     ) {
 
-        window.PagarmeCore.messageList = globalMessageList;
         return Component.extend({
             initPaymentMethod: function() {
                 var _self = this;
 
-                platFormConfig = window.checkoutConfig;
+                const platFormConfig = window.checkoutConfig;
                 platFormConfig.moduleUrls = {};
-                installmentsUrl = installmentsAction();
+                const installmentsUrl = installmentsAction();
                 platFormConfig.grand_total = quote.getTotals()().grand_total;
 
-                var baseUrl = platFormConfig.payment.ccform.base_url;
+                const baseUrl = platFormConfig.payment.ccform.base_url;
 
                 if (
                     quote.billingAddress() &&
@@ -91,8 +88,8 @@ define(
                 /** @fixme Update total should be moved to platformFormBinging **/
                 platFormConfig.updateTotals = quote;
 
-                window.PagarmeCore.platFormConfig = platFormConfig;
-                window.PagarmeCore.initPaymentMethod(
+                PagarmeCore.platFormConfig = platFormConfig;
+                PagarmeCore.initPaymentMethod(
                     this.getModel(),
                     platFormConfig
                 );
@@ -130,7 +127,7 @@ define(
 
                 var _self = this;
 
-                window.PagarmeCore.platFormConfig.addresses.billingAddress = quote.billingAddress();
+                PagarmeCore.platFormConfig.addresses.billingAddress = quote.billingAddress();
 
                 var PlatformPlaceOrder = {
                     obj : _self,
@@ -138,7 +135,7 @@ define(
                     event: event
                 };
 
-                window.PagarmeCore.placeOrder(
+                PagarmeCore.placeOrder(
                     PlatformPlaceOrder,
                     this.getModel()
                 );
@@ -150,8 +147,8 @@ define(
             selectPaymentMethod: function() {
                 var data = this.getData();
                 if (data == undefined) {
-                    var platFormConfig = window.PagarmeCore.platFormConfig;
-                    window.PagarmeCore.init(this.getModel(), platFormConfig);
+                    var platFormConfig = PagarmeCore.platFormConfig;
+                    PagarmeCore.init(this.getModel(), platFormConfig);
                 }
                 selectPaymentMethodAction(this.getData());
                 checkoutData.setSelectedPaymentMethod(this.item.method);

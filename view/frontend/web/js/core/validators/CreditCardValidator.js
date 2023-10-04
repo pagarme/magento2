@@ -1,141 +1,138 @@
-var CreditCardValidator = function (formObject) {
-    this.formObject = formObject;
-};
+define(['Pagarme_Pagarme/js/core/checkout/PlatformConfig',], (PlatformConfig) => {
+   return class CreditCardValidator {
+       constructor(formObject) {
+           this.formObject = formObject;
+       }
+       validate() {
+           if (
+               typeof this.formObject.savedCreditCardSelect != 'undefined' &&
+               this.formObject.savedCreditCardSelect.html().length > 1 &&
+               this.formObject.savedCreditCardSelect.val() !== 'new'
+           ) {
+               return this.validateSavedCard();
+           }
+           return this.validateNewCard();
+       }
+       validateSavedCard() {
 
-CreditCardValidator.prototype.validate = function () {
-    if (
-        typeof this.formObject.savedCreditCardSelect != 'undefined' &&
-        this.formObject.savedCreditCardSelect.html().length > 1 &&
-        this.formObject.savedCreditCardSelect.val() !== 'new'
-    ) {
-        return this.validateSavedCard();
-    }
-    return this.validateNewCard();
-}
-
-CreditCardValidator.prototype.validateSavedCard = function () {
-
-    var inputsInvalid = [];
-    var formObject = this.formObject;
+           const inputsInvalid = [];
+           const formObject = this.formObject;
 
 
-    if (formObject.savedCreditCardSelect.val() == "") {
-        inputsInvalid.push(
-            this.isInputInvalid(formObject.savedCreditCardSelect)
-        );
-    }
+           if (formObject.savedCreditCardSelect.val() == "") {
+               inputsInvalid.push(
+                   this.isInputInvalid(formObject.savedCreditCardSelect)
+               );
+           }
 
-    inputsInvalid.push(
-        this.isInputInstallmentInvalid(formObject.creditCardInstallments)
-    );
+           inputsInvalid.push(
+               this.isInputInstallmentInvalid(formObject.creditCardInstallments)
+           );
 
-    var hasInputInvalid = inputsInvalid.filter(function (item) {
-        return item;
-    });
+           const hasInputInvalid = inputsInvalid.filter(function (item) {
+               return item;
+           });
 
-    if (hasInputInvalid.length > 0) {
-        return false;
-    }
+           if (hasInputInvalid.length > 0) {
+               return false;
+           }
 
-    return true;
-}
+           return true;
+       }
+       validateNewCard() {
 
-CreditCardValidator.prototype.validateNewCard = function () {
+           const inputsInvalid = [];
+           const formObject = this.formObject;
 
-    var inputsInvalid = [];
-    var formObject = this.formObject;
+           inputsInvalid.push(
+               this.isInputInvalid(formObject.creditCardBrand),
+               this.isInputInvalid(formObject.creditCardNumber),
+               this.isInputInvalid(formObject.creditCardHolderName),
+               this.isInputInvalid(formObject.creditCardCvv),
+               this.isInputExpirationInvalid(formObject),
+               this.isInputInstallmentInvalid(formObject.creditCardInstallments),
+               this.isInputInvalidBrandAvailable(formObject.creditCardBrand)
+           );
 
-    inputsInvalid.push(
-        this.isInputInvalid(formObject.creditCardBrand),
-        this.isInputInvalid(formObject.creditCardNumber),
-        this.isInputInvalid(formObject.creditCardHolderName),
-        this.isInputInvalid(formObject.creditCardCvv),
-        this.isInputExpirationInvalid(formObject),
-        this.isInputInstallmentInvalid(formObject.creditCardInstallments),
-        this.isInputInvalidBrandAvailable(formObject.creditCardBrand)
-    );
+           const hasInputInvalid = inputsInvalid.filter(function (item) {
+               return item;
+           });
 
-    var hasInputInvalid = inputsInvalid.filter(function (item) {
-        return item;
-    });
+           if (hasInputInvalid.length > 0) {
+               return false;
+           }
 
-    if (hasInputInvalid.length > 0) {
-        return false;
-    }
+           return true;
+       }
+       isInputInvalidBrandAvailable(element) {
+           const parentsElements = element.parent().parent();
 
-    return true;
-}
+           const brands = [];
+           PlatformConfig.PlatformConfig.avaliableBrands[this.formObject.savedCardSelectUsed].forEach(function (item) {
+               brands.push(item.title.toUpperCase());
+           });
 
-CreditCardValidator.prototype.isInputInvalidBrandAvailable = function (element) {
-    var parentsElements = element.parent().parent();
+           if (!brands.includes(this.formObject.creditCardBrand.val().toUpperCase())) {
+               parentsElements.addClass("_error");
+               parentsElements.find(".field-error").show();
+               parentsElements.find(".nobrand").hide();
+               return true;
+           }
 
-    var brands = [];
-    PlatformConfig.PlatformConfig.avaliableBrands[this.formObject.savedCardSelectUsed].forEach(function (item) {
-        brands.push(item.title.toUpperCase());
-    });
+           parentsElements.removeClass("_error");
+           parentsElements.find(".field-error").hide();
+           return false;
+       }
+       isInputInvalid(element, message = "") {
 
-    if (!brands.includes(this.formObject.creditCardBrand.val().toUpperCase())) {
-        parentsElements.addClass("_error");
-        parentsElements.find(".field-error").show();
-        parentsElements.find(".nobrand").hide();
-        return true;
-    }
+           const parentsElements = element.parent().parent();
 
-    parentsElements.removeClass("_error");
-    parentsElements.find(".field-error").hide();
-    return false;
-}
+           if (element.val() == "") {
+               parentsElements.addClass("_error");
+               parentsElements.find('.field-error').show();
+               return true;
+           }
 
-CreditCardValidator.prototype.isInputInvalid = function (element, message = "") {
+           parentsElements.removeClass('_error');
+           parentsElements.find('.field-error').hide();
+           return false;
+       }
+       isInputExpirationInvalid(formObject) {
+           const cardExpirationMonth = formObject.creditCardExpMonth;
+           const cardExpirationYear = formObject.creditCardExpYear;
 
-    var parentsElements = element.parent().parent();
+           const cardDate = new Date (cardExpirationYear.val(), cardExpirationMonth.val() -1);
+           const dateNow = new Date();
 
-    if (element.val() == "") {
-        parentsElements.addClass("_error");
-        parentsElements.find('.field-error').show();
-        return true;
-    }
+           const monthParentsElements = cardExpirationMonth.parent().parent();
+           const yearParentsElements = cardExpirationYear.parent().parent();
+           const parentsElements = yearParentsElements.parents(".field");
 
-    parentsElements.removeClass('_error');
-    parentsElements.find('.field-error').hide();
-    return false;
-}
+           if (cardDate < dateNow) {
+               monthParentsElements.addClass("_error");
+               yearParentsElements.addClass("_error");
+               parentsElements.find('.field-error').show();
+               return true;
+           }
 
-CreditCardValidator.prototype.isInputExpirationInvalid = function (formObject) {
-    var cardExpirationMonth = formObject.creditCardExpMonth;
-    var cardExpirationYear = formObject.creditCardExpYear;
+           monthParentsElements.removeClass("_error");
+           yearParentsElements.removeClass("_error");
+           parentsElements.find('.field-error').hide();
+           return false;
+       }
+       isInputInstallmentInvalid(element) {
 
-    var cardDate = new Date (cardExpirationYear.val(), cardExpirationMonth.val() -1);
-    var dateNow = new Date();
+           const parentsElements = element.parents(".field");
 
-    var monthParentsElements = cardExpirationMonth.parent().parent();
-    var yearParentsElements = cardExpirationYear.parent().parent();
-    var parentsElements = yearParentsElements.parents(".field");
+           if (element.val() == "") {
 
-    if (cardDate < dateNow) {
-        monthParentsElements.addClass("_error");
-        yearParentsElements.addClass("_error");
-        parentsElements.find('.field-error').show();
-        return true;
-    }
-
-    monthParentsElements.removeClass("_error");
-    yearParentsElements.removeClass("_error");
-    parentsElements.find('.field-error').hide();
-    return false;
-}
-
-CreditCardValidator.prototype.isInputInstallmentInvalid = function (element) {
-
-    var parentsElements = element.parents(".field");
-
-    if (element.val() == "") {
-
-        element.parent().parent().addClass("_error");
-        parentsElements.find('.field-error').show();
-        return true;
-    }
-    element.parent().parent().removeClass("_error");
-    parentsElements.find('.field-error').hide();
-    return false;
-}
+               element.parent().parent().addClass("_error");
+               parentsElements.find('.field-error').show();
+               return true;
+           }
+           element.parent().parent().removeClass("_error");
+           parentsElements.find('.field-error').hide();
+           return false;
+       }
+   }
+});

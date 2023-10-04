@@ -4,27 +4,37 @@ namespace Pagarme\Pagarme\Observer;
 
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
+use Pagarme\Core\Kernel\Aggregates\Configuration;
 use Pagarme\Core\Recurrence\Aggregates\Plan;
 use Pagarme\Core\Recurrence\Services\RecurrenceService;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Pagarme\Pagarme\Helper\RecurrenceProductHelper;
+use Pagarme\Pagarme\Model\PagarmeConfigProvider;
 
 class PaymentMethodAvailable implements ObserverInterface
 {
     /**
-     * @var \Pagarme\Core\Kernel\Aggregates\Configuration
+     * @var PagarmeConfigProvider
      */
-    protected $pagarmeConfig;
+    protected $pagarmeConfigProvider;
+
     /**
      * @var RecurrenceProductHelper
      */
     protected $recurrenceProductHelper;
 
+    /**
+     * @var Configuration
+     */
+    protected $pagarmeConfig;
+
     public function __construct(
-        RecurrenceProductHelper $recurrenceProductHelper
+        RecurrenceProductHelper $recurrenceProductHelper,
+        PagarmeConfigProvider $pagarmeConfigProvider
     ) {
         Magento2CoreSetup::bootstrap();
         $this->recurrenceProductHelper = $recurrenceProductHelper;
+        $this->pagarmeConfigProvider = $pagarmeConfigProvider;
         $this->pagarmeConfig = Magento2CoreSetup::getModuleConfiguration();
     }
 
@@ -37,8 +47,10 @@ class PaymentMethodAvailable implements ObserverInterface
     {
         $quote = $observer->getQuote();
 
-        if (!$quote) {
-            return;
+        $cannotExecuteObserver = !$quote
+            || !$this->pagarmeConfigProvider->isRecurrenceEnabled();
+        if ($cannotExecuteObserver) {
+            return $this;
         }
 
         $recurrenceProduct = $this->getRecurrenceProducts($quote);
@@ -47,23 +59,22 @@ class PaymentMethodAvailable implements ObserverInterface
             $currentMethod = $observer->getEvent()->getMethodInstance()->getCode();
             $isPagarmeMethod = strpos($currentMethod, "pagarme");
 
-            if (
-                !$this->pagarmeConfig->isEnabled() ||
-                $isPagarmeMethod === false
-            ) {
+            $isNotPagarmeMethodOrModuleDisabled =  !$this->pagarmeConfigProvider->getModuleStatus()
+                || $isPagarmeMethod === false;
+            if ($isNotPagarmeMethodOrModuleDisabled) {
                 $checkResult = $observer->getEvent()->getResult();
                 $checkResult->setData('is_available', false);
-                return;
+                return $this;
             }
 
             $this->switchPaymentMethodsForRecurrence($observer, $recurrenceProduct);
         }
 
-        if (!$this->pagarmeConfig->isEnabled()) {
+        if (!$this->pagarmeConfigProvider->getModuleStatus()) {
             $this->disablePagarmePaymentMethods($observer);
         }
 
-        return;
+        return $this;
     }
 
     /**
@@ -73,9 +84,9 @@ class PaymentMethodAvailable implements ObserverInterface
     {
         $currentMethod = $observer->getEvent()->getMethodInstance()->getCode();
 
-        $paymentMethodAvaliable = $this->getAvailableConfigMethods();
+        $availablePaymentMethod = $this->getAvailableConfigMethods();
 
-        if (in_array($currentMethod, $paymentMethodAvaliable)) {
+        if (in_array($currentMethod, $availablePaymentMethod)) {
             $checkResult = $observer->getEvent()->getResult();
             $checkResult->setData('is_available', false);
         }

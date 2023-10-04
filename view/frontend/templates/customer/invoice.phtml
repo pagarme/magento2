@@ -1,54 +1,44 @@
 <?php
-
-$i = 0;
-
+/**
+ * @var \Pagarme\Pagarme\Block\Customer\Invoice $block
+ */
 ?>
 <div>
     <table class="table">
-
         <thead>
-        <tr>
-            <th><?= __('Id') ?></th>
-            <th><?= __('Amount') ?></th>
-            <th><?= __('Paid amount') ?></th>
-            <th><?= __('Canceled amount') ?></th>
-            <th><?= __('Refunded amount') ?></th>
-            <th><?= __('Status') ?></th>
-            <th><?= __('Payement method') ?></th>
-            <?php if ($block->getSubscriptionPaymentMethod() == 'boleto') :?>
-                <th><?= __('Boleto') ?></th>
-            <?php endif;?>
-        </tr>
+            <tr>
+                <th><?= __('Id') ?></th>
+                <th><?= __('Amount') ?></th>
+                <th><?= __('Paid amount') ?></th>
+                <th><?= __('Canceled amount') ?></th>
+                <th><?= __('Refunded amount') ?></th>
+                <th><?= __('Status') ?></th>
+                <th><?= __('Payement method') ?></th>
+                <th><?= __('Action') ?></th>
+            </tr>
         </thead>
         <tbody>
-        <?php foreach ($block->getAllChargesByCodeOrder() as $item) : ?>
-            <?php $i++; ?>
-            <?php
-                $status = $item->getStatus()->getStatus();
-                $paymentMethod = $item->getPaymentMethod()->getPaymentMethod();
-
-                $numberFormatter = new NumberFormatter('pt-BR', NumberFormatter::CURRENCY);
-            ?>
-            <tr>
-                <td><?= $i ?></td>
-                <td><?= $numberFormatter->format(($item->getAmount()) / 100); ?></td>
-                <td><?= $numberFormatter->format(($item->getPaidAmount()) / 100); ?></td>
-                <td><?= $numberFormatter->format(($item->getCanceledAmount()) / 100) ?></td>
-                <td><?= $numberFormatter->format(($item->getRefundedAmount()) / 100) ?></td>
-                <td><?= __($status) ?></td>
-                <td><?= __($paymentMethod) ?></td>
-                <?php if ($block->getSubscriptionPaymentMethod() == 'boleto') :?>
+            <?php foreach ($block->getAllChargesByCodeOrder() as $id => $item): ?>
+                <tr>
+                    <td><?= $block->getVisualChargeId($id); ?></td>
+                    <td><?= $block->formatToCurrency($item->getAmount()); ?></td>
+                    <td><?= $block->formatToCurrency($item->getPaidAmount()); ?></td>
+                    <td><?= $block->formatToCurrency($item->getCanceledAmount()); ?></td>
+                    <td><?= $block->formatToCurrency($item->getRefundedAmount()); ?></td>
+                    <td><?= $item->getStatus()->getStatus(); ?></td>
+                    <td><?= $item->getPaymentMethod()->getPaymentMethod(); ?></td>
                     <td>
-                        <?php if (!empty($item->getBoletoLink())):?>
-                            <button target="_blank" onclick="location.href = '<?= $item->getBoletoLink() ?>';"
-                                    id="details">
-                                <?= __("download") ?>
+                        <?php if ($block->isBillet($item)): ?>
+                            <button
+                                onclick="location.href = '<?= $item->getBoletoLink(); ?>';"
+                                id="details"
+                            >
+                                <?= __('View Billet') ?>
                             </button>
-                        <?php endif;?>
+                        <?php endif; ?>
                     </td>
-                <?php endif;?>
-            </tr>
-        <?php endforeach; ?>
+                </tr>
+            <?php endforeach; ?>
         </tbody>
     </table>
 </div>

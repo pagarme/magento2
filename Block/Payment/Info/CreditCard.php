@@ -26,36 +26,57 @@ class CreditCard extends Cc
 {
     const TEMPLATE = 'Pagarme_Pagarme::info/creditCard.phtml';
 
+    /**
+     * @return void
+     */
     public function _construct()
     {
         $this->setTemplate(self::TEMPLATE);
     }
 
+    /**
+     * @return string
+     */
     public function getCcType()
     {
         return $this->getCcTypeName();
     }
 
+    /**
+     * @return string
+     */
     public function getCardNumber()
     {
         return '**** **** **** ' . $this->getInfo()->getCcLast4();
     }
 
+    /**
+     * @return string
+     */
     public function getCardLast4()
     {
         return '**** **** **** ' . $this->getInfo()->getAdditionalInformation('cc_last_4');
     }
 
+    /**
+     * @return mixed
+     */
     public function getCcBrand()
     {
         return $this->getInfo()->getAdditionalInformation('cc_type');
     }
 
+    /**
+     * @return mixed
+     */
     public function getTitle()
     {
         return $this->getInfo()->getAdditionalInformation('method_title');
     }
 
+    /**
+     * @return mixed
+     */
     public function getInstallments()
     {
         return $this->getInfo()->getAdditionalInformation('cc_installments');
@@ -73,30 +94,54 @@ class CreditCard extends Cc
         $orderService = new OrderService();
 
         $orderEntityId = $this->getInfo()->getOrder()->getIncrementId();
-
-        $platformOrder = new Magento2PlatformOrderDecorator();
-        $platformOrder->loadByIncrementId($orderEntityId);
+        $platformOrder = $this->loadPlatformOrderByIncrementId($orderEntityId);
 
         $orderPagarmeId = $platformOrder->getPagarmeId();
+
         if ($orderPagarmeId === null) {
             return [];
         }
 
-        /**
-         * @var Order orderObject
-         */
-        $orderObject = $orderService->getOrderByPagarmeId(new OrderId($orderPagarmeId));
+        $orderObject = $this->getOrderObjectByPagarmeId($orderService, $orderPagarmeId);
 
-        if ($orderObject === null) {
+        if ($orderObject === null || !is_object($orderObject)) {
             return [];
         }
+
+        $charge = current($orderObject->getCharges());
         
         return array_merge(
-            $orderObject->getCharges()[0]->getAcquirerTidCapturedAndAutorize(),
-            ['tid' => $this->getTid($orderObject->getCharges()[0])]
+            $charge->getAcquirerTidCapturedAndAutorize(),
+            ['tid' => $this->getTid($charge)]
         );
     }
 
+    /**
+     * @param mixed $incrementId
+     * @return Magento2PlatformOrderDecorator
+     */
+    private function loadPlatformOrderByIncrementId($incrementId)
+    {
+        $platformOrder = new Magento2PlatformOrderDecorator();
+        $platformOrder->loadByIncrementId($incrementId);
+        return $platformOrder;
+    }
+
+    /**
+     * @param mixed $orderService
+     * @param mixed $pagarmeId
+     * @return mixed
+     */
+    private function getOrderObjectByPagarmeId($orderService, $pagarmeId)
+    {
+        $orderId = new OrderId($pagarmeId);
+        return $orderService->getOrderByPagarmeId($orderId);
+    }
+
+    /**
+     * @param \Pagarme\Core\Kernel\Aggregates\Charge $charge
+     * @return string|null
+     */
     private function getTid(Charge $charge)
     {
         $transaction = $charge->getLastTransaction();

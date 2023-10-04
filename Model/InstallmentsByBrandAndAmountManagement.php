@@ -26,13 +26,24 @@ class InstallmentsByBrandAndAmountManagement
     extends AbstractInstallmentManagement
     implements InstallmentsByBrandAndAmountManagementInterface
 {
+    /**
+     * @var SimpleBuilderInterface
+     */
     protected $builder;
+
+    /**
+     * @var Session
+     */
     protected $session;
-    protected $cardBrand;
     /**
      * @var RecurrenceProductHelper
      */
     protected $recurrenceProductHelper;
+
+    /**
+     * @var Config
+     */
+    protected $config;
 
     /**
      * @param SimpleBuilderInterface $builder
@@ -61,6 +72,7 @@ class InstallmentsByBrandAndAmountManagement
     {
         $baseBrand = 'nobrand';
         if (
+            !empty($brand) &&
             strlen($brand) > 0 &&
             $brand !== "null" &&
             method_exists(CardBrand::class, $brand)

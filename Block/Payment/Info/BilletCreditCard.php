@@ -11,9 +11,15 @@
 
 namespace Pagarme\Pagarme\Block\Payment\Info;
 
+use Exception;
 use Magento\Framework\DataObject;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Pricing\Helper\Data;
+use Magento\Framework\View\Element\Template\Context;
 use Magento\Payment\Block\Info\Cc;
-use Pagarme\Core\Kernel\Aggregates\Charge;
+use Magento\Payment\Model\Config;
+use Pagarme\Core\Kernel\Aggregates\Order;
+use Pagarme\Core\Kernel\Exceptions\InvalidParamException;
 use Pagarme\Core\Kernel\Services\OrderService;
 use Pagarme\Core\Kernel\ValueObjects\Id\OrderId;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
@@ -25,54 +31,85 @@ class BilletCreditCard extends Cc
     const TEMPLATE = 'Pagarme_Pagarme::info/billetCreditCard.phtml';
 
     /**
+     * @var Data
+     */
+    private $priceHelper;
+
+    /**
+     * @param Context $context
+     * @param Config $paymentConfig
+     * @param Data $priceHelper
+     * @param array $data
+     */
+    public function __construct(
+        Context $context,
+        Config $paymentConfig,
+        Data $priceHelper,
+        array $data = []
+    ) {
+        $this->priceHelper = $priceHelper;
+        parent::__construct($context, $paymentConfig, $data);
+    }
+
+    /**
      * {@inheritdoc}
+     * @throws LocalizedException
      */
     protected function _prepareSpecificInformation($transport = null)
     {
-        $transport = new DataObject([
+        $specificInformation = new DataObject([
             (string)__('Print Billet') => $this->getInfo()->getAdditionalInformation('billet_url')
         ]);
 
-        $transport = parent::_prepareSpecificInformation($transport);
-        return $transport;
+        return parent::_prepareSpecificInformation($specificInformation);
     }
 
-    public function _construct()
+    /**
+     * @throws Exception
+     */
+    protected function _construct()
     {
         Magento2CoreSetup::bootstrap();
         $this->setTemplate(self::TEMPLATE);
     }
 
-    public function getCcType()
-    {
-        return $this->getCcTypeName();
-    }
-
-    public function getCardNumber()
-    {
-        return '**** **** **** ' . $this->getInfo()->getCcLast4();
-    }
-
+    /**
+     * @return string
+     * @throws LocalizedException
+     */
     public function getCardLast4()
     {
         return '**** **** **** ' . $this->getInfo()->getAdditionalInformation('cc_last_4');
     }
 
+    /**
+     * @throws LocalizedException
+     */
     public function getCcBrand()
     {
         return $this->getInfo()->getAdditionalInformation('cc_type');
     }
 
+    /**
+     * @throws LocalizedException
+     */
     public function getTitle()
     {
         return $this->getInfo()->getAdditionalInformation('method_title');
     }
 
+    /**
+     * @throws LocalizedException
+     */
     public function getInstallments()
     {
         return $this->getInfo()->getAdditionalInformation('cc_installments');
     }
 
+    /**
+     * @return string|null
+     * @throws LocalizedException
+     */
     public function getBilletUrl()
     {
         $billetHelper = new BilletHelper();
@@ -80,21 +117,33 @@ class BilletCreditCard extends Cc
 
     }
 
-    public function getCcAmount()
-    {
-        return $this->getInfo()->getAdditionalInformation('cc_cc_amount');
-    }
-
+    /**
+     * @return float|string
+     * @throws LocalizedException
+     */
     public function getCcAmountWithTax()
     {
-        return (float)$this->getInfo()->getAdditionalInformation('cc_cc_amount') + (float)$this->getInfo()->getAdditionalInformation('cc_cc_tax_amount');
+        $ccAmountWithTax = (float) $this->getInfo()->getAdditionalInformation('cc_cc_amount') +
+        (float) $this->getInfo()->getAdditionalInformation('cc_cc_tax_amount');
+        return $this->priceHelper->currency($ccAmountWithTax);
     }
 
+    /**
+     * @return float|string
+     * @throws LocalizedException
+     */
     public function getBilletAmount()
     {
-        return (float)$this->getInfo()->getAdditionalInformation('cc_billet_amount');
+        return $this->priceHelper->currency(
+            $this->getInfo()->getAdditionalInformation('cc_billet_amount')
+        );
     }
 
+    /**
+     * @return array
+     * @throws InvalidParamException
+     * @throws LocalizedException
+     */
     public function getTransactionInfo()
     {
         $orderService = new OrderService();
@@ -110,7 +159,7 @@ class BilletCreditCard extends Cc
         }
 
         /**
-         * @var \Pagarme\Core\Kernel\Aggregates\Order orderObject
+         * @var Order $orderObject
          */
         $orderObject = $orderService->getOrderByPagarmeId(new OrderId($orderPagarmeId));
 
@@ -139,7 +188,65 @@ class BilletCreditCard extends Cc
         return $transactionList;
     }
 
-    private function getTid(Charge $charge)
+    /**
+     * @return string
+     */
+    public function getCreditCardInformation()
+    {
+        $creditCardInformation = '';
+        if (empty($this->getCcTypeName())) {
+            return $creditCardInformation;
+        }
+
+        $creditCardInformation .= sprintf('<p>%s</p>', __($this->getTitle()));
+        $creditCardInformation .= sprintf(
+            '<strong class="box-title"><span>%s</span></strong>',
+            __('Credit Card')
+        );
+        $creditCardInformation .= $this->formatCreditCardData(__('Amount'), $this->getCcAmountWithTax());
+        $creditCardInformation .= $this->formatCreditCardData(__('Brand'), $this->getCcBrand());
+        $creditCardInformation .= $this->formatCreditCardData(__('Number'), $this->getCardLast4());
+        $creditCardInformation .= $this->formatCreditCardData(__('Installments'), $this->getInstallments());
+
+        return $creditCardInformation;
+    }
+
+    /**
+     * @return string
+     * @throws LocalizedException
+     */
+    public function getPrintBillet()
+    {
+        $printBillet = '';
+
+        $canShowPrintBillet = !empty($this->getBilletUrl()) && $this->getInfo()->getOrder()->getStatus() === 'pending';
+        if (!$canShowPrintBillet) {
+            return $printBillet;
+        }
+
+        $printBillet .= sprintf(
+            '<a class="action tocart primary" id="pagarme-link-boleto" href="%s" target="_blank">%s</a>',
+            $this->getBilletUrl(),
+            __('Print Billet')
+        );
+        return $printBillet;
+    }
+
+    /**
+     * @param mixed $title
+     * @param mixed $information
+     * @return string
+     */
+    private function formatCreditCardData($title, $information)
+    {
+        return sprintf('<p><b>%s: </b>%s</p>', $title, $information);
+    }
+
+    /**
+     * @param mixed $charge
+     * @return string|null
+     */
+    private function getTid($charge)
     {
         $transaction = $charge->getLastTransaction();
 

@@ -5,5 +5,10 @@ var config = {
                 'Pagarme_Pagarme/js/mixin/billing-address-mixin': true
             }
         }
+    },
+    map: {
+        '*': {
+            pixCheckoutSuccess: 'Pagarme_Pagarme/js/view/payment/checkout/success/pix'
+        }
     }
 };

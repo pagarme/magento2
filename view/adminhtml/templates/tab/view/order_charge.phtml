@@ -2,109 +2,67 @@
 /**
  * @var $block \Pagarme\Pagarme\Block\Adminhtml\Order\Charge\Tab\View
  */
-
-$objectManager = \Magento\Framework\App\ObjectManager::getInstance(); // Instance of Object Manager
-$priceHelper = $objectManager->create('Magento\Framework\Pricing\Helper\Data'); // Instance of Pricing Helper
-
 ?>
 
 <div class="fieldset-wrapper">
     <div class="fieldset-wrapper-title">
-        <span class="title"><?php echo __('Charges') ?></span>
+        <span class="title"><?= __('Charges') ?></span>
     </div>
     <table class="admin__table-secondary">
         <thead>
-            <th><?php echo __('Charge ID') ?></th>
-            <th><?php echo __('Amount') ?></th>
-            <th><?php echo __('Paid Amount') ?></th>
-            <th><?php echo __('Canceled Amount') ?></th>
-            <th><?php echo __('Refunded Amount') ?></th>
-            <th><?php echo __('Status') ?></th>
+            <th><?= __('Charge ID') ?></th>
+            <th><?= __('Amount') ?></th>
+            <th><?= __('Paid Amount') ?></th>
+            <th><?= __('Canceled Amount') ?></th>
+            <th><?= __('Refunded Amount') ?></th>
+            <th><?= __('Status') ?></th>
             <th></th>
             <th></th>
             <th></th>
         </thead>
         <tbody>
-            <?php foreach ($block->getCharges() as $charge) :?>
+            <?php foreach ($block->getCharges() as $charge): ?>
                 <tr>
-                    <td><?php echo $charge->getPagarmeId()->getValue();?></td>
-                    <td><?php echo $priceHelper->currency($charge->getAmount() / 100, true, false); ?></td>
-                    <td><?php echo $priceHelper->currency($charge->getPaidAmount() / 100, true, false);?></td>
-                    <td><?php echo $priceHelper->currency($charge->getCanceledAmount() / 100, true, false);?></td>
-                    <td><?php echo $priceHelper->currency($charge->getRefundedAmount() / 100, true, false);?></td>
-                    <td><?php echo $charge->getStatus()->getStatus();?></td>
-                    <td class="amount"><input class="amount-value" value="<?php echo $charge->getAmount();?>" /></td>
-                    <?php if ($charge->getCanceledAmount() <= 0) :?>
+                    <td><?= $charge->getPagarmeId()->getValue(); ?></td>
+                    <td><?= $block->formatToCurrency($charge->getAmount()); ?></td>
+                    <td><?= $block->formatToCurrency($charge->getPaidAmount()); ?></td>
+                    <td><?= $block->formatToCurrency($charge->getCanceledAmount()); ?></td>
+                    <td><?= $block->formatToCurrency($charge->getRefundedAmount()); ?></td>
+                    <td><?= $charge->getStatus()->getStatus(); ?></td>
+                    <td class="amount"><input class="amount-value" value="<?= $charge->getAmount(); ?>" /></td>
                     <td>
                         <button class="action charge-button"
-                                action="capture"
-                                order="<?php echo $charge->getOrderId()->getValue();?>"
-                                charge="<?php echo $charge->getPagarmeId()->getValue();?>"
-                                message="<?php echo __('Do you would capture this charge?') ?>"
-                        >Capture</button>
+                                data-action="capture"
+                                data-order="<?= $charge->getOrderId()->getValue(); ?>"
+                                data-charge="<?= $charge->getPagarmeId()->getValue(); ?>"
+                                data-message="<?= __('Do you want to capture this charge?'); ?>"
+                        >
+                            <?= __('Capture'); ?>
+                        </button>
                     </td>
-                    <?php endif;?>
                     <td>
                         <button class="action charge-button"
-                                action="cancel"
-                                order="<?php echo $charge->getOrderId()->getValue();?>"
-                                charge="<?php echo $charge->getPagarmeId()->getValue();?>"
-                                message="<?php echo __('Do you would cancel this charge?') ?>"
-                        >Cancel</button>
+                                data-action="cancel"
+                                data-order="<?= $charge->getOrderId()->getValue(); ?>"
+                                data-charge="<?= $charge->getPagarmeId()->getValue(); ?>"
+                                data-message="<?= __('Do you want to cancel this charge?'); ?>"
+                        >
+                            <?= __('Cancel'); ?>
+                        </button>
                     </td>
                 </tr>
-            <?php endforeach;?>
+            <?php endforeach; ?>
         </tbody>
     </table>
 </div>
 
-<script>
-    window.onload = function() {
-        jQuery(".charge-button").click(function(){
-            var urlCancel = '<?php echo $block->getChargeCancelUrl();?>';
-            var urlCaprute = '<?php echo $block->getChargeCaptureUrl();?>';
-            var action = this.getAttribute('action');
-            var charge = this.getAttribute('charge');
-            var order = this.getAttribute('order');
-            var amount = jQuery(this).parent().parent().children("td.amount").children().val();
-            var msg = this.getAttribute('message');
-            if(confirm(msg)) {
-                var serviceUrl;
-
-                if (action == 'cancel') {
-                    serviceUrl = urlCancel
-                } else {
-                    serviceUrl = urlCaprute
-                }
-                serviceUrl += "amount/" + amount + "/chargeId/" + charge + "/orderId/" + order;
-
-                return jQuery.ajax({
-                    method: "GET",
-                    beforeSend: function(request) {
-                        request.setRequestHeader("Content-type", 'application/json');
-                    },
-                    url: serviceUrl,
-                    showLoader: true,
-                    cache: false,
-                    // data: JSON.stringify(data),
-                    success: function(data) {
-                        if (data.code === 200) {
-                            document.location.reload(true);
-                        }
-                        alert(data.message);
-                    }
-                });
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "orderCharge": {
+                "urlCancel": "<?= $block->getChargeCancelUrl();?>",
+                "urlCapture": "<?= $block->getChargeCaptureUrl();?>"
             }
-        });
-        jQuery('.amount-value').keyup(function(){
-            var v = jQuery(this).val();
-            v=v.replace(/\D/g,"");//Remove tudo o que não é dígito
-            v=v.replace(/(\d)(\d{8})$/,"$1.$2");//coloca o ponto dos milhões
-            v=v.replace(/(\d)(\d{5})$/,"$1.$2");//coloca o ponto dos milhares
-
-            v=v.replace(/(\d)(\d{2})$/,"$1,$2");//coloca a virgula antes dos 2 últimos dígitos
-            return jQuery(this).val(v);
-        });
-        jQuery('.amount-value').keyup();
-    };
+        }
+    }
 </script>
