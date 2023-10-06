@@ -2,5 +2,6 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
         <css src="Pagarme_Pagarme::css/menu.css"/>
+        <css src="Pagarme_Pagarme::css/warnings.css"/>
     </head>
 </page>
