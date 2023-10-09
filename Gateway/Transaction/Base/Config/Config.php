@@ -22,7 +22,7 @@ class Config extends AbstractConfig implements ConfigInterface
     {
         return $this->getConfig(static::PATH_ENABLED);
     }
-    
+
     /**
      * @return string
      */
@@ -153,5 +153,80 @@ class Config extends AbstractConfig implements ConfigInterface
         ];
 
         return $customerConfigs;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAccountId()
+    {
+        return $this->getConfig(static::PATH_ACCOUNT_ID);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPixEnabled()
+    {
+        return (bool)$this->getConfig(static::PATH_PIX_ENABLED);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCreditCardEnabled()
+    {
+        return (bool)$this->getConfig(static::PATH_CREDIT_CARD_ENABLED);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isBilletAndCreditCardEnabled()
+    {
+        return (bool)$this->getConfig(static::PATH_BILLET_AND_CREDIT_CARD_ENABLED);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isTwoCreditCardEnabled()
+    {
+        return (bool)$this->getConfig(static::PATH_TWO_CREDIT_CARD_ENABLED);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAnyCreditCardMethodEnabled()
+    {
+        return $this->isCreditCardEnabled()
+            || $this->isBilletAndCreditCardEnabled()
+            || $this->isTwoCreditCardEnabled();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isBilletEnabled()
+    {
+        return (bool)$this->getConfig(static::PATH_BILLET_ENABLED);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAnyBilletMethodEnabled()
+    {
+        return $this->isBilletEnabled()
+            || $this->isBilletAndCreditCardEnabled();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isVoucherEnabled()
+    {
+        return (bool)$this->getConfig(static::PATH_VOUCHER_ENABLED);
     }
 }
