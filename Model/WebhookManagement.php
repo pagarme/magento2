@@ -12,12 +12,20 @@ use Pagarme\Core\Webhook\Exceptions\WebhookHandlerNotFoundException;
 use Pagarme\Core\Webhook\Services\WebhookReceiverService;
 use Pagarme\Pagarme\Api\WebhookManagementInterface;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
-use Pagarme\Pagarme\Controller\Adminhtml\Hub\Account;
+use Pagarme\Pagarme\Model\Account;
 
 class WebhookManagement implements WebhookManagementInterface
 {
 
-    protected OrderFactory $orderFactory;
+    /**
+     * @var OrderFactory
+     */
+    protected $orderFactory;
+
+    /**
+     * @var Account
+     */
+    protected $account;
 
     public function __construct(
         OrderFactory $orderFactory,
@@ -53,7 +61,7 @@ class WebhookManagement implements WebhookManagementInterface
             }
 
             if ($type === 'charge.paid') {
-                $this->account->getAccountIdFromWebhook($account);
+                $this->account->saveAccountIdFromWebhook($account);
             }
 
             $webhookReceiverService = new WebhookReceiverService();
