@@ -67,6 +67,7 @@ class DashSettingsValidation
         $this->isCreditCardEnabled($accountInfo);
         $this->isBilletEnabled($accountInfo);
         $this->isVoucherEnabled($accountInfo);
+        $this->isDebitEnabled($accountInfo);
 
         return $this->hubAccountErrors;
     }
