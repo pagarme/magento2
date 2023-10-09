@@ -61,6 +61,8 @@ interface ConfigInterface
 
     const PATH_VOUCHER_ENABLED = 'payment/pagarme_voucher/active';
 
+    const PATH_DEBIT_ENABLED = 'payment/pagarme_debit/active';
+
     const HUB_SANDBOX_ENVIRONMENT = 'Sandbox';
 
     /**
@@ -93,10 +95,6 @@ interface ConfigInterface
      */
     public function getTestMode();
 
-    /**
-     * @return string
-     */
-    public function getBaseUrl();
 
     /**
      * @return string

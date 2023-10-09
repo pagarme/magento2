@@ -27,6 +27,8 @@ class DashSettingsValidation
 
     const VOUCHER_DISABLED = 'voucherDisabled';
 
+    const DEBIT_DISABLED = 'debitDisabled';
+
     /**
      * @var StoreManagerInterface
      */
@@ -159,6 +161,15 @@ class DashSettingsValidation
         $dashVoucherDisabled = !$accountInfo->voucherSettings['enabled'];
         if ($dashVoucherDisabled && $storeVoucherEnabled) {
             $this->hubAccountErrors[] = self::VOUCHER_DISABLED;
+        }
+    }
+
+    private function isDebitEnabled($accountInfo)
+    {
+        $storeDebitEnabled = $this->config->isDebitEnabled();
+        $dashDebitDisabled = !$accountInfo->debitSettings['enabled'];
+        if ($dashDebitDisabled && $storeDebitEnabled) {
+            $this->hubAccountErrors[] = self::DEBIT_DISABLED;
         }
     }
 }
