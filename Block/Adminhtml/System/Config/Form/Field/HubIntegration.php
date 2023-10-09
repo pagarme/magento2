@@ -49,7 +49,7 @@ class HubIntegration extends Field
             ? __("View Integration") : __("Integrate With Pagar.me");
     }
 
-    private function getHubUrl($installId)
+    public function getHubUrl($installId)
     {
         return $installId
             ? $this->getBaseViewIntegrationUrl($installId->getValue())
