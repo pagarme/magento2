@@ -31,6 +31,7 @@ class Account
      * @var WriterInterface
      */
     protected $configWriter;
+
     /**
      * @var StoreManagerInterface
      */
@@ -51,6 +52,15 @@ class Account
      */
     protected $configCollectionFactory;
 
+    /**
+     * @param WriterInterface $configWriter
+     * @param StoreManagerInterface $storeManager
+     * @param AccountService $accountService
+     * @param DashSettingsValidation $dashSettingsValidation
+     * @param HubCommand $hubCommand
+     * @param CollectionFactory $configCollectionFactory
+     * @throws Exception
+     */
     public function __construct(
         WriterInterface $configWriter,
         StoreManagerInterface $storeManager,
@@ -69,6 +79,9 @@ class Account
         $this->config = Magento2CoreSetup::getModuleConfiguration();
     }
 
+    /**
+     * @return void
+     */
     public function validateDashSettings()
     {
         if (
@@ -96,6 +109,8 @@ class Account
     }
 
     /**
+     * @param $account
+     * @return void
      * @throws NoSuchEntityException
      */
     public function saveAccountIdFromWebhook($account)
@@ -113,6 +128,10 @@ class Account
         );
     }
 
+    /**
+     * @return array|mixed
+     * @throws NoSuchEntityException
+     */
     public function getDashSettingsErrors()
     {
         $collection = $this->configCollectionFactory->create();
@@ -132,13 +151,41 @@ class Account
         return json_decode($errorsList);
     }
 
+    /**
+     * @return string|null
+     */
     public function getAccountId()
     {
         return $this->config->getAccountId() ?? null;
     }
 
+    /**
+     * @return string|null
+     */
     public function getMerchantId()
     {
         return $this->config->getMerchantId() ?? null;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasMerchantAndAccountIds()
+    {
+        return $this->config->getAccountId() && $this->config->getMerchantId();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDashUrl() {
+        if (!$this->hasMerchantAndAccountIds()) {
+            return null;
+        }
+        return sprintf(
+            'https://dash.pagar.me/%s/%s/',
+            $this->getMerchantId(),
+            $this->getAccountId()
+        );
     }
 }

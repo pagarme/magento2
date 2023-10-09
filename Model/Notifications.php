@@ -15,6 +15,8 @@ use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
 use Pagarme\Pagarme\Gateway\Transaction\Base\Config\ConfigInterface;
+use Pagarme\Pagarme\Model\Account;
+use Pagarme\Pagarme\Model\Validation\DashSettingsValidation;
 
 /**
  * class Notifications
@@ -22,10 +24,16 @@ use Pagarme\Pagarme\Gateway\Transaction\Base\Config\ConfigInterface;
  */
 class Notifications extends Message
 {
+    const PAYMENT_DISABLED_MESSAGE = '%1$s payment method is enabled on your store, but disabled on Pagar.me Dash. '
+    . 'Please, access the %2$s and enable it to be able to process %1$s payment on your store.';
 
     /** @var array */
     private $warnings = [];
     private $config;
+    /**
+     * @var Account
+     */
+    private $account;
 
     /**
      * @param ConfigInterface $config
@@ -39,12 +47,14 @@ class Notifications extends Message
         ConfigInterface $config,
         Context $context,
         Registry $registry,
+        Account $account,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = []
     ) {
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
         $this->config = $config;
+        $this->account = $account;
         $this->addMessages();
     }
 
@@ -90,6 +100,7 @@ class Notifications extends Message
     {
         $this->addEnvorimentMessages();
         $this->addConfigMessages();
+        $this->addHubConfigMessages();
     }
 
     private function addEnvorimentMessages()
@@ -129,8 +140,85 @@ class Notifications extends Message
         }
     }
 
-    private function addHubDomainMessages()
+    private function addHubConfigMessages()
     {
-//        $hubConfigs = $this->config->
+        $hubConfigs = $this->account->getDashSettingsErrors();
+
+        if (empty($hubConfigs)){
+            return;
+        }
+
+        $linkLabel = 'Dash configurations';
+        $linkAccount = 'account-config';
+        $linkOrder = 'order-config';
+        $linkPayment = 'payment-methods';
+
+        $noticesList = [
+            DashSettingsValidation::ACCOUNT_DISABLED => 'Your account is disabled on Pagar.me Dash. '
+                . 'Please, contact our support team to enable it.',
+            DashSettingsValidation::DOMAIN_EMPTY => sprintf(
+                'No domain registered on Pagar.me Dash. Please enter your website\'s domain on the %s '
+                . 'to be able to process payment in your store.',
+                $this->buildLink($linkLabel, $linkAccount),
+            ),
+            DashSettingsValidation::DOMAIN_INCORRECT => sprintf(
+                'The registered domain is different from the URL of your website. Please correct the '
+                . 'domain configured on the %s to be able to process payment in your store.',
+                $this->buildLink($linkLabel, $linkAccount),
+            ),
+            DashSettingsValidation::WEBHOOK_INCORRECT => sprintf(
+                'The URL for receiving webhook registered in Pagar.me Dash is different from the URL of '
+                . 'your website. Please, click the button below to access the Hub and click the Delete > Confirm '
+                . 'button. Then return to your store and integrate again.',
+                $this->buildLink('', ''),
+            ),
+            DashSettingsValidation::MULTIPAYMENTS_DISABLED => sprintf(
+                'Multipayment option is disabled on Pagar.me Dash. Please, access the %s '
+                . 'and enable it to be able to process payment in your store.',
+                $this->buildLink($linkLabel, $linkOrder),
+            ),
+            DashSettingsValidation::MULTIBUYERS_DISABLED => sprintf(
+                'Multibuyers option is disabled on Pagar.me Dash. Please, access the %s '
+                . 'and enable it to be able to process payment in your store.',
+                $this->buildLink($linkLabel, $linkOrder),
+            ),
+            DashSettingsValidation::PIX_DISABLED => sprintf(
+                self::PAYMENT_DISABLED_MESSAGE,
+                'Pix',
+                $this->buildLink($linkLabel, $linkPayment),
+            ),
+            DashSettingsValidation::CREDIT_CARD_DISABLED => sprintf(
+                self::PAYMENT_DISABLED_MESSAGE,
+                'Credit Card',
+                $this->buildLink($linkLabel, $linkPayment),
+            ),
+            DashSettingsValidation::BILLET_DISABLED => sprintf(
+                self::PAYMENT_DISABLED_MESSAGE,
+                'Billet',
+                $this->buildLink($linkLabel, $linkPayment),
+            ),
+            DashSettingsValidation::VOUCHER_DISABLED => sprintf(
+                self::PAYMENT_DISABLED_MESSAGE,
+                'Voucher',
+                $this->buildLink($linkLabel, $linkPayment),
+            )
+        ];
+
+        foreach ($hubConfigs as $error) {
+            $this->warnings[] = $noticesList[$error];
+        }
+    }
+
+    private function buildLink($label, $dashPage)
+    {
+        if (!$this->account->hasMerchantAndAccountIds()) {
+            return $label;
+        }
+
+        return sprintf(
+            '<a href="%s" target="_blank">%s</a>',
+            $this->account->getDashUrl() . "settings/{$dashPage}/",
+            $label
+        );
     }
 }
