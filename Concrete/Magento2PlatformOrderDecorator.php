@@ -49,6 +49,7 @@ use Magento\Sales\Model\ResourceModel\Order\Status\Collection;
 use Magento\Quote\Model\Quote;
 use Pagarme\Pagarme\Helper\Marketplace\WebkulHelper;
 use Pagarme\Pagarme\Model\PagarmeConfigProvider;
+use Pagarme\Pagarme\Model\Source\Bank;
 
 class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 {
