@@ -12,8 +12,8 @@ use Pagarme\Core\Kernel\Aggregates\Configuration;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Pagarme\Pagarme\Gateway\Transaction\Base\Config\ConfigInterface;
 use Pagarme\Pagarme\Model\Api\HubCommand;
-use Pagarme\Pagarme\Model\Validation\DashSettingsValidation;
 use Pagarme\Pagarme\Service\AccountService;
+use Psr\Log\LoggerInterface;
 
 class Account
 {
@@ -38,11 +38,6 @@ class Account
     protected $storeManager;
 
     /**
-     * @var DashSettingsValidation
-     */
-    protected $dashSettingsValidation;
-
-    /**
      * @var HubCommand
      */
     protected $hubCommand;
@@ -53,36 +48,42 @@ class Account
     protected $configCollectionFactory;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * @param WriterInterface $configWriter
      * @param StoreManagerInterface $storeManager
      * @param AccountService $accountService
-     * @param DashSettingsValidation $dashSettingsValidation
      * @param HubCommand $hubCommand
      * @param CollectionFactory $configCollectionFactory
+     * @param LoggerInterface $logger
      * @throws Exception
      */
     public function __construct(
         WriterInterface $configWriter,
         StoreManagerInterface $storeManager,
         AccountService $accountService,
-        DashSettingsValidation $dashSettingsValidation,
         HubCommand $hubCommand,
-        CollectionFactory $configCollectionFactory
+        CollectionFactory $configCollectionFactory,
+        LoggerInterface $logger
     ) {
         $this->configWriter = $configWriter;
         $this->storeManager = $storeManager;
         $this->accountService = $accountService;
-        $this->dashSettingsValidation = $dashSettingsValidation;
         $this->hubCommand = $hubCommand;
         $this->configCollectionFactory = $configCollectionFactory;
         Magento2CoreSetup::bootstrap();
         $this->config = Magento2CoreSetup::getModuleConfiguration();
+        $this->logger = $logger;
     }
 
     /**
+     * @param mixed $website
      * @return void
      */
-    public function validateDashSettings()
+    public function validateDashSettings($website)
     {
         if (
             empty($this->config->getHubInstallId())
@@ -92,19 +93,18 @@ class Account
         }
 
         try {
-            $accountInfo = $this->accountService->getAccount($this->getAccountId());
-            $errorsList = $this->dashSettingsValidation->validate($accountInfo);
+            $account = $this->accountService->getAccountWithValidation($this->getAccountId(), $website);
             $this->configWriter->save(
                 ConfigInterface::PATH_DASH_ERRORS,
-                json_encode($errorsList),
+                json_encode($account->getErrors()),
                 ScopeInterface::SCOPE_WEBSITES,
-                $this->storeManager->getStore()
-                    ->getWebsiteId()
+                $website
             );
         } catch (Exception $e) {
             if ($e->getMessage() === 'Invalid API key') {
                 $this->hubCommand->uninstallCommand();
             }
+            $this->logger->error(__('Failed to get account information: %1', $e->getMessage()));
         }
     }
 

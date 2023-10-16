@@ -49,20 +49,6 @@ interface ConfigInterface
 
     const PATH_DASH_ERRORS = 'pagarme_pagarme/hub/account_errors';
 
-    const PATH_PIX_ENABLED = 'payment/pagarme_pix/active';
-
-    const PATH_CREDIT_CARD_ENABLED = 'payment/pagarme_creditcard/active';
-
-    const PATH_BILLET_AND_CREDIT_CARD_ENABLED = 'payment/pagarme_multipleactionscreditcardbillet/active';
-
-    const PATH_TWO_CREDIT_CARD_ENABLED = 'payment/pagarme_multipleactionstwocreditcard/active';
-
-    const PATH_BILLET_ENABLED = 'payment/pagarme_billet/active';
-
-    const PATH_VOUCHER_ENABLED = 'payment/pagarme_voucher/active';
-
-    const PATH_DEBIT_ENABLED = 'payment/pagarme_debit/active';
-
     const HUB_SANDBOX_ENVIRONMENT = 'Sandbox';
 
     /**
@@ -125,14 +111,4 @@ interface ConfigInterface
      * @return bool
      */
     public function isSendEmail();
-
-    /**
-     * @return string
-     */
-    public function getAccountId();
-
-    /**
-     * @return bool
-     */
-    public function isPixEnabled();
 }

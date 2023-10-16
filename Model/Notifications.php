@@ -15,11 +15,12 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
+use Pagarme\Core\Middle\Model\Account as CoreAccount;
+use Pagarme\Core\Middle\Model\Account\PaymentMethodSettings;
 use Pagarme\Pagarme\Block\Adminhtml\System\Config\Form\Field\HubIntegration;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Pagarme\Pagarme\Gateway\Transaction\Base\Config\ConfigInterface;
 use Pagarme\Pagarme\Model\Account;
-use Pagarme\Pagarme\Model\Validation\DashSettingsValidation;
 
 /**
  * class Notifications
@@ -179,53 +180,53 @@ class Notifications extends Message
         $linkPayment = 'payment-methods';
 
         $noticesList = [
-            DashSettingsValidation::ACCOUNT_DISABLED => __('Your account is disabled on Pagar.me Dash. '
+            CoreAccount::ACCOUNT_DISABLED => __('Your account is disabled on Pagar.me Dash. '
                 . 'Please, contact our support team to enable it.'),
-            DashSettingsValidation::DOMAIN_EMPTY => sprintf(
+            CoreAccount::DOMAIN_EMPTY => sprintf(
                 __('No domain registered on Pagar.me Dash. Please enter your website\'s domain on the %s '
                 . 'to be able to process payment in your store.'),
-                $this->buildDashLink($linkLabel, $linkAccount),
+                $this->buildDashLink($linkLabel, $linkAccount)
             ),
-            DashSettingsValidation::DOMAIN_INCORRECT => sprintf(
+            CoreAccount::DOMAIN_INCORRECT => sprintf(
                 __('The registered domain is different from the URL of your website. Please correct the '
                 . 'domain configured on the %s to be able to process payment in your store.'),
-                $this->buildDashLink($linkLabel, $linkAccount),
+                $this->buildDashLink($linkLabel, $linkAccount)
             ),
-            DashSettingsValidation::WEBHOOK_INCORRECT => sprintf(
+            CoreAccount::WEBHOOK_INCORRECT => sprintf(
                 __('The URL for receiving webhook registered in Pagar.me Dash is different from the URL of '
                 . 'your website. Please, %s to access the Hub and click the Delete > Confirm '
                 . 'button. Then return to your store and integrate again.'),
-                $this->buildHubLink(__('click here')),
+                $this->buildHubLink(__('click here'))
             ),
-            DashSettingsValidation::MULTIPAYMENTS_DISABLED => sprintf(
+            CoreAccount::MULTIPAYMENTS_DISABLED => sprintf(
             __('Multipayment option is disabled on Pagar.me Dash. Please, access the %s '
                 . 'and enable it to be able to process payment in your store.'),
-                $this->buildDashLink($linkLabel, $linkOrder),
+                $this->buildDashLink($linkLabel, $linkOrder)
             ),
-            DashSettingsValidation::MULTIBUYERS_DISABLED => sprintf(
+            CoreAccount::MULTIBUYERS_DISABLED => sprintf(
                 __('Multibuyers option is disabled on Pagar.me Dash. Please, access the %s '
                 . 'and enable it to be able to process payment in your store.'),
-                $this->buildDashLink($linkLabel, $linkOrder),
+                $this->buildDashLink($linkLabel, $linkOrder)
             ),
-            DashSettingsValidation::PIX_DISABLED => sprintf(
+            PaymentMethodSettings::PIX_DISABLED => sprintf(
                 __(self::PAYMENT_DISABLED_MESSAGE),
                 'Pix',
-                $this->buildDashLink($linkLabel, $linkPayment),
+                $this->buildDashLink($linkLabel, $linkPayment)
             ),
-            DashSettingsValidation::CREDIT_CARD_DISABLED => sprintf(
+            PaymentMethodSettings::CREDITCARD_DISABLED => sprintf(
                 __(self::PAYMENT_DISABLED_MESSAGE),
                 __('Credit Card'),
-                $this->buildDashLink($linkLabel, $linkPayment),
+                $this->buildDashLink($linkLabel, $linkPayment)
             ),
-            DashSettingsValidation::BILLET_DISABLED => sprintf(
+            PaymentMethodSettings::BILLET_DISABLED => sprintf(
                 __(self::PAYMENT_DISABLED_MESSAGE),
                 __('Billet'),
-                $this->buildDashLink($linkLabel, $linkPayment),
+                $this->buildDashLink($linkLabel, $linkPayment)
             ),
-            DashSettingsValidation::VOUCHER_DISABLED => sprintf(
+            PaymentMethodSettings::VOUCHER_DISABLED => sprintf(
                 __(self::PAYMENT_DISABLED_MESSAGE),
                 'Voucher',
-                $this->buildDashLink($linkLabel, $linkPayment),
+                $this->buildDashLink($linkLabel, $linkPayment)
             )
         ];
 

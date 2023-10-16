@@ -13,6 +13,8 @@
 namespace Pagarme\Pagarme\Gateway\Transaction\Base\Config;
 
 
+use Pagarme\Core\Middle\Model\Validator\PaymentsValidator;
+
 class Config extends AbstractConfig implements ConfigInterface
 {
     /**
@@ -139,88 +141,5 @@ class Config extends AbstractConfig implements ConfigInterface
             'showVatNumber' => $this->getConfig(static::PATH_CUSTOMER_VAT_NUMBER) ?? '',
             'streetLinesNumber' => $this->getConfig(static::PATH_CUSTOMER_ADDRESS_LINES) ?? '',
         ];
-    }
-
-    /**
-     * @return string
-     */
-    public function getAccountId()
-    {
-        return $this->getConfig(static::PATH_ACCOUNT_ID);
-    }
-
-    /**
-     * @return bool
-     */
-    public function isPixEnabled()
-    {
-        return (bool)$this->getConfig(static::PATH_PIX_ENABLED);
-    }
-
-    /**
-     * @return bool
-     */
-    public function isCreditCardEnabled()
-    {
-        return (bool)$this->getConfig(static::PATH_CREDIT_CARD_ENABLED);
-    }
-
-    /**
-     * @return bool
-     */
-    public function isBilletAndCreditCardEnabled()
-    {
-        return (bool)$this->getConfig(static::PATH_BILLET_AND_CREDIT_CARD_ENABLED);
-    }
-
-    /**
-     * @return bool
-     */
-    public function isTwoCreditCardEnabled()
-    {
-        return (bool)$this->getConfig(static::PATH_TWO_CREDIT_CARD_ENABLED);
-    }
-
-    /**
-     * @return bool
-     */
-    public function isAnyCreditCardMethodEnabled()
-    {
-        return $this->isCreditCardEnabled()
-            || $this->isBilletAndCreditCardEnabled()
-            || $this->isTwoCreditCardEnabled();
-    }
-
-    /**
-     * @return bool
-     */
-    public function isBilletEnabled()
-    {
-        return (bool)$this->getConfig(static::PATH_BILLET_ENABLED);
-    }
-
-    /**
-     * @return bool
-     */
-    public function isAnyBilletMethodEnabled()
-    {
-        return $this->isBilletEnabled()
-            || $this->isBilletAndCreditCardEnabled();
-    }
-
-    /**
-     * @return bool
-     */
-    public function isVoucherEnabled()
-    {
-        return (bool)$this->getConfig(static::PATH_VOUCHER_ENABLED);
-    }
-
-    /**
-     * @return bool
-     */
-    public function isDebitEnabled()
-    {
-        return (bool)$this->getConfig(static::PATH_DEBIT_ENABLED);
     }
 }

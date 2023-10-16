@@ -26,6 +26,9 @@ class DashConfigValidatorObserver implements ObserverInterface
             return $this;
         }
 
-        $this->account->validateDashSettings();
+        $website = $observer->getRequest()
+            ->getParam('website', 1);
+
+        $this->account->validateDashSettings($website);
     }
 }

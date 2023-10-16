@@ -6,6 +6,7 @@ use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Framework\App\Config\ConfigResource\ConfigInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\ScopeInterface;
+use Pagarme\Core\Middle\Model\Account\PaymentEnum;
 use Pagarme\Pagarme\Gateway\Transaction\Base\Config\ConfigInterface as PagarmeConfigInterface;
 
 /**
@@ -33,6 +34,21 @@ class PagarmeConfigProvider implements ConfigProviderInterface
     const PATH_CUSTOMER_NUMBER           = 'payment/pagarme_customer_address/number_attribute';
     const PATH_CUSTOMER_COMPLEMENT       = 'payment/pagarme_customer_address/complement_attribute';
     const PATH_CUSTOMER_DISTRICT         = 'payment/pagarme_customer_address/district_attribute';
+    const PATH_ACCOUNT_ID = 'pagarme_pagarme/hub/account_id';
+
+    const PATH_PIX_ENABLED = 'payment/pagarme_pix/active';
+
+    const PATH_CREDIT_CARD_ENABLED = 'payment/pagarme_creditcard/active';
+
+    const PATH_BILLET_AND_CREDIT_CARD_ENABLED = 'payment/pagarme_multipleactionscreditcardbillet/active';
+
+    const PATH_TWO_CREDIT_CARD_ENABLED = 'payment/pagarme_multipleactionstwocreditcard/active';
+
+    const PATH_BILLET_ENABLED = 'payment/pagarme_billet/active';
+
+    const PATH_VOUCHER_ENABLED = 'payment/pagarme_voucher/active';
+
+    const PATH_DEBIT_ENABLED = 'payment/pagarme_debit/active';
 
     /**
      * Contains scope config of Magento
@@ -279,6 +295,132 @@ class PagarmeConfigProvider implements ConfigProviderInterface
             'default',
             0
         );
+    }
+
+    /**
+     * @return string
+     */
+    public function getAccountId($website = 1)
+    {
+        return $this->scopeConfig->getValue(
+            self::PATH_ACCOUNT_ID,
+            ScopeInterface::SCOPE_WEBSITES,
+            $website
+        );
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPixEnabled($website = 1)
+    {
+        return (bool) $this->scopeConfig->getValue(
+            self::PATH_PIX_ENABLED,
+            ScopeInterface::SCOPE_WEBSITES,
+            $website
+        );
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCreditCardEnabled($website = 1)
+    {
+        return (bool) $this->scopeConfig->getValue(
+            self::PATH_CREDIT_CARD_ENABLED,
+            ScopeInterface::SCOPE_WEBSITES,
+            $website
+        );
+    }
+
+    /**
+     * @return bool
+     */
+    public function isBilletAndCreditCardEnabled($website = 1)
+    {
+        return (bool) $this->scopeConfig->getValue(
+            self::PATH_BILLET_AND_CREDIT_CARD_ENABLED,
+            ScopeInterface::SCOPE_WEBSITES,
+            $website
+        );
+    }
+
+    /**
+     * @return bool
+     */
+    public function isTwoCreditCardEnabled($website = 1)
+    {
+        return (bool) $this->scopeConfig->getValue(
+            self::PATH_TWO_CREDIT_CARD_ENABLED,
+            ScopeInterface::SCOPE_WEBSITES,
+            $website
+        );
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAnyCreditCardMethodEnabled($website = 1)
+    {
+        return $this->isCreditCardEnabled($website)
+            || $this->isBilletAndCreditCardEnabled($website)
+            || $this->isTwoCreditCardEnabled($website);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isBilletEnabled($website = 1)
+    {
+        return (bool) $this->scopeConfig->getValue(
+            self::PATH_BILLET_ENABLED,
+            ScopeInterface::SCOPE_WEBSITES,
+            $website
+        );
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAnyBilletMethodEnabled($website = 1)
+    {
+        return $this->isBilletEnabled($website)
+            || $this->isBilletAndCreditCardEnabled($website);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isVoucherEnabled($website = 1)
+    {
+        return (bool) $this->scopeConfig->getValue(
+            self::PATH_VOUCHER_ENABLED,
+            ScopeInterface::SCOPE_WEBSITES,
+            $website
+        );
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDebitEnabled($website = 1)
+    {
+        return (bool) $this->scopeConfig->getValue(
+            self::PATH_DEBIT_ENABLED,
+            ScopeInterface::SCOPE_WEBSITES,
+            $website
+        );
+    }
+
+    public function availablePaymentMethods($website = 1)
+    {
+        return [
+            PaymentEnum::PIX => $this->isPixEnabled($website),
+            PaymentEnum::DEBIT_CARD => $this->isDebitEnabled($website),
+            PaymentEnum::BILLET => $this->isAnyBilletMethodEnabled($website),
+            PaymentEnum::CREDIT_CARD => $this->isAnyCreditCardMethodEnabled($website),
+            PaymentEnum::VOUCHER => $this->isVoucherEnabled($website)
+        ];
     }
 
     /**
