@@ -58,9 +58,9 @@
         <column name="description" nullable="true" xsi:type="text" comment="Product description"/>
         <column name="plan_id" nullable="true" xsi:type="varchar" comment="Api's id" length="21"/>
         <column name="product_id" nullable="true" xsi:type="int" comment="Product in Magento's table" padding="11"/>
-        <column name="credit_card" nullable="false" xsi:type="char" comment="Accepts credit card" length="1"/>
-        <column name="installments" nullable="false" xsi:type="char" comment="Accepts installments" length="1"/>
-        <column name="boleto" nullable="false" xsi:type="char" comment="Accepts boleto" length="1"/>
+        <column name="credit_card" nullable="false" xsi:type="varchar" comment="Accepts credit card" length="1"/>
+        <column name="installments" nullable="false" xsi:type="varchar" comment="Accepts installments" length="1"/>
+        <column name="boleto" nullable="false" xsi:type="varchar" comment="Accepts boleto" length="1"/>
         <column name="billing_type" nullable="false" xsi:type="varchar" comment="Prepaid, postpaid or exact_day" length="11"/>
         <column name="status" nullable="false" xsi:type="varchar" comment="Active, inactive or deleted" length="11"/>
         <column name="trial_period_days" nullable="true" xsi:type="varchar" comment="Trial period in days" length="11"/>
