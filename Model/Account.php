@@ -3,8 +3,10 @@
 namespace Pagarme\Pagarme\Model;
 
 use Exception;
+use Magento\Backend\Model\Session;
 use Magento\Config\Model\ResourceModel\Config\Data\CollectionFactory;
 use Magento\Framework\App\Config\Storage\WriterInterface;
+use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
@@ -53,13 +55,23 @@ class Account
     protected $logger;
 
     /**
+     * @var Session
+     */
+    protected $session;
+
+    /**
+     * @var RequestInterface
+     */
+    protected $request;
+
+    /**
      * @param WriterInterface $configWriter
      * @param StoreManagerInterface $storeManager
      * @param AccountService $accountService
      * @param HubCommand $hubCommand
      * @param CollectionFactory $configCollectionFactory
      * @param LoggerInterface $logger
-     * @throws Exception
+     * @param Session $session
      */
     public function __construct(
         WriterInterface $configWriter,
@@ -67,16 +79,16 @@ class Account
         AccountService $accountService,
         HubCommand $hubCommand,
         CollectionFactory $configCollectionFactory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        Session $session
     ) {
         $this->configWriter = $configWriter;
         $this->storeManager = $storeManager;
         $this->accountService = $accountService;
         $this->hubCommand = $hubCommand;
         $this->configCollectionFactory = $configCollectionFactory;
-        Magento2CoreSetup::bootstrap();
-        $this->config = Magento2CoreSetup::getModuleConfiguration();
         $this->logger = $logger;
+        $this->session = $session;
     }
 
     /**
@@ -85,6 +97,8 @@ class Account
      */
     public function validateDashSettings($website)
     {
+        $this->session->setWebsiteId($website);
+        $this->initializeConfig($website);
         if (
             empty($this->config->getHubInstallId())
             || empty($this->getAccountId())
@@ -134,21 +148,23 @@ class Account
      */
     public function getDashSettingsErrors()
     {
+        $this->initializeConfig();
         $collection = $this->configCollectionFactory->create();
         $collection->addFieldToFilter('path', ['eq' => ConfigInterface::PATH_DASH_ERRORS]);
         $collection->addFieldToFilter('scope', ['eq' => ScopeInterface::SCOPE_WEBSITES]);
-        $collection->addFieldToFilter('scope_id', ['eq' => $this->storeManager->getStore()->getWebsiteId()]);
+        $collection->addFieldToFilter('scope_id', ['eq' => $this->session->getWebsiteId()]);
 
         if ($collection->count() === 0) {
             return [];
         }
 
         $errorsList = $collection->getFirstItem()->getData()['value'];
-        if (empty($errorsList)) {
+        $returnData = json_decode($errorsList);
+        if (empty($returnData)) {
             return [];
         }
 
-        return json_decode($errorsList);
+        return $returnData;
     }
 
     /**
@@ -156,6 +172,7 @@ class Account
      */
     public function getAccountId()
     {
+        $this->initializeConfig();
         return $this->config->getAccountId() ?? null;
     }
 
@@ -172,7 +189,7 @@ class Account
      */
     public function hasMerchantAndAccountIds()
     {
-        return $this->config->getAccountId() && $this->config->getMerchantId();
+        return $this->getAccountId() && $this->getMerchantId();
     }
 
     /**
@@ -187,5 +204,17 @@ class Account
             $this->getMerchantId(),
             $this->getAccountId()
         );
+    }
+
+    private function initializeConfig($website = null)
+    {
+        if (empty($this->config)) {
+            $websiteId = $website ?? $this->session->getWebsiteId();
+            $storeId = $this->storeManager->getWebsite($websiteId)
+                ->getDefaultStore()->getId();
+            $this->storeManager->setCurrentStore($storeId);
+            Magento2CoreSetup::bootstrap();
+            $this->config = Magento2CoreSetup::getModuleConfiguration();
+        }
     }
 }
