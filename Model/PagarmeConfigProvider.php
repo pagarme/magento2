@@ -6,6 +6,7 @@ use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Framework\App\Config\ConfigResource\ConfigInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\ScopeInterface;
+use Magento\Store\Model\StoreManagerInterface;
 use Pagarme\Core\Middle\Model\Account\PaymentEnum;
 use Pagarme\Pagarme\Gateway\Transaction\Base\Config\ConfigInterface as PagarmeConfigInterface;
 
@@ -65,7 +66,12 @@ class PagarmeConfigProvider implements ConfigProviderInterface
     protected $config;
 
     /** @var PagarmeConfigInterface */
-    private $pagarmeConfig;
+    protected $pagarmeConfig;
+
+    /**
+     * @var StoreManagerInterface
+     */
+    protected $storeManager;
 
     /**
      * @param PagarmeConfigInterface $pagarmeConfig
@@ -75,11 +81,13 @@ class PagarmeConfigProvider implements ConfigProviderInterface
     public function __construct(
         PagarmeConfigInterface $pagarmeConfig,
         ScopeConfigInterface $scopeConfig,
-        ConfigInterface $config
+        ConfigInterface $config,
+        StoreManagerInterface $storeManager
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->config = $config;
         $this->pagarmeConfig = $pagarmeConfig;
+        $this->storeManager = $storeManager;
     }
 
     /**
@@ -300,67 +308,67 @@ class PagarmeConfigProvider implements ConfigProviderInterface
     /**
      * @return string
      */
-    public function getAccountId($website = 1)
+    public function getAccountId($website = null)
     {
         return $this->scopeConfig->getValue(
             self::PATH_ACCOUNT_ID,
             ScopeInterface::SCOPE_WEBSITES,
-            $website
+            $this->getWebsiteId($website)
         );
     }
 
     /**
      * @return bool
      */
-    public function isPixEnabled($website = 1)
+    public function isPixEnabled($website = null)
     {
         return (bool) $this->scopeConfig->getValue(
             self::PATH_PIX_ENABLED,
             ScopeInterface::SCOPE_WEBSITES,
-            $website
+            $this->getWebsiteId($website)
         );
     }
 
     /**
      * @return bool
      */
-    public function isCreditCardEnabled($website = 1)
+    public function isCreditCardEnabled($website = null)
     {
         return (bool) $this->scopeConfig->getValue(
             self::PATH_CREDIT_CARD_ENABLED,
             ScopeInterface::SCOPE_WEBSITES,
-            $website
+            $this->getWebsiteId($website)
         );
     }
 
     /**
      * @return bool
      */
-    public function isBilletAndCreditCardEnabled($website = 1)
+    public function isBilletAndCreditCardEnabled($website = null)
     {
         return (bool) $this->scopeConfig->getValue(
             self::PATH_BILLET_AND_CREDIT_CARD_ENABLED,
             ScopeInterface::SCOPE_WEBSITES,
-            $website
+            $this->getWebsiteId($website)
         );
     }
 
     /**
      * @return bool
      */
-    public function isTwoCreditCardEnabled($website = 1)
+    public function isTwoCreditCardEnabled($website = null)
     {
         return (bool) $this->scopeConfig->getValue(
             self::PATH_TWO_CREDIT_CARD_ENABLED,
             ScopeInterface::SCOPE_WEBSITES,
-            $website
+            $this->getWebsiteId($website)
         );
     }
 
     /**
      * @return bool
      */
-    public function isAnyCreditCardMethodEnabled($website = 1)
+    public function isAnyCreditCardMethodEnabled($website = null)
     {
         return $this->isCreditCardEnabled($website)
             || $this->isBilletAndCreditCardEnabled($website)
@@ -370,19 +378,19 @@ class PagarmeConfigProvider implements ConfigProviderInterface
     /**
      * @return bool
      */
-    public function isBilletEnabled($website = 1)
+    public function isBilletEnabled($website = null)
     {
         return (bool) $this->scopeConfig->getValue(
             self::PATH_BILLET_ENABLED,
             ScopeInterface::SCOPE_WEBSITES,
-            $website
+            $this->getWebsiteId($website)
         );
     }
 
     /**
      * @return bool
      */
-    public function isAnyBilletMethodEnabled($website = 1)
+    public function isAnyBilletMethodEnabled($website = null)
     {
         return $this->isBilletEnabled($website)
             || $this->isBilletAndCreditCardEnabled($website);
@@ -391,19 +399,19 @@ class PagarmeConfigProvider implements ConfigProviderInterface
     /**
      * @return bool
      */
-    public function isVoucherEnabled($website = 1)
+    public function isVoucherEnabled($website = null)
     {
         return (bool) $this->scopeConfig->getValue(
             self::PATH_VOUCHER_ENABLED,
             ScopeInterface::SCOPE_WEBSITES,
-            $website
+            $this->getWebsiteId($website)
         );
     }
 
     /**
      * @return bool
      */
-    public function isDebitEnabled($website = 1)
+    public function isDebitEnabled($website = null)
     {
         return (bool) $this->scopeConfig->getValue(
             self::PATH_DEBIT_ENABLED,
@@ -412,7 +420,7 @@ class PagarmeConfigProvider implements ConfigProviderInterface
         );
     }
 
-    public function availablePaymentMethods($website = 1)
+    public function availablePaymentMethods($website = null)
     {
         return [
             PaymentEnum::PIX => $this->isPixEnabled($website),
@@ -433,5 +441,10 @@ class PagarmeConfigProvider implements ConfigProviderInterface
             'pagarme_is_hub_enabled' => $this->pagarmeConfig->isHubEnabled(),
             'pagarme_customer_configs' => $this->pagarmeConfig->getPagarmeCustomerConfigs(),
         ] ;
+    }
+
+    private function getWebsiteId($websiteId = null)
+    {
+        return $websiteId ?? $this->storeManager->getStore()->getWebsiteId();
     }
 }

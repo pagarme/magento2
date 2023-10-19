@@ -4,6 +4,8 @@ namespace Pagarme\Pagarme\Observer;
 
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Store\Model\StoreManagerInterface;
 use Pagarme\Pagarme\Model\Account;
 
 class DashConfigValidatorObserver implements ObserverInterface
@@ -13,11 +15,26 @@ class DashConfigValidatorObserver implements ObserverInterface
      */
     protected $account;
 
-    public function __construct(Account $account)
-    {
+    /**
+     * @var StoreManagerInterface
+     */
+    protected $storeManager;
+
+    /**
+     * @param Account $account
+     * @param StoreManagerInterface $storeManager
+     */
+    public function __construct(
+        Account $account,
+        StoreManagerInterface $storeManager
+    ) {
         $this->account = $account;
+        $this->storeManager = $storeManager;
     }
 
+    /**
+     * @throws NoSuchEntityException
+     */
     public function execute(Observer $observer)
     {
         $section = $observer->getRequest()
@@ -27,7 +44,7 @@ class DashConfigValidatorObserver implements ObserverInterface
         }
 
         $website = $observer->getRequest()
-            ->getParam('website', 1);
+            ->getParam('website', $this->storeManager->getStore()->getWebsiteId());
 
         $this->account->validateDashSettings($website);
     }
