@@ -12,9 +12,6 @@
 
 namespace Pagarme\Pagarme\Gateway\Transaction\Base\Config;
 
-
-use Pagarme\Core\Middle\Model\Validator\PaymentsValidator;
-
 class Config extends AbstractConfig implements ConfigInterface
 {
     /**
