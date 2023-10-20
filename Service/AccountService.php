@@ -2,7 +2,9 @@
 
 namespace Pagarme\Pagarme\Service;
 
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Pagarme\Core\Middle\Model\Account;
 use Pagarme\Core\Middle\Model\Account\StoreSettings;
@@ -10,6 +12,7 @@ use Pagarme\Core\Middle\Proxy\AccountProxy;
 use Pagarme\Pagarme\Gateway\Transaction\Base\Config\Config;
 use Pagarme\Pagarme\Model\CoreAuth;
 use Pagarme\Pagarme\Model\PagarmeConfigProvider;
+use PagarmeCoreApiLib\Models\GetAccountResponse;
 
 class AccountService
 {
@@ -50,8 +53,9 @@ class AccountService
      * @param mixed $website
      * @return Account
      * @throws NoSuchEntityException
+     * @throws LocalizedException
      */
-    public function getAccountWithValidation($accountId, $website = 1)
+    public function getAccountWithValidation($accountId, $website)
     {
         $storeSettings = new StoreSettings();
         $storeSettings->setSandbox($this->config->isSandboxMode());
@@ -68,12 +72,20 @@ class AccountService
         return $account->validate($storeSettings);
     }
 
+    /**
+     * @param mixed $accountId
+     * @return GetAccountResponse
+     */
     private function getAccountOnPagarme($accountId)
     {
         $accountService = new AccountProxy($this->coreAuth);
         return $accountService->getAccount($accountId);
     }
 
+    /**
+     * @param StoreInterface $store
+     * @return string
+     */
     private function mapBaseUrlFromStore($store)
     {
         return $store->getBaseUrl();

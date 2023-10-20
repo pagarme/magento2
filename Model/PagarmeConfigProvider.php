@@ -5,6 +5,7 @@ namespace Pagarme\Pagarme\Model;
 use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Framework\App\Config\ConfigResource\ConfigInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Pagarme\Core\Middle\Model\Account\PaymentEnum;
@@ -420,6 +421,10 @@ class PagarmeConfigProvider implements ConfigProviderInterface
         );
     }
 
+    /**
+     * @param mixed $website
+     * @return array
+     */
     public function availablePaymentMethods($website = null)
     {
         return [
@@ -443,6 +448,11 @@ class PagarmeConfigProvider implements ConfigProviderInterface
         ] ;
     }
 
+    /**
+     * @param mixed $websiteId
+     * @return int|mixed
+     * @throws NoSuchEntityException
+     */
     private function getWebsiteId($websiteId = null)
     {
         return $websiteId ?? $this->storeManager->getStore()->getWebsiteId();
