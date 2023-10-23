@@ -17,7 +17,7 @@ class WebhookManagement implements WebhookManagementInterface
 {
 
     /**
-     * @var OrderFactory 
+     * @var OrderFactory
      */
     protected $orderFactory;
 
