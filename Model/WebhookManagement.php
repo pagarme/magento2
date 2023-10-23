@@ -16,7 +16,10 @@ use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 class WebhookManagement implements WebhookManagementInterface
 {
 
-    protected OrderFactory $orderFactory;
+    /**
+     * @var OrderFactory 
+     */
+    protected $orderFactory;
 
     public function __construct(
         OrderFactory $orderFactory
