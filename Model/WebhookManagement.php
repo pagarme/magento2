@@ -66,13 +66,8 @@ class WebhookManagement implements WebhookManagementInterface
 
             $webhookReceiverService = new WebhookReceiverService();
             return $webhookReceiverService->handle($postData);
-        } catch (WebhookHandlerNotFoundException $e) {
+        } catch (WebhookHandlerNotFoundException | WebhookAlreadyHandledException $e) {
             return [
-                "message" => $e->getMessage(),
-                "code" => 200
-            ];
-        } catch (WebhookAlreadyHandledException $e)  {
-            return  [
                 "message" => $e->getMessage(),
                 "code" => 200
             ];

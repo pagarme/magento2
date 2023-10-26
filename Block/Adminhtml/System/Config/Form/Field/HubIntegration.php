@@ -19,8 +19,12 @@ class HubIntegration extends Field
      */
     private $account;
 
-    public function __construct(Account $account, Context $context, array $data = [], ?SecureHtmlRenderer $secureRenderer = null)
-    {
+    public function __construct(
+        Account $account,
+        Context $context,
+        array $data = [],
+        ?SecureHtmlRenderer $secureRenderer = null
+    ) {
         $this->account = $account;
         parent::__construct($context, $data, $secureRenderer);
     }

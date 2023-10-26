@@ -29,8 +29,9 @@ use Pagarme\Pagarme\Model\Account;
  */
 class Notifications extends Message
 {
-    const PAYMENT_DISABLED_MESSAGE = '<b>%1$s</b> payment method is enabled on your store, but disabled on Pagar.me Dash. '
-        . 'Please, access the <b>%2$s</b> and enable it to be able to process %1$s payment on your store.';
+    const PAYMENT_DISABLED_MESSAGE = '<b>%1$s</b> payment method is enabled on your store, '
+        . 'but disabled on Pagar.me Dash. Please, access the <b>%2$s</b> and enable it to be able to '
+        . 'process %1$s payment on your store.';
 
     /**
      * @var array
@@ -162,8 +163,8 @@ class Notifications extends Message
             $this->warnings[] = sprintf(
                 __(
                     '<b>Show VAT Number on Storefront</b> must be defined as <b>&quot;Yes&quot;</b> on <b>Stores</b> > '
-                    . '<b>Configuration</b> > <b>Customers</b> > <b>%sCustomer Configuration%s</b> > <b>Create New Account '
-                    . 'Options</b> for Pagar.me module to work on your store.'
+                    . '<b>Configuration</b> > <b>Customers</b> > <b>%sCustomer Configuration%s</b> > <b>'
+                    . 'Create New Account Options</b> for Pagar.me module to work on your store.'
                 ),
                 "<a href='{$customerUrl}'>",
                 '</a>'
@@ -173,9 +174,9 @@ class Notifications extends Message
         if ($customerConfigs['streetLinesNumber'] != 4) {
             $this->warnings[] = sprintf(
                 __(
-                    '<b>Number of Lines in a Street Address</b> must be defined as <b>&quot;4&quot;</b> on <b>Stores</b> > '
-                    . '<b>Configuration</b> > <b>Customers</b> > <b>%sCustomer Configuration%s</b> > <b>Name '
-                    . 'and Address options</b> for Pagar.me module to work on your store.'
+                    '<b>Number of Lines in a Street Address</b> must be defined as <b>&quot;4&quot;</b> on '
+                    . '<b>Stores</b> > <b>Configuration</b> > <b>Customers</b> > <b>%sCustomer Configuration%s</b> > '
+                    . '<b>Name and Address options</b> for Pagar.me module to work on your store.'
                 ),
                 "<a href='{$customerUrl}'>",
                 '</a>'
