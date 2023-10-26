@@ -530,3 +530,4 @@
 "<b>%1$s</b> payment method is enabled on your store, but disabled on Pagar.me Dash. Please, access the <b>%2$s</b> and enable it to be able to process %1$s payment on your store.","A forma de pagamento <b>%1$s</b> está habilitada na sua loja, mas desabilitada na Dash da Pagar.me. Por favor, acesse as <b>%2$s</b> e habilite para poder processar o pagamento via %1$s na sua loja."
 "%sClick here%s to verify Pagar.me Dash Configurations after you correct then.","%sClique aqui%s para verificar as configurações da Dash do Pagar.me após corrigi-las."
 "Access %sPayment Methods%s configurations page to clear messages for errors already corrected in the Pagar.me Dash.","Acesse a página de configurações %sMétodos de Pagamento%s para limpar as mensagens dos erros já corrigidos na Dash do Pagar.me."
+"Failed to get account information: %1","Falha ao pegar informações da conta: %1"
