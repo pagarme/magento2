@@ -192,7 +192,7 @@ class Notifications extends Message
     {
         $dashSettings = $this->account->getDashSettingsErrors();
 
-        if (empty($dashSettings)){
+        if (empty($dashSettings)) {
             return;
         }
 
@@ -308,7 +308,10 @@ class Notifications extends Message
     {
         $paymentUrl = $this->urlInterface->getUrl('adminhtml/system_config/edit/section/payment');
         return $this->warnings[] = sprintf(
-            __('Access %sPayment Methods%s configurations page to clear messages for errors already corrected in the Pagar.me Dash.'),
+            __(
+                'Access %sPayment Methods%s configurations page to clear messages for errors already corrected in '
+                . 'the Pagar.me Dash.'
+            ),
             "<b><a href='{$paymentUrl}'>",
             '</a></b>'
         );
