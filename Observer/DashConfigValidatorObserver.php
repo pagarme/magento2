@@ -33,6 +33,8 @@ class DashConfigValidatorObserver implements ObserverInterface
     }
 
     /**
+     * @param Observer $observer
+     * @return $this
      * @throws NoSuchEntityException
      */
     public function execute(Observer $observer)
@@ -47,5 +49,6 @@ class DashConfigValidatorObserver implements ObserverInterface
             ->getParam('website', $this->storeManager->getStore()->getWebsiteId());
 
         $this->account->validateDashSettings($website);
+        return $this;
     }
 }

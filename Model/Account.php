@@ -7,6 +7,7 @@ use Magento\Backend\Model\Session;
 use Magento\Config\Model\ResourceModel\Config\Data\CollectionFactory;
 use Magento\Framework\App\Config\Storage\WriterInterface;
 use Magento\Framework\App\RequestInterface;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
@@ -131,7 +132,7 @@ class Account
     }
 
     /**
-     * @param $account
+     * @param mixed $account
      * @return void
      * @throws NoSuchEntityException
      */
@@ -151,7 +152,8 @@ class Account
     }
 
     /**
-     * @return array|mixed
+     * @return array
+     * @throws LocalizedException
      * @throws NoSuchEntityException
      */
     public function getDashSettingsErrors()
@@ -175,7 +177,14 @@ class Account
         return $returnData;
     }
 
-    public function getPaymentType($paymentName, $gateway = true)
+    /**
+     * @param string $paymentName
+     * @param bool $gateway
+     * @return bool
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
+     */
+    public function getPaymentType(string $paymentName, bool $gateway = true)
     {
         $this->initializeConfig();
         $paymentType = $gateway
@@ -187,7 +196,7 @@ class Account
         $collection->addFieldToFilter('scope_id', ['eq' => $this->session->getWebsiteId()]);
 
         if ($collection->count() === 0) {
-            return [];
+            return false;
         }
 
         return (bool)$collection->getFirstItem()->getData()['value'];
@@ -233,7 +242,13 @@ class Account
         );
     }
 
-    public function isGateway($paymentName)
+    /**
+     * @param string $paymentName
+     * @return bool
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
+     */
+    public function isGateway(string $paymentName)
     {
         $this->initializeConfig();
 
@@ -241,16 +256,29 @@ class Account
             || $this->getPaymentType($paymentName);
     }
 
-    public function isPSP($paymentName)
+    /**
+     * @param string $paymentName
+     * @return bool
+     */
+    public function isPSP(string $paymentName)
     {
         return !empty($this->getAccountId()) && $this->getPaymentType($paymentName, false);
     }
 
+    /**
+     * @return void
+     */
     public function clearWebsiteId()
     {
         $this->session->setWebsiteId(null);
     }
 
+    /**
+     * @param mixed $website
+     * @return void
+     * @throws NoSuchEntityException
+     * @throws LocalizedException
+     */
     private function initializeConfig($website = null)
     {
         if (empty($this->config)) {
@@ -272,6 +300,11 @@ class Account
         }
     }
 
+    /**
+     * @param AccountMiddle $account
+     * @param mixed $website
+     * @return void
+     */
     private function savePaymentTypes(AccountMiddle $account, $website)
     {
         $this->saveConfig(
@@ -330,6 +363,12 @@ class Account
         );
     }
 
+    /**
+     * @param mixed $path
+     * @param mixed $value
+     * @param mixed $website
+     * @return void
+     */
     private function saveConfig($path, $value, $website)
     {
         $this->configWriter->save(
