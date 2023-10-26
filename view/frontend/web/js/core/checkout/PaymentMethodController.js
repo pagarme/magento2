@@ -85,6 +85,24 @@ define([
 
             this.addCreditCardListeners(this.formObject);
             this.modelToken = new CreditCardToken(this.formObject);
+
+            this.subscribeTotal();
+        }
+
+        subscribeTotal() {
+            const _self = this;
+
+            this.platformConfig.updateTotals.totals.subscribe(function(){
+                if (_self.methodCode === 'twocreditcards' || _self.methodCode === 'boletoCreditcard') {
+                    for (let i = 0, len = _self.formObject.numberOfPaymentForms; i < len; i++) {
+                        _self.fillCardAmount(_self.formObject[i], 2, i);
+                        _self.fillInstallments(_self.formObject[i]);
+                    }
+                    return;
+                }
+                _self.fillCardAmount(_self.formObject, 1);
+                _self.fillInstallments(_self.formObject);
+            });
         }
 
         voucherInit() {
@@ -196,6 +214,7 @@ define([
             }
 
             this.modelToken = new CreditCardToken(this.formObject);
+            this.subscribeTotal();
         }
 
         pixInit() {
@@ -291,6 +310,8 @@ define([
                 this.formObject,
                 this.platformConfig.publicKey
             );
+
+            this.subscribeTotal();
         }
 
         addCreditCardListeners(formObject) {
