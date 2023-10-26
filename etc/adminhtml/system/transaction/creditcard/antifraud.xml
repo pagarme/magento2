@@ -8,6 +8,7 @@
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
     <group id="pagarme_pagarme_transaction_creditcard_antifraud" translate="label comment" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="90">
         <label>Anti fraud</label>
+        <frontend_model>Pagarme\Pagarme\Block\Adminhtml\Form\Fieldset\CreditCardGatewayFieldset</frontend_model>
         <field id="antifraud_active" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="select">
             <label>Active</label>
             <comment />
@@ -25,7 +26,7 @@
             </depends>
         </field>
         <depends>
-            <field id="*/*/pagarme_pagarme_global/is_gateway_integration_type">1</field>
+            <field id="active">1</field>
         </depends>
     </group>
 </include>

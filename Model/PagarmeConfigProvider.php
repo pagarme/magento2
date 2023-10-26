@@ -52,6 +52,22 @@ class PagarmeConfigProvider implements ConfigProviderInterface
 
     const PATH_DEBIT_ENABLED = 'payment/pagarme_debit/active';
 
+    const PATH_IS_PAYMENT_GATEWAY_TYPE = 'pagarme_pagarme/%s/is_payment_gateway';
+
+    const PATH_IS_PAYMENT_PSP_TYPE = 'pagarme_pagarme/%s/is_payment_psp';
+
+    const BILLET_PAYMENT_CONFIG = 'pagarme_billet';
+
+    const CREDIT_CARD_PAYMENT_CONFIG = 'pagarme_creditcard';
+
+    const DEBIT_PAYMENT_CONFIG = 'pagarme_debit';
+
+    const PIX_PAYMENT_CONFIG = 'pagarme_pix';
+
+    const VOUCHER_PAYMENT_CONFIG = 'pagarme_voucher';
+
+    const PATH_DASH_ERRORS = 'pagarme_pagarme/hub/account_errors';
+
     /**
      * Contains scope config of Magento
      *
@@ -116,7 +132,7 @@ class PagarmeConfigProvider implements ConfigProviderInterface
     {
         return $this->scopeConfig->getValue(
             self::XML_PATH_IS_GATEWAY_INTEGRATION_TYPE,
-            ScopeInterface::SCOPE_STORE
+            ScopeInterface::SCOPE_WEBSITES
         );
     }
 
@@ -254,56 +270,6 @@ class PagarmeConfigProvider implements ConfigProviderInterface
     {
         return !$this->getModuleStatus()
             || !$this->isRecurrenceEnabled();
-    }
-
-    public function disableVoucher()
-    {
-        $this->config->saveConfig(
-            self::XML_PATH_VOUCHER_ACTIVE,
-            0,
-            'default',
-            0
-        );
-    }
-
-    public function disableDebit()
-    {
-        $this->config->saveConfig(
-            self::XML_PATH_DEBIT_ACTIVE,
-            0,
-            'default',
-            0
-        );
-    }
-
-    public function disableRecurrence()
-    {
-        $this->config->saveConfig(
-            self::XML_PATH_RECURRENCE_ACTIVE,
-            0,
-            'default',
-            0
-        );
-    }
-
-    public function disableAntifraud()
-    {
-        $this->config->saveConfig(
-            self::XML_PATH_ANTIFRAUD_ACTIVE,
-            0,
-            'default',
-            0
-        );
-    }
-
-    public function disableSavedCard()
-    {
-        $this->config->saveConfig(
-            self::XML_PATH_IS_ENABLE_SAVED_CARDS,
-            0,
-            'default',
-            0
-        );
     }
 
     /**

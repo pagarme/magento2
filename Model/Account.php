@@ -11,8 +11,8 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Pagarme\Core\Kernel\Aggregates\Configuration;
+use Pagarme\Core\Middle\Model\Account as AccountMiddle;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
-use Pagarme\Pagarme\Gateway\Transaction\Base\Config\ConfigInterface;
 use Pagarme\Pagarme\Model\Api\HubCommand;
 use Pagarme\Pagarme\Service\AccountService;
 use Psr\Log\LoggerInterface;
@@ -65,6 +65,11 @@ class Account
     protected $request;
 
     /**
+     * @var PagarmeConfigProvider
+     */
+    protected $pagarmeConfigProvider;
+
+    /**
      * @param WriterInterface $configWriter
      * @param StoreManagerInterface $storeManager
      * @param AccountService $accountService
@@ -80,7 +85,8 @@ class Account
         HubCommand $hubCommand,
         CollectionFactory $configCollectionFactory,
         LoggerInterface $logger,
-        Session $session
+        Session $session,
+        PagarmeConfigProvider $pagarmeConfigProvider
     ) {
         $this->configWriter = $configWriter;
         $this->storeManager = $storeManager;
@@ -89,6 +95,7 @@ class Account
         $this->configCollectionFactory = $configCollectionFactory;
         $this->logger = $logger;
         $this->session = $session;
+        $this->pagarmeConfigProvider = $pagarmeConfigProvider;
     }
 
     /**
@@ -109,11 +116,12 @@ class Account
         try {
             $account = $this->accountService->getAccountWithValidation($this->getAccountId(), $website);
             $this->configWriter->save(
-                ConfigInterface::PATH_DASH_ERRORS,
+                PagarmeConfigProvider::PATH_DASH_ERRORS,
                 json_encode($account->getErrors()),
                 ScopeInterface::SCOPE_WEBSITES,
                 $website
             );
+            $this->savePaymentTypes($account, $website);
         } catch (Exception $e) {
             if ($e->getMessage() === 'Invalid API key') {
                 $this->hubCommand->uninstallCommand();
@@ -134,7 +142,7 @@ class Account
         }
 
         $this->configWriter->save(
-            ConfigInterface::PATH_ACCOUNT_ID,
+            PagarmeConfigProvider::PATH_ACCOUNT_ID,
             $account['id'],
             ScopeInterface::SCOPE_WEBSITES,
             $this->storeManager->getStore()
@@ -150,7 +158,7 @@ class Account
     {
         $this->initializeConfig();
         $collection = $this->configCollectionFactory->create();
-        $collection->addFieldToFilter('path', ['eq' => ConfigInterface::PATH_DASH_ERRORS]);
+        $collection->addFieldToFilter('path', ['eq' => PagarmeConfigProvider::PATH_DASH_ERRORS]);
         $collection->addFieldToFilter('scope', ['eq' => ScopeInterface::SCOPE_WEBSITES]);
         $collection->addFieldToFilter('scope_id', ['eq' => $this->session->getWebsiteId()]);
 
@@ -165,6 +173,24 @@ class Account
         }
 
         return $returnData;
+    }
+
+    public function getPaymentType($paymentName, $gateway = true)
+    {
+        $this->initializeConfig();
+        $paymentType = $gateway
+            ? PagarmeConfigProvider::PATH_IS_PAYMENT_GATEWAY_TYPE
+            : PagarmeConfigProvider::PATH_IS_PAYMENT_PSP_TYPE;
+        $collection = $this->configCollectionFactory->create();
+        $collection->addFieldToFilter('path', ['eq' => sprintf($paymentType, $paymentName)]);
+        $collection->addFieldToFilter('scope', ['eq' => ScopeInterface::SCOPE_WEBSITES]);
+        $collection->addFieldToFilter('scope_id', ['eq' => $this->session->getWebsiteId()]);
+
+        if ($collection->count() === 0) {
+            return [];
+        }
+
+        return (bool)$collection->getFirstItem()->getData()['value'];
     }
 
     /**
@@ -195,7 +221,8 @@ class Account
     /**
      * @return mixed
      */
-    public function getDashUrl() {
+    public function getDashUrl()
+    {
         if (!$this->hasMerchantAndAccountIds()) {
             return null;
         }
@@ -206,15 +233,110 @@ class Account
         );
     }
 
+    public function isGateway($paymentName)
+    {
+        $this->initializeConfig();
+
+        return (empty($this->getAccountId()) && $this->pagarmeConfigProvider->isGatewayIntegrationType())
+            || $this->getPaymentType($paymentName);
+    }
+
+    public function isPSP($paymentName)
+    {
+        return !empty($this->getAccountId()) && $this->getPaymentType($paymentName, false);
+    }
+
+    public function clearWebsiteId()
+    {
+        $this->session->setWebsiteId(null);
+    }
+
     private function initializeConfig($website = null)
     {
         if (empty($this->config)) {
-            $websiteId = $website ?? $this->session->getWebsiteId();
+            $websiteId = $website;
+            if (!$websiteId && $this->session->getWebsiteId()) {
+                $websiteId = $this->session->getWebsiteId();
+            }
+
+            if (!$websiteId) {
+                $websiteId = $this->storeManager->getStore()
+                    ->getWebsiteId();
+            }
+
             $storeId = $this->storeManager->getWebsite($websiteId)
                 ->getDefaultStore()->getId();
             $this->storeManager->setCurrentStore($storeId);
             Magento2CoreSetup::bootstrap();
             $this->config = Magento2CoreSetup::getModuleConfiguration();
         }
+    }
+
+    private function savePaymentTypes(AccountMiddle $account, $website)
+    {
+        $this->saveConfig(
+            sprintf(
+                PagarmeConfigProvider::PATH_IS_PAYMENT_GATEWAY_TYPE,
+                PagarmeConfigProvider::CREDIT_CARD_PAYMENT_CONFIG
+            ),
+            (int)$account->getCreditCardSettings()->isGateway(),
+            $website
+        );
+        $this->saveConfig(
+            sprintf(PagarmeConfigProvider::PATH_IS_PAYMENT_GATEWAY_TYPE, PagarmeConfigProvider::PIX_PAYMENT_CONFIG),
+            (int)$account->getPixSettings()->isGateway(),
+            $website
+        );
+        $this->saveConfig(
+            sprintf(PagarmeConfigProvider::PATH_IS_PAYMENT_GATEWAY_TYPE, PagarmeConfigProvider::VOUCHER_PAYMENT_CONFIG),
+            (int)$account->getVoucherSettings()->isGateway(),
+            $website
+        );
+        $this->saveConfig(
+            sprintf(PagarmeConfigProvider::PATH_IS_PAYMENT_GATEWAY_TYPE, PagarmeConfigProvider::BILLET_PAYMENT_CONFIG),
+            (int)$account->getBilletSettings()->isGateway(),
+            $website
+        );
+        $this->saveConfig(
+            sprintf(PagarmeConfigProvider::PATH_IS_PAYMENT_GATEWAY_TYPE, PagarmeConfigProvider::DEBIT_PAYMENT_CONFIG),
+            (int)$account->getDebitCardSettings()->isGateway(),
+            $website
+        );
+
+        $this->saveConfig(
+            sprintf(PagarmeConfigProvider::PATH_IS_PAYMENT_PSP_TYPE, PagarmeConfigProvider::CREDIT_CARD_PAYMENT_CONFIG),
+            (int)$account->getCreditCardSettings()->isPSP(),
+            $website
+        );
+        $this->saveConfig(
+            sprintf(PagarmeConfigProvider::PATH_IS_PAYMENT_PSP_TYPE, PagarmeConfigProvider::PIX_PAYMENT_CONFIG),
+            (int)$account->getPixSettings()->isPSP(),
+            $website
+        );
+        $this->saveConfig(
+            sprintf(PagarmeConfigProvider::PATH_IS_PAYMENT_PSP_TYPE, PagarmeConfigProvider::VOUCHER_PAYMENT_CONFIG),
+            (int)$account->getVoucherSettings()->isPSP(),
+            $website
+        );
+        $this->saveConfig(
+            sprintf(PagarmeConfigProvider::PATH_IS_PAYMENT_PSP_TYPE, PagarmeConfigProvider::BILLET_PAYMENT_CONFIG),
+            (int)$account->getBilletSettings()->isPSP(),
+            $website
+        );
+        $this->saveConfig(
+            sprintf(PagarmeConfigProvider::PATH_IS_PAYMENT_PSP_TYPE, PagarmeConfigProvider::DEBIT_PAYMENT_CONFIG),
+            (int)$account->getDebitCardSettings()->isPSP(),
+            $website
+        );
+    }
+
+    private function saveConfig($path, $value, $website)
+    {
+        $this->configWriter->save(
+            $path,
+            $value,
+            ScopeInterface::SCOPE_WEBSITES,
+            $website
+        );
     }
 }

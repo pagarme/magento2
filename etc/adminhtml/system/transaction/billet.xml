@@ -18,6 +18,9 @@
 	        <label>Payment label</label>
 	        <config_path>payment/pagarme_billet/title</config_path>
             <validate>required-entry</validate>
+            <depends>
+                <field id="active">1</field>
+            </depends>
 	    </field>
 		<field id="text" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="textarea">
 	        <label>Instructions on checkout page</label>
@@ -32,9 +35,9 @@
 	        <comment />
 	        <source_model>Pagarme\Pagarme\Model\Source\BilletTypes</source_model>
 	        <config_path>payment/pagarme_billet/types</config_path>
+            <frontend_model>Pagarme\Pagarme\Block\Adminhtml\Form\Field\BilletGatewayField</frontend_model>
             <depends>
                 <field id="active">1</field>
-                <field id="*/*/pagarme_pagarme_global/is_gateway_integration_type">1</field>
             </depends>
 	    </field>
 	    <field id="instructions" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="textarea">
@@ -58,6 +61,9 @@
 	        <label>Payment method order</label>
 	        <comment />
 	        <config_path>payment/pagarme_billet/sort_order</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
 	    </field>
     </group>
 </include>

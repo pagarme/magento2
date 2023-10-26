@@ -45,10 +45,6 @@ interface ConfigInterface
 
     const PATH_CUSTOMER_ADDRESS_LINES = 'customer/address/street_lines';
 
-    const PATH_ACCOUNT_ID = 'pagarme_pagarme/hub/account_id';
-
-    const PATH_DASH_ERRORS = 'pagarme_pagarme/hub/account_errors';
-
     const HUB_SANDBOX_ENVIRONMENT = 'Sandbox';
 
     /**

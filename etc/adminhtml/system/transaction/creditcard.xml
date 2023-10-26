@@ -18,22 +18,36 @@
             <label>Payment label</label>
             <config_path>payment/pagarme_creditcard/title</config_path>
             <validate>required-entry</validate>
+            <depends>
+                <field id="active">1</field>
+            </depends>
         </field>
         <field id="soft_description" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="30" translate="label comment" type="text">
             <label>Soft descriptor</label>
-            <comment><![CDATA[<p id='creditcard_soft_description_comment'>Max size: <span id='soft_description_max_size'></span>.<span id='creditcard_soft_description_counter'><span id='creditcard_soft_description_counter_current'></span> / <span id='creditcard_soft_description_counter_max_size'></span></span></p>]]></comment>
+            <comment><![CDATA[<p id='creditcard_soft_description_comment'>Max size: 13.</p>]]></comment>
             <config_path>payment/pagarme_creditcard/soft_description</config_path>
+            <validate>validate-length maximum-length-13</validate>
+            <frontend_model>Pagarme\Pagarme\Block\Adminhtml\Form\Field\CreditCardSoftDescriptor</frontend_model>
+            <depends>
+                <field id="active">1</field>
+            </depends>
         </field>
         <field id="payment_action" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="40" translate="label" type="select">
             <label>Payment action</label>
             <comment />
             <source_model>Pagarme\Pagarme\Model\Source\PaymentAction</source_model>
             <config_path>payment/pagarme_creditcard/payment_action</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
         </field>
         <field id="sort_order" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="50" translate="label" type="text">
             <label>Payment method order</label>
             <comment />
             <config_path>payment/pagarme_creditcard/sort_order</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
         </field>
         <field id="enabled_saved_cards" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="60" translate="label" type="select">
             <label>Enable card wallet</label>
@@ -41,7 +55,7 @@
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>payment/pagarme_creditcard/enabled_saved_cards</config_path>
             <depends>
-                <field id="*/*/pagarme_pagarme_global/is_gateway_integration_type">1</field>
+                <field id="active">1</field>
             </depends>
         </field>
         <field id="cctypes_gateway" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="70" translate="label" type="multiselect">
@@ -50,8 +64,9 @@
             <source_model>Pagarme\Pagarme\Model\Source\Cctype</source_model>
             <config_path>payment/pagarme_creditcard/cctypes</config_path>
             <validate>validate-select</validate>
+            <frontend_model>Pagarme\Pagarme\Block\Adminhtml\Form\Field\CreditCardGatewayField</frontend_model>
             <depends>
-                <field id="*/*/pagarme_pagarme_global/is_gateway_integration_type">1</field>
+                <field id="active">1</field>
             </depends>
         </field>
         <field id="cctypes_psp" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="70" translate="label" type="multiselect">
@@ -60,8 +75,9 @@
             <source_model>Pagarme\Pagarme\Model\Source\CctypePSP</source_model>
             <config_path>payment/pagarme_creditcard/cctypes</config_path>
             <validate>validate-select</validate>
+            <frontend_model>Pagarme\Pagarme\Block\Adminhtml\Form\Field\CreditCardPspField</frontend_model>
             <depends>
-                <field id="*/*/pagarme_pagarme_global/is_gateway_integration_type">0</field>
+                <field id="active">1</field>
             </depends>
         </field>
 
