@@ -62,7 +62,7 @@ class CustomerAddressSaveBefore implements ObserverInterface
             throw new InputException(__("Please check your address. Country is required."));
         }
 
-        if (empty($customerAddress->getName()) || strlen($customerAddress->getName()) > 65) {
+        if (empty($customerAddress->getName()) || mb_strlen($customerAddress->getName()) > 65) {
             throw new InputException(__("Please check your address. Name and firstname are required."));
         }
 
