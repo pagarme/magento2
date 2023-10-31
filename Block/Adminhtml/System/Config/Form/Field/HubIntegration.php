@@ -49,7 +49,7 @@ class HubIntegration extends Field
 
 
         $html .= sprintf(
-            '<a id="hub-button" href="%s">%s</a>',
+            '<a id="pagarme-hub-button" href="%s">%s</a>',
             $hubUrl,
             $buttonText
         );
@@ -57,7 +57,7 @@ class HubIntegration extends Field
         if ($this->account->hasMerchantAndAccountIds()) {
             $dashUrl = $this->account->getDashUrl();
             $html .= sprintf(
-                '<a id="dash-button" href="%s" target="_blank">%s</a>',
+                '<a id="pagarme-dash-button" href="%s" target="_blank">%s</a>',
                 $dashUrl,
                 __('Access Pagar.me Dash')
             );
