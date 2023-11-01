@@ -26,7 +26,8 @@
         <field id="soft_description" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="30" translate="label comment" type="text">
             <label>Soft descriptor</label>
             <config_path>payment/pagarme_debit/soft_description</config_path>
-            <comment><![CDATA[<p id='debit_soft_description_comment'>Max size: 13.</p>]]></comment>
+            <comment><![CDATA[<p id='debit_soft_description_comment'>Max size: <span id='soft_description_max_size'></span>.<span id='creditcard_soft_description_counter'><span id='creditcard_soft_description_counter_current'></span> / <span id='creditcard_soft_description_counter_max_size'></span></span></p>]]></comment>
+            <validate>validate-length maximum-length-13</validate>
             <frontend_model>Pagarme\Pagarme\Block\Adminhtml\Form\Field\DebitCardSoftDescriptor</frontend_model>
             <depends>
                 <field id="active">1</field>
