@@ -2,17 +2,37 @@
 
 namespace Pagarme\Pagarme\Block\Adminhtml\System\Config\Form\Field;
 
+use Exception;
+use Magento\Backend\Block\Template\Context;
 use Magento\Config\Block\System\Config\Form\Field;
 use Magento\Framework\Data\Form\Element\AbstractElement;
+use Magento\Framework\Phrase;
+use Magento\Framework\View\Helper\SecureHtmlRenderer;
 use Pagarme\Core\Hub\Services\HubIntegrationService;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use Pagarme\Pagarme\Model\Account;
 
 class HubIntegration extends Field
 {
     /**
+     * @var Account
+     */
+    private $account;
+
+    public function __construct(
+        Account $account,
+        Context $context,
+        array $data = [],
+        ?SecureHtmlRenderer $secureRenderer = null
+    ) {
+        $this->account = $account;
+        parent::__construct($context, $data, $secureRenderer);
+    }
+
+    /**
      * @param AbstractElement $element
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     protected function _renderValue(AbstractElement $element)
     {
@@ -27,36 +47,52 @@ class HubIntegration extends Field
         $html = '<td class="value">';
         $html .= $this->_getElementHtml($element);
 
+
         $html .= sprintf(
-            '<a
-            id="botao-hub"
-            href="%s"
-            hub-url="%s"
-            button-text="%s"></a>',
-            $hubUrl,
+            '<a id="pagarme-hub-button" href="%s">%s</a>',
             $hubUrl,
             $buttonText
         );
+
+        if ($this->account->hasMerchantAndAccountIds()) {
+            $dashUrl = $this->account->getDashUrl();
+            $html .= sprintf(
+                '<a id="pagarme-dash-button" href="%s" target="_blank">%s</a>',
+                $dashUrl,
+                __('Access Pagar.me Dash')
+            );
+        }
 
         $html .= '</td>';
 
         return $html;
     }
 
-    private function getButtonText($installId)
+    /**
+     * @param $installId
+     * @return Phrase
+     */
+    private function getButtonText($installId): Phrase
     {
         return $installId
             ? __("View Integration") : __("Integrate With Pagar.me");
     }
 
-    private function getHubUrl($installId)
+    /**
+     * @param $installId
+     * @return string
+     */
+    public function getHubUrl($installId): string
     {
         return $installId
             ? $this->getBaseViewIntegrationUrl($installId->getValue())
             : $this->getBaseIntegrateUrl();
     }
 
-    private function getBaseIntegrateUrl()
+    /**
+     * @return string
+     */
+    private function getBaseIntegrateUrl(): string
     {
         $baseUrl = sprintf(
             'https://hub.pagar.me/apps/%s/authorize',
@@ -73,7 +109,11 @@ class HubIntegration extends Field
         return $baseUrl . $params;
     }
 
-    private function getBaseViewIntegrationUrl($installId)
+    /**
+     * @param $installId
+     * @return string
+     */
+    private function getBaseViewIntegrationUrl($installId): string
     {
         return sprintf(
             'https://hub.pagar.me/apps/%s/edit/%s',
@@ -82,17 +122,26 @@ class HubIntegration extends Field
         );
     }
 
+    /**
+     * @return mixed
+     */
     private function getPublicAppKey()
     {
         return Magento2CoreSetup::getHubAppPublicAppKey();
     }
 
-    private function getRedirectUrl()
+    /**
+     * @return string
+     */
+    private function getRedirectUrl(): string
     {
         return $this->getUrl('pagarme_pagarme/hub/index');
     }
 
-    private function getInstallToken()
+    /**
+     * @return string
+     */
+    private function getInstallToken(): string
     {
         $installSeed = uniqid();
         $hubIntegrationService = new HubIntegrationService();

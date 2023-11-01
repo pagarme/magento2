@@ -18,11 +18,17 @@
             <label>Payment label</label>
             <config_path>payment/pagarme_two_creditcard/title</config_path>
             <validate>required-entry</validate>
+            <depends>
+                <field id="active">1</field>
+            </depends>
         </field>
         <field id="sort_order" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="70" translate="label" type="text">
             <label>Payment method order</label>
             <comment />
             <config_path>payment/pagarme_two_creditcard/sort_order</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
         </field>
     </group>
 </include>

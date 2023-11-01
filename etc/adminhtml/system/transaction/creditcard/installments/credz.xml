@@ -19,6 +19,7 @@
             <comment><![CDATA[<p>Insert a number between 1 and 24.</p>]]></comment>
             <config_path>payment/pagarme_creditcard/installments_number_credz</config_path>
             <validate>required-entry validate-number-range number-range-1-12</validate>
+            <frontend_model>Pagarme\Pagarme\Block\Adminhtml\Form\Field\InstallmentsNumber</frontend_model>
         </field>
         <field id="installment_min_amount_credz" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
             <label>Min installment amount</label>
@@ -59,6 +60,7 @@
             <comment><![CDATA[<p>Insert a number between 1 and the <b>Max number of installments</b>.</p>]]></comment>
             <config_path>payment/pagarme_creditcard/installments_max_without_interest_credz</config_path>
             <validate>required-entry validate-number-range number-range-1-12</validate>
+            <frontend_model>Pagarme\Pagarme\Block\Adminhtml\Form\Field\InstallmentsNumber</frontend_model>
             <depends>
                 <field id="installments_interest_by_issuer_credz">1</field>
             </depends>

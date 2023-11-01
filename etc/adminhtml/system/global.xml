@@ -4,6 +4,7 @@
     <group id="pagarme_pagarme_global" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="1" translate="label">
         <label>General Settings</label>
         <field id="hub_integration" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="1" translate="label" type="label">
+            <label>Pagar.me integration</label>
             <frontend_model>Pagarme\Pagarme\Block\Adminhtml\System\Config\Form\Field\HubIntegration</frontend_model>
         </field>
         <field id="hub_environment" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="2" translate="label" type="label">
@@ -32,6 +33,7 @@
             <comment><![CDATA[<p><strong style='color:red'>Warning!</strong> Configurations that only work for <strong>Gateway</strong> customers, who have a direct contract with an acquirer.</p>]]></comment>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>pagarme_pagarme/global/is_gateway_integration_type</config_path>
+            <frontend_model>Pagarme\Pagarme\Block\Adminhtml\Form\Field\EnableAdvanceSettings</frontend_model>
         </field>
         <field id="create_order" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="50" translate="label" type="select">
             <label>Always creates order</label>
