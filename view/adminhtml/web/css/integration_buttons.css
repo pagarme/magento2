@@ -17,13 +17,13 @@
     color: #fff;
     user-select: none;
     transition: background-color .2s ease-in-out, border-color .2s ease-in-out;
+    margin: 0 1rem 1rem 0;
 }
 
 #pagarme-dash-button {
     background-color: #e3e3e3;
     border-color: #adadad;
     color: #514943;
-    margin-left: 2rem;
     text-transform: none;
 }
 
