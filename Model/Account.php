@@ -168,7 +168,7 @@ class Account
             return [];
         }
 
-        $errorsList = $collection->getFirstItem()->getData()['value'];
+        $errorsList = $collection->getFirstItem()->getData()['value'] ?? '';
         $returnData = json_decode($errorsList);
         if (empty($returnData)) {
             return [];

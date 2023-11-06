@@ -148,6 +148,13 @@ class HubCommand implements HubCommandInterface
             $this->websiteId
         );
 
+        $this->configWriter->save(
+            "pagarme_pagarme/hub/account_errors",
+            null,
+            'websites',
+            $this->websiteId
+        );
+
         $this->cacheManager->clean(['config']);
 
         return "Hub uninstalled successfully";
