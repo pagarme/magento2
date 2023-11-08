@@ -15,9 +15,10 @@
         <field id="installments_number_discover" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label comment" type="text">
             <backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
             <label>Max number of installments</label>
-            <comment><![CDATA[<p>Insert a number between 1 and <span id='installments_max_size_discover'></span>.</p>]]></comment>
+            <comment><![CDATA[<p>Insert a number between 1 and <span id='installments_max_size_discover'>12</span>.</p>]]></comment>
             <config_path>payment/pagarme_creditcard/installments_number_discover</config_path>
             <validate>required-entry validate-number-range number-range-1-12</validate>
+            <frontend_model>Pagarme\Pagarme\Block\Adminhtml\Form\Field\InstallmentsNumber</frontend_model>
         </field>
         <field id="installment_min_amount_discover" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
             <backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
@@ -58,6 +59,7 @@
             <comment><![CDATA[<p>Insert a number between 1 and the <b>Max number of installments</b>.</p>]]></comment>
             <config_path>payment/pagarme_creditcard/installments_max_without_interest_discover</config_path>
             <validate>required-entry validate-number-range number-range-1-12</validate>
+            <frontend_model>Pagarme\Pagarme\Block\Adminhtml\Form\Field\InstallmentsNumber</frontend_model>
             <depends>
                 <field id="installments_interest_by_issuer_discover">1</field>
             </depends>

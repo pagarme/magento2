@@ -1,13 +1,8 @@
 <?php
 namespace Pagarme\Pagarme\Observer;
 
-use Magento\Framework\App\Cache;
-use Magento\Framework\App\Config;
 use Magento\Framework\Event\ObserverInterface;
-use Magento\Framework\App\Request\DataPersistorInterface;
-use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Message\ManagerInterface;
-use Magento\Store\Model\StoreManagerInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Framework\App\ResponseFactory;
 use Magento\Framework\App\Cache\TypeListInterface;
@@ -15,6 +10,7 @@ use Magento\Framework\App\Cache\Frontend\Pool;
 use Pagarme\Core\Kernel\Abstractions\AbstractModuleCoreSetup;
 use Pagarme\Core\Kernel\Repositories\ConfigurationRepository;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use Pagarme\Pagarme\Model\Account;
 use Pagarme\Pagarme\Model\PagarmeConfigProvider;
 
 class DataValidateAdmin implements ObserverInterface
@@ -25,12 +21,6 @@ class DataValidateAdmin implements ObserverInterface
      * @var \Pagarme\Pagarme\Model\PagarmeConfigProvider
      */
     protected $configProviderPagarme;
-
-    /**
-     *
-     * @var \Magento\Store\Model\StoreManagerInterface
-     */
-    protected $storeManager;
 
     /**
      * @var \Magento\Framework\UrlInterface
@@ -57,23 +47,28 @@ class DataValidateAdmin implements ObserverInterface
      */
     protected $cacheFrontendPool;
 
+    /**
+     * @var Account
+     */
+    protected $account;
+
     public function __construct(
         PagarmeConfigProvider $configProviderPagarme,
         ManagerInterface $messageManager,
-        StoreManagerInterface $storeManager,
         UrlInterface $urlBuilder,
         ResponseFactory $responseFactory,
         TypeListInterface $cacheTypeList,
-        Pool $cacheFrontendPool
+        Pool $cacheFrontendPool,
+        Account $account
     )
     {
-        $this->storeManager = $storeManager;
         $this->messageManager = $messageManager;
         $this->urlBuilder = $urlBuilder;
         $this->responseFactory = $responseFactory;
         $this->cacheTypeList = $cacheTypeList;
         $this->cacheFrontendPool = $cacheFrontendPool;
         $this->configProviderPagarme = $configProviderPagarme;
+        $this->account = $account;
     }
 
     /**
@@ -89,17 +84,7 @@ class DataValidateAdmin implements ObserverInterface
         }
 
         $this->validateConfigMagento();
-
-        if (!$this->isGatewayIntegrationType()) {
-            $this->configProviderPagarme->disableVoucher();
-            $this->configProviderPagarme->disableDebit();
-            $this->configProviderPagarme->disableRecurrence();
-            $this->configProviderPagarme->disableSavedCard();
-            $this->configProviderPagarme->disableAntifraud();
-
-            ObjectManager::getInstance()->get(Cache::class)
-                ->clean(Config::CACHE_TAG);
-        }
+        $this->account->clearWebsiteId();
 
         return $this;
     }
@@ -136,15 +121,10 @@ class DataValidateAdmin implements ObserverInterface
         return $this->configProviderPagarme->getModuleStatus();
     }
 
-    public function isGatewayIntegrationType()
-    {
-        return $this->configProviderPagarme->isGatewayIntegrationType();
-    }
-
     protected function validateConfigMagento()
     {
         $disableModule = false;
-        $disableMessage;
+        $disableMessage = [];
         $url = $this->urlBuilder->getUrl('adminhtml/system_config/edit/section/payment');
 
         if (!$this->configProviderPagarme->validateMaxInstallment()) {

@@ -12,25 +12,37 @@ use Pagarme\Core\Webhook\Exceptions\WebhookHandlerNotFoundException;
 use Pagarme\Core\Webhook\Services\WebhookReceiverService;
 use Pagarme\Pagarme\Api\WebhookManagementInterface;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use Pagarme\Pagarme\Model\Account;
 
 class WebhookManagement implements WebhookManagementInterface
 {
 
-    protected OrderFactory $orderFactory;
+    /**
+     * @var OrderFactory
+     */
+    protected $orderFactory;
+
+    /**
+     * @var Account
+     */
+    protected $account;
 
     public function __construct(
-        OrderFactory $orderFactory
+        OrderFactory $orderFactory,
+        Account $account
     ) {
         $this->orderFactory = $orderFactory;
+        $this->account = $account;
     }
     /**
      * @api
      * @param mixed $id
+     * @param mixed $account
      * @param mixed $type
      * @param mixed $data
      * @return array|bool
      */
-    public function save($id, $type, $data)
+    public function save($id, $type, $data, $account)
     {
         try {
             Magento2CoreSetup::bootstrap();
@@ -48,15 +60,14 @@ class WebhookManagement implements WebhookManagementInterface
                 ];
             }
 
+            if ($type === 'charge.paid') {
+                $this->account->saveAccountIdFromWebhook($account);
+            }
+
             $webhookReceiverService = new WebhookReceiverService();
             return $webhookReceiverService->handle($postData);
-        } catch (WebhookHandlerNotFoundException $e) {
+        } catch (WebhookHandlerNotFoundException | WebhookAlreadyHandledException $e) {
             return [
-                "message" => $e->getMessage(),
-                "code" => 200
-            ];
-        } catch (WebhookAlreadyHandledException $e)  {
-            return  [
                 "message" => $e->getMessage(),
                 "code" => 200
             ];

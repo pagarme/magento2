@@ -65,4 +65,8 @@
         <observer name="Pagarme::customer_login"
                   instance="Pagarme\Pagarme\Observer\CustomerLogin" />
     </event>
+
+    <event name="controller_action_predispatch_adminhtml_system_config_edit">
+        <observer name="pagarme_dash_config_validator_observer" instance="Pagarme\Pagarme\Observer\DashConfigValidatorObserver"/>
+    </event>
 </config>

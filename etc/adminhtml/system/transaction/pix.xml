@@ -18,6 +18,9 @@
 	        <label>Payment label</label>
 	        <config_path>payment/pagarme_pix/title</config_path>
             <validate>required-entry</validate>
+            <depends>
+                <field id="active">1</field>
+            </depends>
 	    </field>
 	    <field id="expiration_qrcode" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
 	        <label>Qrcode expiration time (seconds)</label>
@@ -28,20 +31,13 @@
                 <field id="active">1</field>
             </depends>
 	    </field>
-		<field id="bank_pix" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="select">
-			<label>Bank</label>
-			<comment />
-			<source_model>Pagarme\Pagarme\Model\Source\PixTypes</source_model>
-			<config_path>payment/pagarme_pix/types</config_path>
-			<depends>
-				<field id="active">1</field>
-				<field id="*/*/pagarme_pagarme_global/is_gateway_integration_type">1</field>
-			</depends>
-		</field>
 	    <field id="sort_order" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
 	        <label>Payment method order</label>
 	        <comment />
 	        <config_path>payment/pagarme_pix/sort_order</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
 	    </field>
     </group>
 </include>

@@ -12,7 +12,6 @@
 
 namespace Pagarme\Pagarme\Gateway\Transaction\Base\Config;
 
-
 class Config extends AbstractConfig implements ConfigInterface
 {
     /**
@@ -22,7 +21,7 @@ class Config extends AbstractConfig implements ConfigInterface
     {
         return $this->getConfig(static::PATH_ENABLED);
     }
-    
+
     /**
      * @return string
      */
@@ -85,18 +84,6 @@ class Config extends AbstractConfig implements ConfigInterface
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function getBaseUrl()
-    {
-        if ($this->getConfig(static::PATH_TEST_MODE)) {
-            return $this->getConfig(static::PATH_SAND_BOX_URL);
-        }
-
-        return $this->getConfig(static::PATH_PRODUCTION_URL);
-    }
-
-    /**
      * @return string
      */
     public function getCustomerStreetAttribute()
@@ -147,11 +134,9 @@ class Config extends AbstractConfig implements ConfigInterface
      */
     public function getPagarmeCustomerConfigs()
     {
-        $customerConfigs = [
+        return [
             'showVatNumber' => $this->getConfig(static::PATH_CUSTOMER_VAT_NUMBER) ?? '',
             'streetLinesNumber' => $this->getConfig(static::PATH_CUSTOMER_ADDRESS_LINES) ?? '',
         ];
-
-        return $customerConfigs;
     }
 }

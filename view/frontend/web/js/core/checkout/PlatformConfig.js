@@ -16,7 +16,7 @@ define([], () => {
 
                 availableBrands[i] = {
                     'title': brands[i],
-                    'image': url
+                    'image': jQuery.isArray(url) ? url.find(element => element.includes('Pagarme')) : url
 
                 };
             }

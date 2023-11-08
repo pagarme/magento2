@@ -1,0 +1,22 @@
+.message.message-warning .pagarme-admin-warnings > h3 {
+    display: flex;
+    align-items: center;
+    margin-bottom: .5rem;
+    padding: 0.5rem 0;
+}
+
+.message.message-warning .pagarme-admin-warnings > h3:before {
+    content: url('../images/avatar-pagarme.svg');
+    height: 28px;
+    margin-right: 0.5rem;
+    background: rgba(255,255,255,.7);
+    border-radius: 0.6rem;
+}
+
+.message.message-warning .pagarme-admin-warnings > div {
+    padding: 1rem 0;
+}
+
+.message.message-warning .pagarme-admin-warnings > div:not(:last-child) {
+    border-bottom: 1px dashed #d1d1d1;
+}

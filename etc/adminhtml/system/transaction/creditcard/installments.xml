@@ -25,9 +25,10 @@
         <field id="installments_number" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="30" translate="label comment" type="text">
             <label>Max number of installments</label>
             <backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
-            <comment><![CDATA[<p>Insert a number between 1 and <span id='installments_max_size'></span>.</p>]]></comment>
+            <comment><![CDATA[<p>Insert a number between 1 and <span id='installments_max_size'>12</span>.</p>]]></comment>
             <config_path>payment/pagarme_creditcard/installments_number</config_path>
             <validate>required-entry validate-number-range number-range-1-12</validate>
+            <frontend_model>Pagarme\Pagarme\Block\Adminhtml\Form\Field\InstallmentsNumber</frontend_model>
             <depends>
                 <field id="installments_active">1</field>
                 <field id="installments_type">1</field>
@@ -84,6 +85,7 @@
             <comment><![CDATA[<p>Insert a number between 1 and the <b>Max number of installments</b>.</p>]]></comment>
             <config_path>payment/pagarme_creditcard/installments_max_without_interest</config_path>
             <validate>required-entry validate-number-range number-range-1-12</validate>
+            <frontend_model>Pagarme\Pagarme\Block\Adminhtml\Form\Field\InstallmentsNumber</frontend_model>
             <depends>
                 <field id="installments_active">1</field>
                 <field id="installments_interest_by_issuer">1</field>
@@ -102,5 +104,8 @@
         <include path="Pagarme_Pagarme::system/transaction/creditcard/installments/credz.xml"/>
         <include path="Pagarme_Pagarme::system/transaction/creditcard/installments/banese.xml"/>
         <include path="Pagarme_Pagarme::system/transaction/creditcard/installments/cabal.xml"/>
+        <depends>
+            <field id="active">1</field>
+        </depends>
     </group>
 </include>

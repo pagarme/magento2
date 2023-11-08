@@ -5,7 +5,10 @@ namespace Pagarme\Pagarme\Model;
 use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Framework\App\Config\ConfigResource\ConfigInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Store\Model\ScopeInterface;
+use Magento\Store\Model\StoreManagerInterface;
+use Pagarme\Core\Middle\Model\Account\PaymentEnum;
 use Pagarme\Pagarme\Gateway\Transaction\Base\Config\ConfigInterface as PagarmeConfigInterface;
 
 /**
@@ -33,6 +36,37 @@ class PagarmeConfigProvider implements ConfigProviderInterface
     const PATH_CUSTOMER_NUMBER           = 'payment/pagarme_customer_address/number_attribute';
     const PATH_CUSTOMER_COMPLEMENT       = 'payment/pagarme_customer_address/complement_attribute';
     const PATH_CUSTOMER_DISTRICT         = 'payment/pagarme_customer_address/district_attribute';
+    const PATH_ACCOUNT_ID = 'pagarme_pagarme/hub/account_id';
+
+    const PATH_PIX_ENABLED = 'payment/pagarme_pix/active';
+
+    const PATH_CREDIT_CARD_ENABLED = 'payment/pagarme_creditcard/active';
+
+    const PATH_BILLET_AND_CREDIT_CARD_ENABLED = 'payment/pagarme_multipleactionscreditcardbillet/active';
+
+    const PATH_TWO_CREDIT_CARD_ENABLED = 'payment/pagarme_multipleactionstwocreditcard/active';
+
+    const PATH_BILLET_ENABLED = 'payment/pagarme_billet/active';
+
+    const PATH_VOUCHER_ENABLED = 'payment/pagarme_voucher/active';
+
+    const PATH_DEBIT_ENABLED = 'payment/pagarme_debit/active';
+
+    const PATH_IS_PAYMENT_GATEWAY_TYPE = 'pagarme_pagarme/%s/is_payment_gateway';
+
+    const PATH_IS_PAYMENT_PSP_TYPE = 'pagarme_pagarme/%s/is_payment_psp';
+
+    const BILLET_PAYMENT_CONFIG = 'pagarme_billet';
+
+    const CREDIT_CARD_PAYMENT_CONFIG = 'pagarme_creditcard';
+
+    const DEBIT_PAYMENT_CONFIG = 'pagarme_debit';
+
+    const PIX_PAYMENT_CONFIG = 'pagarme_pix';
+
+    const VOUCHER_PAYMENT_CONFIG = 'pagarme_voucher';
+
+    const PATH_DASH_ERRORS = 'pagarme_pagarme/hub/account_errors';
 
     /**
      * Contains scope config of Magento
@@ -49,7 +83,12 @@ class PagarmeConfigProvider implements ConfigProviderInterface
     protected $config;
 
     /** @var PagarmeConfigInterface */
-    private $pagarmeConfig;
+    protected $pagarmeConfig;
+
+    /**
+     * @var StoreManagerInterface
+     */
+    protected $storeManager;
 
     /**
      * @param PagarmeConfigInterface $pagarmeConfig
@@ -59,11 +98,13 @@ class PagarmeConfigProvider implements ConfigProviderInterface
     public function __construct(
         PagarmeConfigInterface $pagarmeConfig,
         ScopeConfigInterface $scopeConfig,
-        ConfigInterface $config
+        ConfigInterface $config,
+        StoreManagerInterface $storeManager
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->config = $config;
         $this->pagarmeConfig = $pagarmeConfig;
+        $this->storeManager = $storeManager;
     }
 
     /**
@@ -91,7 +132,7 @@ class PagarmeConfigProvider implements ConfigProviderInterface
     {
         return $this->scopeConfig->getValue(
             self::XML_PATH_IS_GATEWAY_INTEGRATION_TYPE,
-            ScopeInterface::SCOPE_STORE
+            ScopeInterface::SCOPE_WEBSITES
         );
     }
 
@@ -231,54 +272,134 @@ class PagarmeConfigProvider implements ConfigProviderInterface
             || !$this->isRecurrenceEnabled();
     }
 
-    public function disableVoucher()
+    /**
+     * @return string
+     */
+    public function getAccountId($website = null)
     {
-        $this->config->saveConfig(
-            self::XML_PATH_VOUCHER_ACTIVE,
-            0,
-            'default',
-            0
+        return $this->scopeConfig->getValue(
+            self::PATH_ACCOUNT_ID,
+            ScopeInterface::SCOPE_WEBSITES,
+            $this->getWebsiteId($website)
         );
     }
 
-    public function disableDebit()
+    /**
+     * @return bool
+     */
+    public function isPixEnabled($website = null)
     {
-        $this->config->saveConfig(
-            self::XML_PATH_DEBIT_ACTIVE,
-            0,
-            'default',
-            0
+        return (bool) $this->scopeConfig->getValue(
+            self::PATH_PIX_ENABLED,
+            ScopeInterface::SCOPE_WEBSITES,
+            $this->getWebsiteId($website)
         );
     }
 
-    public function disableRecurrence()
+    /**
+     * @return bool
+     */
+    public function isCreditCardEnabled($website = null)
     {
-        $this->config->saveConfig(
-            self::XML_PATH_RECURRENCE_ACTIVE,
-            0,
-            'default',
-            0
+        return (bool) $this->scopeConfig->getValue(
+            self::PATH_CREDIT_CARD_ENABLED,
+            ScopeInterface::SCOPE_WEBSITES,
+            $this->getWebsiteId($website)
         );
     }
 
-    public function disableAntifraud()
+    /**
+     * @return bool
+     */
+    public function isBilletAndCreditCardEnabled($website = null)
     {
-        $this->config->saveConfig(
-            self::XML_PATH_ANTIFRAUD_ACTIVE,
-            0,
-            'default',
-            0
+        return (bool) $this->scopeConfig->getValue(
+            self::PATH_BILLET_AND_CREDIT_CARD_ENABLED,
+            ScopeInterface::SCOPE_WEBSITES,
+            $this->getWebsiteId($website)
         );
     }
 
-    public function disableSavedCard()
+    /**
+     * @return bool
+     */
+    public function isTwoCreditCardEnabled($website = null)
     {
-        $this->config->saveConfig(
-            self::XML_PATH_IS_ENABLE_SAVED_CARDS,
-            0,
-            'default',
-            0
+        return (bool) $this->scopeConfig->getValue(
+            self::PATH_TWO_CREDIT_CARD_ENABLED,
+            ScopeInterface::SCOPE_WEBSITES,
+            $this->getWebsiteId($website)
         );
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAnyCreditCardMethodEnabled($website = null)
+    {
+        return $this->isCreditCardEnabled($website)
+            || $this->isBilletAndCreditCardEnabled($website)
+            || $this->isTwoCreditCardEnabled($website);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isBilletEnabled($website = null)
+    {
+        return (bool) $this->scopeConfig->getValue(
+            self::PATH_BILLET_ENABLED,
+            ScopeInterface::SCOPE_WEBSITES,
+            $this->getWebsiteId($website)
+        );
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAnyBilletMethodEnabled($website = null)
+    {
+        return $this->isBilletEnabled($website)
+            || $this->isBilletAndCreditCardEnabled($website);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isVoucherEnabled($website = null)
+    {
+        return (bool) $this->scopeConfig->getValue(
+            self::PATH_VOUCHER_ENABLED,
+            ScopeInterface::SCOPE_WEBSITES,
+            $this->getWebsiteId($website)
+        );
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDebitEnabled($website = null)
+    {
+        return (bool) $this->scopeConfig->getValue(
+            self::PATH_DEBIT_ENABLED,
+            ScopeInterface::SCOPE_WEBSITES,
+            $website
+        );
+    }
+
+    /**
+     * @param mixed $website
+     * @return array
+     */
+    public function availablePaymentMethods($website = null)
+    {
+        return [
+            PaymentEnum::PIX => $this->isPixEnabled($website),
+            PaymentEnum::DEBIT_CARD => $this->isDebitEnabled($website),
+            PaymentEnum::BILLET => $this->isAnyBilletMethodEnabled($website),
+            PaymentEnum::CREDIT_CARD => $this->isAnyCreditCardMethodEnabled($website),
+            PaymentEnum::VOUCHER => $this->isVoucherEnabled($website)
+        ];
     }
 
     /**
@@ -291,5 +412,15 @@ class PagarmeConfigProvider implements ConfigProviderInterface
             'pagarme_is_hub_enabled' => $this->pagarmeConfig->isHubEnabled(),
             'pagarme_customer_configs' => $this->pagarmeConfig->getPagarmeCustomerConfigs(),
         ] ;
+    }
+
+    /**
+     * @param mixed $websiteId
+     * @return int|mixed
+     * @throws NoSuchEntityException
+     */
+    private function getWebsiteId($websiteId = null)
+    {
+        return $websiteId ?? $this->storeManager->getStore()->getWebsiteId();
     }
 }

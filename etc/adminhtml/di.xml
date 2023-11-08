@@ -48,4 +48,42 @@
             </argument>
         </arguments>
     </type>
+    <!-- Gateway Fields -->
+    <virtualType name="Pagarme\Pagarme\Block\Adminhtml\Form\Field\BilletGatewayField" type="Pagarme\Pagarme\Block\Adminhtml\Form\Field\GatewayField">
+        <arguments>
+            <argument name="paymentMethodName" xsi:type="string">pagarme_billet</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Pagarme\Pagarme\Block\Adminhtml\Form\Field\CreditCardGatewayField" type="Pagarme\Pagarme\Block\Adminhtml\Form\Field\GatewayField">
+        <arguments>
+            <argument name="paymentMethodName" xsi:type="string">pagarme_creditcard</argument>
+        </arguments>
+    </virtualType>
+    <!-- SoftDescriptor Fields -->
+    <virtualType name="Pagarme\Pagarme\Block\Adminhtml\Form\Field\CreditCardSoftDescriptor" type="Pagarme\Pagarme\Block\Adminhtml\Form\Field\SoftDescriptor">
+        <arguments>
+            <argument name="paymentMethodName" xsi:type="string">pagarme_creditcard</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Pagarme\Pagarme\Block\Adminhtml\Form\Field\DebitCardSoftDescriptor" type="Pagarme\Pagarme\Block\Adminhtml\Form\Field\SoftDescriptor">
+        <arguments>
+            <argument name="paymentMethodName" xsi:type="string">pagarme_debit</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Pagarme\Pagarme\Block\Adminhtml\Form\Field\VoucherSoftDescriptor" type="Pagarme\Pagarme\Block\Adminhtml\Form\Field\SoftDescriptor">
+        <arguments>
+            <argument name="paymentMethodName" xsi:type="string">pagarme_voucher</argument>
+        </arguments>
+    </virtualType>
+    <!-- CustomPayments Fieldset -->
+    <virtualType name="Pagarme\Pagarme\Block\Adminhtml\Form\Fieldset\DebitCardFieldset" type="Pagarme\Pagarme\Block\Adminhtml\Form\Fieldset\CustomPaymentFieldset">
+        <arguments>
+            <argument name="paymentMethodName" xsi:type="string">pagarme_debit</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Pagarme\Pagarme\Block\Adminhtml\Form\Fieldset\VoucherFieldset" type="Pagarme\Pagarme\Block\Adminhtml\Form\Fieldset\CustomPaymentFieldset">
+        <arguments>
+            <argument name="paymentMethodName" xsi:type="string">pagarme_voucher</argument>
+        </arguments>
+    </virtualType>
 </config>

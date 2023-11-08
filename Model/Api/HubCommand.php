@@ -89,6 +89,9 @@ class HubCommand implements HubCommandInterface
 
     public function uninstallCommand()
     {
+        if (!$this->websiteId) {
+            $this->websiteId = 1;
+        }
         $this->configWriter->save(
             "pagarme_pagarme/hub/install_id",
             null,
@@ -126,6 +129,27 @@ class HubCommand implements HubCommandInterface
 
         $this->configWriter->save(
             "pagarme_pagarme/global/public_key_test",
+            null,
+            'websites',
+            $this->websiteId
+        );
+
+        $this->configWriter->save(
+            "pagarme_pagarme/hub/account_id",
+            null,
+            'websites',
+            $this->websiteId
+        );
+
+        $this->configWriter->save(
+            "pagarme_pagarme/hub/merchant_id",
+            null,
+            'websites',
+            $this->websiteId
+        );
+
+        $this->configWriter->save(
+            "pagarme_pagarme/hub/account_errors",
             null,
             'websites',
             $this->websiteId
