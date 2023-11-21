@@ -18,6 +18,7 @@
     <preference for="Pagarme\Pagarme\Model\Installments\Config\ConfigInterface" type="Pagarme\Pagarme\Model\Installments\Config\Config" />
     <preference for="Pagarme\Pagarme\Model\Installments\Config\ConfigByBrandInterface" type="Pagarme\Pagarme\Model\Installments\Config\ConfigByBrand" />
     <preference for="Pagarme\Pagarme\Gateway\Transaction\CreditCard\Config\ConfigInterface" type="Pagarme\Pagarme\Gateway\Transaction\CreditCard\Config\Config" />
+    <preference for="Pagarme\Pagarme\Gateway\Transaction\DebitCard\Config\ConfigInterface" type="Pagarme\Pagarme\Gateway\Transaction\DebitCard\Config\Config" />
     <preference for="Pagarme\Pagarme\Gateway\Transaction\TwoCreditCard\Config\ConfigInterface" type="Pagarme\Pagarme\Gateway\Transaction\TwoCreditCard\Config\Config" />
     <preference for="Pagarme\Pagarme\Gateway\Transaction\Billet\Config\ConfigInterface" type="Pagarme\Pagarme\Gateway\Transaction\Billet\Config\Config" />
     <preference for="Pagarme\Pagarme\Gateway\Transaction\BilletCreditCard\Config\ConfigInterface" type="Pagarme\Pagarme\Gateway\Transaction\BilletCreditCard\Config\Config" />

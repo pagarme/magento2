@@ -9,7 +9,7 @@
  * @link        https://pagar.me
  */
 
-namespace Pagarme\Pagarme\Gateway\Transaction\CreditCard\Config;
+namespace Pagarme\Pagarme\Gateway\Transaction\DebitCard\Config;
 
 use Pagarme\Pagarme\Gateway\Transaction\Base\Config\TdsConfigInterface;
 use Pagarme\Pagarme\Gateway\Transaction\Base\Config\AbstractConfig;
@@ -31,7 +31,6 @@ class Config extends AbstractConfig implements ConfigInterface, TdsConfigInterfa
     {
         return (bool) $this->getConfig(static::PATH_ENABLED_SAVED_CARDS);
     }
-
     /**
      * @return string
      */
@@ -70,29 +69,7 @@ class Config extends AbstractConfig implements ConfigInterface, TdsConfigInterfa
         return $this->getConfig(static::PATH_PAYMENT_ACTION);
     }
 
-    /**
-     * @return bool
-     */
-    public function getAntifraudActive()
-    {
-        return $this->getConfig(static::PATH_ANTIFRAUD_ACTIVE);
-    }
-
-    /**
-     * @return string
-     */
-    public function getAntifraudMinAmount()
-    {
-        return $this->getConfig(static::PATH_ANTIFRAUD_MIN_AMOUNT);
-    }
-
-    /**
-     * @return string
-     */
-    public function getSoftDescription()
-    {
-        return $this->getConfig(static::PATH_SOFT_DESCRIPTION);
-    }
+    
 
     /**
      * @return string

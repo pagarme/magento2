@@ -9,24 +9,21 @@
  * @link        https://pagar.me
  */
 
-namespace Pagarme\Pagarme\Gateway\Transaction\CreditCard\Config;
+namespace Pagarme\Pagarme\Gateway\Transaction\DebitCard\Config;
 
 
 interface ConfigInterface
 {
-    const PATH_ACTIVE                       = 'payment/pagarme_creditcard/active';
-    const PATH_ENABLED_SAVED_CARDS          = 'payment/pagarme_creditcard/enabled_saved_cards';
-    const PATH_TDS_ACTIVE                   = 'payment/pagarme_creditcard/tds_active';
-    const PATH_ORDER_WITH_TDS_REFUSED       = 'payment/pagarme_creditcard/order_with_tds_refused';
-    const PATH_PAYMENT_ACTION               = 'payment/pagarme_creditcard/payment_action';
-    const PATH_ANTIFRAUD_ACTIVE             = 'payment/pagarme_creditcard/antifraud_active';
-    const PATH_ANTIFRAUD_MIN_AMOUNT         = 'payment/pagarme_creditcard/antifraud_min_amount';
-    const PATH_SOFT_DESCRIPTION             = 'payment/pagarme_creditcard/soft_description';
+    const PATH_ACTIVE                       = 'payment/pagarme_debit/active';
+    const PATH_ENABLED_SAVED_CARDS          = 'payment/pagarme_debit/enabled_saved_cards';
+    const PATH_TDS_ACTIVE                   = 'payment/pagarme_debit/tds_active';
+    const PATH_ORDER_WITH_TDS_REFUSED       = 'payment/pagarme_debit/order_with_tds_refused';
+    const PATH_PAYMENT_ACTION               = 'payment/pagarme_debit/payment_action';
     const PATH_CUSTOMER_STREET              = 'payment/pagarme_customer_address/street_attribute';
     const PATH_CUSTOMER_NUMBER              = 'payment/pagarme_customer_address/number_attribute';
     const PATH_CUSTOMER_COMPLEMENT          = 'payment/pagarme_customer_address/complement_attribute';
     const PATH_CUSTOMER_DISTRICT            = 'payment/pagarme_customer_address/district_attribute';
-    const PATH_TITLE                        = 'payment/pagarme_creditcard/title';
+    const PATH_TITLE                        = 'payment/pagarme_debit/title';
 
     /**
      * @return bool
@@ -42,21 +39,6 @@ interface ConfigInterface
      * @return string
      */
     public function getPaymentAction();
-
-    /**
-     * @return bool
-     */
-    public function getAntifraudActive();
-
-    /**
-     * @return string
-     */
-    public function getAntifraudMinAmount();
-
-    /**
-     * @return string
-     */
-    public function getSoftDescription();
 
     /**
      * @return string
