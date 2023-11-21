@@ -15,7 +15,7 @@
             <config_path>payment/pagarme_debit/tds_active</config_path>
         </field>
         <field id="order_with_tds_refused" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="select">
-            <label>Proceed with 3DS order declined?</label>
+            <label>Proceed with declined 3DS order?</label>
             <comment><![CDATA[Create orders in Magento even if 3DS authentication is refused by the Issuing Bank]]></comment>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>payment/pagarme_debit/order_with_tds_refused</config_path>

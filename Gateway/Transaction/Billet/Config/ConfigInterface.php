@@ -18,10 +18,6 @@ interface ConfigInterface
     const PATH_TEXT             = 'payment/pagarme_billet/text';
     const PATH_TYPE_BANK        = 'payment/pagarme_billet/types';
     const PATH_EXPIRATION_DAYS  = 'payment/pagarme_billet/expiration_days';
-    const PATH_CUSTOMER_STREET              = 'payment/pagarme_customer_address/street_attribute';
-    const PATH_CUSTOMER_NUMBER              = 'payment/pagarme_customer_address/number_attribute';
-    const PATH_CUSTOMER_COMPLEMENT          = 'payment/pagarme_customer_address/complement_attribute';
-    const PATH_CUSTOMER_DISTRICT            = 'payment/pagarme_customer_address/district_attribute';
     const PATH_TITLE                        = 'payment/pagarme_billet/title';
 
     /**

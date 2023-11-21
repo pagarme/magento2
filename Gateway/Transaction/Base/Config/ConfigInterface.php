@@ -33,14 +33,6 @@ interface ConfigInterface
 
     const PATH_SEND_EMAIL = 'pagarme_pagarme/global/sendmail';
 
-    const PATH_CUSTOMER_STREET = 'payment/pagarme_customer_address/street_attribute';
-
-    const PATH_CUSTOMER_NUMBER = 'payment/pagarme_customer_address/number_attribute';
-
-    const PATH_CUSTOMER_COMPLEMENT = 'payment/pagarme_customer_address/complement_attribute';
-
-    const PATH_CUSTOMER_DISTRICT = 'payment/pagarme_customer_address/district_attribute';
-
     const PATH_CUSTOMER_VAT_NUMBER = 'customer/create_account/vat_frontend_visibility';
 
     const PATH_CUSTOMER_ADDRESS_LINES = 'customer/address/street_lines';
@@ -76,27 +68,6 @@ interface ConfigInterface
      * @return string
      */
     public function getTestMode();
-
-
-    /**
-     * @return string
-     */
-    public function getCustomerStreetAttribute();
-
-    /**
-     * @return string
-     */
-    public function getCustomerAddressNumber();
-
-    /**
-     * @return string
-     */
-    public function getCustomerAddressComplement();
-
-    /**
-     * @return string
-     */
-    public function getCustomerAddressDistrict();
 
     /**
      * @return array
