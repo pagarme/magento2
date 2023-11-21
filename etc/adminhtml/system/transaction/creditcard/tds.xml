@@ -15,11 +15,11 @@
             <config_path>payment/pagarme_creditcard/tds_active</config_path>
         </field>
         <field id="order_with_tds_refused" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="select">
-            <label>Seguir com pedido 3DS recusado?</label>
-            <comment><![CDATA[Criar pedidos no Magento mesmo com a autenticação 3DS recusada pelo Banco Emissor]]></comment>
+            <label>Proceed with 3DS order declined?</label>
+            <comment><![CDATA[Create orders in Magento even if 3DS authentication is refused by the Issuing Bank]]></comment>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>payment/pagarme_creditcard/order_with_tds_refused</config_path>
-            <tooltip>Caso o Banco Emissor rejeite a autenticação 3DS, você poderá receber chargerback por fraude</tooltip>
+            <tooltip>If the Issuing Bank rejects 3DS authentication, you may receive a fraud chargeback</tooltip>
             <depends>
                 <field id="tds_active">1</field>
             </depends>
