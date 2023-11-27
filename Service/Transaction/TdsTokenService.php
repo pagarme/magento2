@@ -1,9 +1,8 @@
 <?php
 
-namespace Pagarme\Pagarme\Service\Customer;
+namespace Pagarme\Pagarme\Service\Transaction;
 
 use Pagarme\Core\Middle\Proxy\TdsTokenProxy;
-use Pagarme\Pagarme\Model\Api\GetTdsToken;
 use Pagarme\Pagarme\Model\CoreAuth;
 
 class TdsTokenService

@@ -24,7 +24,7 @@ define([
                 return;
             }
             
-            var configCard = window.checkoutConfig.payment.pagarme_creditcard;
+            const configCard = window.checkoutConfig.payment.pagarme_creditcard;
             if(configCard['tds_active'] === true) {
                 this.getCreditCardTdsToken(
                     function (data) {

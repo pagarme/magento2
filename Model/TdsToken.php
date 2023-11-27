@@ -4,7 +4,7 @@ namespace Pagarme\Pagarme\Model;
 
 use Pagarme\Pagarme\Api\TdsTokenInterface;
 use Pagarme\Pagarme\Model\PagarmeConfigProvider;
-use Pagarme\Pagarme\Service\Customer\TdsTokenService;
+use Pagarme\Pagarme\Service\Transaction\TdsTokenService;
 
 class TdsToken implements TdsTokenInterface
 {
