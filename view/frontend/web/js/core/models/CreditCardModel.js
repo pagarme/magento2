@@ -2,7 +2,8 @@ define([
     'Pagarme_Pagarme/js/core/validators/CreditCardValidator',
     'Pagarme_Pagarme/js/core/validators/MultibuyerValidator',
     'Pagarme_Pagarme/js/core/checkout/CreditCardToken',
-], (CreditCardValidator, MultibuyerValidator, CreditCardToken) => {
+    'Pagarme_Pagarme/js/core/checkout/TdsToken',
+], (CreditCardValidator, MultibuyerValidator, CreditCardToken, TdsToken) => {
     return class CreditCardModel {
         constructor(formObject, publicKey) {
             this.formObject = formObject;
@@ -22,7 +23,20 @@ define([
                 _self.placeOrderObject.placeOrder();
                 return;
             }
+            
+            const configCard = window.checkoutConfig.payment.pagarme_creditcard;
+            if(configCard['tds_active'] === true) {
+                this.getCreditCardTdsToken(
+                    function (data) {
+                        // Implementtion to call 3ds
+                    },
+                    function(error) {
+                        _self.addErrors("Falha ao gerar Token para 3ds, tente novamente"); // Alterar
+                    }
+                )
 
+            }
+            
             this.getCreditCardToken(
                 function (data) {
                     _self.formObject.creditCardToken.val(data.id);
@@ -55,6 +69,12 @@ define([
         getCreditCardToken(success, error) {
             const modelToken = new CreditCardToken(this.formObject);
             modelToken.getToken(this.publicKey)
+                .done(success)
+                .fail(error);
+        }
+        getCreditCardTdsToken(success, error) {
+            const modelTdsToken = new TdsToken(this.formObject);
+            modelTdsToken.getToken()
                 .done(success)
                 .fail(error);
         }
