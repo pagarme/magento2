@@ -37,7 +37,7 @@ define([
                 shippingAddressNeighbourhood
             ] = shippingAddress.street;
 
-            const customerData = customerPhones = window.checkoutConfig.customerData;
+            const customerData = window.checkoutConfig.customerData;
             const customerPhones = customerData.addresses.map(function(item) {
                 return {
                     country_code : '55',
