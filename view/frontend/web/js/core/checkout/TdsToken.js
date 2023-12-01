@@ -3,8 +3,8 @@ define([
     "mage/url",
     'Magento_Checkout/js/model/quote'
 ], (
-	urlBuilder,
-	mageUrl,
+    urlBuilder,
+    mageUrl,
     quote
 ) => {
 	return class TdsToken {

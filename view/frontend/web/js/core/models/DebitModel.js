@@ -28,7 +28,8 @@ define([
             if(configCard['tds_active'] === true) {
                 this.getDebitTdsToken(
                     function (data) {
-                        // Implementation to call 3ds
+                        const tds = new TdsToken();
+                        tds.getTdsData('03');
                     },
                     function(error) {
                         _self.addErrors("Falha ao gerar Token para 3ds, tente novamente."); // Alterar
@@ -36,7 +37,7 @@ define([
                 )
 
             }
-            
+
             this.getCreditCardToken(
                 function (data) {
                     _self.formObject.creditCardToken.val(data.id);
