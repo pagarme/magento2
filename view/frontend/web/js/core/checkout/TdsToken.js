@@ -24,8 +24,7 @@ define([
             const [
                 billingAddressStreet,
                 billingAddressNumber,
-                billingAddressComplement,
-                billingAddressNeighbourhood
+                billingAddressComplement
             ] = billingAddress.street;
 
 
@@ -33,8 +32,7 @@ define([
             const [
                 shippingAddressStreet,
                 shippingAddressNumber,
-                shippingAddressComplement,
-                shippingAddressNeighbourhood
+                shippingAddressComplement
             ] = shippingAddress.street;
 
             const customerData = window.checkoutConfig.customerData;
