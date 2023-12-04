@@ -50,6 +50,7 @@ use Magento\Quote\Model\Quote;
 use Pagarme\Pagarme\Helper\Marketplace\WebkulHelper;
 use Pagarme\Pagarme\Model\PagarmeConfigProvider;
 use Pagarme\Pagarme\Model\Source\Bank;
+use stdClass;
 
 class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 {
@@ -903,7 +904,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             $customerId = $card->getCardId();
         }
 
-        $newPaymentData = new \stdClass();
+        $newPaymentData = new stdClass();
         $newPaymentData->customerId = $customerId;
         $newPaymentData->brand = $brand;
         $newPaymentData->identifier = $identifier;
@@ -914,6 +915,19 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 
         if (isset($additionalInformation['cc_cvv_card']) && !empty($additionalInformation['cc_cvv_card'])) {
             $newPaymentData->cvvCard = $additionalInformation['cc_cvv_card'];
+        }
+
+        if (!empty($additionalInformation['authentication'])) {
+            $authentication = new stdClass();
+            $authentication->type = 'threed_secure';
+            $authentication->status = $additionalInformation['authentication']['trans_status'];
+
+            $threeDSecure = new stdClass();
+            $threeDSecure->mpi = 'pagarme';
+            $threeDSecure->transactionId = $additionalInformation['authentication']['tds_server_trans_id'];
+
+            $authentication->threeDSecure = $threeDSecure;
+            $newPaymentData->authentication = $authentication;
         }
 
         $amount = $this->getGrandTotal() - $this->getBaseTaxAmount();
@@ -967,7 +981,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
                 $customerId = $card->getCardId();
             }
 
-            $newPaymentData = new \stdClass();
+            $newPaymentData = new stdClass();
             $newPaymentData->customerId = $customerId;
             $newPaymentData->identifier = $identifier;
             $newPaymentData->brand = $brand;
@@ -1024,7 +1038,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             "{$prefix}_buyer_mobile_phone{$index}" => "mobilePhone"
         ];
 
-        $multibuyer = new \stdClass();
+        $multibuyer = new stdClass();
 
         foreach ($fields as $key => $attribute) {
             $value = $additionalInformation[$key];
@@ -1078,7 +1092,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             $customerId = $card->getCardId();
         }
 
-        $newPaymentData = new \stdClass();
+        $newPaymentData = new stdClass();
         $newPaymentData->identifier = $identifier;
         $newPaymentData->customerId = $customerId;
         $newPaymentData->brand = $brand;
@@ -1109,7 +1123,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 
         //boleto
 
-        $newPaymentData = new \stdClass();
+        $newPaymentData = new stdClass();
 
         $amount = str_replace(
             ['.', ','],
@@ -1138,7 +1152,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         &$paymentData,
         $payment
     ) {
-        $newPaymentData = new \stdClass();
+        $newPaymentData = new stdClass();
         $newPaymentData->amount =
             $this->moneyService->floatToCents($this->platformOrder->getGrandTotal());
         $moduleConfiguration = MPSetup::getModuleConfiguration();
@@ -1175,7 +1189,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         &$paymentData,
         $payment
     ) {
-        $newPaymentData = new \stdClass();
+        $newPaymentData = new stdClass();
         $newPaymentData->amount =
             $this->moneyService->floatToCents($this->platformOrder->getGrandTotal());
 
