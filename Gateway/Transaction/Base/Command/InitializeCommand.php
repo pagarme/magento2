@@ -52,8 +52,6 @@ class InitializeCommand implements CommandInterface
         $stateObject = $commandSubject['stateObject'];
         $paymentDO = SubjectReader::readPayment($commandSubject);
         $payment = $paymentDO->getPayment();
-        $authentication = ['trans_status' => 'N', 'tds_server_trans_id' => 'abc'];
-        $payment->setAdditionalInformation('authentication', $authentication);
 
         if (!$payment instanceof Payment) {
             throw new \LogicException('Order Payment should be provided');
