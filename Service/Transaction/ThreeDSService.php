@@ -9,9 +9,7 @@ use Pagarme\Core\Kernel\Interfaces\PlatformOrderInterface;
 use Pagarme\Core\Kernel\Services\OrderLogService;
 use Pagarme\Core\Kernel\ValueObjects\OrderState;
 use Pagarme\Core\Kernel\ValueObjects\OrderStatus;
-use Pagarme\Core\Payment\Aggregates\Order as PaymentOrder;
 use Pagarme\Core\Payment\Aggregates\Payments\Authentication\AuthenticationStatusEnum;
-use Pagarme\Core\Payment\Services\ResponseHandlers\ErrorExceptionHandler;
 use Pagarme\Pagarme\Gateway\Transaction\CreditCard\Config\Config as CreditCardConfig;
 use Pagarme\Pagarme\Gateway\Transaction\DebitCard\Config\Config as DebitCardConfig;
 use Pagarme\Pagarme\Model\Enum\CreditCardBrandEnum;
@@ -67,22 +65,24 @@ class ThreeDSService
                 $orderDecorator->setState(OrderState::canceled());
                 $orderDecorator->save();
 
-                $e = new PaymentException(__("Can't create payment. Please review the information and try again."));
-                $orderInfo = new \stdClass();
-                $orderInfo->grandTotal = $orderDecorator->getGrandTotal();
+                $errorMessage = "Can't create payment. Please review the information and try again.";
                 $logService = new OrderLogService();
                 $logService->orderInfo(
                     $orderDecorator->getCode(),
-                    $e->getMessage(),
-                    $orderInfo
+                    $errorMessage
+                );
+                $logService->orderInfo(
+                    $orderDecorator->getCode(),
+                    "Failed to create order at Pagarme!"
                 );
 
-                $exceptionHandler = new ErrorExceptionHandler();
-                $paymentOrder = new PaymentOrder();
-                $paymentOrder->setCode($orderDecorator->getcode());
-                $frontMessage = $exceptionHandler->handle($e, $paymentOrder);
+                $errorMessage = __(
+                    "Order # %1 : %2",
+                    $orderDecorator->getCode(),
+                    __($errorMessage)
+                );
 
-                throw new PaymentException(__($frontMessage), null, 400);
+                throw new PaymentException(__($errorMessage), null, 400);
             }
 
 

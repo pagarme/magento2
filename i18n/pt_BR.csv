@@ -536,3 +536,4 @@
 "If the Issuing Bank rejects 3DS authentication, you may receive a fraud chargeback","Caso o Banco Emissor rejeite a autenticação 3DS, você poderá receber chargerback por fraude"
 "Order declined, do not try again.","Pedido recusado, não tente novamente."
 "Can't create payment. Please review the information and try again.","Não foi possível realizar o pagamento. Por favor revise os dados e tente novamente."
+"Order # %1 : %2","Pedido # %1 : %2"
