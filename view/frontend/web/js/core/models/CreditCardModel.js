@@ -23,12 +23,14 @@ define([
                 _self.placeOrderObject.placeOrder();
                 return;
             }
-            
+
             const configCard = window.checkoutConfig.payment.pagarme_creditcard;
+
             if(configCard['tds_active'] === true) {
                 this.getCreditCardTdsToken(
                     function (data) {
-                        // Implementtion to call 3ds
+                        const tds = new TdsToken();
+                        tds.getTdsData('02');
                     },
                     function(error) {
                         _self.addErrors("Falha ao gerar Token para 3ds, tente novamente"); // Alterar
@@ -36,7 +38,7 @@ define([
                 )
 
             }
-            
+
             this.getCreditCardToken(
                 function (data) {
                     _self.formObject.creditCardToken.val(data.id);

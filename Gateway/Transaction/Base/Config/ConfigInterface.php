@@ -37,6 +37,14 @@ interface ConfigInterface
 
     const PATH_CUSTOMER_ADDRESS_LINES = 'customer/address/street_lines';
 
+    const PATH_CUSTOMER_ADDRESS_STREET = 'payment/pagarme_customer_address/street_attribute';
+
+    const PATH_CUSTOMER_ADDRESS_NUMBER = 'payment/pagarme_customer_address/number_attribute';
+
+    const PATH_CUSTOMER_ADDRESS_COMPLEMENT = 'payment/pagarme_customer_address/complement_attribute';
+
+    const PATH_CUSTOMER_ADDRESS_NEIGHBOURHOOD = 'payment/pagarme_customer_address/district_attribute';
+
     const HUB_SANDBOX_ENVIRONMENT = 'Sandbox';
 
     /**
@@ -73,6 +81,11 @@ interface ConfigInterface
      * @return array
      */
     public function getPagarmeCustomerConfigs();
+
+    /**
+     * @return array
+     */
+    public function getPagarmeCustomerAddressConfigs();
 
     /**
      * @return bool
