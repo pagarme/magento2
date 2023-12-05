@@ -6,25 +6,31 @@
      * @var \Pagarme\Core\Kernel\Aggregates\Transaction $lastTransaction
      */
     $lastTransaction =  $this->getTransactionInfo();
+    $threeDSStatus =  $this->getThreeDSStatus();
     ?>
-    <span><?php echo __($this->getTitle()); ?></span>
+    <span><?= __($this->getTitle()); ?></span>
     <br/>
     <br/>
-    <span><b><?php echo __('Brand'); ?>: </b><?php echo $this->getCcBrand(); ?></span>
+    <span><b><?= __('Brand'); ?>: </b><?= $this->getCcBrand(); ?></span>
     <br/>
-    <span><b><?php echo __('Number'); ?>: </b><?php echo $this->getCardLast4(); ?></span>
+    <span><b><?= __('Number'); ?>: </b><?= $this->getCardLast4(); ?></span>
     <br/>
-    <span><b><?php echo __('Installments'); ?>: </b><?php echo $this->getInstallments(); ?></span>
-    <?php if (!empty($lastTransaction['authorized'])) {?>
+    <span><b><?= __('Installments'); ?>: </b><?= $this->getInstallments(); ?></span>
+    <?php if (!empty($lastTransaction['authorized'])): ?>
         <br/>
-        <span><b><?= __('NSU'); ?>: </b><?= $lastTransaction['authorized'] ?></span>
-    <?php } ?>
+        <span><b><?= __('NSU'); ?>: </b><?= $lastTransaction['authorized']; ?></span>
+    <?php endif; ?>
     <br/>
-    <?php if (!empty($lastTransaction['captured'])) {?>
-        <span><b><?= __('NSU from capture'); ?>: </b><?= $lastTransaction['captured'] ?></span>
+    <?php if (!empty($lastTransaction['captured'])): ?>
         <br/>
-    <?php } ?>
-    <?php if (!empty($lastTransaction['tid'])) {?>
-        <span><b><?= __('TID'); ?>: </b><?= $lastTransaction['tid'] ?></span>
-    <?php } ?>
+        <span><b><?= __('NSU from capture'); ?>: </b><?= $lastTransaction['captured']; ?></span>
+    <?php endif; ?>
+    <?php if (!empty($lastTransaction['tid'])): ?>
+        <br/>
+        <span><b><?= __('TID'); ?>: </b><?= $lastTransaction['tid']; ?></span>
+    <?php endif; ?>
+    <?php if (!empty($threeDSStatus)): ?>
+        <br/>
+        <span><b><?= __('3DS Status'); ?>: </b><?= __($threeDSStatus); ?></span>
+    <?php endif; ?>
 <?php endif ?>
