@@ -2,8 +2,8 @@ define([
     'Pagarme_Pagarme/js/core/validators/CreditCardValidator',
     'Pagarme_Pagarme/js/core/validators/MultibuyerValidator',
     'Pagarme_Pagarme/js/core/checkout/CreditCardToken',
-    'Pagarme_Pagarme/js/core/checkout/TdsToken',
-], (CreditCardValidator, MultibuyerValidator, CreditCardToken, TdsToken) => {
+    'Pagarme_Pagarme/js/core/checkout/Tds',
+], (CreditCardValidator, MultibuyerValidator, CreditCardToken, Tds) => {
     return class DebitModel {
         constructor(formObject, publicKey) {
             this.formObject = formObject;
@@ -25,7 +25,7 @@ define([
             }
 
             const configCard = window.checkoutConfig.payment.pagarme_debit;
-            if(configCard['tds_active'] === true) {
+            if(configCard['tds_active'] === true) { // && (BANDEIRA FOR = VISA || MASTERCARD)
                 this.getDebitTdsToken(
                     function (data) {
                         const tds = new TdsToken();
@@ -75,7 +75,7 @@ define([
         }
 
         getDebitTdsToken(success, error) {
-            const modelTdsToken = new TdsToken(this.formObject);
+            const modelTdsToken = new Tds(this.formObject);
             modelTdsToken.getToken()
                 .done(success)
                 .fail(error);

@@ -2,8 +2,8 @@ define([
     'Pagarme_Pagarme/js/core/validators/CreditCardValidator',
     'Pagarme_Pagarme/js/core/validators/MultibuyerValidator',
     'Pagarme_Pagarme/js/core/checkout/CreditCardToken',
-    'Pagarme_Pagarme/js/core/checkout/TdsToken',
-], (CreditCardValidator, MultibuyerValidator, CreditCardToken, TdsToken) => {
+    'Pagarme_Pagarme/js/core/checkout/Tds',
+], (CreditCardValidator, MultibuyerValidator, CreditCardToken, Tds) => {
     return class CreditCardModel {
         constructor(formObject, publicKey) {
             this.formObject = formObject;
@@ -25,29 +25,39 @@ define([
             }
 
             const configCard = window.checkoutConfig.payment.pagarme_creditcard;
-
-            if(configCard['tds_active'] === true) {
-                this.getCreditCardTdsToken(
-                    function (data) {
-                        const tds = new TdsToken();
-                        tds.getTdsData('02');
-                    },
-                    function(error) {
-                        _self.addErrors("Falha ao gerar Token para 3ds, tente novamente"); // Alterar
-                    }
-                )
-
-            }
+            
+            // debugger
+            // console.log(this.formObject.authentification)
+            // console.log(_self.formObject.authentification)
+            // if(this.formObject.authentification != null) {
+            //     // _self.formObject.authentification = this.formObject.authentification);
+            //     _self.placeOrderObject.placeOrder();
+            // }
 
             this.getCreditCardToken(
                 function (data) {
                     _self.formObject.creditCardToken.val(data.id);
-                    _self.placeOrderObject.placeOrder();
+                    // _self.placeOrderObject.placeOrder();
                 },
                 function (error) {
                     _self.addErrors("Cartão inválido. Por favor, verifique os dados digitados e tente novamente");
                 }
             );
+            if(configCard['tds_active'] === true && this.brandIsVisaOrMaster() && this.formObject.authentification == null) {
+                this.formObject.authentication = null;
+                this.addTdsAttributeData();
+                this.getCreditCardTdsToken(
+                    function (tdsToken) {
+                        _self.initTds(tdsToken)
+                    },
+                    function(error) {
+                        _self.addErrors("Falha ao gerar Token para 3ds, tente novamente"); // Alterar
+                    }
+                )
+                // this.initTds();
+                // this.removeTdsAttributeData()
+
+            }
         }
         addErrors(error) {
             this.errors.push({
@@ -75,10 +85,45 @@ define([
                 .fail(error);
         }
         getCreditCardTdsToken(success, error) {
-            const modelTdsToken = new TdsToken(this.formObject);
+            const modelTdsToken = new Tds(this.formObject);
             modelTdsToken.getToken()
                 .done(success)
                 .fail(error);
+        }
+        brandIsVisaOrMaster() {
+            return this.formObject.creditCardBrand.val() === "visa" || 
+                this.formObject.creditCardBrand.val() === "mastercard"
+        }
+        initTds(tdsToken) {
+            const modelTds = new Tds(this.formObject)
+            const tdsData = modelTds.getTdsData('02');
+            modelTds.callTdsFunction(tdsToken, tdsData, this.callbackTds.bind(this));
+        }
+
+        callbackTds(data) {
+            this.formObject.authentication = JSON.stringify(data);
+            this.placeOrderObject.placeOrder();
+            return true;
+        }
+
+        addTdsAttributeData () {
+            jQuery(this.formObject.containerSelector).attr("data-pagarmecheckout-form", "")
+            this.formObject.creditCardHolderName.attr("data-pagarmecheckout-element", "holder_name")
+            this.formObject.creditCardNumber.attr("data-pagarmecheckout-element", "number")
+            this.formObject.creditCardNumber.val("9001100811111111")
+            this.formObject.creditCardBrand.attr("data-pagarmecheckout-element", "brand")
+            this.formObject.creditCardExpMonth.attr("data-pagarmecheckout-element", "exp_month")
+            this.formObject.creditCardExpYear.attr("data-pagarmecheckout-element", "exp_year")
+            this.formObject.creditCardCvv.attr("data-pagarmecheckout-element", "cvv")
+        }
+        removeTdsAttributeData () {
+            jQuery(this.formObject.containerSelector).removeAttr("data-pagarmecheckout-form")
+            this.formObject.creditCardHolderName.removeAttr("data-pagarmecheckout-element")
+            this.formObject.creditCardNumber.removeAttr("data-pagarmecheckout-element")
+            this.formObject.creditCardBrand.removeAttr("data-pagarmecheckout-element")
+            this.formObject.creditCardExpMonth.removeAttr("data-pagarmecheckout-element")
+            this.formObject.creditCardExpYear.removeAttr("data-pagarmecheckout-element")
+            this.formObject.creditCardCvv.removeAttr("data-pagarmecheckout-element")
         }
         getData() {
             this.saveThiscard = 0;
@@ -115,7 +160,8 @@ define([
                     'cc_saved_card': formObject.savedCreditCardSelect.val(),
                     'cc_installments': formObject.creditCardInstallments.val(),
                     'cc_token_credit_card': formObject.creditCardToken.val(),
-                    'cc_card_tax_amount' : formObject.creditCardInstallments.find(':selected').attr('interest')
+                    'cc_card_tax_amount' : formObject.creditCardInstallments.find(':selected').attr('interest'),
+                    'authentication': formObject.authentication
                 }
             };
         }

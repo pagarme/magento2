@@ -69,5 +69,12 @@
                 </argument>
             </arguments>
         </referenceBlock>
+        <referenceBlock name="content">
+            <block
+                class='Pagarme\Pagarme\Block\Payment\Tds'
+                name='pagarme_tds'
+                template="Pagarme_Pagarme::payment/tds.phtml"
+            />
+        </referenceBlock>
     </body>
 </page>

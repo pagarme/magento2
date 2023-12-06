@@ -918,6 +918,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         }
 
         if (!empty($additionalInformation['authentication'])) {
+            $additionalInformation['authentication'] = json_decode($additionalInformation['authentication'], true);
             $authentication = new stdClass();
             $authentication->type = 'threed_secure';
             $authentication->status = $additionalInformation['authentication']['trans_status'];

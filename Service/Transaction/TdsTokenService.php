@@ -18,6 +18,7 @@ class TdsTokenService
     public function getTdsToken($accountId)
     {
         $tdsTokenProxy = new TdsTokenProxy($this->coreAuth);
-        return $tdsTokenProxy->getTdsToken($accountId);
+        $tds = $tdsTokenProxy->getTdsToken($accountId);
+        return $tds->tdsToken;
     }
 }

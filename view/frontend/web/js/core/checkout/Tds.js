@@ -7,7 +7,11 @@ define([
     mageUrl,
     quote
 ) => {
-	return class TdsToken {
+	return class Tds {
+		constructor(formObject){
+			this.formObject = formObject;
+			this.returnData = '';
+		}
 		getToken() {
 			const url = urlBuilder.createUrl("/pagarme/tdstoken", {});
 			return jQuery.ajax({
@@ -18,6 +22,10 @@ define([
 				cache: false,
 			});
 		}
+		callTdsFunction(tdsToken, tdsData, callbackTds) {
+			const challengeWindowSize = '03'
+			Script3ds.init3ds(tdsToken, tdsData, callbackTds, challengeWindowSize);
+		}
 
         getTdsData(acctType) {
             const billingAddress = quote.billingAddress();
@@ -27,7 +35,6 @@ define([
                 billingAddressComplement
             ] = billingAddress.street;
 
-
             const shippingAddress = quote.shippingAddress();
             const [
                 shippingAddressStreet,
@@ -36,15 +43,12 @@ define([
             ] = shippingAddress.street;
 
             const customerData = window.checkoutConfig.customerData;
-            const customerPhones = customerData.addresses.map(function(item) {
-                return {
+            const customerPhones =
+                [{
                     country_code : '55',
-                    subscriber : item.telephone,
+                    subscriber : shippingAddress.telephone,
                     phone_type : 'mobile'
-                }
-            });
-
-            const dateNow = new Date();
+                }];
 
             return {
                 bill_addr : {
@@ -52,8 +56,8 @@ define([
                     number : billingAddressNumber,
                     complement : billingAddressComplement,
                     city : billingAddress.city,
-                    state : `${billingAddress.countryId}-${billingAddress.regionCode}`,
-                    country : billingAddress.countryId,
+                    state : billingAddress.regionCode,
+                    country : 'BRA',
                     post_code : billingAddress.postcode
                 },
                 ship_addr : {
@@ -61,24 +65,18 @@ define([
                     number : shippingAddressNumber,
                     complement : shippingAddressComplement,
                     city : shippingAddress.city,
-                    state : `${shippingAddress.countryId}-${shippingAddress.regionCode}`,
-                    country : shippingAddress.countryId,
+                    state : shippingAddress.regionCode,
+                    country : 'BRA',
                     post_code : shippingAddress.postcode
                 },
                 email : customerData.email,
                 phones : customerPhones,
+                card_expiry_date : '2025-02',
                 purchase : {
                     amount : quote.totals().grand_total * 100,
-                    date : new Date(
-                        Date.UTC(
-                            dateNow.getUTCFullYear(),
-                            dateNow.getUTCMonth(),
-                            dateNow.getUTCDate(),
-                            dateNow.getUTCHours(),
-                            dateNow.getUTCMinutes(),
-                            dateNow.getUTCSeconds(),
-                            dateNow.getUTCMilliseconds()
-                        )).format('yyyymmddhhmmss'),
+                    date : 
+                        new Date().toISOString()
+                    ,
                     instal_data : 2,
                 },
                 acct_type : acctType
