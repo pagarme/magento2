@@ -8,9 +8,12 @@ use Pagarme\Pagarme\Model\CoreAuth;
 class TdsTokenService
 {
 
-    private CoreAuth $coreAuth;
+    /**
+     * @var CoreAuth
+     */
+    private $coreAuth;
     public function __construct(
-        CoreAuth $coreAuth,
+        CoreAuth $coreAuth
     ) {
         $this->coreAuth = $coreAuth;
     }
@@ -19,6 +22,6 @@ class TdsTokenService
     {
         $tdsTokenProxy = new TdsTokenProxy($this->coreAuth);
         $tds = $tdsTokenProxy->getTdsToken($accountId);
-        return $tds->tdsToken;
+        return $tds->tds_token;
     }
 }

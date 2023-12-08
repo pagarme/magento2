@@ -2,23 +2,43 @@
 
 namespace Pagarme\Pagarme\Block\Payment;
 
+use Magento\Framework\View\Element\Template;
+use Pagarme\Pagarme\Gateway\Transaction\Base\Config\Config as PagarmeConfig;
 use Pagarme\Pagarme\Gateway\Transaction\CreditCard\Config\Config as CreditCardConfig;
 use Pagarme\Pagarme\Gateway\Transaction\DebitCard\Config\Config as DebitCardConfig;
 use Magento\Framework\View\Element\Template\Context;
 use Magento\Framework\View\Page\Config;
-// use 
 
-class Tds extends \Magento\Framework\View\Element\Template
+class Tds extends Template
 {
 
-    private DebitCardConfig $debitCardConfig;
-    private CreditCardConfig $creditCardConfig;
-    protected Config $config;
+    /**
+     * @var DebitCardConfig
+     */
+    private $debitCardConfig;
+
+    /**
+     * @var CreditCardConfig
+     */
+    private $creditCardConfig;
+
+    /**
+     * @var Config
+     */
+    protected $config;
+
+    /**
+     * @var PagarmeConfig
+     */
+    private $pagarmeConfig;
+
     /**
      * Constructor
      *
-     * @param \Magento\Framework\View\Element\Template\Context  $context
-     * @param \Magento\Framework\View\Page\Config  $pageConfig
+     * @param Context $context
+     * @param Config $config
+     * @param CreditCardConfig $creditCardConfig
+     * @param DebitCardConfig $debitCardConfig
      * @param array $data
      */
     public function __construct(
@@ -26,23 +46,25 @@ class Tds extends \Magento\Framework\View\Element\Template
         Config $config,
         CreditCardConfig $creditCardConfig,
         DebitCardConfig $debitCardConfig,
+        PagarmeConfig $pagarmeConfig,
         array $data = []
     ) {
-        
+
         $this->config = $config;
         $this->creditCardConfig = $creditCardConfig;
         $this->debitCardConfig = $debitCardConfig;
-        // $this->addJs();
+        $this->pagarmeConfig = $pagarmeConfig;
         parent::__construct($context, $data);
     }
 
-    
-    public function addJs()
+
+    public function getSdkUrl()
     {
-        $url = 'https://auth-3ds-sdx.pagar.me/bundle.js';
-        if ($this->canInitTds()) {
-            $this->config->addRemotePageAsset($url, 'js', [], 'pagarme-tds');
+        $url = 'https://auth-3ds.pagar.me/bundle.js';
+        if ($this->pagarmeConfig->isSandboxMode()) {
+            $url = 'https://auth-3ds-sdx.pagar.me/bundle.js';
         }
+        return $url;
     }
 
     public function canInitTds()

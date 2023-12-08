@@ -1,4 +1,7 @@
 <?php
+/**
+ * @var \Pagarme\Pagarme\Block\Payment\Tds  $this
+ */
     if(!$this->canInitTds()) {
         return;
     }
@@ -13,7 +16,7 @@
     ></iframe>
     </div>
 </div>
-<script src="https://auth-3ds-sdx.pagar.me/bundle.js"></script>
+<script src="<?= $this->getSdkUrl(); ?>"></script>
 <style>
     .challengeIframeElement {
         display: none;
