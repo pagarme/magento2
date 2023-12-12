@@ -35,6 +35,7 @@ define([
                         _self.initTds(tdsToken)
                     },
                     function(error) {
+                        jQuery('body').trigger('processStop');
                         _self.addErrors("Falha ao gerar Token para 3ds, tente novamente.");
                     }
                 )
