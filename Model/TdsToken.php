@@ -9,8 +9,16 @@ use Pagarme\Pagarme\Service\Transaction\TdsTokenService;
 class TdsToken implements TdsTokenInterface
 {
 
-    private PagarmeConfigProvider $pagarmeConfig;
-    private TdsTokenService $tdsTokenService;
+    /**
+     * @var PagarmeConfigProvider
+     */
+    private $pagarmeConfig;
+
+    /**
+     * @var TdsTokenService
+     */
+    private $tdsTokenService;
+
     public function __construct(
         PagarmeConfigProvider $pagarmeConfig,
         TdsTokenService $tdsTokenService
