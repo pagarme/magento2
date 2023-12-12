@@ -25,17 +25,21 @@ define([
             }
 
             const configCard = window.checkoutConfig.payment.pagarme_debit;
-            if(configCard['tds_active'] === true) { // && (BANDEIRA FOR = VISA || MASTERCARD)
-                this.getDebitTdsToken(
-                    function (data) {
-                        const tds = new TdsToken();
-                        tds.getTdsData('03');
+
+            if(configCard['tds_active'] === true && this.brandIsVisaOrMaster()) {
+                const tds = new Tds(this.formObject)
+                tds.addTdsAttributeData();
+                jQuery('body').trigger('processStart');
+                this.getCreditCardTdsToken(
+                    function (tdsToken) {
+                        _self.initTds(tdsToken)
                     },
                     function(error) {
-                        _self.addErrors("Falha ao gerar Token para 3ds, tente novamente."); // Alterar
+                        _self.addErrors("Falha ao gerar Token para 3ds, tente novamente.");
                     }
                 )
 
+                return;
             }
 
             this.getCreditCardToken(
@@ -52,6 +56,10 @@ define([
             this.errors.push({
                 message: error
             })
+        }
+        brandIsVisaOrMaster() {
+            return this.formObject.creditCardBrand.val() === "visa" || 
+                this.formObject.creditCardBrand.val() === "mastercard"
         }
         validate() {
 
@@ -80,6 +88,36 @@ define([
                 .done(success)
                 .fail(error);
         }
+
+
+        callbackTds(data) {
+            const _self = this;
+            const tds = new Tds(this.formObject);
+            jQuery('body').trigger('processStop');
+            if(data?.error != undefined) {
+                tds.showErrors(data, _self);
+                return true;
+            }
+            if(data?.trans_status == '' || data?.trans_status == undefined){
+                return true
+            }
+            
+            this.formObject.authentication = JSON.stringify(data);
+            this.formObject.creditCardNumber.val("4000000000000010"); // @todo: remover na versão final
+            this.getCreditCardToken(
+                function (data) {
+                    _self.formObject.creditCardToken.val(data.id);
+                    _self.placeOrderObject.placeOrder();
+                },
+                function (error) {
+                    tds.removeTdsAttributeData()
+                    _self.addErrors("Cartão inválido. Por favor, verifique os dados digitados e tente novamente");
+                }
+            );
+            return true;
+        }
+
+        
 
         getData() {
             this.saveThiscard = 0;

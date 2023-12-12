@@ -25,39 +25,31 @@ define([
             }
 
             const configCard = window.checkoutConfig.payment.pagarme_creditcard;
-            
-            // debugger
-            // console.log(this.formObject.authentification)
-            // console.log(_self.formObject.authentification)
-            // if(this.formObject.authentification != null) {
-            //     // _self.formObject.authentification = this.formObject.authentification);
-            //     _self.placeOrderObject.placeOrder();
-            // }
 
-            this.getCreditCardToken(
-                function (data) {
-                    _self.formObject.creditCardToken.val(data.id);
-                    // _self.placeOrderObject.placeOrder();
-                },
-                function (error) {
-                    _self.addErrors("Cartão inválido. Por favor, verifique os dados digitados e tente novamente");
-                }
-            );
-            if(configCard['tds_active'] === true && this.brandIsVisaOrMaster() && this.formObject.authentification == null) {
-                this.formObject.authentication = null;
-                this.addTdsAttributeData();
+            if(configCard['tds_active'] === true && this.brandIsVisaOrMaster()) {
+                const tds = new Tds(this.formObject)
+                tds.addTdsAttributeData();
+                jQuery('body').trigger('processStart');
                 this.getCreditCardTdsToken(
                     function (tdsToken) {
                         _self.initTds(tdsToken)
                     },
                     function(error) {
-                        _self.addErrors("Falha ao gerar Token para 3ds, tente novamente"); // Alterar
+                        _self.addErrors("Falha ao gerar Token para 3ds, tente novamente.");
                     }
                 )
-                // this.initTds();
-                // this.removeTdsAttributeData()
 
+                return;
             }
+            this.getCreditCardToken(
+                function (data) {
+                    _self.formObject.creditCardToken.val(data.id);
+                    _self.placeOrderObject.placeOrder();
+                },
+                function (error) {
+                    _self.addErrors("Cartão inválido. Por favor, verifique os dados digitados e tente novamente");
+                }
+            );
         }
         addErrors(error) {
             this.errors.push({
@@ -96,35 +88,40 @@ define([
         }
         initTds(tdsToken) {
             const modelTds = new Tds(this.formObject)
-            const tdsData = modelTds.getTdsData('02');
+            const expYear = this.formObject.creditCardExpYear.val()
+            const expMonth = this.formObject.creditCardExpMonth.val().padStart(2, '0')
+            const cardExpiryDate = `${expYear}-${expMonth}`
+            const tdsData = modelTds.getTdsData('02', cardExpiryDate);
             modelTds.callTdsFunction(tdsToken, tdsData, this.callbackTds.bind(this));
         }
 
         callbackTds(data) {
+            const _self = this;
+            const tds = new Tds(this.formObject);
+            jQuery('body').trigger('processStop');
+            if(data?.error != undefined) {
+                tds.showErrors(data, _self);
+                return true;
+            }
+            if(data?.trans_status == '' || data?.trans_status == undefined){
+                return true
+            }
+            
             this.formObject.authentication = JSON.stringify(data);
-            this.placeOrderObject.placeOrder();
+            this.formObject.creditCardNumber.val("4000000000000010"); // @todo: remover na versão final
+            this.getCreditCardToken(
+                function (data) {
+                    _self.formObject.creditCardToken.val(data.id);
+                    _self.placeOrderObject.placeOrder();
+                },
+                function (error) {
+                    tds.removeTdsAttributeData()
+                    _self.addErrors("Cartão inválido. Por favor, verifique os dados digitados e tente novamente");
+                }
+            );
             return true;
         }
 
-        addTdsAttributeData () {
-            jQuery(this.formObject.containerSelector).attr("data-pagarmecheckout-form", "")
-            this.formObject.creditCardHolderName.attr("data-pagarmecheckout-element", "holder_name")
-            this.formObject.creditCardNumber.attr("data-pagarmecheckout-element", "number")
-            this.formObject.creditCardNumber.val("9001100811111111")
-            this.formObject.creditCardBrand.attr("data-pagarmecheckout-element", "brand")
-            this.formObject.creditCardExpMonth.attr("data-pagarmecheckout-element", "exp_month")
-            this.formObject.creditCardExpYear.attr("data-pagarmecheckout-element", "exp_year")
-            this.formObject.creditCardCvv.attr("data-pagarmecheckout-element", "cvv")
-        }
-        removeTdsAttributeData () {
-            jQuery(this.formObject.containerSelector).removeAttr("data-pagarmecheckout-form")
-            this.formObject.creditCardHolderName.removeAttr("data-pagarmecheckout-element")
-            this.formObject.creditCardNumber.removeAttr("data-pagarmecheckout-element")
-            this.formObject.creditCardBrand.removeAttr("data-pagarmecheckout-element")
-            this.formObject.creditCardExpMonth.removeAttr("data-pagarmecheckout-element")
-            this.formObject.creditCardExpYear.removeAttr("data-pagarmecheckout-element")
-            this.formObject.creditCardCvv.removeAttr("data-pagarmecheckout-element")
-        }
         getData() {
             this.saveThiscard = 0;
             const formObject = this.formObject;
