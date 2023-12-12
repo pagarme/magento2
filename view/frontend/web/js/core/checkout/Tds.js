@@ -41,23 +41,25 @@ define([
             }
         }
         addTdsAttributeData () {
-            jQuery(this.formObject.containerSelector).attr("data-pagarmecheckout-form", "")
-            this.formObject.creditCardHolderName.attr("data-pagarmecheckout-element", "holder_name")
-            this.formObject.creditCardNumber.attr("data-pagarmecheckout-element", "number")
-            this.formObject.creditCardNumber.val("9001100811111111") // @todo: remover na versão final
-            this.formObject.creditCardBrand.attr("data-pagarmecheckout-element", "brand")
-            this.formObject.creditCardExpMonth.attr("data-pagarmecheckout-element", "exp_month")
-            this.formObject.creditCardExpYear.attr("data-pagarmecheckout-element", "exp_year")
-            this.formObject.creditCardCvv.attr("data-pagarmecheckout-element", "cvv")
+            const cardForm = this.formObject;
+            jQuery(cardForm.containerSelector).attr("data-pagarmecheckout-form", "")
+            cardForm.creditCardHolderName.attr("data-pagarmecheckout-element", "holder_name")
+            cardForm.creditCardNumber.attr("data-pagarmecheckout-element", "number")
+            cardForm.creditCardNumber.val("9001100811111111") // @todo: remover na versão final
+            cardForm.creditCardBrand.attr("data-pagarmecheckout-element", "brand")
+            cardForm.creditCardExpMonth.attr("data-pagarmecheckout-element", "exp_month")
+            cardForm.creditCardExpYear.attr("data-pagarmecheckout-element", "exp_year")
+            cardForm.creditCardCvv.attr("data-pagarmecheckout-element", "cvv")
         }
         removeTdsAttributeData () {
-            jQuery(this.formObject.containerSelector).removeAttr("data-pagarmecheckout-form")
-            this.formObject.creditCardHolderName.removeAttr("data-pagarmecheckout-element")
-            this.formObject.creditCardNumber.removeAttr("data-pagarmecheckout-element")
-            this.formObject.creditCardBrand.removeAttr("data-pagarmecheckout-element")
-            this.formObject.creditCardExpMonth.removeAttr("data-pagarmecheckout-element")
-            this.formObject.creditCardExpYear.removeAttr("data-pagarmecheckout-element")
-            this.formObject.creditCardCvv.removeAttr("data-pagarmecheckout-element")
+            const cardForm = this.formObject;
+            jQuery(cardForm.containerSelector).removeAttr("data-pagarmecheckout-form")
+            cardForm.creditCardHolderName.removeAttr("data-pagarmecheckout-element")
+            cardForm.creditCardNumber.removeAttr("data-pagarmecheckout-element")
+            cardForm.creditCardBrand.removeAttr("data-pagarmecheckout-element")
+            cardForm.creditCardExpMonth.removeAttr("data-pagarmecheckout-element")
+            cardForm.creditCardExpYear.removeAttr("data-pagarmecheckout-element")
+            cardForm.creditCardCvv.removeAttr("data-pagarmecheckout-element")
         }
         getTdsData(acctType, cardExpiryDate) {
             const billingAddress = quote.billingAddress();

@@ -99,12 +99,12 @@ define([
             const _self = this;
             const tds = new Tds(this.formObject);
             jQuery('body').trigger('processStop');
-            if(data?.error != undefined) {
+            if(data?.error !== undefined) {
                 tds.showErrors(data, _self);
-                return true;
+                return;
             }
-            if(data?.trans_status == '' || data?.trans_status == undefined){
-                return true
+            if(data?.trans_status === '' || data?.trans_status === undefined){
+                return;
             }
             
             this.formObject.authentication = JSON.stringify(data);
