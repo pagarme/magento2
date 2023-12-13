@@ -7,7 +7,7 @@ define([
     mageUrl,
     quote
 ) => {
-	return class Tds {
+    return class Tds {
         constructor(formObject) {
             this.formObject = formObject;
         }
