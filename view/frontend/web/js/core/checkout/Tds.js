@@ -8,9 +8,10 @@ define([
     quote
 ) => {
 	return class Tds {
-		constructor(formObject){
+		constructor(formObject) {
 			this.formObject = formObject;
 		}
+
 		getToken() {
 			const url = urlBuilder.createUrl("/pagarme/tdstoken", {});
 			return jQuery.ajax({
@@ -21,6 +22,7 @@ define([
 				cache: false,
 			});
 		}
+
 		callTdsFunction(tdsToken, tdsData, callbackTds) {
 			const challengeWindowSize = '03'
 			Script3ds.init3ds(tdsToken, tdsData, callbackTds, challengeWindowSize);
@@ -40,7 +42,8 @@ define([
                 parentObject.addErrors("Ocorreu um problema ao montar o dado de compra.");
             }
         }
-        addTdsAttributeData () {
+
+        addTdsAttributeData() {
             const cardForm = this.formObject;
             jQuery(cardForm.containerSelector).attr("data-pagarmecheckout-form", "")
             cardForm.creditCardHolderName.attr("data-pagarmecheckout-element", "holder_name")
@@ -51,7 +54,8 @@ define([
             cardForm.creditCardExpYear.attr("data-pagarmecheckout-element", "exp_year")
             cardForm.creditCardCvv.attr("data-pagarmecheckout-element", "cvv")
         }
-        removeTdsAttributeData () {
+        
+        removeTdsAttributeData() {
             const cardForm = this.formObject;
             jQuery(cardForm.containerSelector).removeAttr("data-pagarmecheckout-form")
             cardForm.creditCardHolderName.removeAttr("data-pagarmecheckout-element")
@@ -61,6 +65,7 @@ define([
             cardForm.creditCardExpYear.removeAttr("data-pagarmecheckout-element")
             cardForm.creditCardCvv.removeAttr("data-pagarmecheckout-element")
         }
+
         getTdsData(acctType, cardExpiryDate) {
             const billingAddress = quote.billingAddress();
             const [
