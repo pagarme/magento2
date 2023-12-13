@@ -14,6 +14,7 @@ class TdsTokenService
     private $coreAuth;
 
     /**
+
      * @var Config
      */
     private $config;
@@ -31,6 +32,6 @@ class TdsTokenService
         if ($this->config->isSandboxMode()) {
             $environment = 'test';
         }
-        return $tdsTokenProxy->getTdsToken($environment, $accountId);
+        return $tdsTokenProxy->getTdsToken($environment, $accountId)->tdsToken;
     }
 }

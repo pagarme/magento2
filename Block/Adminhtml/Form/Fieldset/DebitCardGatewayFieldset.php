@@ -44,9 +44,9 @@ class DebitCardGatewayFieldset extends Fieldset
      */
     public function render(AbstractElement $element)
     {
-        if (!$this->account->isGateway(PagarmeConfigProvider::DEBIT_PAYMENT_CONFIG)) {
-            return '';
-        }
+        // if (!$this->account->isGateway(PagarmeConfigProvider::DEBIT_PAYMENT_CONFIG)) {
+        //     return '';
+        // }
 
         return parent::render($element);
     }
