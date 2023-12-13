@@ -8,25 +8,25 @@ define([
     quote
 ) => {
 	return class Tds {
-		constructor(formObject) {
-			this.formObject = formObject;
-		}
+        constructor(formObject) {
+            this.formObject = formObject;
+        }
 
-		getToken() {
-			const url = urlBuilder.createUrl("/pagarme/tdstoken", {});
-			return jQuery.ajax({
-				type: "GET",
-				dataType: "json",
-				url: mageUrl.build(url),
-				async: false,
-				cache: false,
-			});
-		}
+        getToken() {
+            const url = urlBuilder.createUrl("/pagarme/tdstoken", {});
+            return jQuery.ajax({
+                type: "GET",
+                dataType: "json",
+                url: mageUrl.build(url),
+                async: false,
+                cache: false,
+            });
+        }
 
-		callTdsFunction(tdsToken, tdsData, callbackTds) {
-			const challengeWindowSize = '03'
-			Script3ds.init3ds(tdsToken, tdsData, callbackTds, challengeWindowSize);
-		}
+        callTdsFunction(tdsToken, tdsData, callbackTds) {
+            const challengeWindowSize = '03'
+            Script3ds.init3ds(tdsToken, tdsData, callbackTds, challengeWindowSize);
+        }
 
         showErrors(errors, parentObject) {
             if(errors.error?.email) {
