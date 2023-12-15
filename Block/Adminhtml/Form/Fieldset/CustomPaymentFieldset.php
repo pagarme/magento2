@@ -7,7 +7,6 @@ use Magento\Backend\Model\Auth\Session;
 use Magento\Config\Block\System\Config\Form\Fieldset;
 use Magento\Framework\Data\Form\Element\AbstractElement;
 use Magento\Framework\View\Helper\Js;
-use Magento\Framework\View\Helper\SecureHtmlRenderer;
 use Pagarme\Pagarme\Model\Account;
 
 class CustomPaymentFieldset extends Fieldset
@@ -29,7 +28,6 @@ class CustomPaymentFieldset extends Fieldset
      * @param Account $account
      * @param string $paymentMethodName
      * @param array $data
-     * @param SecureHtmlRenderer|null $secureRenderer
      */
     public function __construct(
         Context $context,
@@ -37,10 +35,9 @@ class CustomPaymentFieldset extends Fieldset
         Js $jsHelper,
         Account $account,
         string $paymentMethodName = '',
-        array $data = [],
-        ?SecureHtmlRenderer $secureRenderer = null
+        array $data = []
     ) {
-        parent::__construct($context, $authSession, $jsHelper, $data, $secureRenderer);
+        parent::__construct($context, $authSession, $jsHelper, $data);
         $this->account = $account;
         $this->paymentMethodName = $paymentMethodName;
     }

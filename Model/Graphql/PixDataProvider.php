@@ -3,6 +3,13 @@ declare(strict_types=1);
 
 namespace Pagarme\Pagarme\Model\Graphql;
 
+if (!class_exists('\Magento\QuoteGraphQl\Model\Cart\Payment\AdditionalDataProviderInterface')) {
+    class PixDataProvider {
+
+    }
+    return;
+}
+
 use Magento\QuoteGraphQl\Model\Cart\Payment\AdditionalDataProviderInterface;
 
 /**
