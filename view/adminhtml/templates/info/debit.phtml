@@ -1,0 +1,15 @@
+<?php /* @var \Pagarme\Pagarme\Block\Payment\Info\Debit $this */
+$threeDSStatus =  $this->getThreeDSStatus();
+?>
+<?php if ($this->getCardBrand()): ?>
+    <span><?= __($this->getTitle()); ?></span>
+    <br/>
+    <br/>
+    <span><b><?= __('Brand'); ?>: </b><?= $this->getCcBrand(); ?></span>
+    <br/>
+    <span><b><?= __('Number'); ?>: </b><?= $this->getCardLast4(); ?></span>
+    <?php if (!empty($threeDSStatus)): ?>
+        <br/>
+        <span><b><?= __('3DS Status'); ?>: </b><?= __($threeDSStatus); ?></span>
+    <?php endif; ?>
+<?php endif ?>

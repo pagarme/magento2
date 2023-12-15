@@ -56,7 +56,7 @@ class CreditCardDataAssignObserver extends AbstractDataAssignObserver
 
         $multiBuyerDataAssign = new MultiBuyerDataAssign();
         $multiBuyerDataAssign->setCcMultiBuyer($info, $additionalData);
-        
+
         $info->setAdditionalInformation('cc_installments', 1);
 
         if ($additionalData->getCcInstallments()) {
@@ -113,6 +113,7 @@ class CreditCardDataAssignObserver extends AbstractDataAssignObserver
     {
         $info->setAdditionalInformation('cc_saved_card', $additionalData->getCcSavedCard());
         $info->setAdditionalInformation('cc_type', $additionalData->getCcType());
+        $info->setAdditionalInformation('authentication', $additionalData->getAuthentication());
         if ($additionalData->getCcLast4()) {
             $info->setAdditionalInformation(
                 'cc_last_4',

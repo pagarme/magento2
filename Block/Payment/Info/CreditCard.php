@@ -15,10 +15,10 @@ use Exception;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Payment\Block\Info\Cc;
 use Pagarme\Core\Kernel\Aggregates\Charge;
-use Pagarme\Core\Kernel\Aggregates\Order;
 use Pagarme\Core\Kernel\Exceptions\InvalidParamException;
 use Pagarme\Core\Kernel\Services\OrderService;
 use Pagarme\Core\Kernel\ValueObjects\Id\OrderId;
+use Pagarme\Core\Payment\Aggregates\Payments\Authentication\AuthenticationStatusEnum;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Pagarme\Pagarme\Concrete\Magento2PlatformOrderDecorator;
 
@@ -40,14 +40,6 @@ class CreditCard extends Cc
     public function getCcType()
     {
         return $this->getCcTypeName();
-    }
-
-    /**
-     * @return string
-     */
-    public function getCardNumber()
-    {
-        return '**** **** **** ' . $this->getInfo()->getCcLast4();
     }
 
     /**
@@ -82,6 +74,13 @@ class CreditCard extends Cc
         return $this->getInfo()->getAdditionalInformation('cc_installments');
     }
 
+    public function getThreeDSStatus()
+    {
+        return AuthenticationStatusEnum::statusMessage(
+            $this->getInfo()->getAdditionalInformation('authentication')['trans_status'] ?? ''
+        );
+    }
+
     /**
      * @return array
      * @throws InvalidParamException
@@ -109,7 +108,7 @@ class CreditCard extends Cc
         }
 
         $charge = current($orderObject->getCharges());
-        
+
         return array_merge(
             $charge->getAcquirerTidCapturedAndAutorize(),
             ['tid' => $this->getTid($charge)]

@@ -83,5 +83,6 @@
 
 	    <include path="Pagarme_Pagarme::system/transaction/creditcard/installments.xml"/>
 	    <include path="Pagarme_Pagarme::system/transaction/creditcard/antifraud.xml"/>
+	    <include path="Pagarme_Pagarme::system/transaction/creditcard/tds.xml"/>
     </group>
 </include>

@@ -22,18 +22,26 @@ use Pagarme\Core\Kernel\Abstractions\AbstractPlatformOrderDecorator;
 use Pagarme\Core\Kernel\Interfaces\PlatformOrderInterface;
 use Pagarme\Core\Kernel\Services\OrderLogService;
 use Pagarme\Core\Kernel\Services\OrderService;
-use Pagarme\Core\Recurrence\Services\RecurrenceService;
 use Pagarme\Core\Recurrence\Services\SubscriptionService;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
-use Pagarme\Pagarme\Concrete\Magento2PlatformPaymentMethodDecorator;
-use Pagarme\Pagarme\Model\Ui\CreditCard\ConfigProvider;
+use Pagarme\Pagarme\Model\Ui\CreditCard\ConfigProvider as CreditConfigProvider;
 use Pagarme\Pagarme\Model\Ui\TwoCreditCard\ConfigProvider as TwoCreditCardConfigProvider;
 use Magento\Framework\Phrase;
 use Magento\Framework\Webapi\Exception as M2WebApiException;
-use Pagarme\Pagarme\Helper\RecurrenceProductHelper;
+use Pagarme\Pagarme\Service\Transaction\ThreeDSService;
 
 class InitializeCommand implements CommandInterface
 {
+    /**
+     * @var ThreeDSService
+     */
+    protected $threeDSService;
+
+    public function __construct(ThreeDSService $threeDSService)
+    {
+        $this->threeDSService = $threeDSService;
+    }
+
     /**
      * @param array $commandSubject
      * @return $this
@@ -76,12 +84,14 @@ class InitializeCommand implements CommandInterface
 
         $stateObject->setData(OrderInterface::STATE, Order::STATE_PENDING_PAYMENT);
 
-        if ($payment->getMethod() === ConfigProvider::CODE || $payment->getMethod() === TwoCreditCardConfigProvider::CODE) {
+        if ($payment->getMethod() === CreditConfigProvider::CODE
+            || $payment->getMethod() === TwoCreditCardConfigProvider::CODE
+        ) {
             $stateObject->setData(OrderInterface::STATE, $customStatus->getData('state'));
             $stateObject->setData(OrderInterface::STATUS, $customStatus->getData('status'));
         }
 
-        if ($payment->getMethod() != ConfigProvider::CODE) {
+        if ($payment->getMethod() !== CreditConfigProvider::CODE) {
             $stateObject->setData(OrderInterface::STATUS, $payment->getMethodInstance()->getConfigData('order_status'));
         }
 
@@ -138,6 +148,10 @@ class InitializeCommand implements CommandInterface
 
             $subscriptionService = new SubscriptionService();
             $isSubscription = $subscriptionService->isSubscription($orderDecorator);
+
+            if ($this->threeDSService->hasThreeDSAuthorization($payment)) {
+                $this->threeDSService->processDeclinedThreeDsTransaction($payment, $orderDecorator);
+            }
 
             if ($isSubscription) {
                 $subscriptionService->createSubscriptionAtPagarme($orderDecorator);

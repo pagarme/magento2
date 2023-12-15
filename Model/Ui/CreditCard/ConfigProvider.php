@@ -100,6 +100,9 @@ final class ConfigProvider implements ConfigProviderInterface
                     'is_saved_card' => $is_saved_card,
                     'enabled_saved_cards' => $this->getCreditCardConfig()
                             ->getEnabledSavedCards(),
+                    'tds_active' => $this->getCreditCardConfig()->getTdsActive(),
+
+                    'order_with_tds_refused' => $this->getCreditCardConfig()->getOrderWithTdsRefused(),
                     'cards' => $cards,
                     'selected_card' => $selectedCard,
                     'size_credit_card' => '18',

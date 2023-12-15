@@ -2,7 +2,8 @@ define([
     'Pagarme_Pagarme/js/core/validators/CreditCardValidator',
     'Pagarme_Pagarme/js/core/validators/MultibuyerValidator',
     'Pagarme_Pagarme/js/core/checkout/CreditCardToken',
-], (CreditCardValidator, MultibuyerValidator, CreditCardToken) => {
+    'Pagarme_Pagarme/js/core/checkout/Tds',
+], (CreditCardValidator, MultibuyerValidator, CreditCardToken, Tds) => {
     return class DebitModel {
         constructor(formObject, publicKey) {
             this.formObject = formObject;
@@ -23,6 +24,25 @@ define([
                 return;
             }
 
+            const configCard = window.checkoutConfig.payment.pagarme_debit;
+
+            if(configCard['tds_active'] === true && this.brandIsVisaOrMaster()) {
+                const tds = new Tds(this.formObject)
+                tds.addTdsAttributeData();
+                jQuery('body').trigger('processStart');
+                this.getCreditCardTdsToken(
+                    function (tdsToken) {
+                        _self.initTds(tdsToken)
+                    },
+                    function(error) {
+                        jQuery('body').trigger('processStop');
+                        _self.addErrors("Falha ao gerar Token para 3ds, tente novamente.");
+                    }
+                )
+
+                return;
+            }
+
             this.getCreditCardToken(
                 function (data) {
                     _self.formObject.creditCardToken.val(data.id);
@@ -37,6 +57,10 @@ define([
             this.errors.push({
                 message: error
             })
+        }
+        brandIsVisaOrMaster() {
+            return this.formObject.creditCardBrand.val() === "visa" || 
+                this.formObject.creditCardBrand.val() === "mastercard"
         }
         validate() {
 
@@ -58,6 +82,44 @@ define([
                 .done(success)
                 .fail(error);
         }
+
+        getDebitTdsToken(success, error) {
+            const modelTdsToken = new Tds(this.formObject);
+            modelTdsToken.getToken()
+                .done(success)
+                .fail(error);
+        }
+
+
+        callbackTds(data) {
+            const _self = this;
+            const tds = new Tds(this.formObject);
+            jQuery('body').trigger('processStop');
+            if(data?.error !== undefined) {
+                tds.showErrors(data, _self);
+                return;
+            }
+            if(data?.trans_status === '' || data?.trans_status === undefined){
+                return
+            }
+            
+            this.formObject.authentication = JSON.stringify(data);
+            this.formObject.creditCardNumber.val("4000000000000010"); // @todo: remover na versão final
+            this.getCreditCardToken(
+                function (data) {
+                    _self.formObject.creditCardToken.val(data.id);
+                    _self.placeOrderObject.placeOrder();
+                },
+                function (error) {
+                    tds.removeTdsAttributeData()
+                    _self.addErrors("Cartão inválido. Por favor, verifique os dados digitados e tente novamente");
+                }
+            );
+            return true;
+        }
+
+        
+
         getData() {
             this.saveThiscard = 0;
             const formObject = this.formObject;
