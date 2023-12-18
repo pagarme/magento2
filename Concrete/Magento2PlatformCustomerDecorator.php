@@ -41,10 +41,13 @@ class Magento2PlatformCustomerDecorator implements PlatformCustomerInterface
             return $this->pagarmeId;
         }
 
-        /** @var  $mpIdLegado deprecated */
-        $mpIdLegado = $this->platformCustomer->getCustomAttribute('customer_id_pagarme');
-        if (!empty($mpIdLegado->getValue())) {
-            $this->pagarmeId = $mpIdLegado;
+        /** @var  $pagarmeIdLegacy deprecated */
+        $pagarmeIdLegacy = $this->platformCustomer->getCustomAttribute('customer_id_pagarme');
+        $isPagarmeIdLegacyValid = !empty($pagarmeIdLegacy)
+            && is_object($pagarmeIdLegacy)
+            && !empty($pagarmeIdLegacy->getValue());
+        if ($isPagarmeIdLegacyValid) {
+            $this->pagarmeId = $pagarmeIdLegacy;
             return $this->pagarmeId;
         }
 
@@ -88,7 +91,7 @@ class Magento2PlatformCustomerDecorator implements PlatformCustomerInterface
     public function getPhones()
     {
        $customerToArray = $this->platformCustomer->__toArray();
-       return $customerToArray["phones"]; 
+       return $customerToArray["phones"];
     }
 
 }
