@@ -54,7 +54,7 @@ define([
             cardForm.creditCardExpYear.attr("data-pagarmecheckout-element", "exp_year")
             cardForm.creditCardCvv.attr("data-pagarmecheckout-element", "cvv")
         }
-        
+
         removeTdsAttributeData() {
             const cardForm = this.formObject;
             jQuery(cardForm.containerSelector).removeAttr("data-pagarmecheckout-form")
@@ -81,7 +81,11 @@ define([
                 shippingAddressComplement
             ] = shippingAddress.street;
 
-            const customerData = window.checkoutConfig.customerData;
+            let customerEmail = window.checkoutConfig.customerData?.email;
+            if(quote.guestEmail) {
+                customerEmail = quote.guestEmail
+            }
+
             const customerPhones =
                 [{
                     country_code : '55',
@@ -108,12 +112,12 @@ define([
                     country : 'BRA',
                     post_code : shippingAddress.postcode
                 },
-                email : customerData.email,
+                email : customerEmail,
                 phones : customerPhones,
                 card_expiry_date : cardExpiryDate,
                 purchase : {
                     amount : quote.totals().grand_total * 100,
-                    date : 
+                    date :
                         new Date().toISOString()
                     ,
                     instal_data : 2,
