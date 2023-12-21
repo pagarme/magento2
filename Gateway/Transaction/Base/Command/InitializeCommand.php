@@ -31,9 +31,18 @@ use Pagarme\Pagarme\Model\Ui\TwoCreditCard\ConfigProvider as TwoCreditCardConfig
 use Magento\Framework\Phrase;
 use Magento\Framework\Webapi\Exception as M2WebApiException;
 use Pagarme\Pagarme\Helper\RecurrenceProductHelper;
+use Pagarme\Pagarme\Gateway\Transaction\Base\Config\Config;
 
 class InitializeCommand implements CommandInterface
 {
+
+    protected $config;
+
+    public function __construct(
+        Config $config
+    ){
+        $this->config = $config;
+    }
     /**
      * @param array $commandSubject
      * @return $this
@@ -94,7 +103,9 @@ class InitializeCommand implements CommandInterface
     private function doCoreDetour($payment)
     {
         $order =  $payment->getOrder();
-
+        if($this->config->getAlwaysCreateOrder()){
+            $order->save();
+        }
         $log = new OrderLogService();
 
         Magento2CoreSetup::bootstrap();
