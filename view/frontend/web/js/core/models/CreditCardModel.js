@@ -109,7 +109,6 @@ define([
             }
             
             this.formObject.authentication = JSON.stringify(data);
-            this.formObject.creditCardNumber.val("4000000000000010"); // @todo: remover na versão final
             this.getCreditCardToken(
                 function (data) {
                     _self.formObject.creditCardToken.val(data.id);
