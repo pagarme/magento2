@@ -48,7 +48,6 @@ define([
             jQuery(cardForm.containerSelector).attr("data-pagarmecheckout-form", "")
             cardForm.creditCardHolderName.attr("data-pagarmecheckout-element", "holder_name")
             cardForm.creditCardNumber.attr("data-pagarmecheckout-element", "number")
-            cardForm.creditCardNumber.val("9001100811111111") // @todo: remover na versão final
             cardForm.creditCardBrand.attr("data-pagarmecheckout-element", "brand")
             cardForm.creditCardExpMonth.attr("data-pagarmecheckout-element", "exp_month")
             cardForm.creditCardExpYear.attr("data-pagarmecheckout-element", "exp_year")
