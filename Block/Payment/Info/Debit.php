@@ -43,7 +43,12 @@ class Debit extends Cc
 
     public function getThreeDSStatus()
     {
-        $authentication = json_decode($this->getInfo()->getAdditionalInformation('authentication'), true);
+        $authenticationAdditionalInformation = $this->getInfo()->getAdditionalInformation('authentication');
+        if (empty($authenticationAdditionalInformation)) {
+            return ''; 
+        }
+        
+        $authentication = json_decode($authenticationAdditionalInformation, true);
         return AuthenticationStatusEnum::statusMessage(
             $authentication['trans_status'] ?? ''
         );
