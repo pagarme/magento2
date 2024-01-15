@@ -58,15 +58,20 @@ jobs:
     -
       name: Check PHP sintax
       run: find . -name \*.php -exec php -l "{}" \;
-  unit-test:
+  unit-tests:
+    name: Magento 2 Unit Tests
     runs-on: ubuntu-latest
+    env:
+      MAGENTO_MARKETPLACE_USERNAME: ${{ secrets.MAGENTO_KEY }}
+      MAGENTO_MARKETPLACE_PASSWORD: ${{ secrets.MAGENTO_SECRET }}
+      REPOSITORY_URL: https://repo.magento.com/
+      MODULE_NAME: "Pagarme_Pagarme"
+      COMPOSER_NAME: "pagarme/pagarme-magento2-module"
     steps:
-    - uses: actions/checkout@v2
-    - uses: graycoreio/github-actions-magento2/unit-test@main
-      with:
-        php_version: "8.1"
-        # test_command: "./vendor/bin/phpunit  -c ./phpunit.xml"
-        composer_auth: '{"http-basic":{ "repo.magento.com":{"username": "${{ secrets.MAGENTO_KEY }}","password": "${{ secrets.MAGENTO_SECRET }}"}}}'
+      - uses: actions/checkout@v2
+      - uses: extdn/github-actions-m2/magento-unit-tests/8.1@master
+        env:
+          MAGENTO_VERSION: '2.4.4'
   # phpunit:
   #   name: PHP Unit
   #   runs-on: ubuntu-latest
