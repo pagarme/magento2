@@ -65,7 +65,7 @@ jobs:
     - uses: graycoreio/github-actions-magento2/unit-test@main
       with:
         php_version: "8.1"
-        test_command: "./vendor/bin/phpunit  -c ./phpunit.xml"
+        # test_command: "./vendor/bin/phpunit  -c ./phpunit.xml"
         composer_auth: '{"http-basic":{ "repo.magento.com":{"username": "${{ secrets.MAGENTO_KEY }}","password": "${{ secrets.MAGENTO_SECRET }}"}}}'
   # phpunit:
   #   name: PHP Unit
