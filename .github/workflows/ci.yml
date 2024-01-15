@@ -58,26 +58,12 @@ jobs:
     -
       name: Check PHP sintax
       run: find . -name \*.php -exec php -l "{}" \;
-  unit-tests:
-    name: Magento 2 Unit Tests
+  phpunit:
+    name: PHP Unit
     runs-on: ubuntu-latest
-    env:
-      MAGENTO_MARKETPLACE_USERNAME: ${{ secrets.MAGENTO_KEY }}
-      MAGENTO_MARKETPLACE_PASSWORD: ${{ secrets.MAGENTO_SECRET }}
-      REPOSITORY_URL: https://repo.magento.com/
-      MODULE_NAME: "Pagarme_Pagarme"
-      COMPOSER_NAME: "pagarme/pagarme-magento2-module"
     steps:
-      - uses: actions/checkout@v2
-      - uses: extdn/github-actions-m2/magento-unit-tests/8.1@master
-        env:
-          MAGENTO_VERSION: '2.4.4'
-  # phpunit:
-  #   name: PHP Unit
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout project
-  #       uses: actions/checkout@v4
+      - name: Checkout project
+        uses: actions/checkout@v4
 
   #     - name: Install dependencies
   #       uses: php-actions/composer@v6
@@ -93,36 +79,36 @@ jobs:
   #         php_extensions: "xdebug"
   #         coverage_clover: "coverage/clover.xml"
 
-  #     - name: Upload coverage artifact
-  #       uses: actions/upload-artifact@master
-  #       with:
-  #         name: mage-coverage-${{ github.sha }}
-  #         path: coverage/clover.xml
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@master
+        with:
+          name: mage-coverage-${{ github.sha }}
+          path: clover.xml
 
   sonar:
     name: SonarCloud 
     runs-on: ubuntu-latest
-    # needs: phpunit
+    needs: phpunit
     steps:
     -
       name: Checkout
       uses: actions/checkout@v3
       with:
         fetch-depth: 0
-    # - 
-    #   name: Download coverage artifact
-    #   uses: actions/download-artifact@master
-    #   with:
-    #     name: mage-coverage-${{ github.sha }}
-    #     path: coverage
+    - 
+      name: Download coverage artifact
+      uses: actions/download-artifact@master
+      with:
+        name: mage-coverage-${{ github.sha }}
+        path: coverage
     -
       name: Run Sonar
       uses: sonarsource/sonarcloud-github-action@master
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-    # - name: Delete coverage artifact
-    #   uses: geekyeggo/delete-artifact@v4
-    #   with:
-    #     token: ${{ secrets.GITHUB_TOKEN }}
-    #     name: mage-coverage-${{ github.sha }}
+    - name: Delete coverage artifact
+      uses: geekyeggo/delete-artifact@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        name: mage-coverage-${{ github.sha }}

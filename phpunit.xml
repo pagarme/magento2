@@ -15,12 +15,15 @@
     <testsuite name="Pagarme">
         <directory suffix="Test.php">Test/Unit</directory>
     </testsuite>
-    <coverage>
+    <coverage pathCoverage="false">
         <include>
             <directory suffix=".php">./*</directory>
         </include>
         <exclude>
             <directory suffix=".php">./Test/</directory>
         </exclude>
+        <report>
+            <clover outputFile="clover.xml"/>
+        </report>
     </coverage>
 </phpunit>
