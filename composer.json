@@ -22,7 +22,8 @@
         "satooshi/php-coveralls": "^1.0",
         "phpdocumentor/phpdocumentor": "^2.8",
         "magento-ecg/coding-standard":"dev-master",
-        "rregeer/phpunit-coverage-check": "^0.1.3"
+        "rregeer/phpunit-coverage-check": "^0.1.3",
+        "mockery/mockery": "1.3.x-dev"
     },
     "authors":[
         {
