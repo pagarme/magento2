@@ -89,7 +89,7 @@ jobs:
         uses: php-actions/composer@v6
         with:
           php_version: 8.1
-          command: require pagarme/pagarme-magento2-module:dev-${{ github.ref_name }}
+          command: require pagarme/pagarme-magento2-module:dev-${{ github.head_ref }}
           args: "--ignore-platform-reqs"
           working_dir: /app/magento
         env: 
