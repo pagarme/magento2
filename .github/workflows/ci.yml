@@ -64,11 +64,6 @@ jobs:
     steps:
       # - name: Checkout project
       #   uses: actions/checkout@v4
-      
-      - name: Create Auth Magento File
-        uses: php-actions/composer@v6
-        with:
-          command: config -g http-basic.repo.magento.com ${{secrets.MAGENTO_KEY}} ${{secrets.MAGENTO_SECRET}}
         
       - name: Create Folder
         run: ls -la && mkdir magento && cd magento && ls -la
@@ -76,9 +71,10 @@ jobs:
       - name: Install Magento
         uses: php-actions/composer@v6
         with:
-          COMPOSER_AUTH: '"http-basic": { "repo.magento.com": { "username": "${{ secrets.MAGENTO_KEY }}", "password": "${{secrets.MAGENTO_SECRET}}"}}'
           command: "create-project --repository-url=https://repo.magento.com/ magento/project-community-edition:2.4.5 magento"
-
+        env: 
+          COMPOSER_AUTH: '"http-basic": { "repo.magento.com": { "username": "${{ secrets.MAGENTO_KEY }}", "password": "${{secrets.MAGENTO_SECRET}}"}}'
+      
       - name: Change minimum stable to Dev
         uses: php-actions/composer@v6
         with:
@@ -90,12 +86,16 @@ jobs:
         with:
           command: require pagarme/pagarme-magento2-module:dev-${{ github.ref_name }}
           working_dir: app/magento
+        env: 
+          COMPOSER_AUTH: '"http-basic": { "repo.magento.com": { "username": "${{ secrets.MAGENTO_KEY }}", "password": "${{secrets.MAGENTO_SECRET}}"}}'
       
       - name: Download Mockery
         uses: php-actions/composer@v6
         with:
           command: require mockery/mockery
           working_dir: app/magento
+        env:
+          COMPOSER_AUTH: '"http-basic": { "repo.magento.com": { "username": "${{ secrets.MAGENTO_KEY }}", "password": "${{secrets.MAGENTO_SECRET}}"}}'
       
       - name: Run PHP Unit Tests
         run: ./vendor/bin/phpunit -c vendor/pagarme/pagarme-magento2-module/phpunit.xml
