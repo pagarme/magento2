@@ -62,11 +62,38 @@ jobs:
     name: PHP Unit
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout project
-        uses: actions/checkout@v4
+      # - name: Checkout project
+      #   uses: actions/checkout@v4
 
-  #     - name: Install dependencies
-  #       uses: php-actions/composer@v6
+      - name: Install Magento
+        uses: php-actions/composer@v6
+        with:
+          command: config -g http-basic.${{secrets.MARKETPLACE_REPO_URL}} ${{secrets.MARKETPLACE_KEY}} ${{secrets.MARKETPLACE_SECRET}}
+      
+      - name: Install Magento
+        uses: php-actions/composer@v6
+        with:
+          command: "create-project --repository-url=https://repo.magento.com/ magento/project-community-edition:2.4.5 ."
+      
+      - name: Change minimum stable to Dev
+        uses: php-actions/composer@v6
+        with:
+          command: "config minimum-stability dev"
+
+      - name: Download Module
+        uses: php-actions/composer@v6
+        with:
+          command: require pagarme/pagarme-magento2-module:dev-${{ github.ref_name }}
+      
+      - name: Download Mockery
+        uses: php-actions/composer@v6
+        with:
+          command: require mockery/mockery
+      
+      - name: Run PHP Unit Tests
+        run: ./vendor/bin/phpunit -c vendor/pagarme/pagarme-magento2-module/phpunit.xml
+
+
 
   #     - name: Unit tests
   #       uses: php-actions/phpunit@v3
@@ -83,7 +110,7 @@ jobs:
         uses: actions/upload-artifact@master
         with:
           name: mage-coverage-${{ github.sha }}
-          path: clover.xml
+          path: vendor/pagarme/pagarme-magento2-module/clover.xml
 
   sonar:
     name: SonarCloud 
