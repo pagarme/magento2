@@ -76,26 +76,25 @@ jobs:
       - name: Install Magento
         uses: php-actions/composer@v6
         with:
-          command: "create-project --repository-url=https://repo.magento.com/ magento/project-community-edition:2.4.5 ."
-          container_workdir: app/magento
+          command: "create-project --repository-url=https://repo.magento.com/ magento/project-community-edition:2.4.5 magento"
 
       - name: Change minimum stable to Dev
         uses: php-actions/composer@v6
         with:
           command: "config minimum-stability dev"
-          container_workdir: app/magento
+          working_dir: app/magento
 
       - name: Download Module
         uses: php-actions/composer@v6
         with:
           command: require pagarme/pagarme-magento2-module:dev-${{ github.ref_name }}
-          container_workdir: app/magento
+          working_dir: app/magento
       
       - name: Download Mockery
         uses: php-actions/composer@v6
         with:
           command: require mockery/mockery
-          container_workdir: app/magento
+          working_dir: app/magento
       
       - name: Run PHP Unit Tests
         run: ./vendor/bin/phpunit -c vendor/pagarme/pagarme-magento2-module/phpunit.xml
