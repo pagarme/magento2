@@ -60,6 +60,5 @@
                 <field id="active">1</field>
             </depends>
 	    </field>
-        <include path="Pagarme_Pagarme::system/transaction/debitcard/tds.xml"/>
     </group>
 </include>
