@@ -68,7 +68,7 @@ jobs:
       - name: Install Magento
         uses: php-actions/composer@v6
         with:
-          command: config -g http-basic.${{secrets.MARKETPLACE_REPO_URL}} ${{secrets.MARKETPLACE_KEY}} ${{secrets.MARKETPLACE_SECRET}}
+          command: config -g http-basic.repo.magento.com ${{secrets.MAGENTO_KEY}} ${{secrets.MAGENTO_SECRET}}
         
       - name: Create Folder
         run: mkdir magento && cd magento
