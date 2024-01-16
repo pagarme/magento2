@@ -71,20 +71,25 @@ jobs:
       - name: Install Magento
         uses: php-actions/composer@v6
         with:
+          php_version: 8.1
           command: "create-project --repository-url=https://repo.magento.com/ magento/project-community-edition:2.4.5 magento"
+          args: "--ignore-platform-reqs"
         env: 
           COMPOSER_AUTH: '{"http-basic": { "repo.magento.com": { "username": "${{ secrets.MAGENTO_KEY }}", "password": "${{secrets.MAGENTO_SECRET}}"}}}'
       
       - name: Change minimum stable to Dev
         uses: php-actions/composer@v6
         with:
+          php_version: 8.1
           command: "config minimum-stability dev"
           working_dir: app/magento
 
       - name: Download Module
         uses: php-actions/composer@v6
         with:
+          php_version: 8.1
           command: require pagarme/pagarme-magento2-module:dev-${{ github.ref_name }}
+          args: "--ignore-platform-reqs"
           working_dir: app/magento
         env: 
           COMPOSER_AUTH: '{"http-basic": { "repo.magento.com": { "username": "${{ secrets.MAGENTO_KEY }}", "password": "${{secrets.MAGENTO_SECRET}}"}}}'
@@ -92,7 +97,9 @@ jobs:
       - name: Download Mockery
         uses: php-actions/composer@v6
         with:
+          php_version: 8.1
           command: require mockery/mockery
+          args: "--ignore-platform-reqs"
           working_dir: app/magento
         env:
           COMPOSER_AUTH: '{"http-basic": { "repo.magento.com": { "username": "${{ secrets.MAGENTO_KEY }}", "password": "${{secrets.MAGENTO_SECRET}}"}}}'
