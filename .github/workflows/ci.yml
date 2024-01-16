@@ -62,9 +62,6 @@ jobs:
     name: PHP Unit
     runs-on: ubuntu-latest
     steps:
-      # - name: Checkout project
-      #   uses: actions/checkout@v4
-        
       - name: Create Folder
         run: ls -la && mkdir magento && cd magento && ls -la
 
@@ -117,6 +114,7 @@ jobs:
         env:
           XDEBUG_MODE: coverage
         with:
+          vendored_phpunit_path: /app/magento/vendor/bin/phpunit
           configuration: "/app/magento/vendor/pagarme/pagarme-magento2-module/phpunit.xml"
           version: 9.5.28
           php_version : 8.1
