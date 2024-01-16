@@ -71,11 +71,12 @@ jobs:
           command: config -g http-basic.repo.magento.com ${{secrets.MAGENTO_KEY}} ${{secrets.MAGENTO_SECRET}}
         
       - name: Create Folder
-        run: ls -la && mkdir magento && cd magento && ls - la
-      
+        run: ls -la && mkdir magento && cd magento && ls -la
+
       - name: Install Magento
         uses: php-actions/composer@v6
         with:
+          COMPOSER_AUTH: '"http-basic": { "repo.magento.com": { "username": "${{ secrets.MAGENTO_KEY }}", "password": "${{secrets.MAGENTO_SECRET}}"}}'
           command: "create-project --repository-url=https://repo.magento.com/ magento/project-community-edition:2.4.5 magento"
 
       - name: Change minimum stable to Dev
