@@ -71,7 +71,7 @@ jobs:
           command: config -g http-basic.repo.magento.com ${{secrets.MAGENTO_KEY}} ${{secrets.MAGENTO_SECRET}}
         
       - name: Create Folder
-        run: la -la && mkdir magento && cd magento && ls - la
+        run: ls -la && mkdir magento && cd magento && ls - la
       
       - name: Install Magento
         uses: php-actions/composer@v6
