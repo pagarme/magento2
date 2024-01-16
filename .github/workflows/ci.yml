@@ -64,11 +64,14 @@ jobs:
     steps:
       # - name: Checkout project
       #   uses: actions/checkout@v4
-
+      
       - name: Install Magento
         uses: php-actions/composer@v6
         with:
           command: config -g http-basic.${{secrets.MARKETPLACE_REPO_URL}} ${{secrets.MARKETPLACE_KEY}} ${{secrets.MARKETPLACE_SECRET}}
+        
+      - name: Create Folder
+        run: mkdir magento && cd magento
       
       - name: Install Magento
         uses: php-actions/composer@v6
@@ -92,8 +95,6 @@ jobs:
       
       - name: Run PHP Unit Tests
         run: ./vendor/bin/phpunit -c vendor/pagarme/pagarme-magento2-module/phpunit.xml
-
-
 
   #     - name: Unit tests
   #       uses: php-actions/phpunit@v3
