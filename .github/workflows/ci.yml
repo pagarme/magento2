@@ -113,8 +113,7 @@ jobs:
         env:
           XDEBUG_MODE: coverage
         with:
-          working_dir: /app/magento
-          configuration: "vendor/pagarme/pagarme-magento2-module/phpunit.xml"
+          configuration: "/app/magento/vendor/pagarme/pagarme-magento2-module/phpunit.xml"
           version: 9.5.28
           php_version : 8.1
           php_extensions: "xdebug"
