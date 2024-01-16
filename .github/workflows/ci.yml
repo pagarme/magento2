@@ -114,7 +114,7 @@ jobs:
         env:
           XDEBUG_MODE: coverage
         with:
-          vendored_phpunit_path: /app/magento/vendor/bin/phpunit
+          bootstrap: "/app/magento/vendor/autoload.php"
           configuration: "/app/magento/vendor/pagarme/pagarme-magento2-module/phpunit.xml"
           version: 9.5.28
           php_version : 8.1
