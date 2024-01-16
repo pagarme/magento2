@@ -11,53 +11,53 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # check_php7_sintax:
-  #   name: Check Sintaxe PHP v-7.1
-  #   runs-on: ubuntu-latest
-  #   container:
-  #     image: php:7.1-apache
-  #   steps:
-  #   - 
-  #     name: Checkout
-  #     uses: actions/checkout@v3
-  #   -
-  #     name: install system packages
-  #     run: apt-get update && apt-get -y install zip git zlib1g-dev wget
-  #   -
-  #     name: Install PHP extensions
-  #     run: |
-  #       docker-php-ext-install pdo
-  #       docker-php-ext-install zip
-  #   -
-  #     name: Display PHP Information
-  #     run: php -v
-  #   -
-  #     name: Check PHP sintax
-  #     run: find . -name \*.php -exec php -l "{}" \;
+  check_php7_sintax:
+    name: Check Sintaxe PHP v-7.1
+    runs-on: ubuntu-latest
+    container:
+      image: php:7.1-apache
+    steps:
+    - 
+      name: Checkout
+      uses: actions/checkout@v3
+    -
+      name: install system packages
+      run: apt-get update && apt-get -y install zip git zlib1g-dev wget
+    -
+      name: Install PHP extensions
+      run: |
+        docker-php-ext-install pdo
+        docker-php-ext-install zip
+    -
+      name: Display PHP Information
+      run: php -v
+    -
+      name: Check PHP sintax
+      run: find . -name \*.php -exec php -l "{}" \;
 
-  # check_php8_sintax:
-  #   name: Check Sintaxe PHP v-8.1
-  #   runs-on: ubuntu-latest
-  #   container:
-  #     image: php:8.1.0alpha3-apache
-  #   steps:
-  #   - 
-  #     name: Checkout
-  #     uses: actions/checkout@v3  
-  #   -
-  #     name: install system packages
-  #     run: apt-get update && apt-get -y install libzip-dev
-  #   -
-  #     name: Install PHP extensions
-  #     run: |
-  #       docker-php-ext-install zip
-  #       docker-php-ext-install pdo
-  #   -
-  #     name: Display PHP Information
-  #     run: php -v
-  #   -
-  #     name: Check PHP sintax
-  #     run: find . -name \*.php -exec php -l "{}" \;
+  check_php8_sintax:
+    name: Check Sintaxe PHP v-8.1
+    runs-on: ubuntu-latest
+    container:
+      image: php:8.1.0alpha3-apache
+    steps:
+    - 
+      name: Checkout
+      uses: actions/checkout@v3  
+    -
+      name: install system packages
+      run: apt-get update && apt-get -y install libzip-dev
+    -
+      name: Install PHP extensions
+      run: |
+        docker-php-ext-install zip
+        docker-php-ext-install pdo
+    -
+      name: Display PHP Information
+      run: php -v
+    -
+      name: Check PHP sintax
+      run: find . -name \*.php -exec php -l "{}" \;
   phpunit:
     name: PHP Unit
     runs-on: ubuntu-latest
@@ -102,13 +102,6 @@ jobs:
         env:
           COMPOSER_AUTH: '{"http-basic": { "repo.magento.com": { "username": "${{ secrets.MAGENTO_KEY }}", "password": "${{secrets.MAGENTO_SECRET}}"}}}'
       
-      - name: Download Mockery
-        uses: php-actions/composer@v6
-        with:
-          php_version: 8.1
-          command: dump-autoload
-          working_dir: /app/magento
-
       - name: Run PHP Unit Tests
         uses: php-actions/phpunit@v3
         env:
@@ -119,7 +112,7 @@ jobs:
           version: 9.5.28
           php_version : 8.1
           php_extensions: "xdebug"
-          
+
       - name: Upload coverage artifact 
         uses: actions/upload-artifact@master
         with:
