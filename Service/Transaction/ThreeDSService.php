@@ -127,6 +127,7 @@ class ThreeDSService
     private function getThreeDsTransaction(Payment $payment)
     {
         $additionalInformation = $payment->getAdditionalInformation();
-        return $additionalInformation['authentication']['trans_status'] ?? '';
+        $authentication = json_decode($additionalInformation['authentication'], true);
+        return $authentication['trans_status'] ?? '';
     }
 }
