@@ -119,14 +119,12 @@ jobs:
           version: 9.5.28
           php_version : 8.1
           php_extensions: "xdebug"
-
-      - name: List dir
-        run: ls -la && ls -la magento/vendor/pagarme/pagarme-magento2-module/
+          
       - name: Upload coverage artifact 
         uses: actions/upload-artifact@master
         with:
           name: mage-coverage-${{ github.sha }}
-          path: /app/magento/vendor/pagarme/pagarme-magento2-module/clover.xml
+          path: magento/vendor/pagarme/pagarme-magento2-module/clover.xml
 
   sonar:
     name: SonarCloud 
