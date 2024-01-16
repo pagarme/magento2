@@ -105,18 +105,19 @@ jobs:
         env:
           COMPOSER_AUTH: '{"http-basic": { "repo.magento.com": { "username": "${{ secrets.MAGENTO_KEY }}", "password": "${{secrets.MAGENTO_SECRET}}"}}}'
       
-      - name: Run PHP Unit Tests
-        run: /app/magento/vendor/bin/phpunit -c /app/magento/vendor/pagarme/pagarme-magento2-module/phpunit.xml
+      # - name: Run PHP Unit Tests
+      #   run: /app/magento/vendor/bin/phpunit -c /app/magento/vendor/pagarme/pagarme-magento2-module/phpunit.xml
 
-      # - name: Unit tests
-      #   uses: php-actions/phpunit@v3
-      #   env:
-      #     XDEBUG_MODE: coverage
-      #   with:
-      #     configuration: "vendor/pagarme/pagarme-magento2-module/phpunit.xml"
-      #     version: 9.5.28
-      #     php_version : 8.1
-      #     php_extensions: "xdebug"
+      - name: Run PHP Unit Tests
+        uses: php-actions/phpunit@v3
+        env:
+          XDEBUG_MODE: coverage
+        with:
+          working_dir: /app/magento
+          configuration: "vendor/pagarme/pagarme-magento2-module/phpunit.xml"
+          version: 9.5.28
+          php_version : 8.1
+          php_extensions: "xdebug"
 
       - name: Upload coverage artifact
         uses: actions/upload-artifact@master
