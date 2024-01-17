@@ -21,7 +21,6 @@ class ThreeDSServiceTest extends BaseTest
     protected function setUp() : void
     {
         $this->paymentMock = Mockery::mock('Magento\Sales\Model\Order\Payment');
-        $this->debitConfigMock = Mockery::mock('Pagarme\Pagarme\Gateway\Transaction\DebitCard\Config\Config');
         $this->creditConfigMock = Mockery::mock('Pagarme\Pagarme\Gateway\Transaction\CreditCard\Config\Config');
         $this->mpSetupMock = Mockery::mock('alias:Pagarme\Core\Kernel\Abstractions\AbstractModuleCoreSetup');
         $this->platformOrderMock = Mockery::mock('Pagarme\Pagarme\Concrete\Magento2PlatformOrderDecorator');
@@ -29,16 +28,16 @@ class ThreeDSServiceTest extends BaseTest
 
     public function testIfHasThreeDSAuthorization()
     {
-        $tdsService = new ThreeDSService($this->creditConfigMock, $this->debitConfigMock);
+        $tdsService = new ThreeDSService($this->creditConfigMock);
         $paymentMock = $this->paymentMock;
-        $paymentMock->shouldReceive('getAdditionalInformation')->andReturn(['authentication' => "{}"]);
+        $paymentMock->shouldReceive('getAdditionalInformation')->andReturn(['authentication' => '{"trans_status":"N", "cc_type":"visa"}']);
         $hasAuth = $tdsService->hasThreeDSAuthorization($paymentMock);
         $this->assertNotFalse($hasAuth);
     }
 
     public function testIfNotHaveThreeDSAuthorization()
     {
-        $tdsService = new ThreeDSService($this->creditConfigMock, $this->debitConfigMock);
+        $tdsService = new ThreeDSService($this->creditConfigMock);
         $paymentMock = $this->paymentMock;
         $paymentMock->shouldReceive('getAdditionalInformation')->andReturn(true);   
         $hasAuth = $tdsService->hasThreeDSAuthorization($paymentMock);
@@ -64,25 +63,25 @@ class ThreeDSServiceTest extends BaseTest
         $paymentMock = $this->paymentMock;
         $paymentMock->shouldReceive('getStatus')->andReturn('N');
         $paymentMock->shouldReceive('getMethod')->andReturn(CreditCardConfigProvider::CODE);
-        $paymentMock->shouldReceive('getAdditionalInformation')->andReturn(['authentication' => ['trans_status'=>'N', 'cc_type'=>'visa']]);
+        $paymentMock->shouldReceive('getAdditionalInformation')->andReturn(['authentication' => '{"trans_status":"N", "cc_type":"visa"}']);
         
         $this->creditConfigMock->shouldReceive('getOrderWithTdsRefused')->andReturn(false);
 
-        $tdsService = new ThreeDSService($this->creditConfigMock, $this->debitConfigMock);
+        $tdsService = new ThreeDSService($this->creditConfigMock);
         $tdsService->processDeclinedThreeDsTransaction($paymentMock, $platformOrderMock);  
     }
 
     public function testProcessDeclinedThreeDsTransactionButIsNotTdsPayment()
-    {   
+    {
         $platformOrderMock = $this->platformOrderMock;
         
         $paymentMock = $this->paymentMock;
         $paymentMock->shouldReceive('getMethod')->andReturn(CreditCardConfigProvider::CODE);
-        $paymentMock->shouldReceive('getAdditionalInformation')->andReturn("{}");
+        $paymentMock->shouldReceive('getAdditionalInformation')->andReturn(['authentication' => ""]);
 
         $this->creditConfigMock->shouldReceive('getOrderWithTdsRefused')->andReturn(false);
         
-        $tdsService = new ThreeDSService($this->creditConfigMock, $this->debitConfigMock);
+        $tdsService = new ThreeDSService($this->creditConfigMock);
         $emptyReturn = $tdsService->processDeclinedThreeDsTransaction($paymentMock, $platformOrderMock);  
         $this->assertEmpty($emptyReturn);
     }
@@ -100,11 +99,11 @@ class ThreeDSServiceTest extends BaseTest
         $paymentMock = $this->paymentMock;
         $paymentMock->shouldReceive('getStatus')->andReturn('Y');
         $paymentMock->shouldReceive('getMethod')->andReturn(CreditCardConfigProvider::CODE);
-        $paymentMock->shouldReceive('getAdditionalInformation')->andReturn(['authentication' => ['trans_status'=>'Y', 'cc_type'=>'visa']]);
+        $paymentMock->shouldReceive('getAdditionalInformation')->andReturn(['authentication' => '{"trans_status":"Y", "cc_type":"visa"}']);
 
         $this->creditConfigMock->shouldReceive('getOrderWithTdsRefused')->andReturn(false);
         
-        $tdsService = new ThreeDSService($this->creditConfigMock, $this->debitConfigMock);
+        $tdsService = new ThreeDSService($this->creditConfigMock);
         $tdsService->processDeclinedThreeDsTransaction($paymentMock, $platformOrderMock);
     }
 }
