@@ -22,19 +22,13 @@ class ThreeDSService
      * @var CreditCardConfig
      */
     protected $creditCardConfig;
-    /**
-     * @var DebitCardConfig
-     */
-    protected $debitCardConfig;
 
     /**
      * @param CreditCardConfig $creditCardConfig
-     * @param DebitCardConfig $debitCardConfig
      */
-    public function __construct(CreditCardConfig $creditCardConfig, DebitCardConfig $debitCardConfig)
+    public function __construct(CreditCardConfig $creditCardConfig)
     {
         $this->creditCardConfig = $creditCardConfig;
-        $this->debitCardConfig = $debitCardConfig;
     }
 
     /**
@@ -97,8 +91,7 @@ class ThreeDSService
     private function isNotThreeDsPayment(Payment $payment)
     {
         $status = $this->getThreeDsTransaction($payment);
-        return ($payment->getMethod() !== CreditConfigProvider::CODE
-                && $payment->getMethod() !== DebitConfigProvider::CODE)
+        return ($payment->getMethod() !== CreditConfigProvider::CODE)
             || empty($status);
     }
 
@@ -123,10 +116,8 @@ class ThreeDSService
      */
     private function isOrderWithTdsRefusedDisabled(Payment $payment)
     {
-        return ($payment->getMethod() === CreditConfigProvider::CODE
-                && !$this->creditCardConfig->getOrderWithTdsRefused())
-            || ($payment->getMethod() === DebitConfigProvider::CODE
-                && !$this->debitCardConfig->getOrderWithTdsRefused());
+        return $payment->getMethod() === CreditConfigProvider::CODE
+                && !$this->creditCardConfig->getOrderWithTdsRefused();
     }
 
     /**
@@ -136,6 +127,7 @@ class ThreeDSService
     private function getThreeDsTransaction(Payment $payment)
     {
         $additionalInformation = $payment->getAdditionalInformation();
-        return $additionalInformation['authentication']['trans_status'] ?? '';
+        $authentication = json_decode($additionalInformation['authentication'], true);
+        return $authentication['trans_status'] ?? '';
     }
 }

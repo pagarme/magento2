@@ -11,10 +11,10 @@
 
 namespace Pagarme\Pagarme\Gateway\Transaction\DebitCard\Config;
 
-use Pagarme\Pagarme\Gateway\Transaction\Base\Config\TdsConfigInterface;
+
 use Pagarme\Pagarme\Gateway\Transaction\Base\Config\AbstractConfig;
 
-class Config extends AbstractConfig implements ConfigInterface, TdsConfigInterface
+class Config extends AbstractConfig implements ConfigInterface
 {
     /**
      * {@inheritdoc}
@@ -43,22 +43,6 @@ class Config extends AbstractConfig implements ConfigInterface, TdsConfigInterfa
         }
 
         return $title;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getTdsActive()
-    {
-        return (bool) $this->getConfig(static::PATH_TDS_ACTIVE);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getOrderWithTdsRefused()
-    {
-        return (bool) $this->getConfig(static::PATH_ORDER_WITH_TDS_REFUSED);
     }
     
     /**
