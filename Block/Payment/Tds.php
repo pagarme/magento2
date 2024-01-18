@@ -5,17 +5,13 @@ namespace Pagarme\Pagarme\Block\Payment;
 use Magento\Framework\View\Element\Template;
 use Pagarme\Pagarme\Gateway\Transaction\Base\Config\Config as PagarmeConfig;
 use Pagarme\Pagarme\Gateway\Transaction\CreditCard\Config\Config as CreditCardConfig;
-use Pagarme\Pagarme\Gateway\Transaction\DebitCard\Config\Config as DebitCardConfig;
 use Magento\Framework\View\Element\Template\Context;
 use Magento\Framework\View\Page\Config;
 
 class Tds extends Template
 {
 
-    /**
-     * @var DebitCardConfig
-     */
-    private $debitCardConfig;
+
 
     /**
      * @var CreditCardConfig
@@ -45,14 +41,12 @@ class Tds extends Template
         Context $context,
         Config $config,
         CreditCardConfig $creditCardConfig,
-        DebitCardConfig $debitCardConfig,
         PagarmeConfig $pagarmeConfig,
         array $data = []
     ) {
 
         $this->config = $config;
         $this->creditCardConfig = $creditCardConfig;
-        $this->debitCardConfig = $debitCardConfig;
         $this->pagarmeConfig = $pagarmeConfig;
         parent::__construct($context, $data);
     }
@@ -69,6 +63,6 @@ class Tds extends Template
 
     public function canInitTds()
     {
-        return $this->creditCardConfig->getTdsActive() || $this->debitCardConfig->getTdsActive();
+        return $this->creditCardConfig->getTdsActive();
     }
 }
