@@ -121,7 +121,7 @@
                class="input-text cvv cc_cid"
                name="payment[cc_cid]"
                value=""
-               onKeyPress="if(this.value.length==4) return false;"
+               oninput="this.value = this.value.replace(/[^0-9]/g, ''); if (this.value.length > 4) this.value = this.value.slice(0, 4);"
                min="0"
                 />
         <div class="field-tooltip toggle">
