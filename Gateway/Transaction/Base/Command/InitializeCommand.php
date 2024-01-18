@@ -28,10 +28,20 @@ use Pagarme\Pagarme\Model\Ui\CreditCard\ConfigProvider as CreditConfigProvider;
 use Pagarme\Pagarme\Model\Ui\TwoCreditCard\ConfigProvider as TwoCreditCardConfigProvider;
 use Magento\Framework\Phrase;
 use Magento\Framework\Webapi\Exception as M2WebApiException;
+use Pagarme\Pagarme\Helper\RecurrenceProductHelper;
+use Pagarme\Pagarme\Gateway\Transaction\Base\Config\Config;
 use Pagarme\Pagarme\Service\Transaction\ThreeDSService;
 
 class InitializeCommand implements CommandInterface
 {
+
+    protected $config;
+
+    public function __construct(
+        Config $config
+    ){
+        $this->config = $config;
+    }
     /**
      * @var ThreeDSService
      */
@@ -104,7 +114,9 @@ class InitializeCommand implements CommandInterface
     private function doCoreDetour($payment)
     {
         $order =  $payment->getOrder();
-
+        if($this->config->getAlwaysCreateOrder()){
+            $order->save();
+        }
         $log = new OrderLogService();
 
         Magento2CoreSetup::bootstrap();

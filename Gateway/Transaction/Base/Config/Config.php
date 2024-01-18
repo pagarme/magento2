@@ -45,7 +45,14 @@ class Config extends AbstractConfig implements ConfigInterface
 
         return $this->getConfig(static::PATH_PUBLIC_KEY);
     }
-
+    /**
+     * @return string
+     */
+    public function getAlwaysCreateOrder()
+    {
+        return $this->getConfig('pagarme_pagarme/global/create_order');
+    }
+    
     /**
      * @return bool
      */
