@@ -19,10 +19,6 @@ interface ConfigInterface
     const PATH_PAYMENT_ACTION               = 'payment/pagarme_billet_creditcard/payment_action';
     const PATH_ANTIFRAUD_ACTIVE             = 'payment/pagarme_billet_creditcard/antifraud_active';
     const PATH_ANTIFRAUD_MIN_AMOUNT         = 'payment/pagarme_billet_creditcard/antifraud_min_amount';
-    const PATH_CUSTOMER_STREET              = 'payment/pagarme_customer_address/street_attribute';
-    const PATH_CUSTOMER_NUMBER              = 'payment/pagarme_customer_address/number_attribute';
-    const PATH_CUSTOMER_COMPLEMENT          = 'payment/pagarme_customer_address/complement_attribute';
-    const PATH_CUSTOMER_DISTRICT            = 'payment/pagarme_customer_address/district_attribute';
     const PATH_TITLE                        = 'payment/pagarme_billet_creditcard/title';
 
     /**
@@ -49,26 +45,6 @@ interface ConfigInterface
      * @return string
      */
     public function getAntifraudMinAmount();
-
-    /**
-     * @return string
-     */
-    public function getCustomerStreetAttribute();
-
-    /**
-     * @return string
-     */
-    public function getCustomerAddressNumber();
-
-    /**
-     * @return string
-     */
-    public function getCustomerAddressComplement();
-
-    /**
-     * @return string
-     */
-    public function getCustomerAddressDistrict();
 
     /**
      * @return string

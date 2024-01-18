@@ -11,6 +11,7 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="checkout" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
         <css src="Pagarme_Pagarme/css/pagarme_style.css" />
+        <css src="Pagarme_Pagarme/css/pagarme_tds.css" />
     </head>
     <body>
         <referenceBlock name="checkout.root">
@@ -68,6 +69,13 @@
                     </item>
                 </argument>
             </arguments>
+        </referenceBlock>
+        <referenceBlock name="content">
+            <block
+                class='Pagarme\Pagarme\Block\Payment\Tds'
+                name='pagarme_tds'
+                template="Pagarme_Pagarme::payment/tds.phtml"
+            />
         </referenceBlock>
     </body>
 </page>

@@ -146,4 +146,17 @@ class Config extends AbstractConfig implements ConfigInterface
             'streetLinesNumber' => $this->getConfig(static::PATH_CUSTOMER_ADDRESS_LINES) ?? '',
         ];
     }
+
+    /**
+     * @return array
+     */
+    public function getPagarmeCustomerAddressConfigs()
+    {
+        return [
+            'street' => $this->getConfig(static::PATH_CUSTOMER_ADDRESS_STREET) ?? '',
+            'number' => $this->getConfig(static::PATH_CUSTOMER_ADDRESS_NUMBER) ?? '',
+            'complement' => $this->getConfig(static::PATH_CUSTOMER_ADDRESS_COMPLEMENT) ?? '',
+            'neighborhood' => $this->getConfig(static::PATH_CUSTOMER_ADDRESS_NEIGHBOURHOOD) ?? '',
+        ];
+    }
 }

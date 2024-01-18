@@ -36,6 +36,15 @@
         </resources>
     </route>
 
+    <route url="/V1/pagarme/tdstoken" method="GET">
+        <service
+                class="Pagarme\Pagarme\Api\TdsTokenInterface"
+                method="getToken"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+
     <route url="/V1/pagarme/installments/brandbyamount/:brand/:amount"
            method="GET">
         <service

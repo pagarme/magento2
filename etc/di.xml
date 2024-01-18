@@ -18,6 +18,7 @@
     <preference for="Pagarme\Pagarme\Model\Installments\Config\ConfigInterface" type="Pagarme\Pagarme\Model\Installments\Config\Config" />
     <preference for="Pagarme\Pagarme\Model\Installments\Config\ConfigByBrandInterface" type="Pagarme\Pagarme\Model\Installments\Config\ConfigByBrand" />
     <preference for="Pagarme\Pagarme\Gateway\Transaction\CreditCard\Config\ConfigInterface" type="Pagarme\Pagarme\Gateway\Transaction\CreditCard\Config\Config" />
+    <preference for="Pagarme\Pagarme\Gateway\Transaction\DebitCard\Config\ConfigInterface" type="Pagarme\Pagarme\Gateway\Transaction\DebitCard\Config\Config" />
     <preference for="Pagarme\Pagarme\Gateway\Transaction\TwoCreditCard\Config\ConfigInterface" type="Pagarme\Pagarme\Gateway\Transaction\TwoCreditCard\Config\Config" />
     <preference for="Pagarme\Pagarme\Gateway\Transaction\Billet\Config\ConfigInterface" type="Pagarme\Pagarme\Gateway\Transaction\Billet\Config\Config" />
     <preference for="Pagarme\Pagarme\Gateway\Transaction\BilletCreditCard\Config\ConfigInterface" type="Pagarme\Pagarme\Gateway\Transaction\BilletCreditCard\Config\Config" />
@@ -27,6 +28,7 @@
     <preference for="Pagarme\Pagarme\Api\WebhookManagementInterface" type="Pagarme\Pagarme\Model\WebhookManagement"/>
     <preference for="Pagarme\Pagarme\Api\InstallmentsByBrandManagementInterface" type="Pagarme\Pagarme\Model\InstallmentsByBrandManagement"/>
     <preference for="Pagarme\Pagarme\Api\InstallmentsByBrandAndAmountManagementInterface" type="Pagarme\Pagarme\Model\InstallmentsByBrandAndAmountManagement"/>
+    <preference for="Pagarme\Pagarme\Api\TdsTokenInterface" type="Pagarme\Pagarme\Model\TdsToken"/>
 
     <preference for="Pagarme\Pagarme\Api\MaintenanceInterface"
                 type="Pagarme\Pagarme\Model\Maintenance"/>
