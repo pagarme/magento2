@@ -36,19 +36,16 @@ class InitializeCommand implements CommandInterface
 {
 
     protected $config;
-
-    public function __construct(
-        Config $config
-    ){
-        $this->config = $config;
-    }
     /**
      * @var ThreeDSService
      */
     protected $threeDSService;
 
-    public function __construct(ThreeDSService $threeDSService)
-    {
+    public function __construct(
+        Config $config,
+        ThreeDSService $threeDSService
+    ){
+        $this->config = $config;
         $this->threeDSService = $threeDSService;
     }
 
