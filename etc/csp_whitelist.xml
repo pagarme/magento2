@@ -17,7 +17,7 @@
         </policy>
         <policy id="script-src">
             <values>
-                <value id="pagarme-api-3ds" type="host">auth-3ds-sdx.pagar.me</value>
+                <value id="pagarme-api-3ds" type="host">3ds2-sdx.pagar.me</value>
             </values>
         </policy>
         <policy id="frame-src">

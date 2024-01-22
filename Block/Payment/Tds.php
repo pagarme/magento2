@@ -54,9 +54,9 @@ class Tds extends Template
 
     public function getSdkUrl()
     {
-        $url = 'https://auth-3ds.pagar.me/bundle.js';
+        $url = 'https://3ds2.pagar.me/v1/3ds2.min.js';
         if ($this->pagarmeConfig->isSandboxMode()) {
-            $url = 'https://auth-3ds-sdx.pagar.me/bundle.js';
+            $url = 'https://3ds2-sdx.pagar.me/v1/3ds2.min.js';
         }
         return $url;
     }
