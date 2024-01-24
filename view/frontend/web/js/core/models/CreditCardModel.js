@@ -3,7 +3,8 @@ define([
     'Pagarme_Pagarme/js/core/validators/MultibuyerValidator',
     'Pagarme_Pagarme/js/core/checkout/CreditCardToken',
     'Pagarme_Pagarme/js/core/checkout/Tds',
-], (CreditCardValidator, MultibuyerValidator, CreditCardToken, Tds) => {
+    'Magento_Checkout/js/model/quote',
+], (CreditCardValidator, MultibuyerValidator, CreditCardToken, Tds, quote) => {
     return class CreditCardModel {
         constructor(formObject, publicKey) {
             this.formObject = formObject;
@@ -24,9 +25,7 @@ define([
                 return;
             }
 
-            const configCard = window.checkoutConfig.payment.pagarme_creditcard;
-
-            if(configCard['tds_active'] === true && this.brandIsVisaOrMaster()) {
+            if(this.canTdsRun()) {
                 const tds = new Tds(this.formObject)
                 tds.addTdsAttributeData();
                 jQuery('body').trigger('processStart');
@@ -83,9 +82,16 @@ define([
                 .done(success)
                 .fail(error);
         }
+        canTdsRun() {
+            const configCard = window.checkoutConfig.payment.pagarme_creditcard;
+
+            return configCard['tds_active'] === true
+                && quote.totals().grand_total * 100 >= configCard['tds_min_amount'] * 100
+                && this.brandIsVisaOrMaster()
+        }
         brandIsVisaOrMaster() {
-            return this.formObject.creditCardBrand.val() === "visa" || 
-                this.formObject.creditCardBrand.val() === "mastercard"
+            return this.formObject.creditCardBrand.val() === "visa"
+                || this.formObject.creditCardBrand.val() === "mastercard"
         }
         initTds(tdsToken) {
             const modelTds = new Tds(this.formObject)
@@ -107,7 +113,7 @@ define([
             if(data?.trans_status === '' || data?.trans_status === undefined){
                 return;
             }
-            
+
             this.formObject.authentication = JSON.stringify(data);
             this.getCreditCardToken(
                 function (data) {

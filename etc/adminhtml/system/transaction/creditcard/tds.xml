@@ -9,7 +9,7 @@
     <group id="pagarme_pagarme_transaction_creditcard_3ds" translate="label comment" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="90">
         <label>3DS</label>
         <frontend_model>Pagarme\Pagarme\Block\Adminhtml\Form\Fieldset\CreditCardGatewayFieldset</frontend_model>
-        <field id="tds_active" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="select">
+        <field id="tds_active" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label" type="select">
             <label>Active</label>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>payment/pagarme_creditcard/tds_active</config_path>
@@ -20,6 +20,16 @@
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>payment/pagarme_creditcard/order_with_tds_refused</config_path>
             <tooltip>If the Issuing Bank rejects 3DS authentication, you may receive a fraud chargeback</tooltip>
+            <depends>
+                <field id="tds_active">1</field>
+            </depends>
+        </field>
+        <field id="tds_min_amount" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="30" translate="label" type="text">
+            <backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
+            <label>Minimum value for 3DS authentication</label>
+            <comment />
+            <config_path>payment/pagarme_creditcard/tds_min_amount</config_path>
+            <validate>validate-currency-dollar</validate>
             <depends>
                 <field id="tds_active">1</field>
             </depends>
