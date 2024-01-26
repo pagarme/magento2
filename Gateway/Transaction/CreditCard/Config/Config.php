@@ -61,7 +61,15 @@ class Config extends AbstractConfig implements ConfigInterface, TdsConfigInterfa
     {
         return (bool) $this->getConfig(static::PATH_ORDER_WITH_TDS_REFUSED);
     }
-    
+
+    /**
+     * @return string
+     */
+    public function getTdsMinAmount()
+    {
+        return $this->getConfig(static::PATH_TDS_MIN_AMOUNT);
+    }
+
     /**
      * {@inheritdoc}
      */
