@@ -5,7 +5,6 @@ namespace Pagarme\Pagarme\Block\Adminhtml\Form\Field;
 use Magento\Backend\Block\Template\Context;
 use Magento\Config\Block\System\Config\Form\Field;
 use Magento\Framework\Data\Form\Element\AbstractElement;
-use Magento\Framework\View\Helper\SecureHtmlRenderer;
 use Pagarme\Pagarme\Model\Account;
 
 class SoftDescriptor extends Field
@@ -25,16 +24,14 @@ class SoftDescriptor extends Field
      * @param Account $account
      * @param string $paymentMethodName
      * @param array $data
-     * @param SecureHtmlRenderer|null $secureRenderer
      */
     public function __construct(
         Context $context,
         Account $account,
         string $paymentMethodName = '',
-        array $data = [],
-        ?SecureHtmlRenderer $secureRenderer = null
+        array $data = []
     ) {
-        parent::__construct($context, $data, $secureRenderer);
+        parent::__construct($context, $data);
         $this->account = $account;
         $this->paymentMethodName = $paymentMethodName;
     }

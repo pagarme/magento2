@@ -2,7 +2,8 @@ define([
     'Pagarme_Pagarme/js/core/validators/CreditCardValidator',
     'Pagarme_Pagarme/js/core/validators/MultibuyerValidator',
     'Pagarme_Pagarme/js/core/checkout/CreditCardToken',
-], (CreditCardValidator, MultibuyerValidator, CreditCardToken) => {
+    'Pagarme_Pagarme/js/core/checkout/Tds',
+], (CreditCardValidator, MultibuyerValidator, CreditCardToken, Tds) => {
     return class DebitModel {
         constructor(formObject, publicKey) {
             this.formObject = formObject;
@@ -38,6 +39,7 @@ define([
                 message: error
             })
         }
+        
         validate() {
 
             const creditCardValidator = new CreditCardValidator(this.formObject);
@@ -58,6 +60,7 @@ define([
                 .done(success)
                 .fail(error);
         }
+
         getData() {
             this.saveThiscard = 0;
             const formObject = this.formObject;

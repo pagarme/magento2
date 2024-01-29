@@ -47,7 +47,7 @@ class DebitDataAssignObserver extends AbstractDataAssignObserver
 
         $info->setAdditionalInformation('cc_saved_card', '0');
         $info->setAdditionalInformation('cc_installments', 1);
-        
+
         $multiBuyerDataAssign = new MultiBuyerDataAssign();
         $multiBuyerDataAssign->setCcMultiBuyer($info, $additionalData);
 
@@ -64,6 +64,7 @@ class DebitDataAssignObserver extends AbstractDataAssignObserver
     {
         $info->setAdditionalInformation('cc_saved_card', $additionalData->getCcSavedCard());
         $info->setAdditionalInformation('cc_type', $additionalData->getCcType());
+        $info->setAdditionalInformation('authentication', $additionalData->getAuthentication());
         if ($additionalData->getCcLast4()) {
             $info->setAdditionalInformation('cc_last_4', substr($additionalData->getCcLast4(),-4));
         }

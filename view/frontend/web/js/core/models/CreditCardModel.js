@@ -2,7 +2,9 @@ define([
     'Pagarme_Pagarme/js/core/validators/CreditCardValidator',
     'Pagarme_Pagarme/js/core/validators/MultibuyerValidator',
     'Pagarme_Pagarme/js/core/checkout/CreditCardToken',
-], (CreditCardValidator, MultibuyerValidator, CreditCardToken) => {
+    'Pagarme_Pagarme/js/core/checkout/Tds',
+    'Magento_Checkout/js/model/quote',
+], (CreditCardValidator, MultibuyerValidator, CreditCardToken, Tds, quote) => {
     return class CreditCardModel {
         constructor(formObject, publicKey) {
             this.formObject = formObject;
@@ -23,6 +25,22 @@ define([
                 return;
             }
 
+            if(this.canTdsRun()) {
+                const tds = new Tds(this.formObject)
+                tds.addTdsAttributeData();
+                jQuery('body').trigger('processStart');
+                this.getCreditCardTdsToken(
+                    function (tdsToken) {
+                        _self.initTds(tdsToken)
+                    },
+                    function(error) {
+                        jQuery('body').trigger('processStop');
+                        _self.addErrors("Falha ao gerar Token para 3ds, tente novamente.");
+                    }
+                )
+
+                return;
+            }
             this.getCreditCardToken(
                 function (data) {
                     _self.formObject.creditCardToken.val(data.id);
@@ -58,6 +76,58 @@ define([
                 .done(success)
                 .fail(error);
         }
+        getCreditCardTdsToken(success, error) {
+            const modelTdsToken = new Tds(this.formObject);
+            modelTdsToken.getToken()
+                .done(success)
+                .fail(error);
+        }
+        canTdsRun() {
+            const configCard = window.checkoutConfig.payment.pagarme_creditcard;
+
+            return configCard['tds_active'] === true
+                && quote.totals().grand_total * 100 >= configCard['tds_min_amount'] * 100
+                && this.brandIsVisaOrMaster()
+        }
+        brandIsVisaOrMaster() {
+            return this.formObject.creditCardBrand.val() === "visa"
+                || this.formObject.creditCardBrand.val() === "mastercard"
+        }
+        initTds(tdsToken) {
+            const modelTds = new Tds(this.formObject)
+            const expYear = this.formObject.creditCardExpYear.val()
+            const expMonth = this.formObject.creditCardExpMonth.val().padStart(2, '0')
+            const cardExpiryDate = `${expYear}-${expMonth}`
+            const tdsData = modelTds.getTdsData('02', cardExpiryDate);
+            modelTds.callTdsFunction(tdsToken, tdsData, this.callbackTds.bind(this));
+        }
+
+        callbackTds(data) {
+            const _self = this;
+            const tds = new Tds(this.formObject);
+            jQuery('body').trigger('processStop');
+            if(data?.error !== undefined) {
+                tds.showErrors(data, _self);
+                return;
+            }
+            if(data?.trans_status === '' || data?.trans_status === undefined){
+                return;
+            }
+
+            this.formObject.authentication = JSON.stringify(data);
+            this.getCreditCardToken(
+                function (data) {
+                    _self.formObject.creditCardToken.val(data.id);
+                    _self.placeOrderObject.placeOrder();
+                },
+                function (error) {
+                    tds.removeTdsAttributeData()
+                    _self.addErrors("Cartão inválido. Por favor, verifique os dados digitados e tente novamente");
+                }
+            );
+            return true;
+        }
+
         getData() {
             this.saveThiscard = 0;
             const formObject = this.formObject;
@@ -93,7 +163,8 @@ define([
                     'cc_saved_card': formObject.savedCreditCardSelect.val(),
                     'cc_installments': formObject.creditCardInstallments.val(),
                     'cc_token_credit_card': formObject.creditCardToken.val(),
-                    'cc_card_tax_amount' : formObject.creditCardInstallments.find(':selected').attr('interest')
+                    'cc_card_tax_amount' : formObject.creditCardInstallments.find(':selected').attr('interest'),
+                    'authentication': formObject.authentication
                 }
             };
         }

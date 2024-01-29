@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2017 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <group id="pagarme_pagarme_transaction_creditcard_3ds" translate="label comment" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="90">
+        <label>3DS</label>
+        <frontend_model>Pagarme\Pagarme\Block\Adminhtml\Form\Fieldset\CreditCardGatewayFieldset</frontend_model>
+        <field id="tds_active" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label" type="select">
+            <label>Active</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>payment/pagarme_creditcard/tds_active</config_path>
+        </field>
+        <field id="order_with_tds_refused" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="select">
+            <label>Proceed with payment without confirmed 3DS authentication</label>
+            <comment><![CDATA[If the issuing bank/brand does not approve 3DS authentication, we will continue with the transaction in the common flow (without 3DS)]]></comment>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>payment/pagarme_creditcard/order_with_tds_refused</config_path>
+            <tooltip>If the Issuing Bank rejects 3DS authentication, you may receive a fraud chargeback</tooltip>
+            <depends>
+                <field id="tds_active">1</field>
+            </depends>
+        </field>
+        <field id="tds_min_amount" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="30" translate="label" type="text">
+            <backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
+            <label>Minimum value for 3DS authentication</label>
+            <comment />
+            <config_path>payment/pagarme_creditcard/tds_min_amount</config_path>
+            <validate>validate-currency-dollar</validate>
+            <depends>
+                <field id="tds_active">1</field>
+            </depends>
+        </field>
+        <depends>
+            <field id="active">1</field>
+        </depends>
+    </group>
+</include>

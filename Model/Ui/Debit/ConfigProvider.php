@@ -7,7 +7,7 @@ use Magento\Customer\Model\Session;
 use Pagarme\Core\Kernel\ValueObjects\Configuration\DebitConfig;
 use Pagarme\Core\Payment\Repositories\CustomerRepository;
 use Pagarme\Core\Payment\Repositories\SavedCardRepository;
-use Pagarme\Pagarme\Concrete\Magento2CoreSetup as MPSetup;
+use Pagarme\Pagarme\Gateway\Transaction\DebitCard\Config\ConfigInterface;
 
 final class ConfigProvider implements ConfigProviderInterface
 {
@@ -25,14 +25,11 @@ final class ConfigProvider implements ConfigProviderInterface
      * @throws \Exception
      */
     public function __construct(
-        Session $customerSession
+        Session $customerSession,
+        ConfigInterface $debitConfig
     )
     {
-        MPSetup::bootstrap();
-        $moduleConfig = MPSetup::getModuleConfiguration();
-        if (!empty($moduleConfig->getDebitConfig())) {
-            $this->setDebitConfig($moduleConfig->getDebitConfig());
-        }
+        $this->setDebitConfig($debitConfig);
         $this->setCustomerSession($customerSession);
     }
 
@@ -84,12 +81,12 @@ final class ConfigProvider implements ConfigProviderInterface
         return [
             'payment' => [
                 self::CODE =>[
-                    'active' => $this->getDebitConfig()->isEnabled(),
+                    'active' => $this->getDebitConfig()->getActive(),
                     'title' => $this->getDebitConfig()->getTitle(),
                     'size_credit_card' => '18',
                     'number_credit_card' => 'null',
                     'data_credit_card' => '',
-                    'enabled_saved_cards' => $this->getDebitConfig()->isSaveCards(),
+                    'enabled_saved_cards' => $this->getDebitConfig()->getEnabledSavedCards(),
                     'is_saved_card' => $isSavedCard,
                     'cards' => $cards,
                     'selected_card' => $selectedCard,
@@ -107,10 +104,10 @@ final class ConfigProvider implements ConfigProviderInterface
     }
 
     /**
-     * @param DebitConfig $debitConfig
+     * @param ConfigInterface $debitConfig
      * @return $this
      */
-    protected function setDebitConfig(DebitConfig $debitConfig)
+    protected function setDebitConfig(ConfigInterface $debitConfig)
     {
         $this->debitConfig = $debitConfig;
         return $this;

@@ -11,10 +11,10 @@
 
 namespace Pagarme\Pagarme\Gateway\Transaction\CreditCard\Config;
 
-
+use Pagarme\Pagarme\Gateway\Transaction\Base\Config\TdsConfigInterface;
 use Pagarme\Pagarme\Gateway\Transaction\Base\Config\AbstractConfig;
 
-class Config extends AbstractConfig implements ConfigInterface
+class Config extends AbstractConfig implements ConfigInterface, TdsConfigInterface
 {
     /**
      * {@inheritdoc}
@@ -49,6 +49,30 @@ class Config extends AbstractConfig implements ConfigInterface
     /**
      * {@inheritdoc}
      */
+    public function getTdsActive()
+    {
+        return (bool) $this->getConfig(static::PATH_TDS_ACTIVE);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getOrderWithTdsRefused()
+    {
+        return (bool) $this->getConfig(static::PATH_ORDER_WITH_TDS_REFUSED);
+    }
+
+    /**
+     * @return string
+     */
+    public function getTdsMinAmount()
+    {
+        return $this->getConfig(static::PATH_TDS_MIN_AMOUNT);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getPaymentAction()
     {
         return $this->getConfig(static::PATH_PAYMENT_ACTION);
@@ -78,35 +102,4 @@ class Config extends AbstractConfig implements ConfigInterface
         return $this->getConfig(static::PATH_SOFT_DESCRIPTION);
     }
 
-    /**
-     * @return string
-     */
-    public function getCustomerStreetAttribute()
-    {
-        return $this->getConfig(static::PATH_CUSTOMER_STREET);
-    }
-
-    /**
-     * @return string
-     */
-    public function getCustomerAddressNumber()
-    {
-        return $this->getConfig(static::PATH_CUSTOMER_NUMBER);
-    }
-
-    /**
-     * @return string
-     */
-    public function getCustomerAddressComplement()
-    {
-        return $this->getConfig(static::PATH_CUSTOMER_COMPLEMENT);
-    }
-
-    /**
-     * @return string
-     */
-    public function getCustomerAddressDistrict()
-    {
-        return $this->getConfig(static::PATH_CUSTOMER_DISTRICT);
-    }
 }

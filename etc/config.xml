@@ -113,6 +113,8 @@
                 <installments_max_without_interest_visa>1</installments_max_without_interest_visa>
                 <can_initialize>1</can_initialize>
                 <allow_multiple_address>0</allow_multiple_address>
+                <order_with_tds_refused>1</order_with_tds_refused>
+                <tds_min_amount>0.00</tds_min_amount>
             </pagarme_creditcard>
 
             <pagarme_billet_creditcard>

@@ -58,19 +58,91 @@ jobs:
     -
       name: Check PHP sintax
       run: find . -name \*.php -exec php -l "{}" \;
+  phpunit:
+    name: PHP Unit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create Folder
+        run: ls -la && mkdir magento && cd magento && ls -la
+
+      - name: Install Magento
+        uses: php-actions/composer@v6
+        with:
+          php_version: 8.1
+          command: "create-project --repository-url=https://repo.magento.com/ magento/project-community-edition:2.4.5 ."
+          args: "--ignore-platform-reqs"
+          working_dir: /app/magento
+        env: 
+          COMPOSER_AUTH: '{"http-basic": { "repo.magento.com": { "username": "${{ secrets.MAGENTO_KEY }}", "password": "${{secrets.MAGENTO_SECRET}}"}}}'
+      
+      - name: Change minimum stable to Dev
+        uses: php-actions/composer@v6
+        with:
+          php_version: 8.1
+          command: "config minimum-stability dev"
+          working_dir: /app/magento
+
+      - name: Download Module
+        uses: php-actions/composer@v6
+        with:
+          php_version: 8.1
+          command: require pagarme/pagarme-magento2-module:dev-${{ github.head_ref }}
+          args: "--ignore-platform-reqs"
+          working_dir: /app/magento
+        env: 
+          COMPOSER_AUTH: '{"http-basic": { "repo.magento.com": { "username": "${{ secrets.MAGENTO_KEY }}", "password": "${{secrets.MAGENTO_SECRET}}"}}}'
+      
+      - name: Download Mockery
+        uses: php-actions/composer@v6
+        with:
+          php_version: 8.1
+          command: require mockery/mockery
+          args: "--ignore-platform-reqs"
+          working_dir: /app/magento
+        env:
+          COMPOSER_AUTH: '{"http-basic": { "repo.magento.com": { "username": "${{ secrets.MAGENTO_KEY }}", "password": "${{secrets.MAGENTO_SECRET}}"}}}'
+      
+      - name: Run PHP Unit Tests
+        uses: php-actions/phpunit@v3
+        env:
+          XDEBUG_MODE: coverage
+        with:
+          bootstrap: "/app/magento/vendor/autoload.php"
+          configuration: "/app/magento/vendor/pagarme/pagarme-magento2-module/phpunit.xml"
+          version: 9.5.28
+          php_version : 8.1
+          php_extensions: "xdebug"
+
+      - name: Upload coverage artifact 
+        uses: actions/upload-artifact@master
+        with:
+          name: mage-coverage-${{ github.sha }}
+          path: magento/vendor/pagarme/pagarme-magento2-module/clover.xml
 
   sonar:
     name: SonarCloud 
     runs-on: ubuntu-latest
+    needs: phpunit
     steps:
     -
       name: Checkout
       uses: actions/checkout@v3
       with:
         fetch-depth: 0
+    - 
+      name: Download coverage artifact
+      uses: actions/download-artifact@master
+      with:
+        name: mage-coverage-${{ github.sha }}
+        path: coverage
     -
       name: Run Sonar
       uses: sonarsource/sonarcloud-github-action@master
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    - name: Delete coverage artifact
+      uses: geekyeggo/delete-artifact@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        name: mage-coverage-${{ github.sha }}

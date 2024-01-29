@@ -45,7 +45,14 @@ class Config extends AbstractConfig implements ConfigInterface
 
         return $this->getConfig(static::PATH_PUBLIC_KEY);
     }
-
+    /**
+     * @return string
+     */
+    public function getAlwaysCreateOrder()
+    {
+        return $this->getConfig('pagarme_pagarme/global/create_order');
+    }
+    
     /**
      * @return bool
      */
@@ -137,6 +144,19 @@ class Config extends AbstractConfig implements ConfigInterface
         return [
             'showVatNumber' => $this->getConfig(static::PATH_CUSTOMER_VAT_NUMBER) ?? '',
             'streetLinesNumber' => $this->getConfig(static::PATH_CUSTOMER_ADDRESS_LINES) ?? '',
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getPagarmeCustomerAddressConfigs()
+    {
+        return [
+            'street' => $this->getConfig(static::PATH_CUSTOMER_ADDRESS_STREET) ?? '',
+            'number' => $this->getConfig(static::PATH_CUSTOMER_ADDRESS_NUMBER) ?? '',
+            'complement' => $this->getConfig(static::PATH_CUSTOMER_ADDRESS_COMPLEMENT) ?? '',
+            'neighborhood' => $this->getConfig(static::PATH_CUSTOMER_ADDRESS_NEIGHBOURHOOD) ?? '',
         ];
     }
 }

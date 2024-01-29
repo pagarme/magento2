@@ -9,7 +9,7 @@
  * @link        https://pagar.me
  */
 
-namespace Pagarme\Pagarme\Gateway\Transaction\Billet\Config;
+namespace Pagarme\Pagarme\Gateway\Transaction\DebitCard\Config;
 
 
 use Pagarme\Pagarme\Gateway\Transaction\Base\Config\AbstractConfig;
@@ -19,35 +19,18 @@ class Config extends AbstractConfig implements ConfigInterface
     /**
      * {@inheritdoc}
      */
-    public function getInstructions()
+    public function getActive()
     {
-        return $this->getConfig(static::PATH_INSTRUCTIONS);
+        return (bool) $this->getConfig(static::PATH_ACTIVE);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getText()
+    public function getEnabledSavedCards()
     {
-        return $this->getConfig(static::PATH_TEXT);
+        return (bool) $this->getConfig(static::PATH_ENABLED_SAVED_CARDS);
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getTypeBank()
-    {
-        return $this->getConfig(static::PATH_TYPE_BANK);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getExpirationDays()
-    {
-        return $this->getConfig(static::PATH_EXPIRATION_DAYS);
-    }
-
     /**
      * @return string
      */
@@ -56,9 +39,17 @@ class Config extends AbstractConfig implements ConfigInterface
         $title = $this->getConfig(static::PATH_TITLE);
 
         if(empty($title)){
-            return __('Pagar.me Billet');
+            return __('Pagar.me Credit Card');
         }
 
         return $title;
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function getPaymentAction()
+    {
+        return $this->getConfig(static::PATH_PAYMENT_ACTION);
     }
 }

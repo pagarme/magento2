@@ -15,5 +15,95 @@
                 <value id="pagarme-img" type="host">api.pagar.me</value>
             </values>
         </policy>
+        <policy id="script-src">
+            <values>
+                <value id="pagarme-api-3ds" type="host">3ds2.pagar.me</value>
+                <value id="pagarme-api-3ds-sdx" type="host">3ds2-sdx.pagar.me</value>
+            </values>
+        </policy>
+        <policy id="frame-src">
+            <values>
+                <value id="pagarme-tds-pagarme" type="host">*.pagar.me</value>
+                <value id="pagarme-tds-netsgroup" type="host">*.netsgroup.com</value>
+                <value id="pagarme-tds-sibs" type="host">*.sibs.pt</value>
+                <value id="pagarme-tds-seglan" type="host">*.seglan.com</value>
+                <value id="pagarme-tds-secureacs" type="host">*.secureacs.com</value>
+                <value id="pagarme-tds-secureacs" type="host">*.secureacs.com</value>
+                <value id="pagarme-tds-rsa3dsauth" type="host">*.rsa3dsauth.com</value>
+                <value id="pagarme-tds-apata" type="host">*.apata.io</value>
+                <value id="pagarme-tds-cardinalcommerce" type="host">*.cardinalcommerce.com</value>
+                <value id="pagarme-tds-santander" type="host">*.santander.com.br</value>
+                <value id="pagarme-tds-bradesco" type="host">*.bradesco.com.br</value>
+                <value id="pagarme-tds-bancobradesco" type="host">*.bradesco</value>
+                <value id="pagarme-tds-stone" type="host">*.stone.com.br</value>
+                <value id="pagarme-tds-nubank" type="host">*.nubank.com.br</value>
+                <value id="pagarme-tds-itau" type="host">*.itau.com.br</value>
+                <value id="pagarme-tds-bb" type="host">*.bb.com.br</value>
+                <value id="pagarme-tds-caixa" type="host">*.caixa.gov.br</value>
+                <value id="pagarme-tds-inter" type="host">*.inter.co</value>
+                <value id="pagarme-tds-bancointer" type="host">*.bancointer.com.br</value>
+                <value id="pagarme-tds-c6" type="host">*.c6bank.com.br</value>
+                <value id="pagarme-tds-bmg" type="host">*.bancobmg.com.br</value>
+                <value id="pagarme-tds-safra" type="host">*.safra.com.br</value>
+                <value id="pagarme-tds-sicoob" type="host">*.sicoob.com.br</value>
+                <value id="pagarme-tds-banrisul" type="host">*.banrisul.com.br</value>
+                <value id="pagarme-tds-banrisulb" type="host">*.banrisul.b.br</value>
+                <value id="pagarme-tds-banorte" type="host">*.banorte.com</value>
+                <value id="pagarme-tds-xpi" type="host">*.xpi.com.br</value>
+                <value id="pagarme-tds-btg" type="host">*.btgpactual.com</value>
+                <value id="pagarme-tds-btgpactualdigital" type="host">*.btgpactualdigital.com</value>
+                <value id="pagarme-tds-mercadopago" type="host">*.mercadopago.com.br</value>
+                <value id="pagarme-tds-mercadopagocom" type="host">*.mercadopago.com</value>
+                <value id="pagarme-tds-picpay" type="host">*.picpay.com</value>
+                <value id="pagarme-tds-amedigital" type="host">*.amedigital.com</value>
+                <value id="pagarme-tds-neontech" type="host">*.neon.tech</value>
+                <value id="pagarme-tds-neoncombr" type="host">*.neon.com.br</value>
+                <value id="pagarme-tds-wise" type="host">*.wise.com</value>
+                <value id="pagarme-tds-revolut" type="host">*.revolut.com</value>
+                <value id="pagarme-tds-sandbox" type="host">*.sandbox.3dsecure.io</value>
+            </values>
+        </policy>
+        <policy id="form-action">
+            <values>
+                <value id="pagarme-tds-pagarme" type="host">*.pagar.me</value>
+                <value id="pagarme-tds-netsgroup" type="host">*.netsgroup.com</value>
+                <value id="pagarme-tds-sibs" type="host">*.sibs.pt</value>
+                <value id="pagarme-tds-seglan" type="host">*.seglan.com</value>
+                <value id="pagarme-tds-secureacs" type="host">*.secureacs.com</value>
+                <value id="pagarme-tds-secureacs" type="host">*.secureacs.com</value>
+                <value id="pagarme-tds-rsa3dsauth" type="host">*.rsa3dsauth.com</value>
+                <value id="pagarme-tds-apata" type="host">*.apata.io</value>
+                <value id="pagarme-tds-cardinalcommerce" type="host">*.cardinalcommerce.com</value>
+                <value id="pagarme-tds-santander" type="host">*.santander.com.br</value>
+                <value id="pagarme-tds-bradesco" type="host">*.bradesco.com.br</value>
+                <value id="pagarme-tds-bancobradesco" type="host">*.bradesco</value>
+                <value id="pagarme-tds-stone" type="host">*.stone.com.br</value>
+                <value id="pagarme-tds-nubank" type="host">*.nubank.com.br</value>
+                <value id="pagarme-tds-itau" type="host">*.itau.com.br</value>
+                <value id="pagarme-tds-bb" type="host">*.bb.com.br</value>
+                <value id="pagarme-tds-caixa" type="host">*.caixa.gov.br</value>
+                <value id="pagarme-tds-inter" type="host">*.inter.co</value>
+                <value id="pagarme-tds-bancointer" type="host">*.bancointer.com.br</value>
+                <value id="pagarme-tds-c6" type="host">*.c6bank.com.br</value>
+                <value id="pagarme-tds-bmg" type="host">*.bancobmg.com.br</value>
+                <value id="pagarme-tds-safra" type="host">*.safra.com.br</value>
+                <value id="pagarme-tds-sicoob" type="host">*.sicoob.com.br</value>
+                <value id="pagarme-tds-banrisul" type="host">*.banrisul.com.br</value>
+                <value id="pagarme-tds-banrisulb" type="host">*.banrisul.b.br</value>
+                <value id="pagarme-tds-banorte" type="host">*.banorte.com</value>
+                <value id="pagarme-tds-xpi" type="host">*.xpi.com.br</value>
+                <value id="pagarme-tds-btg" type="host">*.btgpactual.com</value>
+                <value id="pagarme-tds-btgpactualdigital" type="host">*.btgpactualdigital.com</value>
+                <value id="pagarme-tds-mercadopago" type="host">*.mercadopago.com.br</value>
+                <value id="pagarme-tds-mercadopagocom" type="host">*.mercadopago.com</value>
+                <value id="pagarme-tds-picpay" type="host">*.picpay.com</value>
+                <value id="pagarme-tds-amedigital" type="host">*.amedigital.com</value>
+                <value id="pagarme-tds-neontech" type="host">*.neon.tech</value>
+                <value id="pagarme-tds-neoncombr" type="host">*.neon.com.br</value>
+                <value id="pagarme-tds-wise" type="host">*.wise.com</value>
+                <value id="pagarme-tds-revolut" type="host">*.revolut.com</value>
+                <value id="pagarme-tds-sandbox" type="host">*.sandbox.3dsecure.io</value>
+            </values>
+        </policy>
     </policies>
 </csp_whitelist>

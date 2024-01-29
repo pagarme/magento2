@@ -5,7 +5,6 @@ namespace Pagarme\Pagarme\Block\Adminhtml\Form\Field;
 use Magento\Backend\Block\Template\Context;
 use Magento\Config\Block\System\Config\Form\Field;
 use Magento\Framework\Data\Form\Element\AbstractElement;
-use Magento\Framework\View\Helper\SecureHtmlRenderer;
 use Pagarme\Pagarme\Model\Account;
 use Pagarme\Pagarme\Model\PagarmeConfigProvider;
 
@@ -20,15 +19,13 @@ class CreditCardPspField extends Field
      * @param Context $context
      * @param Account $account
      * @param array $data
-     * @param SecureHtmlRenderer|null $secureRenderer
      */
     public function __construct(
         Context $context,
         Account $account,
-        array $data = [],
-        ?SecureHtmlRenderer $secureRenderer = null
+        array $data = []
     ) {
-        parent::__construct($context, $data, $secureRenderer);
+        parent::__construct($context, $data);
         $this->account = $account;
     }
 

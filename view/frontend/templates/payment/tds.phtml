@@ -1,0 +1,18 @@
+<?php
+/**
+ * @var \Pagarme\Pagarme\Block\Payment\Tds  $this
+ */
+    if(!$this->canInitTds()) {
+        return;
+    }
+?>
+<div id="challengeIframeElement" class="challengeIframeElement">
+    <div class="modal-content">
+    <iframe
+        name="challengeIframe"
+        id="challengeIframe"
+        title="pagarameTdsIframe"
+    ></iframe>
+    </div>
+</div>
+<script src="<?= $this->getSdkUrl(); ?>"></script>

@@ -7,7 +7,6 @@ use Magento\Backend\Block\Template\Context;
 use Magento\Config\Block\System\Config\Form\Field;
 use Magento\Framework\Data\Form\Element\AbstractElement;
 use Magento\Framework\Phrase;
-use Magento\Framework\View\Helper\SecureHtmlRenderer;
 use Pagarme\Core\Hub\Services\HubIntegrationService;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Pagarme\Pagarme\Model\Account;
@@ -22,11 +21,10 @@ class HubIntegration extends Field
     public function __construct(
         Account $account,
         Context $context,
-        array $data = [],
-        ?SecureHtmlRenderer $secureRenderer = null
+        array $data = []
     ) {
         $this->account = $account;
-        parent::__construct($context, $data, $secureRenderer);
+        parent::__construct($context, $data);
     }
 
     /**
