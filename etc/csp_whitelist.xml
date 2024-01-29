@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+git status<?xml version="1.0" encoding="UTF-8"?>
 
 <csp_whitelist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Csp:etc/csp_whitelist.xsd">
@@ -23,7 +23,6 @@
         <policy id="frame-src">
             <values>
                 <value id="pagarme-tds-pagarme" type="host">*.pagar.me</value>
-                <value id="pagarme-tds-google" type="host">*.google.com</value>
                 <value id="pagarme-tds-netsgroup" type="host">*.netsgroup.com</value>
                 <value id="pagarme-tds-sibs" type="host">*.sibs.pt</value>
                 <value id="pagarme-tds-seglan" type="host">*.seglan.com</value>
@@ -66,7 +65,6 @@
         <policy id="form-action">
             <values>
                 <value id="pagarme-tds-pagarme" type="host">*.pagar.me</value>
-                <value id="pagarme-tds-google" type="host">*.google.com</value>
                 <value id="pagarme-tds-netsgroup" type="host">*.netsgroup.com</value>
                 <value id="pagarme-tds-sibs" type="host">*.sibs.pt</value>
                 <value id="pagarme-tds-seglan" type="host">*.seglan.com</value>
