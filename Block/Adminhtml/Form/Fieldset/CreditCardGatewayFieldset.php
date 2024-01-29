@@ -41,7 +41,7 @@ class CreditCardGatewayFieldset extends Fieldset
      */
     public function render(AbstractElement $element)
     {
-        if ($this->account->isGateway(PagarmeConfigProvider::CREDIT_CARD_PAYMENT_CONFIG)) {
+        if (!$this->account->isGateway(PagarmeConfigProvider::CREDIT_CARD_PAYMENT_CONFIG)) {
             return '';
         }
 
