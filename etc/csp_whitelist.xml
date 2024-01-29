@@ -1,4 +1,4 @@
-git status<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 
 <csp_whitelist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Csp:etc/csp_whitelist.xsd">
@@ -17,7 +17,8 @@ git status<?xml version="1.0" encoding="UTF-8"?>
         </policy>
         <policy id="script-src">
             <values>
-                <value id="pagarme-api-3ds" type="host">3ds2-sdx.pagar.me</value>
+                <value id="pagarme-api-3ds" type="host">3ds2.pagar.me</value>
+                <value id="pagarme-api-3ds-sdx" type="host">3ds2-sdx.pagar.me</value>
             </values>
         </policy>
         <policy id="frame-src">
