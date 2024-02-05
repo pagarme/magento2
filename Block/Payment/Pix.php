@@ -1,6 +1,6 @@
 <?php
 /**
- * Class Billet
+ * Class Pix
  *
  * @author      Open Source Team
  * @copyright   2021 Pagar.me (https://pagar.me)
@@ -11,6 +11,8 @@
 
 namespace Pagarme\Pagarme\Block\Payment;
 
+use Exception;
+use Magento\Framework\Phrase;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
 use Magento\Checkout\Model\Session as CheckoutSession;
@@ -94,7 +96,7 @@ class Pix extends Template
     }
 
     /**
-     * @return string
+     * @return Phrase
      */
     public function getSuccessMessage()
     {
@@ -103,11 +105,13 @@ class Pix extends Template
 
     /**
      * @return PixHelper
+     * @throws Exception
      */
     public function getPixInfo()
     {
+        $pagarmeTransaction = $this->checkoutSession->getPixOrBilletTransaction();
         if (empty($this->pixInfo)) {
-            $this->pixInfo = $this->pixHelper->getInfo($this->getPayment());
+            $this->pixInfo = $this->pixHelper->getInfo($this->getPayment(), $pagarmeTransaction);
         }
 
         return $this->pixInfo;

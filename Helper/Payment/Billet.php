@@ -9,25 +9,25 @@
     use Pagarme\Core\Recurrence\Repositories\SubscriptionRepository;
 
     class Billet {
-        
-        public function getBilletUrl($info)
+
+        public function getBilletUrl($info, $transaction = null)
         {
             $method = $info->getMethod();
             if (strpos($method, "pagarme_billet") === false) {
                 return;
             }
-            
+
             Magento2CoreSetup::bootstrap();
-            $boletoUrl = $this->getBoletoLinkFromOrder($info);
+            $boletoUrl = $this->getBoletoLinkFromOrder($info, $transaction);
 
             if (!$boletoUrl) {
                 $boletoUrl = $this->getBoletoLinkFromSubscription($info);
             }
-    
+
             return $boletoUrl;
         }
 
-        private function getBoletoLinkFromOrder($info)
+        private function getBoletoLinkFromOrder($info, $transaction = null)
         {
             $lastTransId = $info->getLastTransId();
             $orderId = null;
@@ -35,8 +35,8 @@
                 $orderId = substr($lastTransId, 0, 19);
             }
 
-            if (!$orderId) {
-                return null;
+            if (!$orderId && !is_null($transaction)) {
+                return $transaction->getBoletoUrl();
             }
 
             $orderRepository = new OrderRepository();

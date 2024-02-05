@@ -67,6 +67,7 @@ class Billet extends Template
     public function getBilletUrl()
     {
         $billetHelper = new BilletHelper();
-        return $billetHelper->getBilletUrl($this->getPayment());
+        $pagarmeTransaction = $this->checkoutSession->getPixOrBilletTransaction();
+        return $billetHelper->getBilletUrl($this->getPayment(), $pagarmeTransaction);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Pagarme\Pagarme\Helper\Payment;
 
+use Exception;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Pagarme\Core\Kernel\ValueObjects\Id\OrderId;
 use Pagarme\Core\Payment\Services\OrderService;
@@ -13,8 +14,9 @@ class Pix
 
     /**
      * @return $this
+     * @throws Exception
      */
-    public function getInfo($info)
+    public function getInfo($info, $transaction = null)
     {
         $orderId = null;
         $method = $info->getMethod();
@@ -25,6 +27,12 @@ class Pix
         $lastTransId = $info->getLastTransId();
         if ($lastTransId) {
             $orderId = substr($lastTransId, 0, 19);
+        }
+
+        if (!$orderId && !is_null($transaction)) {
+            $this->setQrCode($transaction->getPostData()->qr_code);
+            $this->setQrCodeUrl($transaction->getPostData()->qr_code_url);
+            return $this;
         }
 
         Magento2CoreSetup::bootstrap();

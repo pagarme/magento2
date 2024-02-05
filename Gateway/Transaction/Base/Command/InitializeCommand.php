@@ -12,6 +12,7 @@
 
 namespace Pagarme\Pagarme\Gateway\Transaction\Base\Command;
 
+use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Payment\Gateway\Helper\SubjectReader;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Api\Data\OrderInterface;
@@ -28,25 +29,27 @@ use Pagarme\Pagarme\Model\Ui\CreditCard\ConfigProvider as CreditConfigProvider;
 use Pagarme\Pagarme\Model\Ui\TwoCreditCard\ConfigProvider as TwoCreditCardConfigProvider;
 use Magento\Framework\Phrase;
 use Magento\Framework\Webapi\Exception as M2WebApiException;
-use Pagarme\Pagarme\Helper\RecurrenceProductHelper;
-use Pagarme\Pagarme\Gateway\Transaction\Base\Config\Config;
 use Pagarme\Pagarme\Service\Transaction\ThreeDSService;
 
 class InitializeCommand implements CommandInterface
 {
 
-    protected $config;
     /**
      * @var ThreeDSService
      */
     protected $threeDSService;
+    /**
+     * @var CheckoutSession
+     */
+    protected $checkoutSession;
 
     public function __construct(
-        Config $config,
-        ThreeDSService $threeDSService
-    ){
-        $this->config = $config;
+        ThreeDSService  $threeDSService,
+        CheckoutSession $checkoutSession
+    )
+    {
         $this->threeDSService = $threeDSService;
+        $this->checkoutSession = $checkoutSession;
     }
 
     /**
@@ -110,10 +113,7 @@ class InitializeCommand implements CommandInterface
     /** @return AbstractPlatformOrderDecorator */
     private function doCoreDetour($payment)
     {
-        $order =  $payment->getOrder();
-        if($this->config->getAlwaysCreateOrder()){
-            $order->save();
-        }
+        $order = $payment->getOrder();
         $log = new OrderLogService();
 
         Magento2CoreSetup::bootstrap();
@@ -168,7 +168,10 @@ class InitializeCommand implements CommandInterface
 
             if (!$isSubscription) {
                 $orderService = new OrderService();
-                $orderService->createOrderAtPagarme($orderDecorator);
+                $pagarmeOrder = current($orderService->createOrderAtPagarme($orderDecorator));
+                if (!is_null($pagarmeOrder->getPixOrBilletTransaction())) {
+                    $this->checkoutSession->setPixOrBilletTransaction($pagarmeOrder->getPixOrBilletTransaction());
+                }
             }
 
             $orderDecorator->save();
