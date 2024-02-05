@@ -39,6 +39,10 @@
                 return $transaction->getBoletoUrl();
             }
 
+            if (!$orderId) {
+                return null;
+            }
+
             $orderRepository = new OrderRepository();
             $order = $orderRepository->findByPagarmeId(new OrderId($orderId));
 
