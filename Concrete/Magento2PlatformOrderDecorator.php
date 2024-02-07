@@ -1135,11 +1135,10 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $payment
     ) {
         $newPaymentData = new stdClass();
-        $amount = str_replace(
-            ['.', ','],
-            ['','.'],
-            $additionalInformation["cc_billet_amount"] ?? $this->platformOrder->getGrandTotal()
-        );
+        $amount = $this->platformOrder->getGrandTotal();
+        if (isset($additionalInformation["cc_billet_amount"])) {
+            $amount = $this->moneyService->removeSeparators($additionalInformation["cc_billet_amount"]) / 100;
+        }
         $newPaymentData->amount =
             $this->moneyService->floatToCents($amount);
         $moduleConfiguration = MPSetup::getModuleConfiguration();
