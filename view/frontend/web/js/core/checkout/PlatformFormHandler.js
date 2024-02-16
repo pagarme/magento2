@@ -132,7 +132,7 @@ define(['jquery'], ($) => {
         }
         fillSavedCreditCardsSelect = function (platformConfig, formObject) {
             let html = '';
-            const cards = platformConfig.savedAllCards[formObject.savedCardSelectUsed]
+            const cards = platformConfig.savedAllCards[formObject.savedCardSelectUsed];
             let firstOptionValue = null;
 
             const brands = [];
