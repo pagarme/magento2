@@ -212,7 +212,7 @@ class Notifications extends Message
             CoreAccount::DOMAIN_INCORRECT => sprintf(
                 __('The registered <b>domain</b> is different from the URL of your website. Please correct the '
                 . 'domain configured on the <b>%s</b> to be able to process payment in your store.'),
-                $this->buildDashLink($linkLabel, $linkAccount),
+                $this->buildDashLink($linkLabel, $linkAccount)
             ),
             CoreAccount::WEBHOOK_INCORRECT => sprintf(
                 __('The URL for receiving <b>webhooks</b> registered in Pagar.me Dash is different from the URL of '
