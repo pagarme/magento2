@@ -44,7 +44,7 @@ define([
                 );
                 PagarmeCore.paymentMethod[model].placeOrder(platformOrderPlace);
             } catch (e) {
-                console.log(e)
+                console.log(e);
             }
         }
 

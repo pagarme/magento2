@@ -24,7 +24,7 @@ define([
         }
 
         callTdsFunction(tdsToken, tdsData, callbackTds) {
-            const challengeWindowSize = '03'
+            const challengeWindowSize = '03';
             Script3ds.init3ds(tdsToken, tdsData, callbackTds, challengeWindowSize);
         }
 
@@ -45,24 +45,24 @@ define([
 
         addTdsAttributeData() {
             const cardForm = this.formObject;
-            jQuery(cardForm.containerSelector).attr("data-pagarmecheckout-form", "")
-            cardForm.creditCardHolderName.attr("data-pagarmecheckout-element", "holder_name")
-            cardForm.creditCardNumber.attr("data-pagarmecheckout-element", "number")
-            cardForm.creditCardBrand.attr("data-pagarmecheckout-element", "brand")
-            cardForm.creditCardExpMonth.attr("data-pagarmecheckout-element", "exp_month")
-            cardForm.creditCardExpYear.attr("data-pagarmecheckout-element", "exp_year")
-            cardForm.creditCardCvv.attr("data-pagarmecheckout-element", "cvv")
+            jQuery(cardForm.containerSelector).attr("data-pagarmecheckout-form", "");
+            cardForm.creditCardHolderName.attr("data-pagarmecheckout-element", "holder_name");
+            cardForm.creditCardNumber.attr("data-pagarmecheckout-element", "number");
+            cardForm.creditCardBrand.attr("data-pagarmecheckout-element", "brand");
+            cardForm.creditCardExpMonth.attr("data-pagarmecheckout-element", "exp_month");
+            cardForm.creditCardExpYear.attr("data-pagarmecheckout-element", "exp_year");
+            cardForm.creditCardCvv.attr("data-pagarmecheckout-element", "cvv");
         }
 
         removeTdsAttributeData() {
             const cardForm = this.formObject;
-            jQuery(cardForm.containerSelector).removeAttr("data-pagarmecheckout-form")
-            cardForm.creditCardHolderName.removeAttr("data-pagarmecheckout-element")
-            cardForm.creditCardNumber.removeAttr("data-pagarmecheckout-element")
-            cardForm.creditCardBrand.removeAttr("data-pagarmecheckout-element")
-            cardForm.creditCardExpMonth.removeAttr("data-pagarmecheckout-element")
-            cardForm.creditCardExpYear.removeAttr("data-pagarmecheckout-element")
-            cardForm.creditCardCvv.removeAttr("data-pagarmecheckout-element")
+            jQuery(cardForm.containerSelector).removeAttr("data-pagarmecheckout-form");
+            cardForm.creditCardHolderName.removeAttr("data-pagarmecheckout-element");
+            cardForm.creditCardNumber.removeAttr("data-pagarmecheckout-element");
+            cardForm.creditCardBrand.removeAttr("data-pagarmecheckout-element");
+            cardForm.creditCardExpMonth.removeAttr("data-pagarmecheckout-element");
+            cardForm.creditCardExpYear.removeAttr("data-pagarmecheckout-element");
+            cardForm.creditCardCvv.removeAttr("data-pagarmecheckout-element");
         }
 
         getTdsData(acctType, cardExpiryDate) {
@@ -82,7 +82,7 @@ define([
 
             let customerEmail = window.checkoutConfig.customerData?.email;
             if(quote.guestEmail) {
-                customerEmail = quote.guestEmail
+                customerEmail = quote.guestEmail;
             }
 
             const customerPhones =

@@ -45,7 +45,7 @@ define([
         }
 
         formObject(formObject) {
-            this.formObject = formObject
+            this.formObject = formObject;
         }
 
         formValidation() {
@@ -360,7 +360,7 @@ define([
             formObject.inputAmount.on('keyup', function(){
                 const element = $(this);
 
-                const originalValue = paymentMethodController.platformConfig.updateTotals.getTotals()().grand_total
+                const originalValue = paymentMethodController.platformConfig.updateTotals.getTotals()().grand_total;
                 let orderAmount = (originalValue).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
                 orderAmount = orderAmount.replace(/[^0-9]/g, '');
                 orderAmount = Number(orderAmount);
@@ -683,7 +683,7 @@ define([
             let amount = form.inputAmount.val();
             if (!selectedBrand || selectedBrand === 'default') {
                 formHandler.updateInstallmentSelect([], form.creditCardInstallments);
-                return
+                return;
             }
 
             if (typeof amount == "undefined") {

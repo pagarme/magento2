@@ -26,12 +26,12 @@ define([
             }
 
             if(this.canTdsRun()) {
-                const tds = new Tds(this.formObject)
+                const tds = new Tds(this.formObject);
                 tds.addTdsAttributeData();
                 jQuery('body').trigger('processStart');
                 this.getCreditCardTdsToken(
                     function (tdsToken) {
-                        _self.initTds(tdsToken)
+                        _self.initTds(tdsToken);
                     },
                     function(error) {
                         jQuery('body').trigger('processStop');
@@ -87,17 +87,17 @@ define([
 
             return configCard['tds_active'] === true
                 && quote.totals().grand_total * 100 >= configCard['tds_min_amount'] * 100
-                && this.brandIsVisaOrMaster()
+                && this.brandIsVisaOrMaster();
         }
         brandIsVisaOrMaster() {
             return this.formObject.creditCardBrand.val() === "visa"
-                || this.formObject.creditCardBrand.val() === "mastercard"
+                || this.formObject.creditCardBrand.val() === "mastercard";
         }
         initTds(tdsToken) {
-            const modelTds = new Tds(this.formObject)
-            const expYear = this.formObject.creditCardExpYear.val()
-            const expMonth = this.formObject.creditCardExpMonth.val().padStart(2, '0')
-            const cardExpiryDate = `${expYear}-${expMonth}`
+            const modelTds = new Tds(this.formObject);
+            const expYear = this.formObject.creditCardExpYear.val();
+            const expMonth = this.formObject.creditCardExpMonth.val().padStart(2, '0');
+            const cardExpiryDate = `${expYear}-${expMonth}`;
             const tdsData = modelTds.getTdsData('02', cardExpiryDate);
             modelTds.callTdsFunction(tdsToken, tdsData, this.callbackTds.bind(this));
         }
