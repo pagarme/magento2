@@ -9,6 +9,8 @@ use Pagarme\Core\Payment\Services\OrderService;
 
 class Pix
 {
+    const LOGO_URL = "Pagarme_Pagarme::images/logo-pix.svg";
+    
     private $qrCodeUrl;
     private $qrCode;
 
