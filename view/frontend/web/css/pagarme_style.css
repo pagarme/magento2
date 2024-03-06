@@ -23,7 +23,8 @@
     display: none;
 }
 
-.hidden-element {
+.field.hidden-element,
+.field-error.hidden-element {
     display: none;
 }
 
