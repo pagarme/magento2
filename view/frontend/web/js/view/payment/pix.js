@@ -37,6 +37,9 @@ define(
             getModel: function () {
                 return 'pix';
             },
+            getLogoSrc: function() {
+                return window.checkoutConfig.payment.pagarme_pix.logo;
+            },
 
             getData: function () {
                 var paymentMethod = PagarmeCore.paymentMethod[this.getModel()];

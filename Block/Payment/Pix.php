@@ -16,6 +16,7 @@ use Magento\Framework\Phrase;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
 use Magento\Checkout\Model\Session as CheckoutSession;
+use Magento\Framework\View\Asset\Repository;
 use Magento\Sales\Api\Data\OrderInterface as Order;
 use Magento\Sales\Api\Data\OrderPaymentInterface as Payment;
 use Pagarme\Pagarme\Helper\Payment\Pix as PixHelper;
@@ -38,14 +39,27 @@ class Pix extends Template
     private $pixHelper;
 
     /**
-     * Link constructor.
+     * @var Repository
+     */
+    private $assetRepository;
+
+    /**
+     * Pix constructor
+     *
      * @param Context $context
      * @param CheckoutSession $checkoutSession
+     * @param PixHelper $pixHelper
+     * @param Repository $assetRepository
      */
-    public function __construct(Context $context, CheckoutSession $checkoutSession, PixHelper $pixHelper)
-    {
+    public function __construct(
+        Context $context,
+        CheckoutSession $checkoutSession,
+        PixHelper $pixHelper,
+        Repository $assetRepository
+    ) {
         $this->checkoutSession = $checkoutSession;
         $this->pixHelper = $pixHelper;
+        $this->assetRepository = $assetRepository;
         parent::__construct($context, []);
     }
 
@@ -85,6 +99,14 @@ class Pix extends Template
     public function showPixInformation()
     {
         return !empty($this->getPixInfo());
+    }
+
+    /**
+     * @return string
+     */
+    public function getLogoSrc()
+    {
+        return $this->assetRepository->getUrl(PixHelper::LOGO_URL);
     }
 
     /**
