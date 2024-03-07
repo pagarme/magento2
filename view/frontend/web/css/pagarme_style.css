@@ -23,7 +23,8 @@
     display: none;
 }
 
-.hidden-element {
+.field.hidden-element,
+.field-error.hidden-element {
     display: none;
 }
 
@@ -35,4 +36,8 @@
 .field .control .cc_amount,
 .field .control .cc_owner {
     width: 225px;
+}
+
+.pagarme-pix-logo {
+    width: 120px;
 }

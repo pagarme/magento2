@@ -72,7 +72,7 @@ define(
                     typeof quote.billingAddress() != "undefined" &&
                     quote.billingAddress().vatId == ""
                 ) {
-                    quote.billingAddress().vatId = platFormConfig.customerData.taxvat
+                    quote.billingAddress().vatId = platFormConfig.customerData.taxvat;
                 }
 
                 platFormConfig.base_url = baseUrl;
@@ -117,7 +117,7 @@ define(
             },
 
             getKey : function() {
-                return window.checkoutConfig.payment.ccform.pk_token
+                return window.checkoutConfig.payment.ccform.pk_token;
             },
 
             /**

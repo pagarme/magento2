@@ -45,7 +45,7 @@ define([
         }
 
         formObject(formObject) {
-            this.formObject = formObject
+            this.formObject = formObject;
         }
 
         formValidation() {
@@ -94,6 +94,22 @@ define([
 
             this.platformConfig.updateTotals.totals.subscribe(function(){
                 if (_self.methodCode === 'twocreditcards' || _self.methodCode === 'boletoCreditcard') {
+                    let totalAmount = 0;
+                    const separator = '.';
+                    for (let i = 0, len = _self.formObject.numberOfPaymentForms; i < len; i++) {
+                        let amount = _self.formObject[i].inputAmount.val();
+                        if (amount === undefined) {
+                            continue;
+                        }
+                        amount = amount.replace(_self.platformConfig.currency.decimalSeparator, separator);
+
+                        totalAmount += parseFloat(amount);
+                    }
+
+                    if (totalAmount === _self.platformConfig.updateTotals.getTotals()().grand_total) {
+                        return;
+                    }
+
                     for (let i = 0, len = _self.formObject.numberOfPaymentForms; i < len; i++) {
                         _self.fillCardAmount(_self.formObject[i], 2, i);
                         _self.fillInstallments(_self.formObject[i]);
@@ -360,7 +376,7 @@ define([
             formObject.inputAmount.on('keyup', function(){
                 const element = $(this);
 
-                const originalValue = paymentMethodController.platformConfig.updateTotals.getTotals()().grand_total
+                const originalValue = paymentMethodController.platformConfig.updateTotals.getTotals()().grand_total;
                 let orderAmount = (originalValue).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
                 orderAmount = orderAmount.replace(/[^0-9]/g, '');
                 orderAmount = Number(orderAmount);
@@ -479,6 +495,9 @@ define([
             let sumTotal = (parseFloat(valueCard) + parseFloat(valueBoleto));
 
             sumTotal = (sumTotal + parseFloat(sumInterestTotal)).toString();
+            if (sumInterestTotal === undefined) {
+                sumInterestTotal = 0.0;
+            }
             sumInterestTotal = sumInterestTotal.toString();
 
             return { sumTotal, sumInterestTotal };
@@ -683,7 +702,7 @@ define([
             let amount = form.inputAmount.val();
             if (!selectedBrand || selectedBrand === 'default') {
                 formHandler.updateInstallmentSelect([], form.creditCardInstallments);
-                return
+                return;
             }
 
             if (typeof amount == "undefined") {

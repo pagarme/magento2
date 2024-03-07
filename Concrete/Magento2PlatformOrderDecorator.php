@@ -1122,30 +1122,11 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 
         $paymentData[$creditCardDataIndex][] = $newPaymentData;
 
-        //boleto
-
-        $newPaymentData = new stdClass();
-
-        $amount = str_replace(
-            ['.', ','],
-            "",
-            $additionalInformation["cc_billet_amount"] ?? ''
+        $this->extractPaymentDataFromPagarmeBillet(
+            $additionalInformation,
+            $paymentData,
+            $payment
         );
-
-        $newPaymentData->amount =
-            $this->moneyService->floatToCents($amount / 100);
-
-        $boletoDataIndex = BoletoPayment::getBaseCode();
-        if (!isset($paymentData[$boletoDataIndex])) {
-            $paymentData[$boletoDataIndex] = [];
-        }
-
-        $newPaymentData->customer = $this->extractMultibuyerData(
-            'billet',
-            $additionalInformation
-        );
-
-        $paymentData[$boletoDataIndex][] = $newPaymentData;
     }
 
     private function extractPaymentDataFromPagarmeBillet(
@@ -1154,17 +1135,21 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $payment
     ) {
         $newPaymentData = new stdClass();
+        $amount = $this->platformOrder->getGrandTotal();
+        if (isset($additionalInformation["cc_billet_amount"])) {
+            $amount = $this->moneyService->removeSeparators($additionalInformation["cc_billet_amount"]) / 100;
+        }
         $newPaymentData->amount =
-            $this->moneyService->floatToCents($this->platformOrder->getGrandTotal());
+            $this->moneyService->floatToCents($amount);
         $moduleConfiguration = MPSetup::getModuleConfiguration();
         $newPaymentData->instructions = $moduleConfiguration->getBoletoInstructions();
         $bankConfig = new Bank();
-        $bankNumber = $bankConfig->getBankNumber(MPSetup::getModuleConfiguration()->getBoletoBankCode());
+        $bankNumber = $bankConfig->getBankNumber($moduleConfiguration->getBoletoBankCode());
         if ($bankNumber) {
             $newPaymentData->bank = $bankNumber;
         }
         $expirationDate = new \DateTime();
-        $days = MPSetup::getModuleConfiguration()->getBoletoDueDays();
+        $days = $moduleConfiguration->getBoletoDueDays();
         if ($days) {
             $expirationDate->modify("+{$days} day");
         }

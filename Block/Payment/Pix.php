@@ -1,6 +1,6 @@
 <?php
 /**
- * Class Billet
+ * Class Pix
  *
  * @author      Open Source Team
  * @copyright   2021 Pagar.me (https://pagar.me)
@@ -11,9 +11,12 @@
 
 namespace Pagarme\Pagarme\Block\Payment;
 
+use Exception;
+use Magento\Framework\Phrase;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
 use Magento\Checkout\Model\Session as CheckoutSession;
+use Magento\Framework\View\Asset\Repository;
 use Magento\Sales\Api\Data\OrderInterface as Order;
 use Magento\Sales\Api\Data\OrderPaymentInterface as Payment;
 use Pagarme\Pagarme\Helper\Payment\Pix as PixHelper;
@@ -36,14 +39,27 @@ class Pix extends Template
     private $pixHelper;
 
     /**
-     * Link constructor.
+     * @var Repository
+     */
+    private $assetRepository;
+
+    /**
+     * Pix constructor
+     *
      * @param Context $context
      * @param CheckoutSession $checkoutSession
+     * @param PixHelper $pixHelper
+     * @param Repository $assetRepository
      */
-    public function __construct(Context $context, CheckoutSession $checkoutSession, PixHelper $pixHelper)
-    {
+    public function __construct(
+        Context $context,
+        CheckoutSession $checkoutSession,
+        PixHelper $pixHelper,
+        Repository $assetRepository
+    ) {
         $this->checkoutSession = $checkoutSession;
         $this->pixHelper = $pixHelper;
+        $this->assetRepository = $assetRepository;
         parent::__construct($context, []);
     }
 
@@ -88,13 +104,21 @@ class Pix extends Template
     /**
      * @return string
      */
+    public function getLogoSrc()
+    {
+        return $this->assetRepository->getUrl(PixHelper::LOGO_URL);
+    }
+
+    /**
+     * @return string
+     */
     public function getErrorCopyMessage()
     {
         return __('Failed to copy! Please, manually copy the code using the field bellow the button.');
     }
 
     /**
-     * @return string
+     * @return Phrase
      */
     public function getSuccessMessage()
     {
@@ -103,11 +127,13 @@ class Pix extends Template
 
     /**
      * @return PixHelper
+     * @throws Exception
      */
     public function getPixInfo()
     {
+        $pagarmeTransaction = $this->checkoutSession->getPixOrBilletTransaction();
         if (empty($this->pixInfo)) {
-            $this->pixInfo = $this->pixHelper->getInfo($this->getPayment());
+            $this->pixInfo = $this->pixHelper->getInfo($this->getPayment(), $pagarmeTransaction);
         }
 
         return $this->pixInfo;
