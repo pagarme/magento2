@@ -314,7 +314,7 @@
                                     </label>
                                     <div class="admin__field-control">
                                         <select class="recipient-form-inputs admin__control-select"
-                                                name="form[register_information][phone_number][][type]"
+                                                name="form[register_information][phone_number][0][type]"
                                                 id="recipient-phones-type-0" data-toggle-required>
                                             <option value="Celular"><?= __('Mobile phone') ?></option>
                                             <option value="Telefone"><?= __('Telephone') ?></option>
@@ -328,7 +328,7 @@
                                     </label>
                                     <div class="admin__field-control">
                                         <input type="tel" class="recipient-form-inputs"
-                                               name="form[register_information][phone_number][][number]"
+                                               name="form[register_information][phone_number][0][number]"
                                                id="recipient-phones-number-0" placeholder="(00) 00000-0000"
                                                data-phone-mask data-toggle-required>
                                     </div>
@@ -340,7 +340,7 @@
                                     </label>
                                     <div class="admin__field-control">
                                         <select class="recipient-form-inputs admin__control-select"
-                                                name="form[register_information][phone_number][][type]"
+                                                name="form[register_information][phone_number][1][type]"
                                                 id="recipient-phones-type-1">
                                             <option value="Celular"><?= __('Mobile phone') ?></option>
                                             <option value="Telefone"><?= __('Telephone') ?></option>
@@ -354,7 +354,7 @@
                                     </label>
                                     <div class="admin__field-control">
                                         <input type="tel" class="recipient-form-inputs"
-                                               name="form[register_information][phone_number][][number]"
+                                               name="form[register_information][phone_number][1][number]"
                                                id="recipient-phones-number-1" placeholder="(00) 00000-0000"
                                                data-phone-mask>
                                     </div>
@@ -588,13 +588,13 @@
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" list="partners-list" class="recipient-form-inputs"
-                                               name="form[register_information][managing_partners][][name]"
+                                               name="form[register_information][managing_partners][0][name]"
                                                id="recipient-partner-name" data-toggle-required>
                                         <datalist id="partners-list"></datalist>
                                     </div>
                                 </div>
 
-                                <input type="hidden" name="form[register_information][managing_partners][][type]"
+                                <input type="hidden" name="form[register_information][managing_partners][0][type]"
                                        value="individual" data-toggle-required>
 
                                 <div class="admin__field _required">
@@ -603,7 +603,7 @@
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
-                                               name="form[register_information][managing_partners][][document]"
+                                               name="form[register_information][managing_partners][0][document]"
                                                id="recipient-partner-document" placeholder="000.000.000-00"
                                                maxlength="14" data-document-mask data-toggle-required>
                                     </div>
@@ -615,7 +615,7 @@
                                     </label>
                                     <div class="admin__field-control">
                                         <input type="text" class="recipient-form-inputs"
-                                               name="form[register_information][managing_partners][][mother_name]"
+                                               name="form[register_information][managing_partners][0][mother_name]"
                                                id="recipient-partner-mother-name">
                                     </div>
                                 </div>
@@ -626,7 +626,7 @@
                                     </label>
                                     <div class="admin__field-control">
                                         <input type="text" class="recipient-form-inputs"
-                                               name="form[register_information][managing_partners][][email]"
+                                               name="form[register_information][managing_partners][0][email]"
                                                id="recipient-partner-email" data-toggle-required>
                                     </div>
                                 </div>
@@ -637,7 +637,7 @@
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
-                                               name="form[register_information][managing_partners][][birthdate]"
+                                               name="form[register_information][managing_partners][0][birthdate]"
                                                id="recipient-partner-birthdate" placeholder="dd/mm/yyyy"
                                                data-datepicker data-date-mask data-toggle-required>
                                     </div>
@@ -649,7 +649,7 @@
                                     </label>
                                     <div class="admin__field-control">
                                         <input type="text" class="recipient-form-inputs"
-                                               name="form[register_information][managing_partners][][monthly_income]"
+                                               name="form[register_information][managing_partners][0][monthly_income]"
                                                id="recipient-partner-monthly-income" placeholder="0.000,00"
                                                data-currency-mask data-toggle-required>
                                     </div>
@@ -661,13 +661,13 @@
                                     </label>
                                     <div class="admin__field-control">
                                         <input type="text" class="recipient-form-inputs"
-                                               name="form[register_information][managing_partners][][professional_occupation]"
+                                               name="form[register_information][managing_partners][0][professional_occupation]"
                                                id="recipient-partner-professional-occupation" data-toggle-required>
                                     </div>
                                 </div>
 
                                 <input type="hidden"
-                                       name="form[register_information][managing_partners][][self_declared_legal_representative]"
+                                       name="form[register_information][managing_partners][0][self_declared_legal_representative]"
                                        value="1" data-toggle-required>
 
                             </div>
@@ -685,7 +685,7 @@
                                     </label>
                                     <div class="admin__field-control">
                                         <select class="recipient-form-inputs admin__control-select"
-                                                name="form[register_information][managing_partners][][phone_number][][type]"
+                                                name="form[register_information][managing_partners][0][phone_number][0][type]"
                                                 id="recipient-partner-phones-type-0" data-toggle-required>
                                             <option value="Celular"><?= __('Mobile phone') ?></option>
                                             <option value="Telefone"><?= __('Telephone') ?></option>
@@ -699,7 +699,7 @@
                                     </label>
                                     <div class="admin__field-control">
                                         <input type="tel" class="recipient-form-inputs"
-                                               name="form[register_information][managing_partners][][phone_number][][number]"
+                                               name="form[register_information][managing_partners][0][phone_number][0][number]"
                                                id="recipient-partner-phones-number-0" placeholder="(00) 00000-0000"
                                                data-phone-mask data-toggle-required>
                                     </div>
@@ -711,7 +711,7 @@
                                     </label>
                                     <div class="admin__field-control">
                                         <select class="recipient-form-inputs admin__control-select"
-                                                name="form[register_information][managing_partners][][phone_number][][type]"
+                                                name="form[register_information][managing_partners][0][phone_number][1][type]"
                                                 id="recipient-partner-phones-type-1">
                                             <option value="Celular"><?= __('Mobile phone') ?></option>
                                             <option value="Telefone"><?= __('Telephone') ?></option>
@@ -725,7 +725,7 @@
                                     </label>
                                     <div class="admin__field-control">
                                         <input type="tel" class="recipient-form-inputs"
-                                               name="form[register_information][managing_partners][][phone_number][][number]"
+                                               name="form[register_information][managing_partners][0][phone_number][1][number]"
                                                id="recipient-partner-phones-number-1" placeholder="(00) 00000-0000"
                                                data-phone-mask>
                                     </div>
@@ -746,7 +746,7 @@
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
-                                               name="form[register_information][managing_partners][][address][zip_code]"
+                                               name="form[register_information][managing_partners][0][address][zip_code]"
                                                id="recipient-partner-zip-code" placeholder="00000-000"
                                                data-zipcode-mask data-cep-search data-toggle-required>
                                     </div>
@@ -758,7 +758,7 @@
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
-                                               name="form[register_information][managing_partners][][address][street]"
+                                               name="form[register_information][managing_partners][0][address][street]"
                                                id="recipient-partner-street" data-toggle-required>
                                     </div>
                                 </div>
@@ -769,7 +769,7 @@
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
-                                               name="form[register_information][managing_partners][][address][street_number]"
+                                               name="form[register_information][managing_partners][0][address][street_number]"
                                                id="recipient-partner-street-number" data-toggle-required>
                                     </div>
                                 </div>
@@ -780,7 +780,7 @@
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
-                                               name="form[register_information][managing_partners][][address][complementary]"
+                                               name="form[register_information][managing_partners][0][address][complementary]"
                                                id="recipient-partner-complementary">
                                     </div>
                                 </div>
@@ -791,7 +791,7 @@
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
-                                               name="form[register_information][managing_partners][][address][reference_point]"
+                                               name="form[register_information][managing_partners][0][address][reference_point]"
                                                id="recipient-partner-reference-point">
                                     </div>
                                 </div>
@@ -802,7 +802,7 @@
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
-                                               name="form[register_information][managing_partners][][address][neighborhood]"
+                                               name="form[register_information][managing_partners][0][address][neighborhood]"
                                                id="recipient-partner-neighborhood" data-toggle-required>
                                     </div>
                                 </div>
@@ -813,7 +813,7 @@
                                     </label>
                                     <div class="admin__field-control ">
                                         <select class="recipient-form-inputs admin__control-select"
-                                                name="form[register_information][managing_partners][][address][state]"
+                                                name="form[register_information][managing_partners][0][address][state]"
                                                 id="recipient-partner-state"
                                                 data-state
                                                 data-toggle-required>
@@ -832,7 +832,7 @@
                                     <div class="admin__field-control ">
                                         <input type="text" list="recipient-partner-cities"
                                                class="recipient-form-inputs"
-                                               name="form[register_information][managing_partners][][address][city]"
+                                               name="form[register_information][managing_partners][0][address][city]"
                                                id="recipient-partner-city"
                                                data-toggle-required>
                                         <datalist id="recipient-partner-cities"></datalist>
