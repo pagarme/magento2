@@ -2,6 +2,9 @@
 
 namespace Pagarme\Pagarme\Block\Adminhtml\Marketplace;
 
+use Exception;
+use Magento\Customer\Model\ResourceModel\Customer\Collection;
+use Magento\Directory\Model\Country;
 use Magento\Framework\Registry;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
@@ -12,7 +15,9 @@ use stdClass;
 
 class Recipient extends Template
 {
-
+    /**
+     * @var Collection
+     */
     private $customerCollection;
 
     /**
@@ -25,7 +30,6 @@ class Recipient extends Template
      */
     private $coreRegistry;
 
-
     /**
      * @var array
      */
@@ -36,19 +40,31 @@ class Recipient extends Template
      */
     private $recipient = null;
 
+    /**
+     * @var Country
+     */
+    private $country;
+
 
     /**
      * Link constructor.
      * @param Context $context
+     * @param Registry $registry
+     * @param CustomerCollectionFactory $customerCollectionFactory
+     * @param Country $country
+     * @throws Exception
      */
     public function __construct(
-        Context $context,
-        Registry $registry,
-        CustomerCollectionFactory $customerCollectionFactory
-    ) {
+        Context                   $context,
+        Registry                  $registry,
+        CustomerCollectionFactory $customerCollectionFactory,
+        Country                   $country
+    )
+    {
         $this->coreRegistry = $registry;
         $this->customerCollection = $customerCollectionFactory->create();
         $this->recipientRepository = new RecipientRepository();
+        $this->country = $country;
 
         Magento2CoreSetup::bootstrap();
         parent::__construct($context, []);
@@ -126,5 +142,14 @@ class Recipient extends Template
         }
 
         return $this->sellers;
+    }
+
+    /**
+     * @param string $countryCode
+     * @return array
+     */
+    public function getAllRegionsOfCountry($countryCode = 'BR')
+    {
+        return $this->country->loadByCode($countryCode)->getRegions()->getData();
     }
 }
