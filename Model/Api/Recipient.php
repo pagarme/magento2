@@ -39,24 +39,21 @@ class Recipient implements RecipientInterface
         $post = $this->request->getBodyParams();
         parse_str($post[0], $params);
 
-        
+
         $recipientClass = new RecipientFactory();
         $recipient = $recipientClass->createRecipient($params['form']);
         $proxy = new RecipientMiddleProxy();
-        
+
         $data = $proxy->createRecipient($recipient->convertToCreateRequest());
 
+        $form = $this->getFormattedForm($params['form']);
 
-
-        exit();
-        // $form = $this->getFormattedForm($params['form']);
-
-        // if (empty($form)) {
-        //     return json_encode([
-        //         'code' => 400,
-        //         'message' => 'Error on save recipient'
-        //     ]);
-        // }
+         if (empty($form)) {
+             return json_encode([
+                 'code' => 400,
+                 'message' => 'Error on save recipient'
+             ]);
+         }
 
         try {
             $this->recipientService->saveFormRecipient($form);
