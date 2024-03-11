@@ -14,7 +14,7 @@ class RecipientService
     
     public function __construct()
     {
-        $this->coreAuth = new CoreAuth('');
+        $this->coreAuth = new CoreAuth();
     }
 
     public function createRecipient($recipient)

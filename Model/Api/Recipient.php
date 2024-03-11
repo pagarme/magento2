@@ -44,7 +44,7 @@ class Recipient implements RecipientInterface
         $recipient = $recipientClass->createRecipient($params['form']);
         $proxy = new RecipientMiddleProxy();
 
-        $data = $proxy->createRecipient($recipient->convertToCreateRequest());
+        $data = $proxy->createRecipient($recipient);
 
         $form = $this->getFormattedForm($params['form']);
 
