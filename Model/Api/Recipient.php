@@ -5,9 +5,12 @@ namespace Pagarme\Pagarme\Model\Api;
 use Magento\Framework\Webapi\Rest\Request;
 use Pagarme\Core\Kernel\ValueObjects\Id\RecipientId;
 use Pagarme\Core\Marketplace\Services\RecipientService;
+use Pagarme\Core\Middle\Factory\RecipientFactory;
 use Pagarme\Core\Recurrence\Services\PlanService;
 use Pagarme\Pagarme\Api\RecipientInterface;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use Pagarme\Pagarme\Model\CoreAuth;
+use Pagarme\Pagarme\Service\Marketplace\RecipientService as RecipientMiddleProxy;
 
 class Recipient implements RecipientInterface
 {
@@ -36,14 +39,24 @@ class Recipient implements RecipientInterface
         $post = $this->request->getBodyParams();
         parse_str($post[0], $params);
 
-        $form = $this->getFormattedForm($params['form']);
+        
+        $recipientClass = new RecipientFactory();
+        $recipient = $recipientClass->createRecipient($params['form']);
+        $proxy = new RecipientMiddleProxy();
+        
+        $data = $proxy->createRecipient($recipient->convertToCreateRequest());
 
-        if (empty($form)) {
-            return json_encode([
-                'code' => 400,
-                'message' => 'Error on save recipient'
-            ]);
-        }
+
+
+        exit();
+        // $form = $this->getFormattedForm($params['form']);
+
+        // if (empty($form)) {
+        //     return json_encode([
+        //         'code' => 400,
+        //         'message' => 'Error on save recipient'
+        //     ]);
+        // }
 
         try {
             $this->recipientService->saveFormRecipient($form);
