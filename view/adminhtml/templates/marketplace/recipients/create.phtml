@@ -404,25 +404,25 @@
                                     </div>
                                 </div>
 
-                                <div class="admin__field">
+                                <div class="admin__field _required">
                                     <label for="recipient-complementary" class="admin__field-label">
                                         <span><?= __('Complement') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
                                                name="form[register_information][address][complementary]"
-                                               id="recipient-complementary">
+                                               id="recipient-complementary" data-toggle-required>
                                     </div>
                                 </div>
 
-                                <div class="admin__field">
+                                <div class="admin__field _required">
                                     <label for="recipient-reference-point" class="admin__field-label">
                                         <span><?= __('Reference point') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
                                                name="form[register_information][address][reference_point]"
-                                               id="recipient-reference-point">
+                                               id="recipient-reference-point" data-toggle-required>
                                     </div>
                                 </div>
 
@@ -510,25 +510,25 @@
                                     </div>
                                 </div>
 
-                                <div class="admin__field">
+                                <div class="admin__field _required">
                                     <label for="company-complementary" class="admin__field-label">
                                         <span><?= __('Complement') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
                                                name="form[register_information][main_address][complementary]"
-                                               id="company-complementary">
+                                               id="company-complementary" data-toggle-required>
                                     </div>
                                 </div>
 
-                                <div class="admin__field">
+                                <div class="admin__field _required">
                                     <label for="company-reference-point" class="admin__field-label">
                                         <span><?= __('Reference point') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
                                                name="form[register_information][main_address][reference_point]"
-                                               id="company-reference-point">
+                                               id="company-reference-point" data-toggle-required>
                                     </div>
                                 </div>
 
@@ -774,25 +774,25 @@
                                     </div>
                                 </div>
 
-                                <div class="admin__field">
+                                <div class="admin__field _required">
                                     <label for="recipient-partner-complementary" class="admin__field-label">
                                         <span><?= __('Complement') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
                                                name="form[register_information][managing_partners][0][address][complementary]"
-                                               id="recipient-partner-complementary">
+                                               id="recipient-partner-complementary" data-toggle-required>
                                     </div>
                                 </div>
 
-                                <div class="admin__field">
+                                <div class="admin__field _required">
                                     <label for="recipient-partner-reference-point" class="admin__field-label">
                                         <span><?= __('Reference point') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
                                                name="form[register_information][managing_partners][0][address][reference_point]"
-                                               id="recipient-partner-reference-point">
+                                               id="recipient-partner-reference-point" data-toggle-required>
                                     </div>
                                 </div>
 
@@ -954,7 +954,7 @@
 
                                 <h2><?= __('Transfer settings') ?></h2>
 
-                                <div class="admin__field" data-section="individual-corporation">
+                                <div class="admin__field">
                                     <label for="transfer-enabled" class="admin__field-label">
                                         <span><?= __('Enable automatic transfer') ?></span>
                                     </label>
@@ -967,7 +967,8 @@
                                     </div>
                                 </div>
 
-                                <div class="admin__field _required" data-section="transfer" id="transfer-interval-div">
+                                <div class="admin__field _required" data-section="transfer_interval"
+                                     id="transfer-interval-div">
                                     <label for="transfer-interval" class="admin__field-label">
                                         <span><?= __('Transfer interval') ?></span>
                                     </label>
@@ -982,7 +983,7 @@
                                     </div>
                                 </div>
 
-                                <div class="admin__field _required" data-section="transfer-day" id="transfer-day-div">
+                                <div class="admin__field _required" data-section="transfer_day" id="transfer-day-div">
                                     <label for="transfer-day" class="admin__field-label">
                                         <span><?= __('Transfer day') ?></span>
                                     </label>

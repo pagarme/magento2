@@ -2,14 +2,13 @@
 
 namespace Pagarme\Pagarme\Model\Api;
 
+use Exception;
 use Magento\Framework\Webapi\Rest\Request;
 use Pagarme\Core\Kernel\ValueObjects\Id\RecipientId;
 use Pagarme\Core\Marketplace\Services\RecipientService;
 use Pagarme\Core\Middle\Factory\RecipientFactory;
-use Pagarme\Core\Recurrence\Services\PlanService;
 use Pagarme\Pagarme\Api\RecipientInterface;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
-use Pagarme\Pagarme\Model\CoreAuth;
 use Pagarme\Pagarme\Service\Marketplace\RecipientService as RecipientMiddleProxy;
 
 class Recipient implements RecipientInterface
@@ -48,16 +47,16 @@ class Recipient implements RecipientInterface
 
         $form = $this->getFormattedForm($params['form']);
 
-         if (empty($form)) {
-             return json_encode([
-                 'code' => 400,
-                 'message' => 'Error on save recipient'
-             ]);
-         }
+        if (empty($form)) {
+            return json_encode([
+                'code' => 400,
+                'message' => 'Error on save recipient'
+            ]);
+        }
 
         try {
             $this->recipientService->saveFormRecipient($form);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             return json_encode([
                 'code' => 400,
                 'message' => $exception->getMessage()
@@ -73,7 +72,7 @@ class Recipient implements RecipientInterface
     public function getFormattedForm(array $form): array
     {
         $form['holder_document'] = preg_replace("/[^0-9]/", "", $form['holder_document'] ?? '');
-        $form['document']  = preg_replace("/[^0-9]/", "", $form['document'] ?? '');
+        $form['document'] = preg_replace("/[^0-9]/", "", $form['document'] ?? '');
         if (isset($form['type'])) {
             $form['holder_type'] = $form['type'];
         }
@@ -90,7 +89,7 @@ class Recipient implements RecipientInterface
 
         try {
             $recipientId = new RecipientId($post['recipientId']);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return json_encode([
                 'code' => 400,
                 'message' => 'Invalid Pagar.me ID'
@@ -101,9 +100,9 @@ class Recipient implements RecipientInterface
             $recipient = $this->recipientService->findByPagarmeId($recipientId);
 
             if ($recipient->status != 'active') {
-                throw new \Exception('Recipient not active');
+                throw new Exception('Recipient not active');
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return json_encode([
                 'code' => 404,
                 'message' => $e->getMessage(),

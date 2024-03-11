@@ -253,12 +253,12 @@ require([
         });
 
         transferEnabled.on('change', function () {
-            hideOrShowSectionByFieldVal('transfer', $(this).val());
+            hideOrShowSectionByFieldVal('transfer_interval', $(this).val());
         });
 
         $('#transfer-interval').on('change', function () {
             hideOrShowSections(
-                'transfer-day',
+                'transfer_day',
                 $(this).val() === 'Daily' ? 'hide' : 'show'
             );
             fillTransferDayValuesByTransferInterval();
@@ -464,8 +464,8 @@ require([
         }
 
         if (transferDayValue === 'Monthly') {
-            transferDay.children().remove().end().append('<option value="1">1</option>');
-            for (let i = 2; i < 32; i++) {
+            transferDay.children().remove();
+            for (let i = 1; i < 32; i++) {
                 transferDay.append('<option value="' + i + '">' + i + '</option>');
             }
         }
@@ -483,7 +483,7 @@ require([
     function buildRecipientObject(recipient) {
         const nameId = recipient.type === 'individual' ? '#recipient-name' : '#recipient-company-name';
 
-        let recipientObject =  {
+        let recipientObject = {
             '#document-type': recipient.type === 'company' ? 'corporation' : recipient.type,
             '#document': recipient.document,
             '#recipient-email': recipient.email,
