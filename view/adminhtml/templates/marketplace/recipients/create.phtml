@@ -28,9 +28,9 @@
 
     <?php if (!empty($block->getRecipientId())) : ?>
         <!--  LocalId  -->
-        <input type="hidden" name="form[register_information][id]" value="<?= $block->getLocalId() ?>">
+        <input type="hidden" name="form[id]" value="<?= $block->getLocalId() ?>">
         <!--  RecipientId  -->
-        <input type="hidden" name="form[register_information][recipient_id]" value="<?= $block->getRecipientId() ?>">
+        <input type="hidden" name="form[recipient_id]" value="<?= $block->getRecipientId() ?>">
     <?php endif; ?>
 
     <div id="page:main-container" class="page-columns">

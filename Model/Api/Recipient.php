@@ -67,7 +67,7 @@ class Recipient implements RecipientInterface
         if (isset($form['type'])) {
             $form['holder_type'] = $form['type'];
         }
-        if (isset($form['pagarme_id'])) {
+        if ($form['pagarme_id']) {
             $form['recipient_id'] = $form['pagarme_id'];
         }
 
