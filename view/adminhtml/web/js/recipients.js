@@ -74,10 +74,23 @@ require([
             const recipientDocument = webkulSeller
                 .find(':selected')
                 .attr('data-document');
-            $('#document, #holder-document').val(recipientDocument).trigger('change');
-            $('#document-type, #holder-document-type').val(getDocumentTypeByDocument(recipientDocument));
-            $('#document').prop('readonly', !!recipientDocument);
-            $('#document-type').toggleClass('readonly', !!recipientDocument).trigger('change');
+            $('#document-type, #holder-document-type')
+                .val(getDocumentTypeByDocument(recipientDocument))
+                .trigger('change');
+            $('#document-type').toggleClass('readonly', !!recipientDocument);
+            $('#document')
+                .val(recipientDocument)
+                .prop('readonly', !!recipientDocument)
+                .trigger('input')
+                .trigger('change');
+            $('#holder-document').val(documentTypeCorporationToCompany(recipientDocument));
+
+            const recipientBirthdate = webkulSeller
+                .find(':selected')
+                .attr('data-birthdate');
+            $('#recipient-birthdate')
+                .val(formatDate(recipientBirthdate))
+                .prop('readonly', !!recipientEmail);
 
             if (!externalId) {
                 hideOrShowSections(''); // Hide all sections
@@ -95,7 +108,7 @@ require([
                 };
 
             $('#holder-document-type')
-                .val(documentType);
+                .val(documentTypeCorporationToCompany(documentType));
 
             $('#document, #holder-document')
                 .attr({
@@ -192,7 +205,7 @@ require([
                             $('#recipient-partner-0-professional-occupation').val(data['qsa'][0]['qualificacao_socio'])
                         }
                     }).fail(function (data) {
-                        console.log(data);
+                        console.error(data);
                     });
                 }
             });
@@ -209,10 +222,6 @@ require([
                 return;
             }
 
-            const cepField = $(this),
-                maxRequests = 3;
-            let requests = 0;
-
             $.ajax({
                 url: 'https://viacep.com.br/ws/' + cepNumber + '/json/',
                 method: 'get',
@@ -226,7 +235,7 @@ require([
                 addressFieldset.find('select[id$="-state"]').val(data.uf).trigger('change');
                 addressFieldset.find('input[id$="-city"]').val(data.localidade);
             }).fail(function (data) {
-                console.log(data)
+                console.error(data)
             });
         });
 
@@ -307,6 +316,14 @@ require([
             return dateArray[2] + '/' + dateArray[1] + '/' + dateArray[0];
         }
         return date;
+    }
+
+    function documentTypeCorporationToCompany(documentType) {
+        return documentType === 'corporation' ? 'company' : documentType;
+    }
+
+    function documentTypeCompanyToCorporation(documentType) {
+        return documentType === 'company' ? 'corporation' : documentType;
     }
 
     function getDocumentTypeByDocument(document) {
@@ -482,13 +499,13 @@ require([
 
     function buildRecipientObject(recipient) {
         let recipientObject = {
-            '#document-type': recipient.register_information.type === 'company' ? 'corporation' : recipient.type,
+            '#document-type': documentTypeCompanyToCorporation(recipient.register_information.type),
             '#document': recipient.register_information.document,
             '#recipient-email': recipient.register_information.email,
             '#recipient-site': recipient.register_information.site_url,
 
             '#holder-name': recipient.default_bank_account.holder_name,
-            '#holder-document-type': recipient.default_bank_account.holder_type === 'company' ? 'corporation' : recipient.default_bank_account.holder_type,
+            '#holder-document-type': documentTypeCorporationToCompany(recipient.default_bank_account.holder_type),
             '#holder-document': recipient.register_information.document,
             '#bank': recipient.default_bank_account.bank,
             '#branch-number': recipient.default_bank_account.branch_number,
@@ -526,11 +543,13 @@ require([
                 break;
             case 'company':
             case 'corporation':
-                recipientObject['#recipient-company-name'] = recipient.register_information.name;
+                recipientObject['#recipient-company-name'] = recipient.register_information.company_name;
                 recipientObject['#recipient-trading-name'] = recipient.register_information.trading_name;
                 recipientObject['#recipient-annual-revenue'] = recipient.register_information.annual_revenue;
                 recipientObject['#recipient-corporation-type'] = recipient.register_information.corporation_type;
+                recipientObject['#recipient-corporation-type'] = recipient.register_information.corporation_type;
                 recipientObject['#recipient-founding-date'] = formatDate(recipient.register_information.founding_date);
+                recipientObject['#recipient-cnae'] = recipient.register_information.cnae;
 
                 recipientObject['#company-zip-code'] = recipient.register_information.main_address.zip_code;
                 recipientObject['#company-street'] = recipient.register_information.main_address.street;
@@ -551,6 +570,7 @@ require([
             recipientObject['#recipient-partner-' + partnerIndex + '-email'] = partner.email;
             recipientObject['#recipient-partner-' + partnerIndex + '-birthdate'] = formatDate(partner.birthdate);
             recipientObject['#recipient-partner-' + partnerIndex + '-monthly-income'] = partner.monthly_income;
+            recipientObject['#recipient-partner-' + partnerIndex + '-professional-occupation'] = partner.professional_occupation;
             recipientObject['#recipient-partner-' + partnerIndex + '-declaration'] = partner.self_declared_legal_representative;
 
             recipientObject['#recipient-partner-' + partnerIndex + '-zip-code'] = partner.address.zip_code;
@@ -574,7 +594,8 @@ require([
     function triggerChange(elementId) {
         const elements = [
             '#document-type',
-            '#transfer-enabled'
+            '#transfer-enabled',
+            '#transfer-interval'
         ];
         if ($.inArray(elementId, elements) >= 0) {
             $(elementId).trigger('change');

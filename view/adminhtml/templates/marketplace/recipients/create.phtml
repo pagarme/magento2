@@ -60,6 +60,7 @@
                                                         data-sellername="<?php printf("%s %s", $seller['firstname'], $seller['lastname']); ?>"
                                                         data-email="<?= $seller['email'] ?>"
                                                         data-document="<?= !empty($seller['taxvat']) ? $seller['taxvat'] : '' ?>"
+                                                        data-birthdate="<?= !empty($seller['dob']) ? $seller['dob'] : '' ?>"
                                                         value="<?= $seller['entity_id'] ?>">
                                                         <?php printf('%s %s (%s)', $seller['firstname'], $seller['lastname'], $seller['email']); ?>
                                                     </option>
@@ -405,25 +406,25 @@
                                     </div>
                                 </div>
 
-                                <div class="admin__field _required">
+                                <div class="admin__field">
                                     <label for="recipient-complementary" class="admin__field-label">
                                         <span><?= __('Complement') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
                                                name="form[register_information][address][complementary]"
-                                               id="recipient-complementary" data-toggle-required>
+                                               id="recipient-complementary">
                                     </div>
                                 </div>
 
-                                <div class="admin__field _required">
+                                <div class="admin__field">
                                     <label for="recipient-reference-point" class="admin__field-label">
                                         <span><?= __('Reference point') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
                                                name="form[register_information][address][reference_point]"
-                                               id="recipient-reference-point" data-toggle-required>
+                                               id="recipient-reference-point">
                                     </div>
                                 </div>
 
@@ -511,25 +512,25 @@
                                     </div>
                                 </div>
 
-                                <div class="admin__field _required">
+                                <div class="admin__field">
                                     <label for="company-complementary" class="admin__field-label">
                                         <span><?= __('Complement') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
                                                name="form[register_information][main_address][complementary]"
-                                               id="company-complementary" data-toggle-required>
+                                               id="company-complementary">
                                     </div>
                                 </div>
 
-                                <div class="admin__field _required">
+                                <div class="admin__field">
                                     <label for="company-reference-point" class="admin__field-label">
                                         <span><?= __('Reference point') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
                                                name="form[register_information][main_address][reference_point]"
-                                               id="company-reference-point" data-toggle-required>
+                                               id="company-reference-point">
                                     </div>
                                 </div>
 
@@ -779,25 +780,25 @@
                                     </div>
                                 </div>
 
-                                <div class="admin__field _required">
+                                <div class="admin__field">
                                     <label for="recipient-partner-0-complementary" class="admin__field-label">
                                         <span><?= __('Complement') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
                                                name="form[register_information][managing_partners][0][address][complementary]"
-                                               id="recipient-partner-0-complementary" data-toggle-required>
+                                               id="recipient-partner-0-complementary">
                                     </div>
                                 </div>
 
-                                <div class="admin__field _required">
+                                <div class="admin__field">
                                     <label for="recipient-partner-0-reference-point" class="admin__field-label">
                                         <span><?= __('Reference point') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
                                                name="form[register_information][managing_partners][0][address][reference_point]"
-                                               id="recipient-partner-0-reference-point" data-toggle-required>
+                                               id="recipient-partner-0-reference-point">
                                     </div>
                                 </div>
 
@@ -872,7 +873,7 @@
                                                 id="holder-document-type" readonly data-toggle-required>
                                             <option value=""><?= __('Select') ?></option>
                                             <option value="individual"><?= __('CPF') ?></option>
-                                            <option value="corporation"><?= __('CNPJ') ?></option>
+                                            <option value="company"><?= __('CNPJ') ?></option>
                                         </select>
                                     </div>
                                 </div>
