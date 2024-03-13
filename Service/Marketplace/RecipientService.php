@@ -20,8 +20,12 @@ class RecipientService
     public function createRecipient($recipient)
     {
         $recipientProxy = new RecipientProxy($this->coreAuth);
-        $recipientProxy->create($recipient);
-        $abc = $recipientProxy;
-        return $abc;
+        return $recipientProxy->create($recipient);
+    }
+
+    public function searchRecipient()
+    {
+        $recipientProxy = new RecipientProxy($this->coreAuth);
+        return $recipientProxy->getFromPagarme($recipientId);
     }
 }
