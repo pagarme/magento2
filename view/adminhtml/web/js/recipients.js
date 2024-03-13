@@ -39,7 +39,7 @@ require([
         $('[data-date-mask]').mask('00/00/0000');
         $('[data-currency-mask]').mask("#.##0,00", {reverse: true});
         $('[data-zipcode-mask]').mask('00000-000');
-        $('#cnae').mask('0000-0/00');
+        $('#recipient-cnae').mask('0000-0/00');
 
         function phoneMaskBehavior(val) {
             return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
@@ -167,21 +167,19 @@ require([
                             $.each(data['qsa'], function (index) {
                                 partnersList += '<option value="' + capitalizeAllWords(data['qsa'][index]['nome_socio']) + '">' + data['qsa'][index]['qualificacao_socio'] + '</option>';
                             });
-                            fillDatalistOptions('partners-list', partnersList);
+                            fillDatalistOptions('recipient-partner-0-partners-list', partnersList);
                         }
 
-                        const foundingDateArray = data['data_inicio_atividade'].split('-'),
-                            foundingDate = foundingDateArray[2] + '/' + foundingDateArray[1] + '/' + foundingDateArray[0],
-                            phoneNumber = [
-                                data['ddd_telefone_1'],
-                                data['ddd_telefone_2']
-                            ];
+                        const phoneNumber = [
+                            data['ddd_telefone_1'],
+                            data['ddd_telefone_2']
+                        ];
 
                         $('#recipient-company-name').val(capitalizeAllWords(data['razao_social'])).trigger('change');
                         $('#recipient-trading-name').val(capitalizeAllWords(data['nome_fantasia']));
-                        $('#founding-date').val(foundingDate);
+                        $('#recipient-founding-date').val(formatDate(data['data_inicio_atividade']));
                         $('#recipient-corporation-type').val(data['natureza_juridica']);
-                        $('#cnae').val(data['cnae_fiscal']).trigger('input');
+                        $('#recipient-cnae').val(data['cnae_fiscal']).trigger('input');
                         $('#recipient-phones-type-0').val(phoneNumber[0].length === 10 ? 'Telefone' : 'Celular');
                         $('#recipient-phones-number-0').val(phoneNumber[0]).trigger('input');
                         $('#recipient-phones-type-1').val(phoneNumber[1].length === 10 ? 'Telefone' : 'Celular');
@@ -190,11 +188,11 @@ require([
                         $('#company-street-number').val(data['numero']);
                         $('#company-complementary').val(capitalizeAllWords(data['complemento']));
                         if (data['qsa'].length) {
-                            $('#recipient-partner-name').val(capitalizeAllWords(data['qsa'][0]['nome_socio']));
-                            $('#recipient-partner-professional-occupation').val(data['qsa'][0]['qualificacao_socio'])
+                            $('#recipient-partner-0-name').val(capitalizeAllWords(data['qsa'][0]['nome_socio']));
+                            $('#recipient-partner-0-professional-occupation').val(data['qsa'][0]['qualificacao_socio'])
                         }
                     }).fail(function (data) {
-                        console.log(data)
+                        console.log(data);
                     });
                 }
             });
@@ -303,6 +301,14 @@ require([
         });
     }
 
+    function formatDate(date) {
+        const dateArray = date.split('-');
+        if (dateArray.length === 3) {
+            return dateArray[2] + '/' + dateArray[1] + '/' + dateArray[0];
+        }
+        return date;
+    }
+
     function getDocumentTypeByDocument(document) {
         let value = '';
         if (document) {
@@ -407,12 +413,6 @@ require([
         saveButtonSpan.html('Saving');
     }
 
-    // TODO: Remove after correcting the loadRecipient() function
-    function hideElementByMenuSelectValue(value, elementIdToHide) {
-        document.getElementById(elementIdToHide).style.display
-            = value == 1 ? 'block' : 'none';
-    }
-
     function hideOrShowSectionByFieldVal(section, value) {
         hideOrShowSections(section, value === '1' ? 'show' : 'hide');
     }
@@ -481,16 +481,15 @@ require([
     }
 
     function buildRecipientObject(recipient) {
-        const nameId = recipient.type === 'individual' ? '#recipient-name' : '#recipient-company-name';
-
         let recipientObject = {
-            '#document-type': recipient.type === 'company' ? 'corporation' : recipient.type,
-            '#document': recipient.document,
-            '#recipient-email': recipient.email,
+            '#document-type': recipient.register_information.type === 'company' ? 'corporation' : recipient.type,
+            '#document': recipient.register_information.document,
+            '#recipient-email': recipient.register_information.email,
+            '#recipient-site': recipient.register_information.site_url,
 
             '#holder-name': recipient.default_bank_account.holder_name,
             '#holder-document-type': recipient.default_bank_account.holder_type === 'company' ? 'corporation' : recipient.default_bank_account.holder_type,
-            '#holder-document': recipient.document,
+            '#holder-document': recipient.register_information.document,
             '#bank': recipient.default_bank_account.bank,
             '#branch-number': recipient.default_bank_account.branch_number,
             '#branch-check-digit': recipient.default_bank_account.branch_check_digit,
@@ -503,9 +502,83 @@ require([
             '#transfer-day': recipient.transfer_settings.transfer_day
         };
 
-        recipientObject[nameId] = recipient.name;
+        $.each(recipient.register_information.phone_numbers, function (index, phone) {
+            recipientObject['#recipient-phones-type-' + index] = phone.type;
+            recipientObject['#recipient-phones-number-' + index] = phone.ddd + phone.number;
+        });
+
+        switch (recipient.type) {
+            case 'individual':
+                recipientObject['#recipient-name'] = recipient.register_information.name;
+                recipientObject['#recipient-mother-name'] = recipient.register_information.mother_name;
+                recipientObject['#recipient-birthdate'] = formatDate(recipient.register_information.birthdate);
+                recipientObject['#recipient-monthly-income'] = recipient.register_information.monthly_income;
+                recipientObject['#recipient-professional-occupation'] = recipient.register_information.professional_occupation;
+
+                recipientObject['#recipient-zip-code'] = recipient.register_information.address.zip_code;
+                recipientObject['#recipient-street'] = recipient.register_information.address.street;
+                recipientObject['#recipient-street-number'] = recipient.register_information.address.street_number;
+                recipientObject['#recipient-complementary'] = recipient.register_information.address.complementary;
+                recipientObject['#recipient-reference-point'] = recipient.register_information.address.reference_point;
+                recipientObject['#recipient-neighborhood'] = recipient.register_information.address.neighborhood;
+                recipientObject['#recipient-state'] = recipient.register_information.address.state;
+                recipientObject['#recipient-city'] = recipient.register_information.address.city;
+                break;
+            case 'company':
+            case 'corporation':
+                recipientObject['#recipient-company-name'] = recipient.register_information.name;
+                recipientObject['#recipient-trading-name'] = recipient.register_information.trading_name;
+                recipientObject['#recipient-annual-revenue'] = recipient.register_information.annual_revenue;
+                recipientObject['#recipient-corporation-type'] = recipient.register_information.corporation_type;
+                recipientObject['#recipient-founding-date'] = formatDate(recipient.register_information.founding_date);
+
+                recipientObject['#company-zip-code'] = recipient.register_information.main_address.zip_code;
+                recipientObject['#company-street'] = recipient.register_information.main_address.street;
+                recipientObject['#company-street-number'] = recipient.register_information.main_address.street_number;
+                recipientObject['#company-complementary'] = recipient.register_information.main_address.complementary;
+                recipientObject['#company-reference-point'] = recipient.register_information.main_address.reference_point;
+                recipientObject['#company-neighborhood'] = recipient.register_information.main_address.neighborhood;
+                recipientObject['#company-state'] = recipient.register_information.main_address.state;
+                recipientObject['#company-city'] = recipient.register_information.main_address.city;
+                break;
+        }
+
+        $.each(recipient.register_information.managing_partners, function (partnerIndex, partner) {
+            recipientObject['#recipient-partner-' + partnerIndex + '-name'] = partner.name;
+            recipientObject['#recipient-partner-' + partnerIndex + '-document-type'] = partner.type;
+            recipientObject['#recipient-partner-' + partnerIndex + '-document'] = partner.document;
+            recipientObject['#recipient-partner-' + partnerIndex + '-mother-name'] = partner.mother_name;
+            recipientObject['#recipient-partner-' + partnerIndex + '-email'] = partner.email;
+            recipientObject['#recipient-partner-' + partnerIndex + '-birthdate'] = formatDate(partner.birthdate);
+            recipientObject['#recipient-partner-' + partnerIndex + '-monthly-income'] = partner.monthly_income;
+            recipientObject['#recipient-partner-' + partnerIndex + '-declaration'] = partner.self_declared_legal_representative;
+
+            recipientObject['#recipient-partner-' + partnerIndex + '-zip-code'] = partner.address.zip_code;
+            recipientObject['#recipient-partner-' + partnerIndex + '-street'] = partner.address.street;
+            recipientObject['#recipient-partner-' + partnerIndex + '-street-number'] = partner.address.street_number;
+            recipientObject['#recipient-partner-' + partnerIndex + '-complementary'] = partner.address.complementary;
+            recipientObject['#recipient-partner-' + partnerIndex + '-reference-point'] = partner.address.reference_point;
+            recipientObject['#recipient-partner-' + partnerIndex + '-neighborhood'] = partner.address.neighborhood;
+            recipientObject['#recipient-partner-' + partnerIndex + '-state'] = partner.address.state;
+            recipientObject['#recipient-partner-' + partnerIndex + '-city'] = partner.address.city;
+
+            $.each(partner.phone_numbers, function (phoneIndex, phone) {
+                recipientObject['#recipient-partner-' + partnerIndex + '-phones-type-' + phoneIndex] = phone.type;
+                recipientObject['#recipient-partner-' + partnerIndex + '-phones-number-' + phoneIndex] = phone.ddd + phone.number;
+            });
+        });
 
         return recipientObject;
+    }
+
+    function triggerChange(elementId) {
+        const elements = [
+            '#document-type',
+            '#transfer-enabled'
+        ];
+        if ($.inArray(elementId, elements) >= 0) {
+            $(elementId).trigger('change');
+        }
     }
 
     function loadRecipient(recipient, wasSearched) {
@@ -518,8 +591,8 @@ require([
             const recipientValue = recipientObject[elementId];
             const element = $(elementId);
             element.val(recipientValue)
-                .trigger('change')
                 .trigger('input');
+            triggerChange(elementId);
             if (
                 wasSearched
                 && recipientValue !== ''
@@ -530,22 +603,6 @@ require([
                 }
             }
         }
-
-        fillTransferDayValuesByTransferInterval();
-
-        hideElementByMenuSelectValue(
-            transferEnabled.val(),
-            "transfer-day-div"
-        );
-
-        hideElementByMenuSelectValue(
-            transferEnabled.val(),
-            "transfer-interval-div"
-        );
-
-        $('#recipient-id')
-            .val(recipient.id)
-            .attr('disabled', false);
 
         $("#document").attr("readonly", true);
         $("#document-type").attr("readonly", true);

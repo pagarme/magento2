@@ -255,13 +255,13 @@
                                 </div>
 
                                 <div class="admin__field _required" data-section="corporation">
-                                    <label for="recipient-annual_revenue" class="admin__field-label">
+                                    <label for="recipient-annual-revenue" class="admin__field-label">
                                         <span><?= __('Annual revenue') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
                                                name="form[register_information][annual_revenue]"
-                                               id="recipient-annual_revenue" placeholder="0.000.000,00"
+                                               id="recipient-annual-revenue" placeholder="0.000.000,00"
                                                data-currency-mask data-toggle-required>
                                     </div>
                                 </div>
@@ -283,7 +283,8 @@
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
-                                               name="form[register_information][founding_date]" id="founding-date"
+                                               name="form[register_information][founding_date]"
+                                               id="recipient-founding-date"
                                                placeholder="dd/mm/yyyy" data-datepicker data-date-mask>
                                     </div>
                                 </div>
@@ -294,7 +295,7 @@
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" list="cnae-list" class="recipient-form-inputs"
-                                               name="form[register_information][cnae]" id="cnae">
+                                               name="form[register_information][cnae]" id="recipient-cnae">
                                         <datalist id="cnae-list"></datalist>
                                     </div>
                                 </div>
@@ -583,51 +584,53 @@
                                 </div>
 
                                 <div class="admin__field _required">
-                                    <label for="recipient-partner-name" class="admin__field-label">
+                                    <label for="recipient-partner-0-name" class="admin__field-label">
                                         <span><?= __('Name') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
-                                        <input type="text" list="partners-list" class="recipient-form-inputs"
+                                        <input type="text" list="recipient-partner-0-partners-list"
+                                               class="recipient-form-inputs"
                                                name="form[register_information][managing_partners][0][name]"
-                                               id="recipient-partner-name" data-toggle-required>
-                                        <datalist id="partners-list"></datalist>
+                                               id="recipient-partner-0-name" data-toggle-required>
+                                        <datalist id="recipient-partner-0-partners-list"></datalist>
                                     </div>
                                 </div>
 
                                 <input type="hidden" name="form[register_information][managing_partners][0][type]"
+                                       id="recipient-partner-document-type-0"
                                        value="individual" data-toggle-required>
 
                                 <div class="admin__field _required">
-                                    <label for="recipient-partner-document" class="admin__field-label">
+                                    <label for="recipient-partner-0-document" class="admin__field-label">
                                         <span><?= __('Document number') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
                                                name="form[register_information][managing_partners][0][document]"
-                                               id="recipient-partner-document" placeholder="000.000.000-00"
+                                               id="recipient-partner-0-document" placeholder="000.000.000-00"
                                                maxlength="14" data-document-mask data-toggle-required>
                                     </div>
                                 </div>
 
                                 <div class="admin__field">
-                                    <label for="recipient-partner-mother-name" class="admin__field-label">
+                                    <label for="recipient-partner-0-mother-name" class="admin__field-label">
                                         <span><?= __('Mother name') ?></span>
                                     </label>
                                     <div class="admin__field-control">
                                         <input type="text" class="recipient-form-inputs"
                                                name="form[register_information][managing_partners][0][mother_name]"
-                                               id="recipient-partner-mother-name">
+                                               id="recipient-partner-0-mother-name">
                                     </div>
                                 </div>
 
                                 <div class="admin__field _required">
-                                    <label for="recipient-partner-email" class="admin__field-label">
+                                    <label for="recipient-partner-0-email" class="admin__field-label">
                                         <span><?= __('E-mail') ?></span>
                                     </label>
                                     <div class="admin__field-control">
                                         <input type="text" class="recipient-form-inputs"
                                                name="form[register_information][managing_partners][0][email]"
-                                               id="recipient-partner-email" data-toggle-required>
+                                               id="recipient-partner-0-email" data-toggle-required>
                                     </div>
                                 </div>
 
@@ -638,36 +641,38 @@
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
                                                name="form[register_information][managing_partners][0][birthdate]"
-                                               id="recipient-partner-birthdate" placeholder="dd/mm/yyyy"
+                                               id="recipient-partner-0-birthdate" placeholder="dd/mm/yyyy"
                                                data-datepicker data-date-mask data-toggle-required>
                                     </div>
                                 </div>
 
                                 <div class="admin__field _required">
-                                    <label for="recipient-partner-monthly-income" class="admin__field-label">
+                                    <label for="recipient-partner-0-monthly-income" class="admin__field-label">
                                         <span><?= __('Monthly income') ?></span>
                                     </label>
                                     <div class="admin__field-control">
                                         <input type="text" class="recipient-form-inputs"
                                                name="form[register_information][managing_partners][0][monthly_income]"
-                                               id="recipient-partner-monthly-income" placeholder="0.000,00"
+                                               id="recipient-partner-0-monthly-income" placeholder="0.000,00"
                                                data-currency-mask data-toggle-required>
                                     </div>
                                 </div>
 
                                 <div class="admin__field _required">
-                                    <label for="recipient-partner-professional-occupation" class="admin__field-label">
+                                    <label for="recipient-partner-0-professional-occupation"
+                                           class="admin__field-label">
                                         <span><?= __('Profession') ?></span>
                                     </label>
                                     <div class="admin__field-control">
                                         <input type="text" class="recipient-form-inputs"
                                                name="form[register_information][managing_partners][0][professional_occupation]"
-                                               id="recipient-partner-professional-occupation" data-toggle-required>
+                                               id="recipient-partner-0-professional-occupation" data-toggle-required>
                                     </div>
                                 </div>
 
                                 <input type="hidden"
                                        name="form[register_information][managing_partners][0][self_declared_legal_representative]"
+                                       id="recipient-partner-0-declaration"
                                        value="1" data-toggle-required>
 
                             </div>
@@ -680,13 +685,13 @@
                                 </div>
 
                                 <div class="admin__field _required">
-                                    <label for="recipient-partner-phones-type-0" class="admin__field-label">
+                                    <label for="recipient-partner-0-phones-type-0" class="admin__field-label">
                                         <span><?= __('Contact type') ?></span>
                                     </label>
                                     <div class="admin__field-control">
                                         <select class="recipient-form-inputs admin__control-select"
                                                 name="form[register_information][managing_partners][0][phone_number][0][type]"
-                                                id="recipient-partner-phones-type-0" data-toggle-required>
+                                                id="recipient-partner-0-phones-type-0" data-toggle-required>
                                             <option value="Celular"><?= __('Mobile phone') ?></option>
                                             <option value="Telefone"><?= __('Telephone') ?></option>
                                         </select>
@@ -694,25 +699,25 @@
                                 </div>
 
                                 <div class="admin__field _required">
-                                    <label for="recipient-partner-phones-number-0" class="admin__field-label">
+                                    <label for="recipient-partner-0-phones-number-0" class="admin__field-label">
                                         <span><?= __('Contact number') ?></span>
                                     </label>
                                     <div class="admin__field-control">
                                         <input type="tel" class="recipient-form-inputs"
                                                name="form[register_information][managing_partners][0][phone_number][0][number]"
-                                               id="recipient-partner-phones-number-0" placeholder="(00) 00000-0000"
+                                               id="recipient-partner-0-phones-number-0" placeholder="(00) 00000-0000"
                                                data-phone-mask data-toggle-required>
                                     </div>
                                 </div>
 
                                 <div class="admin__field">
-                                    <label for="recipient-partner-phones-type-1" class="admin__field-label">
+                                    <label for="recipient-partner-0-phones-type-1" class="admin__field-label">
                                         <span><?= __('Contact type') ?></span>
                                     </label>
                                     <div class="admin__field-control">
                                         <select class="recipient-form-inputs admin__control-select"
                                                 name="form[register_information][managing_partners][0][phone_number][1][type]"
-                                                id="recipient-partner-phones-type-1">
+                                                id="recipient-partner-0-phones-type-1">
                                             <option value="Celular"><?= __('Mobile phone') ?></option>
                                             <option value="Telefone"><?= __('Telephone') ?></option>
                                         </select>
@@ -720,13 +725,13 @@
                                 </div>
 
                                 <div class="admin__field">
-                                    <label for="recipient-partner-phones-number-1" class="admin__field-label">
+                                    <label for="recipient-partner-0-phones-number-1" class="admin__field-label">
                                         <span><?= __('Contact number') ?></span>
                                     </label>
                                     <div class="admin__field-control">
                                         <input type="tel" class="recipient-form-inputs"
                                                name="form[register_information][managing_partners][0][phone_number][1][number]"
-                                               id="recipient-partner-phones-number-1" placeholder="(00) 00000-0000"
+                                               id="recipient-partner-0-phones-number-1" placeholder="(00) 00000-0000"
                                                data-phone-mask>
                                     </div>
                                 </div>
@@ -741,80 +746,80 @@
                                 </div>
 
                                 <div class="admin__field _required">
-                                    <label for="recipient-partner-zip-code" class="admin__field-label">
+                                    <label for="recipient-partner-0-zip-code" class="admin__field-label">
                                         <span><?= __('Zip/Postal Code') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
                                                name="form[register_information][managing_partners][0][address][zip_code]"
-                                               id="recipient-partner-zip-code" placeholder="00000-000"
+                                               id="recipient-partner-0-zip-code" placeholder="00000-000"
                                                data-zipcode-mask data-cep-search data-toggle-required>
                                     </div>
                                 </div>
 
                                 <div class="admin__field _required">
-                                    <label for="recipient-partner-street" class="admin__field-label">
+                                    <label for="recipient-partner-0-street" class="admin__field-label">
                                         <span><?= __('Street') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
                                                name="form[register_information][managing_partners][0][address][street]"
-                                               id="recipient-partner-street" data-toggle-required>
+                                               id="recipient-partner-0-street" data-toggle-required>
                                     </div>
                                 </div>
 
                                 <div class="admin__field _required">
-                                    <label for="recipient-partner-street-number" class="admin__field-label">
+                                    <label for="recipient-partner-0-street-number" class="admin__field-label">
                                         <span><?= __('Number') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
                                                name="form[register_information][managing_partners][0][address][street_number]"
-                                               id="recipient-partner-street-number" data-toggle-required>
+                                               id="recipient-partner-0-street-number" data-toggle-required>
                                     </div>
                                 </div>
 
                                 <div class="admin__field _required">
-                                    <label for="recipient-partner-complementary" class="admin__field-label">
+                                    <label for="recipient-partner-0-complementary" class="admin__field-label">
                                         <span><?= __('Complement') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
                                                name="form[register_information][managing_partners][0][address][complementary]"
-                                               id="recipient-partner-complementary" data-toggle-required>
+                                               id="recipient-partner-0-complementary" data-toggle-required>
                                     </div>
                                 </div>
 
                                 <div class="admin__field _required">
-                                    <label for="recipient-partner-reference-point" class="admin__field-label">
+                                    <label for="recipient-partner-0-reference-point" class="admin__field-label">
                                         <span><?= __('Reference point') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
                                                name="form[register_information][managing_partners][0][address][reference_point]"
-                                               id="recipient-partner-reference-point" data-toggle-required>
+                                               id="recipient-partner-0-reference-point" data-toggle-required>
                                     </div>
                                 </div>
 
                                 <div class="admin__field _required">
-                                    <label for="recipient-partner-neighborhood" class="admin__field-label">
+                                    <label for="recipient-partner-0-neighborhood" class="admin__field-label">
                                         <span><?= __('Neighborhood') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
                                                name="form[register_information][managing_partners][0][address][neighborhood]"
-                                               id="recipient-partner-neighborhood" data-toggle-required>
+                                               id="recipient-partner-0-neighborhood" data-toggle-required>
                                     </div>
                                 </div>
 
                                 <div class="admin__field _required">
-                                    <label for="recipient-partner-state" class="admin__field-label">
+                                    <label for="recipient-partner-0-state" class="admin__field-label">
                                         <span><?= __('State/Province') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <select class="recipient-form-inputs admin__control-select"
                                                 name="form[register_information][managing_partners][0][address][state]"
-                                                id="recipient-partner-state"
+                                                id="recipient-partner-0-state"
                                                 data-state
                                                 data-toggle-required>
                                             <option value=""><?= __('Select') ?></option>
@@ -826,16 +831,16 @@
                                 </div>
 
                                 <div class="admin__field _required">
-                                    <label for="recipient-partner-city" class="admin__field-label">
+                                    <label for="recipient-partner-0-city" class="admin__field-label">
                                         <span><?= __('City') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" list="recipient-partner-cities"
                                                class="recipient-form-inputs"
                                                name="form[register_information][managing_partners][0][address][city]"
-                                               id="recipient-partner-city"
+                                               id="recipient-partner-0-city"
                                                data-toggle-required>
-                                        <datalist id="recipient-partner-cities"></datalist>
+                                        <datalist id="recipient-partner-0-cities"></datalist>
                                     </div>
                                 </div>
 
