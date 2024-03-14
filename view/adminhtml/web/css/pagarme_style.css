@@ -78,14 +78,6 @@ table.table-cycles {
     display: none;
 }
 
-#pagarme-recipients-form .corporation-wrapper > .corporation-padding-fix[data-section="seller"] {
-    padding-bottom: 0;
-}
-
-#pagarme-recipients-form .corporation-wrapper > .corporation-padding-fix[data-section="corporation"] {
-    padding-top: 0;
-}
-
 #pagarme-recipients-form .recipient-form-inputs {
     -webkit-appearance: none;
     background-color: #fff;

@@ -6,8 +6,6 @@ require([
     'use strict';
 
     const
-        webkulSeller = $('#webkul-seller'),
-        transferEnabled = $('#transfer-enabled'),
         cpfMax = 14, // Includes punctuation due to the mask
         cpfMask = '000.000.000-00',
         cnpjMax = 18, // Includes punctuation due to the mask
@@ -49,50 +47,11 @@ require([
             hideOrShowSectionByFieldVal('pagarme_id', $(this).val());
         });
 
-        webkulSeller.on('change', function () {
-            const externalId = webkulSeller.val();
+        $('#webkul-seller').on('change', function () {
+            const webkulId = $(this).val();
+            fillRecipientByWebkulId(webkulId);
 
-            $('#webkul-id')
-                .val(externalId)
-                .prop('readonly', !!externalId);
-
-            const recipientName = webkulSeller
-                .find(':selected')
-                .attr('data-sellername');
-            $('#recipient-name')
-                .val(recipientName)
-                .prop('readonly', !!recipientName)
-                .trigger('change');
-
-            const recipientEmail = webkulSeller
-                .find(':selected')
-                .attr('data-email');
-            $('#recipient-email')
-                .val(recipientEmail)
-                .prop('readonly', !!recipientEmail);
-
-            const recipientDocument = webkulSeller
-                .find(':selected')
-                .attr('data-document');
-            $('#document-type, #holder-document-type')
-                .val(getDocumentTypeByDocument(recipientDocument))
-                .trigger('change');
-            $('#document-type').toggleClass('readonly', !!recipientDocument);
-            $('#document')
-                .val(recipientDocument)
-                .prop('readonly', !!recipientDocument)
-                .trigger('input')
-                .trigger('change');
-            $('#holder-document').val(documentTypeCorporationToCompany(recipientDocument));
-
-            const recipientBirthdate = webkulSeller
-                .find(':selected')
-                .attr('data-birthdate');
-            $('#recipient-birthdate')
-                .val(formatDate(recipientBirthdate))
-                .prop('readonly', !!recipientEmail);
-
-            if (!externalId) {
+            if (!webkulId) {
                 hideOrShowSections(''); // Hide all sections
                 return;
             }
@@ -117,12 +76,6 @@ require([
                 })
                 .mask(config.mask);
 
-            if (documentType === 'corporation') {
-                $('.admin__fieldset-wrapper-content').addClass('corporation-wrapper');
-            } else {
-                $('.admin__fieldset-wrapper-content').removeClass('corporation-wrapper');
-            }
-
             hideOrShowSections(['individual', 'corporation']);
             if (documentType !== '') {
                 hideOrShowSections(documentType, 'show');
@@ -131,83 +84,83 @@ require([
 
         $('#document')
             .on('keyup change', function () {
-                const documentNumber = $(this).val();
                 $('#holder-document')
-                    .val(documentNumber).trigger('input');
+                    .val($(this).val()).trigger('input');
             })
             .on('change', function () {
                 let documentNumber = $(this).val();
-                if (documentNumber.length === cnpjMax) {
-                    documentNumber = documentNumber.replace(/\D/g, '');
-                    const maxRequests = 3;
-                    let requests = 0;
-                    $.ajax({
-                        url: 'https://brasilapi.com.br/api/cnpj/v1/' + documentNumber,
-                        method: 'get',
-                        showLoader: true,
-                        beforeSend: function (xhr) {
-                            // Empty to remove Magento's default handler
-                        },
-                        statusCode: {
-                            404: function (response) {
-                                if (response.responseJSON.type === 'service_error') {
-                                    requests++;
-                                    if (requests < maxRequests) {
-                                        setTimeout($('#document').trigger('change'), 50);
-                                    }
+                if (documentNumber.length !== cnpjMax) {
+                    return;
+                }
+                documentNumber = documentNumber.replace(/\D/g, '');
+                const maxRequests = 3;
+                let requests = 0;
+                $.ajax({
+                    url: 'https://brasilapi.com.br/api/cnpj/v1/' + documentNumber,
+                    method: 'get',
+                    showLoader: true,
+                    beforeSend: function (xhr) {
+                        // Empty to remove Magento's default handler
+                    },
+                    statusCode: {
+                        404: function (response) {
+                            if (response.responseJSON.type === 'service_error') {
+                                requests++;
+                                if (requests < maxRequests) {
+                                    setTimeout($('#document').trigger('change'), 50);
                                 }
                             }
                         }
-                    }).done(function (data) {
-                        let cnaeList = '';
-                        if (data['cnae_fiscal']) {
-                            cnaeList = '<option value=' + formatCnae(data['cnae_fiscal']) + '>'
-                                + data['cnae_fiscal_descricao'] + '</option>';
-                        }
-                        if (data['cnaes_secundarios']) {
-                            $.each(data['cnaes_secundarios'], function (index) {
-                                if (data['cnaes_secundarios'][index]['codigo']) {
-                                    cnaeList += '<option value=' + formatCnae(data['cnaes_secundarios'][index]['codigo']) + '>'
-                                        + data['cnaes_secundarios'][index]['descricao']
-                                        + '</option>';
-                                }
-                            });
-                        }
-                        fillDatalistOptions('cnae-list', cnaeList);
+                    }
+                }).done(function (data) {
+                    let cnaeList = '';
+                    if (data['cnae_fiscal']) {
+                        cnaeList = '<option value=' + formatCnae(data['cnae_fiscal']) + '>'
+                            + data['cnae_fiscal_descricao'] + '</option>';
+                    }
+                    if (data['cnaes_secundarios']) {
+                        $.each(data['cnaes_secundarios'], function (index) {
+                            if (data['cnaes_secundarios'][index]['codigo']) {
+                                cnaeList += '<option value=' + formatCnae(data['cnaes_secundarios'][index]['codigo']) + '>'
+                                    + data['cnaes_secundarios'][index]['descricao']
+                                    + '</option>';
+                            }
+                        });
+                    }
+                    fillDatalistOptions('cnae-list', cnaeList);
 
-                        if (data['qsa']) {
-                            let partnersList = '';
-                            $.each(data['qsa'], function (index) {
-                                partnersList += '<option value="' + capitalizeAllWords(data['qsa'][index]['nome_socio']) + '">' + data['qsa'][index]['qualificacao_socio'] + '</option>';
-                            });
-                            fillDatalistOptions('recipient-partner-0-partners-list', partnersList);
-                        }
+                    if (data['qsa']) {
+                        let partnersList = '';
+                        $.each(data['qsa'], function (index) {
+                            partnersList += '<option value="' + capitalizeAllWords(data['qsa'][index]['nome_socio']) + '">' + data['qsa'][index]['qualificacao_socio'] + '</option>';
+                        });
+                        fillDatalistOptions('recipient-partner-0-partners-list', partnersList);
+                    }
 
-                        const phoneNumber = [
-                            data['ddd_telefone_1'],
-                            data['ddd_telefone_2']
-                        ];
+                    const phoneNumber = [
+                        data['ddd_telefone_1'],
+                        data['ddd_telefone_2']
+                    ];
 
-                        $('#recipient-company-name').val(capitalizeAllWords(data['razao_social'])).trigger('change');
-                        $('#recipient-trading-name').val(capitalizeAllWords(data['nome_fantasia']));
-                        $('#recipient-founding-date').val(formatDate(data['data_inicio_atividade']));
-                        $('#recipient-corporation-type').val(data['natureza_juridica']);
-                        $('#recipient-cnae').val(data['cnae_fiscal']).trigger('input');
-                        $('#recipient-phones-type-0').val(phoneNumber[0].length === 10 ? 'Telefone' : 'Celular');
-                        $('#recipient-phones-number-0').val(phoneNumber[0]).trigger('input');
-                        $('#recipient-phones-type-1').val(phoneNumber[1].length === 10 ? 'Telefone' : 'Celular');
-                        $('#recipient-phones-number-1').val(phoneNumber[1]).trigger('input');
-                        $('#company-zip-code').val(data['cep']).trigger('change').trigger('input');
-                        $('#company-street-number').val(data['numero']);
-                        $('#company-complementary').val(capitalizeAllWords(data['complemento']));
-                        if (data['qsa'].length) {
-                            $('#recipient-partner-0-name').val(capitalizeAllWords(data['qsa'][0]['nome_socio']));
-                            $('#recipient-partner-0-professional-occupation').val(data['qsa'][0]['qualificacao_socio'])
-                        }
-                    }).fail(function (data) {
-                        console.error(data);
-                    });
-                }
+                    $('#recipient-company-name').val(capitalizeAllWords(data['razao_social'])).trigger('change');
+                    $('#recipient-trading-name').val(capitalizeAllWords(data['nome_fantasia']));
+                    $('#recipient-founding-date').val(formatDate(data['data_inicio_atividade']));
+                    $('#recipient-corporation-type').val(data['natureza_juridica']);
+                    $('#recipient-cnae').val(data['cnae_fiscal']).trigger('input');
+                    $('#recipient-phones-type-0').val(phoneNumber[0].length === 10 ? 'Telefone' : 'Celular');
+                    $('#recipient-phones-number-0').val(phoneNumber[0]).trigger('input');
+                    $('#recipient-phones-type-1').val(phoneNumber[1].length === 10 ? 'Telefone' : 'Celular');
+                    $('#recipient-phones-number-1').val(phoneNumber[1]).trigger('input');
+                    $('#company-zip-code').val(data['cep']).trigger('change').trigger('input');
+                    $('#company-street-number').val(data['numero']);
+                    $('#company-complementary').val(capitalizeAllWords(data['complemento']));
+                    if (data['qsa'].length) {
+                        $('#recipient-partner-0-name').val(capitalizeAllWords(data['qsa'][0]['nome_socio']));
+                        $('#recipient-partner-0-professional-occupation').val(data['qsa'][0]['qualificacao_socio'])
+                    }
+                }).fail(function (data) {
+                    console.error(data);
+                });
             });
 
         $('#recipient-name, #recipient-company-name').on('change', function () {
@@ -259,7 +212,7 @@ require([
                 });
         });
 
-        transferEnabled.on('change', function () {
+        $('#transfer-enabled').on('change', function () {
             hideOrShowSectionByFieldVal('transfer_interval', $(this).val());
         });
 
@@ -326,6 +279,10 @@ require([
         return documentType === 'company' ? 'corporation' : documentType;
     }
 
+    function getNameFieldByDocumentType(documentType) {
+        return documentType === 'individual' ? '#recipient-name' : '#recipient-company-name';
+    }
+
     function getDocumentTypeByDocument(document) {
         let value = '';
         if (document) {
@@ -336,6 +293,40 @@ require([
             }
         }
         return value;
+    }
+
+    function fillRecipientByWebkulId(webkulId) {
+        $('#webkul-id')
+            .val(webkulId)
+            .prop('readonly', !!webkulId);
+
+        const
+            selectedWebkulSeller = $('#webkul-seller').find(':selected'),
+            recipientDocument = selectedWebkulSeller.attr('data-document'),
+            documentType = getDocumentTypeByDocument(recipientDocument);
+        $('#document-type, #holder-document-type')
+            .val(documentType)
+            .trigger('change');
+        $('#document')
+            .val(recipientDocument)
+            .trigger('change')
+            .trigger('input');
+        $('#holder-document')
+            .val(documentTypeCorporationToCompany(recipientDocument))
+            .trigger('input');
+
+        const recipientName = selectedWebkulSeller.attr('data-sellername');
+        $(getNameFieldByDocumentType(documentType))
+            .val(recipientName)
+            .trigger('change');
+
+        const recipientEmail = selectedWebkulSeller.attr('data-email');
+        $('#recipient-email')
+            .val(recipientEmail)
+
+        const recipientBirthdate = selectedWebkulSeller.attr('data-birthdate');
+        $('#recipient-birthdate')
+            .val(formatDate(recipientBirthdate))
     }
 
     function fillDatalistOptions(datalistId, options) {
@@ -498,106 +489,115 @@ require([
     }
 
     function buildRecipientObject(recipient) {
-        let recipientObject = {
-            '#document-type': documentTypeCompanyToCorporation(recipient.register_information.type),
-            '#document': recipient.register_information.document,
-            '#recipient-email': recipient.register_information.email,
-            '#recipient-site': recipient.register_information.site_url,
+        console.log(recipient)
+        let recipientObject = {};
+        if ($.type(recipient.register_information) === 'object') {
+            recipientObject['#document-type'] = documentTypeCompanyToCorporation(recipient.register_information.type);
+            recipientObject['#document'] = recipient.register_information.document;
+            recipientObject['#recipient-email'] = recipient.register_information.email;
+            recipientObject['#recipient-site'] = recipient.register_information.site_url;
 
-            '#holder-name': recipient.default_bank_account.holder_name,
-            '#holder-document-type': documentTypeCorporationToCompany(recipient.default_bank_account.holder_type),
-            '#holder-document': recipient.register_information.document,
-            '#bank': recipient.default_bank_account.bank,
-            '#branch-number': recipient.default_bank_account.branch_number,
-            '#branch-check-digit': recipient.default_bank_account.branch_check_digit,
-            '#account-number': recipient.default_bank_account.account_number,
-            '#account-check-digit': recipient.default_bank_account.account_check_digit,
-            '#account-type': recipient.default_bank_account.type,
+            $.each(recipient.register_information.phone_numbers, function (index, phone) {
+                recipientObject['#recipient-phones-type-' + index] = phone.type;
+                recipientObject['#recipient-phones-number-' + index] = phone.ddd + phone.number;
+            });
 
-            '#transfer-enabled': recipient.transfer_settings.transfer_enabled ? 1 : 0,
-            '#transfer-interval': recipient.transfer_settings.transfer_interval,
-            '#transfer-day': recipient.transfer_settings.transfer_day
-        };
+            switch (recipient.register_information.type) {
+                case 'individual':
+                    recipientObject['#recipient-name'] = recipient.register_information.name;
+                    recipientObject['#recipient-mother-name'] = recipient.register_information.mother_name;
+                    recipientObject['#recipient-birthdate'] = formatDate(recipient.register_information.birthdate);
+                    recipientObject['#recipient-monthly-income'] = recipient.register_information.monthly_income;
+                    recipientObject['#recipient-professional-occupation'] = recipient.register_information.professional_occupation;
 
-        $.each(recipient.register_information.phone_numbers, function (index, phone) {
-            recipientObject['#recipient-phones-type-' + index] = phone.type;
-            recipientObject['#recipient-phones-number-' + index] = phone.ddd + phone.number;
-        });
+                    recipientObject['#recipient-zip-code'] = recipient.register_information.address.zip_code;
+                    recipientObject['#recipient-street'] = recipient.register_information.address.street;
+                    recipientObject['#recipient-street-number'] = recipient.register_information.address.street_number;
+                    recipientObject['#recipient-complementary'] = recipient.register_information.address.complementary;
+                    recipientObject['#recipient-reference-point'] = recipient.register_information.address.reference_point;
+                    recipientObject['#recipient-neighborhood'] = recipient.register_information.address.neighborhood;
+                    recipientObject['#recipient-state'] = recipient.register_information.address.state;
+                    recipientObject['#recipient-city'] = recipient.register_information.address.city;
+                    break;
+                case 'company':
+                case 'corporation':
+                    recipientObject['#recipient-company-name'] = recipient.register_information.company_name;
+                    recipientObject['#recipient-trading-name'] = recipient.register_information.trading_name;
+                    recipientObject['#recipient-annual-revenue'] = recipient.register_information.annual_revenue;
+                    recipientObject['#recipient-corporation-type'] = recipient.register_information.corporation_type;
+                    recipientObject['#recipient-corporation-type'] = recipient.register_information.corporation_type;
+                    recipientObject['#recipient-founding-date'] = formatDate(recipient.register_information.founding_date);
+                    recipientObject['#recipient-cnae'] = recipient.register_information.cnae;
 
-        switch (recipient.type) {
-            case 'individual':
-                recipientObject['#recipient-name'] = recipient.register_information.name;
-                recipientObject['#recipient-mother-name'] = recipient.register_information.mother_name;
-                recipientObject['#recipient-birthdate'] = formatDate(recipient.register_information.birthdate);
-                recipientObject['#recipient-monthly-income'] = recipient.register_information.monthly_income;
-                recipientObject['#recipient-professional-occupation'] = recipient.register_information.professional_occupation;
+                    recipientObject['#company-zip-code'] = recipient.register_information.main_address.zip_code;
+                    recipientObject['#company-street'] = recipient.register_information.main_address.street;
+                    recipientObject['#company-street-number'] = recipient.register_information.main_address.street_number;
+                    recipientObject['#company-complementary'] = recipient.register_information.main_address.complementary;
+                    recipientObject['#company-reference-point'] = recipient.register_information.main_address.reference_point;
+                    recipientObject['#company-neighborhood'] = recipient.register_information.main_address.neighborhood;
+                    recipientObject['#company-state'] = recipient.register_information.main_address.state;
+                    recipientObject['#company-city'] = recipient.register_information.main_address.city;
+                    break;
+            }
 
-                recipientObject['#recipient-zip-code'] = recipient.register_information.address.zip_code;
-                recipientObject['#recipient-street'] = recipient.register_information.address.street;
-                recipientObject['#recipient-street-number'] = recipient.register_information.address.street_number;
-                recipientObject['#recipient-complementary'] = recipient.register_information.address.complementary;
-                recipientObject['#recipient-reference-point'] = recipient.register_information.address.reference_point;
-                recipientObject['#recipient-neighborhood'] = recipient.register_information.address.neighborhood;
-                recipientObject['#recipient-state'] = recipient.register_information.address.state;
-                recipientObject['#recipient-city'] = recipient.register_information.address.city;
-                break;
-            case 'company':
-            case 'corporation':
-                recipientObject['#recipient-company-name'] = recipient.register_information.company_name;
-                recipientObject['#recipient-trading-name'] = recipient.register_information.trading_name;
-                recipientObject['#recipient-annual-revenue'] = recipient.register_information.annual_revenue;
-                recipientObject['#recipient-corporation-type'] = recipient.register_information.corporation_type;
-                recipientObject['#recipient-corporation-type'] = recipient.register_information.corporation_type;
-                recipientObject['#recipient-founding-date'] = formatDate(recipient.register_information.founding_date);
-                recipientObject['#recipient-cnae'] = recipient.register_information.cnae;
+            $.each(recipient.register_information.managing_partners, function (partnerIndex, partner) {
+                recipientObject['#recipient-partner-' + partnerIndex + '-name'] = partner.name;
+                recipientObject['#recipient-partner-' + partnerIndex + '-document-type'] = partner.type;
+                recipientObject['#recipient-partner-' + partnerIndex + '-document'] = partner.document;
+                recipientObject['#recipient-partner-' + partnerIndex + '-mother-name'] = partner.mother_name;
+                recipientObject['#recipient-partner-' + partnerIndex + '-email'] = partner.email;
+                recipientObject['#recipient-partner-' + partnerIndex + '-birthdate'] = formatDate(partner.birthdate);
+                recipientObject['#recipient-partner-' + partnerIndex + '-monthly-income'] = partner.monthly_income;
+                recipientObject['#recipient-partner-' + partnerIndex + '-professional-occupation'] = partner.professional_occupation;
+                recipientObject['#recipient-partner-' + partnerIndex + '-declaration'] = partner.self_declared_legal_representative;
 
-                recipientObject['#company-zip-code'] = recipient.register_information.main_address.zip_code;
-                recipientObject['#company-street'] = recipient.register_information.main_address.street;
-                recipientObject['#company-street-number'] = recipient.register_information.main_address.street_number;
-                recipientObject['#company-complementary'] = recipient.register_information.main_address.complementary;
-                recipientObject['#company-reference-point'] = recipient.register_information.main_address.reference_point;
-                recipientObject['#company-neighborhood'] = recipient.register_information.main_address.neighborhood;
-                recipientObject['#company-state'] = recipient.register_information.main_address.state;
-                recipientObject['#company-city'] = recipient.register_information.main_address.city;
-                break;
+                recipientObject['#recipient-partner-' + partnerIndex + '-zip-code'] = partner.address.zip_code;
+                recipientObject['#recipient-partner-' + partnerIndex + '-street'] = partner.address.street;
+                recipientObject['#recipient-partner-' + partnerIndex + '-street-number'] = partner.address.street_number;
+                recipientObject['#recipient-partner-' + partnerIndex + '-complementary'] = partner.address.complementary;
+                recipientObject['#recipient-partner-' + partnerIndex + '-reference-point'] = partner.address.reference_point;
+                recipientObject['#recipient-partner-' + partnerIndex + '-neighborhood'] = partner.address.neighborhood;
+                recipientObject['#recipient-partner-' + partnerIndex + '-state'] = partner.address.state;
+                recipientObject['#recipient-partner-' + partnerIndex + '-city'] = partner.address.city;
+
+                $.each(partner.phone_numbers, function (phoneIndex, phone) {
+                    recipientObject['#recipient-partner-' + partnerIndex + '-phones-type-' + phoneIndex] = phone.type;
+                    recipientObject['#recipient-partner-' + partnerIndex + '-phones-number-' + phoneIndex] = phone.ddd + phone.number;
+                });
+            });
         }
 
-        $.each(recipient.register_information.managing_partners, function (partnerIndex, partner) {
-            recipientObject['#recipient-partner-' + partnerIndex + '-name'] = partner.name;
-            recipientObject['#recipient-partner-' + partnerIndex + '-document-type'] = partner.type;
-            recipientObject['#recipient-partner-' + partnerIndex + '-document'] = partner.document;
-            recipientObject['#recipient-partner-' + partnerIndex + '-mother-name'] = partner.mother_name;
-            recipientObject['#recipient-partner-' + partnerIndex + '-email'] = partner.email;
-            recipientObject['#recipient-partner-' + partnerIndex + '-birthdate'] = formatDate(partner.birthdate);
-            recipientObject['#recipient-partner-' + partnerIndex + '-monthly-income'] = partner.monthly_income;
-            recipientObject['#recipient-partner-' + partnerIndex + '-professional-occupation'] = partner.professional_occupation;
-            recipientObject['#recipient-partner-' + partnerIndex + '-declaration'] = partner.self_declared_legal_representative;
+        if ($.type(recipient.register_information) !== 'object') {
+            recipientObject['#document-type'] = documentTypeCompanyToCorporation(recipient.type);
+            recipientObject['#document'] = recipient.document;
+            recipientObject[getNameFieldByDocumentType(recipient.type)] = recipient.name;
+            recipientObject['#recipient-email'] = recipient.email;
+        }
 
-            recipientObject['#recipient-partner-' + partnerIndex + '-zip-code'] = partner.address.zip_code;
-            recipientObject['#recipient-partner-' + partnerIndex + '-street'] = partner.address.street;
-            recipientObject['#recipient-partner-' + partnerIndex + '-street-number'] = partner.address.street_number;
-            recipientObject['#recipient-partner-' + partnerIndex + '-complementary'] = partner.address.complementary;
-            recipientObject['#recipient-partner-' + partnerIndex + '-reference-point'] = partner.address.reference_point;
-            recipientObject['#recipient-partner-' + partnerIndex + '-neighborhood'] = partner.address.neighborhood;
-            recipientObject['#recipient-partner-' + partnerIndex + '-state'] = partner.address.state;
-            recipientObject['#recipient-partner-' + partnerIndex + '-city'] = partner.address.city;
+        recipientObject['#holder-name'] = recipient.default_bank_account.holder_name;
+        recipientObject['#holder-document-type'] = documentTypeCorporationToCompany(recipient.default_bank_account.holder_type);
+        recipientObject['#holder-document'] = recipient.document;
+        recipientObject['#bank'] = recipient.default_bank_account.bank;
+        recipientObject['#branch-number'] = recipient.default_bank_account.branch_number;
+        recipientObject['#branch-check-digit'] = recipient.default_bank_account.branch_check_digit;
+        recipientObject['#account-number'] = recipient.default_bank_account.account_number;
+        recipientObject['#account-check-digit'] = recipient.default_bank_account.account_check_digit;
+        recipientObject['#account-type'] = recipient.default_bank_account.type;
 
-            $.each(partner.phone_numbers, function (phoneIndex, phone) {
-                recipientObject['#recipient-partner-' + partnerIndex + '-phones-type-' + phoneIndex] = phone.type;
-                recipientObject['#recipient-partner-' + partnerIndex + '-phones-number-' + phoneIndex] = phone.ddd + phone.number;
-            });
-        });
+        recipientObject['#transfer-enabled'] = recipient.transfer_settings.transfer_enabled ? 1 : 0;
+        recipientObject['#transfer-interval'] = recipient.transfer_settings.transfer_interval;
+        recipientObject['#transfer-day'] = recipient.transfer_settings.transfer_day;
 
         return recipientObject;
     }
 
     function triggerChange(elementId) {
-        const elements = [
+        const changeElements = [
             '#document-type',
             '#transfer-enabled',
             '#transfer-interval'
         ];
-        if ($.inArray(elementId, elements) >= 0) {
+        if ($.inArray(elementId, changeElements) >= 0) {
             $(elementId).trigger('change');
         }
     }
@@ -613,7 +613,13 @@ require([
             const element = $(elementId);
             element.val(recipientValue)
                 .trigger('input');
-            triggerChange(elementId);
+
+            if (wasSearched) {
+                triggerChange(elementId);
+            } else {
+                elementId.trigger('change');
+            }
+
             if (
                 wasSearched
                 && recipientValue !== ''
