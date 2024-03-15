@@ -12,36 +12,11 @@ require([
         cnpjMask = '00.000.000/0000-00';
 
     $(document).ready(function () {
-        const phoneMaskOptions = {
-            onKeyPress: function (val, e, field, options) {
-                field.mask(phoneMaskBehavior.apply({}, arguments), options);
-            }
-        };
 
-        localeDatePicker();
+        applyDatePickerToFields();
+        maskFields();
 
         $('#pagarme-recipients-form').on('submit', formSubmit);
-
-        $('[data-datepicker]').datepicker({
-            changeMonth: true,
-            changeYear: true,
-            dateFormat: 'dd/mm/yy',
-            maxDate: 0,
-            minDate: '-122y', // Jeanne Calment
-            showMonthAfterYear: true,
-            yearRange: 'c-122:c0'
-        });
-
-        $('[data-phone-mask]').mask(phoneMaskBehavior, phoneMaskOptions);
-        $('[data-document-mask]').mask(cpfMask);
-        $('[data-date-mask]').mask('00/00/0000');
-        $('[data-currency-mask]').mask("#.##0,00", {reverse: true});
-        $('[data-zipcode-mask]').mask('00000-000');
-        $('#recipient-cnae').mask('0000-0/00');
-
-        function phoneMaskBehavior(val) {
-            return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
-        }
 
         $('#existing_recipient').on('change', function () {
             hideOrShowSectionByFieldVal('pagarme_id', $(this).val());
@@ -60,26 +35,14 @@ require([
         });
 
         $('#document-type').on('change', function () {
-            const documentType = $(this).val(),
-                config = {
-                    'mask': documentType === 'corporation' ? cnpjMask : cpfMask,
-                    'maxLength': documentType === 'corporation' ? cnpjMax : cpfMax
-                };
-
-            $('#holder-document-type')
-                .val(documentTypeCorporationToCompany(documentType));
-
-            $('#document, #holder-document')
-                .attr({
-                    'placeholder': config.mask,
-                    'maxLength': config.maxLength
-                })
-                .mask(config.mask);
-
+            const documentType = $(this).val();
+            changeDocumentFieldsByType(documentType);
             hideOrShowSections(['individual', 'corporation']);
             if (documentType !== '') {
                 hideOrShowSections(documentType, 'show');
+                return;
             }
+            $(this).removeClass('readonly');
         });
 
         $('#document')
@@ -89,78 +52,12 @@ require([
             })
             .on('change', function () {
                 let documentNumber = $(this).val();
-                if (documentNumber.length !== cnpjMax) {
-                    return;
+                if (documentNumber.length === cnpjMax) {
+                    getCnpjData(documentNumber);
                 }
-                documentNumber = documentNumber.replace(/\D/g, '');
-                const maxRequests = 3;
-                let requests = 0;
-                $.ajax({
-                    url: 'https://brasilapi.com.br/api/cnpj/v1/' + documentNumber,
-                    method: 'get',
-                    showLoader: true,
-                    beforeSend: function (xhr) {
-                        // Empty to remove Magento's default handler
-                    },
-                    statusCode: {
-                        404: function (response) {
-                            if (response.responseJSON.type === 'service_error') {
-                                requests++;
-                                if (requests < maxRequests) {
-                                    setTimeout($('#document').trigger('change'), 50);
-                                }
-                            }
-                        }
-                    }
-                }).done(function (data) {
-                    let cnaeList = '';
-                    if (data['cnae_fiscal']) {
-                        cnaeList = '<option value=' + formatCnae(data['cnae_fiscal']) + '>'
-                            + data['cnae_fiscal_descricao'] + '</option>';
-                    }
-                    if (data['cnaes_secundarios']) {
-                        $.each(data['cnaes_secundarios'], function (index) {
-                            if (data['cnaes_secundarios'][index]['codigo']) {
-                                cnaeList += '<option value=' + formatCnae(data['cnaes_secundarios'][index]['codigo']) + '>'
-                                    + data['cnaes_secundarios'][index]['descricao']
-                                    + '</option>';
-                            }
-                        });
-                    }
-                    fillDatalistOptions('cnae-list', cnaeList);
-
-                    if (data['qsa']) {
-                        let partnersList = '';
-                        $.each(data['qsa'], function (index) {
-                            partnersList += '<option value="' + capitalizeAllWords(data['qsa'][index]['nome_socio']) + '">' + data['qsa'][index]['qualificacao_socio'] + '</option>';
-                        });
-                        fillDatalistOptions('recipient-partner-0-partners-list', partnersList);
-                    }
-
-                    const phoneNumber = [
-                        data['ddd_telefone_1'],
-                        data['ddd_telefone_2']
-                    ];
-
-                    $('#recipient-company-name').val(capitalizeAllWords(data['razao_social'])).trigger('change');
-                    $('#recipient-trading-name').val(capitalizeAllWords(data['nome_fantasia']));
-                    $('#recipient-founding-date').val(formatDate(data['data_inicio_atividade']));
-                    $('#recipient-corporation-type').val(data['natureza_juridica']);
-                    $('#recipient-cnae').val(data['cnae_fiscal']).trigger('input');
-                    $('#recipient-phones-type-0').val(phoneNumber[0].length === 10 ? 'Telefone' : 'Celular');
-                    $('#recipient-phones-number-0').val(phoneNumber[0]).trigger('input');
-                    $('#recipient-phones-type-1').val(phoneNumber[1].length === 10 ? 'Telefone' : 'Celular');
-                    $('#recipient-phones-number-1').val(phoneNumber[1]).trigger('input');
-                    $('#company-zip-code').val(data['cep']).trigger('change').trigger('input');
-                    $('#company-street-number').val(data['numero']);
-                    $('#company-complementary').val(capitalizeAllWords(data['complemento']));
-                    if (data['qsa'].length) {
-                        $('#recipient-partner-0-name').val(capitalizeAllWords(data['qsa'][0]['nome_socio']));
-                        $('#recipient-partner-0-professional-occupation').val(data['qsa'][0]['qualificacao_socio'])
-                    }
-                }).fail(function (data) {
-                    console.error(data);
-                });
+                if (documentNumber === '') {
+                    $(this).attr('readonly', false);
+                }
             });
 
         $('#recipient-name, #recipient-company-name').on('change', function () {
@@ -168,28 +65,10 @@ require([
         });
 
         $('[data-cep-search]').on('change', function () {
-            const cepNumber = $(this).val().replace(/\D/g, ''),
-                addressFieldset = $(this).closest('.admin__fieldset');
-
-            if (cepNumber.length !== 8) {
-                return;
+            const cepNumber = $(this).val().replace(/\D/g, '');
+            if (cepNumber.length === 8) {
+                getCepData($(this), cepNumber);
             }
-
-            $.ajax({
-                url: 'https://viacep.com.br/ws/' + cepNumber + '/json/',
-                method: 'get',
-                showLoader: true,
-                beforeSend: function (xhr) {
-                    // Empty to remove Magento's default handler
-                }
-            }).done(function (data) {
-                addressFieldset.find('input[id$="-street"]').val(data.logradouro);
-                addressFieldset.find('input[id$="-neighborhood"]').val(data.bairro);
-                addressFieldset.find('select[id$="-state"]').val(data.uf).trigger('change');
-                addressFieldset.find('input[id$="-city"]').val(data.localidade);
-            }).fail(function (data) {
-                console.error(data)
-            });
         });
 
         $('[data-state]').on('change', function () {
@@ -233,7 +112,7 @@ require([
         $('#search-recipient-id').on('click', searchRecipient);
     });
 
-    function localeDatePicker() {
+    function localizeDatePickerToPtBr() {
         if ($('html').attr('lang') !== 'pt') {
             return;
         }
@@ -263,11 +142,63 @@ require([
         });
     }
 
+    function applyDatePickerToFields() {
+        localizeDatePickerToPtBr();
+        $('[data-datepicker]').datepicker({
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: 'dd/mm/yy',
+            maxDate: 0,
+            minDate: '-122y', // Jeanne Calment
+            showMonthAfterYear: true,
+            yearRange: 'c-122:c0'
+        });
+    }
+
+    function maskFields() {
+        const phoneMaskOptions = {
+            onKeyPress: function (val, e, field, options) {
+                field.mask(phoneMaskBehavior.apply({}, arguments), options);
+            }
+        };
+
+        $('[data-phone-mask]').mask(phoneMaskBehavior, phoneMaskOptions);
+        $('[data-document-mask]').mask(cpfMask);
+        $('[data-date-mask]').mask('00/00/0000');
+        $('[data-currency-mask]').mask("#.##0,00", {reverse: true});
+        $('[data-zipcode-mask]').mask('00000-000');
+        $('#recipient-cnae').mask('0000-0/00');
+    }
+
+    function changeDocumentFieldsByType(documentType) {
+        const config = {
+            'mask': documentType === 'corporation' ? cnpjMask : cpfMask,
+            'maxLength': documentType === 'corporation' ? cnpjMax : cpfMax
+        };
+
+        $('#holder-document-type')
+            .val(documentTypeCorporationToCompany(documentType));
+
+        $('#document, #holder-document')
+            .attr({
+                'placeholder': config.mask,
+                'maxLength': config.maxLength
+            })
+            .mask(config.mask);
+    }
+
+    function phoneMaskBehavior(val) {
+        return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
+    }
+
     function formatDate(date) {
+        if (!date) return date;
+
         const dateArray = date.split('-');
         if (dateArray.length === 3) {
             return dateArray[2] + '/' + dateArray[1] + '/' + dateArray[0];
         }
+
         return date;
     }
 
@@ -309,8 +240,8 @@ require([
             .trigger('change');
         $('#document')
             .val(recipientDocument)
-            .trigger('change')
-            .trigger('input');
+            .trigger('input')
+            .trigger('change');
         $('#holder-document')
             .val(documentTypeCorporationToCompany(recipientDocument))
             .trigger('input');
@@ -327,6 +258,104 @@ require([
         const recipientBirthdate = selectedWebkulSeller.attr('data-birthdate');
         $('#recipient-birthdate')
             .val(formatDate(recipientBirthdate))
+    }
+
+    function getCnpjData(documentNumber) {
+        documentNumber = documentNumber.replace(/\D/g, '');
+        const maxRequests = 3;
+        let requests = 0;
+        $.ajax({
+            url: 'https://brasilapi.com.br/api/cnpj/v1/' + documentNumber,
+            method: 'get',
+            showLoader: true,
+            beforeSend: function (xhr) {
+                // Empty to remove Magento's default handler
+            },
+            statusCode: {
+                404: function (response) {
+                    if (response.responseJSON.type === 'service_error') {
+                        requests++;
+                        if (requests < maxRequests) {
+                            setTimeout($('#document').trigger('change'), 50);
+                        }
+                    }
+                }
+            }
+        }).done(function (data) {
+            fillCompanyData(data);
+        }).fail(function (data) {
+            console.error(data);
+        });
+    }
+
+    function fillCompanyData(cnpjData) {
+        let cnaeList = '';
+        if (cnpjData['cnae_fiscal']) {
+            cnaeList = '<option value=' + formatCnae(cnpjData['cnae_fiscal']) + '>'
+                + cnpjData['cnae_fiscal_descricao'] + '</option>';
+        }
+        if (cnpjData['cnaes_secundarios']) {
+            $.each(cnpjData['cnaes_secundarios'], function (index) {
+                if (cnpjData['cnaes_secundarios'][index]['codigo']) {
+                    cnaeList += '<option value=' + formatCnae(cnpjData['cnaes_secundarios'][index]['codigo']) + '>'
+                        + cnpjData['cnaes_secundarios'][index]['descricao']
+                        + '</option>';
+                }
+            });
+        }
+        fillDatalistOptions('cnae-list', cnaeList);
+
+        if (cnpjData['qsa']) {
+            let partnersList = '';
+            $.each(cnpjData['qsa'], function (index) {
+                partnersList += '<option value="' + capitalizeAllWords(cnpjData['qsa'][index]['nome_socio']) + '">' + cnpjData['qsa'][index]['qualificacao_socio'] + '</option>';
+            });
+            fillDatalistOptions('recipient-partner-0-partners-list', partnersList);
+        }
+
+        const phoneNumber = [
+            cnpjData['ddd_telefone_1'],
+            cnpjData['ddd_telefone_2']
+        ];
+
+        $('#recipient-company-name').val(capitalizeAllWords(cnpjData['razao_social'])).trigger('change');
+        $('#recipient-trading-name').val(capitalizeAllWords(cnpjData['nome_fantasia']));
+        $('#recipient-founding-date').val(formatDate(cnpjData['cnpjData_inicio_atividade']));
+        $('#recipient-corporation-type').val(cnpjData['natureza_juridica']);
+        $('#recipient-cnae').val(cnpjData['cnae_fiscal']).trigger('input');
+        $('#recipient-phones-type-0').val(phoneNumber[0].length === 10 ? 'Telefone' : 'Celular');
+        $('#recipient-phones-number-0').val(phoneNumber[0]).trigger('input');
+        $('#recipient-phones-type-1').val(phoneNumber[1].length === 10 ? 'Telefone' : 'Celular');
+        $('#recipient-phones-number-1').val(phoneNumber[1]).trigger('input');
+        $('#company-zip-code').val(cnpjData['cep']).trigger('change').trigger('input');
+        $('#company-street-number').val(cnpjData['numero']);
+        $('#company-complementary').val(capitalizeAllWords(cnpjData['complemento']));
+        if (cnpjData['qsa'].length) {
+            $('#recipient-partner-0-name').val(capitalizeAllWords(cnpjData['qsa'][0]['nome_socio']));
+            $('#recipient-partner-0-professional-occupation').val(cnpjData['qsa'][0]['qualificacao_socio'])
+        }
+    }
+
+    function getCepData(element, cepNumber) {
+        $.ajax({
+            url: 'https://viacep.com.br/ws/' + cepNumber + '/json/',
+            method: 'get',
+            showLoader: true,
+            beforeSend: function (xhr) {
+                // Empty to remove Magento's default handler
+            }
+        }).done(function (data) {
+            fillAddressFields(element.closest('.admin__fieldset'), data)
+        }).fail(function (data) {
+            console.error(data)
+        });
+    }
+
+    function fillAddressFields(addressFieldset, cepData) {
+        addressFieldset.find('input[id$="-street"]').val(cepData.logradouro);
+        addressFieldset.find('input[id$="-neighborhood"]').val(cepData.bairro);
+        addressFieldset.find('select[id$="-state"]').val(cepData.uf).trigger('change');
+        addressFieldset.find('input[id$="-city"]').val(cepData.localidade);
     }
 
     function fillDatalistOptions(datalistId, options) {
@@ -489,7 +518,6 @@ require([
     }
 
     function buildRecipientObject(recipient) {
-        console.log(recipient)
         let recipientObject = {};
         if ($.type(recipient.register_information) === 'object') {
             recipientObject['#document-type'] = documentTypeCompanyToCorporation(recipient.register_information.type);
@@ -591,7 +619,7 @@ require([
         return recipientObject;
     }
 
-    function triggerChange(elementId) {
+    function triggerChangeToShowFields(elementId) {
         const changeElements = [
             '#document-type',
             '#transfer-enabled',
@@ -599,6 +627,17 @@ require([
         ];
         if ($.inArray(elementId, changeElements) >= 0) {
             $(elementId).trigger('change');
+        }
+    }
+
+    function blockElement(element) {
+        if (element.is('select')) {
+            element.addClass('readonly');
+        } else {
+            element.attr('readonly', true);
+        }
+        if (element.is('[data-datepicker]')) {
+            element.datepicker('destroy');
         }
     }
 
@@ -615,60 +654,16 @@ require([
                 .trigger('input');
 
             if (wasSearched) {
-                triggerChange(elementId);
-            } else {
-                elementId.trigger('change');
-            }
-
-            if (
-                wasSearched
-                && recipientValue !== ''
-            ) {
-                element.attr('readonly', true);
-                if (element.is('select')) {
-                    element.addClass('readonly');
+                triggerChangeToShowFields(elementId);
+                if (recipientValue !== '') {
+                    blockElement(element);
                 }
+                continue;
             }
+
+            $(elementId).trigger('change');
+            blockElement(element);
         }
-
-        $("#document").attr("readonly", true);
-        $("#document-type").attr("readonly", true);
-
-        if (wasSearched) return;
-
-        $('#webkul-id')
-            .val(recipient.externalId)
-            .attr("readonly", true);
-        $("#webkul-id-div").show();
-
-        $('#existing_recipient')
-            .val('1')
-            .attr("readonly", true);
-
-        $("#use_existing_pagarme_id").hide();
-
-        $('#pagarme_id').show();
-
-        $("#recipient-name")
-            .val(recipient.name)
-            .attr("readonly", true);
-
-        $('#recipient-email')
-            .val(recipient.email)
-            .attr("readonly", true);
-
-        $('#document')
-            .val(recipient.document)
-            .attr("readonly", true);
-
-        $('#holder-document')
-            .val(recipient.document)
-            .attr("readonly", true);
-
-        $('#holder-document-type')
-            .val(recipient.default_bank_account.holder_type)
-            .attr("readonly", true)
-            .addClass('readonly');
     }
 
 });
