@@ -233,22 +233,6 @@ require([
     }
 
     function fillCompanyData(cnpjData) {
-        let cnaeList = '';
-        if (cnpjData['cnae_fiscal']) {
-            cnaeList = '<option value=' + formatCnae(cnpjData['cnae_fiscal']) + '>'
-                + cnpjData['cnae_fiscal_descricao'] + '</option>';
-        }
-        if (cnpjData['cnaes_secundarios']) {
-            $.each(cnpjData['cnaes_secundarios'], function (index) {
-                if (cnpjData['cnaes_secundarios'][index]['codigo']) {
-                    cnaeList += '<option value=' + formatCnae(cnpjData['cnaes_secundarios'][index]['codigo']) + '>'
-                        + cnpjData['cnaes_secundarios'][index]['descricao']
-                        + '</option>';
-                }
-            });
-        }
-        fillDatalistOptions('cnae-list', cnaeList);
-
         if (cnpjData['qsa']) {
             let partnersList = '';
             $.each(cnpjData['qsa'], function (index) {
@@ -266,7 +250,6 @@ require([
         $('#recipient-trading-name').val(capitalizeAllWords(cnpjData['nome_fantasia']));
         $('#recipient-founding-date').val(formatDate(cnpjData['data_inicio_atividade']));
         $('#recipient-corporation-type').val(cnpjData['natureza_juridica']);
-        $('#recipient-cnae').val(cnpjData['cnae_fiscal']).trigger('input');
         $('#recipient-phones-type-0').val(phoneNumber[0].length === 10 ? 'home_phone' : 'mobile_phone');
         $('#recipient-phones-number-0').val(phoneNumber[0]).trigger('input');
         $('#recipient-phones-type-1').val(phoneNumber[1].length === 10 ? 'home_phone' : 'mobile_phone');
@@ -321,10 +304,6 @@ require([
         }
 
         return array.join(' ');
-    }
-
-    function formatCnae(cnae) {
-        return cnae.toString().replace(/(\d+)(\d)(\d{2})/g, '$1-$2/$3');
     }
 
     function searchRecipient(e) {
@@ -507,7 +486,6 @@ require([
                     recipientObject['#recipient-corporation-type'] = recipient.register_information.corporation_type;
                     recipientObject['#recipient-corporation-type'] = recipient.register_information.corporation_type;
                     recipientObject['#recipient-founding-date'] = formatDate(recipient.register_information.founding_date);
-                    recipientObject['#recipient-cnae'] = recipient.register_information.cnae;
 
                     recipientObject['#company-zip-code'] = recipient.register_information.main_address.zip_code;
                     recipientObject['#company-street'] = recipient.register_information.main_address.street;
@@ -713,7 +691,6 @@ require([
         $('[data-date-mask]').mask('00/00/0000');
         $('[data-currency-mask]').mask("#.##0,00", {reverse: true});
         $('[data-zipcode-mask]').mask('00000-000');
-        $('#recipient-cnae').mask('0000-0/00');
     }
 
     function formatDate(date) {
