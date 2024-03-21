@@ -85,7 +85,7 @@ class Recipient implements RecipientInterface
             $recipientModel = $this->modelRecipient;
             $recipientModel->setId(null);
             $recipientModel->setExternalId($params['external_id']);
-            $recipientModel->setName($params['name']);
+            $recipientModel->setName(empty($params['name']) ? $params['company_name'] : $params['name']);
             $recipientModel->setEmail($params['email']);
             $recipientModel->setDocument($params['document']);
             $recipientModel->setPagarmeId($pagarmeId);

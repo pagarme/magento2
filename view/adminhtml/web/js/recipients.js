@@ -23,7 +23,7 @@ require([
         $('#pagarme-recipients-form').on('submit', formSubmit);
 
         $('#existing_recipient').on('change', function () {
-            hideOrShowSectionByFieldVal('pagarme_id', $(this).val());
+            slideUpOrDownSectionByFieldVal('pagarme_id', $(this).val());
         });
 
         $('#webkul-seller').on('change', function () {
@@ -31,19 +31,19 @@ require([
             fillRecipientByWebkulId(webkulId);
 
             if (!webkulId) {
-                hideOrShowSections(''); // Hide all sections
+                slideUpOrDownSections(''); // Hide all sections
                 return;
             }
 
-            hideOrShowSections('seller', 'show');
+            slideUpOrDownSections('seller', 'show');
         });
 
         $('#document-type').on('change', function () {
             const documentType = $(this).val();
             changeDocumentFieldsByType(documentType);
-            hideOrShowSections(['individual', 'corporation']);
+            slideUpOrDownSections(['individual', 'corporation']);
             if (documentType !== '') {
-                hideOrShowSections(documentType, 'show');
+                slideUpOrDownSections(documentType, 'show');
                 return;
             }
             $(this).removeClass('readonly');
@@ -96,11 +96,11 @@ require([
         });
 
         $('#transfer-enabled').on('change', function () {
-            hideOrShowSectionByFieldVal('transfer_interval', $(this).val());
+            slideUpOrDownSectionByFieldVal('transfer_interval', $(this).val());
         });
 
         $('#transfer-interval').on('change', function () {
-            hideOrShowSections(
+            slideUpOrDownSections(
                 'transfer_day',
                 $(this).val() === 'Daily' ? 'hide' : 'show'
             );
@@ -110,7 +110,7 @@ require([
         const editRecipient = $('#edit-recipient').val();
         if (editRecipient.length > 0) {
             $('#webkul-seller-container').hide();
-            loadRecipient(JSON.parse(editRecipient), false);
+            loadRecipient(JSON.parse(editRecipient));
         }
 
         $('#recipient-id').on('change', function () {
@@ -328,7 +328,7 @@ require([
                     return;
                 }
 
-                loadRecipient(response.recipient, true);
+                loadRecipient(response.recipient);
                 $('#recipient-id-control').val(recipientId);
 
                 hideLoader();
@@ -377,11 +377,20 @@ require([
         saveButtonSpan.html('Saving');
     }
 
-    function hideOrShowSectionByFieldVal(section, value) {
-        hideOrShowSections(section, value === '1' ? 'show' : 'hide');
+    function hideSection(section) {
+        const fields = section ? $('[data-section*="' + section + '"]') : $('[data-section]');
+        fields.each(function () {
+            $(this)
+                .hide()
+                .find('[data-toggle-required]').prop('required', false);
+        });
     }
 
-    function hideOrShowSections(sections, action = 'hide') {
+    function slideUpOrDownSectionByFieldVal(section, value) {
+        slideUpOrDownSections(section, value === '1' ? 'show' : 'hide');
+    }
+
+    function slideUpOrDownSections(sections, action = 'hide') {
         let fields;
         if (Array.isArray(sections)) {
             let dataSections = '';
@@ -396,15 +405,17 @@ require([
 
         if (action === 'hide') {
             fields.each(function () {
-                $(this).slideUp('250');
-                $(this).find('[data-toggle-required]').prop('required', false);
+                $(this)
+                    .slideUp('250')
+                    .find('[data-toggle-required]').prop('required', false);
             });
         }
 
         if (action === 'show') {
             fields.each(function () {
-                $(this).slideDown('250');
-                $(this).find('[data-toggle-required]').prop('required', true);
+                $(this)
+                    .slideDown('250')
+                    .find('[data-toggle-required]').prop('required', true);
             });
         }
     }
@@ -422,8 +433,8 @@ require([
                 5: 'Sexta-feira'
             };
             transferDay.children().remove();
-            $.each(transferWeekDays, function (index, value) {
-                transferDay.append('<option value="' + index + '">' + value + '</option>');
+            $.each(transferWeekDays, function (value, label) {
+                transferDay.append('<option value="' + value + '">' + label + '</option>');
             });
         }
 
@@ -627,7 +638,7 @@ require([
         $('#holder-name').val($('#webkul-seller :selected').attr('data-sellername'));
     }
 
-    function loadRecipient(recipient, wasSearched) {
+    function loadRecipient(recipient) {
         const recipientObject = buildRecipientObject(recipient);
 
         for (const elementId in recipientObject) {
@@ -639,24 +650,12 @@ require([
             element.val(recipientValue)
                 .trigger('input');
 
-            if (wasSearched) {
-                triggerChangeToShowFields(elementId);
-                continue;
-            }
-
-            $(elementId).trigger('change');
+            triggerChangeToShowFields(elementId);
             blockElement(element);
         }
 
-        if (wasSearched) {
-            const fields = $('.admin__fieldset input[id], .admin__fieldset select[id]');
-            $.each(fields, function (key, field){
-                blockElement($(field));
-            });
-
-            if (!isNewRecipientId(recipient)) {
-                hideOrShowSections('new-field');
-            }
+        if (!isNewRecipientId(recipient)) {
+            hideSection('new-field');
         }
     }
 
