@@ -111,6 +111,10 @@ table.table-cycles {
     touch-action: none;
 }
 
+#pagarme-recipients-form .message.message-error.error {
+    display: none;
+}
+
 /*
  * Jquery UI Fix
  */

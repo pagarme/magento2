@@ -1,13 +1,16 @@
-<?php $states = $block->getAllRegionsOfCountry(); ?>
+<?php $states = $block->getAllRegionsOfCountry();
+$editRecipient = $block->getEditRecipient() ?>
 <form id="pagarme-recipients-form" method="post">
     <div class="page-main-actions">
         <div class="page-actions-placeholder"></div>
         <div class="page-actions" data-ui-id="page-actions-toolbar-content-header">
             <div class="page-actions-inner" data-title="New Recipient">
                 <div class="page-actions-buttons">
-                    <button id="save-button" title="Save" class="action-default primary" type="submit">
-                        <span><?= __('Save') ?></span>
-                    </button>
+                    <?php if (!$editRecipient) : ?>
+                        <button id="save-button" title="Save" class="action-default primary" type="submit">
+                            <span><?= __('Save') ?></span>
+                        </button>
+                    <?php endif; ?>
                     <button id="back" title="Back" type="button" class="action- scalable back"
                             onclick="location.href = '<?= $block->getUrl('pagarme_pagarme/recipients/index') ?>'"
                             data-ui-id="back-button">
@@ -25,6 +28,8 @@
            value="<?= $block->getBaseUrl() . 'rest/V1/pagarme/marketplace/recipient/searchRecipient' ?>"/>
 
     <input type="hidden" name="form_key" value="<?= $block->getFormKey() ?>"/>
+
+    <input type="hidden" id="recipient-id-control" value=""/>
 
     <?php if (!empty($block->getRecipientId())) : ?>
         <!--  LocalId  -->
@@ -140,7 +145,7 @@
                                 <h2 data-section="individual"><?= __('Personal data') ?></h2>
                                 <h2 data-section="corporation"><?= __('Company data') ?></h2>
 
-                                <div class="admin__field _required" data-section="individual-corporation">
+                                <div class="admin__field _required" data-section="individual corporation">
                                     <label for="document" class="admin__field-label">
                                         <span><?= __('Document number') ?></span>
                                     </label>
@@ -188,7 +193,7 @@
                                     </div>
                                 </div>
 
-                                <div class="admin__field _required" data-section="individual-corporation">
+                                <div class="admin__field _required" data-section="individual corporation">
                                     <label for="recipient-email" class="admin__field-label">
                                         <span><?= __('E-mail') ?></span>
                                     </label>
@@ -199,7 +204,7 @@
                                     </div>
                                 </div>
 
-                                <div class="admin__field" data-section="individual-corporation">
+                                <div class="admin__field" data-section="individual corporation new-field">
                                     <label for="recipient-site" class="admin__field-label">
                                         <span><?= __('Site URL') ?></span>
                                     </label>
@@ -209,7 +214,7 @@
                                     </div>
                                 </div>
 
-                                <div class="admin__field" data-section="individual">
+                                <div class="admin__field" data-section="individual new-field">
                                     <label for="recipient-mother-name" class="admin__field-label">
                                         <span><?= __('Mother name') ?></span>
                                     </label>
@@ -220,7 +225,7 @@
                                     </div>
                                 </div>
 
-                                <div class="admin__field _required" data-section="individual">
+                                <div class="admin__field _required" data-section="individual new-field">
                                     <label for="recipient-birthdate" class="admin__field-label">
                                         <span><?= __('Date of birth') ?></span>
                                     </label>
@@ -232,7 +237,7 @@
                                     </div>
                                 </div>
 
-                                <div class="admin__field _required" data-section="individual">
+                                <div class="admin__field _required" data-section="individual new-field">
                                     <label for="recipient-monthly-income" class="admin__field-label">
                                         <span><?= __('Monthly income') ?></span>
                                     </label>
@@ -244,7 +249,7 @@
                                     </div>
                                 </div>
 
-                                <div class="admin__field _required" data-section="individual">
+                                <div class="admin__field _required" data-section="individual new-field">
                                     <label for="recipient-professional-occupation" class="admin__field-label">
                                         <span><?= __('Profession') ?></span>
                                     </label>
@@ -255,7 +260,7 @@
                                     </div>
                                 </div>
 
-                                <div class="admin__field _required" data-section="corporation">
+                                <div class="admin__field _required" data-section="corporation new-field">
                                     <label for="recipient-annual-revenue" class="admin__field-label">
                                         <span><?= __('Annual revenue') ?></span>
                                     </label>
@@ -267,7 +272,7 @@
                                     </div>
                                 </div>
 
-                                <div class="admin__field" data-section="corporation">
+                                <div class="admin__field" data-section="corporation new-field">
                                     <label for="recipient-corporation-type" class="admin__field-label">
                                         <span><?= __('Company type') ?></span>
                                     </label>
@@ -278,7 +283,7 @@
                                     </div>
                                 </div>
 
-                                <div class="admin__field" data-section="corporation">
+                                <div class="admin__field" data-section="corporation new-field">
                                     <label for="recipient-founding-date" class="admin__field-label">
                                         <span><?= __('Founding date') ?></span>
                                     </label>
@@ -290,7 +295,7 @@
                                     </div>
                                 </div>
 
-                                <div class="admin__field" data-section="corporation">
+                                <div class="admin__field" data-section="corporation new-field">
                                     <label for="recipient-cnae" class="admin__field-label">
                                         <span><?= __('CNAE (Brazilian Classification of Economic Activities)') ?></span>
                                     </label>
@@ -302,7 +307,7 @@
                                 </div>
 
                             </div>
-                            <div class="admin__fieldset" data-section="individual-corporation">
+                            <div class="admin__fieldset" data-section="individual corporation new-field">
 
                                 <div class="admin__field">
                                     <div class="admin__field-label">
@@ -318,8 +323,8 @@
                                         <select class="recipient-form-inputs admin__control-select"
                                                 name="form[register_information][phone_number][0][type]"
                                                 id="recipient-phones-type-0" data-toggle-required>
-                                            <option value="Celular"><?= __('Mobile phone') ?></option>
-                                            <option value="Telefone"><?= __('Telephone') ?></option>
+                                            <option value="mobile_phone"><?= __('Mobile phone') ?></option>
+                                            <option value="home_phone"><?= __('Telephone') ?></option>
                                         </select>
                                     </div>
                                 </div>
@@ -344,8 +349,8 @@
                                         <select class="recipient-form-inputs admin__control-select"
                                                 name="form[register_information][phone_number][1][type]"
                                                 id="recipient-phones-type-1">
-                                            <option value="Celular"><?= __('Mobile phone') ?></option>
-                                            <option value="Telefone"><?= __('Telephone') ?></option>
+                                            <option value="mobile_phone"><?= __('Mobile phone') ?></option>
+                                            <option value="home_phone"><?= __('Telephone') ?></option>
                                         </select>
                                     </div>
                                 </div>
@@ -363,7 +368,7 @@
                                 </div>
 
                             </div>
-                            <div class="admin__fieldset" data-section="individual">
+                            <div class="admin__fieldset" data-section="individual new-field">
 
                                 <div class="admin__field">
                                     <div class="admin__field-label">
@@ -469,7 +474,7 @@
                                 </div>
 
                             </div>
-                            <div class="admin__fieldset" data-section="corporation">
+                            <div class="admin__fieldset" data-section="corporation new-field">
 
                                 <div class="admin__field">
                                     <div class="admin__field-label">
@@ -576,7 +581,7 @@
                                 </div>
 
                             </div>
-                            <div class="admin__fieldset" data-section="corporation">
+                            <div class="admin__fieldset" data-section="corporation new-field">
 
                                 <div class="admin__field">
                                     <div class="admin__field-label">
@@ -677,7 +682,7 @@
                                        value="1" data-toggle-required>
 
                             </div>
-                            <div class="admin__fieldset" data-section="corporation">
+                            <div class="admin__fieldset" data-section="corporation new-field">
 
                                 <div class="admin__field">
                                     <div class="admin__field-label">
@@ -693,8 +698,8 @@
                                         <select class="recipient-form-inputs admin__control-select"
                                                 name="form[register_information][managing_partners][0][phone_number][0][type]"
                                                 id="recipient-partner-0-phones-type-0" data-toggle-required>
-                                            <option value="Celular"><?= __('Mobile phone') ?></option>
-                                            <option value="Telefone"><?= __('Telephone') ?></option>
+                                            <option value="mobile_phone"><?= __('Mobile phone') ?></option>
+                                            <option value="home_phone"><?= __('Telephone') ?></option>
                                         </select>
                                     </div>
                                 </div>
@@ -719,8 +724,8 @@
                                         <select class="recipient-form-inputs admin__control-select"
                                                 name="form[register_information][managing_partners][0][phone_number][1][type]"
                                                 id="recipient-partner-0-phones-type-1">
-                                            <option value="Celular"><?= __('Mobile phone') ?></option>
-                                            <option value="Telefone"><?= __('Telephone') ?></option>
+                                            <option value="mobile_phone"><?= __('Mobile phone') ?></option>
+                                            <option value="home_phone"><?= __('Telephone') ?></option>
                                         </select>
                                     </div>
                                 </div>
@@ -738,7 +743,7 @@
                                 </div>
 
                             </div>
-                            <div class="admin__fieldset" data-section="corporation">
+                            <div class="admin__fieldset" data-section="corporation new-field">
 
                                 <div class="admin__field">
                                     <div class="admin__field-label">
@@ -836,7 +841,7 @@
                                         <span><?= __('City') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
-                                        <input type="text" list="recipient-partner-cities"
+                                        <input type="text" list="recipient-partner-0-cities"
                                                class="recipient-form-inputs"
                                                name="form[register_information][managing_partners][0][address][city]"
                                                id="recipient-partner-0-city"
@@ -846,7 +851,7 @@
                                 </div>
 
                             </div>
-                            <div class="admin__fieldset" data-section="individual-corporation">
+                            <div class="admin__fieldset" data-section="individual corporation">
 
                                 <h2><?= __('Banking information') ?></h2>
 
@@ -1009,4 +1014,4 @@
     </div>
 </form>
 <!-- Edit Recipient-->
-<input type="hidden" name="form[edit_recipient_id]" id="edit-recipient" value='<?= $block->getEditRecipient() ?>'/>
+<input type="hidden" name="form[edit_recipient_id]" id="edit-recipient" value='<?= $editRecipient ?>'/>

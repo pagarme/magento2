@@ -1,8 +1,11 @@
 require([
+    'Magento_Ui/js/modal/alert',
     'jquery',
     'jquery/ui',
+    'mage/translate',
+    'loader',
     'pagarmeJqueryMask'
-], function ($) {
+], function (alert, $) {
     'use strict';
 
     const
@@ -13,7 +16,8 @@ require([
 
     $(document).ready(function () {
 
-        applyDatePickerToFields();
+        localizeDatePickerToPtBr();
+        applyDatePickerToField('[data-datepicker]');
         maskFields();
 
         $('#pagarme-recipients-form').on('submit', formSubmit);
@@ -85,7 +89,7 @@ require([
             $.get('https://servicodados.ibge.gov.br/api/v1/localidades/estados/' + stateCode + '/distritos')
                 .done(function (data) {
                     $.each(data, function (index) {
-                        citiesList += '<option value="' + data[index].nome + '">';
+                        citiesList += '<option value="' + data[index].nome + '">' + data[index].nome + '</option>';
                     });
                     fillDatalistOptions(citiesListId, citiesList);
                 });
@@ -109,66 +113,17 @@ require([
             loadRecipient(JSON.parse(editRecipient), false);
         }
 
+        $('#recipient-id').on('change', function () {
+            const
+                recipientVal = $(this).val(),
+                controlValue = $('#recipient-id-control').val();
+            if (controlValue === '' || recipientVal === controlValue) return;
+
+            resetFields();
+        });
+
         $('#search-recipient-id').on('click', searchRecipient);
     });
-
-    function localizeDatePickerToPtBr() {
-        if ($('html').attr('lang') !== 'pt') {
-            return;
-        }
-
-        const shortWeekDays = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
-        $.datepicker.setDefaults({
-            closeText: 'Fechar',
-            prevText: 'Anterior',
-            nextText: 'Próximo',
-            currentText: 'Hoje',
-            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-                'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-            monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun',
-                'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-            dayNames: [
-                'Domingo',
-                'Segunda-feira',
-                'Terça-feira',
-                'Quarta-feira',
-                'Quinta-feira',
-                'Sexta-feira',
-                'Sábado'
-            ],
-            dayNamesShort: shortWeekDays,
-            dayNamesMin: shortWeekDays,
-            weekHeader: 'Sm'
-        });
-    }
-
-    function applyDatePickerToFields() {
-        localizeDatePickerToPtBr();
-        $('[data-datepicker]').datepicker({
-            changeMonth: true,
-            changeYear: true,
-            dateFormat: 'dd/mm/yy',
-            maxDate: 0,
-            minDate: '-122y', // Jeanne Calment
-            showMonthAfterYear: true,
-            yearRange: 'c-122:c0'
-        });
-    }
-
-    function maskFields() {
-        const phoneMaskOptions = {
-            onKeyPress: function (val, e, field, options) {
-                field.mask(phoneMaskBehavior.apply({}, arguments), options);
-            }
-        };
-
-        $('[data-phone-mask]').mask(phoneMaskBehavior, phoneMaskOptions);
-        $('[data-document-mask]').mask(cpfMask);
-        $('[data-date-mask]').mask('00/00/0000');
-        $('[data-currency-mask]').mask("#.##0,00", {reverse: true});
-        $('[data-zipcode-mask]').mask('00000-000');
-        $('#recipient-cnae').mask('0000-0/00');
-    }
 
     function changeDocumentFieldsByType(documentType) {
         const config = {
@@ -185,21 +140,6 @@ require([
                 'maxLength': config.maxLength
             })
             .mask(config.mask);
-    }
-
-    function phoneMaskBehavior(val) {
-        return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
-    }
-
-    function formatDate(date) {
-        if (!date) return date;
-
-        const dateArray = date.split('-');
-        if (dateArray.length === 3) {
-            return dateArray[2] + '/' + dateArray[1] + '/' + dateArray[0];
-        }
-
-        return date;
     }
 
     function documentTypeCorporationToCompany(documentType) {
@@ -227,6 +167,8 @@ require([
     }
 
     function fillRecipientByWebkulId(webkulId) {
+        showLoader();
+
         $('#webkul-id')
             .val(webkulId)
             .prop('readonly', !!webkulId);
@@ -253,11 +195,13 @@ require([
 
         const recipientEmail = selectedWebkulSeller.attr('data-email');
         $('#recipient-email')
-            .val(recipientEmail)
+            .val(recipientEmail);
 
         const recipientBirthdate = selectedWebkulSeller.attr('data-birthdate');
         $('#recipient-birthdate')
-            .val(formatDate(recipientBirthdate))
+            .val(formatDate(recipientBirthdate));
+
+        hideLoader();
     }
 
     function getCnpjData(documentNumber) {
@@ -320,12 +264,12 @@ require([
 
         $('#recipient-company-name').val(capitalizeAllWords(cnpjData['razao_social'])).trigger('change');
         $('#recipient-trading-name').val(capitalizeAllWords(cnpjData['nome_fantasia']));
-        $('#recipient-founding-date').val(formatDate(cnpjData['cnpjData_inicio_atividade']));
+        $('#recipient-founding-date').val(formatDate(cnpjData['data_inicio_atividade']));
         $('#recipient-corporation-type').val(cnpjData['natureza_juridica']);
         $('#recipient-cnae').val(cnpjData['cnae_fiscal']).trigger('input');
-        $('#recipient-phones-type-0').val(phoneNumber[0].length === 10 ? 'Telefone' : 'Celular');
+        $('#recipient-phones-type-0').val(phoneNumber[0].length === 10 ? 'home_phone' : 'mobile_phone');
         $('#recipient-phones-number-0').val(phoneNumber[0]).trigger('input');
-        $('#recipient-phones-type-1').val(phoneNumber[1].length === 10 ? 'Telefone' : 'Celular');
+        $('#recipient-phones-type-1').val(phoneNumber[1].length === 10 ? 'home_phone' : 'mobile_phone');
         $('#recipient-phones-number-1').val(phoneNumber[1]).trigger('input');
         $('#company-zip-code').val(cnpjData['cep']).trigger('change').trigger('input');
         $('#company-street-number').val(cnpjData['numero']);
@@ -385,6 +329,7 @@ require([
 
     function searchRecipient(e) {
         e.preventDefault();
+        showLoader();
 
         const recipientId = $('#recipient-id').val(),
             url = $('#url-search-recipient-id').val();
@@ -400,11 +345,14 @@ require([
             .then(res => {
                 const response = JSON.parse(res);
                 if (response.code !== 200) {
-                    alert(response.message);
+                    mageAlert(response.message, 'Error!');
                     return;
                 }
 
                 loadRecipient(response.recipient, true);
+                $('#recipient-id-control').val(recipientId);
+
+                hideLoader();
             });
 
     }
@@ -413,7 +361,7 @@ require([
         e.preventDefault();
 
         if (!validateEmail($("#recipient-email").val())) {
-            alert('Invalid email');
+            mageAlert('Invalid email.', 'Error!');
             return;
         }
 
@@ -427,10 +375,10 @@ require([
             success: function (data) {
                 data = JSON.parse(data);
                 if (data.code === 200) {
-                    alert(data.message);
+                    mageAlert(data.message, 'Success!');
                     return window.history.back();
                 }
-                alert(data.message);
+                mageAlert(data.message, 'Error!');
             },
             complete: function () {
                 toggleSaveButton()
@@ -517,9 +465,13 @@ require([
         return validationExpression.test(email);
     }
 
+    function isNewRecipientId(recipient) {
+        return $.type(recipient.register_information) === 'object';
+    }
+
     function buildRecipientObject(recipient) {
         let recipientObject = {};
-        if ($.type(recipient.register_information) === 'object') {
+        if (isNewRecipientId(recipient)) {
             recipientObject['#document-type'] = documentTypeCompanyToCorporation(recipient.register_information.type);
             recipientObject['#document'] = recipient.register_information.document;
             recipientObject['#recipient-email'] = recipient.register_information.email;
@@ -593,18 +545,21 @@ require([
                     recipientObject['#recipient-partner-' + partnerIndex + '-phones-number-' + phoneIndex] = phone.ddd + phone.number;
                 });
             });
+
+            recipientObject['#holder-document'] = recipient.register_information.document;
         }
 
-        if ($.type(recipient.register_information) !== 'object') {
+        if (!isNewRecipientId(recipient)) {
             recipientObject['#document-type'] = documentTypeCompanyToCorporation(recipient.type);
             recipientObject['#document'] = recipient.document;
             recipientObject[getNameFieldByDocumentType(recipient.type)] = recipient.name;
             recipientObject['#recipient-email'] = recipient.email;
+
+            recipientObject['#holder-document'] = recipient.document;
         }
 
         recipientObject['#holder-name'] = recipient.default_bank_account.holder_name;
         recipientObject['#holder-document-type'] = documentTypeCorporationToCompany(recipient.default_bank_account.holder_type);
-        recipientObject['#holder-document'] = recipient.document;
         recipientObject['#bank'] = recipient.default_bank_account.bank;
         recipientObject['#branch-number'] = recipient.default_bank_account.branch_number;
         recipientObject['#branch-check-digit'] = recipient.default_bank_account.branch_check_digit;
@@ -631,14 +586,67 @@ require([
     }
 
     function blockElement(element) {
+        const neverBlockIds = [
+            'webkul-seller',
+            'existing_recipient',
+            'recipient-id'
+        ];
+        if ($.inArray(element.attr('id'), neverBlockIds) >= 0) return;
+
         if (element.is('select')) {
             element.addClass('readonly');
         } else {
             element.attr('readonly', true);
         }
+
         if (element.is('[data-datepicker]')) {
             element.datepicker('destroy');
         }
+    }
+
+    function unblockElement(element) {
+        const
+            neverUnblockIds = [
+                'holder-name',
+                'holder-document-type',
+                'holder-document'
+            ],
+            elementId = element.attr('id');
+        if ($.inArray(elementId, neverUnblockIds) >= 0) return;
+
+        if (element.is('select')) {
+            element.removeClass('readonly');
+        } else {
+            element.attr('readonly', false);
+        }
+
+        if (element.is('[data-datepicker]')) {
+            applyDatePickerToField(`#${elementId}`);
+        }
+    }
+
+    function resetFields() {
+        const neverResetIds = [
+                'webkul-seller',
+                'webkul-id',
+                'existing_recipient',
+                'recipient-id'
+            ],
+            fields = $('.admin__fieldset input[id], .admin__fieldset select[id]');
+
+        $.each(fields, function (key, field) {
+            field = $(field);
+            if ($.inArray(field.attr('id'), neverResetIds) >= 0) return;
+
+            if (field.is('select')) {
+                field.prop('selectedIndex',0).trigger('change');
+            } else {
+                field.val('');
+            }
+            unblockElement(field);
+        });
+
+        $('#holder-name').val($('#webkul-seller :selected').attr('data-sellername'));
     }
 
     function loadRecipient(recipient, wasSearched) {
@@ -655,15 +663,110 @@ require([
 
             if (wasSearched) {
                 triggerChangeToShowFields(elementId);
-                if (recipientValue !== '') {
-                    blockElement(element);
-                }
                 continue;
             }
 
             $(elementId).trigger('change');
             blockElement(element);
         }
+
+        if (wasSearched) {
+            const fields = $('.admin__fieldset input[id], .admin__fieldset select[id]');
+            $.each(fields, function (key, field){
+                blockElement($(field));
+            });
+
+            if (!isNewRecipientId(recipient)) {
+                hideOrShowSections('new-field');
+            }
+        }
+    }
+
+    function mageAlert(content, title = null) {
+        alert({
+            title: $.mage.__(title),
+            content: $.mage.__(content)
+        });
+    }
+
+    function showLoader() {
+        $('body').loader('show');
+    }
+
+    function hideLoader() {
+        $('body').loader('hide');
+    }
+
+    function phoneMaskBehavior(val) {
+        return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
+    }
+
+    function maskFields() {
+        const phoneMaskOptions = {
+            onKeyPress: function (val, e, field, options) {
+                field.mask(phoneMaskBehavior.apply({}, arguments), options);
+            }
+        };
+
+        $('[data-phone-mask]').mask(phoneMaskBehavior, phoneMaskOptions);
+        $('[data-document-mask]').mask(cpfMask);
+        $('[data-date-mask]').mask('00/00/0000');
+        $('[data-currency-mask]').mask("#.##0,00", {reverse: true});
+        $('[data-zipcode-mask]').mask('00000-000');
+        $('#recipient-cnae').mask('0000-0/00');
+    }
+
+    function formatDate(date) {
+        if (!date) return date;
+
+        const dateArray = date.split('-');
+        if (dateArray.length === 3) {
+            return dateArray[2] + '/' + dateArray[1] + '/' + dateArray[0];
+        }
+
+        return date;
+    }
+
+    function applyDatePickerToField(element) {
+        $(element).datepicker({
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: 'dd/mm/yy',
+            maxDate: 0,
+            minDate: '-122y', // Jeanne Calment
+            showMonthAfterYear: true,
+            yearRange: 'c-122:c0'
+        });
+    }
+
+    function localizeDatePickerToPtBr() {
+        if ($('html').attr('lang') !== 'pt') {
+            return;
+        }
+
+        const shortWeekDays = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+        $.datepicker.setDefaults({
+            closeText: 'Fechar',
+            prevText: 'Anterior',
+            nextText: 'Próximo',
+            currentText: 'Hoje',
+            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+                'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+            monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun',
+                'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+            dayNames: [
+                'Domingo',
+                'Segunda-feira',
+                'Terça-feira',
+                'Quarta-feira',
+                'Quinta-feira',
+                'Sexta-feira',
+                'Sábado'
+            ],
+            dayNamesShort: shortWeekDays,
+            dayNamesMin: shortWeekDays,
+            weekHeader: 'Sm'
+        });
     }
 
 });

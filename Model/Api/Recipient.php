@@ -2,12 +2,14 @@
 
 namespace Pagarme\Pagarme\Model\Api;
 
+use Exception;
 use Magento\Framework\Webapi\Rest\Request;
 use Pagarme\Pagarme\Api\RecipientInterface;
-use Pagarme\Pagarme\Model\Recipient as ModelReciepient;
+use Pagarme\Pagarme\Model\Recipient as ModelRecipient;
 use Pagarme\Pagarme\Service\Marketplace\RecipientService;
 use Pagarme\Core\Middle\Factory\RecipientFactory as CoreRecipient;
 use Pagarme\Pagarme\Model\ResourceModel\Recipients as ResourceModelRecipient;
+use Throwable;
 
 class Recipient implements RecipientInterface
 {
@@ -17,28 +19,29 @@ class Recipient implements RecipientInterface
     protected $request;
 
     /**
-     * @var ModelReciepient
+     * @var ModelRecipient
      */
-    protected $modelReciepient;
+    protected $modelRecipient;
 
-     /**
+    /**
      * @var ResourceModelRecipient
      */
     protected $resourceModelRecipient;
-    
+
     /**
      * @var CoreRecipient
      */
     protected $coreRecipient;
 
     public function __construct(
-        Request $request,
-        ModelReciepient $modelReciepient,
+        Request                $request,
+        ModelRecipient         $modelRecipient,
         ResourceModelRecipient $resourceModelRecipient,
-        CoreRecipient $coreRecipient
-    ) {
+        CoreRecipient          $coreRecipient
+    )
+    {
         $this->request = $request;
-        $this->modelReciepient = $modelReciepient;
+        $this->modelRecipient = $modelRecipient;
         $this->resourceModelRecipient = $resourceModelRecipient;
         $this->coreRecipient = $coreRecipient;
     }
@@ -56,9 +59,9 @@ class Recipient implements RecipientInterface
          */
         $randNumber = rand(10000, 20000);
         $params['register_information']['external_id'] = $randNumber . $params['register_information']['external_id'];
-       
+
         try {
-            if(!empty($params['pagarme_id'])) {
+            if (!empty($params['pagarme_id'])) {
                 $this->saveOnPlatform($params['register_information'], $params['pagarme_id']);
             } else {
                 $recipientOnPagarme = $this->createOnPagarme($params);
@@ -66,26 +69,20 @@ class Recipient implements RecipientInterface
             }
             return json_encode([
                 'code' => 200,
-                'message' => 'Recipient saved!'
+                'message' => __('Recipient saved successfully!')
             ]);
-            } catch (\Throwable $th) {
-                return json_encode([
-                    'code' => 400,
-                    'message' => $th->getMessage()
-                ]);
-            } catch (\Exception $e) {
-                return json_encode([
-                    'code' => 400,
-                    'message' => $e->getMessage()
-                ]);
-            }
+        } catch (Throwable $th) {
+            return json_encode([
+                'code' => 400,
+                'message' => __('An error occurred while saving the recipient.')
+            ]);
+        }
     }
 
-
-    private function saveOnPlatform($params, $pagarmeId) 
+    private function saveOnPlatform($params, $pagarmeId)
     {
         try {
-            $recipientModel = $this->modelReciepient;
+            $recipientModel = $this->modelRecipient;
             $recipientModel->setId(null);
             $recipientModel->setExternalId($params['external_id']);
             $recipientModel->setName($params['name']);
@@ -94,17 +91,18 @@ class Recipient implements RecipientInterface
             $recipientModel->setPagarmeId($pagarmeId);
             $recipientModel->setType($params['type']);
             $this->resourceModelRecipient->save($recipientModel);
-        } catch (\Exception $e) {
-            throw new \Exception("Ocorreu um erro ao salvar no Magento");
+        } catch (Exception $e) {
+            throw new Exception(__('An error occurred while saving the recipient.'));
         }
     }
 
-    private function createOnPagarme($recipientData) 
+    private function createOnPagarme($recipientData)
     {
         $coreRecipient = $this->coreRecipient->createRecipient($recipientData);
         $service = new RecipientService();
         return $service->createRecipient($coreRecipient);
     }
+
     public function searchRecipient(): string
     {
         $post = $this->request->getBodyParams();
@@ -113,9 +111,9 @@ class Recipient implements RecipientInterface
         try {
             $recipient = $service->searchRecipient($post['recipientId']);
             if ($recipient->status != 'active') {
-                throw new \Exception('Recipient not active');
+                throw new Exception(__('Recipient not active.'));
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return json_encode([
                 'code' => 404,
                 'message' => __($e->getMessage()),
@@ -124,7 +122,7 @@ class Recipient implements RecipientInterface
 
         return json_encode([
             'code' => 200,
-            'message' => __('Recipient finded'),
+            'message' => __('Recipient found.'),
             'recipient' => $recipient,
         ]);
     }
