@@ -4,14 +4,16 @@ namespace Pagarme\Pagarme\Controller\Adminhtml\Recipients;
 
 use Exception;
 use Magento\Backend\App\Action;
-use Magento\Backend\App\Action\Context;
 use Magento\Framework\Registry;
+use Pagarme\Pagarme\Model\Recipient;
+use Magento\Backend\App\Action\Context;
+use Webkul\Marketplace\Model\SellerFactory;
 use Magento\Framework\View\Result\PageFactory;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
-use Webkul\Marketplace\Model\SellerFactory;
-use Magento\Framework\Message\Factory as MagentoMessageFactory;
 use Magento\Framework\Module\Manager as ModuleManager;
-
+use Pagarme\Pagarme\Service\Marketplace\RecipientService;
+use Magento\Framework\Message\Factory as MagentoMessageFactory;
+use Pagarme\Pagarme\Model\ResourceModel\Recipients as ResourceModelRecipient;
 
 class RecipientAction extends Action
 {
@@ -36,6 +38,21 @@ class RecipientAction extends Action
      * @var ModuleManager
      */
     private $moduleManager;
+    /**
+     *
+     * @var \Pagarme\Pagarme\Model\ResourceModel\Recipients
+     */
+    protected $resourceModelRecipient;
+    /**
+     *
+     * @var \Pagarme\Pagarme\Model\Recipient
+     */
+    protected $recipient;
+    /**
+     *
+     * @var \Pagarme\Pagarme\Service\Marketplace\RecipientService
+     */
+    protected $recipientService;
 
     /**
      * @param Context $context
@@ -43,6 +60,9 @@ class RecipientAction extends Action
      * @param PageFactory $resultPageFactory
      * @param MagentoMessageFactory $messageFactory
      * @param ModuleManager $moduleManager
+     * @param ResourceModelRecipient $resourceModelRecipient
+     * @param Recipient $recipient
+     * @param RecipientService $recipientService
      * @throws Exception
      */
     public function __construct(
@@ -50,7 +70,10 @@ class RecipientAction extends Action
         Registry $coreRegistry,
         PageFactory $resultPageFactory,
         MagentoMessageFactory $messageFactory,
-        ModuleManager $moduleManager
+        ModuleManager $moduleManager,
+        ResourceModelRecipient $resourceModelRecipient,
+        Recipient $recipient,
+        RecipientService $recipientService
     ) {
 
         parent::__construct($context);
@@ -59,7 +82,11 @@ class RecipientAction extends Action
         $this->coreRegistry = $coreRegistry;
         $this->messageFactory = $messageFactory;
         $this->moduleManager = $moduleManager;
+        $this->resourceModelRecipient = $resourceModelRecipient;
+        $this->recipient = $recipient;
+        $this->recipientService = $recipientService;
         $this->__init();
+        
         Magento2CoreSetup::bootstrap();
     }
 

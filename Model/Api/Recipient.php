@@ -3,13 +3,14 @@
 namespace Pagarme\Pagarme\Model\Api;
 
 use Exception;
-use Magento\Framework\Webapi\Rest\Request;
-use Pagarme\Core\Middle\Factory\RecipientFactory as CoreRecipient;
-use Pagarme\Pagarme\Api\RecipientInterface;
-use Pagarme\Pagarme\Model\Recipient as ModelRecipient;
-use Pagarme\Pagarme\Model\ResourceModel\Recipients as ResourceModelRecipient;
-use Pagarme\Pagarme\Service\Marketplace\RecipientService;
 use Throwable;
+use Magento\Framework\Webapi\Rest\Request;
+use Pagarme\Pagarme\Api\RecipientInterface;
+use Pagarme\Core\Kernel\Services\LogService;
+use Pagarme\Pagarme\Model\Recipient as ModelRecipient;
+use Pagarme\Pagarme\Service\Marketplace\RecipientService;
+use Pagarme\Core\Middle\Factory\RecipientFactory as CoreRecipient;
+use Pagarme\Pagarme\Model\ResourceModel\Recipients as ResourceModelRecipient;
 
 class Recipient implements RecipientInterface
 {
@@ -72,6 +73,13 @@ class Recipient implements RecipientInterface
                 'message' => __('Recipient saved successfully!')
             ]);
         } catch (Throwable $th) {
+            $logService = new LogService("Recipient Log", true, 1);
+            $logService->info($th->getMessage(), [
+                'webkul_seller' => $params['register_information']['webkul_seller'],
+                'document'      => $params['register_information']['document'],
+                'external_id'   => $params['register_information']['external_id']
+                
+            ]);
             return json_encode([
                 'code' => 400,
                 'message' => __('An error occurred while saving the recipient.')
@@ -85,7 +93,6 @@ class Recipient implements RecipientInterface
      */
     private function saveOnPlatform($params, $pagarmeId)
     {
-        try {
             $recipientModel = $this->modelRecipient;
             $recipientModel->setId(null);
             $recipientModel->setExternalId($params['external_id']);
@@ -95,9 +102,6 @@ class Recipient implements RecipientInterface
             $recipientModel->setPagarmeId($pagarmeId);
             $recipientModel->setType($params['type']);
             $this->resourceModelRecipient->save($recipientModel);
-        } catch (Exception $e) {
-            throw new Exception(__('An error occurred while saving the recipient.'));
-        }
     }
 
     /**
