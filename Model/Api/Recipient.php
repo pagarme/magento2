@@ -4,11 +4,11 @@ namespace Pagarme\Pagarme\Model\Api;
 
 use Exception;
 use Magento\Framework\Webapi\Rest\Request;
+use Pagarme\Core\Middle\Factory\RecipientFactory as CoreRecipient;
 use Pagarme\Pagarme\Api\RecipientInterface;
 use Pagarme\Pagarme\Model\Recipient as ModelRecipient;
-use Pagarme\Pagarme\Service\Marketplace\RecipientService;
-use Pagarme\Core\Middle\Factory\RecipientFactory as CoreRecipient;
 use Pagarme\Pagarme\Model\ResourceModel\Recipients as ResourceModelRecipient;
+use Pagarme\Pagarme\Service\Marketplace\RecipientService;
 use Throwable;
 
 class Recipient implements RecipientInterface
@@ -75,10 +75,14 @@ class Recipient implements RecipientInterface
             return json_encode([
                 'code' => 400,
                 'message' => __('An error occurred while saving the recipient.')
+                    . ' ' . __($th->getMessage())
             ]);
         }
     }
 
+    /**
+     * @throws Exception
+     */
     private function saveOnPlatform($params, $pagarmeId)
     {
         try {
@@ -96,6 +100,10 @@ class Recipient implements RecipientInterface
         }
     }
 
+    /**
+     * @param $recipientData
+     * @return mixed
+     */
     private function createOnPagarme($recipientData)
     {
         $coreRecipient = $this->coreRecipient->createRecipient($recipientData);
@@ -103,6 +111,9 @@ class Recipient implements RecipientInterface
         return $service->createRecipient($coreRecipient);
     }
 
+    /**
+     * @return string
+     */
     public function searchRecipient(): string
     {
         $post = $this->request->getBodyParams();

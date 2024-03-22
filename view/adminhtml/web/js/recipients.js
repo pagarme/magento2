@@ -628,7 +628,7 @@ require([
             if ($.inArray(field.attr('id'), neverResetIds) >= 0) return;
 
             if (field.is('select')) {
-                field.prop('selectedIndex',0).trigger('change');
+                field.prop('selectedIndex', 0).trigger('change');
             } else {
                 field.val('');
             }
@@ -651,12 +651,16 @@ require([
                 .trigger('input');
 
             triggerChangeToShowFields(elementId);
-            blockElement(element);
         }
 
         if (!isNewRecipientId(recipient)) {
             hideSection('new-field');
         }
+
+        const fields = $('.admin__fieldset input[id], .admin__fieldset select[id]');
+        $.each(fields, function (key, field) {
+            blockElement($(field));
+        });
     }
 
     function mageAlert(content, title = null) {
