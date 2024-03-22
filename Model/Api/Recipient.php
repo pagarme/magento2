@@ -55,12 +55,7 @@ class Recipient implements RecipientInterface
         $bodyParams = current($this->request->getBodyParams());
         parse_str($bodyParams, $params);
         $params = $params['form'];
-        /**
-         * @todo Remove after tests
-         */
-        $randNumber = rand(10000, 20000);
-        $params['register_information']['external_id'] = $randNumber . $params['register_information']['external_id'];
-
+        
         try {
             if (!empty($params['pagarme_id'])) {
                 $this->saveOnPlatform($params['register_information'], $params['pagarme_id']);

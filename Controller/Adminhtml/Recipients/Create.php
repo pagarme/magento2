@@ -16,6 +16,11 @@ class Create extends RecipientAction
      */
     public function execute()
     {
+
+        $sellers = $this->sellerFactory->create()->getCollection()->load();
+        $sellers = $sellers->getItems();
+        $this->coreRegistry->register('sellers', serialize($sellers));
+
         $recipientId = (int)$this->getRequest()->getParam('id');
         if ($recipientId) {
             $this->resourceModelRecipient->load($this->recipient, $recipientId);
