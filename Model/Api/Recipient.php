@@ -3,14 +3,15 @@
 namespace Pagarme\Pagarme\Model\Api;
 
 use Exception;
-use Throwable;
+use http\Exception\InvalidArgumentException;
 use Magento\Framework\Webapi\Rest\Request;
-use Pagarme\Pagarme\Api\RecipientInterface;
 use Pagarme\Core\Kernel\Services\LogService;
-use Pagarme\Pagarme\Model\Recipient as ModelRecipient;
-use Pagarme\Pagarme\Service\Marketplace\RecipientService;
 use Pagarme\Core\Middle\Factory\RecipientFactory as CoreRecipient;
+use Pagarme\Pagarme\Api\RecipientInterface;
+use Pagarme\Pagarme\Model\Recipient as ModelRecipient;
 use Pagarme\Pagarme\Model\ResourceModel\Recipients as ResourceModelRecipient;
+use Pagarme\Pagarme\Service\Marketplace\RecipientService;
+use Throwable;
 
 class Recipient implements RecipientInterface
 {
@@ -55,14 +56,14 @@ class Recipient implements RecipientInterface
         $bodyParams = current($this->request->getBodyParams());
         parse_str($bodyParams, $params);
         $params = $params['form'];
-        
+
         try {
-            if (!empty($params['pagarme_id'])) {
-                $this->saveOnPlatform($params['register_information'], $params['pagarme_id']);
-            } else {
+            if (empty($params['pagarme_id'])) {
                 $recipientOnPagarme = $this->createOnPagarme($params);
-                $this->saveOnPlatform($params['register_information'], $recipientOnPagarme->id);
+                $params['pagarme_id'] = $recipientOnPagarme->id;
             }
+            $this->saveOnPlatform($params['register_information'], $params['pagarme_id']);
+
             return json_encode([
                 'code' => 200,
                 'message' => __('Recipient saved successfully!')
@@ -71,9 +72,9 @@ class Recipient implements RecipientInterface
             $logService = new LogService("Recipient Log", true, 1);
             $logService->info($th->getMessage(), [
                 'webkul_seller' => $params['register_information']['webkul_seller'],
-                'document'      => $params['register_information']['document'],
-                'external_id'   => $params['register_information']['external_id']
-                
+                'document' => $params['register_information']['document'],
+                'external_id' => $params['register_information']['external_id']
+
             ]);
             return json_encode([
                 'code' => 400,
@@ -88,15 +89,15 @@ class Recipient implements RecipientInterface
      */
     private function saveOnPlatform($params, $pagarmeId)
     {
-            $recipientModel = $this->modelRecipient;
-            $recipientModel->setId(null);
-            $recipientModel->setExternalId($params['external_id']);
-            $recipientModel->setName(empty($params['name']) ? $params['company_name'] : $params['name']);
-            $recipientModel->setEmail($params['email']);
-            $recipientModel->setDocument($params['document']);
-            $recipientModel->setPagarmeId($pagarmeId);
-            $recipientModel->setType($params['type']);
-            $this->resourceModelRecipient->save($recipientModel);
+        $recipientModel = $this->modelRecipient;
+        $recipientModel->setId(null);
+        $recipientModel->setExternalId($params['external_id']);
+        $recipientModel->setName(empty($params['name']) ? $params['company_name'] : $params['name']);
+        $recipientModel->setEmail($params['email']);
+        $recipientModel->setDocument($params['document']);
+        $recipientModel->setPagarmeId($pagarmeId);
+        $recipientModel->setType($params['type']);
+        $this->resourceModelRecipient->save($recipientModel);
     }
 
     /**
@@ -120,8 +121,8 @@ class Recipient implements RecipientInterface
 
         try {
             $recipient = $service->searchRecipient($post['recipientId']);
-            if ($recipient->status != 'active') {
-                throw new Exception(__('Recipient not active.'));
+            if ($recipient->status !== 'active') {
+                throw new InvalidArgumentException(__('Recipient not active.'));
             }
         } catch (Exception $e) {
             return json_encode([

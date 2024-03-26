@@ -75,9 +75,10 @@
         <column name="id" xsi:type="int" padding="10" unsigned="true" nullable="false" identity="true" comment="ID"/>
         <column name="external_id" xsi:type="int" nullable="false" comment="Webkul vendor ID"/>
         <column name="pagarme_id" xsi:type="varchar" length="255" nullable="true" comment="Pagar.me ID (format: rp_xxxxxxxxxxxxxxxx)"/>
-        <column name="type" xsi:type="varchar" length="11" nullable="false" comment="Recipient document type: individual (CPF) or corporation (CNPJ)"/>
+        <column name="document_type" xsi:type="varchar" length="11" nullable="false" comment="Recipient document type: individual (CPF) or corporation (CNPJ)"/>
         <column name="document" xsi:type="varchar" length="18" nullable="false" comment="Recipient document number"/>
         <column name="name" xsi:type="varchar" length="255" nullable="false" comment="Recipient name"/>
+        <column name="email" xsi:type="varchar" length="255" nullable="false" comment="Recipient email"/>
         <column name="created_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
         <column name="updated_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Updated At"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">

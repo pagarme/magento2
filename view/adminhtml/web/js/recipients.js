@@ -12,12 +12,31 @@ require([
         cpfMax = 14, // Includes punctuation due to the mask
         cpfMask = '000.000.000-00',
         cnpjMax = 18, // Includes punctuation due to the mask
-        cnpjMask = '00.000.000/0000-00';
+        cnpjMask = '00.000.000/0000-00',
+        fieldDataAttr = {
+            datepicker: '[data-datepicker]',
+            toggleRequired: '[data-toggle-required]'
+        },
+        fieldId = {
+            seller: '#webkul-seller',
+            recipientId: '#recipient-id',
+            documentType: '#document-type',
+            document: '#document',
+            transferEnabled: '#transfer-enabled',
+            transferInterval: '#transfer-interval',
+            companyName: '#recipient-company-name',
+            email: '#recipient-email',
+            birthdate: '#recipient-birthdate',
+            corporationType: '#recipient-corporation-type',
+            holderDocumentType: '#holder-document-type',
+            holderDocument: '#holder-document',
+            holderName: '#holder-name'
+        };
 
     $(document).ready(function () {
 
         localizeDatePickerToPtBr();
-        applyDatePickerToField('[data-datepicker]');
+        applyDatePickerToField(fieldDataAttr['datepicker']);
         maskFields();
 
         $('#pagarme-recipients-form').on('submit', formSubmit);
@@ -26,7 +45,7 @@ require([
             slideUpOrDownSectionByFieldVal('pagarme_id', $(this).val());
         });
 
-        $('#webkul-seller').on('change', function () {
+        $(fieldId['seller']).on('change', function () {
             const webkulId = $(this).val();
             fillRecipientByWebkulId(webkulId);
 
@@ -38,7 +57,7 @@ require([
             slideUpOrDownSections('seller', 'show');
         });
 
-        $('#document-type').on('change', function () {
+        $(fieldId['documentType']).on('change', function () {
             const documentType = $(this).val();
             changeDocumentFieldsByType(documentType);
             slideUpOrDownSections(['individual', 'corporation']);
@@ -49,13 +68,13 @@ require([
             $(this).removeClass('readonly');
         });
 
-        $('#document')
+        $(fieldId['document'])
             .on('keyup change', function () {
-                $('#holder-document')
+                $(fieldId['holderDocument'])
                     .val($(this).val()).trigger('input');
             })
             .on('change', function () {
-                let documentNumber = $(this).val();
+                const documentNumber = $(this).val();
                 if (documentNumber.length === cnpjMax) {
                     getCnpjData(documentNumber);
                 }
@@ -65,7 +84,7 @@ require([
             });
 
         $('#recipient-name, #recipient-company-name').on('change', function () {
-            $('#holder-name').val($(this).val());
+            $(fieldId['holderName']).val($(this).val());
         });
 
         $('[data-cep-search]').on('change', function () {
@@ -86,20 +105,20 @@ require([
                 citiesListId = addressFieldset.find('datalist[id$="-cities"]').attr('id');
             let citiesList = '';
 
-            $.get('https://servicodados.ibge.gov.br/api/v1/localidades/estados/' + stateCode + '/distritos')
+            $.get(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${stateCode}/distritos`)
                 .done(function (data) {
                     $.each(data, function (index) {
-                        citiesList += '<option value="' + data[index].nome + '">' + data[index].nome + '</option>';
+                        citiesList += `<option value="${data[index].nome}">${data[index].nome}</option>`;
                     });
                     fillDatalistOptions(citiesListId, citiesList);
                 });
         });
 
-        $('#transfer-enabled').on('change', function () {
+        $(fieldId['transferEnabled']).on('change', function () {
             slideUpOrDownSectionByFieldVal('transfer_interval', $(this).val());
         });
 
-        $('#transfer-interval').on('change', function () {
+        $(fieldId['transferInterval']).on('change', function () {
             slideUpOrDownSections(
                 'transfer_day',
                 $(this).val() === 'Daily' ? 'hide' : 'show'
@@ -113,11 +132,13 @@ require([
             loadRecipient(JSON.parse(editRecipient));
         }
 
-        $('#recipient-id').on('change', function () {
+        $(fieldId['recipientId']).on('change', function () {
             const
                 recipientVal = $(this).val(),
                 controlValue = $('#recipient-id-control').val();
-            if (controlValue === '' || recipientVal === controlValue) return;
+            if (controlValue === '' || recipientVal === controlValue) {
+                return;
+            }
 
             resetFields();
         });
@@ -131,7 +152,7 @@ require([
             'maxLength': documentType === 'corporation' ? cnpjMax : cpfMax
         };
 
-        $('#holder-document-type')
+        $(fieldId['holderDocumentType'])
             .val(documentTypeCorporationToCompany(documentType));
 
         $('#document, #holder-document')
@@ -151,7 +172,7 @@ require([
     }
 
     function getNameFieldByDocumentType(documentType) {
-        return documentType === 'individual' ? '#recipient-name' : '#recipient-company-name';
+        return documentType === 'individual' ? '#recipient-name' : fieldId['companyName'];
     }
 
     function getDocumentTypeByDocument(document) {
@@ -174,17 +195,17 @@ require([
             .prop('readonly', !!webkulId);
 
         const
-            selectedWebkulSeller = $('#webkul-seller').find(':selected'),
+            selectedWebkulSeller = $(fieldId['seller']).find(':selected'),
             recipientDocument = selectedWebkulSeller.attr('data-document'),
             documentType = getDocumentTypeByDocument(recipientDocument);
         $('#document-type, #holder-document-type')
             .val(documentType)
             .trigger('change');
-        $('#document')
+        $(fieldId['document'])
             .val(recipientDocument)
             .trigger('input')
             .trigger('change');
-        $('#holder-document')
+        $(fieldId['holderDocument'])
             .val(documentTypeCorporationToCompany(recipientDocument))
             .trigger('input');
 
@@ -194,11 +215,11 @@ require([
             .trigger('change');
 
         const recipientEmail = selectedWebkulSeller.attr('data-email');
-        $('#recipient-email')
+        $(fieldId['email'])
             .val(recipientEmail);
 
         const recipientBirthdate = selectedWebkulSeller.attr('data-birthdate');
-        $('#recipient-birthdate')
+        $(fieldId['birthdate'])
             .val(formatDate(recipientBirthdate));
 
         hideLoader();
@@ -209,7 +230,7 @@ require([
         const maxRequests = 3;
         let requests = 0;
         $.ajax({
-            url: 'https://brasilapi.com.br/api/cnpj/v1/' + documentNumber,
+            url: `https://brasilapi.com.br/api/cnpj/v1/${documentNumber}`,
             method: 'get',
             showLoader: true,
             beforeSend: function (xhr) {
@@ -220,7 +241,7 @@ require([
                     if (response.responseJSON.type === 'service_error') {
                         requests++;
                         if (requests < maxRequests) {
-                            setTimeout($('#document').trigger('change'), 50);
+                            setTimeout($(fieldId['document']).trigger('change'), 50);
                         }
                     }
                 }
@@ -236,7 +257,8 @@ require([
         if (cnpjData['qsa']) {
             let partnersList = '';
             $.each(cnpjData['qsa'], function (index) {
-                partnersList += '<option value="' + capitalizeAllWords(cnpjData['qsa'][index]['nome_socio']) + '">' + cnpjData['qsa'][index]['qualificacao_socio'] + '</option>';
+                partnersList += `<option value="${capitalizeAllWords(cnpjData['qsa'][index]['nome_socio'])}">
+                    ${cnpjData['qsa'][index]['qualificacao_socio']}</option>`;
             });
             fillDatalistOptions('recipient-partner-0-partners-list', partnersList);
         }
@@ -246,10 +268,10 @@ require([
             cnpjData['ddd_telefone_2']
         ];
 
-        $('#recipient-company-name').val(capitalizeAllWords(cnpjData['razao_social'])).trigger('change');
+        $(fieldId['companyName']).val(capitalizeAllWords(cnpjData['razao_social'])).trigger('change');
         $('#recipient-trading-name').val(capitalizeAllWords(cnpjData['nome_fantasia']));
         $('#recipient-founding-date').val(formatDate(cnpjData['data_inicio_atividade']));
-        $('#recipient-corporation-type').val(cnpjData['natureza_juridica']);
+        $(fieldId['corporationType']).val(cnpjData['natureza_juridica']);
         $('#recipient-phones-type-0').val(phoneNumber[0].length === 10 ? 'home_phone' : 'mobile_phone');
         $('#recipient-phones-number-0').val(phoneNumber[0]).trigger('input');
         $('#recipient-phones-type-1').val(phoneNumber[1].length === 10 ? 'home_phone' : 'mobile_phone');
@@ -265,7 +287,7 @@ require([
 
     function getCepData(element, cepNumber) {
         $.ajax({
-            url: 'https://viacep.com.br/ws/' + cepNumber + '/json/',
+            url: `https://viacep.com.br/ws/${cepNumber}/json/`,
             method: 'get',
             showLoader: true,
             beforeSend: function (xhr) {
@@ -298,7 +320,7 @@ require([
             return '';
         }
 
-        let array = sentence.split(' ');
+        const array = sentence.split(' ');
         for (let i = 0; i < array.length; i++) {
             array[i] = array[i][0].toUpperCase() + array[i].substr(1).toLowerCase();
         }
@@ -310,7 +332,7 @@ require([
         e.preventDefault();
         showLoader();
 
-        const recipientId = $('#recipient-id').val(),
+        const recipientId = $(fieldId['recipientId']).val(),
             url = $('#url-search-recipient-id').val();
 
         fetch(url, {
@@ -378,11 +400,11 @@ require([
     }
 
     function hideSection(section) {
-        const fields = section ? $('[data-section*="' + section + '"]') : $('[data-section]');
+        const fields = section ? $(`[data-section*="${section}"]`) : $('[data-section]');
         fields.each(function () {
             $(this)
                 .hide()
-                .find('[data-toggle-required]').prop('required', false);
+                .find(fieldDataAttr['toggleRequired']).prop('required', false);
         });
     }
 
@@ -395,19 +417,19 @@ require([
         if (Array.isArray(sections)) {
             let dataSections = '';
             $.each(sections, function (key, val) {
-                dataSections += '[data-section*="' + val + '"]';
+                dataSections += `[data-section*="${val}"]`;
                 dataSections += (key < sections.length - 1) ? ', ' : '';
             });
             fields = $(dataSections);
         } else {
-            fields = sections ? $('[data-section*="' + sections + '"]') : $('[data-section]');
+            fields = sections ? $(`[data-section*="${sections}"]`) : $('[data-section]');
         }
 
         if (action === 'hide') {
             fields.each(function () {
                 $(this)
                     .slideUp('250')
-                    .find('[data-toggle-required]').prop('required', false);
+                    .find(fieldDataAttr['toggleRequired']).prop('required', false);
             });
         }
 
@@ -415,7 +437,7 @@ require([
             fields.each(function () {
                 $(this)
                     .slideDown('250')
-                    .find('[data-toggle-required]').prop('required', true);
+                    .find(fieldDataAttr['toggleRequired']).prop('required', true);
             });
         }
     }
@@ -434,14 +456,14 @@ require([
             };
             transferDay.children().remove();
             $.each(transferWeekDays, function (value, label) {
-                transferDay.append('<option value="' + value + '">' + label + '</option>');
+                transferDay.append(`<option value="${value}">${label}</option>`);
             });
         }
 
         if (transferDayValue === 'Monthly') {
             transferDay.children().remove();
             for (let i = 1; i < 32; i++) {
-                transferDay.append('<option value="' + i + '">' + i + '</option>');
+                transferDay.append(`<option value="${i}">${i}</option>`);
             }
         }
 
@@ -460,11 +482,12 @@ require([
     }
 
     function buildRecipientObject(recipient) {
-        let recipientObject = {};
+        const recipientObject = {};
         if (isNewRecipientId(recipient)) {
-            recipientObject['#document-type'] = documentTypeCompanyToCorporation(recipient.register_information.type);
-            recipientObject['#document'] = recipient.register_information.document;
-            recipientObject['#recipient-email'] = recipient.register_information.email;
+            recipientObject[fieldId['documentType']] =
+                documentTypeCompanyToCorporation(recipient.register_information.type);
+            recipientObject[fieldId['document']] = recipient.register_information.document;
+            recipientObject[fieldId['email']] = recipient.register_information.email;
             recipientObject['#recipient-site'] = recipient.register_information.site_url;
 
             $.each(recipient.register_information.phone_numbers, function (index, phone) {
@@ -476,79 +499,87 @@ require([
                 case 'individual':
                     recipientObject['#recipient-name'] = recipient.register_information.name;
                     recipientObject['#recipient-mother-name'] = recipient.register_information.mother_name;
-                    recipientObject['#recipient-birthdate'] = formatDate(recipient.register_information.birthdate);
+                    recipientObject[fieldId['birthdate']] = formatDate(recipient.register_information.birthdate);
                     recipientObject['#recipient-monthly-income'] = recipient.register_information.monthly_income;
-                    recipientObject['#recipient-professional-occupation'] = recipient.register_information.professional_occupation;
+                    recipientObject['#recipient-professional-occupation'] =
+                        recipient.register_information.professional_occupation;
 
                     recipientObject['#recipient-zip-code'] = recipient.register_information.address.zip_code;
                     recipientObject['#recipient-street'] = recipient.register_information.address.street;
                     recipientObject['#recipient-street-number'] = recipient.register_information.address.street_number;
                     recipientObject['#recipient-complementary'] = recipient.register_information.address.complementary;
-                    recipientObject['#recipient-reference-point'] = recipient.register_information.address.reference_point;
+                    recipientObject['#recipient-reference-point'] =
+                        recipient.register_information.address.reference_point;
                     recipientObject['#recipient-neighborhood'] = recipient.register_information.address.neighborhood;
                     recipientObject['#recipient-state'] = recipient.register_information.address.state;
                     recipientObject['#recipient-city'] = recipient.register_information.address.city;
                     break;
                 case 'company':
                 case 'corporation':
-                    recipientObject['#recipient-company-name'] = recipient.register_information.company_name;
+                    recipientObject[fieldId['companyName']] = recipient.register_information.company_name;
                     recipientObject['#recipient-trading-name'] = recipient.register_information.trading_name;
                     recipientObject['#recipient-annual-revenue'] = recipient.register_information.annual_revenue;
-                    recipientObject['#recipient-corporation-type'] = recipient.register_information.corporation_type;
-                    recipientObject['#recipient-corporation-type'] = recipient.register_information.corporation_type;
-                    recipientObject['#recipient-founding-date'] = formatDate(recipient.register_information.founding_date);
+                    recipientObject[fieldId['corporationType']] = recipient.register_information.corporation_type;
+                    recipientObject['#recipient-founding-date'] =
+                        formatDate(recipient.register_information.founding_date);
 
                     recipientObject['#company-zip-code'] = recipient.register_information.main_address.zip_code;
                     recipientObject['#company-street'] = recipient.register_information.main_address.street;
-                    recipientObject['#company-street-number'] = recipient.register_information.main_address.street_number;
-                    recipientObject['#company-complementary'] = recipient.register_information.main_address.complementary;
-                    recipientObject['#company-reference-point'] = recipient.register_information.main_address.reference_point;
-                    recipientObject['#company-neighborhood'] = recipient.register_information.main_address.neighborhood;
+                    recipientObject['#company-street-number'] =
+                        recipient.register_information.main_address.street_number;
+                    recipientObject['#company-complementary'] =
+                        recipient.register_information.main_address.complementary;
+                    recipientObject['#company-reference-point'] =
+                        recipient.register_information.main_address.reference_point;
+                    recipientObject['#company-neighborhood'] =
+                        recipient.register_information.main_address.neighborhood;
                     recipientObject['#company-state'] = recipient.register_information.main_address.state;
                     recipientObject['#company-city'] = recipient.register_information.main_address.city;
                     break;
             }
 
             $.each(recipient.register_information.managing_partners, function (partnerIndex, partner) {
-                recipientObject['#recipient-partner-' + partnerIndex + '-name'] = partner.name;
-                recipientObject['#recipient-partner-' + partnerIndex + '-document-type'] = partner.type;
-                recipientObject['#recipient-partner-' + partnerIndex + '-document'] = partner.document;
-                recipientObject['#recipient-partner-' + partnerIndex + '-mother-name'] = partner.mother_name;
-                recipientObject['#recipient-partner-' + partnerIndex + '-email'] = partner.email;
-                recipientObject['#recipient-partner-' + partnerIndex + '-birthdate'] = formatDate(partner.birthdate);
-                recipientObject['#recipient-partner-' + partnerIndex + '-monthly-income'] = partner.monthly_income;
-                recipientObject['#recipient-partner-' + partnerIndex + '-professional-occupation'] = partner.professional_occupation;
-                recipientObject['#recipient-partner-' + partnerIndex + '-declaration'] = partner.self_declared_legal_representative;
+                const idPrefix = `#recipient-partner-${partnerIndex}`;
+                recipientObject[`${idPrefix}-name`] = partner.name;
+                recipientObject[`${idPrefix}-document-type`] = partner.type;
+                recipientObject[`${idPrefix}-document`] = partner.document;
+                recipientObject[`${idPrefix}-mother-name`] = partner.mother_name;
+                recipientObject[`${idPrefix}-email`] = partner.email;
+                recipientObject[`${idPrefix}-birthdate`] = formatDate(partner.birthdate);
+                recipientObject[`${idPrefix}-monthly-income`] = partner.monthly_income;
+                recipientObject[`${idPrefix}-professional-occupation`] = partner.professional_occupation;
+                recipientObject[`${idPrefix}-declaration`] = partner.self_declared_legal_representative;
 
-                recipientObject['#recipient-partner-' + partnerIndex + '-zip-code'] = partner.address.zip_code;
-                recipientObject['#recipient-partner-' + partnerIndex + '-street'] = partner.address.street;
-                recipientObject['#recipient-partner-' + partnerIndex + '-street-number'] = partner.address.street_number;
-                recipientObject['#recipient-partner-' + partnerIndex + '-complementary'] = partner.address.complementary;
-                recipientObject['#recipient-partner-' + partnerIndex + '-reference-point'] = partner.address.reference_point;
-                recipientObject['#recipient-partner-' + partnerIndex + '-neighborhood'] = partner.address.neighborhood;
-                recipientObject['#recipient-partner-' + partnerIndex + '-state'] = partner.address.state;
-                recipientObject['#recipient-partner-' + partnerIndex + '-city'] = partner.address.city;
+                recipientObject[`${idPrefix}-zip-code`] = partner.address.zip_code;
+                recipientObject[`${idPrefix}-street`] = partner.address.street;
+                recipientObject[`${idPrefix}-street-number`] = partner.address.street_number;
+                recipientObject[`${idPrefix}-complementary`] = partner.address.complementary;
+                recipientObject[`${idPrefix}-reference-point`] = partner.address.reference_point;
+                recipientObject[`${idPrefix}-neighborhood`] = partner.address.neighborhood;
+                recipientObject[`${idPrefix}-state`] = partner.address.state;
+                recipientObject[`${idPrefix}-city`] = partner.address.city;
 
                 $.each(partner.phone_numbers, function (phoneIndex, phone) {
-                    recipientObject['#recipient-partner-' + partnerIndex + '-phones-type-' + phoneIndex] = phone.type;
-                    recipientObject['#recipient-partner-' + partnerIndex + '-phones-number-' + phoneIndex] = phone.ddd + phone.number;
+                    recipientObject[`${idPrefix}-phones-type-` + phoneIndex] = phone.type;
+                    recipientObject[`${idPrefix}-phones-number-` + phoneIndex] = phone.ddd + phone.number;
                 });
             });
 
-            recipientObject['#holder-document'] = recipient.register_information.document;
+            recipientObject[fieldId['holderDocument']] = recipient.register_information.document;
         }
 
         if (!isNewRecipientId(recipient)) {
-            recipientObject['#document-type'] = documentTypeCompanyToCorporation(recipient.type);
-            recipientObject['#document'] = recipient.document;
+            recipientObject[fieldId['documentType']] = documentTypeCompanyToCorporation(recipient.type);
+            recipientObject[fieldId['document']] = recipient.document;
             recipientObject[getNameFieldByDocumentType(recipient.type)] = recipient.name;
-            recipientObject['#recipient-email'] = recipient.email;
+            recipientObject[fieldId['email']] = recipient.email;
 
-            recipientObject['#holder-document'] = recipient.document;
+            recipientObject[fieldId['holderDocument']] = recipient.document;
         }
 
-        recipientObject['#holder-name'] = recipient.default_bank_account.holder_name;
-        recipientObject['#holder-document-type'] = documentTypeCorporationToCompany(recipient.default_bank_account.holder_type);
+        recipientObject[fieldId['holderName']] = recipient.default_bank_account.holder_name;
+        recipientObject[fieldId['holderDocumentType']] =
+            documentTypeCorporationToCompany(recipient.default_bank_account.holder_type);
         recipientObject['#bank'] = recipient.default_bank_account.bank;
         recipientObject['#branch-number'] = recipient.default_bank_account.branch_number;
         recipientObject['#branch-check-digit'] = recipient.default_bank_account.branch_check_digit;
@@ -556,8 +587,8 @@ require([
         recipientObject['#account-check-digit'] = recipient.default_bank_account.account_check_digit;
         recipientObject['#account-type'] = recipient.default_bank_account.type;
 
-        recipientObject['#transfer-enabled'] = recipient.transfer_settings.transfer_enabled ? 1 : 0;
-        recipientObject['#transfer-interval'] = recipient.transfer_settings.transfer_interval;
+        recipientObject[fieldId['transferEnabled']] = recipient.transfer_settings.transfer_enabled ? 1 : 0;
+        recipientObject[fieldId['transferInterval']] = recipient.transfer_settings.transfer_interval;
         recipientObject['#transfer-day'] = recipient.transfer_settings.transfer_day;
 
         return recipientObject;
@@ -565,9 +596,9 @@ require([
 
     function triggerChangeToShowFields(elementId) {
         const changeElements = [
-            '#document-type',
-            '#transfer-enabled',
-            '#transfer-interval'
+            fieldId['documentType'],
+            fieldId['transferEnabled'],
+            fieldId['transferInterval']
         ];
         if ($.inArray(elementId, changeElements) >= 0) {
             $(elementId).trigger('change');
@@ -580,7 +611,9 @@ require([
             'existing_recipient',
             'recipient-id'
         ];
-        if ($.inArray(element.attr('id'), neverBlockIds) >= 0) return;
+        if ($.inArray(element.attr('id'), neverBlockIds) >= 0) {
+            return;
+        }
 
         if (element.is('select')) {
             element.addClass('readonly');
@@ -588,7 +621,7 @@ require([
             element.attr('readonly', true);
         }
 
-        if (element.is('[data-datepicker]')) {
+        if (element.is(fieldDataAttr['datepicker'])) {
             element.datepicker('destroy');
         }
     }
@@ -601,7 +634,9 @@ require([
                 'holder-document'
             ],
             elementId = element.attr('id');
-        if ($.inArray(elementId, neverUnblockIds) >= 0) return;
+        if ($.inArray(elementId, neverUnblockIds) >= 0) {
+            return;
+        }
 
         if (element.is('select')) {
             element.removeClass('readonly');
@@ -609,7 +644,7 @@ require([
             element.attr('readonly', false);
         }
 
-        if (element.is('[data-datepicker]')) {
+        if (element.is(fieldDataAttr['datepicker'])) {
             applyDatePickerToField(`#${elementId}`);
         }
     }
@@ -625,7 +660,9 @@ require([
 
         $.each(fields, function (key, field) {
             field = $(field);
-            if ($.inArray(field.attr('id'), neverResetIds) >= 0) return;
+            if ($.inArray(field.attr('id'), neverResetIds) >= 0) {
+                return;
+            }
 
             if (field.is('select')) {
                 field.prop('selectedIndex', 0).trigger('change');
@@ -635,15 +672,16 @@ require([
             unblockElement(field);
         });
 
-        $('#holder-name').val($('#webkul-seller :selected').attr('data-sellername'));
+        $(fieldId['holderName']).val($('#webkul-seller :selected').attr('data-sellername'));
     }
 
     function loadRecipient(recipient) {
         const recipientObject = buildRecipientObject(recipient);
 
         for (const elementId in recipientObject) {
-            if (!Object.hasOwnProperty.call(recipientObject, elementId))
+            if (!Object.hasOwnProperty.call(recipientObject, elementId)) {
                 continue;
+            }
 
             const recipientValue = recipientObject[elementId];
             const element = $(elementId);
@@ -697,11 +735,13 @@ require([
     }
 
     function formatDate(date) {
-        if (!date) return date;
+        if (!date) {
+            return date;
+        }
 
         const dateArray = date.split('-');
         if (dateArray.length === 3) {
-            return dateArray[2] + '/' + dateArray[1] + '/' + dateArray[0];
+            return `${dateArray[2]}/${dateArray[1]}/${dateArray[0]}`;
         }
 
         return date;

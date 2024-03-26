@@ -2,10 +2,7 @@
 
 namespace Pagarme\Pagarme\Controller\Adminhtml\Recipients;
 
-use Magento\Framework\Registry;
 use Magento\Framework\Controller\ResultInterface;
-use Webkul\Marketplace\Model\SellerFactory;
-use Pagarme\Pagarme\Controller\Adminhtml\Recipients\RecipientAction;
 
 class Create extends RecipientAction
 {
@@ -35,7 +32,7 @@ class Create extends RecipientAction
                 'recipient_data',
                 json_encode([
                     'recipient' => $recipient,
-                    'externalId' => $recipient->code, 
+                    'externalId' => $recipient->code,
                     'localId' => $recipientId
                 ])
             );

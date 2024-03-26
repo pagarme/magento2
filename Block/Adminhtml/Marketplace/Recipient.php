@@ -4,13 +4,13 @@ namespace Pagarme\Pagarme\Block\Adminhtml\Marketplace;
 
 use Exception;
 use Magento\Customer\Model\ResourceModel\Customer\Collection;
+use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory as CustomerCollectionFactory;
 use Magento\Directory\Model\Country;
 use Magento\Framework\Registry;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
-use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
-use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory as CustomerCollectionFactory;
 use Pagarme\Core\Marketplace\Repositories\RecipientRepository;
+use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use stdClass;
 
 class Recipient extends Template
@@ -151,5 +151,35 @@ class Recipient extends Template
     public function getAllRegionsOfCountry($countryCode = 'BR')
     {
         return $this->country->loadByCode($countryCode)->getRegions()->getData();
+    }
+
+    public function getLabel($key)
+    {
+        $labels = [
+            'no' => 'No',
+            'yes' => 'Yes',
+            'document_type' => 'Document type',
+            'document_number' => 'Document number',
+            'name' => 'Name',
+            'mother_name' => 'Mother name',
+            'email' => 'E-mail',
+            'birthdate' => 'Date of birth',
+            'monthly_income' => 'Monthly income',
+            'profession' => 'Profession',
+            'contact_type' => 'Contact type',
+            'contact_number' => 'Contact number',
+            'mobile_phone' => 'Mobile phone',
+            'street' => 'Street',
+            'number' => 'Number',
+            'complement' => 'Complement',
+            'neighborhood' => 'Neighborhood',
+            'reference_point' => 'Reference point',
+            'state' => 'State/Province',
+            'city' => 'City',
+            'zip' => 'Zip/Postal Code',
+            'select' => 'Select',
+        ];
+
+        return __($labels[$key]);
     }
 }

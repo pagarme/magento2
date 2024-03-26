@@ -50,6 +50,20 @@ class UpgradeSchema implements UpgradeSchemaInterface
             );
         }
 
+        if (version_compare($context->getVersion(), '2.5.0', '<')) {
+            $setup->getConnection()->changeColumn(
+                $setup->getTable('pagarme_module_core_recipients'),
+                'document_type',
+                'type',
+                [
+                    'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                    'length' => 11,
+                    'nullable' => 'false',
+                    'comment' => 'Recipient document type: individual (CPF) or corporation (CNPJ)'
+                ]
+            );
+        }
+
         $setup->endSetup();
     }
 }

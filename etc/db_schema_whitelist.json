@@ -85,9 +85,10 @@
             "id": true,
             "external_id": true,
             "pagarme_id": true,
-            "type": true,
+            "document_type": true,
             "document": true,
             "name": true,
+            "email": true,
             "created_at": true,
             "updated_at": true
         },

@@ -1,5 +1,5 @@
 <?php $states = $block->getAllRegionsOfCountry();
-$editRecipient = $block->getEditRecipient() ?>
+$editRecipient = $block->getEditRecipient(); ?>
 <form id="pagarme-recipients-form" method="post">
     <div class="page-main-actions">
         <div class="page-actions-placeholder"></div>
@@ -23,19 +23,20 @@ $editRecipient = $block->getEditRecipient() ?>
 
     <!-- Url Post-->
     <input type="hidden" id="url-post"
-           value="<?= $block->getBaseUrl() . 'rest/V1/pagarme/marketplace/recipient/formData' ?>"/>
+           value="<?= $block->getBaseUrl() . 'rest/V1/pagarme/marketplace/recipient/formData' ?>" tabindex="-1"/>
     <input type="hidden" id="url-search-recipient-id"
-           value="<?= $block->getBaseUrl() . 'rest/V1/pagarme/marketplace/recipient/searchRecipient' ?>"/>
+           value="<?= $block->getBaseUrl() . 'rest/V1/pagarme/marketplace/recipient/searchRecipient' ?>"
+           tabindex="-1"/>
 
-    <input type="hidden" name="form_key" value="<?= $block->getFormKey() ?>"/>
+    <input type="hidden" name="form_key" value="<?= $block->getFormKey() ?>" tabindex="-1"/>
 
-    <input type="hidden" id="recipient-id-control" value=""/>
+    <input type="hidden" id="recipient-id-control" value="" tabindex="-1"/>
 
     <?php if (!empty($block->getRecipientId())) : ?>
         <!--  LocalId  -->
-        <input type="hidden" name="form[id]" value="<?= $block->getLocalId() ?>">
+        <input type="hidden" name="form[id]" value="<?= $block->getLocalId() ?>" tabindex="-1"/>
         <!--  RecipientId  -->
-        <input type="hidden" name="form[recipient_id]" value="<?= $block->getRecipientId() ?>">
+        <input type="hidden" name="form[recipient_id]" value="<?= $block->getRecipientId() ?>" tabindex="-1"/>
     <?php endif; ?>
 
     <div id="page:main-container" class="page-columns">
@@ -58,20 +59,24 @@ $editRecipient = $block->getEditRecipient() ?>
                                                 autofocus required>
                                             <?php if (!empty($block->getSellers())) : ?>
                                                 <option value=""><?= __('Select a seller') ?></option>
-                                                <?php
-                                                foreach ($block->getSellers() as $seller) {
-                                                    ?>
+                                                <?php foreach ($block->getSellers() as $seller) : ?>
                                                     <option
-                                                        data-sellername="<?php printf("%s %s", $seller['firstname'], $seller['lastname']); ?>"
+                                                        data-sellername="<?php printf(
+                                                            "%s %s",
+                                                            $seller['firstname'],
+                                                            $seller['lastname']); ?>"
                                                         data-email="<?= $seller['email'] ?>"
                                                         data-document="<?= !empty($seller['taxvat']) ? $seller['taxvat'] : '' ?>"
                                                         data-birthdate="<?= !empty($seller['dob']) ? $seller['dob'] : '' ?>"
                                                         value="<?= $seller['entity_id'] ?>">
-                                                        <?php printf('%s %s (%s)', $seller['firstname'], $seller['lastname'], $seller['email']); ?>
+                                                        <?php printf(
+                                                            '%s %s (%s)',
+                                                            $seller['firstname'],
+                                                            $seller['lastname'],
+                                                            $seller['email']
+                                                        ); ?>
                                                     </option>
-                                                    <?php
-                                                }
-                                                ?>
+                                                <?php endforeach; ?>
                                             <?php endif; ?>
 
                                             <?php if (empty($block->getSellers())) : ?>
@@ -106,8 +111,8 @@ $editRecipient = $block->getEditRecipient() ?>
                                         <select class="recipient-form-inputs admin__control-select"
                                                 name="form[existing_recipient]"
                                                 id="existing_recipient" data-toggle-required>
-                                            <option value="0"><?= __('No') ?></option>
-                                            <option value="1"><?= __('Yes') ?></option>
+                                            <option value="0"><?= $block->getLabel('no') ?></option>
+                                            <option value="1"><?= $block->getLabel('yes') ?></option>
                                         </select>
                                     </div>
                                 </div>
@@ -129,13 +134,13 @@ $editRecipient = $block->getEditRecipient() ?>
 
                                 <div class="admin__field _required" data-section="seller">
                                     <label for="document-type" class="admin__field-label">
-                                        <span><?= __('Document type') ?></span>
+                                        <span><?= $block->getLabel('document_type') ?></span>
                                     </label>
                                     <div class="admin__field-control">
                                         <select class="recipient-form-inputs admin__control-select"
                                                 name="form[register_information][type]" id="document-type"
-                                                data-document-type-for="seller" data-toggle-required>
-                                            <option value=""><?= __('Select') ?></option>
+                                                data-toggle-required>
+                                            <option value=""><?= $block->getLabel('select') ?></option>
                                             <option value="individual"><?= __('CPF') ?></option>
                                             <option value="corporation"><?= __('CNPJ') ?></option>
                                         </select>
@@ -147,7 +152,7 @@ $editRecipient = $block->getEditRecipient() ?>
 
                                 <div class="admin__field _required" data-section="individual corporation">
                                     <label for="document" class="admin__field-label">
-                                        <span><?= __('Document number') ?></span>
+                                        <span><?= $block->getLabel('document_number') ?></span>
                                     </label>
                                     <div class="admin__field-control">
                                         <input type="text" class="recipient-form-inputs"
@@ -160,7 +165,7 @@ $editRecipient = $block->getEditRecipient() ?>
 
                                 <div class="admin__field _required" data-section="individual">
                                     <label for="recipient-name" class="admin__field-label">
-                                        <span><?= __('Name') ?></span>
+                                        <span><?= $block->getLabel('name') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
@@ -195,7 +200,7 @@ $editRecipient = $block->getEditRecipient() ?>
 
                                 <div class="admin__field _required" data-section="individual corporation">
                                     <label for="recipient-email" class="admin__field-label">
-                                        <span><?= __('E-mail') ?></span>
+                                        <span><?= $block->getLabel('email') ?></span>
                                     </label>
                                     <div class="admin__field-control">
                                         <input type="email" class="recipient-form-inputs"
@@ -216,7 +221,7 @@ $editRecipient = $block->getEditRecipient() ?>
 
                                 <div class="admin__field" data-section="individual new-field">
                                     <label for="recipient-mother-name" class="admin__field-label">
-                                        <span><?= __('Mother name') ?></span>
+                                        <span><?= $block->getLabel('mother_name') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
@@ -227,7 +232,7 @@ $editRecipient = $block->getEditRecipient() ?>
 
                                 <div class="admin__field _required" data-section="individual new-field">
                                     <label for="recipient-birthdate" class="admin__field-label">
-                                        <span><?= __('Date of birth') ?></span>
+                                        <span><?= $block->getLabel('birthdate') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
@@ -239,7 +244,7 @@ $editRecipient = $block->getEditRecipient() ?>
 
                                 <div class="admin__field _required" data-section="individual new-field">
                                     <label for="recipient-monthly-income" class="admin__field-label">
-                                        <span><?= __('Monthly income') ?></span>
+                                        <span><?= $block->getLabel('monthly_income') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
@@ -251,7 +256,7 @@ $editRecipient = $block->getEditRecipient() ?>
 
                                 <div class="admin__field _required" data-section="individual new-field">
                                     <label for="recipient-professional-occupation" class="admin__field-label">
-                                        <span><?= __('Profession') ?></span>
+                                        <span><?= $block->getLabel('profession') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
@@ -306,13 +311,14 @@ $editRecipient = $block->getEditRecipient() ?>
 
                                 <div class="admin__field _required">
                                     <label for="recipient-phones-type-0" class="admin__field-label">
-                                        <span><?= __('Contact type') ?></span>
+                                        <span><?= $block->getLabel('contact_type') ?></span>
                                     </label>
                                     <div class="admin__field-control">
                                         <select class="recipient-form-inputs admin__control-select"
                                                 name="form[register_information][phone_number][0][type]"
                                                 id="recipient-phones-type-0" data-toggle-required>
-                                            <option value="mobile_phone"><?= __('Mobile phone') ?></option>
+                                            <option
+                                                value="mobile_phone"><?= $block->getLabel('mobile_phone') ?></option>
                                             <option value="home_phone"><?= __('Telephone') ?></option>
                                         </select>
                                     </div>
@@ -320,39 +326,13 @@ $editRecipient = $block->getEditRecipient() ?>
 
                                 <div class="admin__field _required">
                                     <label for="recipient-phones-number-0" class="admin__field-label">
-                                        <span><?= __('Contact number') ?></span>
+                                        <span><?= $block->getLabel('contact_number') ?></span>
                                     </label>
                                     <div class="admin__field-control">
                                         <input type="tel" class="recipient-form-inputs"
                                                name="form[register_information][phone_number][0][number]"
                                                id="recipient-phones-number-0" placeholder="(00) 00000-0000"
                                                data-phone-mask data-toggle-required>
-                                    </div>
-                                </div>
-
-                                <div class="admin__field">
-                                    <label for="recipient-phones-type-1" class="admin__field-label">
-                                        <span><?= __('Contact type') ?></span>
-                                    </label>
-                                    <div class="admin__field-control">
-                                        <select class="recipient-form-inputs admin__control-select"
-                                                name="form[register_information][phone_number][1][type]"
-                                                id="recipient-phones-type-1">
-                                            <option value="mobile_phone"><?= __('Mobile phone') ?></option>
-                                            <option value="home_phone"><?= __('Telephone') ?></option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="admin__field">
-                                    <label for="recipient-phones-number-1" class="admin__field-label">
-                                        <span><?= __('Contact number') ?></span>
-                                    </label>
-                                    <div class="admin__field-control">
-                                        <input type="tel" class="recipient-form-inputs"
-                                               name="form[register_information][phone_number][1][number]"
-                                               id="recipient-phones-number-1" placeholder="(00) 00000-0000"
-                                               data-phone-mask>
                                     </div>
                                 </div>
 
@@ -367,7 +347,7 @@ $editRecipient = $block->getEditRecipient() ?>
 
                                 <div class="admin__field _required">
                                     <label for="recipient-zip-code" class="admin__field-label">
-                                        <span><?= __('Zip/Postal Code') ?></span>
+                                        <span><?= $block->getLabel('zip') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
@@ -380,7 +360,7 @@ $editRecipient = $block->getEditRecipient() ?>
 
                                 <div class="admin__field _required">
                                     <label for="recipient-street" class="admin__field-label">
-                                        <span><?= __('Street') ?></span>
+                                        <span><?= $block->getLabel('street') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
@@ -391,7 +371,7 @@ $editRecipient = $block->getEditRecipient() ?>
 
                                 <div class="admin__field _required">
                                     <label for="recipient-street-number" class="admin__field-label">
-                                        <span><?= __('Number') ?></span>
+                                        <span><?= $block->getLabel('number') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
@@ -402,7 +382,7 @@ $editRecipient = $block->getEditRecipient() ?>
 
                                 <div class="admin__field">
                                     <label for="recipient-complementary" class="admin__field-label">
-                                        <span><?= __('Complement') ?></span>
+                                        <span><?= $block->getLabel('complement') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
@@ -413,7 +393,7 @@ $editRecipient = $block->getEditRecipient() ?>
 
                                 <div class="admin__field">
                                     <label for="recipient-reference-point" class="admin__field-label">
-                                        <span><?= __('Reference point') ?></span>
+                                        <span><?= $block->getLabel('reference_point') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
@@ -424,7 +404,7 @@ $editRecipient = $block->getEditRecipient() ?>
 
                                 <div class="admin__field _required">
                                     <label for="recipient-neighborhood" class="admin__field-label">
-                                        <span><?= __('Neighborhood') ?></span>
+                                        <span><?= $block->getLabel('neighborhood') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
@@ -435,16 +415,18 @@ $editRecipient = $block->getEditRecipient() ?>
 
                                 <div class="admin__field _required">
                                     <label for="recipient-state" class="admin__field-label">
-                                        <span><?= __('State/Province') ?></span>
+                                        <span><?= $block->getLabel('state') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <select class="recipient-form-inputs admin__control-select"
                                                 name="form[register_information][address][state]" id="recipient-state"
                                                 data-state
                                                 data-toggle-required>
-                                            <option value=""><?= __('Select') ?></option>
+                                            <option value=""><?= $block->getLabel('select') ?></option>
                                             <?php foreach ($states as $state) {
-                                                echo "<option value='{$state['code']}'>{$state['default_name']}</option>";
+                                                echo "<option value='{$state['code']}'>
+                                                    {$state['default_name']}
+                                                </option>";
                                             } ?>
                                         </select>
                                     </div>
@@ -452,7 +434,7 @@ $editRecipient = $block->getEditRecipient() ?>
 
                                 <div class="admin__field _required">
                                     <label for="recipient-city" class="admin__field-label">
-                                        <span><?= __('City') ?></span>
+                                        <span><?= $block->getLabel('city') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" list="recipient-cities" class="recipient-form-inputs"
@@ -473,7 +455,7 @@ $editRecipient = $block->getEditRecipient() ?>
 
                                 <div class="admin__field _required">
                                     <label for="company-zip-code" class="admin__field-label">
-                                        <span><?= __('Zip/Postal Code') ?></span>
+                                        <span><?= $block->getLabel('zip') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
@@ -485,7 +467,7 @@ $editRecipient = $block->getEditRecipient() ?>
 
                                 <div class="admin__field _required">
                                     <label for="company-street" class="admin__field-label">
-                                        <span><?= __('Street') ?></span>
+                                        <span><?= $block->getLabel('street') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
@@ -497,7 +479,7 @@ $editRecipient = $block->getEditRecipient() ?>
 
                                 <div class="admin__field _required">
                                     <label for="company-street-number" class="admin__field-label">
-                                        <span><?= __('Number') ?></span>
+                                        <span><?= $block->getLabel('number') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
@@ -508,7 +490,7 @@ $editRecipient = $block->getEditRecipient() ?>
 
                                 <div class="admin__field">
                                     <label for="company-complementary" class="admin__field-label">
-                                        <span><?= __('Complement') ?></span>
+                                        <span><?= $block->getLabel('complement') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
@@ -519,7 +501,7 @@ $editRecipient = $block->getEditRecipient() ?>
 
                                 <div class="admin__field">
                                     <label for="company-reference-point" class="admin__field-label">
-                                        <span><?= __('Reference point') ?></span>
+                                        <span><?= $block->getLabel('reference_point') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
@@ -530,7 +512,7 @@ $editRecipient = $block->getEditRecipient() ?>
 
                                 <div class="admin__field _required">
                                     <label for="company-neighborhood" class="admin__field-label">
-                                        <span><?= __('Neighborhood') ?></span>
+                                        <span><?= $block->getLabel('neighborhood') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
@@ -541,7 +523,7 @@ $editRecipient = $block->getEditRecipient() ?>
 
                                 <div class="admin__field _required">
                                     <label for="company-state" class="admin__field-label">
-                                        <span><?= __('State/Province') ?></span>
+                                        <span><?= $block->getLabel('state') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <select class="recipient-form-inputs admin__control-select"
@@ -549,9 +531,11 @@ $editRecipient = $block->getEditRecipient() ?>
                                                 id="company-state"
                                                 data-state
                                                 data-toggle-required>
-                                            <option value=""><?= __('Select') ?></option>
+                                            <option value=""><?= $block->getLabel('select') ?></option>
                                             <?php foreach ($states as $state) {
-                                                echo "<option value='{$state['code']}'>{$state['default_name']}</option>";
+                                                echo "<option value='{$state['code']}'>
+                                                    {$state['default_name']}
+                                                </option>";
                                             } ?>
                                         </select>
                                     </div>
@@ -559,7 +543,7 @@ $editRecipient = $block->getEditRecipient() ?>
 
                                 <div class="admin__field _required">
                                     <label for="company-city" class="admin__field-label">
-                                        <span><?= __('City') ?></span>
+                                        <span><?= $block->getLabel('city') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" list="company-cities" class="recipient-form-inputs"
@@ -580,7 +564,7 @@ $editRecipient = $block->getEditRecipient() ?>
 
                                 <div class="admin__field _required">
                                     <label for="recipient-partner-0-name" class="admin__field-label">
-                                        <span><?= __('Name') ?></span>
+                                        <span><?= $block->getLabel('name') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" list="recipient-partner-0-partners-list"
@@ -593,11 +577,11 @@ $editRecipient = $block->getEditRecipient() ?>
 
                                 <input type="hidden" name="form[register_information][managing_partners][0][type]"
                                        id="recipient-partner-document-type-0"
-                                       value="individual" data-toggle-required>
+                                       value="individual" tabindex="-1" data-toggle-required/>
 
                                 <div class="admin__field _required">
                                     <label for="recipient-partner-0-document" class="admin__field-label">
-                                        <span><?= __('Document number') ?></span>
+                                        <span><?= $block->getLabel('document_number') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
@@ -609,7 +593,7 @@ $editRecipient = $block->getEditRecipient() ?>
 
                                 <div class="admin__field">
                                     <label for="recipient-partner-0-mother-name" class="admin__field-label">
-                                        <span><?= __('Mother name') ?></span>
+                                        <span><?= $block->getLabel('mother_name') ?></span>
                                     </label>
                                     <div class="admin__field-control">
                                         <input type="text" class="recipient-form-inputs"
@@ -620,7 +604,7 @@ $editRecipient = $block->getEditRecipient() ?>
 
                                 <div class="admin__field _required">
                                     <label for="recipient-partner-0-email" class="admin__field-label">
-                                        <span><?= __('E-mail') ?></span>
+                                        <span><?= $block->getLabel('email') ?></span>
                                     </label>
                                     <div class="admin__field-control">
                                         <input type="email" class="recipient-form-inputs"
@@ -631,7 +615,7 @@ $editRecipient = $block->getEditRecipient() ?>
 
                                 <div class="admin__field _required">
                                     <label for="recipient-partner-birthdate" class="admin__field-label">
-                                        <span><?= __('Date of birth') ?></span>
+                                        <span><?= $block->getLabel('birthdate') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
@@ -643,7 +627,7 @@ $editRecipient = $block->getEditRecipient() ?>
 
                                 <div class="admin__field _required">
                                     <label for="recipient-partner-0-monthly-income" class="admin__field-label">
-                                        <span><?= __('Monthly income') ?></span>
+                                        <span><?= $block->getLabel('monthly_income') ?></span>
                                     </label>
                                     <div class="admin__field-control">
                                         <input type="text" class="recipient-form-inputs"
@@ -656,7 +640,7 @@ $editRecipient = $block->getEditRecipient() ?>
                                 <div class="admin__field _required">
                                     <label for="recipient-partner-0-professional-occupation"
                                            class="admin__field-label">
-                                        <span><?= __('Profession') ?></span>
+                                        <span><?= $block->getLabel('profession') ?></span>
                                     </label>
                                     <div class="admin__field-control">
                                         <input type="text" class="recipient-form-inputs"
@@ -668,7 +652,7 @@ $editRecipient = $block->getEditRecipient() ?>
                                 <input type="hidden"
                                        name="form[register_information][managing_partners][0][self_declared_legal_representative]"
                                        id="recipient-partner-0-declaration"
-                                       value="1" data-toggle-required>
+                                       value="1" tabindex="-1" data-toggle-required/>
 
                             </div>
                             <div class="admin__fieldset" data-section="corporation new-field">
@@ -681,13 +665,14 @@ $editRecipient = $block->getEditRecipient() ?>
 
                                 <div class="admin__field _required">
                                     <label for="recipient-partner-0-phones-type-0" class="admin__field-label">
-                                        <span><?= __('Contact type') ?></span>
+                                        <span><?= $block->getLabel('contact_type') ?></span>
                                     </label>
                                     <div class="admin__field-control">
                                         <select class="recipient-form-inputs admin__control-select"
                                                 name="form[register_information][managing_partners][0][phone_number][0][type]"
                                                 id="recipient-partner-0-phones-type-0" data-toggle-required>
-                                            <option value="mobile_phone"><?= __('Mobile phone') ?></option>
+                                            <option
+                                                value="mobile_phone"><?= $block->getLabel('mobile_phone') ?></option>
                                             <option value="home_phone"><?= __('Telephone') ?></option>
                                         </select>
                                     </div>
@@ -695,39 +680,13 @@ $editRecipient = $block->getEditRecipient() ?>
 
                                 <div class="admin__field _required">
                                     <label for="recipient-partner-0-phones-number-0" class="admin__field-label">
-                                        <span><?= __('Contact number') ?></span>
+                                        <span><?= $block->getLabel('contact_number') ?></span>
                                     </label>
                                     <div class="admin__field-control">
                                         <input type="tel" class="recipient-form-inputs"
                                                name="form[register_information][managing_partners][0][phone_number][0][number]"
                                                id="recipient-partner-0-phones-number-0" placeholder="(00) 00000-0000"
                                                data-phone-mask data-toggle-required>
-                                    </div>
-                                </div>
-
-                                <div class="admin__field">
-                                    <label for="recipient-partner-0-phones-type-1" class="admin__field-label">
-                                        <span><?= __('Contact type') ?></span>
-                                    </label>
-                                    <div class="admin__field-control">
-                                        <select class="recipient-form-inputs admin__control-select"
-                                                name="form[register_information][managing_partners][0][phone_number][1][type]"
-                                                id="recipient-partner-0-phones-type-1">
-                                            <option value="mobile_phone"><?= __('Mobile phone') ?></option>
-                                            <option value="home_phone"><?= __('Telephone') ?></option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="admin__field">
-                                    <label for="recipient-partner-0-phones-number-1" class="admin__field-label">
-                                        <span><?= __('Contact number') ?></span>
-                                    </label>
-                                    <div class="admin__field-control">
-                                        <input type="tel" class="recipient-form-inputs"
-                                               name="form[register_information][managing_partners][0][phone_number][1][number]"
-                                               id="recipient-partner-0-phones-number-1" placeholder="(00) 00000-0000"
-                                               data-phone-mask>
                                     </div>
                                 </div>
 
@@ -742,7 +701,7 @@ $editRecipient = $block->getEditRecipient() ?>
 
                                 <div class="admin__field _required">
                                     <label for="recipient-partner-0-zip-code" class="admin__field-label">
-                                        <span><?= __('Zip/Postal Code') ?></span>
+                                        <span><?= $block->getLabel('zip') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
@@ -754,7 +713,7 @@ $editRecipient = $block->getEditRecipient() ?>
 
                                 <div class="admin__field _required">
                                     <label for="recipient-partner-0-street" class="admin__field-label">
-                                        <span><?= __('Street') ?></span>
+                                        <span><?= $block->getLabel('street') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
@@ -765,7 +724,7 @@ $editRecipient = $block->getEditRecipient() ?>
 
                                 <div class="admin__field _required">
                                     <label for="recipient-partner-0-street-number" class="admin__field-label">
-                                        <span><?= __('Number') ?></span>
+                                        <span><?= $block->getLabel('number') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
@@ -776,7 +735,7 @@ $editRecipient = $block->getEditRecipient() ?>
 
                                 <div class="admin__field">
                                     <label for="recipient-partner-0-complementary" class="admin__field-label">
-                                        <span><?= __('Complement') ?></span>
+                                        <span><?= $block->getLabel('complement') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
@@ -787,7 +746,7 @@ $editRecipient = $block->getEditRecipient() ?>
 
                                 <div class="admin__field">
                                     <label for="recipient-partner-0-reference-point" class="admin__field-label">
-                                        <span><?= __('Reference point') ?></span>
+                                        <span><?= $block->getLabel('reference_point') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
@@ -798,7 +757,7 @@ $editRecipient = $block->getEditRecipient() ?>
 
                                 <div class="admin__field _required">
                                     <label for="recipient-partner-0-neighborhood" class="admin__field-label">
-                                        <span><?= __('Neighborhood') ?></span>
+                                        <span><?= $block->getLabel('neighborhood') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
@@ -809,7 +768,7 @@ $editRecipient = $block->getEditRecipient() ?>
 
                                 <div class="admin__field _required">
                                     <label for="recipient-partner-0-state" class="admin__field-label">
-                                        <span><?= __('State/Province') ?></span>
+                                        <span><?= $block->getLabel('state') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <select class="recipient-form-inputs admin__control-select"
@@ -817,9 +776,11 @@ $editRecipient = $block->getEditRecipient() ?>
                                                 id="recipient-partner-0-state"
                                                 data-state
                                                 data-toggle-required>
-                                            <option value=""><?= __('Select') ?></option>
+                                            <option value=""><?= $block->getLabel('select') ?></option>
                                             <?php foreach ($states as $state) {
-                                                echo "<option value='{$state['code']}'>{$state['default_name']}</option>";
+                                                echo "<option value='{$state['code']}'>
+                                                    {$state['default_name']}
+                                                </option>";
                                             } ?>
                                         </select>
                                     </div>
@@ -827,7 +788,7 @@ $editRecipient = $block->getEditRecipient() ?>
 
                                 <div class="admin__field _required">
                                     <label for="recipient-partner-0-city" class="admin__field-label">
-                                        <span><?= __('City') ?></span>
+                                        <span><?= $block->getLabel('city') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
                                         <input type="text" list="recipient-partner-0-cities"
@@ -844,7 +805,9 @@ $editRecipient = $block->getEditRecipient() ?>
 
                                 <h2><?= __('Banking information') ?></h2>
 
-                                <p class="recipient-block-info"><?= __('The bank account holder must be the recipient (same document number).') ?></p>
+                                <p class="recipient-block-info">
+                                    <?= __('The bank account holder must be the recipient (same document number).') ?>
+                                </p>
 
                                 <div class="admin__field _required">
                                     <label for="holder-name" class="admin__field-label">
@@ -859,13 +822,13 @@ $editRecipient = $block->getEditRecipient() ?>
 
                                 <div class="admin__field _required">
                                     <label for="holder-document-type" class="admin__field-label">
-                                        <span><?= __('Document type') ?></span>
+                                        <span><?= $block->getLabel('document_type') ?></span>
                                     </label>
                                     <div class="admin__field-control">
                                         <select class="recipient-form-inputs admin__control-select"
                                                 name="form[holder_document_type]"
                                                 id="holder-document-type" readonly data-toggle-required>
-                                            <option value=""><?= __('Select') ?></option>
+                                            <option value=""><?= $block->getLabel('select') ?></option>
                                             <option value="individual"><?= __('CPF') ?></option>
                                             <option value="company"><?= __('CNPJ') ?></option>
                                         </select>
@@ -874,7 +837,7 @@ $editRecipient = $block->getEditRecipient() ?>
 
                                 <div class="admin__field _required">
                                     <label for="holder-document" class="admin__field-label">
-                                        <span><?= __('Document number') ?></span>
+                                        <span><?= $block->getLabel('document_number') ?></span>
                                     </label>
                                     <div class="admin__field-control">
                                         <input type="text" class="recipient-form-inputs"
@@ -946,8 +909,10 @@ $editRecipient = $block->getEditRecipient() ?>
                                                 name="form[account_type]" id="account-type">
                                             <option value="checking"><?= __('Checking') ?></option>
                                             <option value="savings"><?= __('Savings') ?></option>
-                                            <option value="conjunct_checking"><?= __('Conjunct checking') ?></option>
-                                            <option value="conjunct_savings"><?= __('Conjunct savings') ?></option>
+                                            <option value="conjunct_checking">
+                                                <?= __('Conjunct checking') ?></option>
+                                            <option value="conjunct_savings">
+                                                <?= __('Conjunct savings') ?></option>
                                         </select>
                                     </div>
                                 </div>
@@ -961,8 +926,8 @@ $editRecipient = $block->getEditRecipient() ?>
                                     <div class="admin__field-control">
                                         <select class="recipient-form-inputs admin__control-select"
                                                 name="form[transfer_enabled]" id="transfer-enabled">
-                                            <option value="0"><?= __('No') ?></option>
-                                            <option value="1"><?= __('Yes') ?></option>
+                                            <option value="0"><?= $block->getLabel('no') ?></option>
+                                            <option value="1"><?= $block->getLabel('yes') ?></option>
                                         </select>
                                     </div>
                                 </div>
@@ -1003,4 +968,4 @@ $editRecipient = $block->getEditRecipient() ?>
     </div>
 </form>
 <!-- Edit Recipient-->
-<input type="hidden" name="form[edit_recipient_id]" id="edit-recipient" value='<?= $editRecipient ?>'/>
+<input type="hidden" name="form[edit_recipient_id]" id="edit-recipient" value='<?= $editRecipient ?>' tabindex="-1"/>
