@@ -2,12 +2,16 @@
 
 namespace Pagarme\Pagarme\Model\Api;
 
+use Exception;
+use InvalidArgumentException;
 use Magento\Framework\Webapi\Rest\Request;
-use Pagarme\Core\Kernel\ValueObjects\Id\RecipientId;
-use Pagarme\Core\Marketplace\Services\RecipientService;
-use Pagarme\Core\Recurrence\Services\PlanService;
+use Pagarme\Core\Kernel\Services\LogService;
+use Pagarme\Core\Middle\Factory\RecipientFactory as CoreRecipient;
 use Pagarme\Pagarme\Api\RecipientInterface;
-use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use Pagarme\Pagarme\Model\Recipient as ModelRecipient;
+use Pagarme\Pagarme\Model\ResourceModel\Recipients as ResourceModelRecipient;
+use Pagarme\Pagarme\Service\Marketplace\RecipientService;
+use Throwable;
 
 class Recipient implements RecipientInterface
 {
@@ -17,15 +21,31 @@ class Recipient implements RecipientInterface
     protected $request;
 
     /**
-     * @var RecipientService
+     * @var ModelRecipient
      */
-    protected $recipientService;
+    protected $modelRecipient;
 
-    public function __construct(Request $request)
+    /**
+     * @var ResourceModelRecipient
+     */
+    protected $resourceModelRecipient;
+
+    /**
+     * @var CoreRecipient
+     */
+    protected $coreRecipient;
+
+    public function __construct(
+        Request                $request,
+        ModelRecipient         $modelRecipient,
+        ResourceModelRecipient $resourceModelRecipient,
+        CoreRecipient          $coreRecipient
+    )
     {
-        Magento2CoreSetup::bootstrap();
         $this->request = $request;
-        $this->recipientService = new RecipientService();
+        $this->modelRecipient = $modelRecipient;
+        $this->resourceModelRecipient = $resourceModelRecipient;
+        $this->coreRecipient = $coreRecipient;
     }
 
     /**
@@ -33,76 +53,87 @@ class Recipient implements RecipientInterface
      */
     public function saveFormData(): string
     {
-        $post = $this->request->getBodyParams();
-        parse_str($post[0], $params);
-
-        $form = $this->getFormattedForm($params['form']);
-
-        if (empty($form)) {
-            return json_encode([
-                'code' => 400,
-                'message' => 'Error on save recipient'
-            ]);
-        }
+        $bodyParams = current($this->request->getBodyParams());
+        parse_str($bodyParams, $params);
+        $params = $params['form'];
 
         try {
-            $this->recipientService->saveFormRecipient($form);
-        } catch (\Exception $exception) {
+            if (empty($params['pagarme_id'])) {
+                $recipientOnPagarme = $this->createOnPagarme($params);
+                $params['pagarme_id'] = $recipientOnPagarme->id;
+            }
+            $this->saveOnPlatform($params['register_information'], $params['pagarme_id']);
+
+            return json_encode([
+                'code' => 200,
+                'message' => __('Recipient saved successfully!')
+            ]);
+        } catch (Throwable $th) {
+            $logService = new LogService("Recipient Log", true, 1);
+            $logService->info($th->getMessage(), [
+                'webkul_seller' => $params['register_information']['webkul_seller'],
+                'document' => $params['register_information']['document'],
+                'external_id' => $params['register_information']['external_id']
+
+            ]);
             return json_encode([
                 'code' => 400,
-                'message' => $exception->getMessage()
+                'message' => __('An error occurred while saving the recipient.')
+                    . ' ' . __($th->getMessage())
             ]);
         }
-
-        return json_encode([
-            'code' => 200,
-            'message' => 'Recipient saved'
-        ]);
     }
 
-    public function getFormattedForm(array $form): array
+    /**
+     * @throws Exception
+     */
+    private function saveOnPlatform($params, $pagarmeId)
     {
-        $form['holder_document'] = preg_replace("/[^0-9]/", "", $form['holder_document'] ?? '');
-        $form['document']  = preg_replace("/[^0-9]/", "", $form['document'] ?? '');
-        if (isset($form['type'])) {
-            $form['holder_type'] = $form['type'];
-        }
-        if (isset($form['pagarme_id'])) {
-            $form['recipient_id'] = $form['pagarme_id'];
-        }
-
-        return $form;
+        $recipientModel = $this->modelRecipient;
+        $recipientModel->setId(null);
+        $recipientModel->setExternalId($params['external_id']);
+        $recipientModel->setName(empty($params['name']) ? $params['company_name'] : $params['name']);
+        $recipientModel->setEmail($params['email']);
+        $recipientModel->setDocument($params['document']);
+        $recipientModel->setPagarmeId($pagarmeId);
+        $recipientModel->setType($params['type']);
+        $this->resourceModelRecipient->save($recipientModel);
     }
 
+    /**
+     * @param $recipientData
+     * @return mixed
+     */
+    private function createOnPagarme($recipientData)
+    {
+        $coreRecipient = $this->coreRecipient->createRecipient($recipientData);
+        $service = new RecipientService();
+        return $service->createRecipient($coreRecipient);
+    }
+
+    /**
+     * @return string
+     */
     public function searchRecipient(): string
     {
         $post = $this->request->getBodyParams();
+        $service = new RecipientService();
 
         try {
-            $recipientId = new RecipientId($post['recipientId']);
-        } catch (\Exception $e) {
-            return json_encode([
-                'code' => 400,
-                'message' => 'Invalid Pagar.me ID'
-            ]);
-        }
-
-        try {
-            $recipient = $this->recipientService->findByPagarmeId($recipientId);
-
-            if ($recipient->status != 'active') {
-                throw new \Exception('Recipient not active');
+            $recipient = $service->searchRecipient($post['recipientId']);
+            if ($recipient->status !== 'active') {
+                throw new InvalidArgumentException(__('Recipient not active.'));
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return json_encode([
                 'code' => 404,
-                'message' => $e->getMessage(),
+                'message' => __($e->getMessage()),
             ]);
         }
 
         return json_encode([
             'code' => 200,
-            'message' => 'Recipient finded',
+            'message' => __('Recipient found.'),
             'recipient' => $recipient,
         ]);
     }

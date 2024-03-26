@@ -7,8 +7,8 @@
     margin-bottom: 10px;
 }
 
-.product_search {
-    border-color: #878787;
+.product_search,
+#pagarme-recipients-form .recipient-form-inputs {
     -webkit-appearance: none;
     background-color: #fff;
     border: 1px solid #adadad;
@@ -19,11 +19,18 @@
     font-weight: 400;
     height: auto;
     line-height: 1.36;
-    padding: .6rem 1rem .6rem;
     transition: border-color .1s linear;
     vertical-align: baseline;
-    width: 15%;
     margin-left: 10px;
+}
+
+.product_search {
+    padding: .6rem 1rem .6rem;
+    width: 15%;
+}
+
+#pagarme-recipients-form .recipient-form-inputs {
+    width: 50%;
 }
 
 .table-products {
@@ -49,6 +56,7 @@
 .ui-autocomplete.ui-menu .ui-menu-item a.ui-corner-all{
     text-decoration: none;
 }
+
 .ui-autocomplete.ui-menu .ui-menu-item a.ui-state-focus{
     background-color: transparent!important;
     border: none;
@@ -67,34 +75,53 @@ table.table-cycles {
     padding: 8px;
 }
 
-#error-message{
+.error-message {
     margin: 10px 0;
     color: red;
     font-size: 10px;
     display: none;
 }
 
-.recipient-form-inputs {
-    border-color: #878787;
-    -webkit-appearance: none;
-    background-color: #fff;
-    border: 1px solid #adadad;
-    border-radius: 1px;
-    box-shadow: none;
-    color: #303030;
-    font-size: 1.4rem;
-    font-weight: 400;
-    height: auto;
-    line-height: 1.36;
-    padding: .6rem 1rem .6rem;
-    transition: border-color .1s linear;
-    vertical-align: baseline;
-    width: 50%;
-    margin-left: 10px;
+#pagarme-recipients-form [data-section] {
+    display: none;
 }
 
-.readonly {
+#pagarme-recipients-form .recipient-form-inputs:focus {
+    border-color: #8fb5cf;
+    box-shadow: 0 0 .5em rgba(10, 10, 10, 0.25);
+}
+
+#pagarme-recipients-form .recipient-form-inputs:not(.admin__control-select) {
+    padding: .6rem 1rem .6rem;
+}
+
+#pagarme-recipients-form h3 {
+    display: inline;
+}
+
+#pagarme-recipients-form .recipient-block-info {
+    margin: 0 0 2em;
+    font-style: italic;
+}
+
+#pagarme-recipients-form .readonly,
+#pagarme-recipients-form [readonly] {
     background: #eee;
     pointer-events: none;
     touch-action: none;
+}
+
+#pagarme-recipients-form .message.message-error.error {
+    display: none;
+}
+
+/*
+ * Jquery UI Fix
+ */
+.ui-datepicker .ui-datepicker-title select:first-child {
+    margin-right: 6%;
+}
+
+.ui-datepicker .ui-datepicker-title select:last-child {
+    margin-right: 0;
 }

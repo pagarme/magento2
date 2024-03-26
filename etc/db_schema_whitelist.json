@@ -79,5 +79,21 @@
         "constraint": {
             "PRIMARY": true
         }
+    },
+    "pagarme_module_core_recipients": {
+        "column": {
+            "id": true,
+            "external_id": true,
+            "pagarme_id": true,
+            "document_type": true,
+            "document": true,
+            "name": true,
+            "email": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
     }
 }

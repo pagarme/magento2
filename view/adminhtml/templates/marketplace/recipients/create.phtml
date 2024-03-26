@@ -1,14 +1,20 @@
-<form id="form-recipients" method="post">
+<?php $states = $block->getAllRegionsOfCountry();
+$editRecipient = $block->getEditRecipient(); ?>
+<form id="pagarme-recipients-form" method="post">
     <div class="page-main-actions">
         <div class="page-actions-placeholder"></div>
         <div class="page-actions" data-ui-id="page-actions-toolbar-content-header">
             <div class="page-actions-inner" data-title="New Recipient">
                 <div class="page-actions-buttons">
-                    <button id="save-button" title="Save" class="action-default primary" type="submit">
-                        <span><?php echo __('Save') ?></span>
-                    </button>
-                    <button id="back" title="Back" type="button" class="action- scalable back" onclick="location.href = '<?php echo $block->getUrl('pagarme_pagarme/recipients/index') ?>'" data-ui-id="back-button">
-                        <span><?php echo __('Back') ?></span>
+                    <?php if (!$editRecipient) : ?>
+                        <button id="save-button" title="Save" class="action-default primary" type="submit">
+                            <span><?= __('Save') ?></span>
+                        </button>
+                    <?php endif; ?>
+                    <button id="back" title="Back" type="button" class="action- scalable back"
+                            onclick="location.href = '<?= $block->getUrl('pagarme_pagarme/recipients/index') ?>'"
+                            data-ui-id="back-button">
+                        <span><?= __('Back') ?></span>
                     </button>
                 </div>
             </div>
@@ -16,16 +22,21 @@
     </div>
 
     <!-- Url Post-->
-    <input id="url-post" value="<?php echo $block->getBaseUrl() . 'rest/V1/pagarme/marketplace/recipient/formData'; ?>" type="hidden" />
-    <input id="url-search-recipient-id" value="<?php echo $block->getBaseUrl() . 'rest/V1/pagarme/marketplace/recipient/searchRecipient'; ?>" type="hidden" />
+    <input type="hidden" id="url-post"
+           value="<?= $block->getBaseUrl() . 'rest/V1/pagarme/marketplace/recipient/formData' ?>" tabindex="-1"/>
+    <input type="hidden" id="url-search-recipient-id"
+           value="<?= $block->getBaseUrl() . 'rest/V1/pagarme/marketplace/recipient/searchRecipient' ?>"
+           tabindex="-1"/>
 
-    <input type="hidden" name="form_key" value="<?php echo $block->getFormKey() ?>" />
+    <input type="hidden" name="form_key" value="<?= $block->getFormKey() ?>" tabindex="-1"/>
+
+    <input type="hidden" id="recipient-id-control" value="" tabindex="-1"/>
 
     <?php if (!empty($block->getRecipientId())) : ?>
         <!--  LocalId  -->
-        <input type="hidden" name="form[id]" value="<?php echo $block->getLocalId() ?>">
+        <input type="hidden" name="form[id]" value="<?= $block->getLocalId() ?>" tabindex="-1"/>
         <!--  RecipientId  -->
-        <input type="hidden" name="form[recipient_id]" value="<?php echo $block->getRecipientId() ?>">
+        <input type="hidden" name="form[recipient_id]" value="<?= $block->getRecipientId() ?>" tabindex="-1"/>
     <?php endif; ?>
 
     <div id="page:main-container" class="page-columns">
@@ -33,241 +44,917 @@
             <div id="container" class="main-col">
                 <div class="entry-edit form-inline">
                     <div class="fieldset-wrapper">
-                        <div class="admin__fieldset-wrapper-content _hide">
+                        <div class="admin__fieldset-wrapper-content">
                             <div class="admin__fieldset">
-                                <div class="admin__field" id="select-seller">
-                                    <label class="admin__field-label">
-                                        <span><?php echo __('Select webkul seller') ?></span>
+
+                                <h2><?= __('Seller information') ?></h2>
+
+                                <div class="admin__field _required" id="webkul-seller-container">
+                                    <label for="webkul-seller" class="admin__field-label">
+                                        <span><?= __('Select Webkul seller') ?></span>
                                     </label>
                                     <div class="admin__field-control">
-                                        <select class="recipient-form-inputs admin__control-select" name="form[external_id]" id="select-webkul-seller">
+                                        <select class="recipient-form-inputs admin__control-select"
+                                                name="form[register_information][webkul_seller]" id="webkul-seller"
+                                                autofocus required>
                                             <?php if (!empty($block->getSellers())) : ?>
-                                                <option value=""><?php echo __('Select a seller') ?></option>
-                                                <?php
-                                                foreach ($block->getSellers() as $seller) {
-                                                ?>
-                                                    <option sellername="<?php printf("%s %s", $seller['firstname'], $seller['lastname']); ?>" email="<?php echo $seller['email']; ?>" document="<?php echo !empty($seller['taxvat']) ? $seller['taxvat'] : ""; ?>" value="<?php echo $seller['entity_id'] ?>">
-                                                        <?php printf("%s %s (%s)", $seller['firstname'], $seller['lastname'], $seller['email']); ?>
+                                                <option value=""><?= __('Select a seller') ?></option>
+                                                <?php foreach ($block->getSellers() as $seller) : ?>
+                                                    <option
+                                                        data-sellername="<?php printf(
+                                                            "%s %s",
+                                                            $seller['firstname'],
+                                                            $seller['lastname']); ?>"
+                                                        data-email="<?= $seller['email'] ?>"
+                                                        data-document="<?= !empty($seller['taxvat']) ? $seller['taxvat'] : '' ?>"
+                                                        data-birthdate="<?= !empty($seller['dob']) ? $seller['dob'] : '' ?>"
+                                                        value="<?= $seller['entity_id'] ?>">
+                                                        <?php printf(
+                                                            '%s %s (%s)',
+                                                            $seller['firstname'],
+                                                            $seller['lastname'],
+                                                            $seller['email']
+                                                        ); ?>
                                                     </option>
-                                                <?php
-                                                }
-                                                ?>
+                                                <?php endforeach; ?>
                                             <?php endif; ?>
 
                                             <?php if (empty($block->getSellers())) : ?>
-                                                <option value=""><?php echo __('No valid sellers found.') ?></option>
+                                                <option value=""><?= __('No valid sellers found.') ?></option>
                                             <?php endif; ?>
-
-
                                         </select>
                                         <?php if (empty($block->getSellers())) : ?>
-                                            <button type="button" class="action-basic" onclick="location.href = '<?php echo $block->getUrl('customer/index/new') ?>'">
-                                                <span><?php echo __('Create') ?></span>
+                                            <button type="button" class="action-basic"
+                                                    onclick="location.href = '<?= $block->getUrl('customer/index/new') ?>'">
+                                                <span><?= __('Create') ?></span>
                                             </button>
                                         <?php endif; ?>
-
-                                        <p id="error-message" class="error-message"></p>
                                     </div>
                                 </div>
 
-                                <div class="admin__field" id="use_existing_pagarme_id">
-                                    <label class="admin__field-label">
-                                        <span><?php echo __('Use an existing Pagar.me recipient') ?></span>
+                                <div class="admin__field _required" data-section="seller">
+                                    <label for="webkul-id" class="admin__field-label">
+                                        <span><?= __('Webkul ID') ?></span>
                                     </label>
                                     <div class="admin__field-control">
-                                        <select class="recipient-form-inputs admin__control-select" name="form[existing_recipient]" id="existing_recipient">
-                                            <option value="0"><?php echo __('No') ?></option>
-                                            <option value="1"><?php echo __('Yes') ?></option>
+                                        <input type="text" class="recipient-form-inputs"
+                                               name="form[register_information][external_id]" id="webkul-id" readonly
+                                               data-toggle-required>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field _required" id="use_existing_pagarme_id" data-section="seller">
+                                    <label for="existing_recipient" class="admin__field-label">
+                                        <span><?= __('Use an existing Pagar.me recipient') ?></span>
+                                    </label>
+                                    <div class="admin__field-control">
+                                        <select class="recipient-form-inputs admin__control-select"
+                                                name="form[existing_recipient]"
+                                                id="existing_recipient" data-toggle-required>
+                                            <option value="0"><?= $block->getLabel('no') ?></option>
+                                            <option value="1"><?= $block->getLabel('yes') ?></option>
                                         </select>
                                     </div>
                                 </div>
 
-                                <div class="admin__field" id="pagarme_id">
-                                    <label class="admin__field-label">
-                                        <span><?php echo __('ID Pagar.me') ?></span>
+                                <div class="admin__field _required" id="pagarme_id" data-section="pagarme_id">
+                                    <label for="recipient-id" class="admin__field-label">
+                                        <span><?= __('ID Pagar.me') ?></span>
                                     </label>
                                     <div class="admin__field-control">
-                                        <input type="text" class="recipient-form-inputs" name="form[pagarme_id]" id="recipient-id">
-                                        <button type="button" class="action-basic" id="search-recipient-id" data-action="">
-                                            <span><?php echo __('Get info') ?></span>
+                                        <input type="text" class="recipient-form-inputs"
+                                               name="form[pagarme_id]" id="recipient-id" data-toggle-required>
+                                        <button type="button" class="action-basic" id="search-recipient-id"
+                                                data-action="">
+                                            <span><?= __('Get info') ?></span>
                                         </button>
                                         <p id="error-message" class="error-message"></p>
                                     </div>
                                 </div>
 
-                                <div class="admin__field _required" id="external-id-div">
-                                    <label class="admin__field-label">
-                                        <span><?php echo __('External ID') ?></span>
+                                <div class="admin__field _required" data-section="seller">
+                                    <label for="document-type" class="admin__field-label">
+                                        <span><?= $block->getLabel('document_type') ?></span>
                                     </label>
                                     <div class="admin__field-control">
-                                        <input type="text" class="recipient-form-inputs" name="form[external_id]" id="external-id">
+                                        <select class="recipient-form-inputs admin__control-select"
+                                                name="form[register_information][type]" id="document-type"
+                                                data-toggle-required>
+                                            <option value=""><?= $block->getLabel('select') ?></option>
+                                            <option value="individual"><?= __('CPF') ?></option>
+                                            <option value="corporation"><?= __('CNPJ') ?></option>
+                                        </select>
                                     </div>
                                 </div>
 
-                                <div class="admin__field _required" id="recipient-name-div">
-                                    <label class="admin__field-label">
-                                        <span><?php echo __('Name') ?></span>
+                                <h2 data-section="individual"><?= __('Personal data') ?></h2>
+                                <h2 data-section="corporation"><?= __('Company data') ?></h2>
+
+                                <div class="admin__field _required" data-section="individual corporation">
+                                    <label for="document" class="admin__field-label">
+                                        <span><?= $block->getLabel('document_number') ?></span>
+                                    </label>
+                                    <div class="admin__field-control">
+                                        <input type="text" class="recipient-form-inputs"
+                                               name="form[register_information][document]" id="document"
+                                               placeholder="000.000.000-00" maxlength="14"
+                                               data-document-number-for="seller"
+                                               data-document-mask data-toggle-required>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field _required" data-section="individual">
+                                    <label for="recipient-name" class="admin__field-label">
+                                        <span><?= $block->getLabel('name') ?></span>
                                     </label>
                                     <div class="admin__field-control ">
-                                        <input type="text" class="recipient-form-inputs" name="form[name]" id="recipient-name" required>
+                                        <input type="text" class="recipient-form-inputs"
+                                               name="form[register_information][name]" id="recipient-name"
+                                               data-toggle-required>
                                     </div>
                                 </div>
 
-                                <div class="admin__field _required" id="email-recipient-div">
-                                    <label class="admin__field-label">
-                                        <span><?php echo __('E-mail') ?></span>
+                                <div class="admin__field _required" data-section="corporation">
+                                    <label for="recipient-company-name" class="admin__field-label">
+                                        <span><?= __('Company name') ?></span>
                                     </label>
-                                    <div class="admin__field-control">
-                                        <input type="text" class="recipient-form-inputs" name="form[email]" id="email-recipient" required>
+                                    <div class="admin__field-control ">
+                                        <input type="text" class="recipient-form-inputs"
+                                               name="form[register_information][company_name]"
+                                               id="recipient-company-name"
+                                               data-toggle-required>
                                     </div>
                                 </div>
-                                <div class="admin__field _required" id="document-type-div">
-                                    <label class="admin__field-label">
-                                        <span><?php echo __('Document type') ?></span>
+
+                                <div class="admin__field _required" data-section="corporation new-field">
+                                    <label for="recipient-trading-name" class="admin__field-label">
+                                        <span><?= __('Trading name') ?></span>
+                                    </label>
+                                    <div class="admin__field-control ">
+                                        <input type="text" class="recipient-form-inputs"
+                                               name="form[register_information][trading_name]"
+                                               id="recipient-trading-name"
+                                               data-toggle-required>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field _required" data-section="individual corporation">
+                                    <label for="recipient-email" class="admin__field-label">
+                                        <span><?= $block->getLabel('email') ?></span>
                                     </label>
                                     <div class="admin__field-control">
-                                        <select class="recipient-form-inputs admin__control-select" name="form[document_type]" id="document-type">
-                                            <option data-title="cpf" value="cpf"><?php echo __('CPF') ?></option>
-                                            <option data-title="cnpj" value="cnpj"><?php echo __('CNPJ') ?></option>
+                                        <input type="email" class="recipient-form-inputs"
+                                               name="form[register_information][email]" id="recipient-email"
+                                               data-toggle-required>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field" data-section="individual corporation new-field">
+                                    <label for="recipient-site" class="admin__field-label">
+                                        <span><?= __('Site URL') ?></span>
+                                    </label>
+                                    <div class="admin__field-control">
+                                        <input type="url" class="recipient-form-inputs"
+                                               name="form[register_information][site_url]" id="recipient-site">
+                                    </div>
+                                </div>
+
+                                <div class="admin__field" data-section="individual new-field">
+                                    <label for="recipient-mother-name" class="admin__field-label">
+                                        <span><?= $block->getLabel('mother_name') ?></span>
+                                    </label>
+                                    <div class="admin__field-control ">
+                                        <input type="text" class="recipient-form-inputs"
+                                               name="form[register_information][mother_name]"
+                                               id="recipient-mother-name">
+                                    </div>
+                                </div>
+
+                                <div class="admin__field _required" data-section="individual new-field">
+                                    <label for="recipient-birthdate" class="admin__field-label">
+                                        <span><?= $block->getLabel('birthdate') ?></span>
+                                    </label>
+                                    <div class="admin__field-control ">
+                                        <input type="text" class="recipient-form-inputs"
+                                               name="form[register_information][birthdate]" id="recipient-birthdate"
+                                               placeholder="dd/mm/yyyy" data-datepicker data-date-mask
+                                               data-toggle-required>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field _required" data-section="individual new-field">
+                                    <label for="recipient-monthly-income" class="admin__field-label">
+                                        <span><?= $block->getLabel('monthly_income') ?></span>
+                                    </label>
+                                    <div class="admin__field-control ">
+                                        <input type="text" class="recipient-form-inputs"
+                                               name="form[register_information][monthly_income]"
+                                               id="recipient-monthly-income" placeholder="00.000,00" data-currency-mask
+                                               data-toggle-required>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field _required" data-section="individual new-field">
+                                    <label for="recipient-professional-occupation" class="admin__field-label">
+                                        <span><?= $block->getLabel('profession') ?></span>
+                                    </label>
+                                    <div class="admin__field-control ">
+                                        <input type="text" class="recipient-form-inputs"
+                                               name="form[register_information][professional_occupation]"
+                                               id="recipient-professional-occupation" data-toggle-required>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field _required" data-section="corporation new-field">
+                                    <label for="recipient-annual-revenue" class="admin__field-label">
+                                        <span><?= __('Annual revenue') ?></span>
+                                    </label>
+                                    <div class="admin__field-control ">
+                                        <input type="text" class="recipient-form-inputs"
+                                               name="form[register_information][annual_revenue]"
+                                               id="recipient-annual-revenue" placeholder="0.000.000,00"
+                                               data-currency-mask data-toggle-required>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field" data-section="corporation new-field">
+                                    <label for="recipient-corporation-type" class="admin__field-label">
+                                        <span><?= __('Company type') ?></span>
+                                    </label>
+                                    <div class="admin__field-control ">
+                                        <input type="text" class="recipient-form-inputs"
+                                               name="form[register_information][corporation_type]"
+                                               id="recipient-corporation-type">
+                                    </div>
+                                </div>
+
+                                <div class="admin__field" data-section="corporation new-field">
+                                    <label for="recipient-founding-date" class="admin__field-label">
+                                        <span><?= __('Founding date') ?></span>
+                                    </label>
+                                    <div class="admin__field-control ">
+                                        <input type="text" class="recipient-form-inputs"
+                                               name="form[register_information][founding_date]"
+                                               id="recipient-founding-date"
+                                               placeholder="dd/mm/yyyy" data-datepicker data-date-mask>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="admin__fieldset" data-section="individual corporation new-field">
+
+                                <div class="admin__field">
+                                    <div class="admin__field-label">
+                                        <h3><?= __('Phone numbers') ?></h3>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field _required">
+                                    <label for="recipient-phones-type-0" class="admin__field-label">
+                                        <span><?= $block->getLabel('contact_type') ?></span>
+                                    </label>
+                                    <div class="admin__field-control">
+                                        <select class="recipient-form-inputs admin__control-select"
+                                                name="form[register_information][phone_number][0][type]"
+                                                id="recipient-phones-type-0" data-toggle-required>
+                                            <option
+                                                value="mobile_phone"><?= $block->getLabel('mobile_phone') ?></option>
+                                            <option value="home_phone"><?= __('Telephone') ?></option>
                                         </select>
                                     </div>
                                 </div>
 
-                                <div class="admin__field _required" id="document-div">
-                                    <label class="admin__field-label">
-                                        <span><?php echo __('Document number') ?></span>
+                                <div class="admin__field _required">
+                                    <label for="recipient-phones-number-0" class="admin__field-label">
+                                        <span><?= $block->getLabel('contact_number') ?></span>
                                     </label>
                                     <div class="admin__field-control">
-                                        <input type="text" class="recipient-form-inputs" pattern="[0-9]+" maxlength="18" name="form[document]" id="document" required>
+                                        <input type="tel" class="recipient-form-inputs"
+                                               name="form[register_information][phone_number][0][number]"
+                                               id="recipient-phones-number-0" placeholder="(00) 00000-0000"
+                                               data-phone-mask data-toggle-required>
                                     </div>
                                 </div>
 
-                                <input id="type" name="form[type]" value="individual" type="hidden" />
+                            </div>
+                            <div class="admin__fieldset" data-section="individual new-field">
 
-                                <h2><?php echo __('Banking information') ?></h2>
+                                <div class="admin__field">
+                                    <div class="admin__field-label">
+                                        <h3><?= __('Address') ?></h3>
+                                    </div>
+                                </div>
 
                                 <div class="admin__field _required">
-                                    <label class="admin__field-label">
-                                        <span><?php echo __('Holder name') ?></span>
+                                    <label for="recipient-zip-code" class="admin__field-label">
+                                        <span><?= $block->getLabel('zip') ?></span>
                                     </label>
-                                    <div class="admin__field-control">
-                                        <input type="text" class="recipient-form-inputs" name="form[holder_name]" id="holder-name" required>
+                                    <div class="admin__field-control ">
+                                        <input type="text" class="recipient-form-inputs"
+                                               name="form[register_information][address][zip_code]"
+                                               id="recipient-zip-code"
+                                               placeholder="00000-000" data-zipcode-mask data-cep-search
+                                               data-toggle-required>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field _required">
+                                    <label for="recipient-street" class="admin__field-label">
+                                        <span><?= $block->getLabel('street') ?></span>
+                                    </label>
+                                    <div class="admin__field-control ">
+                                        <input type="text" class="recipient-form-inputs"
+                                               name="form[register_information][address][street]" id="recipient-street"
+                                               data-toggle-required>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field _required">
+                                    <label for="recipient-street-number" class="admin__field-label">
+                                        <span><?= $block->getLabel('number') ?></span>
+                                    </label>
+                                    <div class="admin__field-control ">
+                                        <input type="text" class="recipient-form-inputs"
+                                               name="form[register_information][address][street_number]"
+                                               id="recipient-street-number" data-toggle-required>
                                     </div>
                                 </div>
 
                                 <div class="admin__field">
-                                    <label class="admin__field-label">
-                                        <span><?php echo __('Document type') ?></span>
+                                    <label for="recipient-complementary" class="admin__field-label">
+                                        <span><?= $block->getLabel('complement') ?></span>
                                     </label>
-                                    <div class="admin__field-control">
-                                        <select class="recipient-form-inputs admin__control-select" name="form[holder_document_type]" id="holder-document-type">
-                                            <option data-title="cpf" value="cpf"><?php echo __('CPF') ?></option>
-                                            <option data-title="cnpj" value="cnpj"><?php echo __('CNPJ') ?></option>
-                                        </select>
+                                    <div class="admin__field-control ">
+                                        <input type="text" class="recipient-form-inputs"
+                                               name="form[register_information][address][complementary]"
+                                               id="recipient-complementary">
                                     </div>
                                 </div>
 
                                 <div class="admin__field">
-                                    <label class="admin__field-label">
-                                        <span><?php echo __('Document number') ?></span>
+                                    <label for="recipient-reference-point" class="admin__field-label">
+                                        <span><?= $block->getLabel('reference_point') ?></span>
                                     </label>
-                                    <div class="admin__field-control">
-                                        <input type="text" class="recipient-form-inputs" name="form[holder_document]" id="holder-document">
+                                    <div class="admin__field-control ">
+                                        <input type="text" class="recipient-form-inputs"
+                                               name="form[register_information][address][reference_point]"
+                                               id="recipient-reference-point">
                                     </div>
                                 </div>
 
                                 <div class="admin__field _required">
-                                    <label class="admin__field-label">
-                                        <span><?php echo __('Bank code') ?></span>
+                                    <label for="recipient-neighborhood" class="admin__field-label">
+                                        <span><?= $block->getLabel('neighborhood') ?></span>
                                     </label>
-                                    <div class="admin__field-control">
-                                        <input type="text" class="recipient-form-inputs" maxlength="3" name="form[bank]" id="bank" required>
+                                    <div class="admin__field-control ">
+                                        <input type="text" class="recipient-form-inputs"
+                                               name="form[register_information][address][neighborhood]"
+                                               id="recipient-neighborhood" data-toggle-required>
                                     </div>
                                 </div>
 
                                 <div class="admin__field _required">
-                                    <label class="admin__field-label">
-                                        <span><?php echo __('Branch number') ?></span>
+                                    <label for="recipient-state" class="admin__field-label">
+                                        <span><?= $block->getLabel('state') ?></span>
                                     </label>
-                                    <div class="admin__field-control">
-                                        <input type="text" class="recipient-form-inputs" maxlength="5" pattern="[0-9]{0,5}" name="form[branch_number]" id="branch-number" required>
+                                    <div class="admin__field-control ">
+                                        <select class="recipient-form-inputs admin__control-select"
+                                                name="form[register_information][address][state]" id="recipient-state"
+                                                data-state
+                                                data-toggle-required>
+                                            <option value=""><?= $block->getLabel('select') ?></option>
+                                            <?php foreach ($states as $state) {
+                                                echo "<option value='{$state['code']}'>
+                                                    {$state['default_name']}
+                                                </option>";
+                                            } ?>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field _required">
+                                    <label for="recipient-city" class="admin__field-label">
+                                        <span><?= $block->getLabel('city') ?></span>
+                                    </label>
+                                    <div class="admin__field-control ">
+                                        <input type="text" list="recipient-cities" class="recipient-form-inputs"
+                                               name="form[register_information][address][city]" id="recipient-city"
+                                               data-toggle-required>
+                                        <datalist id="recipient-cities"></datalist>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="admin__fieldset" data-section="corporation new-field">
+
+                                <div class="admin__field">
+                                    <div class="admin__field-label">
+                                        <h3><?= __('Company address') ?></h3>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field _required">
+                                    <label for="company-zip-code" class="admin__field-label">
+                                        <span><?= $block->getLabel('zip') ?></span>
+                                    </label>
+                                    <div class="admin__field-control ">
+                                        <input type="text" class="recipient-form-inputs"
+                                               name="form[register_information][main_address][zip_code]"
+                                               id="company-zip-code" placeholder="00000-000" data-zipcode-mask
+                                               data-cep-search data-toggle-required>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field _required">
+                                    <label for="company-street" class="admin__field-label">
+                                        <span><?= $block->getLabel('street') ?></span>
+                                    </label>
+                                    <div class="admin__field-control ">
+                                        <input type="text" class="recipient-form-inputs"
+                                               name="form[register_information][main_address][street]"
+                                               id="company-street"
+                                               data-toggle-required>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field _required">
+                                    <label for="company-street-number" class="admin__field-label">
+                                        <span><?= $block->getLabel('number') ?></span>
+                                    </label>
+                                    <div class="admin__field-control ">
+                                        <input type="text" class="recipient-form-inputs"
+                                               name="form[register_information][main_address][street_number]"
+                                               id="company-street-number" data-toggle-required>
                                     </div>
                                 </div>
 
                                 <div class="admin__field">
-                                    <label class="admin__field-label">
-                                        <span><?php echo __('Branch check digit') ?></span>
+                                    <label for="company-complementary" class="admin__field-label">
+                                        <span><?= $block->getLabel('complement') ?></span>
                                     </label>
-                                    <div class="admin__field-control">
-                                        <input type="text" class="recipient-form-inputs" name="form[branch_check_digit]" id="branch-check-digit">
+                                    <div class="admin__field-control ">
+                                        <input type="text" class="recipient-form-inputs"
+                                               name="form[register_information][main_address][complementary]"
+                                               id="company-complementary">
+                                    </div>
+                                </div>
+
+                                <div class="admin__field">
+                                    <label for="company-reference-point" class="admin__field-label">
+                                        <span><?= $block->getLabel('reference_point') ?></span>
+                                    </label>
+                                    <div class="admin__field-control ">
+                                        <input type="text" class="recipient-form-inputs"
+                                               name="form[register_information][main_address][reference_point]"
+                                               id="company-reference-point">
                                     </div>
                                 </div>
 
                                 <div class="admin__field _required">
-                                    <label class="admin__field-label">
-                                        <span><?php echo __('Account number') ?></span>
+                                    <label for="company-neighborhood" class="admin__field-label">
+                                        <span><?= $block->getLabel('neighborhood') ?></span>
                                     </label>
-                                    <div class="admin__field-control">
-                                        <input type="text" class="recipient-form-inputs" maxlength="13" pattern="[0-9]{0,13}" name="form[account_number]" id="account-number" required>
+                                    <div class="admin__field-control ">
+                                        <input type="text" class="recipient-form-inputs"
+                                               name="form[register_information][main_address][neighborhood]"
+                                               id="company-neighborhood" data-toggle-required>
                                     </div>
                                 </div>
 
                                 <div class="admin__field _required">
-                                    <label class="admin__field-label">
-                                        <span><?php echo __('Account check digit') ?></span>
+                                    <label for="company-state" class="admin__field-label">
+                                        <span><?= $block->getLabel('state') ?></span>
                                     </label>
-                                    <div class="admin__field-control">
-                                        <input type="text" class="recipient-form-inputs" maxlength="2" name="form[account_check_digit]" id="account-check-digit" required>
-                                    </div>
-                                </div>
-
-                                <div class="admin__field _required">
-                                    <label class="admin__field-label">
-                                        <span><?php echo __('Account type') ?></span>
-                                    </label>
-                                    <div class="admin__field-control">
-                                        <select class="recipient-form-inputs admin__control-select" name="form[account_type]" id="account-type">
-                                            <option value="checking"><?php echo __('Checking') ?></option>
-                                            <option value="savings"><?php echo __('Savings') ?></option>
-                                            <option value="conjunct_checking"><?php echo __('Conjunct checking') ?></option>
-                                            <option value="conjunct_savings"><?php echo __('Conjunct savings') ?></option>
+                                    <div class="admin__field-control ">
+                                        <select class="recipient-form-inputs admin__control-select"
+                                                name="form[register_information][main_address][state]"
+                                                id="company-state"
+                                                data-state
+                                                data-toggle-required>
+                                            <option value=""><?= $block->getLabel('select') ?></option>
+                                            <?php foreach ($states as $state) {
+                                                echo "<option value='{$state['code']}'>
+                                                    {$state['default_name']}
+                                                </option>";
+                                            } ?>
                                         </select>
                                     </div>
                                 </div>
 
-                                <h2><?php echo __('Transfer settings') ?></h2>
+                                <div class="admin__field _required">
+                                    <label for="company-city" class="admin__field-label">
+                                        <span><?= $block->getLabel('city') ?></span>
+                                    </label>
+                                    <div class="admin__field-control ">
+                                        <input type="text" list="company-cities" class="recipient-form-inputs"
+                                               name="form[register_information][main_address][city]" id="company-city"
+                                               data-toggle-required>
+                                        <datalist id="company-cities"></datalist>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="admin__fieldset" data-section="corporation new-field">
+
+                                <div class="admin__field">
+                                    <div class="admin__field-label">
+                                        <h3><?= __('Managing partner') ?></h3>
+                                    </div>
+                                </div>
 
                                 <div class="admin__field _required">
-                                    <label class="admin__field-label">
-                                        <span><?php echo __('Enable automatic transfer') ?></span>
+                                    <label for="recipient-partner-0-name" class="admin__field-label">
+                                        <span><?= $block->getLabel('name') ?></span>
+                                    </label>
+                                    <div class="admin__field-control ">
+                                        <input type="text" list="recipient-partner-0-partners-list"
+                                               class="recipient-form-inputs"
+                                               name="form[register_information][managing_partners][0][name]"
+                                               id="recipient-partner-0-name" data-toggle-required>
+                                        <datalist id="recipient-partner-0-partners-list"></datalist>
+                                    </div>
+                                </div>
+
+                                <input type="hidden" name="form[register_information][managing_partners][0][type]"
+                                       id="recipient-partner-document-type-0"
+                                       value="individual" tabindex="-1" data-toggle-required/>
+
+                                <div class="admin__field _required">
+                                    <label for="recipient-partner-0-document" class="admin__field-label">
+                                        <span><?= $block->getLabel('document_number') ?></span>
+                                    </label>
+                                    <div class="admin__field-control ">
+                                        <input type="text" class="recipient-form-inputs"
+                                               name="form[register_information][managing_partners][0][document]"
+                                               id="recipient-partner-0-document" placeholder="000.000.000-00"
+                                               maxlength="14" data-document-mask data-toggle-required>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field">
+                                    <label for="recipient-partner-0-mother-name" class="admin__field-label">
+                                        <span><?= $block->getLabel('mother_name') ?></span>
                                     </label>
                                     <div class="admin__field-control">
-                                        <select class="recipient-form-inputs admin__control-select" name="form[transfer_enabled]" id="transfer-enabled">
-                                            <option value="0"><?php echo __('No') ?></option>
-                                            <option value="1"><?php echo __('Yes') ?></option>
+                                        <input type="text" class="recipient-form-inputs"
+                                               name="form[register_information][managing_partners][0][mother_name]"
+                                               id="recipient-partner-0-mother-name">
+                                    </div>
+                                </div>
+
+                                <div class="admin__field _required">
+                                    <label for="recipient-partner-0-email" class="admin__field-label">
+                                        <span><?= $block->getLabel('email') ?></span>
+                                    </label>
+                                    <div class="admin__field-control">
+                                        <input type="email" class="recipient-form-inputs"
+                                               name="form[register_information][managing_partners][0][email]"
+                                               id="recipient-partner-0-email" data-toggle-required>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field _required">
+                                    <label for="recipient-partner-birthdate" class="admin__field-label">
+                                        <span><?= $block->getLabel('birthdate') ?></span>
+                                    </label>
+                                    <div class="admin__field-control ">
+                                        <input type="text" class="recipient-form-inputs"
+                                               name="form[register_information][managing_partners][0][birthdate]"
+                                               id="recipient-partner-0-birthdate" placeholder="dd/mm/yyyy"
+                                               data-datepicker data-date-mask data-toggle-required>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field _required">
+                                    <label for="recipient-partner-0-monthly-income" class="admin__field-label">
+                                        <span><?= $block->getLabel('monthly_income') ?></span>
+                                    </label>
+                                    <div class="admin__field-control">
+                                        <input type="text" class="recipient-form-inputs"
+                                               name="form[register_information][managing_partners][0][monthly_income]"
+                                               id="recipient-partner-0-monthly-income" placeholder="0.000,00"
+                                               data-currency-mask data-toggle-required>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field _required">
+                                    <label for="recipient-partner-0-professional-occupation"
+                                           class="admin__field-label">
+                                        <span><?= $block->getLabel('profession') ?></span>
+                                    </label>
+                                    <div class="admin__field-control">
+                                        <input type="text" class="recipient-form-inputs"
+                                               name="form[register_information][managing_partners][0][professional_occupation]"
+                                               id="recipient-partner-0-professional-occupation" data-toggle-required>
+                                    </div>
+                                </div>
+
+                                <input type="hidden"
+                                       name="form[register_information][managing_partners][0][self_declared_legal_representative]"
+                                       id="recipient-partner-0-declaration"
+                                       value="1" tabindex="-1" data-toggle-required/>
+
+                            </div>
+                            <div class="admin__fieldset" data-section="corporation new-field">
+
+                                <div class="admin__field">
+                                    <div class="admin__field-label">
+                                        <h3><?= __('Managing partner phone numbers') ?></h3>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field _required">
+                                    <label for="recipient-partner-0-phones-type-0" class="admin__field-label">
+                                        <span><?= $block->getLabel('contact_type') ?></span>
+                                    </label>
+                                    <div class="admin__field-control">
+                                        <select class="recipient-form-inputs admin__control-select"
+                                                name="form[register_information][managing_partners][0][phone_number][0][type]"
+                                                id="recipient-partner-0-phones-type-0" data-toggle-required>
+                                            <option
+                                                value="mobile_phone"><?= $block->getLabel('mobile_phone') ?></option>
+                                            <option value="home_phone"><?= __('Telephone') ?></option>
                                         </select>
                                     </div>
                                 </div>
 
-                                <div class="admin__field _required" id="transfer-interval-div">
-                                    <label class="admin__field-label">
-                                        <span><?php echo __('Transfer interval') ?></span>
+                                <div class="admin__field _required">
+                                    <label for="recipient-partner-0-phones-number-0" class="admin__field-label">
+                                        <span><?= $block->getLabel('contact_number') ?></span>
                                     </label>
                                     <div class="admin__field-control">
-                                        <select class="recipient-form-inputs admin__control-select" name="form[transfer_interval]" id="transfer-interval">
-                                            <option value="Daily"><?php echo __('Daily') ?></option>
-                                            <option value="Weekly"><?php echo __('Weekly') ?></option>
-                                            <option value="Monthly"><?php echo __('Monthly') ?></option>
+                                        <input type="tel" class="recipient-form-inputs"
+                                               name="form[register_information][managing_partners][0][phone_number][0][number]"
+                                               id="recipient-partner-0-phones-number-0" placeholder="(00) 00000-0000"
+                                               data-phone-mask data-toggle-required>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="admin__fieldset" data-section="corporation new-field">
+
+                                <div class="admin__field">
+                                    <div class="admin__field-label">
+                                        <h3><?= __('Managing partner address') ?></h3>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field _required">
+                                    <label for="recipient-partner-0-zip-code" class="admin__field-label">
+                                        <span><?= $block->getLabel('zip') ?></span>
+                                    </label>
+                                    <div class="admin__field-control ">
+                                        <input type="text" class="recipient-form-inputs"
+                                               name="form[register_information][managing_partners][0][address][zip_code]"
+                                               id="recipient-partner-0-zip-code" placeholder="00000-000"
+                                               data-zipcode-mask data-cep-search data-toggle-required>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field _required">
+                                    <label for="recipient-partner-0-street" class="admin__field-label">
+                                        <span><?= $block->getLabel('street') ?></span>
+                                    </label>
+                                    <div class="admin__field-control ">
+                                        <input type="text" class="recipient-form-inputs"
+                                               name="form[register_information][managing_partners][0][address][street]"
+                                               id="recipient-partner-0-street" data-toggle-required>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field _required">
+                                    <label for="recipient-partner-0-street-number" class="admin__field-label">
+                                        <span><?= $block->getLabel('number') ?></span>
+                                    </label>
+                                    <div class="admin__field-control ">
+                                        <input type="text" class="recipient-form-inputs"
+                                               name="form[register_information][managing_partners][0][address][street_number]"
+                                               id="recipient-partner-0-street-number" data-toggle-required>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field">
+                                    <label for="recipient-partner-0-complementary" class="admin__field-label">
+                                        <span><?= $block->getLabel('complement') ?></span>
+                                    </label>
+                                    <div class="admin__field-control ">
+                                        <input type="text" class="recipient-form-inputs"
+                                               name="form[register_information][managing_partners][0][address][complementary]"
+                                               id="recipient-partner-0-complementary">
+                                    </div>
+                                </div>
+
+                                <div class="admin__field">
+                                    <label for="recipient-partner-0-reference-point" class="admin__field-label">
+                                        <span><?= $block->getLabel('reference_point') ?></span>
+                                    </label>
+                                    <div class="admin__field-control ">
+                                        <input type="text" class="recipient-form-inputs"
+                                               name="form[register_information][managing_partners][0][address][reference_point]"
+                                               id="recipient-partner-0-reference-point">
+                                    </div>
+                                </div>
+
+                                <div class="admin__field _required">
+                                    <label for="recipient-partner-0-neighborhood" class="admin__field-label">
+                                        <span><?= $block->getLabel('neighborhood') ?></span>
+                                    </label>
+                                    <div class="admin__field-control ">
+                                        <input type="text" class="recipient-form-inputs"
+                                               name="form[register_information][managing_partners][0][address][neighborhood]"
+                                               id="recipient-partner-0-neighborhood" data-toggle-required>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field _required">
+                                    <label for="recipient-partner-0-state" class="admin__field-label">
+                                        <span><?= $block->getLabel('state') ?></span>
+                                    </label>
+                                    <div class="admin__field-control ">
+                                        <select class="recipient-form-inputs admin__control-select"
+                                                name="form[register_information][managing_partners][0][address][state]"
+                                                id="recipient-partner-0-state"
+                                                data-state
+                                                data-toggle-required>
+                                            <option value=""><?= $block->getLabel('select') ?></option>
+                                            <?php foreach ($states as $state) {
+                                                echo "<option value='{$state['code']}'>
+                                                    {$state['default_name']}
+                                                </option>";
+                                            } ?>
                                         </select>
                                     </div>
                                 </div>
 
-                                <div class="admin__field _required" id="transfer-day-div">
-                                    <label class="admin__field-label">
-                                        <span><?php echo __('Transfer day') ?></span>
+                                <div class="admin__field _required">
+                                    <label for="recipient-partner-0-city" class="admin__field-label">
+                                        <span><?= $block->getLabel('city') ?></span>
+                                    </label>
+                                    <div class="admin__field-control ">
+                                        <input type="text" list="recipient-partner-0-cities"
+                                               class="recipient-form-inputs"
+                                               name="form[register_information][managing_partners][0][address][city]"
+                                               id="recipient-partner-0-city"
+                                               data-toggle-required>
+                                        <datalist id="recipient-partner-0-cities"></datalist>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="admin__fieldset" data-section="individual corporation">
+
+                                <h2><?= __('Banking information') ?></h2>
+
+                                <p class="recipient-block-info">
+                                    <?= __('The bank account holder must be the recipient (same document number).') ?>
+                                </p>
+
+                                <div class="admin__field _required">
+                                    <label for="holder-name" class="admin__field-label">
+                                        <span><?= __('Holder name') ?></span>
                                     </label>
                                     <div class="admin__field-control">
-                                        <select class="recipient-form-inputs admin__control-select" name="form[transfer_day]" id="transfer-day">
+                                        <input type="text" class="recipient-form-inputs"
+                                               name="form[holder_name]" id="holder-name"
+                                               readonly data-toggle-required>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field _required">
+                                    <label for="holder-document-type" class="admin__field-label">
+                                        <span><?= $block->getLabel('document_type') ?></span>
+                                    </label>
+                                    <div class="admin__field-control">
+                                        <select class="recipient-form-inputs admin__control-select"
+                                                name="form[holder_document_type]"
+                                                id="holder-document-type" readonly data-toggle-required>
+                                            <option value=""><?= $block->getLabel('select') ?></option>
+                                            <option value="individual"><?= __('CPF') ?></option>
+                                            <option value="company"><?= __('CNPJ') ?></option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field _required">
+                                    <label for="holder-document" class="admin__field-label">
+                                        <span><?= $block->getLabel('document_number') ?></span>
+                                    </label>
+                                    <div class="admin__field-control">
+                                        <input type="text" class="recipient-form-inputs"
+                                               name="form[holder_document]" id="holder-document"
+                                               placeholder="000.000.000-00" maxlength="14" readonly data-document-mask
+                                               data-toggle-required>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field _required">
+                                    <label for="bank" class="admin__field-label">
+                                        <span><?= __('Bank code') ?></span>
+                                    </label>
+                                    <div class="admin__field-control">
+                                        <input type="text" class="recipient-form-inputs" maxlength="3"
+                                               name="form[bank]" id="bank" data-toggle-required>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field _required">
+                                    <label for="branch-number" class="admin__field-label">
+                                        <span><?= __('Branch number') ?></span>
+                                    </label>
+                                    <div class="admin__field-control">
+                                        <input type="text" class="recipient-form-inputs" maxlength="5"
+                                               pattern="[0-9]{0,5}" name="form[branch_number]"
+                                               id="branch-number" data-toggle-required>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field">
+                                    <label for="branch-check-digit" class="admin__field-label">
+                                        <span><?= __('Branch check digit') ?></span>
+                                    </label>
+                                    <div class="admin__field-control">
+                                        <input type="text" class="recipient-form-inputs"
+                                               name="form[branch_check_digit]" id="branch-check-digit">
+                                    </div>
+                                </div>
+
+                                <div class="admin__field _required">
+                                    <label for="account-number" class="admin__field-label">
+                                        <span><?= __('Account number') ?></span>
+                                    </label>
+                                    <div class="admin__field-control">
+                                        <input type="text" class="recipient-form-inputs" maxlength="13"
+                                               pattern="[0-9]{0,13}" name="form[account_number]"
+                                               id="account-number" data-toggle-required>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field _required">
+                                    <label for="account-check-digit" class="admin__field-label">
+                                        <span><?= __('Account check digit') ?></span>
+                                    </label>
+                                    <div class="admin__field-control">
+                                        <input type="text" class="recipient-form-inputs" maxlength="2"
+                                               name="form[account_check_digit]"
+                                               id="account-check-digit" data-toggle-required>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field _required">
+                                    <label for="account-type" class="admin__field-label">
+                                        <span><?= __('Account type') ?></span>
+                                    </label>
+                                    <div class="admin__field-control">
+                                        <select class="recipient-form-inputs admin__control-select"
+                                                name="form[account_type]" id="account-type">
+                                            <option value="checking"><?= __('Checking') ?></option>
+                                            <option value="savings"><?= __('Savings') ?></option>
+                                            <option value="conjunct_checking">
+                                                <?= __('Conjunct checking') ?></option>
+                                            <option value="conjunct_savings">
+                                                <?= __('Conjunct savings') ?></option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <h2><?= __('Transfer settings') ?></h2>
+
+                                <div class="admin__field">
+                                    <label for="transfer-enabled" class="admin__field-label">
+                                        <span><?= __('Enable automatic transfer') ?></span>
+                                    </label>
+                                    <div class="admin__field-control">
+                                        <select class="recipient-form-inputs admin__control-select"
+                                                name="form[transfer_enabled]" id="transfer-enabled">
+                                            <option value="0"><?= $block->getLabel('no') ?></option>
+                                            <option value="1"><?= $block->getLabel('yes') ?></option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field _required" data-section="transfer_interval"
+                                     id="transfer-interval-div">
+                                    <label for="transfer-interval" class="admin__field-label">
+                                        <span><?= __('Transfer interval') ?></span>
+                                    </label>
+                                    <div class="admin__field-control">
+                                        <select class="recipient-form-inputs admin__control-select"
+                                                name="form[transfer_interval]" id="transfer-interval"
+                                                data-toggle-required>
+                                            <option value="Daily"><?= __('Daily') ?></option>
+                                            <option value="Weekly"><?= __('Weekly') ?></option>
+                                            <option value="Monthly"><?= __('Monthly') ?></option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="admin__field _required" data-section="transfer_day" id="transfer-day-div">
+                                    <label for="transfer-day" class="admin__field-label">
+                                        <span><?= __('Transfer day') ?></span>
+                                    </label>
+                                    <div class="admin__field-control">
+                                        <select class="recipient-form-inputs admin__control-select"
+                                                name="form[transfer_day]" id="transfer-day" data-toggle-required>
                                             <option value="0">0</option>
                                         </select>
                                     </div>
@@ -281,4 +968,4 @@
     </div>
 </form>
 <!-- Edit Recipient-->
-<input id="edit-recipient" name='form[edit_recipient_id]' value='<?php echo $block->getEditRecipient(); ?>' type="hidden" />
+<input type="hidden" name="form[edit_recipient_id]" id="edit-recipient" value='<?= $editRecipient ?>' tabindex="-1"/>

@@ -25,10 +25,6 @@ class UpgradeSchema implements UpgradeSchemaInterface
             $setup = $installSchema->installHubToken($setup);
         }
 
-        if (version_compare($version, "1.2.0", "<")) {
-            $setup = $installSchema->installRecipients($setup);
-        }
-
         if (version_compare($version, '2.2.5', '<')) {
             $connection = $setup->getConnection();
             $connection->addColumn(
@@ -50,6 +46,20 @@ class UpgradeSchema implements UpgradeSchemaInterface
                     'length' => 1,
                     'nullable' => true,
                     'comment' => 'Apply products cycle to discount'
+                ]
+            );
+        }
+
+        if (version_compare($context->getVersion(), '2.5.0', '<')) {
+            $setup->getConnection()->changeColumn(
+                $setup->getTable('pagarme_module_core_recipients'),
+                'document_type',
+                'type',
+                [
+                    'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                    'length' => 11,
+                    'nullable' => 'false',
+                    'comment' => 'Recipient document type: individual (CPF) or corporation (CNPJ)'
                 ]
             );
         }
