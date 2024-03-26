@@ -7,9 +7,9 @@
             <values>
                 <value id="mundipagg-api" type="host">api.mundipagg.com</value>
                 <value id="pagarme-api" type="host">api.pagar.me</value>
-                <value id="brasil-api" type="host">brasilapi.com.br</value>
-                <value id="viacep-api" type="host">viacep.com.br</value>
-                <value id="ibge-api" type="host">servicodados.ibge.gov.br</value>
+                <value id="pagarme-brasil-api" type="host">brasilapi.com.br</value>
+                <value id="pagarme-viacep-api" type="host">viacep.com.br</value>
+                <value id="pagarme-ibge-api" type="host">servicodados.ibge.gov.br</value>
             </values>
         </policy>
         <policy id="img-src">
