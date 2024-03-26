@@ -3,7 +3,7 @@
 namespace Pagarme\Pagarme\Model\Api;
 
 use Exception;
-use http\Exception\InvalidArgumentException;
+use InvalidArgumentException;
 use Magento\Framework\Webapi\Rest\Request;
 use Pagarme\Core\Kernel\Services\LogService;
 use Pagarme\Core\Middle\Factory\RecipientFactory as CoreRecipient;
