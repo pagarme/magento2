@@ -147,20 +147,14 @@ require([
     });
 
     function changeDocumentFieldsByType(documentType) {
-        const config = {
-            'mask': documentType === 'corporation' ? cnpjMask : cpfMask,
-            'maxLength': documentType === 'corporation' ? cnpjMax : cpfMax
-        };
+        const documentMask = documentType === 'corporation' ? cnpjMask : cpfMask;
 
         $(fieldId['holderDocumentType'])
             .val(documentTypeCorporationToCompany(documentType));
 
         $('#document, #holder-document')
-            .attr({
-                'placeholder': config.mask,
-                'maxLength': config.maxLength
-            })
-            .mask(config.mask);
+            .attr('placeholder', documentMask)
+            .mask(documentMask);
     }
 
     function documentTypeCorporationToCompany(documentType) {
