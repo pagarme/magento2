@@ -40,7 +40,7 @@ class Create extends RecipientAction
 
         $resultPage = $this->resultPageFactory->create();
 
-        $title = $recipientId ? __('Edit Recipient') : __('Create Recipient');
+        $title = $recipientId ? __('Recipient') : __('Create Recipient');
 
         $resultPage->getConfig()->getTitle()->prepend($title);
 
