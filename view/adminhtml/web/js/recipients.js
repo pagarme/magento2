@@ -9,7 +9,6 @@ require([
     'use strict';
 
     const
-        cpfMax = 14, // Includes punctuation due to the mask
         cpfMask = '000.000.000-00',
         cnpjMax = 18, // Includes punctuation due to the mask
         cnpjMask = '00.000.000/0000-00',
@@ -722,7 +721,6 @@ require([
         };
 
         $('[data-phone-mask]').mask(phoneMaskBehavior, phoneMaskOptions);
-        $('[data-document-mask]').mask(cpfMask);
         $('[data-date-mask]').mask('00/00/0000');
         $('[data-currency-mask]').mask("#.##0,00", {reverse: true});
         $('[data-zipcode-mask]').mask('00000-000');
