@@ -6,9 +6,15 @@ var config = {
             }
         }
     },
+    shim : {
+        'Pagarme_Pagarme/js/view/payment/method-renderer/pagarmegooglepay-method' : {
+            deps : ['googlePay']
+        }
+    },
     map: {
         '*': {
-            pixCheckoutSuccess: 'Pagarme_Pagarme/js/view/payment/checkout/success/pix'
+            pixCheckoutSuccess: 'Pagarme_Pagarme/js/view/payment/checkout/success/pix',
+            googlePay: 'https://pay.google.com/gp/p/js/pay.js'
         }
     }
 };

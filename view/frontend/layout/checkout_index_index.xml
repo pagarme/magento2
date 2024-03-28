@@ -54,6 +54,9 @@
                                                                         <item name="pagarme_debit" xsi:type="array">
                                                                              <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>
+                                                                        <item name="pagarmegooglepay" xsi:type="array">
+																			<item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+																		</item>
                                                                     </item>
                                                                 </item>
                                                             </item>

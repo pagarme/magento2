@@ -23,6 +23,7 @@
 				<include path="Pagarme_Pagarme::system/transaction/debit.xml"/>
                 <include path="Pagarme_Pagarme::system/recurrence.xml"/>
                 <include path="Pagarme_Pagarme::system/marketplace.xml"/>
+                <include path="Pagarme_Pagarme::system/transaction/googlepay.xml"/>
             </group>
         </section>
 	</system>

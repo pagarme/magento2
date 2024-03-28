@@ -46,6 +46,10 @@ define(
             {
                 type: "pagarme_billet_creditcard",
                 component: "Pagarme_Pagarme/js/view/payment/boletocreditcard"
+            },
+            {
+                type: 'pagarmegooglepay',
+                component: 'Pagarme_Pagarme/js/view/payment/method-renderer/pagarmegooglepay-method'
             }
         );
         return Component.extend({});

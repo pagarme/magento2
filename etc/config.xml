@@ -223,6 +223,15 @@
                 <can_initialize>1</can_initialize>
                 <allow_multiple_address>0</allow_multiple_address>
             </pagarme_debit>
+
+            <pagarmegooglepay>
+				<active>1</active>
+				<model>Pagarme\Pagarme\Model\PagarmeGooglePay</model>
+				<order_status>pending</order_status>
+				<title>PagarmeGooglePay</title>
+				<allowspecific>0</allowspecific>
+				<group>offline</group>
+			</pagarmegooglepay>
         </payment>
     </default>
 </config>
