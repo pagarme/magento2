@@ -8,7 +8,7 @@ const locators = {
 }
 
 
-const selectCreditCardOPtion = async page => {
+const selectCreditCardOption = async page => {
     await page.getByLabel('Pagar.me Credit Card').check();
     await page.waitForTimeout(1000); //ninguem gosta disso, imagina ter que usar ne?
 }
@@ -39,7 +39,7 @@ const finalizeCheckout = async page => {
 
 
 module.exports = {
-    selectCreditCardOPtion,
+    selectCreditCardOption,
     informCreditCartNumber,
     informCreditCartName,
     selectExpireDate,

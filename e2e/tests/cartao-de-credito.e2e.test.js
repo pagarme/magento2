@@ -1,28 +1,28 @@
 const { test, expect } = require('@playwright/test')
-const { searchProduct, 
-        selectProduct, 
-        addToCart, 
+const { searchProduct,
+        selectProduct,
+        addToCart,
         proceedCheckout } = require('../helper/product_helper')
-const { informEmail, 
-        informFirstAndLastName, 
-        informCompany, 
-        informAddress, 
-        selectState, 
-        selectCountry, 
-        informCEP, 
-        informCity, 
-        informPhoneNumber, 
-        informVatNumber, 
+const { informEmail,
+        informFirstAndLastName,
+        informCompany,
+        informAddress,
+        selectState,
+        selectCountry,
+        informCEP,
+        informCity,
+        informPhoneNumber,
+        informVatNumber,
         goToCheckoutNextPage } = require('../helper/checkout_helper')
-const { selectCreditCardOPtion, 
-        informCreditCartNumber, 
-        informCreditCartName, 
-        selectExpireDate, 
-        informCVV, 
+const { selectCreditCardOption,
+        informCreditCartNumber,
+        informCreditCartName,
+        selectExpireDate,
+        informCVV,
         finalizeCheckout } = require('../helper/pagarme_helper')
-const { user_information, 
+const { user_information,
         address_information,
-        vat_information, 
+        vat_information,
         credit_card_information_valid } = require('../helper/data_helper')
 
 test.describe('Cartão de Crédito', () => {
@@ -51,13 +51,13 @@ test.describe('Cartão de Crédito', () => {
         await informPhoneNumber(page, user.phone_number)
         await informVatNumber(page, vat.valid_cpf)
         await goToCheckoutNextPage(page)
-        await selectCreditCardOPtion(page)
+        await selectCreditCardOption(page)
         await informCreditCartNumber(page, credit_card.credit_card_number)
         await informCreditCartName(page, user.first_name)
         await selectExpireDate(page, '3', credit_card.credit_card_year)
         await informCVV(page, credit_card.credit_card_cvv)
         await finalizeCheckout(page)
-        await expect(page.getByText('Thank you for your purchase!')).toBeVisible();  
+        await expect(page.getByText('Thank you for your purchase!')).toBeVisible();
     })
 
     test('Criar pedido com CNPJ', async ({page}) => {
@@ -80,12 +80,12 @@ test.describe('Cartão de Crédito', () => {
         await informPhoneNumber(page, user.phone_number)
         await informVatNumber(page, vat.valid_cnpj)
         await goToCheckoutNextPage(page)
-        await selectCreditCardOPtion(page)
+        await selectCreditCardOption(page)
         await informCreditCartNumber(page, credit_card.credit_card_number)
         await informCreditCartName(page, user.first_name)
         await selectExpireDate(page, '3', credit_card.credit_card_year)
         await informCVV(page, credit_card.credit_card_cvv)
         await finalizeCheckout(page)
-        await expect(page.getByText('Thank you for your purchase!')).toBeVisible();  
+        await expect(page.getByText('Thank you for your purchase!')).toBeVisible();
     })
 })
