@@ -339,7 +339,7 @@ require([
             .then(res => {
                 const response = JSON.parse(res);
                 if (response.code !== 200) {
-                    mageAlert(response.message, 'Error!');
+                    mageAlert(response.message, $.mage.__('Error!'));
                     return;
                 }
 
@@ -355,7 +355,7 @@ require([
         e.preventDefault();
 
         if (!validateEmail($("#recipient-email").val())) {
-            mageAlert('Invalid email.', 'Error!');
+            mageAlert($.mage.__('Invalid email.'), $.mage.__('Error!'));
             return;
         }
 
@@ -369,10 +369,10 @@ require([
             success: function (data) {
                 data = JSON.parse(data);
                 if (data.code === 200) {
-                    mageAlert(data.message, 'Success!');
-                    return window.history.back();
+                    mageAlert(data.message, $.mage.__('Success!'), true);
+                    return;
                 }
-                mageAlert(data.message, 'Error!');
+                mageAlert(data.message, $.mage.__('Error!'));
             },
             complete: function () {
                 toggleSaveButton()
@@ -694,11 +694,23 @@ require([
         });
     }
 
-    function mageAlert(content, title = null) {
-        alert({
+    function mageAlert(content, title = null, shouldGoBack = false) {
+        let alertObject = {
             title: $.mage.__(title),
-            content: $.mage.__(content)
-        });
+            content: $.mage.__(content),
+            modalClass: 'pagarme-recipient-modal',
+        };
+        if (shouldGoBack) {
+            alertObject = Object.assign({
+                actions: {
+                    always: function () {
+                        showLoader();
+                        return window.history.back()
+                    }
+                }
+            }, alertObject);
+        }
+        alert(alertObject);
     }
 
     function showLoader() {
