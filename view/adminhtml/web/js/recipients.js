@@ -702,14 +702,12 @@ require([
             modalClass: 'pagarme-recipient-modal',
         };
         if (shouldGoBack) {
-            alertObject = Object.assign({
-                actions: {
-                    always: function () {
-                        showLoader();
-                        return window.history.back()
-                    }
+            alertObject.actions = {
+                always: function () {
+                    showLoader();
+                    return window.history.back()
                 }
-            }, alertObject);
+            }
         }
         alert(alertObject);
     }
