@@ -115,6 +115,27 @@ table.table-cycles {
     display: none;
 }
 
+.pagarme-recipient-modal header {
+    padding-bottom: 2.5rem;
+}
+
+.pagarme-recipient-modal .modal-inner-wrap {
+     max-width: 520px;
+ }
+
+.pagarme-recipient-modal p {
+    margin-bottom: 1.5em;
+}
+
+.pagarme-recipient-modal p:last-of-type {
+    margin-bottom: .5em;
+}
+
+.pagarme-alert-text {
+    font-weight: bold;
+    color: #cd0909;
+}
+
 /*
  * Jquery UI Fix
  */
