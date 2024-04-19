@@ -339,6 +339,7 @@ require([
             .then(res => {
                 const response = JSON.parse(res);
                 if (response.code !== 200) {
+                    hideLoader();
                     mageAlert(response.message, $.mage.__('Error!'));
                     return;
                 }
@@ -696,8 +697,8 @@ require([
 
     function mageAlert(content, title = null, shouldGoBack = false) {
         let alertObject = {
-            title: $.mage.__(title),
-            content: $.mage.__(content),
+            title: title,
+            content: content,
             modalClass: 'pagarme-recipient-modal',
         };
         if (shouldGoBack) {

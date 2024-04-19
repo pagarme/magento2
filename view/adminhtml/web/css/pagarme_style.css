@@ -127,12 +127,13 @@ table.table-cycles {
     margin-bottom: 1.5em;
 }
 
-.pagarme-recipient-modal p {
-    margin-bottom: 1.5em;
-}
-
 .pagarme-recipient-modal p:last-of-type {
     margin-bottom: .5em;
+}
+
+.pagarme-alert-text {
+    font-weight: bold;
+    color: #cd0909;
 }
 
 /*

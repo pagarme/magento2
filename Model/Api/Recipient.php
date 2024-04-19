@@ -70,7 +70,7 @@ class Recipient implements RecipientInterface
                 'message' => __(
                     "<p>Receiver registered successfully!</p><p>He can now sell, but it is necessary to complete "
                     . "the security validation so that he can withdraw the sales amounts in the future.</p>"
-                    . "<p><b style='color: #cd0909'>Attention!</b> Keep up with the <b>withdrawal "
+                    . "<p><span class='pagarme-alert-text'>Attention!</span> Keep up with the <b>withdrawal "
                     . "permission status</b>. Once this is <i>“validation requested”</i>, a link will be "
                     . "made available for the seller to complete the process.</p>"
                 )
