@@ -62,8 +62,9 @@ class Recipient implements RecipientInterface
             if (empty($params['pagarme_id'])) {
                 $recipientOnPagarme = $this->createOnPagarme($params);
                 $params['pagarme_id'] = $recipientOnPagarme->id;
+                $params['status'] = 'registered';
             }
-            $this->saveOnPlatform($params['register_information'], $params['pagarme_id']);
+            $this->saveOnPlatform($params);
 
             return json_encode([
                 'code' => 200,
@@ -94,16 +95,20 @@ class Recipient implements RecipientInterface
     /**
      * @throws Exception
      */
-    private function saveOnPlatform($params, $pagarmeId)
+    private function saveOnPlatform($params)
     {
+        $registeredInformation = $params['register_information'];
         $recipientModel = $this->modelRecipient;
         $recipientModel->setId(null);
-        $recipientModel->setExternalId($params['external_id']);
-        $recipientModel->setName(empty($params['name']) ? $params['company_name'] : $params['name']);
-        $recipientModel->setEmail($params['email']);
-        $recipientModel->setDocument($params['document']);
-        $recipientModel->setPagarmeId($pagarmeId);
-        $recipientModel->setType($params['type']);
+        $recipientModel->setExternalId($registeredInformation['external_id']);
+        $recipientModel->setName(empty($registeredInformation['name']) ? $registeredInformation['company_name'] : $registeredInformation['name']);
+        $recipientModel->setEmail($registeredInformation['email']);
+        $recipientModel->setDocument($registeredInformation['document']);
+        $recipientModel->setPagarmeId($params['pagarme_id']);
+        $recipientModel->setType($registeredInformation['type']);
+        if (!empty($params['status'])) {
+            $recipientModel->setStatus('registered');
+        }
         $this->resourceModelRecipient->save($recipientModel);
     }
 
