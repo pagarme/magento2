@@ -12,7 +12,7 @@ use Pagarme\Core\Webhook\Services\WebhookReceiverService;
 
 class WebhookManagementTest extends BaseTest
 {
-    public function testeSaveWithRecipientWebhook()
+    public function testSaveWithRecipientWebhook()
     {
         $moduleCoreSetupMock = Mockery::mock('alias:Pagarme\Core\Kernel\Abstractions\AbstractModuleCoreSetup');
         $moduleCoreSetupMock->shouldReceive('bootstrap')
@@ -68,7 +68,7 @@ class WebhookManagementTest extends BaseTest
     }
 
 
-    public function testeSaveWithNonPlatformWebhook()
+    public function testSaveWithNonPlatformWebhook()
     {
         $moduleCoreSetupMock = Mockery::mock('alias:Pagarme\Core\Kernel\Abstractions\AbstractModuleCoreSetup');
         $moduleCoreSetupMock->shouldReceive('bootstrap')
