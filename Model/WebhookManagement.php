@@ -27,13 +27,21 @@ class WebhookManagement implements WebhookManagementInterface
      */
     protected $account;
 
+    /**
+     * @var WebhookReceiverService
+     */
+    protected $webhookReceiverService;
+
     public function __construct(
         OrderFactory $orderFactory,
-        Account $account
+        Account $account,
+        WebhookReceiverService $webhookReceiverService
     ) {
         $this->orderFactory = $orderFactory;
         $this->account = $account;
+        $this->webhookReceiverService = $webhookReceiverService;
     }
+
     /**
      * @api
      * @param mixed $id
@@ -67,8 +75,7 @@ class WebhookManagement implements WebhookManagementInterface
                 $this->account->saveAccountIdFromWebhook($account);
             }
 
-            $webhookReceiverService = new WebhookReceiverService();
-            return $webhookReceiverService->handle($postData);
+            return $this->webhookReceiverService->handle($postData);
         } catch (WebhookHandlerNotFoundException | WebhookAlreadyHandledException $e) {
             return [
                 "message" => $e->getMessage(),
@@ -112,7 +119,7 @@ class WebhookManagement implements WebhookManagementInterface
         }
         return $metadata;
     }
-
+    
     private function hasMagentoOrder($data)
     {
         $code = 0;
