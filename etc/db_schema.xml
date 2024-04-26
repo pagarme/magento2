@@ -79,6 +79,7 @@
         <column name="document" xsi:type="varchar" length="18" nullable="false" comment="Recipient document number"/>
         <column name="name" xsi:type="varchar" length="255" nullable="false" comment="Recipient name"/>
         <column name="email" xsi:type="varchar" length="255" nullable="false" comment="Recipient email"/>
+        <column name="status" xsi:type="varchar" length="255" nullable="false" comment="Recipient withdrawal status on Pagar.me"/>
         <column name="created_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
         <column name="updated_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Updated At"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">

@@ -6,6 +6,8 @@ use Exception;
 use InvalidArgumentException;
 use Magento\Framework\Webapi\Rest\Request;
 use Pagarme\Core\Kernel\Services\LogService;
+use Pagarme\Core\Marketplace\Aggregates\Recipient as AggregateRecipient;
+use Pagarme\Core\Marketplace\Interfaces\RecipientInterface as CoreRecipientInterface;
 use Pagarme\Core\Middle\Factory\RecipientFactory as CoreRecipient;
 use Pagarme\Pagarme\Api\RecipientInterface;
 use Pagarme\Pagarme\Model\Recipient as ModelRecipient;
@@ -35,17 +37,24 @@ class Recipient implements RecipientInterface
      */
     protected $coreRecipient;
 
+    /**
+     * @var AggregateRecipient
+     */
+    protected $aggregateRecipient;
+
     public function __construct(
         Request                $request,
         ModelRecipient         $modelRecipient,
         ResourceModelRecipient $resourceModelRecipient,
-        CoreRecipient          $coreRecipient
+        CoreRecipient          $coreRecipient,
+        AggregateRecipient     $aggregateRecipient
     )
     {
         $this->request = $request;
         $this->modelRecipient = $modelRecipient;
         $this->resourceModelRecipient = $resourceModelRecipient;
         $this->coreRecipient = $coreRecipient;
+        $this->aggregateRecipient = $aggregateRecipient;
     }
 
     /**
@@ -59,22 +68,33 @@ class Recipient implements RecipientInterface
         $params = $params['form'];
 
         try {
+            $message = __(
+                "<p>He can now sell, but remember to check his "
+                . "<b>withdrawal permission status</b>. He can only withdraw his sales amounts once the status is "
+                . "<i>“active”</i></p>"
+            );
+
+            if (!empty($params['status']) && !empty($params['kyc_status'])) {
+                $params['status'] = AggregateRecipient::parseStatus($params['status'], $params['kyc_status']);
+            }
+
             if (empty($params['pagarme_id'])) {
                 $recipientOnPagarme = $this->createOnPagarme($params);
                 $params['pagarme_id'] = $recipientOnPagarme->id;
-                $params['status'] = 'registered';
+                $params['status'] = CoreRecipientInterface::REGISTERED;
+                $message = __(
+                    "<p>He can now sell, but it is necessary to complete "
+                    . "the security validation so that he can withdraw the sales amounts in the future.</p>"
+                    . "<p><span class='pagarme-alert-text'>Attention!</span> Keep up with the <b>withdrawal "
+                    . "permission status</b>. Once this is <i>“validation requested”</i>, a link will be "
+                    . "made available for the seller to complete the process.</p>"
+                );
             }
             $this->saveOnPlatform($params);
 
             return json_encode([
                 'code' => 200,
-                'message' => __(
-                    "<p>Receiver registered successfully!</p><p>He can now sell, but it is necessary to complete "
-                    . "the security validation so that he can withdraw the sales amounts in the future.</p>"
-                    . "<p><span class='pagarme-alert-text'>Attention!</span> Keep up with the <b>withdrawal "
-                    . "permission status</b>. Once this is <i>“validation requested”</i>, a link will be "
-                    . "made available for the seller to complete the process.</p>"
-                )
+                'message' => $message
             ]);
         } catch (Throwable $th) {
             $logService = new LogService("Recipient Log", true, 1);
@@ -106,8 +126,8 @@ class Recipient implements RecipientInterface
         $recipientModel->setDocument($registeredInformation['document']);
         $recipientModel->setPagarmeId($params['pagarme_id']);
         $recipientModel->setType($registeredInformation['type']);
-        if (!empty($params['status'])) {
-            $recipientModel->setStatus('registered');
+        if (empty($params['status'])) {
+            $recipientModel->setStatus(CoreRecipientInterface::REGISTERED);
         }
         $this->resourceModelRecipient->save($recipientModel);
     }
