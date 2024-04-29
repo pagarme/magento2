@@ -28,4 +28,10 @@ class RecipientService
         $recipientProxy = new RecipientProxy($this->coreAuth);
         return $recipientProxy->getFromPagarme($recipientId);
     }
+
+    public function createKycLink($recipientId)
+    {
+        $recipientProxy = new RecipientProxy($this->coreAuth);
+        return $recipientProxy->createKycLink($recipientId);
+    }
 }
