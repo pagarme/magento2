@@ -14,11 +14,12 @@ define([
             bodyTmpl: 'Pagarme_Pagarme/ui/grid/cells/recipientStatus'
         },
         getStatusClass: function (row) {
+            const defaultClasses = 'data-grid-cell-content';
             const status = row.status;
             if (typeof status === 'string') {
-                return `recipient-status-${status}`;
+                return `${defaultClasses} kyc-validation-status recipient-status-${status}`;
             }
-            return '';
+            return defaultClasses;
         },
         getLabel: function (row) {
             let status = row.status;
@@ -31,7 +32,7 @@ define([
         },
         getStatusLabel: function (status) {
             let statusLabel = ''
-            // Using portuguese string because mage/translate and knockout i18n were not working
+            // TODO: Using portuguese string because mage/translate and knockout i18n were not working
             switch (status) {
                 case 'registered':
                     statusLabel = 'Cadastrado';
@@ -67,8 +68,7 @@ define([
         generateKycLink: async function (row) {
             try {
                 $('body').loader('show');
-                //const url = mageUrl.build(`/rest/V1/pagarme/marketplace/recipient/kyc/link/${row.id}`);
-                const url = mageUrl.build(`/rest/V1/pagarme/marketplace/recipient/kyc/link/99`);
+                const url = mageUrl.build(`/rest/V1/pagarme/marketplace/recipient/kyc/link/${row.id}`);
                 const response = await $.get(mageUrl.build(url));
                 $('body').loader('hide');
                 if (response) {
@@ -82,7 +82,7 @@ define([
             
         },
         getModalContent: function (url) {
-            // Using portuguese string because mage/translate and knockout i18n were not working
+            // TODO: Using portuguese string because mage/translate and knockout i18n were not working
             const content = `<p><span class='pagarme-alert-text'>Atenção!</span> O recebedor já consegue vender, `
                 + `mas <b>só após a validação de segurança</b> completada com sucesso ele <b>conseguirá sacar seus valores</b> `
                 + `referentes às compras.</p>` 
