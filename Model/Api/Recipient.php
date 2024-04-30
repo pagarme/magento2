@@ -74,10 +74,6 @@ class Recipient implements RecipientInterface
                 . "<i>“active”</i></p>"
             );
 
-            if (!empty($params['status']) && !empty($params['kyc_status'])) {
-                $params['status'] = AggregateRecipient::parseStatus($params['status'], $params['kyc_status']);
-            }
-
             if (empty($params['pagarme_id'])) {
                 $recipientOnPagarme = $this->createOnPagarme($params);
                 $params['pagarme_id'] = $recipientOnPagarme->id;
@@ -126,9 +122,6 @@ class Recipient implements RecipientInterface
         $recipientModel->setDocument($registeredInformation['document']);
         $recipientModel->setPagarmeId($params['pagarme_id']);
         $recipientModel->setType($registeredInformation['type']);
-        if (empty($params['status'])) {
-            $recipientModel->setStatus(CoreRecipientInterface::REGISTERED);
-        }
         $this->resourceModelRecipient->save($recipientModel);
     }
 
