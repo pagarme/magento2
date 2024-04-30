@@ -572,7 +572,8 @@ require([
             recipientObject[fieldId['holderDocument']] = recipient.document;
         }
 
-        recipientObject['#pagarme-status, #status'] = recipient.status;
+        recipientObject['#pagarme-status'] = recipient.status;
+        recipientObject['#status-label'] = recipient.statusLabel;
 
         recipientObject[fieldId['holderName']] = recipient.default_bank_account.holder_name;
         recipientObject[fieldId['holderDocumentType']] =

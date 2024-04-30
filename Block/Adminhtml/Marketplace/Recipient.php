@@ -74,6 +74,9 @@ class Recipient extends Template
             $this->recipient = json_decode($recipientData);
             $this->recipient->recipient->externalId = $this->recipient->externalId;
             $this->recipient->recipient->localId = $this->recipient->localId;
+            $this->recipient->recipient->status = $this->recipient->status;
+            $this->recipient->recipient->statusUpdated = $this->recipient->statusUpdated;
+            $this->recipient->recipient->statusLabel = $this->buildStatusLabel($this->recipient->recipient->status);
             $this->recipient = $this->recipient->recipient;
         }
 
@@ -181,5 +184,22 @@ class Recipient extends Template
         ];
 
         return __($labels[$key]);
+    }
+
+    /**
+     * @param string|null $status
+     * @return string|null
+     */
+    private function buildStatusLabel($status)
+    {
+        if (!is_string($status)) {
+            return $status;
+        }
+
+        $statusWords = explode('_', $status);
+        $statusWords = array_map('ucfirst', $statusWords);
+        $statusLabel = implode(" ", $statusWords);
+        $statusLabel = trim($statusLabel);
+        return __($statusLabel);
     }
 }
