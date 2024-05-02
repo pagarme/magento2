@@ -12,6 +12,7 @@ use Magento\Framework\View\Element\Template\Context;
 use Pagarme\Core\Marketplace\Repositories\RecipientRepository;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use stdClass;
+use Pagarme\Core\Marketplace\Interfaces\RecipientInterface as CoreRecipientInterface;
 
 class Recipient extends Template
 {
@@ -194,6 +195,10 @@ class Recipient extends Template
     {
         if (!is_string($status)) {
             return $status;
+        }
+
+        if ($status === CoreRecipientInterface::ACTIVE) {
+            $status = 'approved';
         }
 
         $statusWords = explode('_', $status);
