@@ -59,17 +59,21 @@ class Recipient extends Template
         Context                   $context,
         Registry                  $registry,
         CustomerCollectionFactory $customerCollectionFactory,
-        Country                   $country
+        Country                   $country,
+        RecipientRepository       $recipientRepository
     )
     {
         $this->coreRegistry = $registry;
         $this->customerCollection = $customerCollectionFactory->create();
-        $this->recipientRepository = new RecipientRepository();
+        $this->recipientRepository = $recipientRepository;
         $this->country = $country;
 
         Magento2CoreSetup::bootstrap();
         parent::__construct($context, []);
+    }
 
+    protected function init()
+    {
         $recipientData = $this->coreRegistry->registry('recipient_data');
         if (!empty($recipientData)) {
             $this->recipient = json_decode($recipientData);
