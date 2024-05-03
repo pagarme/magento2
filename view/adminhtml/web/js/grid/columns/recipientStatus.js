@@ -74,10 +74,10 @@ define([
                 if (response) {
                     this.mageAlert(this.getModalContent(response.url), $t('Success!'));
                 }
-            } catch (e) {
+            } catch (exception) {
                 $('body').loader('hide');
                 $('body').notification('clear');
-                this.mageAlert(e?.responseJSON?.message, $t('Error!'));
+                this.mageAlert(exception?.responseJSON?.message, $t('Error!'));
             }
             
         },
