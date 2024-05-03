@@ -63,11 +63,6 @@ class RecipientTest extends BaseTest
             $recipientRepositoryMock
         );
 
-        $class = new ReflectionClass($recipientBlock);
-        $method = $class->getMethod('init');
-        $method->setAccessible(true);
-        $method->invokeArgs($recipientBlock, []);
-
         $editedRecipient = $recipientBlock->getEditRecipient();
 
         $this->assertStringContainsString("\"statusLabel\":\"$expectedStatusLabel\"", $editedRecipient);
@@ -76,8 +71,8 @@ class RecipientTest extends BaseTest
 
     public function testGetEditRecipientShouldReturnEmpty()
     {
-        $contextMock = Mockery::spy(Context::class);
-        $registryMock = Mockery::mock(Registry::class);
+        $contextSpy = Mockery::spy(Context::class);
+        $registrySpy = Mockery::spy(Registry::class);
         $collectionMock = Mockery::mock(Collection::class);
 
         $collectionFactoryMock = Mockery::mock(CollectionFactory::class);
@@ -94,8 +89,8 @@ class RecipientTest extends BaseTest
 
 
         $recipientBlock = new Recipient(
-            $contextMock,
-            $registryMock,
+            $contextSpy,
+            $registrySpy,
             $collectionFactoryMock,
             $countryMock,
             $recipientRepositoryMock
