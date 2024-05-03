@@ -12,6 +12,7 @@ require([
         cpfMask = '000.000.000-00',
         cnpjMax = 18, // Includes punctuation due to the mask
         cnpjMask = '00.000.000/0000-00',
+        errorTitle = $.mage.__('Error!'),
         fieldDataAttr = {
             datepicker: '[data-datepicker]',
             toggleRequired: '[data-toggle-required]'
@@ -340,7 +341,7 @@ require([
                 const response = JSON.parse(res);
                 if (response.code !== 200) {
                     hideLoader();
-                    mageAlert(response.message, $.mage.__('Error!'));
+                    mageAlert(response.message, errorTitle);
                     return;
                 }
 
@@ -356,7 +357,7 @@ require([
         e.preventDefault();
 
         if (!validateEmail($("#recipient-email").val())) {
-            mageAlert($.mage.__('Invalid email.'), $.mage.__('Error!'));
+            mageAlert($.mage.__('Invalid email.'), errorTitle);
             return;
         }
 
@@ -370,10 +371,10 @@ require([
             success: function (data) {
                 data = JSON.parse(data);
                 if (data.code === 200) {
-                    mageAlert(data.message, $.mage.__('Success!'), true);
+                    mageAlert(data.message, $.mage.__('Recipient registered successfully!'), true);
                     return;
                 }
-                mageAlert(data.message, $.mage.__('Error!'));
+                mageAlert(data.message, errorTitle);
             },
             complete: function () {
                 toggleSaveButton()
@@ -571,6 +572,8 @@ require([
             recipientObject[fieldId['holderDocument']] = recipient.document;
         }
 
+        recipientObject['#pagarme-status, #status'] = recipient.status;
+
         recipientObject[fieldId['holderName']] = recipient.default_bank_account.holder_name;
         recipientObject[fieldId['holderDocumentType']] =
             documentTypeCorporationToCompany(recipient.default_bank_account.holder_type);
@@ -705,7 +708,7 @@ require([
             alertObject.actions = {
                 always: function () {
                     showLoader();
-                    return window.history.back()
+                    $('#back').trigger('click');
                 }
             }
         }

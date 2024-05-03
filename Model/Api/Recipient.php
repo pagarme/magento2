@@ -7,6 +7,7 @@ use InvalidArgumentException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Webapi\Rest\Request;
 use Pagarme\Core\Kernel\Services\LogService;
+use Pagarme\Core\Marketplace\Interfaces\RecipientInterface as CoreRecipientInterface;
 use Pagarme\Core\Middle\Factory\RecipientFactory as CoreRecipient;
 use Pagarme\Pagarme\Api\KycLinkResponseInterfaceFactory;
 use Pagarme\Pagarme\Api\RecipientInterface;
@@ -74,21 +75,29 @@ class Recipient implements RecipientInterface
         $params = $params['form'];
 
         try {
+            $message = __(
+                "<p>He can now sell, but remember to check his "
+                . "<b>withdrawal permission status</b>. He can only withdraw his sales amounts once the status is "
+                . "<i>“active”</i></p>"
+            );
+
             if (empty($params['pagarme_id'])) {
                 $recipientOnPagarme = $this->createOnPagarme($params);
                 $params['pagarme_id'] = $recipientOnPagarme->id;
-            }
-            $this->saveOnPlatform($params['register_information'], $params['pagarme_id']);
-
-            return json_encode([
-                'code' => 200,
-                'message' => __(
-                    "<p>Receiver registered successfully!</p><p>He can now sell, but it is necessary to complete "
+                $params['status'] = CoreRecipientInterface::REGISTERED;
+                $message = __(
+                    "<p>He can now sell, but it is necessary to complete "
                     . "the security validation so that he can withdraw the sales amounts in the future.</p>"
                     . "<p><span class='pagarme-alert-text'>Attention!</span> Keep up with the <b>withdrawal "
                     . "permission status</b>. Once this is <i>“validation requested”</i>, a link will be "
                     . "made available for the seller to complete the process.</p>"
-                )
+                );
+            }
+            $this->saveOnPlatform($params);
+
+            return json_encode([
+                'code' => 200,
+                'message' => $message
             ]);
         } catch (Throwable $th) {
             $logService = new LogService("Recipient Log", true, 1);
@@ -109,16 +118,17 @@ class Recipient implements RecipientInterface
     /**
      * @throws Exception
      */
-    private function saveOnPlatform($params, $pagarmeId)
+    private function saveOnPlatform($params)
     {
+        $registeredInformation = $params['register_information'];
         $recipientModel = $this->modelFactoryRecipient->create();
         $recipientModel->setId(null);
-        $recipientModel->setExternalId($params['external_id']);
-        $recipientModel->setName(empty($params['name']) ? $params['company_name'] : $params['name']);
-        $recipientModel->setEmail($params['email']);
-        $recipientModel->setDocument($params['document']);
-        $recipientModel->setPagarmeId($pagarmeId);
-        $recipientModel->setType($params['type']);
+        $recipientModel->setExternalId($registeredInformation['external_id']);
+        $recipientModel->setName(empty($registeredInformation['name']) ? $registeredInformation['company_name'] : $registeredInformation['name']);
+        $recipientModel->setEmail($registeredInformation['email']);
+        $recipientModel->setDocument($registeredInformation['document']);
+        $recipientModel->setPagarmeId($params['pagarme_id']);
+        $recipientModel->setType($registeredInformation['type']);
         $this->resourceModelRecipient->save($recipientModel);
     }
 
