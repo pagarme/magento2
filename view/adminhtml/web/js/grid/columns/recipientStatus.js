@@ -6,7 +6,7 @@ define([
     'jquery',
     'mage/translate',
     'loader'
-], function (_, Column, mageUrl, alert, $, $t) {
+], function (_, Column, mageUrl, alert, $, translate) {
     'use strict';
 
     return Column.extend({
@@ -28,7 +28,7 @@ define([
                 status = this.getStatusLabel(status);
             }
 
-            return $t(status);
+            return translate(status);
         },
         getStatusLabel: function (status) {
             let statusLabel = ''
@@ -72,12 +72,12 @@ define([
                 const response = await $.get(mageUrl.build(url));
                 $('body').loader('hide');
                 if (response) {
-                    this.mageAlert(this.getModalContent(response.url), $t('Success!'));
+                    this.mageAlert(this.getModalContent(response.url), translate('Success!'));
                 }
             } catch (exception) {
                 $('body').loader('hide');
                 $('body').notification('clear');
-                this.mageAlert(exception?.responseJSON?.message, $t('Error!'));
+                this.mageAlert(exception?.responseJSON?.message, translate('Error!'));
             }
             
         },
