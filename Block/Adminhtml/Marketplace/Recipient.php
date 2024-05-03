@@ -69,6 +69,7 @@ class Recipient extends Template
         $this->country = $country;
 
         Magento2CoreSetup::bootstrap();
+        $this->init();
         parent::__construct($context, []);
     }
 
