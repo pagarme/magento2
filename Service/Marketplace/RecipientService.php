@@ -32,4 +32,10 @@ class RecipientService
         $recipient->status = Recipient::parseStatus($recipient->status, $kycStatus);
         return $recipient;
     }
+
+    public function createKycLink($recipientId)
+    {
+        $recipientProxy = new RecipientProxy($this->coreAuth);
+        return $recipientProxy->createKycLink($recipientId);
+    }
 }

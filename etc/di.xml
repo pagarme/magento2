@@ -749,4 +749,5 @@
                 sortOrder="10"
                 disabled="false"/>
     </type>
+    <preference for="Pagarme\Pagarme\Api\KycLinkResponseInterface" type="Pagarme\Pagarme\Model\Api\KycLinkResponse"/>
 </config>

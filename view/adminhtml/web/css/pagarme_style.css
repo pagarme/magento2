@@ -136,6 +136,51 @@ table.table-cycles {
     color: #cd0909;
 }
 
+.data-grid td .action-menu-item.kyc-validation:link,
+.data-grid td .action-menu-item.kyc-validation:visited,
+.data-grid td .action-menu-item.kyc-validation:hover,
+.data-grid td .action-menu-item.kyc-validation:active {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.data-grid td .kyc-validation-status {
+    background: #000 none repeat scroll 0 0;
+    border: 1px solid #000;
+    display: block;
+    font-weight: bold;
+    line-height: 17px;
+    padding: 0 3px;
+    text-align: center;
+}
+
+.data-grid td .kyc-validation-status.recipient-status-waiting_for_analysis {
+    background-color: #fff7d6;
+    border-color: #974f0c;
+    color: #974f0c;
+}
+
+.data-grid td .recipient-status-active {
+    background-color: #d0e5a9;
+    border-color: #5b8116;
+    color: #185b00;
+}
+
+.data-grid td .recipient-status-registered {
+    background-color: #f1f2f4;
+    border-color: #42526e;
+    color: #42526e;
+}
+
+.data-grid td .recipient-status-disapproved,
+.data-grid td .recipient-status-suspended,
+.data-grid td .recipient-status-blocked,
+.data-grid td .recipient-status-inactive  {
+    background-color: #f9d4d4;
+    border-color: #e22626;
+    color: #e22626;
+}
+
 /*
  * Jquery UI Fix
  */
