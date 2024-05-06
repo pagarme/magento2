@@ -70,7 +70,7 @@ class Recipient implements RecipientInterface
         try {
             $message = __(
                 "<p>He can now sell, but remember to check his "
-                . "<b>withdrawal permission status</b>. He can only withdraw his sales amounts once the status is "
+                . "<b>status</b>. He can only withdraw his sales amounts once the status is "
                 . "<i>“active”</i></p>"
             );
 
