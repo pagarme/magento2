@@ -8,7 +8,8 @@ var config = {
     },
     map: {
         '*': {
-            pixCheckoutSuccess: 'Pagarme_Pagarme/js/view/payment/checkout/success/pix'
+            pixCheckoutSuccess: 'Pagarme_Pagarme/js/view/payment/checkout/success/pix',
+            kyc: 'Pagarme_Pagarme/js/view/marketplace/kyc'
         }
     }
 };

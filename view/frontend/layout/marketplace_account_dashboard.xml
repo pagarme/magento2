@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author      Open Source Team
+ * @copyright   2024 Pagar.me (https://pagar.me)
+ * @license     https://pagar.me Copyright
+ *
+ * @link        https://pagar.me
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Pagarme_Pagarme/css/pagarme_kyc.css" />
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block class="Pagarme\Pagarme\Block\Customer\Marketplace\Kyc" name="pagarme_marketplace_kyc" template="customer/marketplace/kyc.phtml" before="marketplace_account_dashboard" cacheable="false"/>
+        </referenceContainer>
+    </body>
+</page>

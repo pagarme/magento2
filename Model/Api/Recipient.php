@@ -178,7 +178,7 @@ class Recipient implements RecipientInterface
         $kycLink = $this->recipientService->createKycLink($recipientModel->getPagarmeId());
         $kycResponse = $this->kycLinkResponseFactory->create();
         $kycResponse->setUrl($kycLink->url)
-            ->setQrCode($kycLink->base64_qrcode);
+            ->setQrCode('data:image/svg+xml;base64,' . $kycLink->base64_qrcode);
         return $kycResponse;
     }
 }
