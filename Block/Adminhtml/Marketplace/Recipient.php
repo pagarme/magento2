@@ -12,6 +12,7 @@ use Magento\Framework\View\Element\Template\Context;
 use Pagarme\Core\Marketplace\Repositories\RecipientRepository;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use stdClass;
+use Pagarme\Core\Marketplace\Interfaces\RecipientInterface as CoreRecipientInterface;
 
 class Recipient extends Template
 {
@@ -58,22 +59,30 @@ class Recipient extends Template
         Context                   $context,
         Registry                  $registry,
         CustomerCollectionFactory $customerCollectionFactory,
-        Country                   $country
+        Country                   $country,
+        RecipientRepository       $recipientRepository
     )
     {
         $this->coreRegistry = $registry;
         $this->customerCollection = $customerCollectionFactory->create();
-        $this->recipientRepository = new RecipientRepository();
+        $this->recipientRepository = $recipientRepository;
         $this->country = $country;
 
         Magento2CoreSetup::bootstrap();
+        $this->init();
         parent::__construct($context, []);
+    }
 
+    protected function init()
+    {
         $recipientData = $this->coreRegistry->registry('recipient_data');
         if (!empty($recipientData)) {
             $this->recipient = json_decode($recipientData);
             $this->recipient->recipient->externalId = $this->recipient->externalId;
             $this->recipient->recipient->localId = $this->recipient->localId;
+            $this->recipient->recipient->status = $this->recipient->status;
+            $this->recipient->recipient->statusUpdated = $this->recipient->statusUpdated;
+            $this->recipient->recipient->statusLabel = $this->buildStatusLabel($this->recipient->recipient->status);
             $this->recipient = $this->recipient->recipient;
         }
 
@@ -181,5 +190,26 @@ class Recipient extends Template
         ];
 
         return __($labels[$key]);
+    }
+
+    /**
+     * @param string|null $status
+     * @return string|null
+     */
+    private function buildStatusLabel($status)
+    {
+        if (!is_string($status)) {
+            return $status;
+        }
+
+        if ($status === CoreRecipientInterface::ACTIVE) {
+            $status = 'approved';
+        }
+
+        $statusWords = explode('_', $status);
+        $statusWords = array_map('ucfirst', $statusWords);
+        $statusLabel = implode(" ", $statusWords);
+        $statusLabel = trim($statusLabel);
+        return __($statusLabel);
     }
 }

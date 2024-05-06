@@ -129,7 +129,9 @@ require([
         const editRecipient = $('#edit-recipient').val();
         if (editRecipient.length > 0) {
             $('#webkul-seller-container').hide();
-            loadRecipient(JSON.parse(editRecipient));
+            const parsedRecipient = JSON.parse(editRecipient);
+            loadRecipient(parsedRecipient);
+            updateStatusModal(parsedRecipient);
         }
 
         $(fieldId['recipientId']).on('change', function () {
@@ -572,7 +574,8 @@ require([
             recipientObject[fieldId['holderDocument']] = recipient.document;
         }
 
-        recipientObject['#pagarme-status, #status'] = recipient.status;
+        recipientObject['#pagarme-status'] = recipient.status;
+        recipientObject['#status-label'] = recipient.statusLabel;
 
         recipientObject[fieldId['holderName']] = recipient.default_bank_account.holder_name;
         recipientObject[fieldId['holderDocumentType']] =
@@ -793,6 +796,18 @@ require([
             dayNamesMin: shortWeekDays,
             weekHeader: 'Sm'
         });
+    }
+
+    function updateStatusModal(recipient)
+    {
+        if (!recipient.statusUpdated) {
+            return;
+        }
+
+        mageAlert(
+            $.mage.__('Recipient had their status updated successfully.'),
+            $.mage.__('Status updated!')
+        );
     }
 
 });
