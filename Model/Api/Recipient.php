@@ -81,8 +81,8 @@ class Recipient implements RecipientInterface
                 $message = __(
                     "<p>He can now sell, but it is necessary to complete "
                     . "the security validation so that he can withdraw the sales amounts in the future.</p>"
-                    . "<p><span class='pagarme-alert-text'>Attention!</span> Keep up with the <b>withdrawal "
-                    . "permission status</b>. Once this is <i>“validation requested”</i>, a link will be "
+                    . "<p><span class='pagarme-alert-text'>Attention!</span> Keep up with the <b>status</b>. "
+                    . "Once this is <i>“validation requested”</i>, a link will be "
                     . "made available for the seller to complete the process.</p>"
                 );
             }
