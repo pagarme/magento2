@@ -14,7 +14,12 @@
     </head>
     <body>
         <referenceContainer name="content">
-            <block class="Pagarme\Pagarme\Block\Customer\Marketplace\Kyc" name="pagarme_marketplace_kyc" template="customer/marketplace/kyc.phtml" before="marketplace_account_dashboard" cacheable="false"/>
+            <block  class="Pagarme\Pagarme\Block\Customer\Marketplace\Kyc"
+                    name="pagarme_marketplace_kyc"
+                    template="customer/marketplace/kyc.phtml"
+                    before="marketplace_account_dashboard"
+                    cacheable="false"
+                    ifconfig="pagarme_pagarme/marketplace/active"/>
         </referenceContainer>
     </body>
 </page>

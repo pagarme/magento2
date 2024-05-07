@@ -1,13 +1,12 @@
 <?php
 /**
- * @var $block Kyc
+ * @var \Pagarme\Pagarme\Block\Customer\Marketplace\Kyc $block Kyc
  */
 
-use Pagarme\Pagarme\Block\Customer\Marketplace\Kyc;
+$recipient = $block->getRecipient();
+$recipientId = $recipient->getId(); 
 
-$recipientId = $block->getRecipient()->getId();
-
-if (empty($recipientId)) {
+if (empty($recipientId) || $recipient->getStatus() !== \Pagarme\Core\Marketplace\Interfaces\RecipientInterface::VALIDATION_REQUESTED) {
     return;
 }
 
@@ -34,11 +33,17 @@ if (empty($recipientId)) {
     </div>
 </div>
 
-<div id="modal-content">
+<div id="modal-success-content">
     <div class="modal-inner-content pagarme-kyc-modal">
         <p><?= __('Point the smartphone camera to read the QRCode.') ?></p>
         <p><img src="" alt="QRCode" id="pagarme-kyc-qrcode" /></p>
         <p><?= sprintf(__('Or use this %slink%s.'), '<a id="pagarme-kyc-link" target="_blank" rel="noreferrer">', '</a>') ?></p>
+    </div>
+</div>
+
+<div id="modal-error-content">
+    <div class="modal-inner-content pagarme-kyc-modal">
+        <p><?= __('Problem to generate security validation, please try again later.') ?></p>
     </div>
 </div>
 

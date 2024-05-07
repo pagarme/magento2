@@ -6,6 +6,23 @@ define([
     'loader'
 ], function (modal, mageUrl, $) {
     return function (config) {
+        const successModalOptions = {
+            responsive: true,
+            innerScroll: true,
+            // @todo: Using portuguese title for the translation did't work.
+            title: $.mage.__('Iniciar validação'),
+            buttons: [{
+                text: $.mage.__('Close'),
+                click: function () {
+                    this.closeModal();
+                }
+            }]
+        };
+        modal(successModalOptions, $('#modal-success-content'));
+
+        const errorModalOptions = { ...successModalOptions };
+        errorModalOptions.title = $.mage.__('Error!');
+        modal(errorModalOptions, $('#modal-error-content'));
 
         $('#pagarme-kyc-start-validation').on('click', async function (){
             const body = $('body');
@@ -17,27 +34,14 @@ define([
                 if (response) {
                     $('#pagarme-kyc-qrcode').attr('src', response.qr_code);
                     $('#pagarme-kyc-link').attr('href', response.url);
-                    $('.pagarme-kyc-modal').show();
+                    $('#modal-success-content .pagarme-kyc-modal').show();
 
-                    const options = {
-                        responsive: true,
-                        innerScroll: true,
-                        // @todo: Using portuguese title for the translation did't work.
-                        title: $.mage.__('Iniciar validação'),
-                        buttons: [{
-                            text: $.mage.__('Close'),
-                            click: function () {
-                                this.closeModal();
-                            }
-                        }]
-                    };
-
-                    const popup = modal(options, $('#modal-content'));
-                    $('#modal-content').modal('openModal');
+                    $('#modal-success-content').modal('openModal');
                 }
             } catch (exception) {
                 body.loader('hide');
-                // this.mageAlert(exception?.responseJSON?.message, $.mage.__('Error!'));
+                $('#modal-error-content .pagarme-kyc-modal').show();
+                $('#modal-error-content').modal('openModal');
             }
         });
     };

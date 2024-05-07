@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace Pagarme\Pagarme\Block\Customer\Marketplace;
 
 use Magento\Customer\Model\Session;
+use Pagarme\Pagarme\Model\Recipient;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
 use Pagarme\Pagarme\Model\ResourceModel\Recipients\CollectionFactory;
@@ -43,7 +44,11 @@ class Kyc extends Template
         $this->collectionFactory = $collectionFactory;
         parent::__construct($context, $data);
     }
+    
 
+    /**
+     * @return Recipient
+     */
     public function getRecipient()
     {
         return $this->collectionFactory->create()->addFieldToFilter(
@@ -53,11 +58,11 @@ class Kyc extends Template
     }
 
     /**
-     * Get customerid
+     * Get customerId
      *
      * @return int
      */
-    public function getCustomerId()
+    protected function getCustomerId()
     {
         return $this->customerSession->getCustomerId();
     }

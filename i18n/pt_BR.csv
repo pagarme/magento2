@@ -601,3 +601,5 @@
 "Blocked","Bloqueado"
 "Inactive","Inativo"
 "Recipient not founded.","Recebedor não encontrado."
+"Security validation not generated.","Validação de segurança não gerada."
+"Problem to generate security validation, please try again later.","Problema ao gerar validação de segurança, por favor tente novamente mais tarde."

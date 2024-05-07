@@ -77,7 +77,9 @@ define([
             } catch (exception) {
                 $('body').loader('hide');
                 $('body').notification('clear');
-                this.mageAlert(exception?.responseJSON?.message, translate('Error!'));
+                // TODO: Using portuguese string because mage/translate and knockout i18n were not working
+                const errorContent = `<p>Problema ao gerar validação de segurança, por favor tente novamente mais tarde.</p>`;
+                this.mageAlert(errorContent, translate('Error!'));
             }
             
         },

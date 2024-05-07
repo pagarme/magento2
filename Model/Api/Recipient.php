@@ -176,6 +176,9 @@ class Recipient implements RecipientInterface
             throw new NoSuchEntityException(__('Recipient not founded.'));
         }
         $kycLink = $this->recipientService->createKycLink($recipientModel->getPagarmeId());
+        if (empty($kycLink->url) || empty($kycLink->base64_qrcode)) {
+            throw new NoSuchEntityException(__('Security validation not generated.'));
+        }
         $kycResponse = $this->kycLinkResponseFactory->create();
         $kycResponse->setUrl($kycLink->url)
             ->setQrCode('data:image/svg+xml;base64,' . $kycLink->base64_qrcode);
