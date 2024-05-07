@@ -3,10 +3,12 @@
  * @var \Pagarme\Pagarme\Block\Customer\Marketplace\Kyc $block Kyc
  */
 
-$recipient = $block->getRecipient();
-$recipientId = $recipient->getId(); 
+use Pagarme\Core\Marketplace\Interfaces\RecipientInterface;
 
-if (empty($recipientId) || $recipient->getStatus() !== \Pagarme\Core\Marketplace\Interfaces\RecipientInterface::VALIDATION_REQUESTED) {
+$recipient = $block->getRecipient();
+$recipientId = $recipient->getId();
+
+if (empty($recipientId) || $recipient->getStatus() !== RecipientInterface::VALIDATION_REQUESTED) {
     return;
 }
 
@@ -43,7 +45,7 @@ if (empty($recipientId) || $recipient->getStatus() !== \Pagarme\Core\Marketplace
 
 <div id="modal-error-content">
     <div class="modal-inner-content pagarme-kyc-modal">
-        <p><?= __('Problem to generate security validation, please try again later.') ?></p>
+        <p><?= __('Something went wrong, please try again later.') ?></p>
     </div>
 </div>
 

@@ -9,8 +9,7 @@ define([
         const successModalOptions = {
             responsive: true,
             innerScroll: true,
-            // @todo: Using portuguese title for the translation did't work.
-            title: $.mage.__('Iniciar validação'),
+            title: $.mage.__('Start validation'),
             buttons: [{
                 text: $.mage.__('Close'),
                 click: function () {
