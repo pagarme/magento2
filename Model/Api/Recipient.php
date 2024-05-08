@@ -129,6 +129,7 @@ class Recipient implements RecipientInterface
         $recipientModel->setDocument($registeredInformation['document']);
         $recipientModel->setPagarmeId($params['pagarme_id']);
         $recipientModel->setType($registeredInformation['type']);
+        $recipientModel->setStatus($params['status']);
         $this->resourceModelRecipient->save($recipientModel);
     }
 
