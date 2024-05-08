@@ -23,7 +23,7 @@ class Create extends RecipientAction
             $this->resourceModelRecipient->load($this->recipient, $recipientId);
             $recipient = $this->recipientService->searchRecipient($this->recipient->getPagarmeId());
             $statusUpdated = false;
-            if (empty($this->recipient->getStatus())) {
+            if ($this->recipient->getStatus() !== $recipient->status) {
                 $this->recipient->setStatus($recipient->status);
                 $this->resourceModelRecipient->save($this->recipient);
                 $statusUpdated = true;
