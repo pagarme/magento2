@@ -21,7 +21,7 @@ class RecipientTest extends BaseTest
     public function testCreateKycLinkShouldReturnQrCodeAndLink()
     {
         $requestMock = Mockery::mock(Request::class);
-        
+
         $recipientModelMock = Mockery::mock(RecipientModel::class);
         $recipientModelMock->shouldReceive('getPagarmeId')
             ->andReturn('rp_xxxxxxxxxxxxxxxx');
@@ -47,7 +47,7 @@ class RecipientTest extends BaseTest
         $kycLinkResponseFactoryMock = Mockery::mock(KycLinkResponseInterfaceFactory::class);
         $kycLinkResponseFactoryMock->shouldReceive('create')
             ->andReturn($kycLinkResponse);
-        
+
         $recipientModelApi = new Recipient(
             $requestMock,
             $recipientFactoryMock,
@@ -85,7 +85,7 @@ class RecipientTest extends BaseTest
         $recipientServiceMock = Mockery::mock(RecipientService::class);
 
         $kycLinkResponseFactoryMock = Mockery::mock(KycLinkResponseInterfaceFactory::class);
-        
+
         $recipientModelApi = new Recipient(
             $requestMock,
             $recipientFactoryMock,
@@ -104,7 +104,7 @@ class RecipientTest extends BaseTest
     public function testCreateKycLinkShouldNotGenerateSecurityValidation()
     {
         $requestMock = Mockery::mock(Request::class);
-        
+
         $recipientModelMock = Mockery::mock(RecipientModel::class);
         $recipientModelMock->shouldReceive('getPagarmeId')
             ->andReturn('rp_xxxxxxxxxxxxxxxx');
@@ -136,7 +136,7 @@ class RecipientTest extends BaseTest
         );
 
         $this->expectException(NoSuchEntityException::class);
-        $this->expectExceptionMessage('Security validation not generated.');
+        $this->expectExceptionMessage('Failed to generate the security validation link.');
 
         $recipientModelApi->createKycLink(1);
     }

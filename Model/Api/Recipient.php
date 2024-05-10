@@ -178,7 +178,7 @@ class Recipient implements RecipientInterface
         }
         $kycLink = $this->recipientService->createKycLink($recipientModel->getPagarmeId());
         if (empty($kycLink->url) || empty($kycLink->base64_qrcode)) {
-            throw new NoSuchEntityException(__('Security validation not generated.'));
+            throw new NoSuchEntityException(__('Failed to generate the security validation link.'));
         }
         $kycResponse = $this->kycLinkResponseFactory->create();
         $kycResponse->setUrl($kycLink->url)

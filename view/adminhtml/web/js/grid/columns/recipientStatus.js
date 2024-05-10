@@ -75,12 +75,11 @@ define([
                 if (response) {
                     this.mageAlert(this.getModalContent(response.url));
                     $('#kyc-copy-button').on('click', async function (){
-                        const linkInput = $('#kyc-link');
+                        const linkInput = $('#kyc-link'),
+                            messageElement = $('#kyc-copy-message');
 
                         const url = linkInput.attr("value"),
                             showSuccessMessage = () => {
-                                const messageElement = $('#kyc-copy-message');
-
                                 messageElement.html('Link copiado para a área de transferência.')
                                     .addClass('success')
                                     .fadeIn('200');
@@ -90,8 +89,6 @@ define([
                                 }, 3000);
                             },
                             showFailMessage = () => {
-                                const messageElement = $('#kyc-copy-message');
-
                                 linkInput.prop('disabled', false)
                                     .prop('readonly', true)
                                     .focus()
@@ -131,8 +128,7 @@ define([
             } catch (exception) {
                 body.loader('hide');
                 body.notification('clear');
-                const errorContent = `<p>Algo deu errado, por favor tente novamente mais tarde.</p>`;
-                this.mageAlert(errorContent);
+                this.mageAlert(`<p>Algo deu errado, por favor tente novamente mais tarde.</p>`);
             }
 
         },
