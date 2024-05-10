@@ -127,7 +127,7 @@ table.table-cycles {
     margin-bottom: 1.5em;
 }
 
-.pagarme-recipient-modal p:last-of-type {
+.pagarme-recipient-modal *:last-child {
     margin-bottom: .5em;
 }
 
@@ -179,6 +179,40 @@ table.table-cycles {
     background-color: #f9d4d4;
     border-color: #e22626;
     color: #e22626;
+}
+
+.pagarme-recipient-modal .kyc-link-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    margin-bottom: 2rem;
+}
+.pagarme-recipient-modal #kyc-link {
+    width: calc(100% - 10rem);
+    height: 5rem;
+    padding: 1rem 1rem;
+    border: 1px solid #adadad;
+    border-right: 0;
+    border-radius: 6px 0 0 6px;
+}
+
+.pagarme-recipient-modal #kyc-copy-button {
+    width: 10rem;
+    height: 5rem;
+    border-radius: 0 6px 6px 0;
+}
+
+.pagarme-recipient-modal #kyc-copy-message {
+    display: none;
+    margin: .25rem 0 0 .25rem;
+}
+
+.pagarme-recipient-modal #kyc-copy-message.success {
+    color: #35a335;
+}
+
+.pagarme-recipient-modal #kyc-copy-message.error {
+    color: #cd0909;
 }
 
 /*

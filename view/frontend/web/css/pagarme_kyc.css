@@ -1,0 +1,41 @@
+.wk-mp-design .mp-widgets.pagarme-kyc {
+    width: 100%;
+}
+
+.pagarme-kyc .container {
+    padding-bottom: 15px;
+}
+
+.pagarme-kyc-box {
+    border:1px solid #ccc;
+}
+
+.pagarme-kyc-box-title {
+    border-bottom: 1px solid #ccc;
+    display: inline-block;
+    width: 100%;
+}
+
+.pagarme-kyc-box-content {
+    padding:5px;
+}
+
+.pagarme-kyc-box-content > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.pagarme-kyc-box-content > div button {
+    margin: 2.5rem;
+}
+
+.pagarme-kyc-modal {
+    display: none;
+    padding-top: 3rem;
+    text-align: center;
+}
+
+.pagarme-kyc-modal img {
+    width: 220px;
+}

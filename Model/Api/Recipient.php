@@ -129,6 +129,7 @@ class Recipient implements RecipientInterface
         $recipientModel->setDocument($registeredInformation['document']);
         $recipientModel->setPagarmeId($params['pagarme_id']);
         $recipientModel->setType($registeredInformation['type']);
+        $recipientModel->setStatus($params['status']);
         $this->resourceModelRecipient->save($recipientModel);
     }
 
@@ -176,9 +177,12 @@ class Recipient implements RecipientInterface
             throw new NoSuchEntityException(__('Recipient not founded.'));
         }
         $kycLink = $this->recipientService->createKycLink($recipientModel->getPagarmeId());
+        if (empty($kycLink->url) || empty($kycLink->base64_qrcode)) {
+            throw new NoSuchEntityException(__('Failed to generate the security validation link.'));
+        }
         $kycResponse = $this->kycLinkResponseFactory->create();
         $kycResponse->setUrl($kycLink->url)
-            ->setQrCode($kycLink->base64_qrcode);
+            ->setQrCode('data:image/svg+xml;base64,' . $kycLink->base64_qrcode);
         return $kycResponse;
     }
 }
