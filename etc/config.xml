@@ -224,14 +224,21 @@
                 <allow_multiple_address>0</allow_multiple_address>
             </pagarme_debit>
 
-            <pagarmegooglepay>
+            <pagarme_googlepay>
 				<active>1</active>
-				<model>Pagarme\Pagarme\Model\PagarmeGooglePay</model>
-				<order_status>pending</order_status>
-				<title>PagarmeGooglePay</title>
-				<allowspecific>0</allowspecific>
-				<group>offline</group>
-			</pagarmegooglepay>
+				<model>PagarmeGooglePayRemoteMethodAdapter</model>
+				<order_status>pending_payment</order_status>
+                <payment_action>authorize</payment_action>
+				<title>Google Pay</title>
+                <can_initialize>1</can_initialize>
+                <can_authorize>1</can_authorize>
+                <can_capture>1</can_capture>
+                <can_use_checkout>1</can_use_checkout>
+                <can_use_internal>1</can_use_internal>
+                <is_gateway>1</is_gateway>
+                <sort_order>1</sort_order>
+                <can_initialize>1</can_initialize>
+			</pagarme_googlepay>
         </payment>
     </default>
 </config>

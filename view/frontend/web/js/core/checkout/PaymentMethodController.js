@@ -12,6 +12,7 @@ define([
     'Pagarme_Pagarme/js/core/models/PixModel',
     'Pagarme_Pagarme/js/core/models/BoletoModel',
     'Pagarme_Pagarme/js/core/models/BoletoCreditcardModel',
+    'Pagarme_Pagarme/js/core/models/GooglePayModel',
     'Pagarme_Pagarme/js/core/validators/CustomerValidator',
 ], (
     $,
@@ -27,6 +28,7 @@ define([
     PixModel,
     BoletoModel,
     BoletoCreditcardModel,
+    GooglePayModel,
     CustomerValidator,
 ) => {
 
@@ -253,6 +255,20 @@ define([
                 this.addShowMultibuyerListener(this.formObject);
                 this.addValidatorListener(this.formObject);
             }
+        }
+
+        googlepayInit() {
+            this.platformConfig = PlatformConfig.bind(this.platformConfig);
+            this.formObject = FormObject.googlePayInit(this.platformConfig.isMultibuyerEnabled);
+
+            if (!this.formObject) {
+                return;
+            }
+
+            this.model = new GooglePayModel(this.formObject);
+            this.hideCardAmount(this.formObject);
+
+            this.removeMultibuyerForm(this.formObject);
         }
 
         boletoInit() {

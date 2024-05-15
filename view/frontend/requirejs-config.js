@@ -7,7 +7,7 @@ var config = {
         }
     },
     shim : {
-        'Pagarme_Pagarme/js/view/payment/method-renderer/pagarmegooglepay-method' : {
+        'Pagarme_Pagarme/js/view/payment/googlepay' : {
             deps : ['googlePay']
         }
     },

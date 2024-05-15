@@ -148,6 +148,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         self::fillWithCardConfig($configData, $storeConfig);
         self::fillWithBoletoConfig($configData, $storeConfig);
         self::fillWithPixConfig($configData, $storeConfig);
+        self::fillWithGooglePayConfig($configData, $storeConfig);
         self::fillWithBoletoCreditCardConfig($configData, $storeConfig);
         self::fillWithTwoCreditCardsConfig($configData, $storeConfig);
         self::fillWithVoucherConfig($configData, $storeConfig);
@@ -293,6 +294,23 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         $pixObject = new \stdClass();
 
         $configData->pixConfig = self::fillDataObj($storeConfig, $options, $pixObject, $section);
+    }
+    private static function fillWithGooglePayConfig(
+        stdClass $configData,
+        ScopeConfigInterface $storeConfig
+    ) {
+        $options = [
+            'enabled' => 'active',
+            'title' => 'title',
+            'merchantId' => 'merchant_id',
+            'merchantName' => 'merchant_name'
+        ];
+
+        $section = 'payment/pagarme_googlepay/';
+
+        $googlePayObject = new \stdClass();
+
+        $configData->googlePayConfig = self::fillDataObj($storeConfig, $options, $googlePayObject, $section);
     }
 
 

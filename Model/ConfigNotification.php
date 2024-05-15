@@ -20,12 +20,12 @@ class ConfigNotification
 
     private function addLog($logMessage)
     {
-        $logService = new LogService(
-            'Config',
-            true
-        );
+        // $logService = new LogService(
+        //     'Config',
+        //     true
+        // );
 
-        $logService->exception($logMessage);
+        // $logService->exception($logMessage);
     }
 
 }

@@ -1,33 +1,29 @@
 <?xml version="1.0" ?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
 	
-    <group id="pagarmegooglepay" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
-        <label>PagarmeGooglePay</label>
+    <group id="pagarme_googlepay" showInWebsite="1" showInStore="1" showInDefault="1" translate="label"  sortOrder="50">
+        <label>Google Pay</label>
         <field id="active" type="select" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
             <label>Enabled</label>
+            <config_path>payment/pagarme_googlepay/active</config_path>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
         </field>
         <field id="title" type="text" sortOrder="20" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
             <label>Title</label>
+            <config_path>payment/pagarme_googlepay/title</config_path>
         </field>
-        <field id="order_status" type="select" sortOrder="30" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
-            <label>New Order Status</label>
-            <source_model>Magento\Sales\Model\Config\Source\Order\Status\NewStatus</source_model>
+        <field id="merchant_id" type="text" sortOrder="20" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+            <label>MerchantId Google Pay</label>
+            <comment><![CDATA[Identificador do Google Pay necessário para criação de pedidos com sucesso, saiba como solicitar <a target="_blank" href="https://pay.google.com/business/console/?hl=pt-br">aqui</a>.]]></comment>
+            <config_path>payment/pagarme_googlepay/merchant_id</config_path>
         </field>
-        <field id="allowspecific" type="allowspecific" sortOrder="40" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
-            <label>Payment from Applicable Countries</label>
-            <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
-        </field>
-        <field id="specificcountry" type="multiselect" sortOrder="50" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
-            <label>Payment from Applicable Countries</label>
-            <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
-            <can_be_empty>1</can_be_empty>
+        <field id="merchant_name" type="text" sortOrder="20" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+            <label>Merchant Name</label>
+            <config_path>payment/pagarme_googlepay/merchant_name</config_path>
         </field>
         <field id="sort_order" type="text" sortOrder="60" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
             <label>Sort Order</label>
-        </field>
-        <field id="instructions" type="textarea" sortOrder="70" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
-            <label>Instructions</label>
+            <config_path>payment/pagarme_googlepay/sort_order</config_path>
         </field>
     </group>
 </config>

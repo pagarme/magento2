@@ -1194,6 +1194,24 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $paymentData[$pixDataIndex][] = $newPaymentData;
     }
 
+    private function extractPaymentDataFromPagarmeGooglePay(
+        $additionalInformation,
+        &$paymentData,
+        $payment
+    ) {
+        $newPaymentData = new stdClass();
+        $newPaymentData->amount =
+            $this->moneyService->floatToCents($this->platformOrder->getGrandTotal());
+
+        $pixDataIndex = PixPayment::getBaseCode();
+        if (!isset($paymentData[$pixDataIndex])) {
+            $paymentData[$pixDataIndex] = [];
+        }
+
+        $paymentData[$pixDataIndex][] = $newPaymentData;
+    }
+
+    
     public function getShipping()
     {
         /** @var Shipping $shipping */

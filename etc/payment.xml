@@ -23,8 +23,8 @@
         <method name="pagarme_pix">
             <allow_multiple_address>1</allow_multiple_address>
         </method>
-        <method name="pagarmegooglepay">
-            <allow_multiple_address>0</allow_multiple_address>
+        <method name="pagarme_googlepay">
+            <allow_multiple_address>1</allow_multiple_address>
         </method>
         <method name='pagarme_customer_address'>
             <allow_multiple_address>0</allow_multiple_address>
