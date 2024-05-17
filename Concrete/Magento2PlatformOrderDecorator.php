@@ -126,7 +126,8 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
     public function setStatusAfterLog(OrderStatus $status)
     {
         $stringStatus = $status->getStatus();
-        $this->platformOrder->setStatus($stringStatus);
+        $stringMagentoStatus = $this->getMagentoStatusFromCoreStatus($stringStatus);
+        $this->platformOrder->setStatus($stringMagentoStatus);
     }
 
     public function getStatus()
@@ -1335,5 +1336,19 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $splitData->setMarketplaceData($splitDataFromOrder['marketplace']);
 
         return $splitData;
+    }
+
+    /**
+     * @param string|null $coreStatus
+     * @return string|null
+     */
+    private function getMagentoStatusFromCoreStatus($coreStatus)
+    {
+        $coreToMagentoStatus = [
+            'failed' => 'canceled'
+        ];
+
+        return array_key_exists($coreStatus, $coreToMagentoStatus) ?
+            $coreToMagentoStatus[$coreStatus] : $coreStatus;
     }
 }
