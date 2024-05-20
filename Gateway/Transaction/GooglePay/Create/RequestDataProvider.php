@@ -38,6 +38,10 @@ class RequestDataProvider extends AbstractAddressDataProvider
         $this->setConfig($config);
     }
 
+    public function getGooglePayData()
+    {
+        return $this->getPaymentData()->getAdditionalInformation('googleData');
+    }
     /**
      * @return ConfigInterface
      */

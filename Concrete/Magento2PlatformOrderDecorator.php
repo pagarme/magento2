@@ -30,6 +30,7 @@ use Pagarme\Core\Payment\Aggregates\Payments\BoletoPayment;
 use Pagarme\Core\Payment\Aggregates\Payments\NewDebitCardPayment;
 use Pagarme\Core\Payment\Aggregates\Payments\NewVoucherPayment;
 use Pagarme\Core\Payment\Aggregates\Payments\PixPayment;
+use Pagarme\Core\Payment\Aggregates\Payments\GooglePayPayment;
 use Pagarme\Core\Payment\Aggregates\Shipping;
 use Pagarme\Core\Payment\Factories\PaymentFactory;
 use Pagarme\Core\Payment\Repositories\CustomerRepository as CoreCustomerRepository;
@@ -1194,7 +1195,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $paymentData[$pixDataIndex][] = $newPaymentData;
     }
 
-    private function extractPaymentDataFromPagarmeGooglePay(
+    private function extractPaymentDataFromPagarmeGooglepay(
         $additionalInformation,
         &$paymentData,
         $payment
@@ -1203,7 +1204,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $newPaymentData->amount =
             $this->moneyService->floatToCents($this->platformOrder->getGrandTotal());
 
-        $pixDataIndex = PixPayment::getBaseCode();
+        $pixDataIndex = GooglePayPayment::getBaseCode();
         if (!isset($paymentData[$pixDataIndex])) {
             $paymentData[$pixDataIndex] = [];
         }
