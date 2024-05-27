@@ -585,5 +585,6 @@
 "N - Transaction rejected by the Issuer","N - Transação rejeitada pelo Emissor"
 "R - Transaction rejected by Issuer (post-challenge)","R - Transação rejeitada pelo Emissor (pós-desafio)"
 "Google Pay identifier required to create successful orders, find out how to request <a target='_blank' href='https://pay.google.com/business/console/?hl=pt-br'>here</a>.", "Identificador do Google Pay necessário para criação de pedidos com sucesso, saiba como solicitar <a target='_blank' href='https://pay.google.com/business/console/?hl=pt-br'>aqui</a>."
-"Merchant Name", "Nome da Merchant"
-"MerchantId Google Pay", "MerchantId na Google Pay"
+"MerchantId Google Pay", "MerchantId Google Pay"
+"Store name on Google Pay", "Nome da loja no Google Pay"
+"Name of your store that will be displayed to the customer while purchasing through Google Pay.", "Nome da sua loja que será exibida ao cliente durante a compra pelo Google Pay."

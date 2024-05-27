@@ -18,11 +18,12 @@
             <config_path>payment/pagarme_googlepay/merchant_id</config_path>
         </field>
         <field id="merchant_name" type="text" sortOrder="20" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
-            <label>Merchant Name</label>
+            <label>Store name on Google Pay</label>
             <config_path>payment/pagarme_googlepay/merchant_name</config_path>
+            <tooltip>Name of your store that will be displayed to the customer while purchasing through Google Pay.</tooltip>
         </field>
         <field id="sort_order" type="text" sortOrder="60" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
-            <label>Sort Order</label>
+            <label>Payment method order</label>
             <config_path>payment/pagarme_googlepay/sort_order</config_path>
         </field>
     </group>
