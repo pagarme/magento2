@@ -21,7 +21,7 @@ class GooglePayDataAssignObserver extends AbstractDataAssignObserver
             $additionalData = new DataObject($additionalData ?: []);
         }
         
-        $info->setAdditionalInformation('googlePayData', $additionalData->getData('googlePayData'));
+        $info->setAdditionalInformation('googlepayData', $additionalData->getData('googlepayData'));
 
         return $this;
     }

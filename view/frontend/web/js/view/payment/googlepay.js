@@ -1,10 +1,9 @@
 define([
   "Pagarme_Pagarme/js/view/payment/default",
-  "https://pay.google.com/gp/p/js/pay.js",
   "Magento_Checkout/js/model/quote",
   "Pagarme_Pagarme/js/core/checkout/PaymentModuleBootstrap",
-  "Pagarme_Pagarme/js/core/models/GooglePayModel"
-], function (Component, googlePay, quote, PagarmeCore) {
+  "https://pay.google.com/gp/p/js/pay.js"
+], function (Component, quote, PagarmeCore) {
 	"use strict";
 	return Component.extend({
 		defaults: {
@@ -69,7 +68,6 @@ define([
 					gatewayMerchantId: window.checkoutConfig.pagarme_account_id,
 				},
 			};
-			console.log(tokenizationSpecification);
 			const baseCardPaymentMethod = {
 				type: "CARD",
 				parameters: {
@@ -108,7 +106,10 @@ define([
 					self.processPayment(paymentData, self);
 				})
 				.catch(function (err) {
-					// console.error(err);
+					if(err.statusCode ===  "CANCELED") {
+						return;
+					}
+					console.error(err);
 				});
 		},
 
@@ -132,12 +133,7 @@ define([
 		},
 
 		processPayment: function (paymentData, self) {
-			
-			console.log(paymentData.paymentMethodData.tokenizationData.token);
 			var paymentToken = paymentData.paymentMethodData.tokenizationData.token;
-			
-
-
 			var _self = self;
 			_self.elementox = paymentToken;
 			PagarmeCore.platFormConfig.addresses.billingAddress = quote.billingAddress();

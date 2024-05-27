@@ -3,7 +3,7 @@
  * Class Config
  *
  * @author      Open Source Team
- * @copyright   2021 Pagar.me (https://pagar.me)
+ * @copyright   2024 Pagar.me (https://pagar.me)
  * @license     https://pagar.me Copyright
  *
  * @link        https://pagar.me
@@ -16,10 +16,6 @@ use Pagarme\Pagarme\Gateway\Transaction\Base\Config\AbstractConfig;
 
 class Config extends AbstractConfig implements ConfigInterface
 {
-
-
-    
-
     /**
      * @return string
      */
@@ -33,13 +29,20 @@ class Config extends AbstractConfig implements ConfigInterface
 
         return $title;
     }
+
     /**
+     * Return Google ID
      * @return string
      */
     public function getMerchantId()
     {
         return $this->getConfig(static::MERCHANT_ID);
     }
+
+    /**
+     * Return Merchant Name
+     * @return string
+     */
     public function getMerchantName()
     {
         return $this->getConfig(static::MERCHANT_NAME);

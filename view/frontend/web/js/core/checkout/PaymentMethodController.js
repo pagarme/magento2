@@ -267,7 +267,6 @@ define([
 
             this.model = new GooglePayModel(this.formObject);
             this.hideCardAmount(this.formObject);
-
             this.removeMultibuyerForm(this.formObject);
         }
 

@@ -225,7 +225,7 @@
             </pagarme_debit>
 
             <pagarme_googlepay>
-				<active>1</active>
+				<active>0</active>
 				<model>PagarmeGooglePayRemoteMethodAdapter</model>
 				<order_status>pending_payment</order_status>
                 <payment_action>authorize</payment_action>

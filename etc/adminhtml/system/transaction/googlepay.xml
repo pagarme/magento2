@@ -4,17 +4,17 @@
     <group id="pagarme_googlepay" showInWebsite="1" showInStore="1" showInDefault="1" translate="label"  sortOrder="50">
         <label>Google Pay</label>
         <field id="active" type="select" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
-            <label>Enabled</label>
+            <label>Enable this payment method</label>
             <config_path>payment/pagarme_googlepay/active</config_path>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
         </field>
         <field id="title" type="text" sortOrder="20" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
-            <label>Title</label>
+            <label>Payment label</label>
             <config_path>payment/pagarme_googlepay/title</config_path>
         </field>
-        <field id="merchant_id" type="text" sortOrder="20" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+        <field id="merchant_id" type="text" sortOrder="20" showInWebsite="1" showInStore="1" showInDefault="1" translate="label, comment">
             <label>MerchantId Google Pay</label>
-            <comment><![CDATA[Identificador do Google Pay necessário para criação de pedidos com sucesso, saiba como solicitar <a target="_blank" href="https://pay.google.com/business/console/?hl=pt-br">aqui</a>.]]></comment>
+            <comment><![CDATA[Google Pay identifier required to create successful orders, find out how to request <a target='_blank' href='https://pay.google.com/business/console/?hl=pt-br'>here</a>.]]></comment>
             <config_path>payment/pagarme_googlepay/merchant_id</config_path>
         </field>
         <field id="merchant_name" type="text" sortOrder="20" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">

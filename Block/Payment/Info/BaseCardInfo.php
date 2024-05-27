@@ -41,13 +41,14 @@ abstract class BaseCardInfo extends Cc
         }
 
         $charge = current($orderObject->getCharges());
-
+        $lastFourDigitsWithDots = sprintf("**** **** **** %s", 
+        $charge->getLastTransaction()->getCardData()->getLastFourDigits()->getValue());
         return array_merge(
             $charge->getAcquirerTidCapturedAndAutorize(),
             ['tid' => $charge->getLastTransaction()->getAcquirerTid() ?? ""],
             ['cardBrand' => $charge->getLastTransaction()->getCardData()->getBrand()->getName() ?? ""],
             ['installments' => $this->getInfo()->getAdditionalInformation('cc_installments') ?? ""],
-            ['lastFour' => $charge->getLastTransaction()->getCardData()->getLastFourDigits()->getValue() ?? ""],
+            ['lastFour' => $lastFourDigitsWithDots],
             ['acquirerMessage' => $charge->getLastTransaction()->getAcquirerMessage() ?? ""]
         );
     }

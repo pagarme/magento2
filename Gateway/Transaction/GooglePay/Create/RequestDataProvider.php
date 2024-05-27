@@ -3,7 +3,7 @@
  * Class RequestDataProvider
  *
  * @author      Open Source Team
- * @copyright   2021 Pagar.me (https://pagar.me)
+ * @copyright   2024 Pagar.me (https://pagar.me)
  * @license     https://pagar.me Copyright
  *
  * @link        https://pagar.me
@@ -38,10 +38,6 @@ class RequestDataProvider extends AbstractAddressDataProvider
         $this->setConfig($config);
     }
 
-    public function getGooglePayData()
-    {
-        return $this->getPaymentData()->getAdditionalInformation('googlePayData');
-    }
     /**
      * @return ConfigInterface
      */

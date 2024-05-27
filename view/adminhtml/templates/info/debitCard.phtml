@@ -12,11 +12,11 @@ $info =  $this->getTransactionInfo();
     <br /><br />
     <span>
         <b><?= __('Brand'); ?>: </b>
-        <?= $info['cardBrand'] ?>
+        <?= $info['cardBrand']; ?>
     </span><br />
     <span>
         <b><?= __('Number'); ?>: </b>
-        <?= sprintf("**** **** **** %s", $info['lastFour']); ?>
+        <?= $info['lastFour']; ?>
     </span>
     <br />
     <?php if (!empty($info['authorized'])) : ?>

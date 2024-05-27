@@ -3,7 +3,7 @@
  * Class ConfigInterface
  *
  * @author      Open Source Team
- * @copyright   2021 Pagar.me (https://pagar.me)
+ * @copyright   2024 Pagar.me (https://pagar.me)
  * @license     https://pagar.me Copyright
  *
  * @link        https://pagar.me

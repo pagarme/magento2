@@ -584,3 +584,6 @@
 "U - Authentication unavailable","U - Autenticação indisponível"
 "N - Transaction rejected by the Issuer","N - Transação rejeitada pelo Emissor"
 "R - Transaction rejected by Issuer (post-challenge)","R - Transação rejeitada pelo Emissor (pós-desafio)"
+"Google Pay identifier required to create successful orders, find out how to request <a target='_blank' href='https://pay.google.com/business/console/?hl=pt-br'>here</a>.", "Identificador do Google Pay necessário para criação de pedidos com sucesso, saiba como solicitar <a target='_blank' href='https://pay.google.com/business/console/?hl=pt-br'>aqui</a>."
+"Merchant Name", "Nome da Merchant"
+"MerchantId Google Pay", "MerchantId na Google Pay"

@@ -18,16 +18,6 @@ interface GooglePayRequestDataProviderInterface extends BaseRequestDataProviderI
     /**
      * @return string
      */
-    public function getBankType();
-
-    /**
-     * @return string
-     */
-    public function getInstructions();
-
-    /**
-     * @return string
-     */
     public function getCustomerAddressStreet($shipping);
 
     /**
