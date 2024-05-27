@@ -2,9 +2,9 @@
 
 namespace Pagarme\Pagarme\Block\Payment\Info;
 
-use Magento\Payment\Block\Info;
+use Pagarme\Pagarme\Block\Payment\Info\BaseCardInfo;
 
-class GooglePay extends Info
+class GooglePay extends BaseCardInfo
 {
     const TEMPLATE = 'Pagarme_Pagarme::info/googlepay.phtml';
 
@@ -12,5 +12,4 @@ class GooglePay extends Info
     {
         $this->setTemplate(self::TEMPLATE);
     }
-
 }

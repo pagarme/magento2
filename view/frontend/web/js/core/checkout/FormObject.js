@@ -337,13 +337,10 @@ define(['jquery'], ($) => {
 
         const containerSelector = '#pagarme_googlepay-form';
 
-        
-
         const googlepayElements = {
             'containerSelector' : containerSelector,
             "inputAmount" : $(containerSelector + " .cc_amount"),
             "inputAmountContainer" : $(containerSelector + " .amount-container"),
-            'teste' : "test"
         };
 
         FormObject.FormObject = googlepayElements;

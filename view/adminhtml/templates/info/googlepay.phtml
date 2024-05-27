@@ -1,0 +1,40 @@
+<?php
+
+/**
+ * @var Pagarme\Pagarme\Block\Payment\Info\GooglePay $this
+ */
+$info = $this->getTransactionInfo();
+
+?>
+<span>Google Pay</span><br /><br />
+<span>
+    <b><?= __('Brand'); ?>: </b>
+    <?= $info['cardBrand']; ?>
+</span><br />
+<span>
+    <b><?= __('Number'); ?>: </b>
+    <?= sprintf("**** **** **** %s", $info['lastFour']); ?>
+</span><br />
+<?php if (!empty($info['authorized'])) : ?>
+    <br />
+    <span>
+        <b><?= __('NSU'); ?>: </b>
+        <?= $info['authorized']; ?>
+    </span>
+<?php endif; ?>
+<?php if (!empty($info['captured'])) : ?>
+    <br />
+    <span>
+        <b><?= __('NSU from capture'); ?>: </b>
+        <?= $info['captured']; ?>
+    </span>
+<?php endif; ?>
+<?php if (!empty($info['tid'])) : ?>
+    <br />
+    <span>
+        <b><?= __('TID'); ?>: </b>
+        <?= $info['tid']; ?>
+    </span>
+<?php endif; ?>
+<br />
+<span><?= $info['acquirerMessage']; ?></span>

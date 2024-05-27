@@ -21,7 +21,7 @@ define(['Pagarme_Pagarme/js/core/validators/MultibuyerValidator'], (MultibuyerVa
             const data = {
                 'method': "pagarme_googlepay",
                 'additional_data': {
-                    "googleData": this.placeOrderObject?.data
+                    "googlePayData": this.placeOrderObject?.data
                 }
             };
             return data;

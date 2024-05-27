@@ -1203,13 +1203,14 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $newPaymentData = new stdClass();
         $newPaymentData->amount =
             $this->moneyService->floatToCents($this->platformOrder->getGrandTotal());
-
-        $pixDataIndex = GooglePayPayment::getBaseCode();
-        if (!isset($paymentData[$pixDataIndex])) {
-            $paymentData[$pixDataIndex] = [];
+        $newPaymentData->googlepayData = $additionalInformation['googlePayData'];
+        $newPaymentData->additionalInformation = ["googlePayData" => $additionalInformation['googlePayData']];
+        $googlepayIndex = 'googlepay';
+        if (!isset($paymentData[$googlepayIndex])) {
+            $paymentData[$googlepayIndex] = [];
         }
 
-        $paymentData[$pixDataIndex][] = $newPaymentData;
+        $paymentData[$googlepayIndex][] = $newPaymentData;
     }
 
     

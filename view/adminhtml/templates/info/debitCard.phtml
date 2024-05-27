@@ -1,11 +1,11 @@
 <?php
-    /**
-     * @var \Pagarme\Pagarme\Block\Payment\Info\CreditCard $this
-     * @var \Pagarme\Core\Kernel\Aggregates\Transaction $info
-     */
-    $info =  $this->getTransactionInfo();
+/**
+ * @var \Pagarme\Pagarme\Block\Payment\Info\CreditCard $this
+ * @var \Pagarme\Core\Kernel\Aggregates\Transaction $info
+ */
+$info =  $this->getTransactionInfo();
+    
 ?>
-<?php if ($this->getCcType()) : ?>
     <span>
         <?= __($this->getTitle()); ?>
     </span>
@@ -19,10 +19,6 @@
         <?= sprintf("**** **** **** %s", $info['lastFour']); ?>
     </span>
     <br />
-    <span>
-        <b><?= __('Installments'); ?>: </b>
-        <?= $info['installments'] ?>
-    </span>
     <?php if (!empty($info['authorized'])) : ?>
         <br />
         <span>
@@ -51,4 +47,3 @@
     <?php endif; ?>
     <br />
     <span><?= $info['acquirerMessage']; ?></span>
-<?php endif ?>

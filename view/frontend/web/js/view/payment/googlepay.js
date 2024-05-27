@@ -25,7 +25,7 @@ define([
 
 			return new google.payments.api.PaymentsClient({ environment: environment });
 		},
-		addGoogePayButton: function () {
+		addGooglePayButton: function () {
 			let self = this;
 			let paymentsClient = this.getGooglePaymentsClient();
 			const button = paymentsClient.createButton({
@@ -65,10 +65,11 @@ define([
 			const tokenizationSpecification = {
 				type: "PAYMENT_GATEWAY",
 				parameters: {
-				gateway: "pagarme",
-				gatewayMerchantId: window.checkoutConfig.payment.pagarme_googlepay.merchantId,
+					gateway: "pagarme",
+					gatewayMerchantId: window.checkoutConfig.pagarme_account_id,
 				},
 			};
+			console.log(tokenizationSpecification);
 			const baseCardPaymentMethod = {
 				type: "CARD",
 				parameters: {
@@ -89,7 +90,7 @@ define([
 			paymentDataRequest.allowedPaymentMethods = [cardPaymentMethod];
 			paymentDataRequest.transactionInfo = this.getGoogleTransactionInfo();
 			paymentDataRequest.merchantInfo = {
-				// merchantId: window.checkoutConfig.payment.pagarme_googlepay.merchantId,
+				merchantId: window.checkoutConfig.payment.pagarme_googlepay.merchantId,
 				merchantName: window.checkoutConfig.payment.pagarme_googlepay.merchantName,
 			};
 			return paymentDataRequest;

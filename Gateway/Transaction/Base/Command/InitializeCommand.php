@@ -139,13 +139,13 @@ class InitializeCommand implements CommandInterface
 
         try {
             $quoteSuccess = $quote->getCustomerNote();
-            // if ($quoteSuccess === 'pagarme-processing') {
-            //     $log->orderInfo(
-            //         $orderDecorator->getCode(),
-            //         "Quote already used, order id duplicated. Customer Note: {$quoteSuccess}"
-            //     );
-            //     throw new \Exception("Quote already used, order id duplicated.");
-            // }
+            if ($quoteSuccess === 'pagarme-processing') {
+                $log->orderInfo(
+                    $orderDecorator->getCode(),
+                    "Quote already used, order id duplicated. Customer Note: {$quoteSuccess}"
+                );
+                throw new \Exception("Quote already used, order id duplicated.");
+            }
 
             $quote->setCustomerNote('pagarme-processing');
             $quote->save();

@@ -1,0 +1,17 @@
+<?php
+/**
+ * var Pagarme\Pagarme\Block\Payment\Info\CreditCard $this
+ *
+ * @author      Open Source Team
+ * @copyright   2021 Pagar.me (https://pagar.me)
+ * @license     https://pagar.me Copyright
+ *
+ * @link        https://pagar.me
+ */
+$info = $this->getTransactionInfo();
+?>
+<p><?= __($this->getTitle()); ?></p>
+<p>
+    <b><?= __('Brand'); ?>:</b> <?= ucfirst($info['cardBrand']); ?><br/>
+    <b><?= __('Number'); ?>:</b> <?= $info['lastFour'] ?><br/>
+</p>

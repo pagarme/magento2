@@ -2,9 +2,9 @@
 
 namespace Pagarme\Pagarme\Block\Payment\Info;
 
-use Magento\Payment\Block\Info\Cc;
+use Pagarme\Pagarme\Block\Payment\Info\BaseCardInfo;
 
-class Voucher extends Cc
+class Voucher extends BaseCardInfo
 {
 
 }

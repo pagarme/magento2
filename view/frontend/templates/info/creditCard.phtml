@@ -1,18 +1,25 @@
 <?php
-/**
- * var Pagarme\Pagarme\Block\Payment\Info\CreditCard $this
- *
- * @author      Open Source Team
- * @copyright   2021 Pagar.me (https://pagar.me)
- * @license     https://pagar.me Copyright
- *
- * @link        https://pagar.me
- */
-
+    /**
+     * @var \Pagarme\Core\Kernel\Aggregates\Transaction $info
+     */
+    $info =  $this->getTransactionInfo();
 ?>
-<p><?= __($this->getTitle()); ?></p>
-<p>
-    <b><?= __('Brand'); ?>:</b> <?= ucfirst($this->getCcBrand()); ?><br/>
-    <b><?= __('Number'); ?>:</b> <?= $this->getCardLast4(); ?><br/>
-    <b><?= __('Installments'); ?>:</b> <?= $this->getInstallments(); ?>
-</p>
+<?php if ($this->getCcType()) : ?>
+    <span>
+        <?= __($this->getTitle()); ?>
+    </span>
+    <br /><br />
+    <span>
+        <b><?= __('Brand'); ?>: </b>
+        <?= $info['cardBrand'] ?>
+    </span><br />
+    <span>
+        <b><?= __('Number'); ?>: </b>
+        <?= sprintf("**** **** **** %s", $info['lastFour']); ?>
+    </span>
+    <br />
+    <span>
+        <b><?= __('Installments'); ?>: </b>
+        <?= $info['installments'] ?>
+    </span>
+<?php endif ?>

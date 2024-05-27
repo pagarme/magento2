@@ -1,9 +1,16 @@
 <?php
 /**
- * @var Pagarme\Pagarme\Block\Payment\Pix $this
- *
+ * @var Pagarme\Pagarme\Block\Payment\Info\GooglePay $this
  */
+$info = $this->getTransactionInfo();
 
 ?>
-<p><?=__($this->getTitle())?></p>
-<h1>Google Pay compra</h1>
+<span>Google Pay</span><br /><br />
+<span>
+    <b><?= __('Brand'); ?>: </b>
+    <?= $info['cardBrand']; ?>
+</span><br />
+<span>
+    <b><?= __('Number'); ?>: </b>
+    <?= sprintf("**** **** **** %s", $info['lastFour']); ?>
+</span><br />
