@@ -1,15 +1,15 @@
 define([
-  "Pagarme_Pagarme/js/view/payment/default",
-  "Magento_Checkout/js/model/quote",
-  "Pagarme_Pagarme/js/core/checkout/PaymentModuleBootstrap",
-  "https://pay.google.com/gp/p/js/pay.js"
+	"Pagarme_Pagarme/js/view/payment/default",
+	"Magento_Checkout/js/model/quote",
+	"Pagarme_Pagarme/js/core/checkout/PaymentModuleBootstrap",
+	"https://pay.google.com/gp/p/js/pay.js",
 ], function (Component, quote, PagarmeCore) {
 	"use strict";
 	return Component.extend({
 		defaults: {
 			template: "Pagarme_Pagarme/payment/googlepay",
 		},
-		getCode: function() {
+		getCode: function () {
 			return "pagarme_googlepay";
 		},
 		getTitle: function () {
@@ -22,17 +22,19 @@ define([
 				environment = "PRODUCTION";
 			}
 
-			return new google.payments.api.PaymentsClient({ environment: environment });
+			return new google.payments.api.PaymentsClient({
+				environment: environment,
+			});
 		},
 		addGooglePayButton: function () {
 			let self = this;
 			let paymentsClient = this.getGooglePaymentsClient();
 			const button = paymentsClient.createButton({
-				buttonColor: 'default',
-				buttonType: 'pay',
+				buttonColor: "default",
+				buttonType: "pay",
 				buttonRadius: 5,
-				buttonLocale: 'pt',
-				buttonSizeMode: 'fill',
+				buttonLocale: "pt",
+				buttonSizeMode: "fill",
 			});
 			document.getElementById("pagarme-googlepay").appendChild(button);
 		},
@@ -40,19 +42,19 @@ define([
 		onPaymentAuthorized: function (paymentData) {
 			return new Promise(function (resolve, reject) {
 				processPayment(paymentData)
-				.then(function () {
-					resolve({ transactionState: "SUCCESS" });
-				})
-				.catch(function () {
-					resolve({
-					transactionState: "ERROR",
-					error: {
-						intent: "PAYMENT_AUTHORIZATION",
-						message: "Insufficient funds",
-						reason: "PAYMENT_DATA_INVALID",
-					},
+					.then(function () {
+						resolve({ transactionState: "SUCCESS" });
+					})
+					.catch(function () {
+						resolve({
+							transactionState: "ERROR",
+							error: {
+								intent: "PAYMENT_AUTHORIZATION",
+								message: "Insufficient funds",
+								reason: "PAYMENT_DATA_INVALID",
+							},
+						});
 					});
-				});
 			});
 		},
 
@@ -71,14 +73,14 @@ define([
 			const baseCardPaymentMethod = {
 				type: "CARD",
 				parameters: {
-				allowedAuthMethods: ["PAN_ONLY"],
-				allowedCardNetworks: [
-					"AMEX",
-					"DISCOVER",
-					"JCB",
-					"MASTERCARD",
-					"VISA",
-				],
+					allowedAuthMethods: ["PAN_ONLY"],
+					allowedCardNetworks: [
+						"AMEX",
+						"DISCOVER",
+						"JCB",
+						"MASTERCARD",
+						"VISA",
+					],
 				},
 			};
 			const cardPaymentMethod = Object.assign({}, baseCardPaymentMethod, {
@@ -89,7 +91,8 @@ define([
 			paymentDataRequest.transactionInfo = this.getGoogleTransactionInfo();
 			paymentDataRequest.merchantInfo = {
 				merchantId: window.checkoutConfig.payment.pagarme_googlepay.merchantId,
-				merchantName: window.checkoutConfig.payment.pagarme_googlepay.merchantName,
+				merchantName:
+					window.checkoutConfig.payment.pagarme_googlepay.merchantName,
 			};
 			return paymentDataRequest;
 		},
@@ -106,7 +109,7 @@ define([
 					self.processPayment(paymentData, self);
 				})
 				.catch(function (err) {
-					if(err.statusCode ===  "CANCELED") {
+					if (err.statusCode === "CANCELED") {
 						return;
 					}
 					console.error(err);
@@ -136,18 +139,16 @@ define([
 			var paymentToken = paymentData.paymentMethodData.tokenizationData.token;
 			var _self = self;
 			_self.elementox = paymentToken;
-			PagarmeCore.platFormConfig.addresses.billingAddress = quote.billingAddress();
+			PagarmeCore.platFormConfig.addresses.billingAddress =
+				quote.billingAddress();
 
 			var PlatformPlaceOrder = {
-				obj : _self,
+				obj: _self,
 				data: paymentToken,
-				event: event
+				event: event,
 			};
 
-			PagarmeCore.placeOrder(
-				PlatformPlaceOrder,
-				this.getModel()
-			);
+			PagarmeCore.placeOrder(PlatformPlaceOrder, this.getModel());
 		},
 
 		getMailingAddress: function () {
@@ -157,7 +158,7 @@ define([
 			return window.checkoutConfig.payment.instructions[this.item.method];
 		},
 		getModel: function () {
-			return 'googlepay';
+			return "googlepay";
 		},
 
 		getData: function () {
