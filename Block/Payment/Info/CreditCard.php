@@ -16,7 +16,7 @@ use Pagarme\Core\Payment\Aggregates\Payments\Authentication\AuthenticationStatus
 
 class CreditCard extends BaseCardInfo
 {
-    const TEMPLATE = 'Pagarme_Pagarme::info/creditCard.phtml';
+    const TEMPLATE = 'Pagarme_Pagarme::info/card.phtml';
 
     /**
      * @return void

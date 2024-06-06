@@ -14,7 +14,7 @@ use Pagarme\Pagarme\Concrete\Magento2PlatformOrderDecorator;
 abstract class BaseCardInfo extends Cc
 {
 
-     /**
+    /**
      * @return array
      * @throws InvalidParamException
      * @throws LocalizedException
@@ -41,10 +41,12 @@ abstract class BaseCardInfo extends Cc
         }
 
         $charge = current($orderObject->getCharges());
-        $lastFourDigitsWithDots = sprintf("**** **** **** %s", 
-        $charge->getLastTransaction()->getCardData()->getLastFourDigits()->getValue());
+        $lastFourDigitsWithDots = sprintf(
+            "**** **** **** %s",
+            $charge->getLastTransaction()->getCardData()->getLastFourDigits()->getValue()
+        );
         return array_merge(
-            $charge->getAcquirerTidCapturedAndAutorize(),
+            $charge->getAcquirerTidCapturedAndAuthorize(),
             ['tid' => $charge->getLastTransaction()->getAcquirerTid() ?? ""],
             ['cardBrand' => $charge->getLastTransaction()->getCardData()->getBrand()->getName() ?? ""],
             ['installments' => $this->getInfo()->getAdditionalInformation('cc_installments') ?? ""],

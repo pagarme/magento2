@@ -6,7 +6,7 @@ use Pagarme\Pagarme\Block\Payment\Info\BaseCardInfo;
 
 class Debit extends BaseCardInfo
 {
-    const TEMPLATE = 'Pagarme_Pagarme::info/debitCard.phtml';
+    const TEMPLATE = 'Pagarme_Pagarme::info/card.phtml';
 
     public function _construct()
     {

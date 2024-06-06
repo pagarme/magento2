@@ -225,11 +225,11 @@
             </pagarme_debit>
 
             <pagarme_googlepay>
-				<active>0</active>
-				<model>PagarmeGooglePayRemoteMethodAdapter</model>
-				<order_status>pending_payment</order_status>
+                <active>0</active>
+                <model>PagarmeGooglePayRemoteMethodAdapter</model>
+                <order_status>pending_payment</order_status>
                 <payment_action>authorize</payment_action>
-				<title>Google Pay</title>
+                <title>Google Pay</title>
                 <can_initialize>1</can_initialize>
                 <can_authorize>1</can_authorize>
                 <can_capture>1</can_capture>

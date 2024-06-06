@@ -159,13 +159,13 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
             self::fillWithHubConfig($configData, $storeConfig);
             self::fillWithMarketplaceConfig($configData, $storeConfig);
 
-                $configurationFactory = new ConfigurationFactory();
-                $config = $configurationFactory->createFromJsonData(
-                    json_encode($configData)
-                );
+            $configurationFactory = new ConfigurationFactory();
+            $config = $configurationFactory->createFromJsonData(
+                json_encode($configData)
+            );
 
-                self::$moduleConfig = $config;
-                self::$instance->setApiBaseUrl();
+            self::$moduleConfig = $config;
+            self::$instance->setApiBaseUrl();
 
         } catch (\Throwable $error) {
             $configErrorNotify = new ConfigNotification();
