@@ -238,7 +238,7 @@
                 <is_gateway>1</is_gateway>
                 <sort_order>1</sort_order>
                 <can_initialize>1</can_initialize>
-			</pagarme_googlepay>
+            </pagarme_googlepay>
         </payment>
     </default>
 </config>

@@ -29,7 +29,8 @@ final class ConfigProvider implements ConfigProviderInterface
                     'active' => true,
                     'title' => $this->googlePayConfig->getTitle(),
                     'merchantId' => $this->googlePayConfig->getMerchantId(),
-                    'merchantName' => $this->googlePayConfig->getMerchantName()
+                    'merchantName' => $this->googlePayConfig->getMerchantName(),
+                    'cardBrands' => $this->googlePayConfig->getCardBrands()
                 ]
             ]
         ];

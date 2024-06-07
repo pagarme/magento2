@@ -47,4 +47,24 @@ class Config extends AbstractConfig implements ConfigInterface
     {
         return $this->getConfig(static::MERCHANT_NAME);
     }
+
+    /**
+     * Return Cards Brands
+     * @return array
+     */
+    public function getCardBrands()
+    {
+        $brandsAllowed = [];
+        $creditCardBrandsSelected = explode(',' , $this->getConfig(static::CARD_BRANDS));
+        /**
+         * Possible brands by google
+         * @see https://developers.google.com/pay/api/web/reference/request-objects#CardParameters
+         */
+        $possibleBrandsByGoogle = ['VISA', 'ELECTRON', 'MASTERCARD', 'MAESTRO', 'ELO'];
+        foreach ($creditCardBrandsSelected as $brand) {
+            if(in_array(strtoupper($brand), $possibleBrandsByGoogle))
+                $brandsAllowed[] = strtoupper($brand);
+        }
+        return $brandsAllowed;
+    }
 }
