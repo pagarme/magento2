@@ -98,7 +98,7 @@ define([
         },
 
         onGooglePaymentButtonClicked: function () {
-            self = this;
+            const self = this;
             const paymentDataRequest = this.getGooglePaymentDataRequest();
             paymentDataRequest.transactionInfo =
                 this.getGoogleTransactionInfo();

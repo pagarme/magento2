@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Class Config
  *
@@ -23,7 +24,7 @@ class Config extends AbstractConfig implements ConfigInterface
     {
         $title = $this->getConfig(static::PATH_TITLE);
 
-        if(empty($title)){
+        if (empty($title)) {
             return __('Pagar.me Google Pay');
         }
 
@@ -55,15 +56,11 @@ class Config extends AbstractConfig implements ConfigInterface
     public function getCardBrands()
     {
         $brandsAllowed = [];
-        $creditCardBrandsSelected = explode(',' , $this->getConfig(static::CARD_BRANDS));
-        /**
-         * Possible brands by google
-         * @see https://developers.google.com/pay/api/web/reference/request-objects#CardParameters
-         */
-        $possibleBrandsByGoogle = ['VISA', 'ELECTRON', 'MASTERCARD', 'MAESTRO', 'ELO'];
+        $creditCardBrandsSelected = explode(',', $this->getConfig(static::CARD_BRANDS));
         foreach ($creditCardBrandsSelected as $brand) {
-            if(in_array(strtoupper($brand), $possibleBrandsByGoogle))
+            if (in_array(strtoupper($brand), static::GOOGLE_POSSIBLE_BRANDS)) {
                 $brandsAllowed[] = strtoupper($brand);
+            }
         }
         return $brandsAllowed;
     }
