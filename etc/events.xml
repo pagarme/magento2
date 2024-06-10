@@ -18,6 +18,9 @@
     <event name="payment_method_assign_data_pagarme_pix">
         <observer name="pagarme_payment_method_assign_data_pagarme_pix" instance="Pagarme\Pagarme\Observer\PixDataAssignObserver" />
     </event>
+    <event name="payment_method_assign_data_pagarme_googlepay">
+        <observer name="pagarme_payment_method_assign_data_pagarme_googlepay" instance="Pagarme\Pagarme\Observer\GooglePayDataAssignObserver" />
+    </event>
     <event name="sales_order_place_before">
         <observer name="pagarme_payment_sales_order_place_before_pagarme_creditcard" instance="Pagarme\Pagarme\Observer\CreditCardOrderPlaceBeforeObserver" />
         <observer name="pagarme_payment_sales_order_place_before" instance="Pagarme\Pagarme\Observer\OrderPlaceBeforeObserver" />

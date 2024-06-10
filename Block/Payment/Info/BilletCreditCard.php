@@ -175,7 +175,7 @@ class BilletCreditCard extends Cc
             if ($item->getAcquirerNsu() != 0) {
                 $transactionList['creditCard'] =
                     array_merge(
-                        $orderObject->getCharges()[0]->getAcquirerTidCapturedAndAutorize(),
+                        $orderObject->getCharges()[0]->getAcquirerTidCapturedAndAuthorize(),
                         ['tid' => $this->getTid($orderObject->getCharges()[0])]
                     );
 

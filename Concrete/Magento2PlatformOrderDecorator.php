@@ -30,6 +30,7 @@ use Pagarme\Core\Payment\Aggregates\Payments\BoletoPayment;
 use Pagarme\Core\Payment\Aggregates\Payments\NewDebitCardPayment;
 use Pagarme\Core\Payment\Aggregates\Payments\NewVoucherPayment;
 use Pagarme\Core\Payment\Aggregates\Payments\PixPayment;
+use Pagarme\Core\Payment\Aggregates\Payments\GooglePayPayment;
 use Pagarme\Core\Payment\Aggregates\Shipping;
 use Pagarme\Core\Payment\Factories\PaymentFactory;
 use Pagarme\Core\Payment\Repositories\CustomerRepository as CoreCustomerRepository;
@@ -1195,6 +1196,25 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $paymentData[$pixDataIndex][] = $newPaymentData;
     }
 
+    private function extractPaymentDataFromPagarmeGooglepay(
+        $additionalInformation,
+        &$paymentData,
+        $payment
+    ) {
+        $newPaymentData = new stdClass();
+        $newPaymentData->amount =
+            $this->moneyService->floatToCents($this->platformOrder->getGrandTotal());
+        $newPaymentData->googlepayData = $additionalInformation['googlepayData'];
+        $newPaymentData->additionalInformation = ["googlepayData" => $additionalInformation['googlepayData']];
+        $googlepayIndex = 'googlepay';
+        if (!isset($paymentData[$googlepayIndex])) {
+            $paymentData[$googlepayIndex] = [];
+        }
+
+        $paymentData[$googlepayIndex][] = $newPaymentData;
+    }
+
+    
     public function getShipping()
     {
         /** @var Shipping $shipping */
