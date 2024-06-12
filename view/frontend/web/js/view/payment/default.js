@@ -33,7 +33,7 @@ define(
         "Pagarme_Pagarme/js/core/validators/CreditCardValidator",
         "Pagarme_Pagarme/js/core/validators/CustomerValidator",
         "Pagarme_Pagarme/js/core/validators/MultibuyerValidator",
-        "Pagarme_Pagarme/js/core/validators/VoucherCardValidator",
+        "Pagarme_Pagarme/js/core/validators/VoucherCardValidator"
     ],
     function(
         Component,

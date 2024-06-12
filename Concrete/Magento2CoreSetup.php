@@ -143,20 +143,21 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
                 return;
             }
 
-        self::fillWithGeneralConfig($configData, $storeConfig);
-        self::fillWithPagarmeKeys($configData, $storeConfig);
-        self::fillWithCardConfig($configData, $storeConfig);
-        self::fillWithBoletoConfig($configData, $storeConfig);
-        self::fillWithPixConfig($configData, $storeConfig);
-        self::fillWithBoletoCreditCardConfig($configData, $storeConfig);
-        self::fillWithTwoCreditCardsConfig($configData, $storeConfig);
-        self::fillWithVoucherConfig($configData, $storeConfig);
-        self::fillWithDebitConfig($configData, $storeConfig);
-        self::fillWithAddressConfig($configData, $storeConfig);
-        self::fillWithMultiBuyerConfig($configData, $storeConfig);
-        self::fillWithRecurrenceConfig($configData, $storeConfig);
-        self::fillWithHubConfig($configData, $storeConfig);
-        self::fillWithMarketplaceConfig($configData, $storeConfig);
+            self::fillWithGeneralConfig($configData, $storeConfig);
+            self::fillWithPagarmeKeys($configData, $storeConfig);
+            self::fillWithCardConfig($configData, $storeConfig);
+            self::fillWithBoletoConfig($configData, $storeConfig);
+            self::fillWithPixConfig($configData, $storeConfig);
+            self::fillWithGooglePayConfig($configData, $storeConfig);
+            self::fillWithBoletoCreditCardConfig($configData, $storeConfig);
+            self::fillWithTwoCreditCardsConfig($configData, $storeConfig);
+            self::fillWithVoucherConfig($configData, $storeConfig);
+            self::fillWithDebitConfig($configData, $storeConfig);
+            self::fillWithAddressConfig($configData, $storeConfig);
+            self::fillWithMultiBuyerConfig($configData, $storeConfig);
+            self::fillWithRecurrenceConfig($configData, $storeConfig);
+            self::fillWithHubConfig($configData, $storeConfig);
+            self::fillWithMarketplaceConfig($configData, $storeConfig);
 
             $configurationFactory = new ConfigurationFactory();
             $config = $configurationFactory->createFromJsonData(
@@ -293,6 +294,24 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         $pixObject = new \stdClass();
 
         $configData->pixConfig = self::fillDataObj($storeConfig, $options, $pixObject, $section);
+    }
+    
+    private static function fillWithGooglePayConfig(
+        stdClass $configData,
+        ScopeConfigInterface $storeConfig
+    ) {
+        $options = [
+            'enabled' => 'active',
+            'title' => 'title',
+            'merchantId' => 'merchant_id',
+            'merchantName' => 'merchant_name'
+        ];
+
+        $section = 'payment/pagarme_googlepay/';
+
+        $googlePayObject = new \stdClass();
+
+        $configData->googlePayConfig = self::fillDataObj($storeConfig, $options, $googlePayObject, $section);
     }
 
 

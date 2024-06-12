@@ -11,6 +11,7 @@ class Magento2PlatformPaymentMethodDecorator implements PlatformPaymentMethodInt
     const VOUCHER = 'voucher';
     const DEBIT = "debit";
     const PIX = "pix";
+    const GOOGLEPAY = "googlepay";
 
     private $paymentMethod;
 
@@ -78,5 +79,10 @@ class Magento2PlatformPaymentMethodDecorator implements PlatformPaymentMethodInt
     private function pix()
     {
         return self::PIX;
+    }
+    
+    private function googlepay()
+    {
+        return self::GOOGLEPAY;
     }
 }

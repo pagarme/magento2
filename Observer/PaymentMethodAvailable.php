@@ -180,6 +180,9 @@ class PaymentMethodAvailable implements ObserverInterface
         if ($this->pagarmeConfig->getPixConfig()->isEnabled()) {
             $paymentMethods[] = "pagarme_pix";
         }
+        if ($this->pagarmeConfig->getGooglePayConfig()->isEnabled()) {
+            $paymentMethods[] = "pagarme_googlepay";
+        }
 
         return $paymentMethods;
     }
