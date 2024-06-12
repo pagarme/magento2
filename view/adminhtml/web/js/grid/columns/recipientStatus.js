@@ -55,6 +55,9 @@ define([
                 case 'blocked':
                     statusLabel = 'Bloqueado'
                     break;
+                case 'refused':
+                    statusLabel = 'Recusado'
+                    break;
                 case 'inactive':
                     statusLabel = 'Inativo'
                     break;
