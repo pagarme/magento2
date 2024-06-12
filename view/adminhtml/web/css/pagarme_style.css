@@ -175,7 +175,8 @@ table.table-cycles {
 .data-grid td .recipient-status-disapproved,
 .data-grid td .recipient-status-suspended,
 .data-grid td .recipient-status-blocked,
-.data-grid td .recipient-status-inactive  {
+.data-grid td .recipient-status-inactive,
+.data-grid td .recipient-status-refused  {
     background-color: #f9d4d4;
     border-color: #e22626;
     color: #e22626;
