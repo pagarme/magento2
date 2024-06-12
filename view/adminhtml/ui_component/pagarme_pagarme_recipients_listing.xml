@@ -123,6 +123,20 @@
                 </item>
             </argument>
         </column>
+        <column name="status" component="Pagarme_Pagarme/js/grid/columns/recipientStatus">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">text</item>
+                    <item name="editor" xsi:type="array">
+                        <item name="editorType" xsi:type="string">text</item>
+                        <item name="validation" xsi:type="array">
+                            <item name="required-entry" xsi:type="boolean">true</item>
+                        </item>
+                    </item>
+                    <item name="label" xsi:type="string" translate="true">Status</item>
+                </item>
+            </argument>
+        </column>
         <actionsColumn name="actions" class="Pagarme\Pagarme\Ui\Component\Column\RecipientActions">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">

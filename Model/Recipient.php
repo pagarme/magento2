@@ -2,7 +2,6 @@
 
 namespace Pagarme\Pagarme\Model;
 
-use Magento\Framework\DataObject\IdentityInterface;
 use Magento\Framework\Model\AbstractModel;
 
 class Recipient extends AbstractModel

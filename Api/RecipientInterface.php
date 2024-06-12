@@ -17,4 +17,10 @@ interface RecipientInterface
      * @return string
      */
     public function searchRecipient(): string;
+
+    /**
+     * @param string $id
+     * @return KycLinkResponseInterface
+     */
+    public function createKycLink(string $id);
 }

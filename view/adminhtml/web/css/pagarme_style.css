@@ -115,6 +115,106 @@ table.table-cycles {
     display: none;
 }
 
+.pagarme-recipient-modal header {
+    padding-bottom: 2.5rem;
+}
+
+.pagarme-recipient-modal .modal-inner-wrap {
+     max-width: 520px;
+ }
+
+.pagarme-recipient-modal p {
+    margin-bottom: 1.5em;
+}
+
+.pagarme-recipient-modal *:last-child {
+    margin-bottom: .5em;
+}
+
+.pagarme-alert-text {
+    font-weight: bold;
+    color: #cd0909;
+}
+
+.data-grid td .action-menu-item.kyc-validation:link,
+.data-grid td .action-menu-item.kyc-validation:visited,
+.data-grid td .action-menu-item.kyc-validation:hover,
+.data-grid td .action-menu-item.kyc-validation:active {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.data-grid td .kyc-validation-status {
+    background: #000 none repeat scroll 0 0;
+    border: 1px solid #000;
+    display: block;
+    font-weight: bold;
+    line-height: 17px;
+    padding: 0 3px;
+    text-align: center;
+}
+
+.data-grid td .kyc-validation-status.recipient-status-waiting_for_analysis {
+    background-color: #fff7d6;
+    border-color: #974f0c;
+    color: #974f0c;
+}
+
+.data-grid td .recipient-status-active {
+    background-color: #d0e5a9;
+    border-color: #5b8116;
+    color: #185b00;
+}
+
+.data-grid td .recipient-status-registered {
+    background-color: #f1f2f4;
+    border-color: #42526e;
+    color: #42526e;
+}
+
+.data-grid td .recipient-status-disapproved,
+.data-grid td .recipient-status-suspended,
+.data-grid td .recipient-status-blocked,
+.data-grid td .recipient-status-inactive  {
+    background-color: #f9d4d4;
+    border-color: #e22626;
+    color: #e22626;
+}
+
+.pagarme-recipient-modal .kyc-link-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    margin-bottom: 2rem;
+}
+.pagarme-recipient-modal #kyc-link {
+    width: calc(100% - 10rem);
+    height: 5rem;
+    padding: 1rem 1rem;
+    border: 1px solid #adadad;
+    border-right: 0;
+    border-radius: 6px 0 0 6px;
+}
+
+.pagarme-recipient-modal #kyc-copy-button {
+    width: 10rem;
+    height: 5rem;
+    border-radius: 0 6px 6px 0;
+}
+
+.pagarme-recipient-modal #kyc-copy-message {
+    display: none;
+    margin: .25rem 0 0 .25rem;
+}
+
+.pagarme-recipient-modal #kyc-copy-message.success {
+    color: #35a335;
+}
+
+.pagarme-recipient-modal #kyc-copy-message.error {
+    color: #cd0909;
+}
+
 /*
  * Jquery UI Fix
  */

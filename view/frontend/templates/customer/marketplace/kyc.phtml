@@ -1,0 +1,58 @@
+<?php
+/**
+ * @var \Pagarme\Pagarme\Block\Customer\Marketplace\Kyc $block Kyc
+ */
+
+use Pagarme\Core\Marketplace\Interfaces\RecipientInterface;
+
+$recipient = $block->getRecipient();
+$recipientId = $recipient->getId();
+
+if (empty($recipientId) || $recipient->getStatus() !== RecipientInterface::VALIDATION_REQUESTED) {
+    return;
+}
+
+?>
+
+<div class="wk-mp-design">
+    <div class="mp-widgets pagarme-kyc">
+        <div class="container">
+            <div class="pagarme-kyc-box">
+                <div class="pagarme-kyc-box-title">
+                    <div class="p-5"><?= __('Pagar.me Recipient') ?></div>
+                </div>
+                <div class="pagarme-kyc-box-content">
+                    <div class="p-5">
+                        <p><?= __('You can now sell, but you must successfully complete our <b>security '
+                                . 'validation</b> to release your sales amounts.') ?></p>
+                        <button class="button" id="pagarme-kyc-start-validation">
+                            <span><?= __('Start validation') ?></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal-success-content">
+    <div class="modal-inner-content pagarme-kyc-modal">
+        <p><?= __('Point the smartphone camera to scan the QRCode.') ?></p>
+        <p><img src="" alt="QRCode" id="pagarme-kyc-qrcode" /></p>
+        <p><?= sprintf(__('Or use this %slink%s.'), '<a id="pagarme-kyc-link" target="_blank" rel="noreferrer">', '</a>') ?></p>
+    </div>
+</div>
+
+<div id="modal-error-content">
+    <div class="modal-inner-content pagarme-kyc-modal">
+        <p><?= __('Something went wrong, please try again later.') ?></p>
+    </div>
+</div>
+
+<script type="text/x-magento-init">
+    {
+        "#pagarme-kyc-start-validation": {
+            "kyc": {"id": "<?= $recipientId ?>"}
+        }
+    }
+</script>

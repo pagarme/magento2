@@ -22,18 +22,27 @@ class Create extends RecipientAction
         if ($recipientId) {
             $this->resourceModelRecipient->load($this->recipient, $recipientId);
             $recipient = $this->recipientService->searchRecipient($this->recipient->getPagarmeId());
+            $statusUpdated = false;
+            if ($this->recipient->getStatus() !== $recipient->status) {
+                $this->recipient->setStatus($recipient->status);
+                $this->resourceModelRecipient->save($this->recipient);
+                $statusUpdated = true;
+            }
             if (!$recipient || !$recipient->id) {
                 $this->messageManager->addError(__('Recipient not exist.'));
                 $this->_redirect('pagarme_pagarme/recipients/index');
                 return;
             }
 
+
             $this->coreRegistry->register(
                 'recipient_data',
                 json_encode([
                     'recipient' => $recipient,
                     'externalId' => $recipient->code,
-                    'localId' => $recipientId
+                    'localId' => $recipientId,
+                    'status' => $this->recipient->getStatus(),
+                    'statusUpdated' => $statusUpdated
                 ])
             );
         }

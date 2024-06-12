@@ -28,6 +28,8 @@ $editRecipient = $block->getEditRecipient(); ?>
            value="<?= $block->getBaseUrl() . 'rest/V1/pagarme/marketplace/recipient/searchRecipient' ?>"
            tabindex="-1"/>
 
+    <input type="hidden" name="form[status]" id="pagarme-status" value="" tabindex="-1"/>
+
     <input type="hidden" name="form_key" value="<?= $block->getFormKey() ?>" tabindex="-1"/>
 
     <input type="hidden" id="recipient-id-control" value="" tabindex="-1"/>
@@ -146,6 +148,17 @@ $editRecipient = $block->getEditRecipient(); ?>
                                         </select>
                                     </div>
                                 </div>
+
+                                <?php if ($editRecipient) : ?>
+                                    <div class="admin__field _required">
+                                        <label for="status" class="admin__field-label">
+                                            <span><?= __('Status') ?></span>
+                                        </label>
+                                        <div class="admin__field-control">
+                                            <input type="text" value="" class="recipient-form-inputs" id="status-label" readonly>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
 
                                 <h2 data-section="individual"><?= __('Personal data') ?></h2>
                                 <h2 data-section="corporation"><?= __('Company data') ?></h2>
