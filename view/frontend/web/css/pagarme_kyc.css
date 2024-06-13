@@ -39,3 +39,8 @@
 .pagarme-kyc-modal img {
     width: 220px;
 }
+
+.pagarme-alert-text {
+    font-weight: bold;
+    color: #cd0909;
+}
