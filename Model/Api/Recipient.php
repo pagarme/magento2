@@ -2,12 +2,19 @@
 
 namespace Pagarme\Pagarme\Model\Api;
 
+use Exception;
+use InvalidArgumentException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Webapi\Rest\Request;
-use Pagarme\Core\Kernel\ValueObjects\Id\RecipientId;
-use Pagarme\Core\Marketplace\Services\RecipientService;
-use Pagarme\Core\Recurrence\Services\PlanService;
+use Pagarme\Core\Kernel\Services\LogService;
+use Pagarme\Core\Marketplace\Interfaces\RecipientInterface as CoreRecipientInterface;
+use Pagarme\Core\Middle\Factory\RecipientFactory as CoreRecipient;
+use Pagarme\Pagarme\Api\KycLinkResponseInterfaceFactory;
 use Pagarme\Pagarme\Api\RecipientInterface;
-use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use Pagarme\Pagarme\Model\RecipientFactory as ModelFactoryRecipient;
+use Pagarme\Pagarme\Model\ResourceModel\Recipients as ResourceModelRecipient;
+use Pagarme\Pagarme\Service\Marketplace\RecipientService;
+use Throwable;
 
 class Recipient implements RecipientInterface
 {
@@ -17,93 +24,162 @@ class Recipient implements RecipientInterface
     protected $request;
 
     /**
+     * @var ModelFactoryRecipient
+     */
+    protected $modelFactoryRecipient;
+
+    /**
+     * @var ResourceModelRecipient
+     */
+    protected $resourceModelRecipient;
+
+    /**
+     * @var CoreRecipient
+     */
+    protected $coreRecipient;
+
+    /**
      * @var RecipientService
      */
     protected $recipientService;
 
-    public function __construct(Request $request)
-    {
-        Magento2CoreSetup::bootstrap();
+    /**
+     * @var KycLinkResponseInterfaceFactory
+     */
+    protected $kycLinkResponseFactory;
+
+    public function __construct(
+        Request $request,
+        ModelFactoryRecipient $modelFactoryRecipient,
+        ResourceModelRecipient $resourceModelRecipient,
+        CoreRecipient $coreRecipient,
+        RecipientService $recipientService,
+        KycLinkResponseInterfaceFactory $kycLinkResponseFactory
+    ) {
         $this->request = $request;
-        $this->recipientService = new RecipientService();
+        $this->modelFactoryRecipient = $modelFactoryRecipient;
+        $this->resourceModelRecipient = $resourceModelRecipient;
+        $this->coreRecipient = $coreRecipient;
+        $this->recipientService = $recipientService;
+        $this->kycLinkResponseFactory = $kycLinkResponseFactory;
     }
 
     /**
      * @return mixed
+     * @throws Exception
      */
     public function saveFormData(): string
     {
-        $post = $this->request->getBodyParams();
-        parse_str($post[0], $params);
-
-        $form = $this->getFormattedForm($params['form']);
-
-        if (empty($form)) {
-            return json_encode([
-                'code' => 400,
-                'message' => 'Error on save recipient'
-            ]);
-        }
+        $bodyParams = current($this->request->getBodyParams());
+        parse_str($bodyParams, $params);
+        $params = $params['form'];
 
         try {
-            $this->recipientService->saveFormRecipient($form);
-        } catch (\Exception $exception) {
+            $message = __(
+                "<p>He can now sell, but remember to check his "
+                . "<b>status</b>. He can only withdraw his sales amounts once the status is "
+                . "<i>“active”</i></p>"
+            );
+
+            if (empty($params['pagarme_id'])) {
+                $recipientOnPagarme = $this->createOnPagarme($params);
+                $params['pagarme_id'] = $recipientOnPagarme->id;
+                $params['status'] = CoreRecipientInterface::REGISTERED;
+                $message = __(
+                    "<p>Follow the status on <b>Pagar.me > Recipients</b> to activate"
+                    . " this recipient's balance movement soon!</p>"
+                );
+            }
+            $this->saveOnPlatform($params);
+
+            return json_encode([
+                'code' => 200,
+                'message' => $message
+            ]);
+        } catch (Throwable $th) {
+            $logService = new LogService("Recipient Log", true, 1);
+            $logService->info($th->getMessage(), [
+                'webkul_seller' => $params['register_information']['webkul_seller'],
+                'document' => $params['register_information']['document'],
+                'external_id' => $params['register_information']['external_id']
+
+            ]);
             return json_encode([
                 'code' => 400,
-                'message' => $exception->getMessage()
+                'message' => __('An error occurred while saving the recipient.')
+                    . ' ' . __($th->getMessage())
             ]);
         }
-
-        return json_encode([
-            'code' => 200,
-            'message' => 'Recipient saved'
-        ]);
     }
 
-    public function getFormattedForm(array $form): array
+    /**
+     * @throws Exception
+     */
+    private function saveOnPlatform($params)
     {
-        $form['holder_document'] = preg_replace("/[^0-9]/", "", $form['holder_document'] ?? '');
-        $form['document']  = preg_replace("/[^0-9]/", "", $form['document'] ?? '');
-        if (isset($form['type'])) {
-            $form['holder_type'] = $form['type'];
-        }
-        if (isset($form['pagarme_id'])) {
-            $form['recipient_id'] = $form['pagarme_id'];
-        }
-
-        return $form;
+        $registeredInformation = $params['register_information'];
+        $recipientModel = $this->modelFactoryRecipient->create();
+        $recipientModel->setId(null);
+        $recipientModel->setExternalId($registeredInformation['external_id']);
+        $recipientModel->setName(empty($registeredInformation['name']) ? $registeredInformation['company_name'] : $registeredInformation['name']);
+        $recipientModel->setEmail($registeredInformation['email']);
+        $recipientModel->setDocument($registeredInformation['document']);
+        $recipientModel->setPagarmeId($params['pagarme_id']);
+        $recipientModel->setType($registeredInformation['type']);
+        $recipientModel->setStatus($params['status']);
+        $this->resourceModelRecipient->save($recipientModel);
     }
 
+    /**
+     * @param $recipientData
+     * @return mixed
+     */
+    private function createOnPagarme($recipientData)
+    {
+        $coreRecipient = $this->coreRecipient->createRecipient($recipientData);
+        return $this->recipientService->createRecipient($coreRecipient);
+    }
+
+    /**
+     * @return string
+     */
     public function searchRecipient(): string
     {
         $post = $this->request->getBodyParams();
 
         try {
-            $recipientId = new RecipientId($post['recipientId']);
-        } catch (\Exception $e) {
-            return json_encode([
-                'code' => 400,
-                'message' => 'Invalid Pagar.me ID'
-            ]);
-        }
-
-        try {
-            $recipient = $this->recipientService->findByPagarmeId($recipientId);
-
-            if ($recipient->status != 'active') {
-                throw new \Exception('Recipient not active');
+            $recipient = $this->recipientService->searchRecipient($post['recipientId']);
+            if ($recipient->status !== 'active') {
+                throw new InvalidArgumentException(__('Recipient not active.'));
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return json_encode([
                 'code' => 404,
-                'message' => $e->getMessage(),
+                'message' => __($e->getMessage()),
             ]);
         }
 
         return json_encode([
             'code' => 200,
-            'message' => 'Recipient finded',
+            'message' => __('Recipient found.'),
             'recipient' => $recipient,
         ]);
+    }
+
+    public function createKycLink(string $id)
+    {
+        $recipientModel = $this->modelFactoryRecipient->create();
+        $this->resourceModelRecipient->load($recipientModel, $id);
+        if (empty($recipientModel->getPagarmeId())) {
+            throw new NoSuchEntityException(__('Recipient not founded.'));
+        }
+        $kycLink = $this->recipientService->createKycLink($recipientModel->getPagarmeId());
+        if (empty($kycLink->url) || empty($kycLink->base64_qrcode)) {
+            throw new NoSuchEntityException(__('Failed to generate the security validation link.'));
+        }
+        $kycResponse = $this->kycLinkResponseFactory->create();
+        $kycResponse->setUrl($kycLink->url)
+            ->setQrCode('data:image/svg+xml;base64,' . $kycLink->base64_qrcode);
+        return $kycResponse;
     }
 }

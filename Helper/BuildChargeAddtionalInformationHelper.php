@@ -55,7 +55,7 @@ class BuildChargeAddtionalInformationHelper
 
             if (empty($billetTransaction)) {
                 $acquirerNsuCapturedAndAutorize =
-                    $charge->getAcquirerTidCapturedAndAutorize();
+                    $charge->getAcquirerTidCapturedAndAuthorize();
 
                 $chargeInformation[$key]["cc_tid"] =
                     $charge->getLastTransaction()->getAcquirerTid();
@@ -92,7 +92,7 @@ class BuildChargeAddtionalInformationHelper
             $name = $nameForTwoCards[$key];
 
             $acquirerNsuCapturedAndAutorize =
-                $charge->getAcquirerTidCapturedAndAutorize();
+                $charge->getAcquirerTidCapturedAndAuthorize();
 
             $chargeInformation[$key]["cc_tid{$name}"] =
                 $charge->getLastTransaction()->getAcquirerTid();
@@ -116,7 +116,7 @@ class BuildChargeAddtionalInformationHelper
         $chargeInformation = [];
         foreach ($charges as $key => $charge) {
             $acquirerNsuCapturedAndAutorize =
-                $charge->getAcquirerTidCapturedAndAutorize();
+                $charge->getAcquirerTidCapturedAndAuthorize();
 
             $chargeInformation[$key]["cc_tid"] =
                 $charge->getLastTransaction()->getAcquirerTid();

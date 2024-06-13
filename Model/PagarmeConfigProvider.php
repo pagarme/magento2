@@ -51,6 +51,7 @@ class PagarmeConfigProvider implements ConfigProviderInterface
     const PATH_VOUCHER_ENABLED = 'payment/pagarme_voucher/active';
 
     const PATH_DEBIT_ENABLED = 'payment/pagarme_debit/active';
+    const PATH_GOOGLEPAY_ENABLED = 'payment/pagarme_googlepay/active';
 
     const PATH_IS_PAYMENT_GATEWAY_TYPE = 'pagarme_pagarme/%s/is_payment_gateway';
 
@@ -63,6 +64,8 @@ class PagarmeConfigProvider implements ConfigProviderInterface
     const DEBIT_PAYMENT_CONFIG = 'pagarme_debit';
 
     const PIX_PAYMENT_CONFIG = 'pagarme_pix';
+    
+    const GOOGLEPAY_PAYMENT_CONFIG = 'pagarme_googlepay';
 
     const VOUCHER_PAYMENT_CONFIG = 'pagarme_voucher';
 
@@ -386,6 +389,17 @@ class PagarmeConfigProvider implements ConfigProviderInterface
             $website
         );
     }
+    /**
+     * @return bool
+     */
+    public function isGooglePayEnabled($website = null)
+    {
+        return (bool) $this->scopeConfig->getValue(
+            self::PATH_GOOGLEPAY_ENABLED,
+            ScopeInterface::SCOPE_WEBSITES,
+            $website
+        );
+    }
 
     /**
      * @param mixed $website
@@ -398,7 +412,8 @@ class PagarmeConfigProvider implements ConfigProviderInterface
             PaymentEnum::DEBIT_CARD => $this->isDebitEnabled($website),
             PaymentEnum::BILLET => $this->isAnyBilletMethodEnabled($website),
             PaymentEnum::CREDIT_CARD => $this->isAnyCreditCardMethodEnabled($website),
-            PaymentEnum::VOUCHER => $this->isVoucherEnabled($website)
+            PaymentEnum::VOUCHER => $this->isVoucherEnabled($website),
+            PaymentEnum::GOOGLEPAY => $this->isGooglePayEnabled($website)
         ];
     }
 
@@ -410,6 +425,7 @@ class PagarmeConfigProvider implements ConfigProviderInterface
         return [
             'pagarme_is_sandbox_mode' => $this->pagarmeConfig->isSandboxMode(),
             'pagarme_is_hub_enabled' => $this->pagarmeConfig->isHubEnabled(),
+            'pagarme_account_id' => $this->getAccountId(),
             'pagarme_customer_configs' => $this->pagarmeConfig->getPagarmeCustomerConfigs(),
             'pagarme_customer_address_configs' => $this->pagarmeConfig->getPagarmeCustomerAddressConfigs()
         ] ;

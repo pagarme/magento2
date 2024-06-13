@@ -15,9 +15,10 @@ class InstallSchema implements InstallSchemaInterface
      * {@inheritdoc}
      */
     public function install(
-        SchemaSetupInterface $setup,
+        SchemaSetupInterface   $setup,
         ModuleContextInterface $context
-    ) {
+    )
+    {
         $installer = $setup;
         $installer->startSetup();
 
@@ -40,14 +41,14 @@ class InstallSchema implements InstallSchemaInterface
         $this->installRecurrenceCharge($setup);
         $this->installSubProducts($setup);
         $this->installProductsPlan($setup);
-        $this->installRecipients($setup);
 
         $setup->endSetup();
     }
 
     public function installConfig(
         SchemaSetupInterface $installer
-    ) {
+    )
+    {
         $tableName = $installer->getTable('pagarme_module_core_configuration');
         if (!$installer->getConnection()->isTableExists($tableName)) {
             $configTable = $installer->getConnection()
@@ -92,7 +93,8 @@ class InstallSchema implements InstallSchemaInterface
 
     public function installWebhook(
         SchemaSetupInterface $installer
-    ) {
+    )
+    {
         $tableName = $installer->getTable('pagarme_module_core_webhook');
         if (!$installer->getConnection()->isTableExists($tableName)) {
             $webhookTable = $installer->getConnection()
@@ -138,7 +140,8 @@ class InstallSchema implements InstallSchemaInterface
 
     public function installOrder(
         SchemaSetupInterface $installer
-    ) {
+    )
+    {
         $tableName = $installer->getTable('pagarme_module_core_order');
         if (!$installer->getConnection()->isTableExists($tableName)) {
             $webhookTable = $installer->getConnection()
@@ -193,7 +196,8 @@ class InstallSchema implements InstallSchemaInterface
 
     public function installCharge(
         SchemaSetupInterface $installer
-    ) {
+    )
+    {
         $tableName = $installer->getTable('pagarme_module_core_charge');
         if (!$installer->getConnection()->isTableExists($tableName)) {
             $webhookTable = $installer->getConnection()
@@ -315,7 +319,8 @@ class InstallSchema implements InstallSchemaInterface
 
     public function installTransaction(
         SchemaSetupInterface $installer
-    ) {
+    )
+    {
         $tableName = $installer->getTable('pagarme_module_core_transaction');
         if (!$installer->getConnection()->isTableExists($tableName)) {
             $webhookTable = $installer->getConnection()
@@ -549,7 +554,7 @@ class InstallSchema implements InstallSchemaInterface
                     'brand',
                     Table::TYPE_TEXT,
                     255,
-                    ['nullable' => false,  'default' => ''],
+                    ['nullable' => false, 'default' => ''],
                     'Card Brand'
                 )
                 ->setComment('Pagar.me Card Tokens')
@@ -857,253 +862,6 @@ class InstallSchema implements InstallSchemaInterface
         return $installer;
     }
 
-    public function installProductsPlan(SchemaSetupInterface $installer)
-    {
-        $tableName = $installer->getTable('pagarme_module_core_recurrence_products_plan');
-        if (!$installer->getConnection()->isTableExists($tableName)) {
-            $customer = $installer->getConnection()
-                ->newTable($tableName)
-                ->addColumn(
-                    'id',
-                    Table::TYPE_INTEGER,
-                    null,
-                    [
-                        'identity' => true,
-                        'unsigned' => true,
-                        'nullable' => false,
-                        'primary' => true
-                    ],
-                    'ID'
-                )
-                ->addColumn(
-                    'interval_type',
-                    Table::TYPE_TEXT,
-                    15,
-                    [
-                        'nullable' => false
-                    ],
-                    'Day, week, month ou year'
-                )
-                ->addColumn(
-                    'interval_count',
-                    Table::TYPE_SMALLINT,
-                    2,
-                    [
-                        'nullable' => false
-                    ],
-                    '1 - 12'
-                )
-                ->addColumn(
-                    'name',
-                    Table::TYPE_TEXT,
-                    255,
-                    [
-                        'nullable' => true
-                    ],
-                    "Product name"
-                )
-                ->addColumn(
-                    'description',
-                    Table::TYPE_TEXT,
-                    500,
-                    [
-                        'nullable' => true
-                    ],
-                    "Product description"
-                )
-                ->addColumn(
-                    'plan_id',
-                    Table::TYPE_TEXT,
-                    21,
-                    [
-                        'nullable' => true
-                    ],
-                    "Api's id"
-                )
-                ->addColumn(
-                    'product_id',
-                    Table::TYPE_INTEGER,
-                    11,
-                    [
-                        'nullable' => true
-                    ],
-                    "Product in Magento's table"
-                )
-                ->addColumn(
-                    'credit_card',
-                    Table::TYPE_TEXT,
-                    1,
-                    [
-                        'nullable' => false
-                    ],
-                    "Accepts credit card"
-                )
-                ->addColumn(
-                    'installments',
-                    Table::TYPE_TEXT,
-                    1,
-                    [
-                        'nullable' => false
-                    ],
-                    "Accepts installments"
-                )
-                ->addColumn(
-                    'boleto',
-                    Table::TYPE_TEXT,
-                    1,
-                    [
-                        'nullable' => false
-                    ],
-                    "Accepts boleto"
-                )
-                ->addColumn(
-                    'billing_type',
-                    Table::TYPE_TEXT,
-                    11,
-                    [
-                        'nullable' => false
-                    ],
-                    "Prepaid, postpaid ou exact_day"
-                )
-                ->addColumn(
-                    'status',
-                    Table::TYPE_TEXT,
-                    11,
-                    [
-                        'nullable' => false
-                    ],
-                    "Active, inactive ou deleted"
-                )
-                ->addColumn(
-                    'trial_period_days',
-                    Table::TYPE_TEXT,
-                    11,
-                    [
-                        'nullable' => true
-                    ],
-                    "Trial period in days"
-                )
-                ->addColumn(
-                    'created_at',
-                    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
-                    null,
-                    ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT],
-                    'Created At'
-                )
-                ->addColumn(
-                    'updated_at',
-                    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
-                    null,
-                    ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT_UPDATE],
-                    'Updated At'
-                )
-                ->setOption('charset', 'utf8');
-
-            $installer->getConnection()->createTable($customer);
-        }
-        return $installer;
-    }
-
-    public function installSubProducts(SchemaSetupInterface $installer)
-    {
-        $tableName = $installer->getTable('pagarme_module_core_recurrence_sub_products');
-        if (!$installer->getConnection()->isTableExists($tableName)) {
-            $customer = $installer->getConnection()
-                ->newTable($tableName)
-                ->addColumn(
-                    'id',
-                    Table::TYPE_INTEGER,
-                    null,
-                    [
-                        'identity' => true,
-                        'unsigned' => true,
-                        'nullable' => false,
-                        'primary' => true
-                    ],
-                    'ID'
-                )
-                ->addColumn(
-                    'product_id',
-                    Table::TYPE_INTEGER,
-                    255,
-                    [
-                        'nullable' => false
-                    ],
-                    "Magento's product id"
-                )
-                ->addColumn(
-                    'product_recurrence_id',
-                    Table::TYPE_INTEGER,
-                    255,
-                    [
-                        'nullable' => false
-                    ],
-                    'Id from table pagarme_module_core_products_(plan/subscription)'
-                )
-                ->addColumn(
-                    'recurrence_type',
-                    Table::TYPE_TEXT,
-                    255,
-                    [
-                        'nullable' => false
-                    ],
-                    'Type of recurrence product (plan or subscription)'
-                )
-                ->addColumn(
-                    'cycles',
-                    Table::TYPE_INTEGER,
-                    5,
-                    [
-                        'nullable' => true
-                    ],
-                    'Cycle'
-                )
-                ->addColumn(
-                    'quantity',
-                    Table::TYPE_INTEGER,
-                    255,
-                    [
-                        'nullable' => true
-                    ],
-                    "Quantity"
-                )
-                ->addColumn(
-                    'trial_period_days',
-                    Table::TYPE_INTEGER,
-                    255,
-                    [
-                        'nullable' => true
-                    ],
-                    "Trial period"
-                )
-                ->addColumn(
-                    'created_at',
-                    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
-                    null,
-                    ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT],
-                    'Created At'
-                )
-                ->addColumn(
-                    'updated_at',
-                    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
-                    null,
-                    ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT_UPDATE],
-                    'Updated At'
-                )
-                ->addColumn(
-                    'pagarme_id',
-                    Table::TYPE_TEXT,
-                    21,
-                    ['nullable' => true],
-                    'Pagarme Id'
-                )
-                ->setOption('charset', 'utf8');
-
-            $installer->getConnection()->createTable($customer);
-        }
-        return $installer;
-    }
-
     public function installProductsSubscription(SchemaSetupInterface $installer)
     {
         $tableName = $installer->getTable('pagarme_module_core_recurrence_products_subscription');
@@ -1178,22 +936,103 @@ class InstallSchema implements InstallSchemaInterface
                 )
                 ->addColumn(
                     'created_at',
-                    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
+                    Table::TYPE_TIMESTAMP,
                     null,
-                    ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT],
+                    ['nullable' => false, 'default' => Table::TIMESTAMP_INIT],
                     'Created At'
                 )
                 ->addColumn(
                     'updated_at',
-                    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
+                    Table::TYPE_TIMESTAMP,
                     null,
-                    ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT_UPDATE],
+                    ['nullable' => false, 'default' => Table::TIMESTAMP_INIT_UPDATE],
                     'Updated At'
                 )
                 ->setComment('Product Plan Table')
                 ->setOption('charset', 'utf8');
 
             $installer->getConnection()->createTable($customer);
+        }
+        return $installer;
+    }
+
+    public function installSubscriptionItems(SchemaSetupInterface $installer)
+    {
+        $tableName = $installer->getTable(
+            'pagarme_module_core_recurrence_subscription_items'
+        );
+
+        if (!$installer->getConnection()->isTableExists($tableName)) {
+            $configTable = $installer->getConnection()
+                ->newTable($tableName)
+                ->addColumn(
+                    'id',
+                    Table::TYPE_INTEGER,
+                    null,
+                    [
+                        'identity' => true,
+                        'unsigned' => true,
+                        'nullable' => false,
+                        'primary' => true
+                    ],
+                    'ID'
+                )
+                ->addColumn(
+                    'pagarme_id',
+                    Table::TYPE_TEXT,
+                    null,
+                    [
+                        'nullable' => false
+                    ],
+                    'format: si_xxxxxxxxxxxxxxxx'
+                )
+                ->setOption('charset', 'utf8')
+                ->addColumn(
+                    'subscription_id',
+                    Table::TYPE_TEXT,
+                    null,
+                    [
+                        'nullable' => false
+                    ],
+                    'format: sub_xxxxxxxxxxxxxxxx'
+                )
+                ->setOption('charset', 'utf8')
+                ->addColumn(
+                    'code',
+                    Table::TYPE_TEXT,
+                    100,
+                    [
+                        'nullable' => false,
+                    ],
+                    'Product code on platform'
+                )
+                ->addColumn(
+                    'quantity',
+                    Table::TYPE_INTEGER,
+                    null,
+                    [
+                        'unsigned' => true,
+                        'nullable' => false,
+                    ],
+                    'Quantity'
+                )
+                ->addColumn(
+                    'created_at',
+                    Table::TYPE_TIMESTAMP,
+                    null,
+                    ['nullable' => false, 'default' => Table::TIMESTAMP_INIT],
+                    'Created At'
+                )
+                ->addColumn(
+                    'updated_at',
+                    Table::TYPE_TIMESTAMP,
+                    null,
+                    ['nullable' => false, 'default' => Table::TIMESTAMP_INIT_UPDATE],
+                    'Updated At'
+                )
+                ->setOption('charset', 'utf8');
+
+            $installer->getConnection()->createTable($configTable);
         }
         return $installer;
     }
@@ -1264,16 +1103,16 @@ class InstallSchema implements InstallSchemaInterface
                 )
                 ->addColumn(
                     'created_at',
-                    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
+                    Table::TYPE_TIMESTAMP,
                     null,
-                    ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT],
+                    ['nullable' => false, 'default' => Table::TIMESTAMP_INIT],
                     'Created At'
                 )
                 ->addColumn(
                     'updated_at',
-                    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
+                    Table::TYPE_TIMESTAMP,
                     null,
-                    ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT_UPDATE],
+                    ['nullable' => false, 'default' => Table::TIMESTAMP_INIT_UPDATE],
                     'Updated At'
                 )
                 ->setOption('charset', 'utf8');
@@ -1405,16 +1244,16 @@ class InstallSchema implements InstallSchemaInterface
                 )
                 ->addColumn(
                     'created_at',
-                    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
+                    Table::TYPE_TIMESTAMP,
                     null,
-                    ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT],
+                    ['nullable' => false, 'default' => Table::TIMESTAMP_INIT],
                     'Created At'
                 )
                 ->addColumn(
                     'updated_at',
-                    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
+                    Table::TYPE_TIMESTAMP,
                     null,
-                    ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT_UPDATE],
+                    ['nullable' => false, 'default' => Table::TIMESTAMP_INIT_UPDATE],
                     'Updated At'
                 )
                 ->setOption('charset', 'utf8');
@@ -1570,30 +1409,30 @@ class InstallSchema implements InstallSchemaInterface
                 ->setOption('charset', 'utf8')
                 ->addColumn(
                     'cycle_start',
-                    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
+                    Table::TYPE_TIMESTAMP,
                     null,
                     ['nullable' => false],
                     'Cycle Start'
                 )
                 ->addColumn(
                     'cycle_end',
-                    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
+                    Table::TYPE_TIMESTAMP,
                     null,
                     ['nullable' => false],
                     'Cycle End'
                 )
                 ->addColumn(
                     'created_at',
-                    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
+                    Table::TYPE_TIMESTAMP,
                     null,
-                    ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT],
+                    ['nullable' => false, 'default' => Table::TIMESTAMP_INIT],
                     'Created At'
                 )
                 ->addColumn(
                     'updated_at',
-                    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
+                    Table::TYPE_TIMESTAMP,
                     null,
-                    ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT_UPDATE],
+                    ['nullable' => false, 'default' => Table::TIMESTAMP_INIT_UPDATE],
                     'Updated At'
                 )
                 ->setOption('charset', 'utf8');
@@ -1603,90 +1442,9 @@ class InstallSchema implements InstallSchemaInterface
         return $installer;
     }
 
-    public function installSubscriptionItems(SchemaSetupInterface $installer)
+    public function installSubProducts(SchemaSetupInterface $installer)
     {
-        $tableName = $installer->getTable(
-            'pagarme_module_core_recurrence_subscription_items'
-        );
-
-        if (!$installer->getConnection()->isTableExists($tableName)) {
-            $configTable = $installer->getConnection()
-                ->newTable($tableName)
-                ->addColumn(
-                    'id',
-                    Table::TYPE_INTEGER,
-                    null,
-                    [
-                        'identity' => true,
-                        'unsigned' => true,
-                        'nullable' => false,
-                        'primary' => true
-                    ],
-                    'ID'
-                )
-                ->addColumn(
-                    'pagarme_id',
-                    Table::TYPE_TEXT,
-                    null,
-                    [
-                        'nullable' => false
-                    ],
-                    'format: si_xxxxxxxxxxxxxxxx'
-                )
-                ->setOption('charset', 'utf8')
-                ->addColumn(
-                    'subscription_id',
-                    Table::TYPE_TEXT,
-                    null,
-                    [
-                        'nullable' => false
-                    ],
-                    'format: sub_xxxxxxxxxxxxxxxx'
-                )
-                ->setOption('charset', 'utf8')
-                ->addColumn(
-                    'code',
-                    Table::TYPE_TEXT,
-                    100,
-                    [
-                        'nullable' => false,
-                    ],
-                    'Product code on platform'
-                )
-                ->addColumn(
-                    'quantity',
-                    Table::TYPE_INTEGER,
-                    null,
-                    [
-                        'unsigned' => true,
-                        'nullable' => false,
-                    ],
-                    'Quantity'
-                )
-                ->addColumn(
-                    'created_at',
-                    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
-                    null,
-                    ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT],
-                    'Created At'
-                )
-                ->addColumn(
-                    'updated_at',
-                    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
-                    null,
-                    ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT_UPDATE],
-                    'Updated At'
-                )
-                ->setOption('charset', 'utf8');
-
-            $installer->getConnection()->createTable($configTable);
-        }
-        return $installer;
-    }
-
-    public function installRecipients(SchemaSetupInterface $installer)
-    {
-        $tableName = $installer->getTable('pagarme_module_core_recipients');
+        $tableName = $installer->getTable('pagarme_module_core_recurrence_sub_products');
         if (!$installer->getConnection()->isTableExists($tableName)) {
             $customer = $installer->getConnection()
                 ->newTable($tableName)
@@ -1703,71 +1461,225 @@ class InstallSchema implements InstallSchemaInterface
                     'ID'
                 )
                 ->addColumn(
-                    'external_id',
-                    Table::TYPE_TEXT,
-                    null,
+                    'product_id',
+                    Table::TYPE_INTEGER,
+                    255,
                     [
                         'nullable' => false
                     ],
-                    'External ID'
+                    "Magento's product id"
+                )
+                ->addColumn(
+                    'product_recurrence_id',
+                    Table::TYPE_INTEGER,
+                    255,
+                    [
+                        'nullable' => false
+                    ],
+                    'Id from table pagarme_module_core_products_(plan/subscription)'
+                )
+                ->addColumn(
+                    'recurrence_type',
+                    Table::TYPE_TEXT,
+                    255,
+                    [
+                        'nullable' => false
+                    ],
+                    'Type of recurrence product (plan or subscription)'
+                )
+                ->addColumn(
+                    'cycles',
+                    Table::TYPE_INTEGER,
+                    5,
+                    [
+                        'nullable' => true
+                    ],
+                    'Cycle'
+                )
+                ->addColumn(
+                    'quantity',
+                    Table::TYPE_INTEGER,
+                    255,
+                    [
+                        'nullable' => true
+                    ],
+                    "Quantity"
+                )
+                ->addColumn(
+                    'trial_period_days',
+                    Table::TYPE_INTEGER,
+                    255,
+                    [
+                        'nullable' => true
+                    ],
+                    "Trial period"
+                )
+                ->addColumn(
+                    'created_at',
+                    Table::TYPE_TIMESTAMP,
+                    null,
+                    ['nullable' => false, 'default' => Table::TIMESTAMP_INIT],
+                    'Created At'
+                )
+                ->addColumn(
+                    'updated_at',
+                    Table::TYPE_TIMESTAMP,
+                    null,
+                    ['nullable' => false, 'default' => Table::TIMESTAMP_INIT_UPDATE],
+                    'Updated At'
+                )
+                ->addColumn(
+                    'pagarme_id',
+                    Table::TYPE_TEXT,
+                    21,
+                    ['nullable' => true],
+                    'Pagarme Id'
+                )
+                ->setOption('charset', 'utf8');
+
+            $installer->getConnection()->createTable($customer);
+        }
+        return $installer;
+    }
+
+    public function installProductsPlan(SchemaSetupInterface $installer)
+    {
+        $tableName = $installer->getTable('pagarme_module_core_recurrence_products_plan');
+        if (!$installer->getConnection()->isTableExists($tableName)) {
+            $customer = $installer->getConnection()
+                ->newTable($tableName)
+                ->addColumn(
+                    'id',
+                    Table::TYPE_INTEGER,
+                    null,
+                    [
+                        'identity' => true,
+                        'unsigned' => true,
+                        'nullable' => false,
+                        'primary' => true
+                    ],
+                    'ID'
+                )
+                ->addColumn(
+                    'interval_type',
+                    Table::TYPE_TEXT,
+                    15,
+                    [
+                        'nullable' => false
+                    ],
+                    'Day, week, month ou year'
+                )
+                ->addColumn(
+                    'interval_count',
+                    Table::TYPE_SMALLINT,
+                    2,
+                    [
+                        'nullable' => false
+                    ],
+                    '1 - 12'
                 )
                 ->addColumn(
                     'name',
                     Table::TYPE_TEXT,
                     255,
                     [
-                        'nullable' => false
+                        'nullable' => true
                     ],
-                    'Name'
+                    "Product name"
                 )
                 ->addColumn(
-                    'email',
+                    'description',
                     Table::TYPE_TEXT,
-                    255,
+                    500,
+                    [
+                        'nullable' => true
+                    ],
+                    "Product description"
+                )
+                ->addColumn(
+                    'plan_id',
+                    Table::TYPE_TEXT,
+                    21,
+                    [
+                        'nullable' => true
+                    ],
+                    "Api's id"
+                )
+                ->addColumn(
+                    'product_id',
+                    Table::TYPE_INTEGER,
+                    11,
+                    [
+                        'nullable' => true
+                    ],
+                    "Product in Magento's table"
+                )
+                ->addColumn(
+                    'credit_card',
+                    Table::TYPE_TEXT,
+                    1,
                     [
                         'nullable' => false
                     ],
-                    'Email'
+                    "Accepts credit card"
                 )
                 ->addColumn(
-                    'document_type',
+                    'installments',
                     Table::TYPE_TEXT,
-                    255,
+                    1,
                     [
                         'nullable' => false
                     ],
-                    'Document Type'
+                    "Accepts installments"
                 )
                 ->addColumn(
-                    'document',
+                    'boleto',
                     Table::TYPE_TEXT,
-                    255,
+                    1,
                     [
                         'nullable' => false
                     ],
-                    'Document'
+                    "Accepts boleto"
                 )
                 ->addColumn(
-                    'pagarme_id',
+                    'billing_type',
                     Table::TYPE_TEXT,
-                    null,
+                    11,
                     [
                         'nullable' => false
                     ],
-                    'format: rp_xxxxxxxxxxxxxxxx'
+                    "Prepaid, postpaid ou exact_day"
+                )
+                ->addColumn(
+                    'status',
+                    Table::TYPE_TEXT,
+                    11,
+                    [
+                        'nullable' => false
+                    ],
+                    "Active, inactive ou deleted"
+                )
+                ->addColumn(
+                    'trial_period_days',
+                    Table::TYPE_TEXT,
+                    11,
+                    [
+                        'nullable' => true
+                    ],
+                    "Trial period in days"
                 )
                 ->addColumn(
                     'created_at',
-                    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
+                    Table::TYPE_TIMESTAMP,
                     null,
-                    ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT],
+                    ['nullable' => false, 'default' => Table::TIMESTAMP_INIT],
                     'Created At'
                 )
                 ->addColumn(
                     'updated_at',
-                    \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
+                    Table::TYPE_TIMESTAMP,
                     null,
-                    ['nullable' => false, 'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT_UPDATE],
+                    ['nullable' => false, 'default' => Table::TIMESTAMP_INIT_UPDATE],
                     'Updated At'
                 )
                 ->setOption('charset', 'utf8');

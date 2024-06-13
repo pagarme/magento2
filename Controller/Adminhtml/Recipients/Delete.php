@@ -32,7 +32,7 @@ class Delete extends RecipientAction
 
         $recipientService->delete($recipientId);
 
-        $message = $this->messageFactory->create('success', _("Recipient deleted."));
+        $message = $this->messageFactory->create('success', __("Recipient deleted."));
         $this->messageManager->addMessage($message);
 
         $this->_redirect('pagarme_pagarme/recipients/index');

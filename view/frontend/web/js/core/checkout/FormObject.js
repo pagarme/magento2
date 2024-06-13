@@ -331,6 +331,23 @@ define(['jquery'], ($) => {
         return FormObject.FormObject;
     };
 
+    FormObject.googlePayInit = (isMultibuyerEnabled) => {
+
+        FormObject.FormObject = {};
+
+        const containerSelector = '#pagarme_googlepay-form';
+
+        const googlepayElements = {
+            'containerSelector' : containerSelector,
+            "inputAmount" : $(containerSelector + " .cc_amount"),
+            "inputAmountContainer" : $(containerSelector + " .amount-container"),
+        };
+
+        FormObject.FormObject = googlepayElements;
+        FormObject.FormObject.numberOfPaymentForms = 1;
+        return FormObject.FormObject;
+    };
+
     FormObject.boletoInit = (isMultibuyerEnabled) => {
 
         FormObject.FormObject = {};

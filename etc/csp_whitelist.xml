@@ -7,18 +7,38 @@
             <values>
                 <value id="mundipagg-api" type="host">api.mundipagg.com</value>
                 <value id="pagarme-api" type="host">api.pagar.me</value>
+                <value id="pagarme-brasil-api" type="host">brasilapi.com.br</value>
+                <value id="pagarme-viacep-api" type="host">viacep.com.br</value>
+                <value id="pagarme-ibge-api" type="host">servicodados.ibge.gov.br</value>
+                <value id="pagarme-googlepay" type="host">*.google.com</value>
+                <value id="pagarme-googlepay-google" type="host">google.com</value>
+                <value id="pagarme-googlepay-sandbox" type="host">pay.sandbox.google.com</value>
             </values>
         </policy>
         <policy id="img-src">
             <values>
                 <value id="mundipagg-img" type="host">cdn.mundipagg.com</value>
                 <value id="pagarme-img" type="host">api.pagar.me</value>
+                <value id="pagarme-googlepay" type="host">*.gstatic.com</value>
+            </values>
+        </policy>
+        <policy id="style-src">
+            <values>
+                <value id="pagarme-googlepayapis" type="host">*.googleapis.com</value>
+                <value id="pagarme-googlepay" type="host">*.google.com</value>
+            </values>
+        </policy>
+        <policy id="font-src">
+            <values>
+                <value id="pagarme-googlepay" type="host">*.google.com</value>
+                <value id="pagarme-googlepay-gstatic" type="host">*.gstatic.com</value>
             </values>
         </policy>
         <policy id="script-src">
             <values>
                 <value id="pagarme-api-3ds" type="host">3ds2.pagar.me</value>
                 <value id="pagarme-api-3ds-sdx" type="host">3ds2-sdx.pagar.me</value>
+                <value id="pagarme-googlepay" type="host">*.google.com</value>
             </values>
         </policy>
         <policy id="frame-src">
@@ -61,6 +81,7 @@
                 <value id="pagarme-tds-wise" type="host">*.wise.com</value>
                 <value id="pagarme-tds-revolut" type="host">*.revolut.com</value>
                 <value id="pagarme-tds-sandbox" type="host">*.sandbox.3dsecure.io</value>
+                <value id="pagarme-googlepay" type="host">*.google.com</value>
             </values>
         </policy>
         <policy id="form-action">
@@ -103,6 +124,7 @@
                 <value id="pagarme-tds-wise" type="host">*.wise.com</value>
                 <value id="pagarme-tds-revolut" type="host">*.revolut.com</value>
                 <value id="pagarme-tds-sandbox" type="host">*.sandbox.3dsecure.io</value>
+                <value id="pagarme-googlepay" type="host">*.google.com</value>
             </values>
         </policy>
     </policies>

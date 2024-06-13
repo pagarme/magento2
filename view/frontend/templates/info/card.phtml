@@ -1,0 +1,25 @@
+<?php
+    /**
+     * @var \Pagarme\Core\Kernel\Aggregates\Transaction $info
+     */
+    $info =  $this->getTransactionInfo();
+?>
+<span>
+    <?= __($this->getTitle()); ?>
+</span>
+<br /><br />
+<span>
+    <b><?= __('Brand'); ?>: </b>
+    <?= $info['cardBrand']; ?>
+</span><br />
+<span>
+    <b><?= __('Number'); ?>: </b>
+    <?= $info['lastFour']; ?>
+</span>
+<br />
+<?php if (!empty($info['installments'])) : ?>
+    <span>
+        <b><?= __('Installments'); ?>: </b>
+        <?= $info['installments'] ?>
+    </span>
+<?php endif; ?>

@@ -72,6 +72,7 @@
                 <item name="installments_creditcard" xsi:type="object">PagarmeCreditCardInstallmentsUiConfigProvider</item>
                 <item name="pagarme_billet_config_provider" xsi:type="object">Pagarme\Pagarme\Model\Ui\Billet\ConfigProvider</item>
                 <item name="pagarme_pix_config_provider" xsi:type="object">Pagarme\Pagarme\Model\Ui\Pix\ConfigProvider</item>
+                <item name="pagarme_googlepay_config_provider" xsi:type="object">Pagarme\Pagarme\Model\Ui\GooglePay\ConfigProvider</item>
                 <item name="pagarme_config_provider" xsi:type="object">Pagarme\Pagarme\Model\PagarmeConfigProvider</item>
             </argument>
         </arguments>

@@ -97,6 +97,14 @@
         </resources>
     </route>
 
+    <route url="/V1/pagarme/marketplace/recipient/kyc/link/:id" method="GET">
+        <service class="Pagarme\Pagarme\Api\RecipientInterface"
+                 method="createKycLink"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+
     <route url="/V1/pagarme/recurrence/product" method="POST">
         <service class="Pagarme\Pagarme\Api\ProductSubscriptionApiInterface"
                  method="save"/>
