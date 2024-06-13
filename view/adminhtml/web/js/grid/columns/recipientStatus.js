@@ -136,17 +136,14 @@ define([
 
         },
         getModalContent: function (url) {
-            return `<p><span class='pagarme-alert-text'>Atenção!</span> O recebedor já consegue vender, `
-                + `mas <b>só após a validação de segurança</b> completada com sucesso ele <b>conseguirá sacar seus valores</b> `
-                + `referentes às compras.</p>`
-                + `<p>Solicite que ele acesse a <b>Dashboard do Marketplace</b> para completar a validação ou envie o `
-                + `link abaixo para ele.</p>`
+            return `<p>Envie o link abaixo para que o recebedor complete a nossa validação de segurança.</p>`
+                + `<p><span class='pagarme-alert-text'>Atenção!</span> O link é válido por 20 minutos.</p>`
                 + `<div class="kyc-link-container"><input type="text" id="kyc-link" value="${url}" disabled/>`
                 + `<button id="kyc-copy-button">Copiar</button><span id="kyc-copy-message"></span></div>`;
         },
         mageAlert(content) {
             const alertObject = {
-                title: 'Validação solicitada',
+                title: 'Ative a movimentação do saldo deste recebedor',
                 content: content,
                 modalClass: 'pagarme-recipient-modal',
                 buttons: []

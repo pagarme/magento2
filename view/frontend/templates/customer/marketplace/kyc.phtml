@@ -23,8 +23,8 @@ if (empty($recipientId) || $recipient->getStatus() !== RecipientInterface::VALID
                 </div>
                 <div class="pagarme-kyc-box-content">
                     <div class="p-5">
-                        <p><?= __('You can now sell, but you must successfully complete our <b>security '
-                                . 'validation</b> to release your sales amounts.') ?></p>
+                        <p><?= __('To activate your balance movement on Pagar.me, complete our <b>security validation</b>.') ?></p>
+                        <p><?= __("<span class='pagarme-alert-text'>Attention!</span> The generated link will be valid for 20 minutes.") ?></p>
                         <button class="button" id="pagarme-kyc-start-validation">
                             <span><?= __('Start validation') ?></span>
                         </button>

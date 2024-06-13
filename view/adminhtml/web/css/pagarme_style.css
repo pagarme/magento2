@@ -115,8 +115,10 @@ table.table-cycles {
     display: none;
 }
 
-.pagarme-recipient-modal header {
+.pagarme-recipient-modal header .modal-title{
     padding-bottom: 2.5rem;
+    text-align: center;
+    margin-right: 0px;
 }
 
 .pagarme-recipient-modal .modal-inner-wrap {
