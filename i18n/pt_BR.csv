@@ -439,7 +439,7 @@
 "<p>He can now sell, but remember to check his <b>status</b>. He can only withdraw his sales amounts once the status is <i>“active”</i></p>","<p>Ele já consegue vender, mas lembre-se de verificar o <b>status</b>. Ele só poderá sacar os valores de suas vendas quando o status estiver <i>“ativo”</i>.</p>"
 "<p>Follow the status on <b>Pagar.me > Recipients</b> to activate this recipient's balance movement soon!</p>","<p>Acompanhe o status em <b>Pagar.me > Recebedores</b> para ativar a movimentação de saldo deste recebedor em breve!</p>"
 "To activate your balance movement on Pagar.me, complete our <b>security validation</b>.","Para ativar sua movimentação de saldo no Pagar.me, complete nossa <b>validação de segurança</b>."
-"<span class='pagarme-alert-text'><b>Attention!</b></span> The generated link will be valid for 20 minutes.", "<span class='pagarme-alert-text'><b>Atenção!</b></span> O link gerado será válido por 20 minutos."
+"<span class='pagarme-alert-text'>Attention!</span> The generated link will be valid for 20 minutes.", "<span class='pagarme-alert-text'>Atenção!</span> O link gerado será válido por 20 minutos."
 
 "Start validation","Iniciar validação"
 "Point the smartphone camera to scan the QRCode.","Aponte a câmera do celular para ler o QRCode."
