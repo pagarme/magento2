@@ -1,5 +1,6 @@
 <?php $states = $block->getAllRegionsOfCountry();
-$editRecipient = $block->getEditRecipient(); ?>
+$editRecipient = $block->getEditRecipient();
+$datePlaceholder = __('dd/mm/yyyy'); ?>
 <form id="pagarme-recipients-form" method="post">
     <div class="page-main-actions">
         <div class="page-actions-placeholder"></div>
@@ -250,8 +251,8 @@ $editRecipient = $block->getEditRecipient(); ?>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
                                                name="form[register_information][birthdate]" id="recipient-birthdate"
-                                               placeholder="dd/mm/yyyy" data-datepicker data-date-mask
-                                               data-toggle-required>
+                                               placeholder="<?= $datePlaceholder ?>" data-datepicker
+                                               data-date-mask data-toggle-required>
                                     </div>
                                 </div>
 
@@ -290,14 +291,15 @@ $editRecipient = $block->getEditRecipient(); ?>
                                     </div>
                                 </div>
 
-                                <div class="admin__field" data-section="corporation new-field">
+                                <div class="admin__field _required" data-section="corporation new-field">
                                     <label for="recipient-corporation-type" class="admin__field-label">
                                         <span><?= __('Company type') ?></span>
                                     </label>
-                                    <div class="admin__field-control ">
+                                    <div class="admin__field-control">
                                         <input type="text" class="recipient-form-inputs"
                                                name="form[register_information][corporation_type]"
-                                               id="recipient-corporation-type">
+                                               id="recipient-corporation-type"
+                                               placeholder="<?= __('E.g. LTDA. or SA.') ?>" data-toggle-required>
                                     </div>
                                 </div>
 
@@ -305,11 +307,12 @@ $editRecipient = $block->getEditRecipient(); ?>
                                     <label for="recipient-founding-date" class="admin__field-label">
                                         <span><?= __('Founding date') ?></span>
                                     </label>
-                                    <div class="admin__field-control ">
+                                    <div class="admin__field-control">
                                         <input type="text" class="recipient-form-inputs"
                                                name="form[register_information][founding_date]"
                                                id="recipient-founding-date"
-                                               placeholder="dd/mm/yyyy" data-datepicker data-date-mask>
+                                               placeholder="<?= $datePlaceholder ?>"
+                                               data-datepicker data-date-mask>
                                     </div>
                                 </div>
 
@@ -633,7 +636,8 @@ $editRecipient = $block->getEditRecipient(); ?>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
                                                name="form[register_information][managing_partners][0][birthdate]"
-                                               id="recipient-partner-0-birthdate" placeholder="dd/mm/yyyy"
+                                               id="recipient-partner-0-birthdate"
+                                               placeholder="<?= $datePlaceholder ?>"
                                                data-datepicker data-date-mask data-toggle-required>
                                     </div>
                                 </div>
