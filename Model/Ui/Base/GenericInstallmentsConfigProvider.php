@@ -12,11 +12,12 @@
 
 namespace Pagarme\Pagarme\Model\Ui\Base;
 
-use Magento\Framework\View\Asset\Repository;
-use Pagarme\Pagarme\Model\Installments\Config\ConfigInterface;
-use Pagarme\Pagarme\Gateway\Transaction\Base\Config\ConfigInterface as BaseConfig;
 use Magento\Checkout\Model\ConfigProviderInterface;
-use \Magento\Store\Model\StoreManagerInterface;
+use Magento\Framework\App\ObjectManager;
+use Magento\Framework\View\Asset\Repository;
+use Magento\Store\Model\StoreManagerInterface;
+use Pagarme\Pagarme\Gateway\Transaction\Base\Config\ConfigInterface as BaseConfig;
+use Pagarme\Pagarme\Model\Installments\Config\ConfigInterface;
 
 abstract class GenericInstallmentsConfigProvider implements ConfigProviderInterface
 {
@@ -48,11 +49,12 @@ abstract class GenericInstallmentsConfigProvider implements ConfigProviderInterf
     protected $storageManager;
 
     public function __construct(
-        Repository $assetRepo,
-        ConfigInterface $config,
-        BaseConfig $baseConfig,
+        Repository            $assetRepo,
+        ConfigInterface       $config,
+        BaseConfig            $baseConfig,
         StoreManagerInterface $storeManager
-    ) {
+    )
+    {
         $this->assetRepo = $assetRepo;
         $this->baseConfig = $baseConfig;
         $this->storageManager = $storeManager;
@@ -176,6 +178,11 @@ abstract class GenericInstallmentsConfigProvider implements ConfigProviderInterf
                             'width' => 46,
                             'url' => $this->assetRepo->getUrl("Pagarme_Pagarme::images/cc/Banese.png")
                         ],
+                        'Ticket' => [
+                            'height' => 30,
+                            'width' => 46,
+                            'url' => $this->assetRepo->getUrl("Pagarme_Pagarme::images/cc/Ticket.png")
+                        ],
                     ],
                 ]
             ],
@@ -184,6 +191,13 @@ abstract class GenericInstallmentsConfigProvider implements ConfigProviderInterf
         ];
     }
 
+    /**
+     * @return ConfigInterface
+     */
+    protected function _getConfig()
+    {
+        return $this->config;
+    }
 
     /**
      * @param ConfigInterface $config
@@ -195,18 +209,10 @@ abstract class GenericInstallmentsConfigProvider implements ConfigProviderInterf
         return $this;
     }
 
-    /**
-     * @return ConfigInterface
-     */
-    protected function _getConfig()
-    {
-        return $this->config;
-    }
-
     protected function getRegionStates()
     {
-        /** @fixme Get current country **/
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        /** @fixme Get current country * */
+        $objectManager = ObjectManager::getInstance();
         $states = $objectManager
             ->create('Magento\Directory\Model\RegionFactory')
             ->create()->getCollection()->addFieldToFilter('country_id', 'BR');

@@ -11,7 +11,6 @@ namespace Pagarme\Pagarme\Model\Source;
  *
  * @link        https://pagar.me
  */
-
 class Vouchertype extends \Magento\Payment\Model\Source\Cctype
 {
     /**
@@ -22,7 +21,8 @@ class Vouchertype extends \Magento\Payment\Model\Source\Cctype
         return [
             'VR',
             'Alelo',
-            'Sodexo'
+            'Sodexo',
+            'Ticket'
         ];
     }
 }
