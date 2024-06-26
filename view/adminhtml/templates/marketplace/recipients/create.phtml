@@ -1,5 +1,6 @@
 <?php $states = $block->getAllRegionsOfCountry();
-$editRecipient = $block->getEditRecipient(); ?>
+$editRecipient = $block->getEditRecipient();
+$datePlaceholder = __('dd/mm/yyyy'); ?>
 <form id="pagarme-recipients-form" method="post">
     <div class="page-main-actions">
         <div class="page-actions-placeholder"></div>
@@ -250,7 +251,7 @@ $editRecipient = $block->getEditRecipient(); ?>
                                     <div class="admin__field-control ">
                                         <input type="text" class="recipient-form-inputs"
                                                name="form[register_information][birthdate]" id="recipient-birthdate"
-                                               placeholder="<?= __('dd/mm/yyyy') ?>" data-datepicker
+                                               placeholder="<?= $datePlaceholder ?>" data-datepicker
                                                data-date-mask data-toggle-required>
                                     </div>
                                 </div>
@@ -310,7 +311,7 @@ $editRecipient = $block->getEditRecipient(); ?>
                                         <input type="text" class="recipient-form-inputs"
                                                name="form[register_information][founding_date]"
                                                id="recipient-founding-date"
-                                               placeholder="<?= __('dd/mm/yyyy') ?>"
+                                               placeholder="<?= $datePlaceholder ?>"
                                                data-datepicker data-date-mask>
                                     </div>
                                 </div>
@@ -636,7 +637,7 @@ $editRecipient = $block->getEditRecipient(); ?>
                                         <input type="text" class="recipient-form-inputs"
                                                name="form[register_information][managing_partners][0][birthdate]"
                                                id="recipient-partner-0-birthdate"
-                                               placeholder="<?= __('dd/mm/yyyy') ?>"
+                                               placeholder="<?= $datePlaceholder ?>"
                                                data-datepicker data-date-mask data-toggle-required>
                                     </div>
                                 </div>
