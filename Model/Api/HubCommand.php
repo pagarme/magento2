@@ -50,6 +50,10 @@ class HubCommand implements HubCommandInterface
         $this->storeManager = $storeManager;
     }
 
+    /**
+     * @throws MagentoException
+     * @throws \Exception
+     */
     public function execute()
     {
         $params = json_decode(
@@ -57,13 +61,8 @@ class HubCommand implements HubCommandInterface
         );
 
         $paramsFromUrl = $this->request->getParams();
-        $this->websiteId = isset($paramsFromUrl['websiteId'])
-            ? $paramsFromUrl['websiteId']
-            : $this->storeManager->getDefaultStoreView()->getWebsiteId();
+        $this->websiteId = $paramsFromUrl['websiteId'] ?? 0;
 
-        $storeId = $this->storeManager->getWebsite($this->websiteId)
-            ->getDefaultStore()->getId();
-        $this->storeManager->setCurrentStore($storeId);
         Magento2CoreSetup::bootstrap();
 
         $hubIntegrationService = new HubIntegrationService();
@@ -83,80 +82,79 @@ class HubCommand implements HubCommandInterface
             return "Command $params->command executed successfully";
         }
 
-        $commandMessage = $this->$command();
-        return $commandMessage;
+        return $this->$command();
     }
 
     public function uninstallCommand()
     {
-        if (!$this->websiteId) {
-            $this->websiteId = 1;
-        }
-        $this->configWriter->save(
-            "pagarme_pagarme/hub/install_id",
-            null,
-            'websites',
-            $this->websiteId
-        );
-
-        $this->configWriter->save(
-            "pagarme_pagarme/hub/environment",
-            null,
-            'websites',
-            $this->websiteId
-        );
-
-        $this->configWriter->save(
-            "pagarme_pagarme/global/secret_key",
-            null,
-            'websites',
-            $this->websiteId
-        );
-
-        $this->configWriter->save(
-            "pagarme_pagarme/global/public_key",
-            null,
-            'websites',
-            $this->websiteId
-        );
-
-        $this->configWriter->save(
-            "pagarme_pagarme/global/secret_key_test",
-            null,
-            'websites',
-            $this->websiteId
-        );
-
-        $this->configWriter->save(
-            "pagarme_pagarme/global/public_key_test",
-            null,
-            'websites',
-            $this->websiteId
-        );
-
-        $this->configWriter->save(
-            "pagarme_pagarme/hub/account_id",
-            null,
-            'websites',
-            $this->websiteId
-        );
-
-        $this->configWriter->save(
-            "pagarme_pagarme/hub/merchant_id",
-            null,
-            'websites',
-            $this->websiteId
-        );
-
-        $this->configWriter->save(
-            "pagarme_pagarme/hub/account_errors",
-            null,
-            'websites',
-            $this->websiteId
-        );
-
-        $this->cacheManager->clean(['config']);
-
-        return "Hub uninstalled successfully";
+//        if (!$this->websiteId) {
+//            $this->websiteId = 1;
+//        }
+//        $this->configWriter->save(
+//            "pagarme_pagarme/hub/install_id",
+//            null,
+//            'websites',
+//            $this->websiteId
+//        );
+//
+//        $this->configWriter->save(
+//            "pagarme_pagarme/hub/environment",
+//            null,
+//            'websites',
+//            $this->websiteId
+//        );
+//
+//        $this->configWriter->save(
+//            "pagarme_pagarme/global/secret_key",
+//            null,
+//            'websites',
+//            $this->websiteId
+//        );
+//
+//        $this->configWriter->save(
+//            "pagarme_pagarme/global/public_key",
+//            null,
+//            'websites',
+//            $this->websiteId
+//        );
+//
+//        $this->configWriter->save(
+//            "pagarme_pagarme/global/secret_key_test",
+//            null,
+//            'websites',
+//            $this->websiteId
+//        );
+//
+//        $this->configWriter->save(
+//            "pagarme_pagarme/global/public_key_test",
+//            null,
+//            'websites',
+//            $this->websiteId
+//        );
+//
+//        $this->configWriter->save(
+//            "pagarme_pagarme/hub/account_id",
+//            null,
+//            'websites',
+//            $this->websiteId
+//        );
+//
+//        $this->configWriter->save(
+//            "pagarme_pagarme/hub/merchant_id",
+//            null,
+//            'websites',
+//            $this->websiteId
+//        );
+//
+//        $this->configWriter->save(
+//            "pagarme_pagarme/hub/account_errors",
+//            null,
+//            'websites',
+//            $this->websiteId
+//        );
+//
+//        $this->cacheManager->clean(['config']);
+//
+//        return "Hub uninstalled successfully";
     }
 }

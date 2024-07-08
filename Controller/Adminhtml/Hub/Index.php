@@ -6,6 +6,9 @@ use Magento\Backend\App\Action\Context;
 use Magento\Framework\App\Cache\Manager;
 use Magento\Framework\App\Config\Storage\WriterInterface;
 use Magento\Framework\App\RequestInterface;
+use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\View\Result\PageFactory;
 use Magento\Framework\Webapi\Exception as MagentoException;
 use Magento\Store\Model\StoreManagerInterface;
@@ -50,18 +53,14 @@ class Index extends \Magento\Backend\App\Action
     /**
      * Index action
      *
-     * @return \Magento\Framework\Controller\ResultInterface
+     * @return ResultInterface
+     * @throws MagentoException|LocalizedException
+     * @throws \Exception
      */
     public function execute()
     {
         $params = $this->requestObject->getParams();
-        $websiteId = isset($params['website'])
-            ? $params['website']
-            : $this->storeManager->getDefaultStoreView()->getWebsiteId();
-
-        $storeId = $this->storeManager->getWebsite($websiteId)
-            ->getDefaultStore()->getId();
-        $this->storeManager->setCurrentStore($storeId);
+        $websiteId = $params['website'] ?? 0;
 
         Magento2CoreSetup::bootstrap();
 
@@ -85,160 +84,108 @@ class Index extends \Magento\Backend\App\Action
         }
 
         $url = $this->getUrl('adminhtml/system_config/edit/section/payment');
-        header('Location: ' . explode('?', $url ?? '')[0] . 'website/' . $websiteId);
+        $header = 'Location: ' . explode('?', $url ?? '')[0];
+        if (!empty($websiteId)) {
+            $header .= 'website/' . $websiteId;
+        }
+        header($header);
         exit;
     }
 
+    /**
+     * @param $websiteId
+     * @return string
+     * @throws NoSuchEntityException
+     */
     private function getCallbackUrl($websiteId)
     {
         $baseUrl = $this->storeManager->getStore()->getBaseUrl();
-        return $baseUrl . "rest/V1/pagarme/hub/command?websiteId=" . $websiteId;
+        $callbackUrl = $baseUrl . "rest/V1/pagarme/hub/command";
+
+        if (!empty($websiteId)) {
+            $callbackUrl .= "?websiteId=" . $websiteId;
+        }
+
+        return $callbackUrl;
     }
 
+    /**
+     * @return string
+     * @throws NoSuchEntityException
+     */
     private function getWebHookkUrl()
     {
         $baseUrl = $this->storeManager->getStore()->getBaseUrl();
         return $baseUrl . "rest/V1/pagarme/webhook";
     }
 
-    private function allWebsitesIntegrated($currentWebsiteId)
-    {
-        $websites = $this->storeManager->getWebsites();
-        $magento2CoreSetup = new Magento2CoreSetup();
-
-        foreach ($websites as $websiteId => $website) {
-            $storeId = $this->storeManager->getWebsite($websiteId)
-                ->getDefaultStore()->getId();
-
-            $this->storeManager->setCurrentStore($storeId);
-
-            $magento2CoreSetup->loadModuleConfigurationFromPlatform();
-            $currentConfiguration = Magento2CoreSetup::getModuleConfiguration();
-
-            $isSameWebsite = $websiteId === intval($currentWebsiteId);
-
-            if (!$isSameWebsite && !$currentConfiguration->isHubEnabled()) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    private function removeDefaultConfigKeys()
-    {
-        $this->configWriter->save(
-            "pagarme_pagarme/global/secret_key",
-            null,
-            'default',
-            0
-        );
-
-        $this->configWriter->save(
-            "pagarme_pagarme/global/public_key",
-            null,
-            'default',
-            0
-        );
-
-        $this->configWriter->save(
-            "pagarme_pagarme/global/secret_key_test",
-            null,
-            'default',
-            0
-        );
-
-        $this->configWriter->save(
-            "pagarme_pagarme/global/public_key_test",
-            null,
-            'default',
-            0
-        );
-        $this->configWriter->save(
-            "pagarme_pagarme/hub/account_id",
-            null,
-            'default',
-            0
-        );
-
-        $this->configWriter->save(
-            "pagarme_pagarme/hub/merchant_id",
-            null,
-            'default',
-            0
-        );
-    }
-
     private function updateStoreFields($websiteId)
     {
         $currentConfiguration = Magento2CoreSetup::getModuleConfiguration();
+        $scope = !empty($websiteId) ? "websites" : "default";
 
         $this->configWriter->save(
             "pagarme_pagarme/hub/install_id",
             $currentConfiguration->getHubInstallId()->getValue(),
-            'websites',
+            $scope,
             $websiteId
         );
 
         $this->configWriter->save(
             "pagarme_pagarme/hub/environment",
             $currentConfiguration->getHubEnvironment()->getValue(),
-            'websites',
+            $scope,
             $websiteId
         );
 
         $this->configWriter->save(
             "pagarme_pagarme/global/secret_key",
             $currentConfiguration->getSecretKey()->getValue(),
-            'websites',
+            $scope,
             $websiteId
         );
 
         $this->configWriter->save(
             "pagarme_pagarme/global/public_key",
             $currentConfiguration->getPublicKey()->getValue(),
-            'websites',
+            $scope,
             $websiteId
         );
 
         $this->configWriter->save(
             "pagarme_pagarme/hub/account_id",
             $currentConfiguration->getAccountId()->getValue(),
-            'websites',
+            $scope,
             $websiteId
         );
 
         $this->configWriter->save(
             "pagarme_pagarme/hub/merchant_id",
             $currentConfiguration->getMerchantId()->getValue(),
-            'websites',
+            $scope,
             $websiteId
         );
 
         $this->configWriter->save(
             "pagarme_pagarme/global/test_mode",
             0,
-            'websites',
+            $scope,
             $websiteId
         );
 
         $this->configWriter->save(
             "pagarme_pagarme/global/secret_key_test",
             null,
-            'websites',
+            $scope,
             $websiteId
         );
 
         $this->configWriter->save(
             "pagarme_pagarme/global/public_key_test",
             null,
-            'websites',
+            $scope,
             $websiteId
         );
-
-        if ($this->allWebsitesIntegrated($websiteId)) {
-            $this->removeDefaultConfigKeys();
-        }
 
         $this->cacheManager->clean(['config']);
     }
