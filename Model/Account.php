@@ -287,7 +287,7 @@ class Account
                 $websiteId = $this->session->getWebsiteId();
             }
 
-            if (!$websiteId) {
+            if (!$websiteId && $websiteId !== 0) {
                 $websiteId = $this->storeManager->getStore()
                     ->getWebsiteId();
             }

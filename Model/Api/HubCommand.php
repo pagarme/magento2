@@ -3,6 +3,7 @@
 namespace Pagarme\Pagarme\Model\Api;
 
 use Magento\Framework\App\Cache\Manager;
+use Magento\Framework\App\Cache\Type\Config;
 use Magento\Framework\App\Config\Storage\WriterInterface;
 use Magento\Framework\Webapi\Exception as MagentoException;
 use Magento\Framework\Webapi\Rest\Request;
@@ -10,6 +11,7 @@ use Magento\Store\Model\StoreManagerInterface;
 use Pagarme\Core\Hub\Services\HubIntegrationService;
 use Pagarme\Pagarme\Api\HubCommandInterface;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use Pagarme\Pagarme\Controller\Adminhtml\Hub\Index as HubControllerIndex;
 
 class HubCommand implements HubCommandInterface
 {
@@ -38,16 +40,23 @@ class HubCommand implements HubCommandInterface
      */
     protected $storeManager;
 
+    /**
+     * @var HubControllerIndex
+     */
+    private $hubControllerIndex;
+
     public function __construct(
         Request $request,
         WriterInterface $configWriter,
         Manager $cacheManager,
-        StoreManagerInterface $storeManager
+        StoreManagerInterface $storeManager,
+        HubControllerIndex $hubControllerIndex
     ) {
         $this->request = $request;
         $this->configWriter = $configWriter;
         $this->cacheManager = $cacheManager;
         $this->storeManager = $storeManager;
+        $this->hubControllerIndex = $hubControllerIndex;
     }
 
     /**
@@ -87,74 +96,69 @@ class HubCommand implements HubCommandInterface
 
     public function uninstallCommand()
     {
-//        if (!$this->websiteId) {
-//            $this->websiteId = 1;
-//        }
-//        $this->configWriter->save(
-//            "pagarme_pagarme/hub/install_id",
-//            null,
-//            'websites',
-//            $this->websiteId
-//        );
-//
-//        $this->configWriter->save(
-//            "pagarme_pagarme/hub/environment",
-//            null,
-//            'websites',
-//            $this->websiteId
-//        );
-//
-//        $this->configWriter->save(
-//            "pagarme_pagarme/global/secret_key",
-//            null,
-//            'websites',
-//            $this->websiteId
-//        );
-//
-//        $this->configWriter->save(
-//            "pagarme_pagarme/global/public_key",
-//            null,
-//            'websites',
-//            $this->websiteId
-//        );
-//
-//        $this->configWriter->save(
-//            "pagarme_pagarme/global/secret_key_test",
-//            null,
-//            'websites',
-//            $this->websiteId
-//        );
-//
-//        $this->configWriter->save(
-//            "pagarme_pagarme/global/public_key_test",
-//            null,
-//            'websites',
-//            $this->websiteId
-//        );
-//
-//        $this->configWriter->save(
-//            "pagarme_pagarme/hub/account_id",
-//            null,
-//            'websites',
-//            $this->websiteId
-//        );
-//
-//        $this->configWriter->save(
-//            "pagarme_pagarme/hub/merchant_id",
-//            null,
-//            'websites',
-//            $this->websiteId
-//        );
-//
-//        $this->configWriter->save(
-//            "pagarme_pagarme/hub/account_errors",
-//            null,
-//            'websites',
-//            $this->websiteId
-//        );
-//
-//        $this->cacheManager->clean(['config']);
-//
-//        return "Hub uninstalled successfully";
+        $scope = $this->hubControllerIndex->getScopeName();
+        $websiteId = $this->websiteId ?? Magento2CoreSetup::getCurrentStoreId();
+
+        if (!$websiteId) {
+            $websiteId = 0;
+        }
+
+        $this->configWriter->delete(
+            "pagarme_pagarme/hub/install_id",
+            $scope,
+            $websiteId
+        );
+
+        $this->configWriter->delete(
+            "pagarme_pagarme/hub/environment",
+            $scope,
+            $websiteId
+        );
+
+        $this->configWriter->delete(
+            "pagarme_pagarme/global/secret_key",
+            $scope,
+            $websiteId
+        );
+
+        $this->configWriter->delete(
+            "pagarme_pagarme/global/public_key",
+            $scope,
+            $websiteId
+        );
+
+        $this->configWriter->delete(
+            "pagarme_pagarme/global/secret_key_test",
+            $scope,
+            $websiteId
+        );
+
+        $this->configWriter->delete(
+            "pagarme_pagarme/global/public_key_test",
+            $scope,
+            $websiteId
+        );
+
+        $this->configWriter->delete(
+            "pagarme_pagarme/hub/account_id",
+            $scope,
+            $websiteId
+        );
+
+        $this->configWriter->delete(
+            "pagarme_pagarme/hub/merchant_id",
+            $scope,
+            $websiteId
+        );
+
+        $this->configWriter->delete(
+            "pagarme_pagarme/hub/account_errors",
+            $scope,
+            $websiteId
+        );
+
+        $this->cacheManager->clean([Config::TYPE_IDENTIFIER]);
+
+        return "Hub uninstalled successfully";
     }
 }

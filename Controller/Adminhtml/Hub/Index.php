@@ -2,8 +2,10 @@
 
 namespace Pagarme\Pagarme\Controller\Adminhtml\Hub;
 
+use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\App\Cache\Manager;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Config\Storage\WriterInterface;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Controller\ResultInterface;
@@ -11,11 +13,12 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\View\Result\PageFactory;
 use Magento\Framework\Webapi\Exception as MagentoException;
+use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Pagarme\Core\Hub\Services\HubIntegrationService;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 
-class Index extends \Magento\Backend\App\Action
+class Index extends Action
 {
     protected $resultPageFactory;
     protected $configWriter;
@@ -60,7 +63,9 @@ class Index extends \Magento\Backend\App\Action
     public function execute()
     {
         $params = $this->requestObject->getParams();
+        $scopeUrl = $this->getScopeUrl();
         $websiteId = $params['website'] ?? 0;
+        $this->storeManager->setCurrentStore($websiteId);
 
         Magento2CoreSetup::bootstrap();
 
@@ -85,11 +90,47 @@ class Index extends \Magento\Backend\App\Action
 
         $url = $this->getUrl('adminhtml/system_config/edit/section/payment');
         $header = 'Location: ' . explode('?', $url ?? '')[0];
-        if (!empty($websiteId)) {
-            $header .= 'website/' . $websiteId;
+        if (!empty($websiteId) && !empty($scopeUrl)) {
+            $header .= $scopeUrl . '/' . $websiteId;
         }
         header($header);
         exit;
+    }
+
+    /**
+     * @return string
+     */
+    public function getScopeName(): string
+    {
+        $request = $this->requestObject;
+
+        if ($request->getParam(ScopeInterface::SCOPE_WEBSITE)) {
+            return ScopeInterface::SCOPE_WEBSITES;
+        }
+
+        if ($request->getParam(ScopeInterface::SCOPE_STORE)) {
+            return ScopeInterface::SCOPE_STORES;
+        }
+
+        return ScopeConfigInterface::SCOPE_TYPE_DEFAULT;
+    }
+
+    /**
+     * @return string|null
+     */
+    private function getScopeUrl()
+    {
+        $request = $this->requestObject;
+
+        if ($request->getParam(ScopeInterface::SCOPE_WEBSITE)) {
+            return ScopeInterface::SCOPE_WEBSITE;
+        }
+
+        if ($request->getParam(ScopeInterface::SCOPE_STORE)) {
+            return ScopeInterface::SCOPE_STORE;
+        }
+
+        return null;
     }
 
     /**
@@ -122,7 +163,7 @@ class Index extends \Magento\Backend\App\Action
     private function updateStoreFields($websiteId)
     {
         $currentConfiguration = Magento2CoreSetup::getModuleConfiguration();
-        $scope = !empty($websiteId) ? "websites" : "default";
+        $scope = $this->getScopeName();
 
         $this->configWriter->save(
             "pagarme_pagarme/hub/install_id",

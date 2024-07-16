@@ -5,6 +5,7 @@ namespace Pagarme\Pagarme\Observer;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Pagarme\Pagarme\Model\Account;
 
@@ -46,7 +47,7 @@ class DashConfigValidatorObserver implements ObserverInterface
         }
 
         $website = $observer->getRequest()
-            ->getParam('website', $this->storeManager->getStore()->getWebsiteId());
+            ->getParam(ScopeInterface::SCOPE_WEBSITE, 0);
 
         $this->account->validateDashSettings($website);
         return $this;

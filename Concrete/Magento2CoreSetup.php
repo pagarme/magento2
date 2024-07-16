@@ -6,7 +6,7 @@ use Magento\Framework\App\Config as Magento2StoreConfig;
 use Magento\Config\Model\Config as Magento2ModelConfig;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
-use Magento\Store\Model\ScopeInterface as ScopeInterface;
+use Magento\Store\Model\ScopeInterface;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\ProductMetadataInterface;
 use Magento\Framework\Filesystem\DirectoryList;
@@ -74,19 +74,19 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
     {
         self::$config = [
             AbstractModuleCoreSetup::CONCRETE_DATABASE_DECORATOR_CLASS =>
-            Magento2DatabaseDecorator::class,
+                Magento2DatabaseDecorator::class,
             AbstractModuleCoreSetup::CONCRETE_PLATFORM_ORDER_DECORATOR_CLASS =>
-            Magento2PlatformOrderDecorator::class,
+                Magento2PlatformOrderDecorator::class,
             AbstractModuleCoreSetup::CONCRETE_PLATFORM_INVOICE_DECORATOR_CLASS =>
-            Magento2PlatformInvoiceDecorator::class,
+                Magento2PlatformInvoiceDecorator::class,
             AbstractModuleCoreSetup::CONCRETE_PLATFORM_CREDITMEMO_DECORATOR_CLASS =>
-            Magento2PlatformCreditmemoDecorator::class,
+                Magento2PlatformCreditmemoDecorator::class,
             AbstractModuleCoreSetup::CONCRETE_DATA_SERVICE =>
-            Magento2DataService::class,
+                Magento2DataService::class,
             AbstractModuleCoreSetup::CONCRETE_PLATFORM_PAYMENT_METHOD_DECORATOR_CLASS =>
-            Magento2PlatformPaymentMethodDecorator::class,
+                Magento2PlatformPaymentMethodDecorator::class,
             AbstractModuleCoreSetup::CONCRETE_PRODUCT_DECORATOR_CLASS =>
-            Magento2PlatformProductDecorator::class
+                Magento2PlatformProductDecorator::class
         ];
     }
 
@@ -295,7 +295,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
 
         $configData->pixConfig = self::fillDataObj($storeConfig, $options, $pixObject, $section);
     }
-    
+
     private static function fillWithGooglePayConfig(
         stdClass $configData,
         ScopeConfigInterface $storeConfig
@@ -541,40 +541,34 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
     public static function getCurrentStoreId()
     {
         $objectManager = ObjectManager::getInstance();
-        $config = $objectManager->get(Magento2ModelConfig::class);
 
-        $storeInterfaceName = '\Magento\Store\Model\StoreManagerInterface';
-        $storeManager = $objectManager->get($storeInterfaceName);
+        $requestClass = '\Magento\Framework\App\RequestInterface';
+        $request = $objectManager->get($requestClass);
 
-        $store = $storeManager->getWebsite()->getId();
+        if ($request->getControllerName() !== 'system_config') {
+            $storeInterfaceName = '\Magento\Store\Model\StoreManagerInterface';
+            $storeManager = $objectManager->get($storeInterfaceName);
 
-        if ($config->getScope() == 'websites') {
-            $store = $config->getScopeId();
+            return $storeManager->getStore()->getWebsite()->getId();
         }
 
-        if ($config->getScope() == 'stores') {
-            $store = $storeManager
-                ->getStore($config->getScopeId())
-                ->getWebsite()
-                ->getId();
+        if ($request->getParam(ScopeInterface::SCOPE_WEBSITE)) {
+            return $request->getParam(ScopeInterface::SCOPE_WEBSITE);
         }
 
-        if ($config->getScope() == 'default') {
-            $store = $storeManager->getDefaultStoreView()->getStoreId();
+        if ($request->getParam(ScopeInterface::SCOPE_STORE)) {
+            return $request->getParam(ScopeInterface::SCOPE_STORE);
         }
 
-        return $store;
+        return 0;
     }
 
+    /**
+     * @return int
+     */
     public static function getDefaultStoreId()
     {
-        $objectManager = ObjectManager::getInstance();
-        $storeInterfaceName = '\Magento\Store\Model\StoreManagerInterface';
-        $storeManager = $objectManager->get($storeInterfaceName);
-
-        $defaultStoreView = $storeManager->getDefaultStoreView();
-
-        return $defaultStoreView->getStoreId();
+        return 0;
     }
 
     /**
