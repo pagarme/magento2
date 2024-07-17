@@ -14,14 +14,16 @@ require([
             integratedScope = $('[data-pagarme-integration-scope]').attr('data-pagarme-integration-scope'),
             hasIntegration =
                 $('#row_payment_other_pagarme_pagarme_pagarme_pagarme_global_hub_integration .control-value')
-                    .html() !== '';
+                    .html() !== '',
+            disabledClass = 'is-disabled',
+            hiddenClass = 'hidden';
 
         if (integrationUseDefault.is(':checked') && hasIntegration) {
             disableButtons();
         }
 
         integrationButtons.on('click', function(event) {
-            const isDisabled = integrationButtonsRow.hasClass('is-disabled');
+            const isDisabled = integrationButtonsRow.hasClass(disabledClass);
 
             if (isDisabled) {
                 event.preventDefault();
@@ -44,11 +46,11 @@ require([
                 return;
             }
 
-            integrationButtonsRow.addClass('is-disabled');
+            integrationButtonsRow.addClass(disabledClass);
         }
 
         function enableButtons() {
-            integrationButtonsRow.removeClass('is-disabled');
+            integrationButtonsRow.removeClass(disabledClass);
         }
 
         function hideIntegratedButtons() {
@@ -56,9 +58,9 @@ require([
                 return;
             }
 
-            viewIntegrationButton.addClass('hidden');
-            dashButton.addClass('hidden');
-            integrateButton.removeClass('hidden');
+            viewIntegrationButton.addClass(hiddenClass);
+            dashButton.addClass(hiddenClass);
+            integrateButton.removeClass(hiddenClass);
         }
 
         function showIntegratedButtons() {
@@ -69,9 +71,9 @@ require([
                 return;
             }
 
-            integrateButton.addClass('hidden');
-            viewIntegrationButton.removeClass('hidden');
-            dashButton.removeClass('hidden');
+            integrateButton.addClass(hiddenClass);
+            viewIntegrationButton.removeClass(hiddenClass);
+            dashButton.removeClass(hiddenClass);
         }
     });
 });

@@ -118,7 +118,7 @@ class Index extends Action
     /**
      * @return string|null
      */
-    private function getScopeUrl()
+    public function getScopeUrl()
     {
         $request = $this->requestObject;
 

@@ -9,11 +9,11 @@ use Magento\Framework\App\Config\Storage\WriterInterface;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Pagarme\Core\Kernel\Aggregates\Configuration;
 use Pagarme\Core\Middle\Model\Account as AccountMiddle;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+use Pagarme\Pagarme\Controller\Adminhtml\Hub\Index as HubControllerIndex;
 use Pagarme\Pagarme\Model\Api\HubCommand;
 use Pagarme\Pagarme\Service\AccountService;
 use Psr\Log\LoggerInterface;
@@ -71,6 +71,11 @@ class Account
     protected $pagarmeConfigProvider;
 
     /**
+     * @var HubControllerIndex
+     */
+    protected $hubControllerIndex;
+
+    /**
      * @param WriterInterface $configWriter
      * @param StoreManagerInterface $storeManager
      * @param AccountService $accountService
@@ -78,17 +83,21 @@ class Account
      * @param CollectionFactory $configCollectionFactory
      * @param LoggerInterface $logger
      * @param Session $session
+     * @param PagarmeConfigProvider $pagarmeConfigProvider
+     * @param HubControllerIndex $hubControllerIndex
      */
     public function __construct(
-        WriterInterface $configWriter,
+        WriterInterface       $configWriter,
         StoreManagerInterface $storeManager,
-        AccountService $accountService,
-        HubCommand $hubCommand,
-        CollectionFactory $configCollectionFactory,
-        LoggerInterface $logger,
-        Session $session,
-        PagarmeConfigProvider $pagarmeConfigProvider
-    ) {
+        AccountService        $accountService,
+        HubCommand            $hubCommand,
+        CollectionFactory     $configCollectionFactory,
+        LoggerInterface       $logger,
+        Session               $session,
+        PagarmeConfigProvider $pagarmeConfigProvider,
+        HubControllerIndex    $hubControllerIndex
+    )
+    {
         $this->configWriter = $configWriter;
         $this->storeManager = $storeManager;
         $this->accountService = $accountService;
@@ -97,11 +106,14 @@ class Account
         $this->logger = $logger;
         $this->session = $session;
         $this->pagarmeConfigProvider = $pagarmeConfigProvider;
+        $this->hubControllerIndex = $hubControllerIndex;
     }
 
     /**
      * @param mixed $website
      * @return void
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
     public function validateDashSettings($website)
     {
@@ -119,7 +131,7 @@ class Account
             $this->configWriter->save(
                 PagarmeConfigProvider::PATH_DASH_ERRORS,
                 json_encode($account->getErrors()),
-                ScopeInterface::SCOPE_WEBSITES,
+                $this->hubControllerIndex->getScopeName(),
                 $website
             );
             $this->savePaymentTypes($account, $website);
@@ -145,9 +157,8 @@ class Account
         $this->configWriter->save(
             PagarmeConfigProvider::PATH_ACCOUNT_ID,
             $account['id'],
-            ScopeInterface::SCOPE_WEBSITES,
-            $this->storeManager->getStore()
-                ->getWebsiteId()
+            $this->hubControllerIndex->getScopeName(),
+            $this->storeManager->getStore()->getWebsiteId()
         );
     }
 
@@ -161,7 +172,7 @@ class Account
         $this->initializeConfig();
         $collection = $this->configCollectionFactory->create();
         $collection->addFieldToFilter('path', ['eq' => PagarmeConfigProvider::PATH_DASH_ERRORS]);
-        $collection->addFieldToFilter('scope', ['eq' => ScopeInterface::SCOPE_WEBSITES]);
+        $collection->addFieldToFilter('scope', ['eq' => $this->hubControllerIndex->getScopeName()]);
         $collection->addFieldToFilter('scope_id', ['eq' => $this->session->getWebsiteId()]);
 
         if ($collection->count() === 0) {
@@ -192,7 +203,7 @@ class Account
             : PagarmeConfigProvider::PATH_IS_PAYMENT_PSP_TYPE;
         $collection = $this->configCollectionFactory->create();
         $collection->addFieldToFilter('path', ['eq' => sprintf($paymentType, $paymentName)]);
-        $collection->addFieldToFilter('scope', ['eq' => ScopeInterface::SCOPE_WEBSITES]);
+        $collection->addFieldToFilter('scope', ['eq' => $this->hubControllerIndex->getScopeName()]);
         $collection->addFieldToFilter('scope_id', ['eq' => $this->session->getWebsiteId()]);
 
         if ($collection->count() === 0) {
@@ -374,7 +385,7 @@ class Account
         $this->configWriter->save(
             $path,
             $value,
-            ScopeInterface::SCOPE_WEBSITES,
+            $this->hubControllerIndex->getScopeName(),
             $website
         );
     }
