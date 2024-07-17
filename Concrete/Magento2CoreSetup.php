@@ -3,6 +3,7 @@
 namespace Pagarme\Pagarme\Concrete;
 
 use DateTimeZone;
+use Exception;
 use Magento\Config\Model\Config as Magento2ModelConfig;
 use Magento\Framework\App\Config as Magento2StoreConfig;
 use Magento\Framework\App\Config\ScopeConfigInterface;
@@ -566,6 +567,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
 
     /**
      * @return DateTimeZone
+     * @throws Exception
      * @since 1.7.1
      *
      */
@@ -579,9 +581,8 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         $timezoneString = $timezone->getConfigTimezone(
             ScopeInterface::SCOPE_STORE
         );
-        $dateTimeZone = new DateTimeZone($timezoneString);
 
-        return $dateTimeZone;
+        return new DateTimeZone($timezoneString);
     }
 
     static private function fillWithRecurrenceConfig(&$dataObj, $storeConfig)
