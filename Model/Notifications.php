@@ -60,9 +60,11 @@ class Notifications extends Message
      * @param Registry $registry
      * @param Account $account
      * @param HubIntegration $hubIntegration
+     * @param UrlInterface $urlInterface
      * @param AbstractResource|null $resource
      * @param AbstractDb|null $resourceCollection
      * @param array $data
+     * @throws NoSuchEntityException
      */
     public function __construct(
         ConfigInterface   $config,
@@ -271,18 +273,7 @@ class Notifications extends Message
      */
     private function buildDashLink(string $label, string $dashPage = '')
     {
-        if (!$this->account->hasMerchantAndAccountIds()) {
-            return $label;
-        }
-
-        $dashSettings = !empty($dashPage) ? "settings/{$dashPage}/" : '';
-        $url = $this->account->getDashUrl() . $dashSettings;
-
-        return sprintf(
-            '<a href="%s" target="_blank">%s</a>',
-            $url,
-            $label
-        );
+        return $label;
     }
 
     /**
