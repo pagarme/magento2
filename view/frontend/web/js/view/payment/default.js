@@ -51,17 +51,13 @@ define(
         $t,
         globalMessageList,
         urlBuilder,
-        PagarmeCore,
-        PaymentController,
-        PlatformPlaceOrder
+        PagarmeCore
     ) {
         return Component.extend({
             initPaymentMethod: function() {
-                const _self = this;
-
-                let platFormConfig = window.checkoutConfig;
+                const platFormConfig = window.checkoutConfig;
                 platFormConfig.moduleUrls = {};
-                let installmentsUrl = installmentsAction();
+                const installmentsUrl = installmentsAction();
                 platFormConfig.grand_total = quote.getTotals()().grand_total;
 
                 const baseUrl = platFormConfig.payment.ccform.base_url;
@@ -146,7 +142,7 @@ define(
             selectPaymentMethod: function() {
                 const data = this.getData();
                 if (data == undefined) {
-                    let platFormConfig = PagarmeCore.platFormConfig;
+                    const platFormConfig = PagarmeCore.platFormConfig;
                     PagarmeCore.init(this.getModel(), platFormConfig);
                 }
                 selectPaymentMethodAction(this.getData());
