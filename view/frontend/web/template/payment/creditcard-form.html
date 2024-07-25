@@ -55,12 +55,11 @@
     </label>
     <div class="control">
         <input
-                type="number"
-                min="0"
-                maxlength="19"
+                type="text"
+                inputmode="numeric"
                 name="payment[cc_number]"
                 class="input-text cc_number"
-                value=""
+                placeholder="0000 0000 0000 0000"
         />
     </div>
     <div class="field-error hidden-element">
@@ -116,14 +115,14 @@
         <span>CVV</span>
     </label>
     <div class="control _with-tooltip">
-        <input type="number"
+        <input type="text"
+               inputmode="numeric"
                autocomplete="off"
-               class="input-text cvv cc_cid"
                name="payment[cc_cid]"
-               value=""
+               class="input-text cvv cc_cid"
+               placeholder="000"
                oninput="this.value = this.value.replace(/[^0-9]/g, ''); if (this.value.length > 4) this.value = this.value.slice(0, 4);"
-               min="0"
-                />
+        />
         <div class="field-tooltip toggle">
             <span class="field-tooltip-action action-cvv"
                   tabindex="0"
