@@ -5,9 +5,6 @@ const config = {
             pagarmeJqueryMask: 'Pagarme_Pagarme/js/jquery.mask.min'
         },
         shim : {
-            'Pagarme_Pagarme/js/view/payment/googlepay' : {
-                deps : ['googlePay']
-            },
             'pagarmeJqueryMask' : {
                 deps : ['jquery']
             },

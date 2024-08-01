@@ -45,9 +45,6 @@ define([
         init() {
             const paymentMethodInit = this.methodCode + 'Init';
             this[paymentMethodInit]();
-            setTimeout(function(){
-                $('.payment-method-content.pagarme-content .cc_number').mask('0000 0000 0000 0000');
-            }, 500 );
         }
 
         formObject(formObject) {
@@ -474,6 +471,8 @@ define([
                     paymentMethodController.setBin(binObj, element, formObject);
                 }, 300);
             });
+
+            formObject.creditCardNumber.mask('0000 0000 0000 0000');
         }
 
         twoCardsTotal(paymentMethod) {
