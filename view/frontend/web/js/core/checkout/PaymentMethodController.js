@@ -14,6 +14,7 @@ define([
     'Pagarme_Pagarme/js/core/models/BoletoCreditcardModel',
     'Pagarme_Pagarme/js/core/models/GooglePayModel',
     'Pagarme_Pagarme/js/core/validators/CustomerValidator',
+    'pagarmeJqueryMask'
 ], (
     $,
     PlatformConfig,
@@ -460,17 +461,8 @@ define([
             const paymentMethodController = this;
 
             formObject.creditCardNumber.unbind();
-            formObject.creditCardNumber.on('keydown', function () {
-                const element = $(this);
-                paymentMethodController.limitCharacters(element, 19);
-            });
 
             const binObj = new Bin();
-
-            formObject.creditCardNumber.on('keyup', function () {
-                const element = $(this);
-                paymentMethodController.clearLetters(element);
-            });
 
             formObject.creditCardNumber.on('change', function () {
                 const element = $(this);
@@ -479,6 +471,8 @@ define([
                     paymentMethodController.setBin(binObj, element, formObject);
                 }, 300);
             });
+
+            formObject.creditCardNumber.mask('0000 0000 0000 0000');
         }
 
         twoCardsTotal(paymentMethod) {
@@ -841,15 +835,16 @@ define([
         setBin(binObj, creditCardNumberElement, formObject) {
 
             const bin = binObj;
-            const cardNumber = bin.formatNumber(creditCardNumberElement.val());
+            const cardNumber = creditCardNumberElement.val().replace(/[^0-9]+/g, '');
+            const cardBin = bin.formatNumber(cardNumber);
 
-            if (cardNumber.length < 4) {
+            if (cardBin.length < 4) {
                 return;
             }
 
-            const isNewBrand = bin.validate(cardNumber);
+            const isNewBrand = bin.validate(cardBin);
 
-            bin.init(cardNumber);
+            bin.init(cardBin);
 
             const formHandler = new FormHandler();
             formHandler.init(formObject);
@@ -860,20 +855,6 @@ define([
             }
 
 
-        }
-
-        limitCharacters(element, limit) {
-            const val = element.val();
-
-            if (val != "" && val.length > limit) {
-                element.val(val.substring(0, limit));
-            }
-        }
-
-        clearLetters(element) {
-            const val = element.val();
-            const newVal = val.replace(/[^0-9]+/g, '');
-            element.val(newVal);
         }
 
         clearNumbers(element) {
