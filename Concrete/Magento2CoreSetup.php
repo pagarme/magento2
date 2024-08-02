@@ -644,4 +644,11 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
 
         $configData->marketplaceConfig = self::fillDataObj($storeConfig, $options, $marketplaceObject, $section);
     }
+
+    /**
+     * @return null
+     */
+    public static function getInstallmentType() {
+        return null;
+    }
 }
