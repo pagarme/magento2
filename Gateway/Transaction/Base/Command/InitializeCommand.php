@@ -30,6 +30,8 @@ use Pagarme\Pagarme\Model\Ui\TwoCreditCard\ConfigProvider as TwoCreditCardConfig
 use Magento\Framework\Phrase;
 use Magento\Framework\Webapi\Exception as M2WebApiException;
 use Pagarme\Pagarme\Service\Transaction\ThreeDSService;
+use Pagarme\Pagarme\Concrete\Magento2PlatformOrderDecorator;
+use Pagarme\Core\Kernel\Factories\OrderFactory;
 
 class InitializeCommand implements CommandInterface
 {
@@ -146,7 +148,10 @@ class InitializeCommand implements CommandInterface
                 );
                 throw new \Exception("Quote already used, order id duplicated.");
             }
-
+            $redirectWithOutPagarme = $this->redirectIfHasLastSuccess($orderDecorator);
+            if ($redirectWithOutPagarme !== false) {
+                return $redirectWithOutPagarme;
+            }
             $quote->setCustomerNote('pagarme-processing');
             $quote->save();
 
@@ -196,5 +201,75 @@ class InitializeCommand implements CommandInterface
                 M2WebApiException::HTTP_BAD_REQUEST
             );
         }
+    }
+
+    private function redirectIfHasLastSuccess($orderDecorator)
+    {
+        if($orderDecorator->getPlatformOrder()->getPayment()->getMethod() != "pagarme_creditcard" ) {
+            return false;
+        }
+        $lastOrderId =  $this->checkoutSession?->getLastRealOrder() ?? 0;
+        if (empty($lastOrderId)) {
+            return  false;
+        }
+        $platformOrder = new Magento2PlatformOrderDecorator();
+        $platformOrder->loadByIncrementId("000000585");
+
+
+        if ($this->isTheIntervalGreaterThanAMinute($orderDecorator, $platformOrder)) {
+            return false;
+        }
+
+        if ( $this->areDifferentPaymentMethods($orderDecorator, $platformOrder)) {
+            return false;
+        }
+
+        if ( $this->areDifferentOrders($orderDecorator, $platformOrder)) {
+            return false;
+        }
+        return $platformOrder;
+    }
+
+    private function isTheIntervalGreaterThanAMinute($orderDecorator, $platformOrder)
+    {
+        if (
+            abs(
+                strtotime($orderDecorator->getQuote()->getUpdatedAt())
+                - strtotime($platformOrder->getQuote()->getUpdatedAt())
+            ) > 60
+        ) {
+            return true;
+        }
+        return false;
+    }
+
+    private function areDifferentPaymentMethods($orderDecorator, $platformOrder)
+    {
+        if (
+            $orderDecorator->getPlatformOrder()->getPayment()->getMethod() !=
+                $platformOrder->getPlatformOrder()->getPayment()->getMethod()
+        ) {
+            return true;
+        }
+        return false;
+    }
+
+    private function areDifferentOrders($orderDecorator, $platformOrder)
+    {
+        if (
+            $orderDecorator->getPlatformOrder()->getGrandTotal() !=
+                $platformOrder->getPlatformOrder()->getGrandTotal()
+        ) {
+            return true;
+        }
+
+        if (
+            $orderDecorator->getPlatformOrder()->getCustomerEmail() !=
+                $platformOrder->getPlatformOrder()->getCustomerEmail()
+        ) {
+            return true;
+        }
+
+        return false;
     }
 }
