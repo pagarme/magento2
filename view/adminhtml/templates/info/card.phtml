@@ -3,6 +3,10 @@
      * @var \Pagarme\Core\Kernel\Aggregates\Transaction $info
      */
     $info =  $this->getTransactionInfo();
+    if(empty($info)) {
+        echo "Ocorreu um erro ao buscar informações!";
+        return;
+    }
 ?>
 <span>
     <?= __($this->getTitle()); ?>
