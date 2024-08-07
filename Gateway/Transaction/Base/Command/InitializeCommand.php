@@ -208,7 +208,7 @@ class InitializeCommand implements CommandInterface
         if($orderDecorator->getPlatformOrder()->getPayment()->getMethod() != "pagarme_creditcard" ) {
             return false;
         }
-        $lastOrderId =  $this->checkoutSession?->getLastRealOrder() ?? 0;
+        $lastOrderId =  array_key_exists('last_real_order_id', $this->checkoutSession->getData()) ? $this->checkoutSession->getLastRealOrderId() : 0;
         if (empty($lastOrderId)) {
             return  false;
         }
