@@ -213,7 +213,7 @@ class InitializeCommand implements CommandInterface
             return  false;
         }
         $platformOrder = new Magento2PlatformOrderDecorator();
-        $platformOrder->loadByIncrementId("000000585");
+        $platformOrder->loadByIncrementId($lastOrderId);
 
 
         if ($this->isTheIntervalGreaterThanAMinute($orderDecorator, $platformOrder)) {
