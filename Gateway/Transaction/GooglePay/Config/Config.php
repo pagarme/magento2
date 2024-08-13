@@ -56,7 +56,7 @@ class Config extends AbstractConfig implements ConfigInterface
     public function getCardBrands()
     {
         $brandsAllowed = [];
-        $creditCardBrandsSelected = explode(',', $this->getConfig(static::CARD_BRANDS));
+        $creditCardBrandsSelected = explode(',', $this->getConfig(static::CARD_BRANDS) ?? '');
         foreach ($creditCardBrandsSelected as $brand) {
             if (in_array(strtoupper($brand), static::GOOGLE_POSSIBLE_BRANDS)) {
                 $brandsAllowed[] = strtoupper($brand);
