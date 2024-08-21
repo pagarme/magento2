@@ -20,7 +20,7 @@ interface RecipientInterface
 
     /**
      * @param string $id
-     * @return KycLinkResponseInterface
+     * @return Pagarme\Pagarme\Api\KycLinkResponseInterface
      */
     public function createKycLink(string $id);
 }
