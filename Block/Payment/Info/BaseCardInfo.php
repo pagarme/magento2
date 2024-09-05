@@ -41,6 +41,9 @@ abstract class BaseCardInfo extends Cc
         }
 
         $charge = current($orderObject->getCharges());
+        if ($charge->getLastTransaction()->getCardData() == null) {
+            return [];
+        }
         $lastFourDigitsWithDots = sprintf(
             "**** **** **** %s",
             $charge->getLastTransaction()->getCardData()->getLastFourDigits()->getValue()
