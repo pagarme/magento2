@@ -16,11 +16,34 @@ abstract class BaseCardInfo extends Cc
 
     /**
      * @return array
+     */
+    public function getTransactionInfo()
+    {
+        $charge = $this->getLastCharge();
+        if ($charge->getLastTransaction()->getCardData() == null) {
+            return [];
+        }
+        $lastFourDigitsWithDots = sprintf(
+            "**** **** **** %s",
+            $charge->getLastTransaction()->getCardData()->getLastFourDigits()->getValue()
+        );
+        return array_merge(
+            $charge->getAcquirerTidCapturedAndAuthorize(),
+            ['tid' => $charge->getLastTransaction()->getAcquirerTid() ?? ""],
+            ['cardBrand' => $charge->getLastTransaction()->getCardData()->getBrand()->getName() ?? ""],
+            ['installments' => $this->getInfo()->getAdditionalInformation('cc_installments') ?? ""],
+            ['lastFour' => $lastFourDigitsWithDots],
+            ['acquirerMessage' => $charge->getLastTransaction()->getAcquirerMessage() ?? ""]
+        );
+    }
+
+    /**
+     * @return mixed|array|Charge
      * @throws InvalidParamException
      * @throws LocalizedException
      * @throws Exception
      */
-    public function getTransactionInfo()
+    private function getLastCharge()
     {
         Magento2CoreSetup::bootstrap();
         $orderService = new OrderService();
@@ -40,21 +63,9 @@ abstract class BaseCardInfo extends Cc
             return [];
         }
 
-        $charge = current($orderObject->getCharges());
-        $lastFourDigitsWithDots = sprintf(
-            "**** **** **** %s",
-            $charge->getLastTransaction()->getCardData()->getLastFourDigits()->getValue()
-        );
-        return array_merge(
-            $charge->getAcquirerTidCapturedAndAuthorize(),
-            ['tid' => $charge->getLastTransaction()->getAcquirerTid() ?? ""],
-            ['cardBrand' => $charge->getLastTransaction()->getCardData()->getBrand()->getName() ?? ""],
-            ['installments' => $this->getInfo()->getAdditionalInformation('cc_installments') ?? ""],
-            ['lastFour' => $lastFourDigitsWithDots],
-            ['acquirerMessage' => $charge->getLastTransaction()->getAcquirerMessage() ?? ""]
-        );
+        return current($orderObject->getCharges());
     }
-
+    
     /**
      * @param mixed $orderService
      * @param mixed $pagarmeId
