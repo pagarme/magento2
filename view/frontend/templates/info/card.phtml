@@ -3,8 +3,9 @@
      * @var \Pagarme\Core\Kernel\Aggregates\Transaction $info
      */
     $info =  $this->getTransactionInfo();
-    if(empty($info))
+    if(empty($info)) {
         return;
+    }
 ?>
 <span>
     <?= __($this->getTitle()); ?>
