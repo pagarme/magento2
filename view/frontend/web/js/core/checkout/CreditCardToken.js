@@ -3,7 +3,7 @@ define([], () => {
         constructor(formObject, documentNumber = null) {
             this.documentNumber = documentNumber;
             if (documentNumber != null) {
-                this.documentNumber = documentNumber.replace(/(\.|\/|\-)/g,"");
+                this.documentNumber = documentNumber.replace(/[^0-9]+/g, '');
             }
             this.formObject = formObject;
         }
@@ -12,7 +12,7 @@ define([], () => {
                 type: "card",
                 card : {
                     holder_name: this.formObject.creditCardHolderName.val(),
-                    number: this.formObject.creditCardNumber.val(),
+                    number: this.formObject.creditCardNumber.val().replace(/[^0-9]+/g, ''),
                     exp_month: this.formObject.creditCardExpMonth.val(),
                     exp_year: this.formObject.creditCardExpYear.val(),
                     cvv: this.formObject.creditCardCvv.val(),

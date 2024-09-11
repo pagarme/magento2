@@ -2,37 +2,29 @@
 
 namespace Pagarme\Pagarme\Concrete;
 
-use Magento\Framework\App\Config as Magento2StoreConfig;
+use DateTimeZone;
+use Exception;
 use Magento\Config\Model\Config as Magento2ModelConfig;
+use Magento\Framework\App\Config as Magento2StoreConfig;
 use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
-use Magento\Store\Model\ScopeInterface as ScopeInterface;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\ProductMetadataInterface;
 use Magento\Framework\Filesystem\DirectoryList;
-use Magento\Store\Model\StoreManager as MagentoStoreManager;
+use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
+use Magento\Store\Model\ScopeInterface;
+use Magento\Store\Model\StoreManagerInterface;
+use Magento\Store\Model\Website\Interceptor;
 use Pagarme\Core\Kernel\Abstractions\AbstractModuleCoreSetup;
 use Pagarme\Core\Kernel\Aggregates\Configuration;
 use Pagarme\Core\Kernel\Factories\ConfigurationFactory;
 use Pagarme\Core\Kernel\Services\MoneyService;
 use Pagarme\Core\Kernel\ValueObjects\CardBrand;
 use Pagarme\Core\Kernel\ValueObjects\Configuration\CardConfig;
-use Pagarme\Pagarme\Gateway\Transaction\Base\Config\Config;
-use Pagarme\Pagarme\Gateway\Transaction\CreditCard\Config\ConfigInterface;
-use Pagarme\Pagarme\Model\Installments\Config\ConfigInterface as InstallmentConfigInterface;
 use Pagarme\Pagarme\Helper\ModuleHelper;
-use Pagarme\Pagarme\Model\Enum\CreditCardBrandEnum;
-use Pagarme\Pagarme\Concrete\Magento2DatabaseDecorator;
-use Pagarme\Pagarme\Concrete\Magento2PlatformOrderDecorator;
-use Pagarme\Pagarme\Concrete\Magento2PlatformInvoiceDecorator;
-use Pagarme\Pagarme\Concrete\Magento2PlatformCreditmemoDecorator;
-use Pagarme\Pagarme\Concrete\Magento2DataService;
-use Pagarme\Pagarme\Concrete\Magento2PlatformPaymentMethodDecorator;
-use Pagarme\Pagarme\Concrete\Magento2PlatformProductDecorator;
 use Pagarme\Pagarme\Model\ConfigNotification;
-use Magento\Store\Model\StoreManagerInterface;
-use Magento\Store\Model\Website\Interceptor;
+use Pagarme\Pagarme\Model\Enum\CreditCardBrandEnum;
 use stdClass;
+use Throwable;
 
 final class Magento2CoreSetup extends AbstractModuleCoreSetup
 {
@@ -74,19 +66,19 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
     {
         self::$config = [
             AbstractModuleCoreSetup::CONCRETE_DATABASE_DECORATOR_CLASS =>
-            Magento2DatabaseDecorator::class,
+                Magento2DatabaseDecorator::class,
             AbstractModuleCoreSetup::CONCRETE_PLATFORM_ORDER_DECORATOR_CLASS =>
-            Magento2PlatformOrderDecorator::class,
+                Magento2PlatformOrderDecorator::class,
             AbstractModuleCoreSetup::CONCRETE_PLATFORM_INVOICE_DECORATOR_CLASS =>
-            Magento2PlatformInvoiceDecorator::class,
+                Magento2PlatformInvoiceDecorator::class,
             AbstractModuleCoreSetup::CONCRETE_PLATFORM_CREDITMEMO_DECORATOR_CLASS =>
-            Magento2PlatformCreditmemoDecorator::class,
+                Magento2PlatformCreditmemoDecorator::class,
             AbstractModuleCoreSetup::CONCRETE_DATA_SERVICE =>
-            Magento2DataService::class,
+                Magento2DataService::class,
             AbstractModuleCoreSetup::CONCRETE_PLATFORM_PAYMENT_METHOD_DECORATOR_CLASS =>
-            Magento2PlatformPaymentMethodDecorator::class,
+                Magento2PlatformPaymentMethodDecorator::class,
             AbstractModuleCoreSetup::CONCRETE_PRODUCT_DECORATOR_CLASS =>
-            Magento2PlatformProductDecorator::class
+                Magento2PlatformProductDecorator::class
         ];
     }
 
@@ -134,7 +126,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
                 $storeConfig = $objectManager->get(Magento2StoreConfig::class);
             }
 
-            $configData = new \stdClass();
+            $configData = new stdClass();
 
             $storeId = self::getCurrentStoreId();
 
@@ -167,7 +159,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
             self::$moduleConfig = $config;
             self::$instance->setApiBaseUrl();
 
-        } catch (\Throwable $error) {
+        } catch (Throwable $error) {
             $configErrorNotify = new ConfigNotification();
             $configErrorNotify->addNotify($error);
         }
@@ -212,13 +204,13 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
 
         $section = 'payment/pagarme_voucher/';
 
-        $voucherObject = new \stdClass();
+        $voucherObject = new stdClass();
 
         $dataObj->voucherConfig = self::fillDataObj($storeConfig, $options, $voucherObject, $section);
 
         $operation = Configuration::CARD_OPERATION_AUTH_ONLY;
         if ($dataObj->voucherConfig->cardOperation === 'authorize_capture') {
-            $operation  = Configuration::CARD_OPERATION_AUTH_AND_CAPTURE;
+            $operation = Configuration::CARD_OPERATION_AUTH_AND_CAPTURE;
         }
 
         $dataObj->voucherConfig->cardOperation = $operation;
@@ -237,7 +229,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
 
         $section = 'payment/pagarme_debit/';
 
-        $debitObject = new \stdClass();
+        $debitObject = new stdClass();
 
         $dataObj->debitConfig = self::fillDataObj($storeConfig, $options, $debitObject, $section);
         $dataObj->debitConfig->cardOperation = Configuration::CARD_OPERATION_AUTH_AND_CAPTURE;
@@ -279,9 +271,10 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
     }
 
     private static function fillWithPixConfig(
-        stdClass $configData,
+        stdClass             $configData,
         ScopeConfigInterface $storeConfig
-    ) {
+    )
+    {
         $options = [
             'enabled' => 'active',
             'expirationQrCode' => 'expiration_qrcode',
@@ -291,15 +284,16 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
 
         $section = 'payment/pagarme_pix/';
 
-        $pixObject = new \stdClass();
+        $pixObject = new stdClass();
 
         $configData->pixConfig = self::fillDataObj($storeConfig, $options, $pixObject, $section);
     }
-    
+
     private static function fillWithGooglePayConfig(
-        stdClass $configData,
+        stdClass             $configData,
         ScopeConfigInterface $storeConfig
-    ) {
+    )
+    {
         $options = [
             'enabled' => 'active',
             'title' => 'title',
@@ -309,7 +303,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
 
         $section = 'payment/pagarme_googlepay/';
 
-        $googlePayObject = new \stdClass();
+        $googlePayObject = new stdClass();
 
         $configData->googlePayConfig = self::fillDataObj($storeConfig, $options, $googlePayObject, $section);
     }
@@ -380,7 +374,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
 
         $section = 'pagarme_pagarme/global/';
 
-        $keys = new \stdClass;
+        $keys = new stdClass;
 
         $dataObj->keys =
             self::fillDataObj(
@@ -415,7 +409,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         ];
         $section = 'payment/pagarme_customer_address/';
 
-        $addressAttributes = new \stdClass();
+        $addressAttributes = new stdClass();
         $dataObj->addressAttributes =
             self::fillDataObj(
                 $storeConfig,
@@ -455,7 +449,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
 
         $scope = ScopeInterface::SCOPE_WEBSITES;
         $storeId = self::getCurrentStoreId();
-        $selectedBrands = $storeConfig->getValue($section .  'cctypes', $scope, $storeId) ?? '';
+        $selectedBrands = $storeConfig->getValue($section . 'cctypes', $scope, $storeId) ?? '';
         $brands = array_merge([''], explode(
             ',',
             $selectedBrands
@@ -482,12 +476,12 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
                 $max = $storeConfig->getValue($section . 'installments_number' . $brand, $scope, $storeId);
             }
 
-            $minValue =  $storeConfig->getValue($section . 'installment_min_amount' . $brand, $scope, $storeId);
-            $initial =  $storeConfig->getValue($section . 'installments_interest_rate_initial' . $brand, $scope, $storeId);
-            $incremental =  $storeConfig->getValue($section . 'installments_interest_rate_incremental' . $brand, $scope, $storeId);
-            $maxWithout =  $storeConfig->getValue($section . 'installments_max_without_interest' . $brand, $scope, $storeId);
+            $minValue = $storeConfig->getValue($section . 'installment_min_amount' . $brand, $scope, $storeId);
+            $initial = $storeConfig->getValue($section . 'installments_interest_rate_initial' . $brand, $scope, $storeId);
+            $incremental = $storeConfig->getValue($section . 'installments_interest_rate_incremental' . $brand, $scope, $storeId);
+            $maxWithout = $storeConfig->getValue($section . 'installments_max_without_interest' . $brand, $scope, $storeId);
 
-            $interestByBrand =  $storeConfig->getValue($section . 'installments_interest_by_issuer' . $brand, $scope, $storeId);
+            $interestByBrand = $storeConfig->getValue($section . 'installments_interest_by_issuer' . $brand, $scope, $storeId);
             if (empty($interestByBrand)) {
                 $initial = 0;
                 $incremental = 0;
@@ -541,46 +535,41 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
     public static function getCurrentStoreId()
     {
         $objectManager = ObjectManager::getInstance();
-        $config = $objectManager->get(Magento2ModelConfig::class);
 
-        $storeInterfaceName = '\Magento\Store\Model\StoreManagerInterface';
-        $storeManager = $objectManager->get($storeInterfaceName);
+        $requestClass = '\Magento\Framework\App\RequestInterface';
+        $request = $objectManager->get($requestClass);
 
-        $store = $storeManager->getWebsite()->getId();
+        if ($request->getControllerName() !== 'system_config') {
+            $storeInterfaceName = '\Magento\Store\Model\StoreManagerInterface';
+            $storeManager = $objectManager->get($storeInterfaceName);
 
-        if ($config->getScope() == 'websites') {
-            $store = $config->getScopeId();
+            return $storeManager->getStore()->getWebsite()->getId();
         }
 
-        if ($config->getScope() == 'stores') {
-            $store = $storeManager
-                ->getStore($config->getScopeId())
-                ->getWebsite()
-                ->getId();
+        if ($request->getParam(ScopeInterface::SCOPE_WEBSITE)) {
+            return $request->getParam(ScopeInterface::SCOPE_WEBSITE);
         }
 
-        if ($config->getScope() == 'default') {
-            $store = $storeManager->getDefaultStoreView()->getStoreId();
+        if ($request->getParam(ScopeInterface::SCOPE_STORE)) {
+            return $request->getParam(ScopeInterface::SCOPE_STORE);
         }
 
-        return $store;
-    }
-
-    public static function getDefaultStoreId()
-    {
-        $objectManager = ObjectManager::getInstance();
-        $storeInterfaceName = '\Magento\Store\Model\StoreManagerInterface';
-        $storeManager = $objectManager->get($storeInterfaceName);
-
-        $defaultStoreView = $storeManager->getDefaultStoreView();
-
-        return $defaultStoreView->getStoreId();
+        return 0;
     }
 
     /**
+     * @return int
+     */
+    public static function getDefaultStoreId()
+    {
+        return 0;
+    }
+
+    /**
+     * @return DateTimeZone
+     * @throws Exception
      * @since 1.7.1
      *
-     * @return \DateTimeZone
      */
     protected function getPlatformStoreTimezone()
     {
@@ -592,9 +581,8 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         $timezoneString = $timezone->getConfigTimezone(
             ScopeInterface::SCOPE_STORE
         );
-        $dateTimeZone = new \DateTimeZone($timezoneString);
 
-        return $dateTimeZone;
+        return new DateTimeZone($timezoneString);
     }
 
     static private function fillWithRecurrenceConfig(&$dataObj, $storeConfig)
@@ -622,7 +610,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
 
         $section = 'pagarme_pagarme/recurrence/';
 
-        $recurrenceConfig = new \stdClass();
+        $recurrenceConfig = new stdClass();
         $dataObj->recurrenceConfig = self::fillDataObj(
             $storeConfig,
             $options,
@@ -632,9 +620,10 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
     }
 
     static private function fillWithMarketplaceConfig(
-        stdClass $configData,
+        stdClass             $configData,
         ScopeConfigInterface $storeConfig
-    ) {
+    )
+    {
         $options = [
             'enabled' => 'active',
             'responsibilityForProcessingFees'
@@ -651,8 +640,15 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
 
         $section = 'pagarme_pagarme/marketplace/';
 
-        $marketplaceObject = new \stdClass();
+        $marketplaceObject = new stdClass();
 
         $configData->marketplaceConfig = self::fillDataObj($storeConfig, $options, $marketplaceObject, $section);
+    }
+
+    /**
+     * @return null
+     */
+    public static function getInstallmentType() {
+        return null;
     }
 }

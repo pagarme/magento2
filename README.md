@@ -16,7 +16,7 @@ composer require pagarme/pagarme-magento2-module
 
 ## Requirements
 * PHP >= 7.1
-* Magento2 >= 2.3 & <= 2.4.5
+* Magento2 >= 2.3 & <= 2.4.6
 
 ## Configuration
 
@@ -36,3 +36,9 @@ Open a new Issue following our issue template [ISSUE-TEMPLATE](ISSUE-TEMPLATE.md
 
 ## Changelog
 See in [releases](https://github.com/pagarme/magento2-module/releases)
+
+
+## Contributors
+| ![robsoned avatar](https://avatars.githubusercontent.com/u/18008565?v=4) | 
+|--------------------------------------------------------------------------------------
+| [robsoned](https://github.com/robsoned)                                | 

@@ -51,15 +51,10 @@ define(
         $t,
         globalMessageList,
         urlBuilder,
-        PagarmeCore,
-        PaymentController,
-        PlatformPlaceOrder
+        PagarmeCore
     ) {
-
         return Component.extend({
             initPaymentMethod: function() {
-                var _self = this;
-
                 const platFormConfig = window.checkoutConfig;
                 platFormConfig.moduleUrls = {};
                 const installmentsUrl = installmentsAction();
@@ -125,12 +120,12 @@ define(
              */
             beforeplaceOrder: function(data, event){
 
-                var _self = this;
+                const _self = this;
 
                 PagarmeCore.platFormConfig.addresses.billingAddress = quote.billingAddress();
 
-                var PlatformPlaceOrder = {
-                    obj : _self,
+                const PlatformPlaceOrder = {
+                    obj: _self,
                     data: data,
                     event: event
                 };
@@ -145,9 +140,9 @@ define(
              * Select current payment token
              */
             selectPaymentMethod: function() {
-                var data = this.getData();
+                const data = this.getData();
                 if (data == undefined) {
-                    var platFormConfig = PagarmeCore.platFormConfig;
+                    const platFormConfig = PagarmeCore.platFormConfig;
                     PagarmeCore.init(this.getModel(), platFormConfig);
                 }
                 selectPaymentMethodAction(this.getData());
@@ -161,9 +156,9 @@ define(
                     this.oldInstallmentTax = 0;
                 }
 
-                var total = quote.getTotals()();
-                var subTotalIndex = null;
-                for (var i = 0, len = total.total_segments.length; i < len; i++) {
+                const total = quote.getTotals()();
+                let subTotalIndex = null;
+                for (let i = 0, len = total.total_segments.length; i < len; i++) {
                     if (total.total_segments[i].code == "grand_total") {
                         subTotalIndex = i;
                         continue;

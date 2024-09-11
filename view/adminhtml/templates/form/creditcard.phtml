@@ -45,7 +45,8 @@ $code = $block->getMethodCode();
             <span><?= __('Credit Card Number'); ?></span>
         </label>
         <div class="admin__field-control control">
-            <input id="pagarme_cc_number" name="payment[cc_number]" class="hosted-control cc_number"/>
+            <input id="pagarme_cc_number" name="payment[cc_number]" class="hosted-control cc_number"
+                   inputmode="numeric"/>
             <div class="hosted-error"><?= __('Please, enter valid Credit Card Number'); ?></div>
         </div>
     </div>
@@ -91,7 +92,8 @@ $code = $block->getMethodCode();
                    type="number"
                    min="0"
                    name="payment[cc_cid]"
-                   class="hosted-control hosted-cid cc_cid"/>
+                   class="hosted-control hosted-cid cc_cid"
+                   inputmode="numeric"/>
 
             <div class="hosted-error">
                 <?= __('The cvv field must be a minimum length of 3 and a maximum length of 4.'); ?>
