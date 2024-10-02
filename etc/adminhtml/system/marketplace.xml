@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
-    <group id="pagarme_pagarme_marketplace" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="50" translate="label">
+    <group id="pagarme_pagarme_marketplace" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="110" translate="label">
         <label>Marketplace</label>
         <field id="is_marketplace_disable" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="label">
             <frontend_model>Pagarme\Pagarme\Block\Adminhtml\System\Config\Form\Field\MarketplaceMessage</frontend_model>

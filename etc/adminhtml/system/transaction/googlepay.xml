@@ -1,0 +1,49 @@
+<?xml version="1.0" ?>
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <group id="pagarme_googlepay" showInWebsite="1" showInStore="1" showInDefault="1" translate="label"  sortOrder="50">
+        <label>Google Pay</label>
+        <field id="active" type="select" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+            <label>Enable this payment method</label>
+            <config_path>payment/pagarme_googlepay/active</config_path>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+        </field>
+        <field id="title" type="text" sortOrder="20" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+            <label>Payment label</label>
+            <config_path>payment/pagarme_googlepay/title</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
+        <field id="pagarme_account_id" type="text" sortOrder="30" showInWebsite="1" showInStore="1" showInDefault="1" translate="label, comment">
+            <label>Pagar.me account ID</label>
+            <comment><![CDATA[Consult the <a target='_blank' href='https://id.pagar.me/signin'>Dashboard</a> at: <i>Settings > Keys > Account ID</i>]]></comment>
+            <config_path>pagarme_pagarme/hub/account_id</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
+        <field id="merchant_id" type="text" sortOrder="40" showInWebsite="1" showInStore="1" showInDefault="1" translate="label, comment">
+            <label>MerchantId Google Pay</label>
+            <comment><![CDATA[Google Pay identifier required to create successful orders. Find out how to request <a target='_blank' href='https://pay.google.com/business/console/?hl=pt-br'>here</a>.]]></comment>
+            <config_path>payment/pagarme_googlepay/merchant_id</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
+        <field id="merchant_name" type="text" sortOrder="50" showInWebsite="1" showInStore="1" showInDefault="1" translate="label, tooltip">
+            <label>Store name on Google Pay</label>
+            <config_path>payment/pagarme_googlepay/merchant_name</config_path>
+            <tooltip>Name of your store that will be displayed to the customer while purchasing through Google Pay.</tooltip>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
+        <field id="sort_order" type="text" sortOrder="60" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+            <label>Payment method order</label>
+            <config_path>payment/pagarme_googlepay/sort_order</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
+    </group>
+</include>

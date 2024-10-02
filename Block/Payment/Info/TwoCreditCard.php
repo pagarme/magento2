@@ -159,11 +159,11 @@ class TwoCreditCard extends Cc
 
         return [
             'card1' => array_merge(
-                $chargeOne->getAcquirerTidCapturedAndAutorize(),
+                $chargeOne->getAcquirerTidCapturedAndAuthorize(),
                 ['tid' => $this->getTid($chargeOne)]
             ),
             'card2' => array_merge(
-                $chargeTwo->getAcquirerTidCapturedAndAutorize(),
+                $chargeTwo->getAcquirerTidCapturedAndAuthorize(),
                 ['tid' => $this->getTid($chargeTwo)]
             )
         ];

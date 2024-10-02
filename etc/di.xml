@@ -20,6 +20,7 @@
     <preference for="Pagarme\Pagarme\Gateway\Transaction\CreditCard\Config\ConfigInterface" type="Pagarme\Pagarme\Gateway\Transaction\CreditCard\Config\Config" />
     <preference for="Pagarme\Pagarme\Gateway\Transaction\DebitCard\Config\ConfigInterface" type="Pagarme\Pagarme\Gateway\Transaction\DebitCard\Config\Config" />
     <preference for="Pagarme\Pagarme\Gateway\Transaction\TwoCreditCard\Config\ConfigInterface" type="Pagarme\Pagarme\Gateway\Transaction\TwoCreditCard\Config\Config" />
+    <preference for="Pagarme\Pagarme\Gateway\Transaction\GooglePay\Config\ConfigInterface" type="Pagarme\Pagarme\Gateway\Transaction\GooglePay\Config\Config" />
     <preference for="Pagarme\Pagarme\Gateway\Transaction\Billet\Config\ConfigInterface" type="Pagarme\Pagarme\Gateway\Transaction\Billet\Config\Config" />
     <preference for="Pagarme\Pagarme\Gateway\Transaction\BilletCreditCard\Config\ConfigInterface" type="Pagarme\Pagarme\Gateway\Transaction\BilletCreditCard\Config\Config" />
     <preference for="Pagarme\Pagarme\Api\BilletCreditCardRequestDataProviderInterface" type="Pagarme\Pagarme\Gateway\Transaction\BilletCreditCard\ResourceGateway\Create\RequestDataProvider" />
@@ -212,6 +213,60 @@
             <argument name="config" xsi:type="object">PagarmeCreditCardInstallmentByBrandAndAmount</argument>
         </arguments>
     </type>
+
+    <!-- GooglePay -->
+    <virtualType name="PagarmeGooglePayRemoteMethodAdapter" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">Pagarme\Pagarme\Model\Ui\GooglePay\ConfigProvider::CODE</argument>
+            <argument name="valueHandlerPool" xsi:type="object">PagarmeGooglePayValueHandlerPool</argument>
+            <argument name="commandPool" xsi:type="object">PagarmeGooglePayCommandPool</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">Pagarme\Pagarme\Block\Payment\Info\GooglePay</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PagarmeGooglePayCommandResponseHandlerPool" type="Magento\Payment\Gateway\Response\HandlerChain">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="general" xsi:type="string">Pagarme\Pagarme\Gateway\Transaction\GooglePay\ResourceGateway\Create\Response\GeneralHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PagarmeGooglePayAuthorizeCommand" type="Pagarme\Pagarme\Gateway\Transaction\Base\Command\AuthorizeCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">Pagarme\Pagarme\Gateway\Transaction\GooglePay\ResourceGateway\Create\RequestBuilder</argument>
+            <argument name="responseHandler" xsi:type="object">PagarmeGooglePayCommandResponseHandlerPool</argument>
+            <argument name="validator" xsi:type="object">Pagarme\Pagarme\Gateway\Transaction\GooglePay\ResourceGateway\Create\Response\Validator</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PagarmeGooglePayValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">PagarmeGooglePayConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="PagarmeGooglePayConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">PagarmeGooglePayConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="PagarmeGooglePayConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">Pagarme\Pagarme\Model\Ui\GooglePay\ConfigProvider::CODE</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="PagarmeGooglePayCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="initialize" xsi:type="string">Pagarme\Pagarme\Gateway\Transaction\Base\Command\InitializeCommand</item>
+                <item name="authorize" xsi:type="string">PagarmeGooglePayAuthorizeCommand</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <!-- GooglePay -->
 
     <!-- Pix -->
     <virtualType name="PagarmePixRemoteMethodAdapter" type="Magento\Payment\Model\Method\Adapter">
@@ -749,4 +804,5 @@
                 sortOrder="10"
                 disabled="false"/>
     </type>
+    <preference for="Pagarme\Pagarme\Api\KycLinkResponseInterface" type="Pagarme\Pagarme\Model\Api\KycLinkResponse"/>
 </config>

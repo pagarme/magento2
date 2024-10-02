@@ -1,0 +1,9 @@
+
+<div class="data-grid-cell-content"
+     if="!$col.needsValidation($row())"
+     data-bind="attr: { class: $col.getStatusClass($row())}"
+     text="$col.getLabel($row())"></div>
+<a   class="action-menu-item kyc-validation"
+     if="$col.needsValidation($row())"
+     data-bind="click: $col.generateKycLink.bind($col, $row())"
+     text="$col.getLabel($row())"></a>

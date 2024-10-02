@@ -3,9 +3,10 @@
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
     <group id="pagarme_pagarme_global" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="1" translate="label">
         <label>General Settings</label>
-        <field id="hub_integration" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="1" translate="label" type="label">
+        <field id="hub_integration" showInDefault="1" showInStore="0" showInWebsite="1" sortOrder="1" translate="label" type="hidden">
             <label>Pagar.me integration</label>
             <frontend_model>Pagarme\Pagarme\Block\Adminhtml\System\Config\Form\Field\HubIntegration</frontend_model>
+            <config_path>pagarme_pagarme/hub/install_id</config_path>
         </field>
         <field id="hub_environment" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="2" translate="label" type="label">
             <label>Integration Environment</label>

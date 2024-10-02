@@ -12,6 +12,7 @@ require([
         cpfMask = '000.000.000-00',
         cnpjMax = 18, // Includes punctuation due to the mask
         cnpjMask = '00.000.000/0000-00',
+        errorTitle = $.mage.__('Error!'),
         fieldDataAttr = {
             datepicker: '[data-datepicker]',
             toggleRequired: '[data-toggle-required]'
@@ -128,7 +129,9 @@ require([
         const editRecipient = $('#edit-recipient').val();
         if (editRecipient.length > 0) {
             $('#webkul-seller-container').hide();
-            loadRecipient(JSON.parse(editRecipient));
+            const parsedRecipient = JSON.parse(editRecipient);
+            loadRecipient(parsedRecipient);
+            updateStatusModal(parsedRecipient);
         }
 
         $(fieldId['recipientId']).on('change', function () {
@@ -339,7 +342,8 @@ require([
             .then(res => {
                 const response = JSON.parse(res);
                 if (response.code !== 200) {
-                    mageAlert(response.message, 'Error!');
+                    hideLoader();
+                    mageAlert(response.message, errorTitle);
                     return;
                 }
 
@@ -355,7 +359,7 @@ require([
         e.preventDefault();
 
         if (!validateEmail($("#recipient-email").val())) {
-            mageAlert('Invalid email.', 'Error!');
+            mageAlert($.mage.__('Invalid email.'), errorTitle);
             return;
         }
 
@@ -369,10 +373,10 @@ require([
             success: function (data) {
                 data = JSON.parse(data);
                 if (data.code === 200) {
-                    mageAlert(data.message, 'Success!');
-                    return window.history.back();
+                    mageAlert(data.message, $.mage.__('Recipient registered successfully!'), true);
+                    return;
                 }
-                mageAlert(data.message, 'Error!');
+                mageAlert(data.message, errorTitle);
             },
             complete: function () {
                 toggleSaveButton()
@@ -570,6 +574,9 @@ require([
             recipientObject[fieldId['holderDocument']] = recipient.document;
         }
 
+        recipientObject['#pagarme-status'] = recipient.status;
+        recipientObject['#status-label'] = recipient.statusLabel;
+
         recipientObject[fieldId['holderName']] = recipient.default_bank_account.holder_name;
         recipientObject[fieldId['holderDocumentType']] =
             documentTypeCorporationToCompany(recipient.default_bank_account.holder_type);
@@ -694,11 +701,21 @@ require([
         });
     }
 
-    function mageAlert(content, title = null) {
-        alert({
-            title: $.mage.__(title),
-            content: $.mage.__(content)
-        });
+    function mageAlert(content, title = null, shouldGoBack = false) {
+        let alertObject = {
+            title: title,
+            content: content,
+            modalClass: 'pagarme-recipient-modal',
+        };
+        if (shouldGoBack) {
+            alertObject.actions = {
+                always: function () {
+                    showLoader();
+                    $('#back').trigger('click');
+                }
+            }
+        }
+        alert(alertObject);
     }
 
     function showLoader() {
@@ -779,6 +796,18 @@ require([
             dayNamesMin: shortWeekDays,
             weekHeader: 'Sm'
         });
+    }
+
+    function updateStatusModal(recipient)
+    {
+        if (!recipient.statusUpdated) {
+            return;
+        }
+
+        mageAlert(
+            $.mage.__('Recipient had their status updated successfully.'),
+            $.mage.__('Status updated!')
+        );
     }
 
 });

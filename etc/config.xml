@@ -9,7 +9,7 @@
         </pagarme>
         <payment>
             <pagarme_billet>
-                <active>1</active>
+                <active>0</active>
                 <model>PagarmeBilletRemoteMethodAdapter</model>
                 <order_status>pending_payment</order_status>
                 <payment_action>authorize</payment_action>
@@ -25,7 +25,7 @@
             </pagarme_billet>
 
             <pagarme_pix>
-                <active>1</active>
+                <active>0</active>
                 <model>PagarmePixRemoteMethodAdapter</model>
                 <order_status>pending_payment</order_status>
                 <payment_action>authorize</payment_action>
@@ -41,7 +41,7 @@
             </pagarme_pix>
 
             <pagarme_creditcard>
-                <active>1</active>
+                <active>0</active>
                 <model>PagarmeCreditCardsRemoteMethodAdapter</model>
                 <order_status>pending_payment</order_status>
                 <payment_action>authorize_capture</payment_action>
@@ -118,7 +118,7 @@
             </pagarme_creditcard>
 
             <pagarme_billet_creditcard>
-                <active>1</active>
+                <active>0</active>
                 <model>PagarmeBilletCreditCardsRemoteMethodAdapter</model>
                 <order_status>pending_payment</order_status>
                 <payment_action>authorize</payment_action>
@@ -145,7 +145,7 @@
             </pagarme_billet_creditcard>
 
             <pagarme_two_creditcard>
-                <active>1</active>
+                <active>0</active>
                 <model>PagarmeTwoCreditCardRemoteMethodAdapter</model>
                 <order_status>pending_payment</order_status>
                 <payment_action>authorize</payment_action>
@@ -172,7 +172,7 @@
             </pagarme_two_creditcard>
 
             <pagarme_voucher>
-                <active>1</active>
+                <active>0</active>
                 <model>PagarmeVoucherRemoteMethodAdapter</model>
                 <order_status>pending_payment</order_status>
                 <payment_action>authorize_capture</payment_action>
@@ -199,7 +199,7 @@
             </pagarme_voucher>
 
             <pagarme_debit>
-                <active>1</active>
+                <active>0</active>
                 <model>PagarmeDebitRemoteMethodAdapter</model>
                 <order_status>pending_payment</order_status>
                 <payment_action>authorize_capture</payment_action>
@@ -223,6 +223,22 @@
                 <can_initialize>1</can_initialize>
                 <allow_multiple_address>0</allow_multiple_address>
             </pagarme_debit>
+
+            <pagarme_googlepay>
+                <active>0</active>
+                <model>PagarmeGooglePayRemoteMethodAdapter</model>
+                <order_status>pending_payment</order_status>
+                <payment_action>authorize</payment_action>
+                <title>Google Pay</title>
+                <can_initialize>1</can_initialize>
+                <can_authorize>1</can_authorize>
+                <can_capture>1</can_capture>
+                <can_use_checkout>1</can_use_checkout>
+                <can_use_internal>1</can_use_internal>
+                <is_gateway>1</is_gateway>
+                <sort_order>1</sort_order>
+                <can_initialize>1</can_initialize>
+            </pagarme_googlepay>
         </payment>
     </default>
 </config>

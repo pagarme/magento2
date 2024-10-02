@@ -12,7 +12,9 @@ define([
     'Pagarme_Pagarme/js/core/models/PixModel',
     'Pagarme_Pagarme/js/core/models/BoletoModel',
     'Pagarme_Pagarme/js/core/models/BoletoCreditcardModel',
+    'Pagarme_Pagarme/js/core/models/GooglePayModel',
     'Pagarme_Pagarme/js/core/validators/CustomerValidator',
+    'pagarmeJqueryMask'
 ], (
     $,
     PlatformConfig,
@@ -27,6 +29,7 @@ define([
     PixModel,
     BoletoModel,
     BoletoCreditcardModel,
+    GooglePayModel,
     CustomerValidator,
 ) => {
 
@@ -92,7 +95,7 @@ define([
         subscribeTotal() {
             const _self = this;
 
-            this.platformConfig.updateTotals.totals.subscribe(function(){
+            this.platformConfig.updateTotals.totals.subscribe(function () {
                 if (_self.methodCode === 'twocreditcards' || _self.methodCode === 'boletoCreditcard') {
                     let totalAmount = 0;
                     const separator = '.';
@@ -255,6 +258,19 @@ define([
             }
         }
 
+        googlepayInit() {
+            this.platformConfig = PlatformConfig.bind(this.platformConfig);
+            this.formObject = FormObject.googlePayInit(this.platformConfig.isMultibuyerEnabled);
+
+            if (!this.formObject) {
+                return;
+            }
+
+            this.model = new GooglePayModel(this.formObject);
+            this.hideCardAmount(this.formObject);
+            this.removeMultibuyerForm(this.formObject);
+        }
+
         boletoInit() {
             this.platformConfig = PlatformConfig.bind(this.platformConfig);
             this.formObject = FormObject.boletoInit(this.platformConfig.isMultibuyerEnabled);
@@ -373,7 +389,7 @@ define([
 
             });
 
-            formObject.inputAmount.on('keyup', function(){
+            formObject.inputAmount.on('keyup', function () {
                 const element = $(this);
 
                 const originalValue = paymentMethodController.platformConfig.updateTotals.getTotals()().grand_total;
@@ -435,34 +451,28 @@ define([
                     || element.attr('name').startsWith('payment[cc_exp_year]')
                 ) {
                     paymentMethodController.validateCcExpDateField(formObject);
-                    return;
+
                 }
             });
         }
+
         addCreditCardNumberListener(formObject) {
 
             const paymentMethodController = this;
 
             formObject.creditCardNumber.unbind();
-            formObject.creditCardNumber.on('keydown', function () {
-                const element = $(this);
-                paymentMethodController.limitCharacters(element, 19);
-            });
 
             const binObj = new Bin();
-
-            formObject.creditCardNumber.on('keyup', function () {
-                const element = $(this);
-                paymentMethodController.clearLetters(element);
-            });
 
             formObject.creditCardNumber.on('change', function () {
                 const element = $(this);
 
-                setTimeout(function() {
-                    paymentMethodController.setBin(binObj,  element, formObject);
+                setTimeout(function () {
+                    paymentMethodController.setBin(binObj, element, formObject);
                 }, 300);
             });
+
+            formObject.creditCardNumber.mask('0000 0000 0000 0000');
         }
 
         twoCardsTotal(paymentMethod) {
@@ -481,7 +491,7 @@ define([
             sumTotal = (sumTotal + sumInterestTotal).toString();
             sumInterestTotal = sumInterestTotal.toString();
 
-            return { sumTotal, sumInterestTotal };
+            return {sumTotal, sumInterestTotal};
         }
 
         boletoCreditCardTotal(paymentMethod) {
@@ -500,7 +510,7 @@ define([
             }
             sumInterestTotal = sumInterestTotal.toString();
 
-            return { sumTotal, sumInterestTotal };
+            return {sumTotal, sumInterestTotal};
         }
 
         updateTotalByPaymentMethod(paymentMethod, event) {
@@ -557,7 +567,7 @@ define([
             formHandler.init(formObject);
 
 
-            formObject.savedCreditCardSelect.on('change', function() {
+            formObject.savedCreditCardSelect.on('change', function () {
                 const value = $(this).val();
                 const currentSavedCardBrand = $(this).find(optionSelectedSelector).attr('brand');
 
@@ -718,7 +728,7 @@ define([
                 url: installmentsUrl,
                 method: 'GET',
                 cache: true,
-            }).done(function(data) {
+            }).done(function (data) {
                 formHandler = new FormHandler();
 
                 if (!data.length) return;
@@ -731,6 +741,7 @@ define([
                 formHandler.switchBrand(selectedBrand);
             });
         }
+
         fillBrandList(formObject, method) {
             if (method == undefined) {
                 method = 'pagarme_creditcard';
@@ -751,7 +762,7 @@ define([
             amount = amount.replace(separator, this.platformConfig.currency.decimalSeparator);
 
             if (card === 1) {
-                const orderAmountOriginal =  amount.replace(this.platformConfig.currency.decimalSeparator, ".");
+                const orderAmountOriginal = amount.replace(this.platformConfig.currency.decimalSeparator, ".");
                 const amountBalance = (this.platformConfig.updateTotals.getTotals()().grand_total - orderAmountOriginal).toFixed(2);
                 formObject.inputAmount.val(amountBalance.replace(".", this.platformConfig.currency.decimalSeparator));
                 return;
@@ -759,6 +770,7 @@ define([
 
             formObject.inputAmount.val(amount);
         }
+
         validateCcNumberField(element, formObject) {
             if (element.val() === '') {
                 formObject.creditCardBrand.val('');
@@ -768,12 +780,14 @@ define([
                 formHandler.switchBrand('');
             }
         }
+
         validateCcExpDateField(formObject) {
             const cardExpirationMonth = formObject.creditCardExpMonth;
             const cardExpirationYear = formObject.creditCardExpYear;
 
-            const cardDate = new Date(cardExpirationYear.val(), cardExpirationMonth.val() -1);
-            const dateNow = new Date();
+            const cardDate = new Date(cardExpirationYear.val(), cardExpirationMonth.val() - 1);
+            let dateNow = new Date();
+            dateNow = new Date(dateNow.getFullYear(), dateNow.getMonth());
 
             const monthParentsElements = cardExpirationMonth.parent().parent();
             const yearParentsElements = cardExpirationYear.parent().parent();
@@ -817,18 +831,20 @@ define([
 
             return false;
         }
+
         setBin(binObj, creditCardNumberElement, formObject) {
 
             const bin = binObj;
-            const cardNumber = bin.formatNumber(creditCardNumberElement.val());
+            const cardNumber = creditCardNumberElement.val().replace(/[^0-9]+/g, '');
+            const cardBin = bin.formatNumber(cardNumber);
 
-            if (cardNumber.length < 4) {
+            if (cardBin.length < 4) {
                 return;
             }
 
-            const isNewBrand = bin.validate(cardNumber);
+            const isNewBrand = bin.validate(cardBin);
 
-            bin.init(cardNumber);
+            bin.init(cardBin);
 
             const formHandler = new FormHandler();
             formHandler.init(formObject);
@@ -838,21 +854,7 @@ define([
                 this.fillInstallments(formObject);
             }
 
-            return;
-        }
 
-        limitCharacters(element, limit) {
-            const val = element.val();
-
-            if(val != "" && val.length > limit) {
-                element.val(val.substring(0, limit));
-            }
-        }
-
-        clearLetters(element) {
-            const val = element.val();
-            const newVal = val.replace(/[^0-9]+/g, '');
-            element.val(newVal);
         }
 
         clearNumbers(element) {
