@@ -58,7 +58,7 @@ define(
                 const platFormConfig = window.checkoutConfig;
                 platFormConfig.moduleUrls = {};
                 const installmentsUrl = installmentsAction();
-                platFormConfig.grand_total = quote.getTotals()().grand_total;
+                platFormConfig.grand_total = quote.getTotals()().base_grand_total;
 
                 const baseUrl = platFormConfig.payment.ccform.base_url;
 
@@ -157,6 +157,7 @@ define(
                 }
 
                 const total = quote.getTotals()();
+                debugger;
                 let subTotalIndex = null;
                 for (let i = 0, len = total.total_segments.length; i < len; i++) {
                     if (total.total_segments[i].code == "grand_total") {
