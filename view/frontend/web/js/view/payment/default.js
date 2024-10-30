@@ -157,7 +157,6 @@ define(
                 }
 
                 const total = quote.getTotals()();
-                debugger;
                 let subTotalIndex = null;
                 for (let i = 0, len = total.total_segments.length; i < len; i++) {
                     if (total.total_segments[i].code == "grand_total") {
