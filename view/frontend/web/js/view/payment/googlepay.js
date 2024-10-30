@@ -122,7 +122,7 @@ define([
                 countryCode: "BR",
                 currencyCode: quote.totals().base_currency_code,
                 totalPriceStatus: "FINAL",
-                totalPrice: quote.totals().grand_total.toFixed(2),
+                totalPrice: quote.totals().base_grand_total.toFixed(2),
             };
         },
 
