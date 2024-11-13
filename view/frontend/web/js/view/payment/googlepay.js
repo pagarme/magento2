@@ -16,7 +16,6 @@ define([
             return window.checkoutConfig.payment.pagarme_googlepay.title;
         },
         getGooglePaymentsClient: function () {
-            let self = this;
             let environment = "TEST";
             if (window.checkoutConfig.pagarme_is_sandbox_mode === false) {
                 environment = "PRODUCTION";
@@ -27,7 +26,6 @@ define([
             });
         },
         addGooglePayButton: function () {
-            let self = this;
             let paymentsClient = this.getGooglePaymentsClient();
             const button = paymentsClient.createButton({
                 buttonColor: "default",
@@ -137,14 +135,14 @@ define([
         },
 
         processPayment: function (paymentData, self) {
-            var paymentToken =
+            let paymentToken =
                 paymentData.paymentMethodData.tokenizationData.token;
-            var _self = self;
+            let _self = self;
             _self.elementox = paymentToken;
             PagarmeCore.platFormConfig.addresses.billingAddress =
                 quote.billingAddress();
 
-            var PlatformPlaceOrder = {
+            let PlatformPlaceOrder = {
                 obj: _self,
                 data: paymentToken,
                 event: event,
@@ -164,11 +162,11 @@ define([
         },
 
         getData: function () {
-            var paymentMethod = PagarmeCore.paymentMethod[this.getModel()];
+            let paymentMethod = PagarmeCore.paymentMethod[this.getModel()];
             if (paymentMethod == undefined) {
                 return paymentMethod;
             }
-            var paymentModel = paymentMethod.model;
+            let paymentModel = paymentMethod.model;
             return paymentModel.getData();
         },
     });
