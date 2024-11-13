@@ -72,9 +72,7 @@ abstract class GenericInstallmentsConfigProvider implements ConfigProviderInterf
                         'value' => 0,
                     ],
                     'pk_token' => $this->baseConfig->getPublicKey(),
-                    'icons' => [
-                        $this->getBrands()
-                    ],
+                    'icons' => $this->getBrandImages(),
                 ]
             ],
             'is_multi_buyer_enabled' => $this->_getConfig()->getMultiBuyerActive(),
@@ -84,9 +82,9 @@ abstract class GenericInstallmentsConfigProvider implements ConfigProviderInterf
     
     /**
      * Return all brands and their respective images
-     * @return array{height: int, url: string, width: int}
+     * @return array{height: int, width: int, url: string}
      */
-    private function getBrands()
+    private function getBrandImages()
     {
         $possibleBrands = ["Visa", "Elo", "Discover", "Diners", "Credz", "Hipercard", "HiperCard", "Mastercard", 
         "Sodexo", "SodexoAlimentacao", "SodexoCombustivel", "SodexoCultura", "SodexoGift", "SodexoPremium", 
