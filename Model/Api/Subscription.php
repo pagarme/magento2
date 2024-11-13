@@ -2,42 +2,25 @@
 
 namespace Pagarme\Pagarme\Model\Api;
 
-use Magento\Framework\Webapi\Rest\Request;
-use Pagarme\Core\Kernel\Services\LocalizationService;
-use Pagarme\Core\Kernel\Services\MoneyService;
+use Magento\Framework\App\Area;
+use Magento\Framework\App\State;
 use Pagarme\Core\Recurrence\Services\SubscriptionService;
 use Pagarme\Pagarme\Api\SubscriptionApiInterface;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 
 class Subscription implements SubscriptionApiInterface
 {
-
-    /**
-     * @var Request
-     */
-    protected $request;
     /**
      * @var SubscriptionService
      */
     protected $subscriptionService;
 
-    /**
-     * @var LocalizationService
-     */
-    protected $i18n;
-
-    /**
-     * @var MoneyService
-     */
-    protected $moneyService;
-
-    public function __construct(Request $request)
+    public function __construct(State $state)
     {
-        $this->request = $request;
-        Magento2CoreSetup::bootstrap();
-        $this->i18n = new LocalizationService();
-        $this->moneyService = new MoneyService();
-        $this->subscriptionService = new SubscriptionService();
+        if ($state->getAreaCode() === Area::AREA_WEBAPI_REST) {
+            Magento2CoreSetup::bootstrap();
+            $this->subscriptionService = new SubscriptionService();
+        }
     }
 
     /**
@@ -68,16 +51,5 @@ class Subscription implements SubscriptionApiInterface
                 "message" => $exception->getMessage()
             ];
         }
-    }
-
-    /**
-     * List product subscription
-     *
-     * @param string $customerId
-     * @return \Pagarme\Core\Recurrence\Interfaces\SubscriptionInterface[]
-     */
-    public function listByCustomerId($customerId)
-    {
-        // TODO: Implement listByCustomerId() method.
     }
 }
