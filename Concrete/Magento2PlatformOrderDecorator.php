@@ -787,7 +787,17 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         return $this->quote;
     }
 
-    /** @return AbstractPayment[] */
+    /**
+     * @uses self::extractPaymentDataFromPagarmeCreditCard 
+     * @uses self::extractPaymentDataFromPagarmeVoucher
+     * @uses self::extractPaymentDataFromPagarmeDebit
+     * @uses self::extractPaymentDataFromPagarmeTwoCreditCard
+     * @uses self::extractPaymentDataFromPagarmeBilletCreditcard
+     * @uses self::extractPaymentDataFromPagarmeGooglePay
+     * @uses self::extractPaymentDataFromPagarmePix
+     * @uses self::extractPaymentdataFromPagarmeBillet
+     * @return AbstractPayment[] 
+     * */
     public function getPaymentMethodCollection()
     {
         $payments = $this->getPaymentCollection();
@@ -1206,6 +1216,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             $this->moneyService->floatToCents($this->platformOrder->getGrandTotal());
         $newPaymentData->googlepayData = $additionalInformation['googlepayData'];
         $newPaymentData->additionalInformation = ["googlepayData" => $additionalInformation['googlepayData']];
+        $newPaymentData->billing_address = $this->getAddress($this->getQuote()->getBillingAddress())->convertToSDKRequest();
         $googlepayIndex = 'googlepay';
         if (!isset($paymentData[$googlepayIndex])) {
             $paymentData[$googlepayIndex] = [];

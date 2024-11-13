@@ -86,7 +86,7 @@ define([
             const configCard = window.checkoutConfig.payment.pagarme_creditcard;
 
             return configCard['tds_active'] === true
-                && quote.totals().grand_total * 100 >= configCard['tds_min_amount'] * 100
+                && quote.totals().base_grand_total * 100 >= configCard['tds_min_amount'] * 100
                 && this.brandIsVisaOrMaster();
         }
         brandIsVisaOrMaster() {

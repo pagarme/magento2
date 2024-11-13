@@ -109,7 +109,7 @@ define([
                         totalAmount += parseFloat(amount);
                     }
 
-                    if (totalAmount === _self.platformConfig.updateTotals.getTotals()().grand_total) {
+                    if (totalAmount === _self.platformConfig.updateTotals.getTotals()().base_grand_total) {
                         return;
                     }
 
@@ -392,7 +392,7 @@ define([
             formObject.inputAmount.on('keyup', function () {
                 const element = $(this);
 
-                const originalValue = paymentMethodController.platformConfig.updateTotals.getTotals()().grand_total;
+                const originalValue = paymentMethodController.platformConfig.updateTotals.getTotals()().base_grand_total;
                 let orderAmount = (originalValue).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
                 orderAmount = orderAmount.replace(/[^0-9]/g, '');
                 orderAmount = Number(orderAmount);
@@ -754,7 +754,7 @@ define([
         }
 
         fillCardAmount(formObject, count, card = null) {
-            const orderAmount = this.platformConfig.updateTotals.getTotals()().grand_total / count;
+            const orderAmount = this.platformConfig.updateTotals.getTotals()().base_grand_total / count;
 
             let amount = orderAmount.toFixed(this.platformConfig.currency.precision);
             const separator = ".";
@@ -763,7 +763,7 @@ define([
 
             if (card === 1) {
                 const orderAmountOriginal = amount.replace(this.platformConfig.currency.decimalSeparator, ".");
-                const amountBalance = (this.platformConfig.updateTotals.getTotals()().grand_total - orderAmountOriginal).toFixed(2);
+                const amountBalance = (this.platformConfig.updateTotals.getTotals()().base_grand_total - orderAmountOriginal).toFixed(2);
                 formObject.inputAmount.val(amountBalance.replace(".", this.platformConfig.currency.decimalSeparator));
                 return;
             }

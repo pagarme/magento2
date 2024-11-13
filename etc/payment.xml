@@ -1,5 +1,6 @@
 <?xml version="1.0" ?>
-<payment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Payment:etc/payment.xsd">
+<payment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Payment:etc/payment.xsd">
 
     <methods>
         <method name="pagarme_billet">
@@ -94,6 +95,9 @@
         </type>
         <type id="Sodexo" order="20">
             <label>Sodexo</label>
+        </type>
+        <type id="Ticket" order="21">
+            <label>Ticket</label>
         </type>
 
         <!-- Billet -->

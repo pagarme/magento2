@@ -115,7 +115,7 @@ define([
                 phones : customerPhones,
                 card_expiry_date : cardExpiryDate,
                 purchase : {
-                    amount : quote.totals().grand_total * 100,
+                    amount : quote.totals().base_grand_total * 100,
                     date :
                         new Date().toISOString()
                     ,
