@@ -40,5 +40,5 @@ See in [releases](https://github.com/pagarme/magento2-module/releases)
 
 ## Contributors
 | <img src="https://avatars.githubusercontent.com/u/18008565" alt="robsoned avatar" width="120"/> | <img src="https://avatars.githubusercontent.com/u/1132274" alt="rafaelsiqueira avatar" width="120"/> |
-|---|---|
+|:-:|:-:|
 | [robsoned](https://github.com/robsoned) | [rafaelsiqueira](https://github.com/rafaelsiqueira) |
