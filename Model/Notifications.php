@@ -206,16 +206,6 @@ class Notifications extends Message
         $noticesList = [
             CoreAccount::ACCOUNT_DISABLED => __('Your account is <b>disabled</b> on Pagar.me Dash. '
                 . 'Please, contact our support team to enable it.'),
-            CoreAccount::DOMAIN_EMPTY => sprintf(
-                __('No <b>domain</b> registered on Pagar.me Dash. Please enter your website\'s domain on the <b>%s</b> '
-                . 'to be able to process payment in your store.'),
-                $this->buildDashLink($linkLabel, $linkAccount)
-            ),
-            CoreAccount::DOMAIN_INCORRECT => sprintf(
-                __('The registered <b>domain</b> is different from the URL of your website. Please correct the '
-                . 'domain configured on the <b>%s</b> to be able to process payment in your store.'),
-                $this->buildDashLink($linkLabel, $linkAccount)
-            ),
             CoreAccount::WEBHOOK_INCORRECT => sprintf(
                 __('The URL for receiving <b>webhooks</b> registered in Pagar.me Dash is different from the URL of '
                 . 'your website. Please, <b>%s</b> to access the Hub and click the Delete > Confirm '
