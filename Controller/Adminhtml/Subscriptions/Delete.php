@@ -66,7 +66,7 @@ class Delete extends Action
 
         $message = $this->messageFactory->create(
             MessageInterface::TYPE_ERROR,
-            _("Unable to cancel subscription")
+            __("Unable to cancel subscription")
         );
 
         $subscription = $this->subscriptionService->cancel($id);
@@ -74,7 +74,7 @@ class Delete extends Action
         if ($subscription['code'] == 200) {
             $message = $this->messageFactory->create(
                 MessageInterface::TYPE_SUCCESS,
-                _("Subscription deleted.")
+                __("Subscription deleted.")
             );
         }
 
