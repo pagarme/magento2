@@ -91,6 +91,12 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
 
     static protected function getPlatformHubAppPublicAppKey()
     {
+        $objectManager = ObjectManager::getInstance();
+        $config = $objectManager->get('Magento\Framework\App\Config\ScopeConfigInterface');
+        $key = $config->getValue('pagarme_pagarme/hub/partner_public_app_key');
+        if(!empty($key)) {
+            return $key;
+        }
         return '3470c63b-a233-4be0-9d2a-9ff56e349556';
     }
 
