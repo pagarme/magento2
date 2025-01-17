@@ -64,7 +64,7 @@ class Delete extends Action
 
         $message = $this->messageFactory->create(
             MessageInterface::TYPE_ERROR,
-            _("Unable to cancel invoice")
+            __("Unable to cancel invoice")
         );
 
         $invoice = $this->invoiceService->cancel($id);
@@ -72,7 +72,7 @@ class Delete extends Action
         if ($invoice['code'] == 200) {
             $message = $this->messageFactory->create(
                 MessageInterface::TYPE_SUCCESS,
-                _("Invoice canceled.")
+                __("Invoice canceled.")
             );
         }
 
