@@ -32,7 +32,7 @@ class Delete extends PlanAction
 
         $planService->delete($productId);
 
-        $message = $this->messageFactory->create('success', _("Plan deleted."));
+        $message = $this->messageFactory->create('success', __("Plan deleted."));
         $this->messageManager->addMessage($message);
 
         $this->_redirect('pagarme_pagarme/plans/index');

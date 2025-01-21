@@ -48,5 +48,8 @@
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>pagarme_pagarme/global/sendmail</config_path>
         </field>
+        <field id="partner_public_app_key" type="string">
+            <config_path>pagarme_pagarme/hub/partner_public_app_key</config_path>
+        </field>
     </group>
 </include>

@@ -2,7 +2,7 @@
     /**
      * @var \Pagarme\Core\Kernel\Aggregates\Transaction $info
      */
-    $info =  $this->getTransactionInfo();
+    $info =  $block->getTransactionInfo();
     if(empty($info)) {
         return;
     }

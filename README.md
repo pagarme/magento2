@@ -39,6 +39,6 @@ See in [releases](https://github.com/pagarme/magento2-module/releases)
 
 
 ## Contributors
-| ![robsoned avatar](https://avatars.githubusercontent.com/u/18008565?v=4) | 
-|--------------------------------------------------------------------------------------
-| [robsoned](https://github.com/robsoned)                                | 
+| <img src="https://avatars.githubusercontent.com/u/18008565" alt="robsoned avatar" width="120"/> | <img src="https://avatars.githubusercontent.com/u/1132274" alt="rafaelsiqueira avatar" width="120"/> |
+|:-:|:-:|
+| [robsoned](https://github.com/robsoned) | [rafaelsiqueira](https://github.com/rafaelsiqueira) |

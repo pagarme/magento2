@@ -20,6 +20,10 @@ abstract class BaseCardInfo extends Cc
     public function getTransactionInfo()
     {
         $charge = $this->getLastCharge();
+
+        if (empty($charge) || empty($charge->getLastTransaction())) {
+            return [];
+        }
         if ($charge->getLastTransaction()->getCardData() == null) {
             return [];
         }
@@ -65,7 +69,7 @@ abstract class BaseCardInfo extends Cc
 
         return current($orderObject->getCharges());
     }
-    
+
     /**
      * @param mixed $orderService
      * @param mixed $pagarmeId

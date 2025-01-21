@@ -12,14 +12,6 @@ interface SubscriptionApiInterface
     public function list();
 
     /**
-     * List product subscription
-     *
-     * @param string $customerId
-     * @return \Pagarme\Core\Recurrence\Interfaces\SubscriptionInterface[]
-     */
-    public function listByCustomerId($customerId);
-
-    /**
      * Cancel subscription
      *
      * @param int $id
