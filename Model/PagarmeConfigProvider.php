@@ -64,7 +64,7 @@ class PagarmeConfigProvider implements ConfigProviderInterface
     const DEBIT_PAYMENT_CONFIG = 'pagarme_debit';
 
     const PIX_PAYMENT_CONFIG = 'pagarme_pix';
-    
+
     const GOOGLEPAY_PAYMENT_CONFIG = 'pagarme_googlepay';
 
     const VOUCHER_PAYMENT_CONFIG = 'pagarme_voucher';
@@ -198,7 +198,7 @@ class PagarmeConfigProvider implements ConfigProviderInterface
     {
         $isGatewayIntegrationType = $this->isGatewayIntegrationType();
         $maxInstallment = $this->getMaxInstallment();
-        $maxInstallmentForPSP = 12;
+        $maxInstallmentForPSP = 18;
 
         if (
             !$isGatewayIntegrationType

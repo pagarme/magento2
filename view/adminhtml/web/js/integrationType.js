@@ -91,7 +91,7 @@ require([
 
             if (installmentsMaxSizeElements) {
                 installmentsMaxSizeElements.each(function () {
-                    $(this).html(integrationType === '0' ? 12 : 24);
+                    $(this).html(integrationType === '0' ? 18 : 24);
                 });
             }
         }
@@ -128,9 +128,9 @@ require([
         function changeInstallmentsValidation(integrationType) {
             if (integrationType === '0') {
                 installmentsNumberElements.toggleClass('number-range-1-24', false);
-                installmentsNumberElements.toggleClass('number-range-1-12', true);
+                installmentsNumberElements.toggleClass('number-range-1-18', true);
             } else {
-                installmentsNumberElements.toggleClass('number-range-1-12', false);
+                installmentsNumberElements.toggleClass('number-range-1-18', false);
                 installmentsNumberElements.toggleClass('number-range-1-24', true);
             }
         }

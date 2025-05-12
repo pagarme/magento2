@@ -58,56 +58,56 @@
                 <sort_order>1</sort_order>
                 <installments_active>0</installments_active>
                 <installments_interest_by_issuer>0</installments_interest_by_issuer>
-                <installments_number>12</installments_number>
+                <installments_number>18</installments_number>
                 <installments_is_with_interest>1</installments_is_with_interest>
                 <installment_min_amount>10.00</installment_min_amount>
                 <installments_interest_rate>10</installments_interest_rate>
                 <installments_max_without_interest>6</installments_max_without_interest>
-                <installments_number_amex>12</installments_number_amex>
+                <installments_number_amex>18</installments_number_amex>
                 <installments_interest_rate_initial_amex>0</installments_interest_rate_initial_amex>
                 <installments_interest_rate_incremental_amex>0</installments_interest_rate_incremental_amex>
                 <installments_max_without_interest_amex>1</installments_max_without_interest_amex>
-                <installments_number_aura>12</installments_number_aura>
+                <installments_number_aura>18</installments_number_aura>
                 <installments_interest_rate_initial_aura>0</installments_interest_rate_initial_aura>
                 <installments_interest_rate_incremental_aura>0</installments_interest_rate_incremental_aura>
                 <installments_max_without_interest_aura>1</installments_max_without_interest_aura>
-                <installments_number_banese>12</installments_number_banese>
+                <installments_number_banese>18</installments_number_banese>
                 <installments_interest_rate_initial_banese>0</installments_interest_rate_initial_banese>
                 <installments_interest_rate_incremental_banese>0</installments_interest_rate_incremental_banese>
                 <installments_max_without_interest_banese>1</installments_max_without_interest_banese>
-                <installments_number_cabal>12</installments_number_cabal>
+                <installments_number_cabal>18</installments_number_cabal>
                 <installments_interest_rate_initial_cabal>0</installments_interest_rate_initial_cabal>
                 <installments_interest_rate_incremental_cabal>0</installments_interest_rate_incremental_cabal>
                 <installments_max_without_interest_cabal>1</installments_max_without_interest_cabal>
-                <installments_number_credz>12</installments_number_credz>
+                <installments_number_credz>18</installments_number_credz>
                 <installments_interest_rate_initial_credz>0</installments_interest_rate_initial_credz>
                 <installments_interest_rate_incremental_credz>0</installments_interest_rate_incremental_credz>
                 <installments_max_without_interest_credz>1</installments_max_without_interest_credz>
-                <installments_number_diners>12</installments_number_diners>
+                <installments_number_diners>18</installments_number_diners>
                 <installments_interest_rate_initial_diners>0</installments_interest_rate_initial_diners>
                 <installments_interest_rate_incremental_diners>0</installments_interest_rate_incremental_diners>
                 <installments_max_without_interest_diners>1</installments_max_without_interest_diners>
-                <installments_number_discover>12</installments_number_discover>
+                <installments_number_discover>18</installments_number_discover>
                 <installments_interest_rate_initial_discover>0</installments_interest_rate_initial_discover>
                 <installments_interest_rate_incremental_discover>0</installments_interest_rate_incremental_discover>
                 <installments_max_without_interest_discover>1</installments_max_without_interest_discover>
-                <installments_number_elo>12</installments_number_elo>
+                <installments_number_elo>18</installments_number_elo>
                 <installments_interest_rate_initial_elo>0</installments_interest_rate_initial_elo>
                 <installments_interest_rate_incremental_elo>0</installments_interest_rate_incremental_elo>
                 <installments_max_without_interest_elo>1</installments_max_without_interest_elo>
-                <installments_number_hipercard>12</installments_number_hipercard>
+                <installments_number_hipercard>18</installments_number_hipercard>
                 <installments_interest_rate_initial_hipercard>0</installments_interest_rate_initial_hipercard>
                 <installments_interest_rate_incremental_hipercard>0</installments_interest_rate_incremental_hipercard>
                 <installments_max_without_interest_hipercard>1</installments_max_without_interest_hipercard>
-                <installments_number_jcb>12</installments_number_jcb>
+                <installments_number_jcb>18</installments_number_jcb>
                 <installments_interest_rate_initial_jcb>0</installments_interest_rate_initial_jcb>
                 <installments_interest_rate_incremental_jcb>0</installments_interest_rate_incremental_jcb>
                 <installments_max_without_interest_jcb>1</installments_max_without_interest_jcb>
-                <installments_number_mastercard>12</installments_number_mastercard>
+                <installments_number_mastercard>18</installments_number_mastercard>
                 <installments_interest_rate_initial_mastercard>0</installments_interest_rate_initial_mastercard>
                 <installments_interest_rate_incremental_mastercard>0</installments_interest_rate_incremental_mastercard>
                 <installments_max_without_interest_mastercard>1</installments_max_without_interest_mastercard>
-                <installments_number_visa>12</installments_number_visa>
+                <installments_number_visa>18</installments_number_visa>
                 <installments_interest_rate_initial_visa>0</installments_interest_rate_initial_visa>
                 <installments_interest_rate_incremental_visa>0</installments_interest_rate_incremental_visa>
                 <installments_max_without_interest_visa>1</installments_max_without_interest_visa>
@@ -135,7 +135,7 @@
                 <sort_order>1</sort_order>
                 <installments_active>0</installments_active>
                 <installments_interest_by_issuer>0</installments_interest_by_issuer>
-                <installments_number>12</installments_number>
+                <installments_number>18</installments_number>
                 <installments_is_with_interest>1</installments_is_with_interest>
                 <installment_min_amount>10.00</installment_min_amount>
                 <installments_interest_rate>10</installments_interest_rate>
@@ -162,7 +162,7 @@
                 <sort_order>1</sort_order>
                 <installments_active>0</installments_active>
                 <installments_interest_by_issuer>0</installments_interest_by_issuer>
-                <installments_number>12</installments_number>
+                <installments_number>18</installments_number>
                 <installments_is_with_interest>1</installments_is_with_interest>
                 <installment_min_amount>10.00</installment_min_amount>
                 <installments_interest_rate>10</installments_interest_rate>

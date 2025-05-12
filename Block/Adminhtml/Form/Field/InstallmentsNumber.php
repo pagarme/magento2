@@ -42,12 +42,12 @@ class InstallmentsNumber extends Field
         $isGateway = $this->account->isGateway(PagarmeConfigProvider::CREDIT_CARD_PAYMENT_CONFIG);
         if ($isGateway) {
             $classes = $element->getClass();
-            $classes = str_replace('number-range-1-12', '', $classes);
+            $classes = str_replace('number-range-1-18', '', $classes);
             $classes .= ' number-range-1-24';
             $element->setClass($classes);
 
             $comment = $element->getComment();
-            $comment = str_replace('12', '24', $comment);
+            $comment = str_replace('18', '24', $comment);
             $element->setComment($comment);
         }
         return parent::render($element);
