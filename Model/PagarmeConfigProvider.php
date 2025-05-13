@@ -8,6 +8,7 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
+use Pagarme\Core\Kernel\Services\InstallmentService;
 use Pagarme\Core\Middle\Model\Account\PaymentEnum;
 use Pagarme\Pagarme\Gateway\Transaction\Base\Config\ConfigInterface as PagarmeConfigInterface;
 
@@ -198,15 +199,14 @@ class PagarmeConfigProvider implements ConfigProviderInterface
     {
         $isGatewayIntegrationType = $this->isGatewayIntegrationType();
         $maxInstallment = $this->getMaxInstallment();
-        $maxInstallmentForPSP = 18;
 
         if (
             !$isGatewayIntegrationType
-            && $maxInstallment > $maxInstallmentForPSP
+            && $maxInstallment > InstallmentService::MAX_PSP_INSTALLMENTS_NUMBER
         ) {
             $this->config->saveConfig(
                 self::XML_PATH_MAX_INSTALLMENT,
-                $maxInstallmentForPSP,
+                InstallmentService::MAX_PSP_INSTALLMENTS_NUMBER,
                 'default',
                 0
             );
