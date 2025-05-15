@@ -3,11 +3,15 @@ require([
     "jquery/ui",
 ], function ($) {
     "use strict";
+
+    const maxPspInstallmentsValue = 18,
+          maxGatewayInstallmentsValue = 24;
+
     $(document).ready(function () {
         const integrationTypeElement = $('select[id*="pagarme_pagarme_global_is_gateway_integration_type"]'),
-            softDescriptionElements = $('input[id$="_soft_description"]'),
-            installmentsNumberElements = $('input[id*="pagarme_creditcard_installments"][id*="installments_number"]'),
-            installmentsWithoutInterestElements = $('input[id*="pagarme_creditcard_installments"][id*="max_without_interest"]');
+              softDescriptionElements = $('input[id$="_soft_description"]'),
+              installmentsNumberElements = $('input[id*="pagarme_creditcard_installments"][id*="installments_number"]'),
+              installmentsWithoutInterestElements = $('input[id*="pagarme_creditcard_installments"][id*="max_without_interest"]');
 
         integrationTypeElement.change(function () {
             const integrationType = $(this).val(),
@@ -91,7 +95,7 @@ require([
 
             if (installmentsMaxSizeElements) {
                 installmentsMaxSizeElements.each(function () {
-                    $(this).html(integrationType === '0' ? 12 : 24);
+                    $(this).html(integrationType === '0' ? maxPspInstallmentsValue : maxGatewayInstallmentsValue);
                 });
             }
         }
@@ -127,11 +131,11 @@ require([
 
         function changeInstallmentsValidation(integrationType) {
             if (integrationType === '0') {
-                installmentsNumberElements.toggleClass('number-range-1-24', false);
-                installmentsNumberElements.toggleClass('number-range-1-12', true);
+                installmentsNumberElements.toggleClass('number-range-1-' + maxGatewayInstallmentsValue, false);
+                installmentsNumberElements.toggleClass('number-range-1-' + maxPspInstallmentsValue, true);
             } else {
-                installmentsNumberElements.toggleClass('number-range-1-12', false);
-                installmentsNumberElements.toggleClass('number-range-1-24', true);
+                installmentsNumberElements.toggleClass('number-range-1-' + maxPspInstallmentsValue, false);
+                installmentsNumberElements.toggleClass('number-range-1-' + maxGatewayInstallmentsValue, true);
             }
         }
 
