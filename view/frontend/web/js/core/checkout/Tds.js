@@ -67,7 +67,7 @@ define([
 
         getTdsData(acctType, cardExpiryDate) {
             const billingAddress = quote.billingAddress();
-            let amountInCents = quote.totals().base_grand_total * 100;
+            const  amountInCents = quote.totals().base_grand_total * 100;
             const [
                 billingAddressStreet,
                 billingAddressNumber,
