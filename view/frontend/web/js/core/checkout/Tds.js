@@ -65,11 +65,6 @@ define([
             cardForm.creditCardCvv.removeAttr("data-pagarmecheckout-element");
         }
 
-        getAmountInCents(){
-            
-            return ;
-        }
-
         getTdsData(acctType, cardExpiryDate) {
             const billingAddress = quote.billingAddress();
             let amountInCents = quote.totals().base_grand_total * 100;
