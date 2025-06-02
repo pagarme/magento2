@@ -6,6 +6,8 @@ on:
       - master
   pull_request:
 
+permissions: {}
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -117,4 +119,22 @@ jobs:
         uses: actions/upload-artifact@master
         with:
           name: mage-coverage-${{ github.sha }}
-          path: magento/vendor/pagarme/pagarme-magento2-module/clover.xml
+          path: magento/vendor/pagarme/pagarme-magento2-module/lcov.info
+
+  coverage-report:
+      needs: phpunit
+      uses: ./.github/workflows/coverage-report.yml
+      with:
+        ARTIFACT_NAME: mage-coverage-${{ github.sha }}
+        WORKING_DIRECTORY: ./
+        PROJECT: Magento2 Dashboard
+        PR_MINIMUM: 0
+        NAME_HTML_REPORT: MAgento2 Coverage Report
+        RUNS_ON: ubuntu-latest
+      secrets:
+        EXPORTED_PAGARME_GH_PAT: ${{ secrets.GITHUB_TOKEN }}
+
+  mega_linter:
+    uses: ./.github/workflows/mega-linter.yml
+    with:
+      RUNS_ON: ubuntu-latest
