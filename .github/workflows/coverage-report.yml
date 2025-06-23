@@ -15,7 +15,7 @@ on:
         type: number
       NAME_HTML_REPORT:
         type: string
-      ALL_FILES_MINIMUN:
+      ALL_FILES_MINIMUM:
         type: number
         default: 0
       RUNS_ON:
