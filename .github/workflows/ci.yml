@@ -129,7 +129,7 @@ jobs:
         WORKING_DIRECTORY: ./
         PROJECT: Magento2 Dashboard
         PR_MINIMUM: 0
-        NAME_HTML_REPORT: MAgento2 Coverage Report
+        NAME_HTML_REPORT: Magento2 Coverage Report
         RUNS_ON: ubuntu-latest
       secrets:
         EXPORTED_PAGARME_GH_PAT: ${{ secrets.GITHUB_TOKEN }}
