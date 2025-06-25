@@ -168,7 +168,7 @@ class InitializeCommand implements CommandInterface
 
             if (!$isSubscription) {
                 $orderService = new OrderService();
-                $pagarmeOrder = current($orderService->createOrderAtPagarme($orderDecorator));
+                $pagarmeOrder = $orderService->createOrderAtPagarme($orderDecorator);
                 $transaction = $pagarmeOrder->getPixOrBilletTransaction();
                 if (!is_null($transaction)) {
                     $this->checkoutSession->setPixOrBilletTransaction($transaction);
