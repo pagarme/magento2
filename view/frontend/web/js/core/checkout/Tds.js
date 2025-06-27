@@ -67,6 +67,7 @@ define([
 
         getTdsData(acctType, cardExpiryDate) {
             const billingAddress = quote.billingAddress();
+            const  amountInCents = quote.totals().base_grand_total * 100;
             const [
                 billingAddressStreet,
                 billingAddressNumber,
@@ -88,7 +89,7 @@ define([
             const customerPhones =
                 [{
                     country_code : '55',
-                    subscriber : shippingAddress.telephone,
+                    subscriber : shippingAddress.telephone.replace(/\D/g, ''),
                     phone_type : 'mobile'
                 }];
 
@@ -115,7 +116,7 @@ define([
                 phones : customerPhones,
                 card_expiry_date : cardExpiryDate,
                 purchase : {
-                    amount : quote.totals().base_grand_total * 100,
+                    amount : Math.trunc(amountInCents),
                     date :
                         new Date().toISOString()
                     ,

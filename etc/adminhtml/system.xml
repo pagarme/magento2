@@ -10,7 +10,6 @@
                     <![CDATA[Pagar.me&nbsp;&nbsp;<i>Payment Solutions.</i>]]>
                 </label>
                 <frontend_model>Pagarme\Pagarme\Block\Adminhtml\System\Config\Form\Fieldset\Group</frontend_model>
-				<attribute type="displayIn">recommended_solutions</attribute>
 				<fieldset_css>complex</fieldset_css>
                 <include path="Pagarme_Pagarme::system/global.xml"/>
                 <include path="Pagarme_Pagarme::system/customer-address.xml"/>

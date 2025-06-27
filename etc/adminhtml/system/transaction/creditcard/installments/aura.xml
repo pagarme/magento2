@@ -15,9 +15,9 @@
         <field id="installments_number_aura" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label comment" type="text">
             <label>Max number of installments</label>
             <backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
-            <comment><![CDATA[<p>Insert a number between 1 and <span id='installments_max_size_aura'>12</span>.</p>]]></comment>
+            <comment><![CDATA[<p>Insert a number between 1 and <span id='installments_max_size_aura'>18</span>.</p>]]></comment>
             <config_path>payment/pagarme_creditcard/installments_number_aura</config_path>
-            <validate>required-entry validate-number-range number-range-1-12</validate>
+            <validate>required-entry validate-number-range number-range-1-18</validate>
             <frontend_model>Pagarme\Pagarme\Block\Adminhtml\Form\Field\InstallmentsNumber</frontend_model>
         </field>
         <field id="installment_min_amount_aura" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label" type="text">
@@ -58,7 +58,7 @@
             <backend_model>Pagarme\Pagarme\Model\Validation\GenericValidation</backend_model>
             <comment><![CDATA[<p>Insert a number between 1 and the <b>Max number of installments</b>.</p>]]></comment>
             <config_path>payment/pagarme_creditcard/installments_max_without_interest_aura</config_path>
-            <validate>required-entry validate-number-range number-range-1-12</validate>
+            <validate>required-entry validate-number-range number-range-1-18</validate>
             <frontend_model>Pagarme\Pagarme\Block\Adminhtml\Form\Field\InstallmentsNumber</frontend_model>
             <depends>
                 <field id="installments_interest_by_issuer_aura">1</field>
