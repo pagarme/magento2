@@ -6,6 +6,7 @@ use Magento\Backend\Block\Template\Context;
 use Magento\Config\Block\System\Config\Form\Field;
 use Magento\Config\Model\ResourceModel\Config\Data\CollectionFactory;
 use Magento\Framework\Data\Form\Element\AbstractElement;
+use Pagarme\Core\Kernel\Services\InstallmentService;
 use Pagarme\Pagarme\Model\Account;
 use Pagarme\Pagarme\Model\PagarmeConfigProvider;
 
@@ -42,12 +43,16 @@ class InstallmentsNumber extends Field
         $isGateway = $this->account->isGateway(PagarmeConfigProvider::CREDIT_CARD_PAYMENT_CONFIG);
         if ($isGateway) {
             $classes = $element->getClass();
-            $classes = str_replace('number-range-1-12', '', $classes);
-            $classes .= ' number-range-1-24';
+            $classes = str_replace('number-range-1-' . InstallmentService::MAX_PSP_INSTALLMENTS_NUMBER, '', $classes);
+            $classes .= ' number-range-1-' . InstallmentService::MAX_GATEWAY_INSTALLMENTS_NUMBER;
             $element->setClass($classes);
 
             $comment = $element->getComment();
-            $comment = str_replace('12', '24', $comment);
+            $comment = str_replace(
+                InstallmentService::MAX_PSP_INSTALLMENTS_NUMBER,
+                InstallmentService::MAX_GATEWAY_INSTALLMENTS_NUMBER,
+                $comment
+            );
             $element->setComment($comment);
         }
         return parent::render($element);
