@@ -20,7 +20,7 @@ class OrderHelper
     {
         $orderId = $info->getOrder()->getIncrementId();
         $lastTransId = $info->getLastTransId();
-        if(preg_match('/^or_/', $lastTransId ?? '') === false) {
+        if (preg_match('/^or_/', $lastTransId ?? '') === false) {
             return OrderHelper::getPagarmeIdByIncrementId($orderId);
         }
         return substr($lastTransId, 0, 19);
