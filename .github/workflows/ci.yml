@@ -6,6 +6,8 @@ on:
       - master
   pull_request:
 
+permissions: write-all
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -117,32 +119,9 @@ jobs:
         uses: actions/upload-artifact@master
         with:
           name: mage-coverage-${{ github.sha }}
-          path: magento/vendor/pagarme/pagarme-magento2-module/clover.xml
+          path: magento/vendor/pagarme/pagarme-magento2-module/lcov.infoß
 
-  sonar:
-    name: SonarCloud 
-    runs-on: ubuntu-latest
-    needs: phpunit
-    steps:
-    -
-      name: Checkout
-      uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
-    - 
-      name: Download coverage artifact
-      uses: actions/download-artifact@master
-      with:
-        name: mage-coverage-${{ github.sha }}
-        path: coverage
-    -
-      name: Run Sonar
-      uses: sonarsource/sonarcloud-github-action@master
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-    - name: Delete coverage artifact
-      uses: geekyeggo/delete-artifact@v4
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        name: mage-coverage-${{ github.sha }}
+  mega_linter:
+    uses: ./.github/workflows/mega-linter.yml
+    with:
+      RUNS_ON: ubuntu-latest
