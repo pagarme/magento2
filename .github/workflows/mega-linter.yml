@@ -32,6 +32,11 @@ on:
       GRAFANA_API_REPORTER_METRICS_BASIC_AUTH_USERNAME:
         required: false
 
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write
+  security-events: write
 
 # Comment env block if you do not want to apply fixes
 env:
@@ -49,8 +54,6 @@ env:
 concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
   cancel-in-progress: true
-
-permissions: write-all
 
 jobs:
   megalinter:

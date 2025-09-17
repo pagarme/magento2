@@ -6,7 +6,9 @@ on:
       - master
   pull_request:
 
-permissions: write-all
+permissions:
+  contents: read
+  actions: write
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
