@@ -4,6 +4,7 @@
     "version": "2.7.0",
     "type": "magento2-module",
     "description": "Magento 2 Module Pagar.me",
+    "minimum-stability": "dev",
     "require": {
         "php": ">=7.1",
         "pagarme/ecommerce-module-core": "~2.9.0"
