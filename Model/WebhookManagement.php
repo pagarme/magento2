@@ -2,20 +2,24 @@
 
 namespace Pagarme\Pagarme\Model;
 
+use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Phrase;
 use Magento\Framework\Webapi\Exception as M2WebApiException;
 use Magento\Sales\Model\OrderFactory;
+use Pagarme\Core\Kernel\Abstractions\AbstractModuleCoreSetup;
 use Pagarme\Core\Kernel\Exceptions\AbstractPagarmeCoreException;
 use Pagarme\Core\Kernel\Services\LogService;
 use Pagarme\Core\Webhook\Exceptions\WebhookAlreadyHandledException;
 use Pagarme\Core\Webhook\Exceptions\WebhookHandlerNotFoundException;
 use Pagarme\Core\Webhook\Services\WebhookReceiverService;
+use Pagarme\Core\Webhook\Services\WebhookValidatorService;
 use Pagarme\Pagarme\Api\WebhookManagementInterface;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Pagarme\Pagarme\Model\Account;
 
 class WebhookManagement implements WebhookManagementInterface
 {
+    const WEBHOOK_SIGNATURE_HEADER = 'X-Webhook-Asymmetric-Signature';
 
     /**
      * @var OrderFactory
@@ -32,14 +36,21 @@ class WebhookManagement implements WebhookManagementInterface
      */
     protected $webhookReceiverService;
 
+    /**
+     * @var RequestInterface
+     */
+    private $request;
+
     public function __construct(
         OrderFactory $orderFactory,
         Account $account,
-        WebhookReceiverService $webhookReceiverService
+        WebhookReceiverService $webhookReceiverService,
+        RequestInterface $request
     ) {
         $this->orderFactory = $orderFactory;
         $this->account = $account;
         $this->webhookReceiverService = $webhookReceiverService;
+        $this->request = $request;
     }
 
     /**
@@ -52,6 +63,32 @@ class WebhookManagement implements WebhookManagementInterface
      */
     public function save($id, $type, $data, $account)
     {
+        $webhookSignature = $this->request->getHeader(self::WEBHOOK_SIGNATURE_HEADER);
+        if (!$webhookSignature) {
+            throw new M2WebApiException(
+                new Phrase("Webhook signature (" . self::WEBHOOK_SIGNATURE_HEADER . ") not found in header."),
+                0,
+                M2WebApiException::HTTP_UNAUTHORIZED
+            );
+        }
+
+        $requestBody = $this->request->getContent();
+        if (empty($requestBody)) {
+            throw new M2WebApiException(
+                new Phrase("Webhook request body not found."),
+                0,
+                M2WebApiException::HTTP_UNAUTHORIZED
+            );
+        }
+
+        if (!WebhookValidatorService::validateSignature($requestBody, $webhookSignature)) {
+            throw new M2WebApiException(
+                new Phrase("Invalid webhook signature."),
+                0,
+                M2WebApiException::HTTP_UNAUTHORIZED
+            );
+        }
+
         try {
             Magento2CoreSetup::bootstrap();
 
@@ -119,7 +156,7 @@ class WebhookManagement implements WebhookManagementInterface
         }
         return $metadata;
     }
-    
+
     private function hasMagentoOrder($data)
     {
         $code = 0;
