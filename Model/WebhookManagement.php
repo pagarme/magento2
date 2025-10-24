@@ -73,7 +73,7 @@ class WebhookManagement implements WebhookManagementInterface
         }
 
         $requestBody = $this->request->getContent();
-        if (!$requestBody) {
+        if (empty($requestBody)) {
             throw new M2WebApiException(
                 new Phrase("Webhook request body not found."),
                 0,
