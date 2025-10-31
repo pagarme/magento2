@@ -73,8 +73,8 @@ class Notifications extends Message
         Account           $account,
         HubIntegration    $hubIntegration,
         UrlInterface      $urlInterface,
-        AbstractResource  $resource = null,
-        AbstractDb        $resourceCollection = null,
+        ?AbstractResource  $resource = null,
+        ?AbstractDb        $resourceCollection = null,
         array             $data = []
     ) {
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);

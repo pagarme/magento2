@@ -76,7 +76,7 @@ class ProductsList
      * @param ProductInterface|null $product
      * @return string
      */
-    protected function getProductRecurrenceHtml(ProductInterface $product = null)
+    protected function getProductRecurrenceHtml(?ProductInterface $product = null)
     {
         $typeId = $product ? $product->getTypeId() : null;
         $renderer = $this->getRecurrenceRenderer($product, $typeId);
