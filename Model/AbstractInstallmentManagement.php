@@ -23,9 +23,9 @@ abstract class AbstractInstallmentManagement
      * @throws InvalidParamException
      */
     protected function getCoreInstallments(
-        Order $order = null,
-        CardBrand $brand = null,
-        $value = null
+        ?Order     $order,
+        ?CardBrand $brand,
+                   $value
     ) {
         Magento2CoreSetup::bootstrap();
         $installmentService = new InstallmentService();

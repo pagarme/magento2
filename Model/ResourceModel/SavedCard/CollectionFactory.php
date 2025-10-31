@@ -50,7 +50,7 @@ class CollectionFactory implements CollectionFactoryInterface
      * @param string|null $ownerId
      * @return Collection
      */
-    public function create(string $ownerId = null): Collection
+    public function create(?string $ownerId = null): Collection
     {
         /** @var \Pagarme\Pagarme\Model\ResourceModel\SavedCard\Collection $collection */
         $collection = $this->objectManager->create($this->instanceName);
