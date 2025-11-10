@@ -6,7 +6,7 @@
 MODULE_NAME="pagarme/pagarme-magento2-module"
 MODULE_COMPOSER_PATH="vendor/pagarme/pagarme-magento2-module/composer.json"
 PATCH_FILE="pagarme_temp.patch"
-FIXED_PATCH_URL="https://gist.github.com/fabiano-mallmann/c9fe6e1607dbf69574b9fe9d0c5d1eb1/raw"
+FIXED_PATCH_URL="https://raw.githubusercontent.com/pagarme/magento2/refs/tags/patch1/.patches/patch1-webhook-module-core.patch"
 PATCH_LEVEL="-p1"
 
 # URL do Patch Condicional (Será definida com base na versão)
@@ -64,7 +64,7 @@ function download_and_apply() {
         echo "ERRO: Falha ao baixar o patch $patch_name. Verifique a URL."
         return 1
     fi
-    
+
     # Executa o patch com dry-run primeiro para verificar
     echo "Verificando aplicação (dry-run)..."
     patch $PATCH_LEVEL --dry-run < "$patch_file"
@@ -77,7 +77,7 @@ function download_and_apply() {
     # Aplica o patch
     echo "Aplicando o patch ($patch_name) com nível $PATCH_LEVEL..."
     patch $PATCH_LEVEL --verbose < "$patch_file"
-    
+
     if [ $? -eq 0 ]; then
         echo "SUCESSO: Patch $patch_name aplicado."
         rm "$patch_file"
@@ -118,19 +118,19 @@ echo "Versão do módulo encontrada: $MODULE_VERSION"
 
 # Da versão 1.1.0 até a 2.2.4
 if version_in_range "$MODULE_VERSION" "1.1.0" "2.2.4"; then
-    CONDITIONAL_PATCH_URL="https://gist.github.com/fabiano-mallmann/a7eef791b1640dbcc54617a16f9b6faf/raw"
+    CONDITIONAL_PATCH_URL="https://raw.githubusercontent.com/pagarme/magento2/refs/tags/patch1/.patches/patch1-webhook-magento-110-224.patch"
     echo "Faixa de versão correspondente: 1.1.0 - 2.2.4"
 # Na versão 2.2.5
 elif version_in_range "$MODULE_VERSION" "2.2.5" "2.2.5"; then
-    CONDITIONAL_PATCH_URL="https://gist.github.com/fabiano-mallmann/fb27fa2cf43d6214f2930ef6fa301596/raw"
+    CONDITIONAL_PATCH_URL="https://raw.githubusercontent.com/pagarme/magento2/refs/tags/patch1/.patches/patch1-webhook-magento-225.patch"
     echo "Versão correspondente: 2.2.5"
-# Da versão 2.3.0 até a 2.4.2 
+# Da versão 2.3.0 até a 2.4.2
 elif version_in_range "$MODULE_VERSION" "2.3.0" "2.4.2"; then
-    CONDITIONAL_PATCH_URL="https://gist.github.com/fabiano-mallmann/f6697544aa407646275f84bc4eb9de31/raw"
+    CONDITIONAL_PATCH_URL="https://raw.githubusercontent.com/pagarme/magento2/refs/tags/patch1/.patches/patch1-webhook-magento-230-242.patch"
     echo "Faixa de versão correspondente: 2.3.0 - 2.4.2"
 # Da versão 2.5.0 até 2.7.2
 elif version_in_range "$MODULE_VERSION" "2.5.0" "2.7.2"; then
-    CONDITIONAL_PATCH_URL="https://gist.github.com/fabiano-mallmann/76674cfbcf3ac111cb4634497aa1fb1e/raw"
+    CONDITIONAL_PATCH_URL="https://raw.githubusercontent.com/pagarme/magento2/refs/tags/patch1/.patches/patch1-webhook-magento-250-271.patch"
     echo "Faixa de versão correspondente: 2.5.0 - 2.7.2"
 else
     echo "ERRO: Nenhuma faixa de patch definida corresponde à versão $MODULE_VERSION. O script não pode prosseguir."
