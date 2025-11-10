@@ -1,0 +1,75 @@
+diff --git a/vendor/pagarme/pagarme-magento2-module/Model/WebhookManagement.php b/vendor/pagarme/pagarme-magento2-module/Model/WebhookManagement.php
+index 24b3202f..aa53a01c 100644
+--- a/vendor/pagarme/pagarme-magento2-module/Model/WebhookManagement.php
++++ b/vendor/pagarme/pagarme-magento2-module/Model/WebhookManagement.php
+@@ -2,6 +2,7 @@
+
+ namespace Pagarme\Pagarme\Model;
+
++use Magento\Framework\App\RequestInterface;
+ use Magento\Framework\DB\Transaction;
+ use Magento\Framework\Phrase;
+ use Magento\Framework\Webapi\Exception as M2WebApiException;
+@@ -12,15 +13,30 @@ use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
+ use Magento\Sales\Model\Service\CreditmemoService;
+ use Magento\Sales\Model\Service\InvoiceService;
+ use Magento\Sales\Model\Service\OrderService;
++use Pagarme\Core\Kernel\Abstractions\AbstractModuleCoreSetup;
+ use Pagarme\Core\Kernel\Exceptions\AbstractPagarmeCoreException;
+ use Pagarme\Core\Webhook\Exceptions\WebhookAlreadyHandledException;
+ use Pagarme\Core\Webhook\Exceptions\WebhookHandlerNotFoundException;
+ use Pagarme\Core\Webhook\Services\WebhookReceiverService;
++use Pagarme\Core\Webhook\Services\WebhookValidatorService;
+ use Pagarme\Pagarme\Api\WebhookManagementInterface;
+ use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+
+ class WebhookManagement implements WebhookManagementInterface
+ {
++    const WEBHOOK_SIGNATURE_HEADER = 'X-Webhook-Asymmetric-Signature';
++
++    /**
++     * @var RequestInterface
++     */
++    private $request;
++
++    public function __construct(
++        RequestInterface $request
++    ) {
++        $this->request = $request;
++    }
++
+     /**
+      * @api
+      * @param mixed $id
+@@ -30,6 +46,32 @@ class WebhookManagement implements WebhookManagementInterface
+      */
+     public function save($id, $type, $data)
+     {
++        $webhookSignature = $this->request->getHeader(self::WEBHOOK_SIGNATURE_HEADER);
++        if (!$webhookSignature) {
++            throw new M2WebApiException(
++                new Phrase("Webhook signature (" . self::WEBHOOK_SIGNATURE_HEADER . ") not found in header."),
++                0,
++                M2WebApiException::HTTP_UNAUTHORIZED
++            );
++        }
++
++        $requestBody = $this->request->getContent();
++        if (empty($requestBody)) {
++            throw new M2WebApiException(
++                new Phrase("Webhook request body not found."),
++                0,
++                M2WebApiException::HTTP_UNAUTHORIZED
++            );
++        }
++
++        if (!WebhookValidatorService::validateSignature($requestBody, $webhookSignature)) {Expand commentComment on line R84ResolvedCode has comments. Press enter to view.
++            throw new M2WebApiException(
++                new Phrase("Invalid webhook signature."),
++                0,
++                M2WebApiException::HTTP_UNAUTHORIZED
++            );
++        }
++
+         try {
+             Magento2CoreSetup::bootstrap();
