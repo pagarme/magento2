@@ -35,7 +35,7 @@ abstract class AbstractApiCommand implements CommandInterface
         RequestBuilder $requestBuilder,
         ResponseHandler $responseHandler,
         ConfigInterface $config,
-        ?ValidatorInterface $validator
+        ?ValidatorInterface $validator = null
     )
     {
         $this->setRequestBuilder($requestBuilder);
@@ -140,7 +140,7 @@ abstract class AbstractApiCommand implements CommandInterface
      * @param ValidatorInterface|null $validator
      * @return $this
      */
-    protected function setValidator(ValidatorInterface $validator)
+    protected function setValidator(?ValidatorInterface $validator = null)
     {
         $this->validator = $validator;
         return $this;
