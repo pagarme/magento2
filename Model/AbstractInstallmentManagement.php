@@ -25,7 +25,7 @@ abstract class AbstractInstallmentManagement
     protected function getCoreInstallments(
         ?Order     $order,
         ?CardBrand $brand,
-                   $value
+        $value = null
     ) {
         Magento2CoreSetup::bootstrap();
         $installmentService = new InstallmentService();
