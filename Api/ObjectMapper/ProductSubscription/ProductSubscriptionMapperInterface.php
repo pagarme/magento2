@@ -2,7 +2,9 @@
 
 namespace Pagarme\Pagarme\Api\ObjectMapper\ProductSubscription;
 
-interface ProductSubscriptionMapperInterface extends \Pagarme\Core\Recurrence\Interfaces\ProductSubscriptionInterface
+use Pagarme\Core\Recurrence\Interfaces\ProductSubscriptionInterface;
+
+interface ProductSubscriptionMapperInterface extends ProductSubscriptionInterface
 {
     /**
      * @return \Pagarme\Pagarme\Api\ObjectMapper\ProductSubscription\RepetitionInterface[]|null
