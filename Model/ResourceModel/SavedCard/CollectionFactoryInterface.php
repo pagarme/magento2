@@ -21,5 +21,5 @@ interface CollectionFactoryInterface
      * @param string|null $ownerId
      * @return Collection
      */
-    public function create(string $ownerId = null): Collection;
+    public function create(?string $ownerId = null): Collection;
 }

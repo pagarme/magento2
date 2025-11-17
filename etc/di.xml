@@ -718,21 +718,11 @@
 
     <!-- Recurrence -->
 
-    <preference for="Pagarme\Core\Recurrence\Interfaces\RepetitionInterface" type="Pagarme\Core\Recurrence\Aggregates\Repetition" />
     <preference for="Pagarme\Pagarme\Api\ProductSubscriptionApiInterface" type="Pagarme\Pagarme\Model\Api\ProductsSubscription" />
     <preference for="Pagarme\Pagarme\Api\SubscriptionApiInterface" type="Pagarme\Pagarme\Model\Api\Subscription" />
     <preference for="Pagarme\Pagarme\Api\InvoiceApiInterface" type="Pagarme\Pagarme\Model\Api\Invoice" />
 
     <preference for="Pagarme\Pagarme\Api\ProductPlanApiInterface" type="Pagarme\Pagarme\Model\Api\ProductsPlan" />
-    <preference for="Pagarme\Core\Recurrence\Interfaces\ProductPlanInterface" type="Pagarme\Core\Recurrence\Aggregates\Plan" />
-
-    <preference for="Pagarme\Pagarme\Api\ObjectMapper\ProductPlan\ProductPlanMapperInterface" type="Pagarme\Core\Recurrence\Aggregates\Plan" />
-    <preference for="Pagarme\Pagarme\Api\ObjectMapper\ProductPlan\SubProduct" type="Pagarme\Core\Recurrence\Aggregates\SubProduct" />
-
-    <preference for="Pagarme\Pagarme\Api\ObjectMapper\ProductSubscription\ProductSubscriptionMapperInterface" type="Pagarme\Core\Recurrence\Aggregates\ProductSubscription" />
-    <preference for="Pagarme\Pagarme\Api\ObjectMapper\ProductSubscription\RepetitionInterface" type="Pagarme\Core\Recurrence\Aggregates\Repetition" />
-
-    <preference for="Pagarme\Pagarme\Api\ObjectMapper\ProductSubscription\RepetitionInterface" type="Pagarme\Core\Recurrence\Aggregates\Repetition" />
 
     <preference for="Pagarme\Pagarme\Api\HubCommandInterface"
                 type="Pagarme\Pagarme\Model\Api\HubCommand"/>
