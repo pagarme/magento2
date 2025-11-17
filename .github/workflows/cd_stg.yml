@@ -4,6 +4,12 @@ on:
   pull_request:
     branches: ["stg"]
     types: closed
+
+permissions:
+  contents: read
+  actions: read
+  pull-requests: read
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true

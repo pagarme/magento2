@@ -2,6 +2,7 @@
     namespace Pagarme\Pagarme\Helper\Payment;
 
     use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
+    use Pagarme\Pagarme\Helper\OrderHelper;
     use Pagarme\Core\Kernel\ValueObjects\Id\OrderId;
     use Pagarme\Core\Kernel\ValueObjects\Id\SubscriptionId;
     use Pagarme\Core\Kernel\Repositories\OrderRepository;
@@ -29,11 +30,7 @@
 
         private function getBoletoLinkFromOrder($info, $transaction = null)
         {
-            $lastTransId = $info->getLastTransId();
-            $orderId = null;
-            if ($lastTransId) {
-                $orderId = substr($lastTransId, 0, 19);
-            }
+            $orderId = OrderHelper::getPagarmeOrderId($info);
 
             if (!$orderId && !is_null($transaction)) {
                 return $transaction->getBoletoUrl();

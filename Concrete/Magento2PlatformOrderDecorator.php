@@ -392,7 +392,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             $orderId = $this->platformOrder->getPayment()->getLastTransId();
         }
 
-        if (!empty($orderId)) {
+        if (!empty($orderId) && preg_match('/^or_/', $orderId) === 1) {
             $orderId = substr($orderId, 0, 19);
             return new OrderId($orderId);
         }
@@ -788,7 +788,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
     }
 
     /**
-     * @uses self::extractPaymentDataFromPagarmeCreditCard 
+     * @uses self::extractPaymentDataFromPagarmeCreditCard
      * @uses self::extractPaymentDataFromPagarmeVoucher
      * @uses self::extractPaymentDataFromPagarmeDebit
      * @uses self::extractPaymentDataFromPagarmeTwoCreditCard
@@ -796,7 +796,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
      * @uses self::extractPaymentDataFromPagarmeGooglePay
      * @uses self::extractPaymentDataFromPagarmePix
      * @uses self::extractPaymentdataFromPagarmeBillet
-     * @return AbstractPayment[] 
+     * @return AbstractPayment[]
      * */
     public function getPaymentMethodCollection()
     {
@@ -1225,7 +1225,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         $paymentData[$googlepayIndex][] = $newPaymentData;
     }
 
-    
+
     public function getShipping()
     {
         /** @var Shipping $shipping */

@@ -6,11 +6,12 @@ use Exception;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Pagarme\Core\Kernel\ValueObjects\Id\OrderId;
 use Pagarme\Core\Payment\Services\OrderService;
+use Pagarme\Pagarme\Helper\OrderHelper;
 
 class Pix
 {
     const LOGO_URL = "Pagarme_Pagarme::images/logo-pix.svg";
-    
+
     private $qrCodeUrl;
     private $qrCode;
 
@@ -26,10 +27,7 @@ class Pix
             return null;
         }
 
-        $lastTransId = $info->getLastTransId();
-        if ($lastTransId) {
-            $orderId = substr($lastTransId, 0, 19);
-        }
+        $orderId = OrderHelper::getPagarmeOrderId($info);
 
         if (!$orderId && !is_null($transaction)) {
             $this->setQrCode($transaction->getPostData()->qr_code);
