@@ -215,6 +215,8 @@ class Account
 
     /**
      * @return string|null
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
     public function getAccountId()
     {
@@ -232,20 +234,57 @@ class Account
 
     /**
      * @return bool
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
-    public function hasMerchantAndAccountIds()
+    public function isPagarmeDashConfigAccessible()
     {
         return $this->getAccountId() && $this->getMerchantId();
     }
 
     /**
-     * @return mixed
+     * @return string|null
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
+     */
+    public function getPaymentProfileId()
+    {
+        $this->initializeConfig();
+        return $this->config->getPaymentProfileId() ?? null;
+    }
+
+    /**
+     * @return array|null
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
+     */
+    public function getPoiType()
+    {
+        $this->initializeConfig();
+        return $this->config->getPoiType() ?? null;
+    }
+
+    /**
+     * @return bool
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
+     */
+    public function isOneStoneEnabled()
+    {
+        return !empty($this->getPaymentProfileId());
+    }
+
+    /**
+     * @return string|null
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
     public function getDashUrl()
     {
-        if (!$this->hasMerchantAndAccountIds()) {
+        if (!$this->isPagarmeDashConfigAccessible()) {
             return null;
         }
+
         return sprintf(
             'https://dash.pagar.me/%s/%s/',
             $this->getMerchantId(),
@@ -270,6 +309,8 @@ class Account
     /**
      * @param string $paymentName
      * @return bool
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
     public function isPSP(string $paymentName)
     {

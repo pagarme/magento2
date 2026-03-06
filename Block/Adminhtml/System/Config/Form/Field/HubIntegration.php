@@ -71,7 +71,7 @@ class HubIntegration extends Field
             __("View Integration")
         );
 
-        if ($this->account->hasMerchantAndAccountIds()) {
+        if ($this->account->isPagarmeDashConfigAccessible()) {
             $html .= sprintf(
                 '<a href="%s" target="_blank" id="pagarme-dash-button" class="pagarme-integration-button%s">%s</a>',
                 $this->account->getDashUrl(),
