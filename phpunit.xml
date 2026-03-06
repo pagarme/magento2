@@ -9,9 +9,11 @@
  */
 -->
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/9.5.28/phpunit.xsd"
+         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+         bootstrap="Test/bootstrap.php"
          colors="true"
-        >
+         cacheResult="false"
+>
     <testsuite name="Pagarme">
         <directory suffix="Test.php">Test/Unit</directory>
     </testsuite>
@@ -22,8 +24,5 @@
         <exclude>
             <directory suffix=".php">./Test/</directory>
         </exclude>
-        <report>
-            <clover outputFile="lcov.info"/>
-        </report>
     </coverage>
 </phpunit>
