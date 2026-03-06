@@ -15,7 +15,7 @@
         "phpmd/phpmd": "@stable",
         "pdepend/pdepend": "2.2.2",
         "sjparkinson/static-review": "~4.1",
-        "fabpot/php-cs-fixer": "~1.2",
+        "friendsofphp/php-cs-fixer": "^3.0",
         "lusitanian/oauth": "~0.3 <=0.7.0",
         "phpunit/phpunit-selenium": ">=1.2",
         "sebastian/phpcpd": "^2.0",
