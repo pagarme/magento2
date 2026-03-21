@@ -30,11 +30,16 @@ class HubIntegrationObserver implements ObserverInterface
     {
         $configData = $observer->getData('event')->getData('configData');
 
-        if ($configData[ScopeInterface::SCOPE_WEBSITE] === null) {
+        if (empty($configData[ScopeInterface::SCOPE_WEBSITE])) {
             return;
         }
 
-        $pagarmeGlobalFields = $configData['groups']['pagarme_pagarme']['groups']['pagarme_pagarme_global']['fields'];
+        $pagarmeGlobalFields = [];
+
+        if (isset($configData['groups']['pagarme_pagarme']['groups']['pagarme_pagarme_global']['fields'])) {
+            $pagarmeGlobalFields = $configData['groups']['pagarme_pagarme']['groups']['pagarme_pagarme_global']['fields'];
+        }
+
         $integrationUseDefault = 0;
 
         if (array_key_exists('hub_integration', $pagarmeGlobalFields)) {

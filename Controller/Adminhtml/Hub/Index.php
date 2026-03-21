@@ -73,7 +73,7 @@ class Index extends Action
             try {
                 $hubIntegrationService = new HubIntegrationService();
                 $hubIntegrationService->endHubIntegration(
-                    $params['&install_token'],
+                    $params['install_token'] ?? null,
                     $params['authorization_code'],
                     $this->getCallbackUrl($websiteId),
                     $this->getWebHookkUrl()
