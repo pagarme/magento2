@@ -108,14 +108,14 @@ class HubIntegration extends Field
 
         if($this->getRequest()->getParam('website') !== null) {
             $params = sprintf(
-                '?redirect=%swebsite/%s/&install_token/%s',
+                '?redirect=%swebsite/%s/install_token/%s',
                 $this->getRedirectUrl(),
                 Magento2CoreSetup::getCurrentStoreId(),
                 $this->getInstallToken()
             );
         } else {
             $params = sprintf(
-                '?redirect=%s&install_token/%s',
+                '?redirect=%sinstall_token/%s',
                 $this->getRedirectUrl(),
                 $this->getInstallToken()
             );
