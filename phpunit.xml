@@ -26,4 +26,8 @@
             <clover outputFile="lcov.info"/>
         </report>
     </coverage>
+    <php>
+        <!-- Enable mocking of final classes and methods -->
+        <ini name="pcov.enabled" value="0"/>
+    </php>
 </phpunit>
