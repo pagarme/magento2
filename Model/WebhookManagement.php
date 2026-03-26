@@ -59,9 +59,10 @@ class WebhookManagement implements WebhookManagementInterface
      * @param mixed $account
      * @param mixed $type
      * @param mixed $data
+     * @param mixed $identifier
      * @return array|bool
      */
-    public function save($id, $type, $data, $account)
+    public function save($id, $type, $data, $account, $identifier = null)
     {
         $webhookSignature = $this->request->getHeader(self::WEBHOOK_SIGNATURE_HEADER);
         if (!$webhookSignature) {
@@ -112,6 +113,11 @@ class WebhookManagement implements WebhookManagementInterface
                 $this->account->saveAccountIdFromWebhook($account);
             }
 
+            if (!empty($identifier)) {
+                $this->account->savePaymentProfileIdFromWebhook($identifier);
+                $this->account->savePoiTypeFromWebhook($identifier);
+            }
+
             return $this->webhookReceiverService->handle($postData);
         } catch (WebhookHandlerNotFoundException | WebhookAlreadyHandledException $e) {
             return [
@@ -138,7 +144,7 @@ class WebhookManagement implements WebhookManagementInterface
                 true
             );
             $logService->info(
-                "Webhook Received but not proccessed",
+                "Webhook Received but not processed",
                 (object)[
                     'webhookId' => $webhookId
                 ]
