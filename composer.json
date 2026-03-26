@@ -30,6 +30,9 @@
         "test": "phpunit"
     },
     "autoload": {
+        "files": [
+            "registration.php"
+        ],
         "psr-4": {
             "Pagarme\\Pagarme\\": ""
         }
