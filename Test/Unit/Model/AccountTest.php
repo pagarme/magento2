@@ -213,6 +213,73 @@ class AccountTest extends BaseTest
     }
 
     /**
+     * Test getDashUrl returns URL with PaymentProfileId when One Stone is enabled
+     */
+    public function testGetDashUrlUsesPaymentProfileIdWhenOneStoneEnabled()
+    {
+        // Arrange
+        $this->configMock->setPaymentProfileId('pp_xxxxxxxxxxxx');
+        $this->configMock->setMerchantId('merch_yyyyyyyyyyyy');
+
+        // Act
+        $result = $this->account->getDashUrl();
+
+        // Assert
+        $this->assertSame('https://dash.stone.com.br/pp_xxxxxxxxxxxx', $result);
+    }
+
+    /**
+     * Test getDashUrl returns URL with AccountId when One Stone is disabled (legacy mode)
+     */
+    public function testGetDashUrlUsesAccountIdWhenOneStoneDisabled()
+    {
+        // Arrange
+        $this->configMock->setPaymentProfileId(null);
+        $this->configMock->setAccountId('acc_zzzzzzzzzzzz');
+        $this->configMock->setMerchantId('merch_yyyyyyyyyyyy');
+
+        // Act
+        $result = $this->account->getDashUrl();
+
+        // Assert
+        $this->assertSame('https://dash.pagar.me/merch_yyyyyyyyyyyy/acc_zzzzzzzzzzzz/', $result);
+    }
+
+    /**
+     * Test getDashUrl returns null when MerchantId is absent
+     */
+    public function testGetDashUrlReturnsNullWhenMerchantIdAbsent()
+    {
+        // Arrange
+        $this->configMock->setPaymentProfileId(null);
+        $this->configMock->setAccountId('acc_zzzzzzzzzzzz');
+        $this->configMock->setMerchantId(null);
+
+        // Act
+        $result = $this->account->getDashUrl();
+
+        // Assert
+        $this->assertNull($result);
+    }
+
+    /**
+     * Test getDashUrl returns null when AccountId is absent in legacy mode
+     */
+    public function testGetDashUrlReturnsNullWhenAccountIdAbsentInLegacyMode()
+    {
+        // Arrange
+        $this->configMock->setPaymentProfileId(null);
+        $this->configMock->setAccountId(null);
+        $this->configMock->setMerchantId('merch_yyyyyyyyyyyy');
+
+        // Act
+        $result = $this->account->getDashUrl();
+
+        // Assert
+        $this->assertNull($result);
+    }
+
+    /**
      * Inject the config property via reflection to facilitate testing
      *
      * @param ConfigurationStub|Configuration $config

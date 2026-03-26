@@ -11,15 +11,21 @@ class ConfigurationStub
 {
     private $paymentProfileId;
     private $poiType;
+    private $accountId;
+    private $merchantId;
 
     /**
      * @param string|null $paymentProfileId
      * @param array|null $poiType
+     * @param string|null $accountId
+     * @param string|null $merchantId
      */
-    public function __construct($paymentProfileId = null, $poiType = null)
+    public function __construct($paymentProfileId = null, $poiType = null, $accountId = null, $merchantId = null)
     {
         $this->paymentProfileId = $paymentProfileId;
         $this->poiType = $poiType;
+        $this->accountId = $accountId;
+        $this->merchantId = $merchantId;
     }
 
     /**
@@ -54,6 +60,40 @@ class ConfigurationStub
     public function setPoiType($poiType)
     {
         $this->poiType = $poiType;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getAccountId()
+    {
+        return $this->accountId;
+    }
+
+    /**
+     * @param string|null $accountId
+     * @return void
+     */
+    public function setAccountId($accountId)
+    {
+        $this->accountId = $accountId;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getMerchantId()
+    {
+        return $this->merchantId;
+    }
+
+    /**
+     * @param string|null $merchantId
+     * @return void
+     */
+    public function setMerchantId($merchantId)
+    {
+        $this->merchantId = $merchantId;
     }
 
     /**
