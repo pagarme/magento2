@@ -170,7 +170,7 @@ class Account
      */
     public function savePaymentProfileIdFromWebhook($identifier)
     {
-        if ($this->getPaymentProfileId() || !$this->isEcommerceIdentifier($identifier))) {
+        if ($this->getPaymentProfileId() || !$this->isEcommerceIdentifier($identifier)) {
             return;
         }
 
