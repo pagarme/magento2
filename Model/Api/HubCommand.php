@@ -12,6 +12,7 @@ use Pagarme\Core\Hub\Services\HubIntegrationService;
 use Pagarme\Pagarme\Api\HubCommandInterface;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Pagarme\Pagarme\Controller\Adminhtml\Hub\Index as HubControllerIndex;
+use Pagarme\Pagarme\Model\PagarmeConfigProvider;
 
 class HubCommand implements HubCommandInterface
 {
@@ -104,55 +105,67 @@ class HubCommand implements HubCommandInterface
         }
 
         $this->configWriter->delete(
-            "pagarme_pagarme/hub/install_id",
+            PagarmeConfigProvider::PATH_INSTALL_ID,
             $scope,
             $websiteId
         );
 
         $this->configWriter->delete(
-            "pagarme_pagarme/hub/environment",
+            PagarmeConfigProvider::PATH_ENVIRONMENT,
             $scope,
             $websiteId
         );
 
         $this->configWriter->delete(
-            "pagarme_pagarme/global/secret_key",
+            PagarmeConfigProvider::PATH_SECRET_KEY,
             $scope,
             $websiteId
         );
 
         $this->configWriter->delete(
-            "pagarme_pagarme/global/public_key",
+            PagarmeConfigProvider::PATH_PUBLIC_KEY,
             $scope,
             $websiteId
         );
 
         $this->configWriter->delete(
-            "pagarme_pagarme/global/secret_key_test",
+            PagarmeConfigProvider::PATH_SECRET_KEY_TEST,
             $scope,
             $websiteId
         );
 
         $this->configWriter->delete(
-            "pagarme_pagarme/global/public_key_test",
+            PagarmeConfigProvider::PATH_PUBLIC_KEY_TEST,
             $scope,
             $websiteId
         );
 
         $this->configWriter->delete(
-            "pagarme_pagarme/hub/account_id",
+            PagarmeConfigProvider::PATH_ACCOUNT_ID,
             $scope,
             $websiteId
         );
 
         $this->configWriter->delete(
-            "pagarme_pagarme/hub/merchant_id",
+            PagarmeConfigProvider::PATH_MERCHANT_ID,
             $scope,
             $websiteId
         );
 
         $this->configWriter->delete(
-            "pagarme_pagarme/hub/account_errors",
+            PagarmeConfigProvider::PATH_PAYMENT_PROFILE_ID,
+            $scope,
+            $websiteId
+        );
+
+        $this->configWriter->delete(
+            PagarmeConfigProvider::PATH_POI_TYPE,
+            $scope,
+            $websiteId
+        );
+
+        $this->configWriter->delete(
+            PagarmeConfigProvider::PATH_DASH_ERRORS,
             $scope,
             $websiteId
         );
