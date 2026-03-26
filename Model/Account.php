@@ -11,7 +11,6 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Store\Model\StoreManagerInterface;
 use Pagarme\Core\Kernel\Aggregates\Configuration;
-use Pagarme\Core\Kernel\ValueObjects\PoiType;
 use Pagarme\Core\Middle\Model\Account as AccountMiddle;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Pagarme\Pagarme\Controller\Adminhtml\Hub\Index as HubControllerIndex;
