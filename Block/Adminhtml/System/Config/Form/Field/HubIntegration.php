@@ -71,12 +71,12 @@ class HubIntegration extends Field
             __("View Integration")
         );
 
-        if ($this->account->hasMerchantAndAccountIds()) {
+        if ($this->account->hasIdentifiers()) {
             $html .= sprintf(
                 '<a href="%s" target="_blank" id="pagarme-dash-button" class="pagarme-integration-button%s">%s</a>',
                 $this->account->getDashUrl(),
                 $installId ? '' : $hidden,
-                __('Access Pagar.me Dash')
+                __('Access Dashboard')
             );
         }
 

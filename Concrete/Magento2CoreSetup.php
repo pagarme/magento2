@@ -354,7 +354,8 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
             'hubInstallId' => 'install_id',
             'hubEnvironment' => 'environment',
             'merchantId' => 'merchant_id',
-            'accountId' => 'account_id'
+            'accountId' => 'account_id',
+            'paymentProfileId' => 'payment_profile_id',
         ];
 
         $section = 'pagarme_pagarme/hub/';
@@ -363,6 +364,16 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
         if (!$dataObj->hubInstallId) {
             $dataObj->hubInstallId = null;
             $dataObj->hubEnvironment = null;
+        }
+
+        $poiTypeRaw = $storeConfig->getValue(
+            $section . 'poi_type',
+            ScopeInterface::SCOPE_WEBSITES,
+            self::getCurrentStoreId()
+        );
+        if (!empty($poiTypeRaw)) {
+            $decoded = json_decode($poiTypeRaw, true);
+            $dataObj->poiType = is_array($decoded) ? $decoded : [$poiTypeRaw];
         }
     }
 
