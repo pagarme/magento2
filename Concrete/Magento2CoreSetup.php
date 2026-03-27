@@ -367,9 +367,14 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
             $dataObj->hubEnvironment = null;
         }
 
-        if (!empty($dataObj->poiType) && is_string($dataObj->poiType)) {
-            $decoded = json_decode($dataObj->poiType, true);
-            $dataObj->poiType = is_array($decoded) ? $decoded : [];
+        $poiTypeRaw = $storeConfig->getValue(
+            $section . 'poi_type',
+            ScopeInterface::SCOPE_WEBSITES,
+            self::getCurrentStoreId()
+        );
+        if (!empty($poiTypeRaw)) {
+            $decoded = json_decode($poiTypeRaw, true);
+            $dataObj->poiType = is_array($decoded) ? $decoded : [$poiTypeRaw];
         }
     }
 
