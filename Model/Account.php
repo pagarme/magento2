@@ -260,7 +260,7 @@ class Account
      * @return bool
      */
     public function hasIdentifiers()
-    {;
+    {
         return $this->isOneStoneEnabled() || (!empty($this->getMerchantId()) && !empty($this->getAccountId()));
     }
 
