@@ -11,7 +11,7 @@ interface WebhookManagementInterface
      * @param mixed $data
      * @param mixed $account
      * @param mixed $identifier
-     * @return boolean
+     * @return array
      */
     public function save($id, $type, $data, $account, $identifier = null);
 }

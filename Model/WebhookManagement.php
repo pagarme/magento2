@@ -60,7 +60,7 @@ class WebhookManagement implements WebhookManagementInterface
      * @param mixed $type
      * @param mixed $data
      * @param mixed $identifier
-     * @return array|bool
+     * @return array
      */
     public function save($id, $type, $data, $account, $identifier = null)
     {
