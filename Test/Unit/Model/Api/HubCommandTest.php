@@ -66,9 +66,9 @@ class HubCommandTest extends BaseTest
     }
 
     /**
-     * Verifies that uninstallCommand deletes all 11 hub config paths,
-     * including the two One Stone fields (payment_profile_id and poi_type),
-     * and cleans the Magento config cache.
+     * Verifies that uninstallCommand deletes all 11 relevant configuration paths
+     * used by the hub integration, including the two One Stone fields
+     * (payment_profile_id and poi_type), and cleans the Magento config cache.
      */
     public function testUninstallCommandDeletesAllHubConfigPaths()
     {
