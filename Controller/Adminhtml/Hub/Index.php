@@ -208,6 +208,20 @@ class Index extends Action
         );
 
         $this->configWriter->save(
+            "pagarme_pagarme/hub/payment_profile_id",
+            $currentConfiguration->getPaymentProfileId(),
+            $scope,
+            $websiteId
+        );
+
+        $this->configWriter->save(
+            "pagarme_pagarme/hub/poi_type",
+            json_encode($currentConfiguration->getPoiType()),
+            $scope,
+            $websiteId
+        );
+
+        $this->configWriter->save(
             "pagarme_pagarme/global/test_mode",
             0,
             $scope,
