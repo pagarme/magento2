@@ -1,5 +1,4 @@
 <?php
-
 namespace Pagarme\Pagarme\Test\Unit\Model;
 /**
  * Stub class for Configuration to enable testing with final classes
