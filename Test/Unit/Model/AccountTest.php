@@ -279,6 +279,252 @@ class AccountTest extends BaseTest
         $this->assertNull($result);
     }
 
+    // ─── savePaymentProfileIdFromWebhook ────────────────────────────────────────
+
+    public function testSavePaymentProfileIdFromWebhookDoesNotSaveWhenProfileIdAlreadyExists()
+    {
+        // Arrange
+        $this->configMock->setPaymentProfileId('pp_existing_123');
+        $identifier = [
+            'payment_profile_id'        => 'pp_new_456',
+            'point_of_interaction_type' => 'Ecommerce',
+        ];
+        $saveInvocations = 0;
+        $this->configWriterMock
+            ->shouldReceive('save')
+            ->andReturnUsing(function () use (&$saveInvocations) {
+                $saveInvocations++;
+            });
+
+        // Act
+        $this->account->savePaymentProfileIdFromWebhook($identifier);
+
+        // Assert
+        $this->assertSame(0, $saveInvocations, 'configWriter->save must not be called when paymentProfileId is already set');
+    }
+
+    public function testSavePaymentProfileIdFromWebhookDoesNotSaveWhenIdentifierIsNull()
+    {
+        // Arrange
+        $saveInvocations = 0;
+        $this->configWriterMock
+            ->shouldReceive('save')
+            ->andReturnUsing(function () use (&$saveInvocations) {
+                $saveInvocations++;
+            });
+
+        // Act
+        $this->account->savePaymentProfileIdFromWebhook(null);
+
+        // Assert
+        $this->assertSame(0, $saveInvocations, 'configWriter->save must not be called when identifier is null');
+    }
+
+    public function testSavePaymentProfileIdFromWebhookDoesNotSaveWhenPoiTypeIsEmpty()
+    {
+        // Arrange
+        $identifier = [
+            'payment_profile_id'        => 'pp_new_456',
+            'point_of_interaction_type' => '',
+        ];
+        $saveInvocations = 0;
+        $this->configWriterMock
+            ->shouldReceive('save')
+            ->andReturnUsing(function () use (&$saveInvocations) {
+                $saveInvocations++;
+            });
+
+        // Act
+        $this->account->savePaymentProfileIdFromWebhook($identifier);
+
+        // Assert
+        $this->assertSame(0, $saveInvocations, 'configWriter->save must not be called when point_of_interaction_type is empty');
+    }
+
+    public function testSavePaymentProfileIdFromWebhookDoesNotSaveWhenPoiTypeIsNotEcommerce()
+    {
+        // Arrange
+        $identifier = [
+            'payment_profile_id'        => 'pp_new_456',
+            'point_of_interaction_type' => 'Pos',
+        ];
+        $saveInvocations = 0;
+        $this->configWriterMock
+            ->shouldReceive('save')
+            ->andReturnUsing(function () use (&$saveInvocations) {
+                $saveInvocations++;
+            });
+
+        // Act
+        $this->account->savePaymentProfileIdFromWebhook($identifier);
+
+        // Assert
+        $this->assertSame(0, $saveInvocations, 'configWriter->save must not be called when point_of_interaction_type is not Ecommerce');
+    }
+
+    public function testSavePaymentProfileIdFromWebhookPersistsWithCorrectArgumentsForEcommerceIdentifier()
+    {
+        // Arrange
+        $paymentProfileId = 'pp_abc123';
+        $websiteId        = 1;
+        $scopeName        = 'websites';
+        $identifier = [
+            'payment_profile_id'        => $paymentProfileId,
+            'point_of_interaction_type' => 'Ecommerce',
+        ];
+
+        $storeMock = Mockery::mock();
+        $storeMock->shouldReceive('getWebsiteId')->andReturn($websiteId);
+        $this->storeManagerMock->shouldReceive('getStore')->andReturn($storeMock);
+        $this->hubControllerIndexMock->shouldReceive('getScopeName')->andReturn($scopeName);
+
+        $capturedArgs = [];
+        $this->configWriterMock
+            ->shouldReceive('save')
+            ->once()
+            ->andReturnUsing(function () use (&$capturedArgs) {
+                $capturedArgs = func_get_args();
+            });
+
+        // Act
+        $this->account->savePaymentProfileIdFromWebhook($identifier);
+
+        // Assert
+        $this->assertSame(PagarmeConfigProvider::PATH_PAYMENT_PROFILE_ID, $capturedArgs[0]);
+        $this->assertSame($paymentProfileId, $capturedArgs[1]);
+        $this->assertSame($scopeName, $capturedArgs[2]);
+        $this->assertSame($websiteId, $capturedArgs[3]);
+    }
+
+    public function testSavePaymentProfileIdFromWebhookPoiTypeComparisonIsCaseInsensitive()
+    {
+        // Arrange
+        $paymentProfileId = 'pp_abc123';
+        $websiteId        = 1;
+        $scopeName        = 'websites';
+        $identifier = [
+            'payment_profile_id'        => $paymentProfileId,
+            'point_of_interaction_type' => 'ECOMMERCE', // uppercase variant
+        ];
+
+        $storeMock = Mockery::mock();
+        $storeMock->shouldReceive('getWebsiteId')->andReturn($websiteId);
+        $this->storeManagerMock->shouldReceive('getStore')->andReturn($storeMock);
+        $this->hubControllerIndexMock->shouldReceive('getScopeName')->andReturn($scopeName);
+
+        $saveInvocations = 0;
+        $this->configWriterMock
+            ->shouldReceive('save')
+            ->once()
+            ->andReturnUsing(function () use (&$saveInvocations) {
+                $saveInvocations++;
+            });
+
+        // Act
+        $this->account->savePaymentProfileIdFromWebhook($identifier);
+
+        // Assert
+        $this->assertSame(1, $saveInvocations, 'configWriter->save must be called even when point_of_interaction_type is uppercase');
+    }
+
+    // ─── savePoiTypeFromWebhook ──────────────────────────────────────────────────
+
+    public function testSavePoiTypeFromWebhookDoesNotSaveWhenPoiTypeAlreadySet()
+    {
+        // Arrange
+        $this->configMock->setPoiType(['type' => 'Ecommerce']);
+        $identifier = [
+            'payment_profile_id'        => 'pp_new_456',
+            'point_of_interaction_type' => 'Ecommerce',
+        ];
+        $saveInvocations = 0;
+        $this->configWriterMock
+            ->shouldReceive('save')
+            ->andReturnUsing(function () use (&$saveInvocations) {
+                $saveInvocations++;
+            });
+
+        // Act
+        $this->account->savePoiTypeFromWebhook($identifier);
+
+        // Assert
+        $this->assertSame(0, $saveInvocations, 'configWriter->save must not be called when poiType is already persisted');
+    }
+
+    public function testSavePoiTypeFromWebhookDoesNotSaveWhenIdentifierIsNull()
+    {
+        // Arrange
+        $saveInvocations = 0;
+        $this->configWriterMock
+            ->shouldReceive('save')
+            ->andReturnUsing(function () use (&$saveInvocations) {
+                $saveInvocations++;
+            });
+
+        // Act
+        $this->account->savePoiTypeFromWebhook(null);
+
+        // Assert
+        $this->assertSame(0, $saveInvocations, 'configWriter->save must not be called when identifier is null');
+    }
+
+    public function testSavePoiTypeFromWebhookDoesNotSaveWhenPoiTypeIsNotEcommerce()
+    {
+        // Arrange
+        $identifier = [
+            'payment_profile_id'        => 'pp_new_456',
+            'point_of_interaction_type' => 'Tef',
+        ];
+        $saveInvocations = 0;
+        $this->configWriterMock
+            ->shouldReceive('save')
+            ->andReturnUsing(function () use (&$saveInvocations) {
+                $saveInvocations++;
+            });
+
+        // Act
+        $this->account->savePoiTypeFromWebhook($identifier);
+
+        // Assert
+        $this->assertSame(0, $saveInvocations, 'configWriter->save must not be called when point_of_interaction_type is not Ecommerce');
+    }
+
+    public function testSavePoiTypeFromWebhookPersistsStringValueWithCorrectArgumentsForEcommerceIdentifier()
+    {
+        // Arrange
+        $poiTypeValue = 'Ecommerce';
+        $websiteId    = 1;
+        $scopeName    = 'websites';
+        $identifier = [
+            'payment_profile_id'        => 'pp_abc123',
+            'point_of_interaction_type' => $poiTypeValue,
+        ];
+
+        $storeMock = Mockery::mock();
+        $storeMock->shouldReceive('getWebsiteId')->andReturn($websiteId);
+        $this->storeManagerMock->shouldReceive('getStore')->andReturn($storeMock);
+        $this->hubControllerIndexMock->shouldReceive('getScopeName')->andReturn($scopeName);
+
+        $capturedArgs = [];
+        $this->configWriterMock
+            ->shouldReceive('save')
+            ->once()
+            ->andReturnUsing(function () use (&$capturedArgs) {
+                $capturedArgs = func_get_args();
+            });
+
+        // Act
+        $this->account->savePoiTypeFromWebhook($identifier);
+
+        // Assert
+        $this->assertSame(PagarmeConfigProvider::PATH_POI_TYPE, $capturedArgs[0]);
+        $this->assertSame($poiTypeValue, $capturedArgs[1]);
+        $this->assertSame($scopeName, $capturedArgs[2]);
+        $this->assertSame($websiteId, $capturedArgs[3]);
+    }
+
+
+
     /**
      * Inject the config property via reflection to facilitate testing
      *
