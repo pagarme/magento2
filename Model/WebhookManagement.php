@@ -56,9 +56,9 @@ class WebhookManagement implements WebhookManagementInterface
     /**
      * @api
      * @param mixed $id
-     * @param mixed $account
      * @param mixed $type
      * @param mixed $data
+     * @param mixed $account
      * @param mixed $identifier
      * @return array
      */
