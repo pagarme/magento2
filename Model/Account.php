@@ -174,6 +174,10 @@ class Account
             return;
         }
 
+        if (empty($identifier['payment_profile_id'])) {
+            return;
+        }
+
         $this->configWriter->save(
             PagarmeConfigProvider::PATH_PAYMENT_PROFILE_ID,
             $identifier['payment_profile_id'],
@@ -190,6 +194,10 @@ class Account
     public function savePoiTypeFromWebhook($identifier)
     {
         if (!empty($this->getPoiType()) || !$this->isEcommerceIdentifier($identifier)) {
+            return;
+        }
+
+        if (empty($identifier['point_of_interaction_type'])) {
             return;
         }
 
@@ -358,9 +366,9 @@ class Account
      */
     private function isEcommerceIdentifier($identifier): bool
     {
-        return !empty($identifier)
+        return is_array($identifier)
             && !empty($identifier['point_of_interaction_type'])
-            && strtolower($identifier['point_of_interaction_type'] ?? "") === strtolower(PoiType::ECOMMERCE);
+            && strtolower($identifier['point_of_interaction_type']) === strtolower(PoiType::ECOMMERCE);
     }
 
     /**
