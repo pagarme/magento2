@@ -171,6 +171,54 @@ class AccountTest extends BaseTest
     }
 
     /**
+     * @dataProvider poiTypeHydrationProvider
+     *
+     * Simulates what Magento2CoreSetup produces when reading poi_type from the DB,
+     * then asserts the contract: only arrays are valid; everything else must be null.
+     */
+    public function testGetPoiTypeContractAfterHydration(string $rawDbValue, $expected)
+    {
+        // Arrange
+        $decoded = json_decode($rawDbValue, true);
+        $this->configMock->setPoiType(is_array($decoded) ? $decoded : null);
+
+        // Act
+        $result = $this->account->getPoiType();
+
+        // Assert
+        $this->assertSame($expected, $result);
+    }
+
+    public function poiTypeHydrationProvider(): array
+    {
+        return [
+            'null stored by old buggy code'  => ['null',                                null],
+            'empty string in DB'             => ['""',                                  null],
+            'invalid json in DB'             => ['"not-an-array"',                      null],
+            'valid array'                    => ['{"type":"physical"}',                 ['type' => 'physical']],
+        ];
+    }
+
+    /**
+     * Guards the specific regression: json_encode(null) produces the string "null",
+     * which must never be decoded back as ["null"].
+     */
+    public function testPoiTypeNullIsNotWrappedInArrayAfterJsonRoundTrip()
+    {
+        // Arrange
+        $rawDbValue = json_encode(null); // old buggy write produced "null"
+        $decoded = json_decode($rawDbValue, true);
+        $this->configMock->setPoiType(is_array($decoded) ? $decoded : null);
+
+        // Act
+        $result = $this->account->getPoiType();
+
+        // Assert
+        $this->assertNull($result);
+        $this->assertNotSame(['null'], $result);
+    }
+
+    /**
      * Test isOneStoneEnabled method when paymentProfileId is configured
      */
     public function testIsOneStoneEnabledReturnsTrueWhenProfileIdExists()
