@@ -72,7 +72,8 @@ class HubCommandTest extends BaseTest
      */
     public function testUninstallCommandDeletesAllHubConfigPaths()
     {
-        $scope = 'websites';
+        // Arrange
+        $scope     = 'websites';
         $websiteId = 1;
 
         $this->hubControllerIndexMock
@@ -80,7 +81,70 @@ class HubCommandTest extends BaseTest
             ->once()
             ->andReturn($scope);
 
-        $paths = [
+        foreach ($this->allHubPaths() as $path) {
+            $this->configWriterMock
+                ->shouldReceive('delete')
+                ->with($path, $scope, $websiteId)
+                ->once();
+        }
+
+        $this->cacheManagerMock
+            ->shouldReceive('clean')
+            ->with([Config::TYPE_IDENTIFIER])
+            ->once();
+
+        // Act
+        $result = $this->hubCommand->uninstallCommand();
+
+        // Assert
+        $this->assertEquals('Hub uninstalled successfully', $result);
+    }
+
+    /**
+     * Verifies that uninstallCommand uses websiteId = 0 when the request carries no
+     * website context (global scope uninstall). The conditional block normalises any
+     * falsy websiteId to 0, so all deletes must still fire with that value.
+     */
+    public function testUninstallCommandDeletesAllHubConfigPathsForDefaultScope()
+    {
+        // Arrange — inject websiteId = 0 to simulate a global-scope uninstall request
+        $websiteIdProp = new \ReflectionProperty(HubCommand::class, 'websiteId');
+        $websiteIdProp->setAccessible(true);
+        $websiteIdProp->setValue($this->hubCommand, 0);
+
+        $scope     = 'default';
+        $websiteId = 0;
+
+        $this->hubControllerIndexMock
+            ->shouldReceive('getScopeName')
+            ->once()
+            ->andReturn($scope);
+
+        foreach ($this->allHubPaths() as $path) {
+            $this->configWriterMock
+                ->shouldReceive('delete')
+                ->with($path, $scope, $websiteId)
+                ->once();
+        }
+
+        $this->cacheManagerMock
+            ->shouldReceive('clean')
+            ->with([Config::TYPE_IDENTIFIER])
+            ->once();
+
+        // Act
+        $result = $this->hubCommand->uninstallCommand();
+
+        // Assert
+        $this->assertEquals('Hub uninstalled successfully', $result);
+    }
+
+    /**
+     * @return string[]
+     */
+    private function allHubPaths(): array
+    {
+        return [
             PagarmeConfigProvider::PATH_INSTALL_ID,
             PagarmeConfigProvider::PATH_ENVIRONMENT,
             PagarmeConfigProvider::PATH_SECRET_KEY,
@@ -93,21 +157,5 @@ class HubCommandTest extends BaseTest
             PagarmeConfigProvider::PATH_POI_TYPE,
             PagarmeConfigProvider::PATH_DASH_ERRORS,
         ];
-
-        foreach ($paths as $path) {
-            $this->configWriterMock
-                ->shouldReceive('delete')
-                ->with($path, $scope, $websiteId)
-                ->once();
-        }
-
-        $this->cacheManagerMock
-            ->shouldReceive('clean')
-            ->with([Config::TYPE_IDENTIFIER])
-            ->once();
-
-        $result = $this->hubCommand->uninstallCommand();
-
-        $this->assertEquals('Hub uninstalled successfully', $result);
     }
 }
