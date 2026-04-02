@@ -301,13 +301,9 @@ class Account
     /**
      * @return bool
      */
-    public function hasMerchantAndAccountIds()
+    public function hasIdentifiers()
     {
-        $secondId = $this->isOneStoneEnabled()
-            ? $this->getPaymentProfileId()
-            : $this->getAccountId();
-
-        return !empty($secondId) && !empty($this->getMerchantId());
+        return $this->isOneStoneEnabled() || (!empty($this->getMerchantId()) && !empty($this->getAccountId()));
     }
 
     /**
@@ -315,7 +311,7 @@ class Account
      */
     public function getDashUrl()
     {
-        if (!$this->hasMerchantAndAccountIds()) {
+        if (!$this->hasIdentifiers()) {
             return null;
         }
 
