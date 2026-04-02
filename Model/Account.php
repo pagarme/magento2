@@ -197,12 +197,9 @@ class Account
             return;
         }
 
-        $poiType = $identifier['point_of_interaction_type'];
-        $value = (is_array($poiType) || is_object($poiType)) ? json_encode($poiType) : $poiType;
-
         $this->configWriter->save(
             PagarmeConfigProvider::PATH_POI_TYPE,
-            $value,
+            $identifier['point_of_interaction_type'],
             $this->hubControllerIndex->getScopeName(),
             $this->storeManager->getStore()->getWebsiteId()
         );
