@@ -247,6 +247,148 @@ class WebhookManagementTest extends BaseTest
         $this->assertSame($expectedResponse, $result);
     }
 
+    /**
+     * Simulates the REST endpoint receiving a legacy JSON payload (no "identifier" key).
+     * Magento's InputParamsResolver omits the optional param → save() is called without a
+     * 5th argument, so $identifier defaults to null.
+     * Asserts neither identifier method is invoked and the handler response is returned.
+     */
+    public function testLegacyPayloadWithoutIdentifierFieldSkipsIdentifierMethods()
+    {
+        // Arrange — decode a legacy JSON body the same way Magento's REST layer would
+        $legacyJsonBody = '{
+            "id":      "hook_aaaaaaaaaaaaaaaa",
+            "type":    "charge.paid",
+            "data":    {"order": {"code": "000000001"}},
+            "account": {"id": "acc_xxxxxxxxxxxxxxxx", "name": "Test"}
+        }';
+        $payload = json_decode($legacyJsonBody, true);
+
+        $moduleCoreSetupMock = Mockery::mock('alias:Pagarme\Core\Kernel\Abstractions\AbstractModuleCoreSetup');
+        $moduleCoreSetupMock->shouldReceive('bootstrap')->andReturnSelf();
+
+        $orderMock = Mockery::mock(Order::class);
+        $orderMock->shouldReceive('loadByIncrementId')->andReturnSelf();
+        $orderMock->shouldReceive('getId')->andReturnFalse();
+
+        $orderFactoryMock = Mockery::mock(OrderFactory::class);
+        $orderFactoryMock->shouldReceive('create')->andReturn($orderMock);
+
+        $ppCallCount  = 0;
+        $poiCallCount = 0;
+        $accountMock  = Mockery::mock(Account::class);
+        $accountMock->shouldReceive('savePaymentProfileIdFromWebhook')
+            ->andReturnUsing(function () use (&$ppCallCount) { $ppCallCount++; });
+        $accountMock->shouldReceive('savePoiTypeFromWebhook')
+            ->andReturnUsing(function () use (&$poiCallCount) { $poiCallCount++; });
+
+        $requestMock = Mockery::mock(RequestInterface::class);
+        $requestMock->shouldReceive('getHeader')
+            ->with(WebhookManagement::WEBHOOK_SIGNATURE_HEADER)
+            ->andReturn('alg=RS256; kid=test-kid; signature=test-sig');
+        $requestMock->shouldReceive('getContent')->andReturn($legacyJsonBody);
+
+        $validatorMock = Mockery::mock('alias:' . WebhookValidatorService::class);
+        $validatorMock->shouldReceive('validateSignature')->andReturn(true);
+
+        $expectedResponse = ['message' => 'ok', 'code' => 200];
+        $webhookReceiverServiceMock = Mockery::mock(WebhookReceiverService::class);
+        $webhookReceiverServiceMock->shouldReceive('handle')->once()->andReturn($expectedResponse);
+
+        $webhookManagement = new WebhookManagement(
+            $orderFactoryMock, $accountMock, $webhookReceiverServiceMock, $requestMock
+        );
+
+        // Act — no 5th argument, mirroring what InputParamsResolver does for a missing optional param
+        $result = $webhookManagement->save(
+            $payload['id'],
+            $payload['type'],
+            $payload['data'],
+            $payload['account']
+            // $identifier intentionally omitted → defaults to null
+        );
+
+        // Assert
+        $this->assertSame(0, $ppCallCount, 'savePaymentProfileIdFromWebhook must not be called for a legacy payload');
+        $this->assertSame(0, $poiCallCount, 'savePoiTypeFromWebhook must not be called for a legacy payload');
+        $this->assertSame($expectedResponse, $result);
+    }
+
+    /**
+     * Simulates the REST endpoint receiving a new JSON payload (with "identifier" object).
+     * Magento's InputParamsResolver deserializes the "identifier" JSON object to a PHP array
+     * and passes it as the 5th argument to save().
+     * Asserts both identifier methods are invoked with the deserialized array.
+     */
+    public function testNewPayloadWithIdentifierFieldDispatchesIdentifierMethodsWithDeserializedArray()
+    {
+        // Arrange — decode a new-format JSON body the same way Magento's REST layer would
+        $newJsonBody = '{
+            "id":      "hook_bbbbbbbbbbbbbbbb",
+            "type":    "charge.paid",
+            "data":    {"order": {"code": "000000002"}},
+            "account": {"id": "acc_xxxxxxxxxxxxxxxx", "name": "Test"},
+            "identifier": {
+                "payment_profile_id":        "pp_abc123",
+                "point_of_interaction_type": "Ecommerce"
+            }
+        }';
+        $payload = json_decode($newJsonBody, true);
+
+        $moduleCoreSetupMock = Mockery::mock('alias:Pagarme\Core\Kernel\Abstractions\AbstractModuleCoreSetup');
+        $moduleCoreSetupMock->shouldReceive('bootstrap')->andReturnSelf();
+
+        $orderMock = Mockery::mock(Order::class);
+        $orderMock->shouldReceive('loadByIncrementId')->andReturnSelf();
+        $orderMock->shouldReceive('getId')->andReturnFalse();
+
+        $orderFactoryMock = Mockery::mock(OrderFactory::class);
+        $orderFactoryMock->shouldReceive('create')->andReturn($orderMock);
+
+        $ppCallCount  = 0;
+        $poiCallCount = 0;
+        $accountMock  = Mockery::mock(Account::class);
+        $accountMock->shouldReceive('savePaymentProfileIdFromWebhook')
+            ->once()
+            ->with($payload['identifier'])
+            ->andReturnUsing(function () use (&$ppCallCount) { $ppCallCount++; });
+        $accountMock->shouldReceive('savePoiTypeFromWebhook')
+            ->once()
+            ->with($payload['identifier'])
+            ->andReturnUsing(function () use (&$poiCallCount) { $poiCallCount++; });
+
+        $requestMock = Mockery::mock(RequestInterface::class);
+        $requestMock->shouldReceive('getHeader')
+            ->with(WebhookManagement::WEBHOOK_SIGNATURE_HEADER)
+            ->andReturn('alg=RS256; kid=test-kid; signature=test-sig');
+        $requestMock->shouldReceive('getContent')->andReturn($newJsonBody);
+
+        $validatorMock = Mockery::mock('alias:' . WebhookValidatorService::class);
+        $validatorMock->shouldReceive('validateSignature')->andReturn(true);
+
+        $expectedResponse = ['message' => 'ok', 'code' => 200];
+        $webhookReceiverServiceMock = Mockery::mock(WebhookReceiverService::class);
+        $webhookReceiverServiceMock->shouldReceive('handle')->once()->andReturn($expectedResponse);
+
+        $webhookManagement = new WebhookManagement(
+            $orderFactoryMock, $accountMock, $webhookReceiverServiceMock, $requestMock
+        );
+
+        // Act — 5th argument is the PHP array that InputParamsResolver produces from the JSON object
+        $result = $webhookManagement->save(
+            $payload['id'],
+            $payload['type'],
+            $payload['data'],
+            $payload['account'],
+            $payload['identifier']
+        );
+
+        // Assert
+        $this->assertSame(1, $ppCallCount, 'savePaymentProfileIdFromWebhook must be called once with the deserialized identifier');
+        $this->assertSame(1, $poiCallCount, 'savePoiTypeFromWebhook must be called once with the deserialized identifier');
+        $this->assertSame($expectedResponse, $result);
+    }
+
     public function testSaveSkipsIdentifierMethodsAndReturnsHandlerResponseWhenIdentifierIsEmptyArray()
     {
         // Arrange
