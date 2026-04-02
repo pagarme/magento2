@@ -216,7 +216,7 @@ class Index extends Action
 
         $this->configWriter->save(
             "pagarme_pagarme/hub/poi_type",
-            json_encode($currentConfiguration->getPoiType()),
+            $this->encodePoiType($currentConfiguration->getPoiType()),
             $scope,
             $websiteId
         );
@@ -243,5 +243,18 @@ class Index extends Action
         );
 
         $this->cacheManager->clean(['config']);
+    }
+
+    /**
+     * @param array|null $poiType
+     * @return string|null
+     */
+    private function encodePoiType($poiType)
+    {
+        if ($poiType === null) {
+            return null;
+        }
+
+        return json_encode($poiType);
     }
 }
