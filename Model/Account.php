@@ -164,11 +164,11 @@ class Account
     }
 
     /**
-     * @param mixed $identifier
+     * @param array|null $identifier
      * @return void
      * @throws NoSuchEntityException
      */
-    public function savePaymentProfileIdFromWebhook($identifier)
+    public function savePaymentProfileIdFromWebhook(?array $identifier)
     {
         if ($this->getPaymentProfileId() || !$this->isEcommerceIdentifier($identifier)) {
             return;
@@ -187,17 +187,13 @@ class Account
     }
 
     /**
-     * @param mixed $identifier
+     * @param array|null $identifier
      * @return void
      * @throws NoSuchEntityException
      */
-    public function savePoiTypeFromWebhook($identifier)
+    public function savePoiTypeFromWebhook(?array $identifier)
     {
         if (!empty($this->getPoiType()) || !$this->isEcommerceIdentifier($identifier)) {
-            return;
-        }
-
-        if (empty($identifier['point_of_interaction_type'])) {
             return;
         }
 
@@ -361,10 +357,10 @@ class Account
     }
 
     /**
-     * @param mixed $identifier
+     * @param array|null $identifier
      * @return bool
      */
-    private function isEcommerceIdentifier($identifier): bool
+    private function isEcommerceIdentifier(?array $identifier): bool
     {
         return is_array($identifier)
             && !empty($identifier['point_of_interaction_type'])
