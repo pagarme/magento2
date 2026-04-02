@@ -389,6 +389,80 @@ class WebhookManagementTest extends BaseTest
         $this->assertSame($expectedResponse, $result);
     }
 
+    /**
+     * Validates the highest-impact webhook path: charge.paid with a filled identifier.
+     * All three persistence calls must coexist — saveAccountIdFromWebhook (driven by
+     * the charge.paid type) and both identifier methods (driven by the non-empty identifier).
+     */
+    public function testChargePaidWithIdentifierCallsAllThreePersistenceMethods()
+    {
+        // Arrange
+        $moduleCoreSetupMock = Mockery::mock('alias:Pagarme\Core\Kernel\Abstractions\AbstractModuleCoreSetup');
+        $moduleCoreSetupMock->shouldReceive('bootstrap')->andReturnSelf();
+
+        $orderMock = Mockery::mock(Order::class);
+        $orderMock->shouldReceive('loadByIncrementId')->andReturnSelf();
+        $orderMock->shouldReceive('getId')->andReturn(42); // truthy → hasMagentoOrder returns 42, skipping early return
+
+        $orderFactoryMock = Mockery::mock(OrderFactory::class);
+        $orderFactoryMock->shouldReceive('create')->andReturn($orderMock);
+
+        $account    = ['id' => 'acc_xxxxxxxxxxxxxxxx', 'name' => 'Test'];
+        $identifier = [
+            'payment_profile_id'        => 'pp_abc123',
+            'point_of_interaction_type' => 'Ecommerce',
+        ];
+
+        $accountCallCount = 0;
+        $ppCallCount      = 0;
+        $poiCallCount     = 0;
+        $accountMock = Mockery::mock(Account::class);
+        $accountMock->shouldReceive('saveAccountIdFromWebhook')
+            ->once()
+            ->with($account)
+            ->andReturnUsing(function () use (&$accountCallCount) { $accountCallCount++; });
+        $accountMock->shouldReceive('savePaymentProfileIdFromWebhook')
+            ->once()
+            ->with($identifier)
+            ->andReturnUsing(function () use (&$ppCallCount) { $ppCallCount++; });
+        $accountMock->shouldReceive('savePoiTypeFromWebhook')
+            ->once()
+            ->with($identifier)
+            ->andReturnUsing(function () use (&$poiCallCount) { $poiCallCount++; });
+
+        $requestMock = Mockery::mock(RequestInterface::class);
+        $requestMock->shouldReceive('getHeader')
+            ->with(WebhookManagement::WEBHOOK_SIGNATURE_HEADER)
+            ->andReturn('alg=RS256; kid=test-kid; signature=test-sig');
+        $requestMock->shouldReceive('getContent')->andReturn('{"id":"hook_aaaaaaaaaaaaaaaa"}');
+
+        $validatorMock = Mockery::mock('alias:' . WebhookValidatorService::class);
+        $validatorMock->shouldReceive('validateSignature')->andReturn(true);
+
+        $expectedResponse = ['message' => 'ok', 'code' => 200];
+        $webhookReceiverServiceMock = Mockery::mock(WebhookReceiverService::class);
+        $webhookReceiverServiceMock->shouldReceive('handle')->once()->andReturn($expectedResponse);
+
+        $webhookManagement = new WebhookManagement(
+            $orderFactoryMock, $accountMock, $webhookReceiverServiceMock, $requestMock
+        );
+
+        // Act
+        $result = $webhookManagement->save(
+            'hook_aaaaaaaaaaaaaaaa',
+            'charge.paid',
+            ['order' => ['code' => '000000001']],
+            $account,
+            $identifier
+        );
+
+        // Assert
+        $this->assertSame(1, $accountCallCount, 'saveAccountIdFromWebhook must be called once for charge.paid');
+        $this->assertSame(1, $ppCallCount,      'savePaymentProfileIdFromWebhook must be called once when identifier is set');
+        $this->assertSame(1, $poiCallCount,     'savePoiTypeFromWebhook must be called once when identifier is set');
+        $this->assertSame($expectedResponse, $result);
+    }
+
     public function testSaveSkipsIdentifierMethodsAndReturnsHandlerResponseWhenIdentifierIsEmptyArray()
     {
         // Arrange
