@@ -362,6 +362,47 @@ class AccountTest extends BaseTest
         $this->assertSame(0, $saveInvocations, 'configWriter->save must not be called when point_of_interaction_type is not Ecommerce');
     }
 
+    public function testSavePaymentProfileIdFromWebhookDoesNotSaveWhenPaymentProfileIdIsAbsent()
+    {
+        // Arrange
+        $identifier = [
+            'point_of_interaction_type' => 'Ecommerce',
+        ];
+        $saveInvocations = 0;
+        $this->configWriterMock
+            ->shouldReceive('save')
+            ->andReturnUsing(function () use (&$saveInvocations) {
+                $saveInvocations++;
+            });
+
+        // Act
+        $this->account->savePaymentProfileIdFromWebhook($identifier);
+
+        // Assert
+        $this->assertSame(0, $saveInvocations, 'configWriter->save must not be called when payment_profile_id is absent');
+    }
+
+    public function testSavePaymentProfileIdFromWebhookDoesNotSaveWhenPaymentProfileIdIsEmpty()
+    {
+        // Arrange
+        $identifier = [
+            'payment_profile_id'        => '',
+            'point_of_interaction_type' => 'Ecommerce',
+        ];
+        $saveInvocations = 0;
+        $this->configWriterMock
+            ->shouldReceive('save')
+            ->andReturnUsing(function () use (&$saveInvocations) {
+                $saveInvocations++;
+            });
+
+        // Act
+        $this->account->savePaymentProfileIdFromWebhook($identifier);
+
+        // Assert
+        $this->assertSame(0, $saveInvocations, 'configWriter->save must not be called when payment_profile_id is empty');
+    }
+
     public function testSavePaymentProfileIdFromWebhookPersistsWithCorrectArgumentsForEcommerceIdentifier()
     {
         // Arrange
