@@ -38,6 +38,8 @@ class PagarmeConfigProvider implements ConfigProviderInterface
     const PATH_CUSTOMER_COMPLEMENT       = 'payment/pagarme_customer_address/complement_attribute';
     const PATH_CUSTOMER_DISTRICT         = 'payment/pagarme_customer_address/district_attribute';
     const PATH_ACCOUNT_ID = 'pagarme_pagarme/hub/account_id';
+    const PATH_PAYMENT_PROFILE_ID = 'pagarme_pagarme/hub/payment_profile_id';
+    const PATH_POI_TYPE = 'pagarme_pagarme/hub/poi_type';
 
     const PATH_PIX_ENABLED = 'payment/pagarme_pix/active';
 

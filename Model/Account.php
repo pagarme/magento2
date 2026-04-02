@@ -11,6 +11,7 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Store\Model\StoreManagerInterface;
 use Pagarme\Core\Kernel\Aggregates\Configuration;
+use Pagarme\Core\Kernel\ValueObjects\PoiType;
 use Pagarme\Core\Middle\Model\Account as AccountMiddle;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Pagarme\Pagarme\Controller\Adminhtml\Hub\Index as HubControllerIndex;
@@ -163,6 +164,48 @@ class Account
     }
 
     /**
+     * @param array|null $identifier
+     * @return void
+     * @throws NoSuchEntityException
+     */
+    public function savePaymentProfileIdFromWebhook(?array $identifier)
+    {
+        if ($this->getPaymentProfileId() || !$this->isEcommerceIdentifier($identifier)) {
+            return;
+        }
+
+        if (empty($identifier['payment_profile_id'])) {
+            return;
+        }
+
+        $this->configWriter->save(
+            PagarmeConfigProvider::PATH_PAYMENT_PROFILE_ID,
+            $identifier['payment_profile_id'],
+            $this->hubControllerIndex->getScopeName(),
+            $this->storeManager->getStore()->getWebsiteId()
+        );
+    }
+
+    /**
+     * @param array|null $identifier
+     * @return void
+     * @throws NoSuchEntityException
+     */
+    public function savePoiTypeFromWebhook(?array $identifier)
+    {
+        if (!empty($this->getPoiType()) || !$this->isEcommerceIdentifier($identifier)) {
+            return;
+        }
+
+        $this->configWriter->save(
+            PagarmeConfigProvider::PATH_POI_TYPE,
+            $identifier['point_of_interaction_type'],
+            $this->hubControllerIndex->getScopeName(),
+            $this->storeManager->getStore()->getWebsiteId()
+        );
+    }
+
+    /**
      * @return array
      * @throws LocalizedException
      * @throws NoSuchEntityException
@@ -308,6 +351,17 @@ class Account
     public function isPSP(string $paymentName)
     {
         return !empty($this->getAccountId()) && $this->getPaymentType($paymentName, false);
+    }
+
+    /**
+     * @param array|null $identifier
+     * @return bool
+     */
+    private function isEcommerceIdentifier(?array $identifier): bool
+    {
+        return is_array($identifier)
+            && !empty($identifier['point_of_interaction_type'])
+            && strtolower($identifier['point_of_interaction_type']) === strtolower(PoiType::ECOMMERCE);
     }
 
     /**

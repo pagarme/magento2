@@ -356,6 +356,7 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
             'merchantId' => 'merchant_id',
             'accountId' => 'account_id',
             'paymentProfileId' => 'payment_profile_id',
+            'poiType' => 'poi_type'
         ];
 
         $section = 'pagarme_pagarme/hub/';
@@ -371,8 +372,17 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
             ScopeInterface::SCOPE_WEBSITES,
             self::getCurrentStoreId()
         );
-        $decoded = json_decode($poiTypeRaw, true);
-        $dataObj->poiType = is_array($decoded) ? $decoded : null;
+        $dataObj->poiType = self::decodePoiType($poiTypeRaw);
+    }
+
+    /**
+     * @param string|null $raw
+     * @return array|null
+     */
+    static private function decodePoiType($raw)
+    {
+        $decoded = json_decode($raw, true);
+        return is_array($decoded) ? $decoded : null;
     }
 
     static private function fillWithPagarmeKeys(&$dataObj, $storeConfig)
