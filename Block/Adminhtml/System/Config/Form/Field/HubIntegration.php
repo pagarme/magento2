@@ -59,14 +59,14 @@ class HubIntegration extends Field
 
         $html .= sprintf(
             '<a href="%s" id="pagarme-integrate-button" class="pagarme-integration-button%s">%s</a>',
-            $this->getBaseIntegrateUrl(),
+            $this->_escaper->escapeUrl($this->getBaseIntegrateUrl()),
             $installId ? $hidden : '',
             __("Integrate With Pagar.me")
         );
 
         $html .= sprintf(
             '<a href="%s" id="pagarme-view-integration-button" class="pagarme-integration-button%s">%s</a>',
-            $this->getHubUrl($installId),
+            $this->_escaper->escapeUrl($this->getHubUrl($installId)),
             $installId ? '' : $hidden,
             __("View Integration")
         );
@@ -74,7 +74,7 @@ class HubIntegration extends Field
         if ($this->account->hasIdentifiers()) {
             $html .= sprintf(
                 '<a href="%s" target="_blank" id="pagarme-dash-button" class="pagarme-integration-button%s">%s</a>',
-                $this->account->getDashUrl(),
+                $this->_escaper->escapeUrl($this->account->getDashUrl()),
                 $installId ? '' : $hidden,
                 __('Access Dashboard')
             );
