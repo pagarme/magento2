@@ -372,10 +372,17 @@ final class Magento2CoreSetup extends AbstractModuleCoreSetup
             ScopeInterface::SCOPE_WEBSITES,
             self::getCurrentStoreId()
         );
-        if (!empty($poiTypeRaw)) {
-            $decoded = json_decode($poiTypeRaw, true);
-            $dataObj->poiType = is_array($decoded) ? $decoded : [$poiTypeRaw];
-        }
+        $dataObj->poiType = self::decodePoiType($poiTypeRaw);
+    }
+
+    /**
+     * @param string|null $raw
+     * @return array|null
+     */
+    static private function decodePoiType($raw)
+    {
+        $decoded = json_decode($raw, true);
+        return is_array($decoded) ? $decoded : null;
     }
 
     static private function fillWithPagarmeKeys(&$dataObj, $storeConfig)
