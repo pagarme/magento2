@@ -208,6 +208,20 @@ class Index extends Action
         );
 
         $this->configWriter->save(
+            "pagarme_pagarme/hub/payment_profile_id",
+            $currentConfiguration->getPaymentProfileId(),
+            $scope,
+            $websiteId
+        );
+
+        $this->configWriter->save(
+            "pagarme_pagarme/hub/poi_type",
+            $this->encodePoiType($currentConfiguration->getPoiType()),
+            $scope,
+            $websiteId
+        );
+
+        $this->configWriter->save(
             "pagarme_pagarme/global/test_mode",
             0,
             $scope,
@@ -229,5 +243,18 @@ class Index extends Action
         );
 
         $this->cacheManager->clean(['config']);
+    }
+
+    /**
+     * @param array|null $poiType
+     * @return string|null
+     */
+    private function encodePoiType($poiType)
+    {
+        if ($poiType === null) {
+            return null;
+        }
+
+        return json_encode($poiType);
     }
 }

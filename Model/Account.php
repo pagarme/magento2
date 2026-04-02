@@ -231,21 +231,55 @@ class Account
     }
 
     /**
-     * @return bool
+     * @return string|null
      */
-    public function hasMerchantAndAccountIds()
+    public function getPaymentProfileId()
     {
-        return $this->getAccountId() && $this->getMerchantId();
+        $this->initializeConfig();
+        return $this->config->getPaymentProfileId() ?? null;
     }
 
     /**
-     * @return mixed
+     * @return array|null
+     */
+    public function getPoiType()
+    {
+        $this->initializeConfig();
+        return $this->config->getPoiType() ?? null;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isOneStoneEnabled()
+    {
+        return !empty($this->getPaymentProfileId());
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasIdentifiers()
+    {
+        return $this->isOneStoneEnabled() || (!empty($this->getMerchantId()) && !empty($this->getAccountId()));
+    }
+
+    /**
+     * @return string|null
      */
     public function getDashUrl()
     {
-        if (!$this->hasMerchantAndAccountIds()) {
+        if (!$this->hasIdentifiers()) {
             return null;
         }
+
+        if ($this->isOneStoneEnabled()) {
+            return sprintf(
+                'https://dash.stone.com.br/%s',
+                $this->getPaymentProfileId()
+            );
+        }
+
         return sprintf(
             'https://dash.pagar.me/%s/%s/',
             $this->getMerchantId(),
