@@ -60,17 +60,21 @@ WORKDIR /var/www/html
 # ────────────────────────────────────────────
 FROM base AS build
 
-COPY composer.json composer.lock ./
-
+# Install Magento — this layer is cached until the version changes
 RUN --mount=type=secret,id=composer_auth,dst=/root/.composer/auth.json \
-    composer install \
-    --no-dev \
-    --prefer-dist \
-    --optimize-autoloader \
-    --no-interaction \
-    --no-progress
+    composer create-project \
+        --repository-url=https://repo.magento.com/ \
+        magento/project-community-edition:2.4.6 . \
+        --no-interaction \
+        --no-progress
 
-COPY . .
+# Copy module source and require it — only this layer reruns on code changes
+COPY . /tmp/module
+RUN composer config repositories.local \
+        '{"type":"path","url":"/tmp/module","options":{"symlink":false}}' \
+    && composer require pagarme/pagarme-magento2-module:* \
+        --no-interaction \
+        --no-progress
 
 # ────────────────────────────────────────────
 FROM base AS production
