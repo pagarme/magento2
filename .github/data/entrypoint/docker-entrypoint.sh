@@ -9,17 +9,19 @@ WAIT_RETRIES=${WAIT_RETRIES:-10}
 wait_for_db() {
     echo "[entrypoint] Waiting for MariaDB at ${MAGENTO_DATABASE_HOST}:${MAGENTO_DATABASE_PORT_NUMBER:-3306}..."
     local retries=0
-    until php -r "
-        \$conn = @new mysqli(
-            '${MAGENTO_DATABASE_HOST}',
-            '${MAGENTO_DATABASE_USER}',
-            '${MAGENTO_DATABASE_PASSWORD}',
-            '${MAGENTO_DATABASE_NAME}',
-            ${MAGENTO_DATABASE_PORT_NUMBER:-3306}
-        );
-        if (\$conn->connect_error) exit(1);
-        exit(0);
-    " 2>/dev/null; do
+    until DB_HOST="${MAGENTO_DATABASE_HOST}" \
+          DB_USER="${MAGENTO_DATABASE_USER}" \
+          DB_PASS="${MAGENTO_DATABASE_PASSWORD}" \
+          DB_NAME="${MAGENTO_DATABASE_NAME}" \
+          DB_PORT="${MAGENTO_DATABASE_PORT_NUMBER:-3306}" \
+          php -r "
+              \$conn = @new mysqli(
+                  getenv('DB_HOST'), getenv('DB_USER'), getenv('DB_PASS'),
+                  getenv('DB_NAME'), (int) getenv('DB_PORT')
+              );
+              if (\$conn->connect_error) exit(1);
+              exit(0);
+          " 2>/dev/null; do
         retries=$(( retries + 1 ))
         if [ "$retries" -ge "$WAIT_RETRIES" ]; then
             echo "[entrypoint] ERROR: MariaDB not ready after ${WAIT_RETRIES} attempts. Aborting." >&2
@@ -44,6 +46,26 @@ wait_for_elasticsearch() {
         sleep 3
     done
     echo "[entrypoint] Elasticsearch is ready."
+}
+
+# Checks whether Magento is already installed by querying the DB directly.
+# This is the authoritative check — the flag file is ephemeral and may be
+# lost on container restart if /var/www/html/var is not a persistent volume.
+is_magento_installed() {
+    DB_HOST="${MAGENTO_DATABASE_HOST}" \
+    DB_USER="${MAGENTO_DATABASE_USER}" \
+    DB_PASS="${MAGENTO_DATABASE_PASSWORD}" \
+    DB_NAME="${MAGENTO_DATABASE_NAME}" \
+    DB_PORT="${MAGENTO_DATABASE_PORT_NUMBER:-3306}" \
+    php -r "
+        \$conn = @new mysqli(
+            getenv('DB_HOST'), getenv('DB_USER'), getenv('DB_PASS'),
+            getenv('DB_NAME'), (int) getenv('DB_PORT')
+        );
+        if (\$conn->connect_error) exit(1);
+        \$r = \$conn->query('SHOW TABLES LIKE \"core_config_data\"');
+        exit(\$r && \$r->num_rows > 0 ? 0 : 1);
+    " 2>/dev/null
 }
 
 run_setup_install() {
@@ -74,7 +96,7 @@ run_setup_install() {
         --timezone="${MAGENTO_TIMEZONE}" \
         --search-engine=elasticsearch7 \
         --elasticsearch-host="${ELASTICSEARCH_HOST}" \
-        --elasticsearch-port="${ELASTICSEARCH_PORT_NUMBER}" \
+        --elasticsearch-port="${ELASTICSEARCH_PORT_NUMBER:-9200}" \
         --use-rewrites=1 \
         --backend-frontname="${MAGENTO_ADMIN_URL}"
 
@@ -96,15 +118,17 @@ cd "${MAGENTO_ROOT}"
 wait_for_db
 wait_for_elasticsearch
 
-if [ ! -f "${INSTALL_FLAG}" ]; then
-    run_setup_install
-else
+if is_magento_installed; then
     run_upgrade
+else
+    run_setup_install
 fi
 
 # Set deploy mode
 if [ -n "${MAGENTO_MODE}" ]; then
-    php bin/magento deploy:mode:set "${MAGENTO_MODE}" --skip-compilation 2>/dev/null || true
+    if ! php bin/magento deploy:mode:set "${MAGENTO_MODE}" --skip-compilation; then
+        echo "[entrypoint] WARN: deploy:mode:set failed, continuing anyway." >&2
+    fi
 fi
 
 echo "[entrypoint] Starting services..."
