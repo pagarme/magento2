@@ -72,11 +72,6 @@ RUN --mount=type=secret,id=composer_auth,dst=/root/.composer/auth.json \
 
 COPY . .
 
-# Generate config.php and compile
-RUN php bin/magento module:enable --all \
-    && php bin/magento setup:di:compile \
-    && php bin/magento setup:static-content:deploy -f en_US
-
 # ────────────────────────────────────────────
 FROM base AS production
 
