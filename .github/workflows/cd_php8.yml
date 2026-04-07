@@ -1,0 +1,27 @@
+name: CD PHP8
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Branch, tag ou commit para deployar'
+        required: true
+        default: 'master'
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ inputs.ref }}
+  cancel-in-progress: true
+
+jobs:
+  call-workflow-cd:
+    uses: ./.github/workflows/cd_reusable.yml
+    with:
+      matrix_tags: "['php8']"
+      ref: ${{ inputs.ref }}
+    secrets:
+      inherit

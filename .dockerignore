@@ -1,0 +1,15 @@
+.git
+.github
+*.md
+docker-compose*.yml
+.env
+.env.*
+auth.json
+var/cache
+var/log
+var/session
+var/tmp
+pub/static/*
+pub/media/*
+generated/*
+node_modules
