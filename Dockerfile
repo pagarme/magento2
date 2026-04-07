@@ -87,4 +87,7 @@ RUN find var generated vendor pub/static pub/media app/etc -type f -exec chmod g
 
 EXPOSE 80
 
+HEALTHCHECK --interval=30s --timeout=10s --start-period=120s --retries=3 \
+    CMD curl -sf http://localhost/health_check.php || exit 1
+
 ENTRYPOINT ["docker-entrypoint.sh"]
