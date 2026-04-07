@@ -4,8 +4,11 @@ set -e
 MAGENTO_ROOT=/var/www/html
 INSTALL_FLAG="${MAGENTO_ROOT}/var/.installed"
 
+WAIT_RETRIES=${WAIT_RETRIES:-10}
+
 wait_for_db() {
     echo "[entrypoint] Waiting for MariaDB at ${MAGENTO_DATABASE_HOST}:${MAGENTO_DATABASE_PORT_NUMBER:-3306}..."
+    local retries=0
     until php -r "
         \$conn = @new mysqli(
             '${MAGENTO_DATABASE_HOST}',
@@ -17,7 +20,12 @@ wait_for_db() {
         if (\$conn->connect_error) exit(1);
         exit(0);
     " 2>/dev/null; do
-        echo "[entrypoint] DB not ready yet, retrying in 3s..."
+        retries=$(( retries + 1 ))
+        if [ "$retries" -ge "$WAIT_RETRIES" ]; then
+            echo "[entrypoint] ERROR: MariaDB not ready after ${WAIT_RETRIES} attempts. Aborting." >&2
+            exit 1
+        fi
+        echo "[entrypoint] DB not ready yet, retrying in 3s... (${retries}/${WAIT_RETRIES})"
         sleep 3
     done
     echo "[entrypoint] DB is ready."
@@ -25,8 +33,14 @@ wait_for_db() {
 
 wait_for_elasticsearch() {
     echo "[entrypoint] Waiting for Elasticsearch at ${ELASTICSEARCH_HOST}:${ELASTICSEARCH_PORT_NUMBER:-9200}..."
+    local retries=0
     until curl -sf "http://${ELASTICSEARCH_HOST}:${ELASTICSEARCH_PORT_NUMBER:-9200}/_cluster/health" > /dev/null 2>&1; do
-        echo "[entrypoint] Elasticsearch not ready yet, retrying in 3s..."
+        retries=$(( retries + 1 ))
+        if [ "$retries" -ge "$WAIT_RETRIES" ]; then
+            echo "[entrypoint] ERROR: Elasticsearch not ready after ${WAIT_RETRIES} attempts. Aborting." >&2
+            exit 1
+        fi
+        echo "[entrypoint] Elasticsearch not ready yet, retrying in 3s... (${retries}/${WAIT_RETRIES})"
         sleep 3
     done
     echo "[entrypoint] Elasticsearch is ready."
