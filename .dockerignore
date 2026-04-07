@@ -1,5 +1,8 @@
 .git
-.github
+.github/workflows
+.github/CODEOWNERS
+.github/ISSUE_TEMPLATE
+.github/PULL_REQUEST_TEMPLATE
 *.md
 docker-compose*.yml
 .env

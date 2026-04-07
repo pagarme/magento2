@@ -46,12 +46,12 @@ RUN docker-php-ext-configure gd \
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-COPY docker/php/php.ini           /usr/local/etc/php/conf.d/magento.ini
-COPY docker/php/opcache.ini       /usr/local/etc/php/conf.d/opcache.ini
-COPY docker/nginx/nginx.conf      /etc/nginx/nginx.conf
-COPY docker/nginx/default.conf    /etc/nginx/conf.d/default.conf
-COPY docker/supervisor/supervisord.conf /etc/supervisord.conf
-COPY docker/entrypoint/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+COPY .github/data/php/php.ini           /usr/local/etc/php/conf.d/magento.ini
+COPY .github/data/php/opcache.ini       /usr/local/etc/php/conf.d/opcache.ini
+COPY .github/data/nginx/nginx.conf      /etc/nginx/nginx.conf
+COPY .github/data/nginx/default.conf    /etc/nginx/conf.d/default.conf
+COPY .github/data/supervisor/supervisord.conf /etc/supervisord.conf
+COPY .github/data/entrypoint/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 WORKDIR /var/www/html
