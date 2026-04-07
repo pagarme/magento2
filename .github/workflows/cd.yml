@@ -1,0 +1,64 @@
+name: CD – Build & Deploy magento2-pagarme
+
+on:
+  push:
+    branches: [master, stg, develop]
+  workflow_dispatch:
+
+env:
+  ACR_LOGIN_SERVER: ${{ secrets.ACR_LOGIN_SERVER }}
+  IMAGE_NAME: magento2-pagarme
+  IMAGE_TAG: php8
+
+jobs:
+
+  build-and-push:
+    name: Build & push to ACR
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      full_tag: ${{ steps.tag.outputs.full_tag }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set full image tag
+        id: tag
+        run: |
+          SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
+          echo "full_tag=${ACR_LOGIN_SERVER}/${IMAGE_NAME}:${IMAGE_TAG}-${SHORT_SHA}" >> "$GITHUB_OUTPUT"
+
+      - name: Create auth.json from secrets
+        run: |
+          cat > auth.json <<EOF
+          {
+            "http-basic": {
+              "repo.magento.com": {
+                "username": "${{ secrets.MAGENTO_REPO_PUBLIC_KEY }}",
+                "password": "${{ secrets.MAGENTO_REPO_PRIVATE_KEY }}"
+              }
+            }
+          }
+          EOF
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ${{ env.ACR_LOGIN_SERVER }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/build-push-action@v5
+        with:
+          context: .
+          target: production
+          push: true
+          tags: |
+            ${{ steps.tag.outputs.full_tag }}
+            ${{ env.ACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          cache-from: type=registry,ref=${{ env.ACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:buildcache
+          cache-to: type=registry,ref=${{ env.ACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:buildcache,mode=max
+          secret-files: |
+            composer_auth=./auth.json

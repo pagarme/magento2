@@ -6,6 +6,10 @@ on:
       matrix_tags:
         required: true
         type: string
+      ref:
+        required: false
+        type: string
+        default: ''
 
 permissions:
   contents: read
@@ -20,7 +24,9 @@ jobs:
     steps:
     -
       name: Checkout Code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ inputs.ref != '' && inputs.ref || github.ref }}
     -
       name: Copy CI files to root
       run: |
