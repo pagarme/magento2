@@ -50,19 +50,19 @@ run_setup_install() {
         --db-name="${MAGENTO_DATABASE_NAME}" \
         --db-user="${MAGENTO_DATABASE_USER}" \
         --db-password="${MAGENTO_DATABASE_PASSWORD}" \
-        --admin-firstname="${MAGENTO_ADMIN_FIRSTNAME:-Admin}" \
-        --admin-lastname="${MAGENTO_ADMIN_LASTNAME:-Admin}" \
-        --admin-email="${MAGENTO_ADMIN_EMAIL:-admin@example.com}" \
-        --admin-user="${MAGENTO_ADMIN_USER:-admin}" \
-        --admin-password="${MAGENTO_ADMIN_PASSWORD:-Admin@12345}" \
-        --language="${MAGENTO_LANGUAGE:-en_US}" \
-        --currency="${MAGENTO_CURRENCY:-USD}" \
-        --timezone="${MAGENTO_TIMEZONE:-America/Sao_Paulo}" \
+        --admin-firstname="${MAGENTO_ADMIN_FIRSTNAME}" \
+        --admin-lastname="${MAGENTO_ADMIN_LASTNAME}" \
+        --admin-email="${MAGENTO_ADMIN_EMAIL}" \
+        --admin-user="${MAGENTO_ADMIN_USER}" \
+        --admin-password="${MAGENTO_ADMIN_PASSWORD}" \
+        --language="${MAGENTO_LANGUAGE}" \
+        --currency="${MAGENTO_CURRENCY}" \
+        --timezone="${MAGENTO_TIMEZONE}" \
         --search-engine=elasticsearch7 \
-        --elasticsearch-host="${ELASTICSEARCH_HOST:-elasticsearch}" \
-        --elasticsearch-port="${ELASTICSEARCH_PORT_NUMBER:-9200}" \
+        --elasticsearch-host="${ELASTICSEARCH_HOST}" \
+        --elasticsearch-port="${ELASTICSEARCH_PORT_NUMBER}" \
         --use-rewrites=1 \
-        --backend-frontname="${MAGENTO_ADMIN_URL:-admin}"
+        --backend-frontname="${MAGENTO_ADMIN_URL}"
 
     touch "${INSTALL_FLAG}"
     echo "[entrypoint] setup:install complete."
