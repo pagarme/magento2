@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1
 FROM php:8.2-fpm-alpine AS base
 
 RUN apk add --no-cache \
@@ -59,12 +60,10 @@ WORKDIR /var/www/html
 # ────────────────────────────────────────────
 FROM base AS build
 
-# Copy composer auth for repo.magento.com
-COPY auth.json /root/.composer/auth.json
-
 COPY composer.json composer.lock ./
 
-RUN composer install \
+RUN --mount=type=secret,id=composer_auth,dst=/root/.composer/auth.json \
+    composer install \
     --no-dev \
     --prefer-dist \
     --optimize-autoloader \
