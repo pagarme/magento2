@@ -26,7 +26,6 @@ jobs:
       - name: Set full image tag
         id: tag
         run: |
-          SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
           echo "full_tag=${ACR_LOGIN_SERVER}/${IMAGE_NAME}:${IMAGE_TAG}" >> "$GITHUB_OUTPUT"
 
       - name: Create auth.json from secrets
