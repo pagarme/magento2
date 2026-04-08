@@ -9,6 +9,7 @@ env:
   ACR_LOGIN_SERVER: ${{ secrets.ACR_LOGIN_SERVER }}
   IMAGE_NAME: magento2-pagarme
   IMAGE_TAG: php8
+  SORT_SHA: $(echo "${{ github.sha }}" | cut -c1-7)
 
 jobs:
 
@@ -26,7 +27,8 @@ jobs:
       - name: Set full image tag
         id: tag
         run: |
-          echo "full_tag=${ACR_LOGIN_SERVER}/${IMAGE_NAME}:${IMAGE_TAG}" >> "$GITHUB_OUTPUT"
+          SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
+          echo "full_tag=${ACR_LOGIN_SERVER}/${IMAGE_NAME}:${IMAGE_TAG}-${SHORT_SHA}" >> "$GITHUB_OUTPUT"
 
       - name: Create auth.json from secrets
         run: |
@@ -54,9 +56,7 @@ jobs:
           context: .
           target: production
           push: true
-          tags: |
-            ${{ steps.tag.outputs.full_tag }}
-            ${{ secrets.DOCKER_ACCOUNT }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          tags: ${{ secrets.DOCKER_ACCOUNT }}/magento2-pagarme:${{ env.IMAGE_TAG }}-${{ env.SORT_SHA }}
           cache-from: type=registry,ref=${{ secrets.DOCKER_ACCOUNT }}/${{ env.IMAGE_NAME }}:buildcache
           cache-to: type=registry,ref=${{ secrets.DOCKER_ACCOUNT }}/${{ env.IMAGE_NAME }}:buildcache,mode=max
           secret-files: |
