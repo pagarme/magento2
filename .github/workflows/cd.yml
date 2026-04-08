@@ -9,7 +9,6 @@ env:
   ACR_LOGIN_SERVER: ${{ secrets.ACR_LOGIN_SERVER }}
   IMAGE_NAME: magento2-pagarme
   IMAGE_TAG: php8
-  SORT_SHA: $(echo "${{ github.sha }}" | cut -c1-7)
 
 jobs:
 
