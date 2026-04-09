@@ -64,7 +64,7 @@ FROM base AS build
 RUN --mount=type=secret,id=composer_auth,dst=/root/.composer/auth.json \
     composer create-project \
         --repository-url=https://repo.magento.com/ \
-        magento/project-community-edition:2.4.6 . \
+        magento/project-community-edition:2.4.* . \
         --no-interaction \
         --no-progress
 
