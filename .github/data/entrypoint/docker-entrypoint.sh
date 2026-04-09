@@ -91,12 +91,12 @@ run_setup_install() {
         --admin-email="${MAGENTO_ADMIN_EMAIL}" \
         --admin-user="${MAGENTO_ADMIN_USER}" \
         --admin-password="${MAGENTO_ADMIN_PASSWORD}" \
-        --language="${MAGENTO_LANGUAGE}" \
-        --currency="${MAGENTO_CURRENCY}" \
-        --timezone="${MAGENTO_TIMEZONE}" \
-        --search-engine=elasticsearch7 \
-        --elasticsearch-host="${ELASTICSEARCH_HOST}" \
-        --elasticsearch-port="${ELASTICSEARCH_PORT_NUMBER:-9200}" \
+        --language="${MAGENTO_LANGUAGE:-en_US}" \
+        --currency="${MAGENTO_CURRENCY:-BRL}" \
+        --timezone="${MAGENTO_TIMEZONE:-America/Sao_Paulo}" \
+        --search-engine=opensearch \
+        --opensearch-host="${ELASTICSEARCH_HOST}" \
+        --opensearch-port="${ELASTICSEARCH_PORT_NUMBER:-9200}" \
         --use-rewrites=1 \
         --backend-frontname="${MAGENTO_ADMIN_URL}"
 
