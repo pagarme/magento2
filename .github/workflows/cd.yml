@@ -2,7 +2,7 @@ name: CD – Build & Deploy magento2-pagarme
 
 on:
   push:
-    branches: [master, stg, develop]
+    branches: [master, stg, develop, feat-new-cd]
   workflow_dispatch:
 
 env:
@@ -30,8 +30,8 @@ jobs:
           {
             "http-basic": {
               "repo.magento.com": {
-                "username": "${{ secrets.MAGENTO_REPO_PUBLIC_KEY }}",
-                "password": "${{ secrets.MAGENTO_REPO_PRIVATE_KEY }}"
+                "username": "${{ secrets.MAGENTO_KEY }}",
+                "password": "${{ secrets.MAGENTO_SECRET }}"
               }
             }
           }
