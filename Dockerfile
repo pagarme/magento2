@@ -61,7 +61,10 @@ WORKDIR /var/www/html
 FROM base AS build
 
 # Install Magento — this layer is cached until the version changes
-RUN --mount=type=secret,id=composer_auth,src=./auth.json,dst=/root/.composer/auth.json \
+RUN composer auth \
+        --repository=https://repo.magento.com/ \
+        --username="${{ secrets.MAGENTO_KEY }}" \
+        --password="${{ secrets.MAGENTO_SECRET }}" \
     composer create-project \
         --repository-url=https://repo.magento.com/ \
         magento/project-community-edition:2.4.* . \
