@@ -2,7 +2,7 @@
 set -e
 
 MAGENTO_ROOT=/var/www/html
-
+INSTALL_FLAG="${MAGENTO_ROOT}/var/.installed"
 WAIT_RETRIES=${WAIT_RETRIES:-30}
 
 wait_for_db() {
@@ -48,11 +48,20 @@ wait_for_elasticsearch() {
 }
 
 is_magento_installed() {
-    php bin/magento setup:db:status > /dev/null 2>&1
-    local code=$?
-    # 0 = up to date, 1 = needs upgrade → installed
-    # 2 = tables missing, or any other error → not installed
-    [ "$code" -eq 0 ] || [ "$code" -eq 1 ]
+    DB_HOST="${MAGENTO_DATABASE_HOST}" \
+    DB_USER="${MAGENTO_DATABASE_USER}" \
+    DB_PASS="${MAGENTO_DATABASE_PASSWORD}" \
+    DB_NAME="${MAGENTO_DATABASE_NAME}" \
+    DB_PORT="${MAGENTO_DATABASE_PORT_NUMBER:-3306}" \
+    php -r "
+        \$conn = @new mysqli(
+            getenv('DB_HOST'), getenv('DB_USER'), getenv('DB_PASS'),
+            getenv('DB_NAME'), (int) getenv('DB_PORT')
+        );
+        if (\$conn->connect_error) exit(1);
+        \$r = \$conn->query('SHOW TABLES LIKE \"core_config_data\"');
+        exit(\$r && \$r->num_rows > 0 ? 0 : 1);
+    " 2>/dev/null
 }
 
 run_setup_install() {
@@ -92,8 +101,8 @@ run_setup_install() {
 
 run_upgrade() {
     # echo "[entrypoint] Running setup:upgrade..."
-    # php bin/magento setup:upgrade --keep-generated
-    # php bin/magento cache:flush
+    php bin/magento setup:upgrade --keep-generated
+    php bin/magento cache:flush
     pwd
     echo "[entrypoint] Upgrade complete."
 }

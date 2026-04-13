@@ -69,10 +69,16 @@ RUN --mount=type=secret,id=composer_auth,dst=/root/.composer/auth.json \
         --no-progress
 
 # Copy module source and require it — only this layer reruns on code changes
-COPY . /tmp/module
+COPY . /var/www/html/extensions/pagarme-magento2-module
 RUN composer config repositories.local \
-        '{"type":"path","url":"/tmp/module","options":{"symlink":false}}' \
-    && composer require pagarme/pagarme-magento2-module:* \
+        '{"type":"path","url":"/var/www/html/extensions/pagarme-magento2-module","options":{"symlink":false}}' \
+    && composer config repositories.ecommerce-core \
+        '{"type":"vcs","url":"https://github.com/pagarme/ecommerce-module-core"}' \
+    && composer config minimum-stability dev \
+    && composer config prefer-stable true \
+    && composer require \
+        pagarme/pagarme-magento2-module:* \
+        pagarme/ecommerce-module-core:dev-develop \
         --no-interaction \
         --no-progress
 
