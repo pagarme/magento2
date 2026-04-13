@@ -91,9 +91,10 @@ run_setup_install() {
 }
 
 run_upgrade() {
-    echo "[entrypoint] Running setup:upgrade..."
-    php bin/magento setup:upgrade --keep-generated
-    php bin/magento cache:flush
+    # echo "[entrypoint] Running setup:upgrade..."
+    # php bin/magento setup:upgrade --keep-generated
+    # php bin/magento cache:flush
+    pwd
     echo "[entrypoint] Upgrade complete."
 }
 
