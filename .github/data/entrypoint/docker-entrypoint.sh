@@ -47,6 +47,51 @@ wait_for_elasticsearch() {
     echo "[entrypoint] Elasticsearch is ready."
 }
 
+generate_env_php() {
+    local env_file="${MAGENTO_ROOT}/app/etc/env.php"
+    echo "[entrypoint] Generating app/etc/env.php from environment variables..."
+    mkdir -p "${MAGENTO_ROOT}/app/etc"
+
+    BASE_URL="http://${MAGENTO_HOST}/"
+    if [ "${MAGENTO_ENABLE_HTTPS:-no}" = "yes" ]; then
+        BASE_URL="https://${MAGENTO_HOST}/"
+    fi
+
+    php -r "
+        \$config = [
+            'backend' => ['frontName' => getenv('MAGENTO_ADMIN_URL') ?: 'admin'],
+            'crypt' => ['key' => getenv('MAGENTO_CRYPT_KEY') ?: bin2hex(random_bytes(16))],
+            'db' => [
+                'table_prefix' => '',
+                'connection' => [
+                    'default' => [
+                        'host' => getenv('MAGENTO_DATABASE_HOST') . ':' . (getenv('MAGENTO_DATABASE_PORT_NUMBER') ?: '3306'),
+                        'dbname'   => getenv('MAGENTO_DATABASE_NAME'),
+                        'username' => getenv('MAGENTO_DATABASE_USER'),
+                        'password' => getenv('MAGENTO_DATABASE_PASSWORD'),
+                        'model'    => 'mysql4',
+                        'engine'   => 'innodb',
+                        'initStatements' => 'SET NAMES utf8;',
+                        'active'   => '1',
+                        'driver_options' => [1014 => false],
+                    ],
+                ],
+            ],
+            'resource' => ['default_setup' => ['connection' => 'default']],
+            'x-frame-options' => 'SAMEORIGIN',
+            'MAGE_MODE' => getenv('MAGENTO_MODE') ?: 'developer',
+            'session' => ['save' => 'files'],
+            'cache_types' => [],
+            'install' => ['date' => date('D, d M Y H:i:s O')],
+        ];
+        file_put_contents(
+            '${env_file}',
+            '<?php' . PHP_EOL . 'return ' . var_export(\$config, true) . ';' . PHP_EOL
+        );
+    "
+    echo "[entrypoint] env.php generated."
+}
+
 is_magento_installed() {
     DB_HOST="${MAGENTO_DATABASE_HOST}" \
     DB_USER="${MAGENTO_DATABASE_USER}" \
@@ -78,6 +123,7 @@ run_setup_install() {
     php bin/magento setup:install \
         --base-url="${BASE_URL}" \
         ${HTTPS_ARGS} \
+        --key="${MAGENTO_CRYPT_KEY}" \
         --db-host="${MAGENTO_DATABASE_HOST}:${MAGENTO_DATABASE_PORT_NUMBER:-3306}" \
         --db-name="${MAGENTO_DATABASE_NAME}" \
         --db-user="${MAGENTO_DATABASE_USER}" \
@@ -113,6 +159,7 @@ cd "${MAGENTO_ROOT}"
 
 wait_for_db
 wait_for_elasticsearch
+generate_env_php
 
 if is_magento_installed; then
     run_upgrade
