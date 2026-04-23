@@ -48,16 +48,13 @@ wait_for_elasticsearch() {
 }
 
 generate_env_php() {
+    local already_installed="${1:-false}"
     local env_file="${MAGENTO_ROOT}/app/etc/env.php"
     echo "[entrypoint] Generating app/etc/env.php from environment variables..."
     mkdir -p "${MAGENTO_ROOT}/app/etc"
 
-    BASE_URL="http://${MAGENTO_HOST}/"
-    if [ "${MAGENTO_ENABLE_HTTPS:-no}" = "yes" ]; then
-        BASE_URL="https://${MAGENTO_HOST}/"
-    fi
-
     php -r "
+        \$installed = '${already_installed}' === 'true';
         \$config = [
             'backend' => ['frontName' => getenv('MAGENTO_ADMIN_URL') ?: 'admin'],
             'crypt' => ['key' => getenv('MAGENTO_CRYPT_KEY') ?: bin2hex(random_bytes(16))],
@@ -83,6 +80,9 @@ generate_env_php() {
             'session' => ['save' => 'files'],
             'cache_types' => [],
         ];
+        if (\$installed) {
+            \$config['install'] = ['date' => date('D, d M Y H:i:s O')];
+        }
         file_put_contents(
             '${env_file}',
             '<?php' . PHP_EOL . 'return ' . var_export(\$config, true) . ';' . PHP_EOL
@@ -158,11 +158,12 @@ cd "${MAGENTO_ROOT}"
 
 wait_for_db
 wait_for_elasticsearch
-generate_env_php
 
 if is_magento_installed; then
+    generate_env_php "true"
     run_upgrade
 else
+    generate_env_php "false"
     run_setup_install
 fi
 
