@@ -82,7 +82,6 @@ generate_env_php() {
             'MAGE_MODE' => getenv('MAGENTO_MODE') ?: 'developer',
             'session' => ['save' => 'files'],
             'cache_types' => [],
-            'install' => ['date' => date('D, d M Y H:i:s O')],
         ];
         file_put_contents(
             '${env_file}',
