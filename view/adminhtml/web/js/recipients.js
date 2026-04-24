@@ -11,7 +11,7 @@ require([
     const
         cpfMask = '000.000.000-00',
         cnpjMax = 18, // Includes punctuation due to the mask
-        cnpjMask = '00.000.000/0000-00',
+        cnpjMask = 'AA.AAA.AAA/AAAA-00', // A = alphanumeric; only check digits remain numeric
         errorTitle = $.mage.__('Error!'),
         fieldDataAttr = {
             datepicker: '[data-datepicker]',
