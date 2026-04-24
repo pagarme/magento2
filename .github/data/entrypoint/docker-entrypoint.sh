@@ -71,12 +71,27 @@ configure_magento() {
             \$f = '${env_file}';
             \$c = include \$f;
             \$c['install'] = ['date' => date('D, d M Y H:i:s O')];
-            file_put_contents(\$f, '<?php' . PHP_EOL . 'return ' . var_export(\$c, true) . ';' . PHP_EOL);
+            \$result = file_put_contents(\$f, '<?php' . PHP_EOL . 'return ' . var_export(\$c, true) . ';' . PHP_EOL);
+            if (\$result === false) {
+                fwrite(STDERR, '[entrypoint] ERROR: failed to write install.date to env.php' . PHP_EOL);
+                exit(1);
+            }
         "
         echo "[entrypoint] install.date added to env.php."
     fi
 
     echo "[entrypoint] env.php ready ($(wc -c < "${env_file}") bytes)."
+
+    echo "[entrypoint] DEBUG: verifying env.php..."
+    php -r "
+        \$f = '${env_file}';
+        if (!file_exists(\$f)) { echo '[entrypoint] DEBUG: env.php NOT FOUND at ' . \$f . PHP_EOL; exit(1); }
+        \$c = include \$f;
+        if (!is_array(\$c)) { echo '[entrypoint] DEBUG: env.php did not return an array' . PHP_EOL; exit(1); }
+        echo '[entrypoint] DEBUG: install.date = ' . (\$c['install']['date'] ?? 'NOT SET') . PHP_EOL;
+        echo '[entrypoint] DEBUG: db.host = ' . (\$c['db']['connection']['default']['host'] ?? 'NOT SET') . PHP_EOL;
+        echo '[entrypoint] DEBUG: crypt.key present = ' . (isset(\$c['crypt']['key']) ? 'yes' : 'no') . PHP_EOL;
+    "
 }
 
 is_magento_installed() {
