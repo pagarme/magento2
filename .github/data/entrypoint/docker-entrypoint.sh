@@ -230,5 +230,9 @@ if [ -n "${MAGENTO_MODE}" ]; then
     fi
 fi
 
+echo "[entrypoint] Deploying static content..."
+php bin/magento setup:static-content:deploy -f \
+    || echo "[entrypoint] WARN: static-content:deploy failed, continuing anyway." >&2
+
 echo "[entrypoint] Starting services..."
 exec /usr/bin/supervisord -c /etc/supervisord.conf
