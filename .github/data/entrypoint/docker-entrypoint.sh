@@ -64,9 +64,6 @@ configure_magento() {
         --backend-frontname="${MAGENTO_ADMIN_URL:-admin}" \
         --session-save=files \
         --lock-provider=db \
-        --search-engine=opensearch \
-        --opensearch-host="${ELASTICSEARCH_HOST}" \
-        --opensearch-port="${ELASTICSEARCH_PORT_NUMBER:-9200}" \
         -n
 
     if [ "${already_installed}" = "true" ]; then
