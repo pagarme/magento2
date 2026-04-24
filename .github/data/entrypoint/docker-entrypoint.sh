@@ -52,6 +52,7 @@ generate_env_php() {
     local env_file="${MAGENTO_ROOT}/app/etc/env.php"
     echo "[entrypoint] Generating app/etc/env.php from environment variables..."
     mkdir -p "${MAGENTO_ROOT}/app/etc"
+    rm -f "${env_file}"
 
     php -r "
         \$installed = '${already_installed}' === 'true';
@@ -78,17 +79,19 @@ generate_env_php() {
             'x-frame-options' => 'SAMEORIGIN',
             'MAGE_MODE' => getenv('MAGENTO_MODE') ?: 'developer',
             'session' => ['save' => 'files'],
+            'lock' => ['provider' => 'db', 'config' => ['prefix' => null]],
             'cache_types' => [],
         ];
         if (\$installed) {
             \$config['install'] = ['date' => date('D, d M Y H:i:s O')];
         }
-        file_put_contents(
-            '${env_file}',
-            '<?php' . PHP_EOL . 'return ' . var_export(\$config, true) . ';' . PHP_EOL
-        );
+        \$result = file_put_contents('${env_file}', '<?php' . PHP_EOL . 'return ' . var_export(\$config, true) . ';' . PHP_EOL);
+        if (\$result === false) {
+            fwrite(STDERR, '[entrypoint] ERROR: Could not write env.php to ${env_file}' . PHP_EOL);
+            exit(1);
+        }
     "
-    echo "[entrypoint] env.php generated."
+    echo "[entrypoint] env.php generated at ${env_file} ($(wc -c < "${env_file}") bytes)"
 }
 
 is_magento_installed() {
