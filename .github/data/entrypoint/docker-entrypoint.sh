@@ -92,6 +92,15 @@ configure_magento() {
         echo '[entrypoint] DEBUG: db.host = ' . (\$c['db']['connection']['default']['host'] ?? 'NOT SET') . PHP_EOL;
         echo '[entrypoint] DEBUG: crypt.key present = ' . (isset(\$c['crypt']['key']) ? 'yes' : 'no') . PHP_EOL;
     "
+
+    local config_php="${MAGENTO_ROOT}/app/etc/config.php"
+    echo "[entrypoint] DEBUG: config.php exists = $([ -f "${config_php}" ] && echo yes || echo no)"
+    if [ -f "${config_php}" ]; then
+        php -r "
+            \$c = include '${config_php}';
+            echo '[entrypoint] DEBUG: config.php install key = ' . (isset(\$c['install']) ? json_encode(\$c['install']) : 'NOT PRESENT') . PHP_EOL;
+        "
+    fi
 }
 
 is_magento_installed() {
@@ -148,10 +157,10 @@ run_setup_install() {
 }
 
 run_upgrade() {
-    # echo "[entrypoint] Running setup:upgrade..."
-    php bin/magento setup:upgrade --keep-generated
+    echo "[entrypoint] Running setup:upgrade..."
+    echo "[entrypoint] DEBUG: CWD=$(pwd), env.php exists=$([ -f app/etc/env.php ] && echo yes || echo no)"
+    php bin/magento setup:upgrade --keep-generated -v
     php bin/magento cache:flush
-    pwd
     echo "[entrypoint] Upgrade complete."
 }
 
