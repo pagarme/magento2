@@ -180,12 +180,40 @@ run_upgrade() {
     echo "[entrypoint] Upgrade step done."
 }
 
+generate_config_php() {
+    local config_file="${MAGENTO_ROOT}/app/etc/config.php"
+    if [ -f "${config_file}" ]; then
+        echo "[entrypoint] config.php already exists, skipping generation."
+        return 0
+    fi
+    echo "[entrypoint] Generating app/etc/config.php from module.xml files..."
+    php -r "
+        \$files = array_merge(
+            glob('${MAGENTO_ROOT}/vendor/*/*/etc/module.xml') ?: [],
+            glob('${MAGENTO_ROOT}/app/code/*/*/etc/module.xml') ?: []
+        );
+        \$modules = [];
+        foreach (\$files as \$file) {
+            \$xml = @simplexml_load_file(\$file);
+            if (\$xml) foreach (\$xml->module as \$m) \$modules[(string)\$m['name']] = 1;
+        }
+        ksort(\$modules);
+        \$out = '<?php' . PHP_EOL . 'return [' . PHP_EOL . \"    'modules' => [\" . PHP_EOL;
+        foreach (\$modules as \$name => \$v) \$out .= \"        '\" . \$name . \"' => \" . \$v . \",\" . PHP_EOL;
+        \$out .= '    ]' . PHP_EOL . '];' . PHP_EOL;
+        file_put_contents('${config_file}', \$out);
+        echo '[entrypoint] config.php generated with ' . count(\$modules) . ' modules.' . PHP_EOL;
+    "
+}
+
 # ── Main ──────────────────────────────────────────────
 
 cd "${MAGENTO_ROOT}"
 
 wait_for_db
 wait_for_elasticsearch
+
+generate_config_php
 
 if is_magento_installed; then
     configure_magento "true"

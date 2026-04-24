@@ -76,27 +76,6 @@ RUN composer config repositories.local \
         --no-interaction \
         --no-progress
 
-# Gera app/etc/config.php com todos os módulos habilitados.
-# Sem esse arquivo o Magento não carrega módulos e setup:upgrade falha
-# quando o container é recriado a partir de uma nova imagem.
-RUN php -r "
-    \$files = array_merge(
-        glob('vendor/*/*/etc/module.xml') ?: [],
-        glob('app/code/*/*/etc/module.xml') ?: []
-    );
-    \$modules = [];
-    foreach (\$files as \$file) {
-        \$xml = @simplexml_load_file(\$file);
-        if (\$xml) foreach (\$xml->module as \$m) \$modules[(string)\$m['name']] = 1;
-    }
-    ksort(\$modules);
-    \$out = \"<?php\nreturn [\n    'modules' => [\n\";
-    foreach (\$modules as \$name => \$v) \$out .= \"        '\$name' => \$v,\n\";
-    \$out .= \"    ]\n];\n\";
-    file_put_contents('app/etc/config.php', \$out);
-    echo 'config.php gerado com ' . count(\$modules) . ' modulos' . PHP_EOL;
-"
-
 # ────────────────────────────────────────────
 FROM base AS production
 
