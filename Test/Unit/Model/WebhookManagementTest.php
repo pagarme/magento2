@@ -68,6 +68,57 @@ class WebhookManagementTest extends BaseTest
     }
 
 
+    public function testSaveWithRecipientWebhookAlphanumericCnpj()
+    {
+        $moduleCoreSetupMock = Mockery::mock('alias:Pagarme\Core\Kernel\Abstractions\AbstractModuleCoreSetup');
+        $moduleCoreSetupMock->shouldReceive('bootstrap')
+            ->andReturnSelf();
+
+        $orderMock = Mockery::mock(Order::class);
+        $orderMock->shouldReceive('loadByIncrementId')
+            ->andReturnSelf();
+        $orderMock->shouldReceive('getId')
+            ->andReturnFalse();
+
+        $orderFactoryMock = Mockery::mock(OrderFactory::class);
+        $orderFactoryMock->shouldReceive('create')
+            ->andReturn($orderMock);
+        $accountMock = Mockery::mock(Account::class);
+
+        $webhookReceiverServiceMock = Mockery::mock(WebhookReceiverService::class);
+        $webhookRecipientResponse = [
+            'message' => 'Recipient updated',
+            'code' => 200
+        ];
+        $webhookReceiverServiceMock->shouldReceive('handle')
+            ->once()
+            ->andReturn($webhookRecipientResponse);
+
+        $webhookManagement = new WebhookManagement($orderFactoryMock, $accountMock, $webhookReceiverServiceMock);
+
+        $id = "hook_aaaaaaaaaaaaaaaa";
+        $type = "recipient.updated";
+        $data = [
+            "id" => 'rp_xxxxxxxxxxxxxxxx',
+            "name" => "Test company",
+            "email" => "test@company.test",
+            "document" => "1A2B3C4D000195",
+            "description" => "Test description",
+            "type" => "company",
+            "payment_mode" => "bank_transfer",
+            "status" => "active",
+            "kyc_details" => ["status" => "approved"],
+        ];
+
+        $account = [
+            "id" => "acc_xxxxxxxxxxxxxxxx",
+            "name" => "Account Test"
+        ];
+        $result = $webhookManagement->save($id, $type, $data, $account);
+
+        $this->assertSame($webhookRecipientResponse, $result);
+    }
+
     public function testSaveWithNonPlatformWebhook()
     {
         $moduleCoreSetupMock = Mockery::mock('alias:Pagarme\Core\Kernel\Abstractions\AbstractModuleCoreSetup');
