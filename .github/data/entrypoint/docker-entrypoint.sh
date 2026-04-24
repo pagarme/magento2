@@ -158,10 +158,26 @@ run_setup_install() {
 
 run_upgrade() {
     echo "[entrypoint] Running setup:upgrade..."
-    echo "[entrypoint] DEBUG: CWD=$(pwd), env.php exists=$([ -f app/etc/env.php ] && echo yes || echo no)"
-    php bin/magento setup:upgrade --keep-generated -v
-    php bin/magento cache:flush
-    echo "[entrypoint] Upgrade complete."
+    echo "[entrypoint] DEBUG: CWD=$(pwd)"
+    echo "[entrypoint] DEBUG: bin/magento realpath=$(realpath bin/magento 2>/dev/null || echo 'N/A')"
+    echo "[entrypoint] DEBUG: MAGENTO_ROOT realpath=$(realpath "${MAGENTO_ROOT}" 2>/dev/null || echo 'N/A')"
+    php -r "
+        \$bp = dirname(dirname(realpath('/var/www/html/bin/magento')));
+        echo '[entrypoint] DEBUG: Magento BP via realpath = ' . \$bp . PHP_EOL;
+        \$envFile = \$bp . '/app/etc/env.php';
+        echo '[entrypoint] DEBUG: env.php path Magento reads = ' . \$envFile . PHP_EOL;
+        \$exists = file_exists(\$envFile);
+        echo '[entrypoint] DEBUG: env.php exists at that path = ' . (\$exists ? 'YES' : 'NO') . PHP_EOL;
+        if (\$exists) {
+            \$d = include \$envFile;
+            echo '[entrypoint] DEBUG: install.date via Magento BP = ' . (\$d['install']['date'] ?? 'NOT SET') . PHP_EOL;
+        }
+    "
+    php bin/magento setup:upgrade --keep-generated -v \
+        || echo "[entrypoint] WARN: setup:upgrade failed, continuing anyway." >&2
+    php bin/magento cache:flush \
+        || echo "[entrypoint] WARN: cache:flush failed, continuing anyway." >&2
+    echo "[entrypoint] Upgrade step done."
 }
 
 # ── Main ──────────────────────────────────────────────
