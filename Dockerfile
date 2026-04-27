@@ -71,9 +71,17 @@ RUN --mount=type=secret,id=composer_auth,dst=/root/.composer/auth.json \
 
 
 # Install marketplace module — this layer is cached until the version changes
-RUN composer config -g repositories.marketplace_repo composer ${MARKETPLACE_REPO}
-RUN composer config -g http-basic.${MARKETPLACE_REPO_URL} ${MARKETPLACE_KEY} ${MARKETPLACE_SECRET}
-RUN composer require ${MARKETPLACE_NAME}:${MARKETPLACE_VERSION} \
+RUN --mount=type=secret,id=marketplace_repo \
+    --mount=type=secret,id=marketplace_repo_url \
+    --mount=type=secret,id=marketplace_key \
+    --mount=type=secret,id=marketplace_secret \
+    --mount=type=secret,id=marketplace_name \
+    --mount=type=secret,id=marketplace_version \
+    composer config -g repositories.marketplace_repo composer "$(cat /run/secrets/marketplace_repo)" \
+    && composer config -g http-basic."$(cat /run/secrets/marketplace_repo_url)" \
+        "$(cat /run/secrets/marketplace_key)" \
+        "$(cat /run/secrets/marketplace_secret)" \
+    && composer require "$(cat /run/secrets/marketplace_name)":"$(cat /run/secrets/marketplace_version)" \
         --no-interaction \
         --no-progress
 
