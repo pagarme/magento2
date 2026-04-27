@@ -68,6 +68,16 @@ RUN --mount=type=secret,id=composer_auth,dst=/root/.composer/auth.json \
         --no-interaction \
         --no-progress
 
+
+
+# Install marketplace module — this layer is cached until the version changes
+RUN composer config -g repositories.marketplace_repo composer ${MARKETPLACE_REPO}
+RUN composer config -g http-basic.${MARKETPLACE_REPO_URL} ${MARKETPLACE_KEY} ${MARKETPLACE_SECRET}
+RUN composer require ${MARKETPLACE_NAME}:${MARKETPLACE_VERSION} \
+        --no-interaction \
+        --no-progress
+
+        
 # Copy module source and require it — only this layer reruns on code changes
 COPY . /tmp/module
 RUN composer config repositories.local \
@@ -77,12 +87,6 @@ RUN composer config repositories.local \
         --no-progress
 
 
-# Install marketplace module — this layer is cached until the version changes
-RUN composer config -g repositories.marketplace_repo composer ${MARKETPLACE_REPO}
-RUN composer config -g http-basic.${MARKETPLACE_REPO_URL} ${MARKETPLACE_KEY} ${MARKETPLACE_SECRET}
-RUN composer require ${MARKETPLACE_NAME}:${MARKETPLACE_VERSION} \
-        --no-interaction \
-        --no-progress
 
 
 # ────────────────────────────────────────────
