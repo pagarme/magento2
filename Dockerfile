@@ -76,6 +76,15 @@ RUN composer config repositories.local \
         --no-interaction \
         --no-progress
 
+
+# Install marketplace module — this layer is cached until the version changes
+RUN composer config -g repositories.marketplace_repo composer ${MARKETPLACE_REPO}
+RUN composer config -g http-basic.${MARKETPLACE_REPO_URL} ${MARKETPLACE_KEY} ${MARKETPLACE_SECRET}
+RUN composer require ${MARKETPLACE_NAME}:${MARKETPLACE_VERSION} \
+        --no-interaction \
+        --no-progress
+
+
 # ────────────────────────────────────────────
 FROM base AS production
 
