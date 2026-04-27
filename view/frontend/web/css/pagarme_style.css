@@ -23,6 +23,10 @@
     display: none;
 }
 
+.multibuyer_document {
+    text-transform: uppercase;
+}
+
 .field.hidden-element,
 .field-error.hidden-element {
     display: none;

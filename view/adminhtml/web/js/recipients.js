@@ -68,6 +68,10 @@ require([
             $(this).removeClass('readonly');
         });
 
+        $('[data-document-mask]').on('input', function () {
+            this.value = this.value.toUpperCase();
+        });
+
         $(fieldId['document'])
             .on('keyup change', function () {
                 $(fieldId['holderDocument'])
