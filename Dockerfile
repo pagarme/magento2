@@ -90,6 +90,8 @@ RUN --mount=type=secret,id=marketplace_repo \
 COPY . /tmp/module
 RUN composer config repositories.local \
         '{"type":"path","url":"/tmp/module","options":{"symlink":false}}' \
+    && composer config minimum-stability dev \
+    && composer config prefer-stable true \
     && composer require pagarme/pagarme-magento2-module:* \
         --no-interaction \
         --no-progress
