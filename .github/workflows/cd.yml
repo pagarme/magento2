@@ -2,7 +2,7 @@ name: CD – Build & Deploy magento2-pagarme
 
 on:
   push:
-    branches: [master, stg, develop, feat-new-cd]
+    branches: [master, stg, develop]
   workflow_dispatch:
 
 env:
