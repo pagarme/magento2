@@ -11,6 +11,7 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Store\Model\StoreManagerInterface;
 use Pagarme\Core\Kernel\Aggregates\Configuration;
+use Pagarme\Core\Kernel\ValueObjects\PoiType;
 use Pagarme\Core\Middle\Model\Account as AccountMiddle;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Pagarme\Pagarme\Controller\Adminhtml\Hub\Index as HubControllerIndex;
@@ -163,6 +164,47 @@ class Account
     }
 
     /**
+     * @param mixed $identifier
+     * @return void
+     * @throws NoSuchEntityException
+     */
+    public function savePaymentProfileIdFromWebhook($identifier)
+    {
+        if ($this->getPaymentProfileId() || !$this->isEcommerceIdentifier($identifier)) {
+            return;
+        }
+
+        $this->configWriter->save(
+            PagarmeConfigProvider::PATH_PAYMENT_PROFILE_ID,
+            $identifier['payment_profile_id'],
+            $this->hubControllerIndex->getScopeName(),
+            $this->storeManager->getStore()->getWebsiteId()
+        );
+    }
+
+    /**
+     * @param mixed $identifier
+     * @return void
+     * @throws NoSuchEntityException
+     */
+    public function savePoiTypeFromWebhook($identifier)
+    {
+        if (!empty($this->getPoiType()) || !$this->isEcommerceIdentifier($identifier)) {
+            return;
+        }
+
+        $poiType = $identifier['point_of_interaction_type'];
+        $value = (is_array($poiType) || is_object($poiType)) ? json_encode($poiType) : $poiType;
+
+        $this->configWriter->save(
+            PagarmeConfigProvider::PATH_POI_TYPE,
+            $value,
+            $this->hubControllerIndex->getScopeName(),
+            $this->storeManager->getStore()->getWebsiteId()
+        );
+    }
+
+    /**
      * @return array
      * @throws LocalizedException
      * @throws NoSuchEntityException
@@ -231,21 +273,55 @@ class Account
     }
 
     /**
-     * @return bool
+     * @return string|null
      */
-    public function hasMerchantAndAccountIds()
+    public function getPaymentProfileId()
     {
-        return $this->getAccountId() && $this->getMerchantId();
+        $this->initializeConfig();
+        return $this->config->getPaymentProfileId() ?? null;
     }
 
     /**
-     * @return mixed
+     * @return array|null
+     */
+    public function getPoiType()
+    {
+        $this->initializeConfig();
+        return $this->config->getPoiType() ?? null;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isOneStoneEnabled()
+    {
+        return !empty($this->getPaymentProfileId());
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasIdentifiers()
+    {
+        return $this->isOneStoneEnabled() || (!empty($this->getMerchantId()) && !empty($this->getAccountId()));
+    }
+
+    /**
+     * @return string|null
      */
     public function getDashUrl()
     {
-        if (!$this->hasMerchantAndAccountIds()) {
+        if (!$this->hasIdentifiers()) {
             return null;
         }
+
+        if ($this->isOneStoneEnabled()) {
+            return sprintf(
+                'https://dash.stone.com.br/%s',
+                $this->getPaymentProfileId()
+            );
+        }
+
         return sprintf(
             'https://dash.pagar.me/%s/%s/',
             $this->getMerchantId(),
@@ -274,6 +350,17 @@ class Account
     public function isPSP(string $paymentName)
     {
         return !empty($this->getAccountId()) && $this->getPaymentType($paymentName, false);
+    }
+
+    /**
+     * @param mixed $identifier
+     * @return bool
+     */
+    private function isEcommerceIdentifier($identifier): bool
+    {
+        return !empty($identifier)
+            && !empty($identifier['point_of_interaction_type'])
+            && strtolower($identifier['point_of_interaction_type'] ?? "") === strtolower(PoiType::ECOMMERCE);
     }
 
     /**

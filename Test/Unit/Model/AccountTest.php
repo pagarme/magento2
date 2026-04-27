@@ -1,0 +1,343 @@
+<?php
+
+namespace Pagarme\Pagarme\Test\Unit\Model;
+
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Pagarme\Core\Kernel\Aggregates\Configuration;
+use Pagarme\Pagarme\Controller\Adminhtml\Hub\Index as HubControllerIndex;
+use Pagarme\Pagarme\Model\Account;
+use Pagarme\Pagarme\Model\PagarmeConfigProvider;
+use Pagarme\Pagarme\Service\AccountService;
+use Pagarme\Pagarme\Test\Unit\BaseTest;
+use Magento\Backend\Model\Session;
+use Magento\Config\Model\ResourceModel\Config\Data\CollectionFactory;
+use Magento\Framework\App\Config\Storage\WriterInterface;
+use Magento\Store\Model\StoreManagerInterface;
+use Psr\Log\LoggerInterface;
+
+/**
+ * Class AccountTest
+ *
+ * Unit tests for the Account class methods
+ */
+class AccountTest extends BaseTest
+{
+    use MockeryPHPUnitIntegration;
+
+    /**
+     * @var Account
+     */
+    private $account;
+
+    /**
+     * @var WriterInterface|Mockery\MockInterface
+     */
+    private $configWriterMock;
+
+    /**
+     * @var StoreManagerInterface|Mockery\MockInterface
+     */
+    private $storeManagerMock;
+
+    /**
+     * @var AccountService|Mockery\MockInterface
+     */
+    private $accountServiceMock;
+
+    /**
+     * @var \Pagarme\Pagarme\Model\Api\HubCommand|Mockery\MockInterface
+     */
+    private $hubCommandMock;
+
+    /**
+     * @var CollectionFactory|Mockery\MockInterface
+     */
+    private $configCollectionFactoryMock;
+
+    /**
+     * @var LoggerInterface|Mockery\MockInterface
+     */
+    private $loggerMock;
+
+    /**
+     * @var Session|Mockery\MockInterface
+     */
+    private $sessionMock;
+
+    /**
+     * @var PagarmeConfigProvider|Mockery\MockInterface
+     */
+    private $pagarmeConfigProviderMock;
+
+    /**
+     * @var HubControllerIndex|Mockery\MockInterface
+     */
+    private $hubControllerIndexMock;
+
+    /**
+     * @var ConfigurationStub
+     */
+    private $configMock;
+
+    /**
+     * Setup before each test
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->configWriterMock = Mockery::mock(WriterInterface::class);
+        $this->storeManagerMock = Mockery::mock(StoreManagerInterface::class);
+        $this->accountServiceMock = Mockery::mock(AccountService::class);
+        $this->hubCommandMock = Mockery::mock(\Pagarme\Pagarme\Model\Api\HubCommand::class);
+        $this->configCollectionFactoryMock = Mockery::mock(CollectionFactory::class);
+        $this->loggerMock = Mockery::mock(LoggerInterface::class);
+        $this->sessionMock = Mockery::mock(Session::class);
+        $this->pagarmeConfigProviderMock = Mockery::mock(PagarmeConfigProvider::class);
+        $this->hubControllerIndexMock = Mockery::mock(HubControllerIndex::class);
+
+        $this->configMock = new ConfigurationStub();
+
+        $this->account = new Account(
+            $this->configWriterMock,
+            $this->storeManagerMock,
+            $this->accountServiceMock,
+            $this->hubCommandMock,
+            $this->configCollectionFactoryMock,
+            $this->loggerMock,
+            $this->sessionMock,
+            $this->pagarmeConfigProviderMock,
+            $this->hubControllerIndexMock
+        );
+
+        $this->injectConfigProperty($this->configMock);
+    }
+
+    /**
+     * Test getPaymentProfileId method when a profileId is configured
+     */
+    public function testGetPaymentProfileIdReturnsProfileId()
+    {
+        // Arrange
+        $expectedProfileId = 'pp_test_123456';
+        $this->configMock->setPaymentProfileId($expectedProfileId);
+
+        // Act
+        $result = $this->account->getPaymentProfileId();
+
+        // Assert
+        $this->assertEquals($expectedProfileId, $result);
+    }
+
+    /**
+     * Test getPaymentProfileId method when profileId is not configured
+     */
+    public function testGetPaymentProfileIdReturnsNullWhenNotConfigured()
+    {
+        // Act
+        $result = $this->account->getPaymentProfileId();
+
+        // Assert
+        $this->assertNull($result);
+    }
+
+    /**
+     * Test getPoiType method when a poiType is configured
+     */
+    public function testGetPoiTypeReturnsPoiTypeArray()
+    {
+        // Arrange
+        $expectedPoiType = ['type' => 'physical', 'location' => 'store'];
+        $this->configMock->setPoiType($expectedPoiType);
+
+        // Act
+        $result = $this->account->getPoiType();
+
+        // Assert
+        $this->assertEquals($expectedPoiType, $result);
+    }
+
+    /**
+     * Test getPoiType method when poiType is not configured
+     */
+    public function testGetPoiTypeReturnsNullWhenNotConfigured()
+    {
+        // Act
+        $result = $this->account->getPoiType();
+
+        // Assert
+        $this->assertNull($result);
+    }
+
+    /**
+     * @dataProvider poiTypeHydrationProvider
+     *
+     * Simulates what Magento2CoreSetup produces when reading poi_type from the DB,
+     * then asserts the contract: only arrays are valid; everything else must be null.
+     */
+    public function testGetPoiTypeContractAfterHydration(string $rawDbValue, $expected)
+    {
+        // Arrange
+        $decoded = json_decode($rawDbValue, true);
+        $this->configMock->setPoiType(is_array($decoded) ? $decoded : null);
+
+        // Act
+        $result = $this->account->getPoiType();
+
+        // Assert
+        $this->assertSame($expected, $result);
+    }
+
+    public function poiTypeHydrationProvider(): array
+    {
+        return [
+            'null stored by old buggy code'  => ['null',                                null],
+            'empty string in DB'             => ['""',                                  null],
+            'invalid json in DB'             => ['"not-an-array"',                      null],
+            'valid array'                    => ['{"type":"physical"}',                 ['type' => 'physical']],
+        ];
+    }
+
+    /**
+     * Guards the specific regression: json_encode(null) produces the string "null",
+     * which must never be decoded back as ["null"].
+     */
+    public function testPoiTypeNullIsNotWrappedInArrayAfterJsonRoundTrip()
+    {
+        // Arrange
+        $rawDbValue = json_encode(null); // old buggy write produced "null"
+        $decoded = json_decode($rawDbValue, true);
+        $this->configMock->setPoiType(is_array($decoded) ? $decoded : null);
+
+        // Act
+        $result = $this->account->getPoiType();
+
+        // Assert
+        $this->assertNull($result);
+        $this->assertNotSame(['null'], $result);
+    }
+
+    /**
+     * Test isOneStoneEnabled method when paymentProfileId is configured
+     */
+    public function testIsOneStoneEnabledReturnsTrueWhenProfileIdExists()
+    {
+        // Arrange
+        $this->configMock->setPaymentProfileId('pp_test_123456');
+
+        // Act
+        $result = $this->account->isOneStoneEnabled();
+
+        // Assert
+        $this->assertTrue($result);
+    }
+
+    /**
+     * Test isOneStoneEnabled method when paymentProfileId is not configured
+     */
+    public function testIsOneStoneEnabledReturnsFalseWhenProfileIdIsNull()
+    {
+        // Act
+        $result = $this->account->isOneStoneEnabled();
+
+        // Assert
+        $this->assertFalse($result);
+    }
+
+    /**
+     * Test isOneStoneEnabled method when paymentProfileId is an empty string
+     */
+    public function testIsOneStoneEnabledReturnsFalseWhenProfileIdIsEmpty()
+    {
+        // Arrange
+        $this->configMock->setPaymentProfileId('');
+
+        // Act
+        $result = $this->account->isOneStoneEnabled();
+
+        // Assert
+        $this->assertFalse($result);
+    }
+
+    /**
+     * Test getDashUrl returns URL with PaymentProfileId when One Stone is enabled
+     */
+    public function testGetDashUrlUsesPaymentProfileIdWhenOneStoneEnabled()
+    {
+        // Arrange
+        $this->configMock->setPaymentProfileId('pp_xxxxxxxxxxxx');
+        $this->configMock->setMerchantId('merch_yyyyyyyyyyyy');
+
+        // Act
+        $result = $this->account->getDashUrl();
+
+        // Assert
+        $this->assertSame('https://dash.stone.com.br/pp_xxxxxxxxxxxx', $result);
+    }
+
+    /**
+     * Test getDashUrl returns URL with AccountId when One Stone is disabled (legacy mode)
+     */
+    public function testGetDashUrlUsesAccountIdWhenOneStoneDisabled()
+    {
+        // Arrange
+        $this->configMock->setPaymentProfileId(null);
+        $this->configMock->setAccountId('acc_zzzzzzzzzzzz');
+        $this->configMock->setMerchantId('merch_yyyyyyyyyyyy');
+
+        // Act
+        $result = $this->account->getDashUrl();
+
+        // Assert
+        $this->assertSame('https://dash.pagar.me/merch_yyyyyyyyyyyy/acc_zzzzzzzzzzzz/', $result);
+    }
+
+    /**
+     * Test getDashUrl returns null when MerchantId is absent
+     */
+    public function testGetDashUrlReturnsNullWhenMerchantIdAbsent()
+    {
+        // Arrange
+        $this->configMock->setPaymentProfileId(null);
+        $this->configMock->setAccountId('acc_zzzzzzzzzzzz');
+        $this->configMock->setMerchantId(null);
+
+        // Act
+        $result = $this->account->getDashUrl();
+
+        // Assert
+        $this->assertNull($result);
+    }
+
+    /**
+     * Test getDashUrl returns null when AccountId is absent in legacy mode
+     */
+    public function testGetDashUrlReturnsNullWhenAccountIdAbsentInLegacyMode()
+    {
+        // Arrange
+        $this->configMock->setPaymentProfileId(null);
+        $this->configMock->setAccountId(null);
+        $this->configMock->setMerchantId('merch_yyyyyyyyyyyy');
+
+        // Act
+        $result = $this->account->getDashUrl();
+
+        // Assert
+        $this->assertNull($result);
+    }
+
+    /**
+     * Inject the config property via reflection to facilitate testing
+     *
+     * @param ConfigurationStub|Configuration $config
+     * @return void
+     */
+    private function injectConfigProperty($config)
+    {
+        $reflection = new \ReflectionClass($this->account);
+        $property = $reflection->getProperty('config');
+        $property->setAccessible(true);
+        $property->setValue($this->account, $config);
+    }
+}
