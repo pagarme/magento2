@@ -179,7 +179,7 @@ require([
         let value = '';
         if (document) {
             value = 'individual';
-            document = document.toString().replace(/\D/g, '');
+            document = document.toString().replace(/[^a-zA-Z0-9]/g, '');
             if (document.length > 11) {
                 value = 'corporation';
             }
@@ -226,7 +226,7 @@ require([
     }
 
     function getCnpjData(documentNumber) {
-        documentNumber = documentNumber.replace(/\D/g, '');
+        documentNumber = documentNumber.replace(/[^a-zA-Z0-9]/g, '');
         const maxRequests = 3;
         let requests = 0;
         $.ajax({
@@ -745,6 +745,7 @@ require([
         $('[data-date-mask]').mask('00/00/0000');
         $('[data-currency-mask]').mask("#.##0,00", {reverse: true});
         $('[data-zipcode-mask]').mask('00000-000');
+        $('[data-document-mask]').mask(cpfMask).attr('placeholder', cpfMask);
     }
 
     function formatDate(date) {
