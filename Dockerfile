@@ -61,20 +61,43 @@ WORKDIR /var/www/html
 FROM base AS build
 
 # Install Magento — this layer is cached until the version changes
-RUN --mount=type=secret,id=composer_auth,src=./auth.json,dst=/root/.composer/auth.json \
+RUN --mount=type=secret,id=composer_auth,dst=/root/.composer/auth.json \
     composer create-project \
         --repository-url=https://repo.magento.com/ \
-        magento/project-community-edition:2.4.* . \
+        magento/project-community-edition:2.4.6-p14 . \
         --no-interaction \
         --no-progress
 
+
+
+# Install marketplace module — this layer is cached until the version changes
+RUN --mount=type=secret,id=marketplace_repo \
+    --mount=type=secret,id=marketplace_repo_url \
+    --mount=type=secret,id=marketplace_key \
+    --mount=type=secret,id=marketplace_secret \
+    --mount=type=secret,id=marketplace_name \
+    --mount=type=secret,id=marketplace_version \
+    composer config -g repositories.marketplace_repo composer "$(cat /run/secrets/marketplace_repo)" \
+    && composer config -g http-basic."$(cat /run/secrets/marketplace_repo_url)" \
+        "$(cat /run/secrets/marketplace_key)" \
+        "$(cat /run/secrets/marketplace_secret)" \
+    && composer require "$(cat /run/secrets/marketplace_name)":"$(cat /run/secrets/marketplace_version)" \
+        --no-interaction \
+        --no-progress
+
+        
 # Copy module source and require it — only this layer reruns on code changes
 COPY . /tmp/module
 RUN composer config repositories.local \
         '{"type":"path","url":"/tmp/module","options":{"symlink":false}}' \
+    && composer config minimum-stability dev \
+    && composer config prefer-stable true \
     && composer require pagarme/pagarme-magento2-module:* \
         --no-interaction \
         --no-progress
+
+
+
 
 # ────────────────────────────────────────────
 FROM base AS production

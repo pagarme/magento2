@@ -2,7 +2,7 @@ name: CD – Build & Deploy magento2-pagarme
 
 on:
   push:
-    branches: [master, stg, develop, feat-new-cd]
+    branches: [master, stg, develop]
   workflow_dispatch:
 
 env:
@@ -55,3 +55,10 @@ jobs:
           cache-to: type=registry,ref=${{ secrets.DOCKER_ACCOUNT }}/${{ env.IMAGE_NAME }}:buildcache,mode=max
           secret-files: |
             composer_auth=./auth.json
+          secrets: |
+            marketplace_repo=${{ secrets.MARKETPLACE_REPO }}
+            marketplace_repo_url=${{ secrets.MARKETPLACE_REPO_URL }}
+            marketplace_key=${{ secrets.MARKETPLACE_KEY }}
+            marketplace_secret=${{ secrets.MARKETPLACE_SECRET }}
+            marketplace_name=${{ secrets.MARKETPLACE_NAME }}
+            marketplace_version=${{ secrets.MARKETPLACE_VERSION }}
