@@ -12,7 +12,7 @@ define([], () => {
                 return;
             }
 
-            if (address.vatId <= 0 && address.vatId != null) {
+            if (address.vatId != null && address.vatId.toString().trim() === '') {
                 this.errors.push("O campo CPF/CNPJ é obrigatório.");
             }
 

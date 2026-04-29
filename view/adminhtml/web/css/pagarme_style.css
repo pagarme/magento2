@@ -24,6 +24,10 @@
     margin-left: 10px;
 }
 
+#pagarme-recipients-form input[data-document-mask] {
+    text-transform: uppercase;
+}
+
 .product_search {
     padding: .6rem 1rem .6rem;
     width: 15%;

@@ -98,7 +98,7 @@ abstract class AbstractRequestDataProvider
      */
     public function getDocumentType()
     {
-        $identity = (int) preg_replace('/[^0-9]/','', $this->getDocumentNumber() ?? '');
+        $identity = preg_replace('/[^a-zA-Z0-9]/', '', $this->getDocumentNumber() ?? '');
         return (strlen($identity) === 14) ?
             \Pagarme\Pagarme\Model\Enum\DocumentTypeEnum::CNPJ :
             \Pagarme\Pagarme\Model\Enum\DocumentTypeEnum::CPF;
