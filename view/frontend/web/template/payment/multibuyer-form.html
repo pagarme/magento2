@@ -84,7 +84,7 @@
         <span><!-- ko i18n: 'Document'--><!-- /ko --></span>
     </label>
     <div class="control">
-        <input type="text" class="input-text multibuyer_document" name="payment[multibuyer_document]" maxlength="16">
+        <input type="text" class="input-text multibuyer_document" name="payment[multibuyer_document]" maxlength="16" oninput="this.value = this.value.toUpperCase()">
     </div>
     <div class="field-error hidden-element">
         <span ><!-- ko i18n: 'This is a required field'--><!-- /ko --></span>

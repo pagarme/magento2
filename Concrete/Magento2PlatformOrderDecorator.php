@@ -582,7 +582,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             return '';
         }
         return preg_replace(
-            '/\D/',
+            '/[^a-zA-Z0-9]/',
             '',
             $document
         );
