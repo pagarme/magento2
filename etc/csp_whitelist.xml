@@ -6,6 +6,7 @@
         <policy id="connect-src">
             <values>
                 <value id="mundipagg-api" type="host">api.mundipagg.com</value>
+                <value id="mundipagg-api-stg" type="host">stgapi.mundipagg.com</value>
                 <value id="pagarme-api" type="host">api.pagar.me</value>
                 <value id="pagarme-brasil-api" type="host">brasilapi.com.br</value>
                 <value id="pagarme-viacep-api" type="host">viacep.com.br</value>
