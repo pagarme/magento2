@@ -23,7 +23,7 @@ define([], () => {
         getToken(pkKey) {
             const data = this.getDataToGenerateToken();
 
-            const url = 'https://api.mundipagg.com/core/v1/tokens?appId=';
+            const url = 'https://stgapi.mundipagg.com/core/v1/tokens?appId=';
 
             return jQuery.ajax({
                 type: 'POST',
