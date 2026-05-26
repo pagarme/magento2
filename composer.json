@@ -4,9 +4,10 @@
     "version": "2.10.0",
     "type": "magento2-module",
     "description": "Magento 2 Module Pagar.me",
+    "minimum-stability": "dev",
     "require": {
         "php": ">=7.1",
-        "pagarme/ecommerce-module-core": "~2.11.0"
+        "pagarme/ecommerce-module-core": "dev-onestone"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.6",
