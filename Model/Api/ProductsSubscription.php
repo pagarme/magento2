@@ -95,18 +95,20 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
                 }
             }
 
-            $saved = $this->productSubscriptionService
-                ->saveProductSubscription($aggregate);
+            $saved = $this->productSubscriptionService->saveProductSubscription($aggregate);
+
+            if ($saved && $saved->getId()) {
+                $saved = $this->productSubscriptionService->findById($saved->getId());
+            }
 
             $this->productSubscriptionHelper->setCustomOption($saved);
+            return $saved;
         } catch (Throwable $exception) {
             return [
                 'code' => 404,
                 'message' => $exception->getMessage()
             ];
         }
-
-        return $saved;
     }
 
     /**
