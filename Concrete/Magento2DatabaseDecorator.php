@@ -72,7 +72,7 @@ final class Magento2DatabaseDecorator extends AbstractDatabaseDecorator
 
     protected function doQuery($query)
     {
-        $connection = $this->db->getConnection();
+        $connection = $this->db->getConnection(\Magento\Framework\App\ResourceConnection::DEFAULT_CONNECTION);
         $connection->query($query);
         $this->setLastInsertId($connection->lastInsertId());
     }
