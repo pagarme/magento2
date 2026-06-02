@@ -14,6 +14,7 @@ help: ## Exibe esta ajuda
 # ── Ambiente ──────────────────────────────────────────────────────────────────
 .PHONY: setup
 setup: ## Configura e sobe o ambiente do zero (primeira vez)
+	@mkdir -p src
 	@chmod +x bin/*
 	@bin/setup
 	@$(MAKE) --no-print-directory fix-vendor-bugs
@@ -51,6 +52,7 @@ down: ## Para todos os containers (dados preservados)
 
 .PHONY: rebuild
 rebuild: ## Reconstrói a imagem e reinicia após mudança no código
+	@mkdir -p src
 	@chmod +x bin/*
 	@bin/rebuild
 

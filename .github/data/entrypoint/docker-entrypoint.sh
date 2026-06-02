@@ -115,6 +115,16 @@ run_upgrade() {
 
 cd "${MAGENTO_ROOT}"
 
+# Primeira inicialização com volume vazio (./src bind-mount em dev):
+# copia os arquivos da semente gravada na imagem para o volume montado.
+if [ -d "/opt/magento-src" ] && [ ! -f "${MAGENTO_ROOT}/index.php" ]; then
+    echo "[entrypoint] Volume vazio detectado. Copiando arquivos do Magento para ${MAGENTO_ROOT}..."
+    echo "[entrypoint] Isso pode levar alguns minutos na primeira vez..."
+    cp -a /opt/magento-src/. "${MAGENTO_ROOT}/"
+    chown -R www-data:www-data "${MAGENTO_ROOT}"
+    echo "[entrypoint] Cópia concluída."
+fi
+
 wait_for_db
 wait_for_elasticsearch
 

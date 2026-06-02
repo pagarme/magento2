@@ -107,4 +107,8 @@ RUN apk add --no-cache --virtual .build-deps autoconf g++ make \
 COPY docker/php/xdebug.ini      /usr/local/etc/php/conf.d/xdebug.ini
 COPY docker/php/opcache-dev.ini /usr/local/etc/php/conf.d/opcache.ini
 
+# Semente para o volume de desenvolvimento local (./src:/var/www/html).
+# O entrypoint copia estes arquivos para o volume vazio na primeira inicialização.
+RUN cp -a /var/www/html/. /opt/magento-src/
+
 EXPOSE 443

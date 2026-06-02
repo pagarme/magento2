@@ -8,3 +8,5 @@ docker/certs/*.crt
 docker/certs/*.key
 # auth.json é necessário apenas para o target CI/production (repo.magento.com)
 auth.json
+# Arquivos do Magento extraídos para edição local — gerados pelo make setup
+/src/
