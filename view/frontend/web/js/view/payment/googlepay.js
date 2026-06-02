@@ -2,9 +2,53 @@ define([
     "Pagarme_Pagarme/js/view/payment/default",
     "Magento_Checkout/js/model/quote",
     "Pagarme_Pagarme/js/core/checkout/PaymentModuleBootstrap",
-    "https://pay.google.com/gp/p/js/pay.js",
-], function (Component, quote, PagarmeCore) {
+    "jquery",
+], function (Component, quote, PagarmeCore, $) {
     "use strict";
+
+    var GOOGLE_PAY_SCRIPT_URL = "https://pay.google.com/gp/p/js/pay.js",
+        googlePayScriptPromise = null;
+
+    /**
+     * Loads Google's pay.js on demand instead of declaring it as a hard
+     * RequireJS dependency. Loading an external, non-AMD script through
+     * RequireJS makes the whole module graph (including this component's
+     * template) fail to load when the script is slow, blocked or served
+     * without an AMD define, which surfaces as:
+     *   Failed to load the "Pagarme_Pagarme/payment/googlepay" template.
+     *
+     * @returns {jQueryPromise}
+     */
+    function loadGooglePayScript() {
+        if (googlePayScriptPromise) {
+            return googlePayScriptPromise;
+        }
+
+        googlePayScriptPromise = $.Deferred(function (defer) {
+            var script;
+
+            if (window.google && window.google.payments) {
+                defer.resolve();
+                return;
+            }
+
+            script = document.createElement("script");
+            script.src = GOOGLE_PAY_SCRIPT_URL;
+            script.async = true;
+            script.onload = function () {
+                defer.resolve();
+            };
+            script.onerror = function () {
+                // Allow a later retry if the script failed to load.
+                googlePayScriptPromise = null;
+                defer.reject();
+            };
+            document.head.appendChild(script);
+        }).promise();
+
+        return googlePayScriptPromise;
+    }
+
     return Component.extend({
         defaults: {
             template: "Pagarme_Pagarme/payment/googlepay",
@@ -26,15 +70,30 @@ define([
             });
         },
         addGooglePayButton: function () {
-            let paymentsClient = this.getGooglePaymentsClient();
-            const button = paymentsClient.createButton({
-                buttonColor: "default",
-                buttonType: "pay",
-                buttonRadius: 5,
-                buttonLocale: "pt",
-                buttonSizeMode: "fill",
+            const self = this;
+
+            loadGooglePayScript().done(function () {
+                const container = document.getElementById("pagarme-googlepay");
+
+                if (!container) {
+                    return;
+                }
+
+                const paymentsClient = self.getGooglePaymentsClient();
+                const button = paymentsClient.createButton({
+                    buttonColor: "default",
+                    buttonType: "pay",
+                    buttonRadius: 5,
+                    buttonLocale: "pt",
+                    buttonSizeMode: "fill",
+                    onClick: function () {
+                        self.onGooglePaymentButtonClicked();
+                    },
+                });
+
+                container.innerHTML = "";
+                container.appendChild(button);
             });
-            document.getElementById("pagarme-googlepay").appendChild(button);
         },
 
         onPaymentAuthorized: function (paymentData) {
