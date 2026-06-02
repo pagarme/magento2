@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Wrapper para executar comandos bin/magento dentro do container app.
+# Uso: bin/magento <comando> [argumentos]
+# Ex:  bin/magento cache:flush
+#      bin/magento module:status
+docker compose exec app php bin/magento "$@"

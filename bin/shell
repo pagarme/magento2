@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Abre um shell bash interativo dentro do container app.
+# Uso: bin/shell
+docker compose exec app bash

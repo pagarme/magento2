@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# Reconstrói a imagem Docker e reinicia o container app.
+# Necessário após qualquer alteração no código do módulo.
+# Uso: bin/rebuild
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
+cd "$PROJECT_DIR"
+
+echo "[rebuild] Parando containers..."
+docker compose down
+
+echo "[rebuild] Construindo nova imagem..."
+DOCKER_BUILDKIT=1 docker compose build
+
+echo "[rebuild] Subindo containers..."
+docker compose up -d
+
+echo "[rebuild] Pronto. Acompanhe os logs com: bin/logs"

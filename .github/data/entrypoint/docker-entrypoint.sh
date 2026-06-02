@@ -118,7 +118,7 @@ cd "${MAGENTO_ROOT}"
 wait_for_db
 wait_for_elasticsearch
 
-if is_magento_installed; then
+if is_magento_installed && [ -f "${MAGENTO_ROOT}/app/etc/env.php" ]; then
     run_upgrade
 else
     run_setup_install

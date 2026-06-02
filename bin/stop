@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Para todos os containers (preserva volumes de dados).
+# Uso: bin/stop
+docker compose down "$@"

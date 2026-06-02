@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Wrapper para executar comandos Composer dentro do container app.
+# Uso: bin/composer <comando> [argumentos]
+# Ex:  bin/composer require vendor/package
+#      bin/composer install
+docker compose exec app composer "$@"

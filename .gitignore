@@ -1,3 +1,10 @@
 /.idea/
 /vendor/
 *.lock
+
+# Ambiente local Docker
+.env
+docker/certs/*.crt
+docker/certs/*.key
+# auth.json é necessário apenas para o target CI/production (repo.magento.com)
+auth.json

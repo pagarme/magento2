@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Sobe todos os containers em background.
+# Uso: bin/start
+docker compose up -d "$@"

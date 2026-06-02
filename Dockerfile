@@ -8,6 +8,7 @@ RUN apk add --no-cache \
     freetype-dev \
     gettext \
     git \
+    icu-data-full \
     icu-dev \
     libjpeg-turbo-dev \
     libpng-dev \
@@ -53,18 +54,20 @@ COPY .github/data/nginx/nginx.conf      /etc/nginx/nginx.conf
 COPY .github/data/nginx/default.conf    /etc/nginx/conf.d/default.conf
 COPY .github/data/supervisor/supervisord.conf /etc/supervisord.conf
 COPY .github/data/entrypoint/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh \
+    && mkdir -p /var/log/supervisor /var/run
 
 WORKDIR /var/www/html
 
 # ────────────────────────────────────────────
 FROM base AS build
 
-# Install Magento — this layer is cached until the version changes
-RUN --mount=type=secret,id=composer_auth,src=./auth.json,dst=/root/.composer/auth.json \
-    composer create-project \
-        --repository-url=https://repo.magento.com/ \
-        magento/project-community-edition:2.4.* . \
+# Install Magento from the public Mage-OS mirror — no credentials required.
+# Use --mount=type=secret only when building the CI/production target against
+# repo.magento.com; the local dev target uses this credential-free path.
+RUN composer create-project \
+        --repository-url=https://mirror.mage-os.org/ \
+        magento/project-community-edition:2.4.7-p3 . \
         --no-interaction \
         --no-progress
 
@@ -72,7 +75,7 @@ RUN --mount=type=secret,id=composer_auth,src=./auth.json,dst=/root/.composer/aut
 COPY . /tmp/module
 RUN composer config repositories.local \
         '{"type":"path","url":"/tmp/module","options":{"symlink":false}}' \
-    && composer require pagarme/pagarme-magento2-module:* \
+    && composer require pagarme/pagarme-magento2-module:* magento/language-pt_br \
         --no-interaction \
         --no-progress
 
@@ -91,3 +94,17 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=120s --retries=3 \
     CMD curl -sf http://localhost/health_check.php || exit 1
 
 ENTRYPOINT ["docker-entrypoint.sh"]
+
+# ────────────────────────────────────────────
+# Dev: estende production, adiciona Xdebug e overrides de OPcache para dev
+FROM production AS dev
+
+RUN apk add --no-cache --virtual .build-deps autoconf g++ make \
+    && pecl install xdebug \
+    && docker-php-ext-enable xdebug \
+    && apk del --no-cache .build-deps
+
+COPY docker/php/xdebug.ini      /usr/local/etc/php/conf.d/xdebug.ini
+COPY docker/php/opcache-dev.ini /usr/local/etc/php/conf.d/opcache.ini
+
+EXPOSE 443

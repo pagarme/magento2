@@ -16,3 +16,7 @@ pub/static/*
 pub/media/*
 generated/*
 node_modules
+# Arquivos de dev local (não fazem parte da imagem)
+bin/
+docker/certs/
+docker/nginx/

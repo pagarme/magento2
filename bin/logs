@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Exibe e acompanha logs dos containers.
+# Uso: bin/logs          → logs do container app (padrão)
+#      bin/logs db       → logs do container db
+#      bin/logs -f app   → follow do app
+docker compose logs -f "${@:-app}"

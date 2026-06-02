@@ -1,0 +1,7 @@
+# Garante LF para scripts shell (evita erros de "bad interpreter" no Linux/macOS)
+bin/*       text eol=lf
+*.sh        text eol=lf
+
+# Força CRLF em arquivos Windows-específicos
+*.bat       text eol=crlf
+*.cmd       text eol=crlf
