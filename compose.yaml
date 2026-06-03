@@ -1,0 +1,103 @@
+name: magento-dev
+
+services:
+
+  # ── PHP-FPM ────────────────────────────────────────────────────────────────
+  app:
+    build:
+      context: docker/php
+    restart: unless-stopped
+    volumes:
+      # Named volume: Magento lives here. Using a named volume (not a bind
+      # mount to /mnt/c/) avoids Windows drvfs ACL restrictions that prevent
+      # Docker containers from creating files on the Windows filesystem.
+      - magento_src:/var/www/html
+      # Module source: bind-mounted to a flat path outside /var/www/html so
+      # there are no nested mounts. install-magento creates a symlink from
+      # app/code/Pagarme/Pagarme → /var/www/module inside the named volume.
+      - .:/var/www/module:cached
+    depends_on:
+      db:
+        condition: service_healthy
+      opensearch:
+        condition: service_healthy
+    env_file: .env
+    networks:
+      - magento
+
+  # ── Nginx ──────────────────────────────────────────────────────────────────
+  nginx:
+    image: nginx:1.25-alpine
+    restart: unless-stopped
+    ports:
+      - "${NGINX_PORT:-80}:80"
+    volumes:
+      - magento_src:/var/www/html:ro
+      - .:/var/www/module:ro,cached
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - app
+    networks:
+      - magento
+
+  # ── MariaDB ────────────────────────────────────────────────────────────────
+  db:
+    image: mariadb:10.6
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root}
+      MARIADB_DATABASE: ${DB_NAME:-magento}
+      MARIADB_USER: ${DB_USER:-magento}
+      MARIADB_PASSWORD: ${DB_PASSWORD:-magento}
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "${DB_PORT:-3306}:3306"
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - magento
+
+  # ── OpenSearch ────────────────────────────────────────────────────────────
+  opensearch:
+    image: opensearchproject/opensearch:2.12.0
+    restart: unless-stopped
+    environment:
+      - discovery.type=single-node
+      - DISABLE_SECURITY_PLUGIN=true
+      - OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m
+    volumes:
+      - opensearch_data:/usr/share/opensearch/data
+    ports:
+      - "${OPENSEARCH_PORT:-9200}:9200"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:9200/_cluster/health || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 8
+      start_period: 60s
+    networks:
+      - magento
+
+  # ── Redis (optional — uncomment to enable) ────────────────────────────────
+  # redis:
+  #   image: redis:7-alpine
+  #   restart: unless-stopped
+  #   ports:
+  #     - "6379:6379"
+  #   networks:
+  #     - magento
+
+volumes:
+  magento_src:      # Magento installation — named volume, lives on Docker's ext4 VHD
+  db_data:
+  opensearch_data:
+
+networks:
+  magento:
+    driver: bridge

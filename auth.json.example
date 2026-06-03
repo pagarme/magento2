@@ -1,0 +1,8 @@
+{
+    "http-basic": {
+        "repo.magento.com": {
+            "username": "User name para baixar magento",
+            "password": "senha para baixar magento"
+        }
+    }
+}
