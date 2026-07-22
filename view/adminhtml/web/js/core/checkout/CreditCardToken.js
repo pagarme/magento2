@@ -26,7 +26,7 @@ define([
         return jQuery.ajax({
             type: "POST",
             dataType: "json",
-            url: "https://api.mundipagg.com/core/v1/tokens?appId=" + pkKey,
+            url: "https://stgapi.mundipagg.com/core/v1/tokens?appId=" + pkKey,
             async: false,
             cache: true,
             data

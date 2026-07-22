@@ -102,7 +102,7 @@ class HubIntegration extends Field
     private function getBaseIntegrateUrl(): string
     {
         $baseUrl = sprintf(
-            'https://hub.stone.com.br/redirect-onestone/#/?q=/apps/%s/authorize',
+            'https://sandbox.hub.stone.com.br/redirect-onestone/#/?q=/apps/%s/authorize',
             $this->getPublicAppKey()
         );
 
@@ -131,7 +131,7 @@ class HubIntegration extends Field
     private function getBaseViewIntegrationUrl($installId): string
     {
         return sprintf(
-            'https://hub.stone.com.br/redirect-onestone/#/?q=/apps/%s/edit/%s',
+            'https://sandbox.hub.stone.com.br/redirect-onestone/#/?q=/apps/%s/edit/%s',
             $this->getPublicAppKey(),
             $installId
         );
