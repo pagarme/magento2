@@ -61,7 +61,7 @@ class HubIntegration extends Field
             '<a href="%s" id="pagarme-integrate-button" class="pagarme-integration-button%s">%s</a>',
             $this->_escaper->escapeUrl($this->getBaseIntegrateUrl()),
             $installId ? $hidden : '',
-            __("Integrate With Pagar.me")
+            __("Integrate With Stone")
         );
 
         $html .= sprintf(
@@ -102,20 +102,20 @@ class HubIntegration extends Field
     private function getBaseIntegrateUrl(): string
     {
         $baseUrl = sprintf(
-            'https://hub.pagar.me/apps/%s/authorize',
+            'https://hub.stone.com.br/redirect-onestone/#/?q=/apps/%s/authorize',
             $this->getPublicAppKey()
         );
 
         if($this->getRequest()->getParam('website') !== null) {
             $params = sprintf(
-                '?redirect=%swebsite/%s/install_token/%s',
+                '&redirect=%swebsite/%s/install_token/%s',
                 $this->getRedirectUrl(),
                 Magento2CoreSetup::getCurrentStoreId(),
                 $this->getInstallToken()
             );
         } else {
             $params = sprintf(
-                '?redirect=%sinstall_token/%s',
+                '&redirect=%sinstall_token/%s',
                 $this->getRedirectUrl(),
                 $this->getInstallToken()
             );
@@ -131,7 +131,7 @@ class HubIntegration extends Field
     private function getBaseViewIntegrationUrl($installId): string
     {
         return sprintf(
-            'https://hub.pagar.me/apps/%s/edit/%s',
+            'https://hub.stone.com.br/redirect-onestone/#/?q=/apps/%s/edit/%s',
             $this->getPublicAppKey(),
             $installId
         );

@@ -1,10 +1,10 @@
 <?xml version="1.0" ?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
 	<menu>
-		<add id="Pagarme::pagarme" module="Pagarme_Pagarme" resource="Magento_Backend::content" sortOrder="80" title="Pagar.me"/>
+		<add id="Pagarme::pagarme" module="Pagarme_Pagarme" resource="Magento_Backend::content" sortOrder="80" title="Stone"/>
 		<add id="Pagarme::pagarme_label" module="Pagarme_Pagarme" parent="Pagarme::pagarme" resource="Magento_Config::config" sortOrder="10" title="Configurations" translate="title" />
-		<add action="pagarme_pagarme/charges/index" id="Pagarme::pagarme_charges" module="Pagarme_Pagarme" parent="Pagarme::pagarme_label" resource="Magento_Backend::content" sortOrder="20" title="Charges Pagar.me" translate="title" />
-		<add action="pagarme_pagarme/cards/index" id="Pagarme::pagarme_cards" module="Pagarme_Pagarme" parent="Pagarme::pagarme_label" resource="Magento_Backend::content" sortOrder="10" title="Cards Pagar.me" translate="title" />
+		<add action="pagarme_pagarme/charges/index" id="Pagarme::pagarme_charges" module="Pagarme_Pagarme" parent="Pagarme::pagarme_label" resource="Magento_Backend::content" sortOrder="20" title="Charges Stone" translate="title" />
+		<add action="pagarme_pagarme/cards/index" id="Pagarme::pagarme_cards" module="Pagarme_Pagarme" parent="Pagarme::pagarme_label" resource="Magento_Backend::content" sortOrder="10" title="Cards Stone" translate="title" />
 		<add action="adminhtml/system_config/edit/section/payment" id="Pagarme::pagarme_payment_methods" module="Pagarme_Pagarme" parent="Pagarme::pagarme_label" resource="Magento_Config::config" sortOrder="1" title="Payment Methods" translate="title" />
 
 		<add id="Pagarme::pagarme_pagarme_marketplace" module="Pagarme_Pagarme" parent="Pagarme::pagarme" resource="Magento_Config::config" sortOrder="20"  dependsOnConfig="pagarme_pagarme/marketplace/active" title="Marketplace" translate="title" />

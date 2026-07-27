@@ -15,8 +15,8 @@
             </depends>
         </field>
         <field id="pagarme_account_id" type="text" sortOrder="30" showInWebsite="1" showInStore="1" showInDefault="1" translate="label, comment">
-            <label>Pagar.me account ID</label>
-            <comment><![CDATA[Consult the <a target='_blank' href='https://id.pagar.me/signin'>Dashboard</a> at: <i>Settings > Keys > Account ID</i>]]></comment>
+            <label>Stone account ID</label>
+            <comment><![CDATA[Consult the <a target='_blank' href='https://hub.stone.com.br/redirect-onestone/'>Dashboard</a> at: <i>Settings > Keys > Account ID</i>]]></comment>
             <config_path>pagarme_pagarme/hub/account_id</config_path>
             <depends>
                 <field id="active">1</field>
