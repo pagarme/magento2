@@ -2,12 +2,12 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
 	<system>
 		<tab id="pagarme" sortOrder="1" translate="label">
-			<label>Pagar.me</label>
+			<label>Stone</label>
 		</tab>
 		<section id="payment" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="1000" translate="label">
             <group id="pagarme_pagarme" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label">
                 <label>
-                    <![CDATA[Pagar.me&nbsp;&nbsp;<i>Payment Solutions.</i>]]>
+                    <![CDATA[Stone&nbsp;&nbsp;<i>Payment Solutions.</i>]]>
                 </label>
                 <frontend_model>Pagarme\Pagarme\Block\Adminhtml\System\Config\Form\Fieldset\Group</frontend_model>
 				<fieldset_css>complex</fieldset_css>
