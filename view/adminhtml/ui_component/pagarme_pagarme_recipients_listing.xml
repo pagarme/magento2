@@ -119,7 +119,7 @@
                             <item name="required-entry" xsi:type="boolean">true</item>
                         </item>
                     </item>
-                    <item name="label" xsi:type="string" translate="true">Pagar.me ID</item>
+                    <item name="label" xsi:type="string" translate="true">Stone ID</item>
                 </item>
             </argument>
         </column>

@@ -13,7 +13,7 @@
                 <model>PagarmeBilletRemoteMethodAdapter</model>
                 <order_status>pending_payment</order_status>
                 <payment_action>authorize</payment_action>
-                <title>Pagar.me Billet</title>
+                <title>Stone Billet</title>
                 <can_authorize>1</can_authorize>
                 <can_capture>1</can_capture>
                 <can_use_checkout>1</can_use_checkout>
@@ -29,7 +29,7 @@
                 <model>PagarmePixRemoteMethodAdapter</model>
                 <order_status>pending_payment</order_status>
                 <payment_action>authorize</payment_action>
-                <title>Pagar.me Pix</title>
+                <title>Stone Pix</title>
                 <expiration_qrcode>3600</expiration_qrcode>
                 <can_authorize>1</can_authorize>
                 <can_capture>1</can_capture>
@@ -45,7 +45,7 @@
                 <model>PagarmeCreditCardsRemoteMethodAdapter</model>
                 <order_status>pending_payment</order_status>
                 <payment_action>authorize_capture</payment_action>
-                <title>Pagar.me Credit Card</title>
+                <title>Stone Credit Card</title>
                 <can_authorize>1</can_authorize>
                 <can_capture_partial>1</can_capture_partial>
                 <can_capture>1</can_capture>
@@ -122,7 +122,7 @@
                 <model>PagarmeBilletCreditCardsRemoteMethodAdapter</model>
                 <order_status>pending_payment</order_status>
                 <payment_action>authorize</payment_action>
-                <title>Pagar.me Billet Credit Card</title>
+                <title>Stone Billet Credit Card</title>
                 <can_authorize>1</can_authorize>
                 <can_capture_partial>1</can_capture_partial>
                 <can_capture>1</can_capture>
@@ -149,7 +149,7 @@
                 <model>PagarmeTwoCreditCardRemoteMethodAdapter</model>
                 <order_status>pending_payment</order_status>
                 <payment_action>authorize</payment_action>
-                <title>Pagar.me Two Credit Cards</title>
+                <title>Stone Two Credit Cards</title>
                 <can_authorize>1</can_authorize>
                 <can_capture_partial>1</can_capture_partial>
                 <can_capture>1</can_capture>
@@ -176,7 +176,7 @@
                 <model>PagarmeVoucherRemoteMethodAdapter</model>
                 <order_status>pending_payment</order_status>
                 <payment_action>authorize_capture</payment_action>
-                <title>Pagar.me Voucher</title>
+                <title>Stone Voucher</title>
                 <can_authorize>1</can_authorize>
                 <can_capture_partial>1</can_capture_partial>
                 <can_capture>1</can_capture>
@@ -203,7 +203,7 @@
                 <model>PagarmeDebitRemoteMethodAdapter</model>
                 <order_status>pending_payment</order_status>
                 <payment_action>authorize_capture</payment_action>
-                <title>Pagar.me Debit Card</title>
+                <title>Stone Debit Card</title>
                 <can_authorize>1</can_authorize>
                 <can_capture_partial>1</can_capture_partial>
                 <can_capture>1</can_capture>

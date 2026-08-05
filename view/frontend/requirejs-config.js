@@ -6,16 +6,10 @@ var config = {
             }
         }
     },
-    shim : {
-        'Pagarme_Pagarme/js/view/payment/googlepay' : {
-            deps : ['googlePay']
-        }
-    },
     map: {
         '*': {
             pixCheckoutSuccess: 'Pagarme_Pagarme/js/view/payment/checkout/success/pix',
-            kyc: 'Pagarme_Pagarme/js/view/marketplace/kyc',
-            googlePay: 'https://pay.google.com/gp/p/js/pay.js'
+            kyc: 'Pagarme_Pagarme/js/view/marketplace/kyc'
         }
     }
 };

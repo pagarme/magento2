@@ -61,7 +61,7 @@ class HubIntegration extends Field
             '<a href="%s" id="pagarme-integrate-button" class="pagarme-integration-button%s">%s</a>',
             $this->_escaper->escapeUrl($this->getBaseIntegrateUrl()),
             $installId ? $hidden : '',
-            __("Integrate With Pagar.me")
+            __("Integrate With Stone")
         );
 
         $html .= sprintf(
