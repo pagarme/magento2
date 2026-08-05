@@ -1,10 +1,11 @@
 define([
     'Pagarme_Pagarme/js/core/validators/CreditCardValidator',
     'Pagarme_Pagarme/js/core/validators/MultibuyerValidator',
+    'Pagarme_Pagarme/js/core/validators/Tds3DSValidator',
     'Pagarme_Pagarme/js/core/checkout/CreditCardToken',
     'Pagarme_Pagarme/js/core/checkout/Tds',
     'Magento_Checkout/js/model/quote',
-], (CreditCardValidator, MultibuyerValidator, CreditCardToken, Tds, quote) => {
+], (CreditCardValidator, MultibuyerValidator, Tds3DSValidator, CreditCardToken, Tds, quote) => {
     return class CreditCardModel {
         constructor(formObject, publicKey) {
             this.formObject = formObject;
@@ -26,6 +27,12 @@ define([
             }
 
             if(this.canTdsRun()) {
+                const tdsValidator = new Tds3DSValidator();
+                if (!tdsValidator.validate()) {
+                    tdsValidator.getErrors().forEach((error) => this.addErrors(error));
+                    return;
+                }
+
                 const tds = new Tds(this.formObject);
                 tds.addTdsAttributeData();
                 jQuery('body').trigger('processStart');
@@ -106,15 +113,26 @@ define([
             const _self = this;
             const tds = new Tds(this.formObject);
             jQuery('body').trigger('processStop');
-            if(data?.error !== undefined) {
+            const cardIsNotEnrolled = data?.error === '3DS not available';
+            const hasError = (data?.error !== undefined && !cardIsNotEnrolled) || data?.message !== undefined;
+
+            if (hasError) {
                 tds.showErrors(data, _self);
-                return;
-            }
-            if(data?.trans_status === '' || data?.trans_status === undefined){
+                if (_self.errors.length === 0) {
+                    _self.addErrors("Não foi possível concluir a autenticação 3DS. Por favor, tente novamente.");
+                }
                 return;
             }
 
-            this.formObject.authentication = JSON.stringify(data);
+            const challengeWasCancelled = data?.challenge_cancelled === true;
+            const isMissingTransStatus = data?.trans_status === '' || data?.trans_status === undefined;
+
+            if (!cardIsNotEnrolled && (challengeWasCancelled || isMissingTransStatus)) {
+                _self.addErrors("A autenticação 3DS foi cancelada. Por favor, tente novamente.");
+                return;
+            }
+
+            this.formObject.authentication = cardIsNotEnrolled ? undefined : JSON.stringify(data);
             this.getCreditCardToken(
                 function (data) {
                     _self.formObject.creditCardToken.val(data.id);
