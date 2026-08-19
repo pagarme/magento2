@@ -41,6 +41,9 @@ define([
             if(errors.error?.purchase) {
                 parentObject.addErrors("Ocorreu um problema ao montar o dado de compra.");
             }
+            if(errors.message) {
+                parentObject.addErrors(errors.message);
+            }
         }
 
         addTdsAttributeData() {
@@ -67,29 +70,37 @@ define([
 
         getTdsData(acctType, cardExpiryDate) {
             const billingAddress = quote.billingAddress();
-            const  amountInCents = quote.totals().base_grand_total * 100;
+            const amountInCents = quote.totals().base_grand_total * 100;
             const [
-                billingAddressStreet,
-                billingAddressNumber,
-                billingAddressComplement
-            ] = billingAddress.street;
+                billingAddressStreet = '',
+                billingAddressNumber = '',
+                billingAddressComplement = ''
+            ] = billingAddress.street || [];
 
-            const shippingAddress = quote.shippingAddress();
+            const shippingAddressObj = quote.shippingAddress();
+            const effectiveShippingAddress = (shippingAddressObj && shippingAddressObj.street && shippingAddressObj.telephone)
+                ? shippingAddressObj
+                : billingAddress;
+
             const [
-                shippingAddressStreet,
-                shippingAddressNumber,
-                shippingAddressComplement
-            ] = shippingAddress.street;
+                shippingAddressStreet = '',
+                shippingAddressNumber = '',
+                shippingAddressComplement = ''
+            ] = (effectiveShippingAddress.street || []);
 
             let customerEmail = window.checkoutConfig.customerData?.email;
             if(quote.guestEmail) {
                 customerEmail = quote.guestEmail;
             }
 
+            const phoneNumber = effectiveShippingAddress.telephone
+                ? effectiveShippingAddress.telephone.replace(/\D/g, '')
+                : '';
+
             const customerPhones =
                 [{
                     country_code : '55',
-                    subscriber : shippingAddress.telephone.replace(/\D/g, ''),
+                    subscriber : phoneNumber,
                     phone_type : 'mobile'
                 }];
 
@@ -107,10 +118,10 @@ define([
                     street : shippingAddressStreet,
                     number : shippingAddressNumber,
                     complement : shippingAddressComplement,
-                    city : shippingAddress.city,
-                    state : shippingAddress.regionCode,
+                    city : effectiveShippingAddress.city,
+                    state : effectiveShippingAddress.regionCode,
                     country : 'BRA',
-                    post_code : shippingAddress.postcode
+                    post_code : effectiveShippingAddress.postcode
                 },
                 email : customerEmail,
                 phones : customerPhones,
