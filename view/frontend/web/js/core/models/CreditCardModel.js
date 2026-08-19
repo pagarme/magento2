@@ -48,6 +48,7 @@ define([
 
                 return;
             }
+            this.formObject.tdsReason = this.getTdsSkipReason();
             this.getCreditCardToken(
                 function (data) {
                     _self.formObject.creditCardToken.val(data.id);
@@ -89,12 +90,15 @@ define([
                 .done(success)
                 .fail(error);
         }
-        canTdsRun() {
+        getTdsSkipReason() {
             const configCard = window.checkoutConfig.payment.pagarme_creditcard;
-
-            return configCard['tds_active'] === true
-                && quote.totals().base_grand_total * 100 >= configCard['tds_min_amount'] * 100
-                && this.brandIsVisaOrMaster();
+            if (configCard['tds_active'] !== true) return 'config_disabled';
+            if (quote.totals().base_grand_total * 100 < configCard['tds_min_amount'] * 100) return 'amount_below_min';
+            if (!this.brandIsVisaOrMaster()) return 'brand_not_supported';
+            return null;
+        }
+        canTdsRun() {
+            return this.getTdsSkipReason() === null;
         }
         brandIsVisaOrMaster() {
             return this.formObject.creditCardBrand.val() === "visa"
@@ -130,6 +134,19 @@ define([
             if (!cardIsNotEnrolled && (challengeWasCancelled || isMissingTransStatus)) {
                 _self.addErrors("A autenticação 3DS foi cancelada. Por favor, tente novamente.");
                 return;
+            }
+
+            if (cardIsNotEnrolled) {
+                const tdsModeConfig = window.checkoutConfig.payment.pagarme_creditcard.tds_mode;
+                if (tdsModeConfig === 'mandatory') {
+                    _self.addErrors(
+                        "Seu banco não suporta autenticação 3DS obrigatória neste momento. " +
+                        "Utilize outro cartão ou método de pagamento (PIX, boleto)."
+                    );
+                    tds.removeTdsAttributeData();
+                    return;
+                }
+                this.formObject.tdsReason = 'not_eligible';
             }
 
             this.formObject.authentication = cardIsNotEnrolled ? undefined : JSON.stringify(data);
@@ -182,7 +199,8 @@ define([
                     'cc_installments': formObject.creditCardInstallments.val(),
                     'cc_token_credit_card': formObject.creditCardToken.val(),
                     'cc_card_tax_amount' : formObject.creditCardInstallments.find(':selected').attr('interest'),
-                    'authentication': formObject.authentication
+                    'authentication': formObject.authentication,
+                    'tds_reason': formObject.tdsReason
                 }
             };
         }
