@@ -117,8 +117,14 @@ define([
             const _self = this;
             const tds = new Tds(this.formObject);
             jQuery('body').trigger('processStop');
-            const cardIsNotEnrolled = data?.error === '3DS not available';
-            const hasError = (data?.error !== undefined && !cardIsNotEnrolled) || data?.message !== undefined;
+            const cardIsNotEnrolled = data?.error === '3DS not available' || data?.error === 'bad request occurred during 3DS provider call';
+            const hasTdsValidationError = !cardIsNotEnrolled && (
+                data?.email !== undefined ||
+                data?.bill_addr !== undefined ||
+                data?.card_expiry_date !== undefined ||
+                data?.purchase !== undefined
+            );
+            const hasError = (data?.error !== undefined && !cardIsNotEnrolled) || data?.message !== undefined || hasTdsValidationError;
 
             if (hasError) {
                 tds.showErrors(data, _self);

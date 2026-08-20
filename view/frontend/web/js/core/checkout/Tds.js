@@ -29,16 +29,16 @@ define([
         }
 
         showErrors(errors, parentObject) {
-            if(errors.error?.email) {
+            if(errors.email) {
                 parentObject.addErrors("Ocorreu um problema ao encontrar o e-mail.");
             }
-            if(errors.error?.bill_addr) {
+            if(errors.bill_addr) {
                 parentObject.addErrors("Ocorreu um problema ao encontrar os endereços.");
             }
-            if(errors.error?.card_expiry_date) {
+            if(errors.card_expiry_date) {
                 parentObject.addErrors("Ocorreu um problema ao montar o dado de expiração do cartão.");
             }
-            if(errors.error?.purchase) {
+            if(errors.purchase) {
                 parentObject.addErrors("Ocorreu um problema ao montar o dado de compra.");
             }
             if(errors.message) {
