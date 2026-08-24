@@ -29,17 +29,20 @@ define([
         }
 
         showErrors(errors, parentObject) {
-            if(errors.error?.email) {
+            if(errors.email) {
                 parentObject.addErrors("Ocorreu um problema ao encontrar o e-mail.");
             }
-            if(errors.error?.bill_addr) {
+            if(errors.bill_addr) {
                 parentObject.addErrors("Ocorreu um problema ao encontrar os endereços.");
             }
-            if(errors.error?.card_expiry_date) {
+            if(errors.card_expiry_date) {
                 parentObject.addErrors("Ocorreu um problema ao montar o dado de expiração do cartão.");
             }
-            if(errors.error?.purchase) {
+            if(errors.purchase) {
                 parentObject.addErrors("Ocorreu um problema ao montar o dado de compra.");
+            }
+            if(errors.message) {
+                parentObject.addErrors(errors.message);
             }
         }
 
@@ -67,29 +70,37 @@ define([
 
         getTdsData(acctType, cardExpiryDate) {
             const billingAddress = quote.billingAddress();
-            const  amountInCents = quote.totals().base_grand_total * 100;
+            const amountInCents = quote.totals().base_grand_total * 100;
             const [
-                billingAddressStreet,
-                billingAddressNumber,
-                billingAddressComplement
-            ] = billingAddress.street;
+                billingAddressStreet = '',
+                billingAddressNumber = '',
+                billingAddressComplement = ''
+            ] = billingAddress.street || [];
 
-            const shippingAddress = quote.shippingAddress();
+            const shippingAddressObj = quote.shippingAddress();
+            const effectiveShippingAddress = (shippingAddressObj && shippingAddressObj.street && shippingAddressObj.telephone)
+                ? shippingAddressObj
+                : billingAddress;
+
             const [
-                shippingAddressStreet,
-                shippingAddressNumber,
-                shippingAddressComplement
-            ] = shippingAddress.street;
+                shippingAddressStreet = '',
+                shippingAddressNumber = '',
+                shippingAddressComplement = ''
+            ] = (effectiveShippingAddress.street || []);
 
             let customerEmail = window.checkoutConfig.customerData?.email;
             if(quote.guestEmail) {
                 customerEmail = quote.guestEmail;
             }
 
+            const phoneNumber = effectiveShippingAddress.telephone
+                ? effectiveShippingAddress.telephone.replace(/\D/g, '')
+                : '';
+
             const customerPhones =
                 [{
                     country_code : '55',
-                    subscriber : shippingAddress.telephone.replace(/\D/g, ''),
+                    subscriber : phoneNumber,
                     phone_type : 'mobile'
                 }];
 
@@ -107,10 +118,10 @@ define([
                     street : shippingAddressStreet,
                     number : shippingAddressNumber,
                     complement : shippingAddressComplement,
-                    city : shippingAddress.city,
-                    state : shippingAddress.regionCode,
+                    city : effectiveShippingAddress.city,
+                    state : effectiveShippingAddress.regionCode,
                     country : 'BRA',
-                    post_code : shippingAddress.postcode
+                    post_code : effectiveShippingAddress.postcode
                 },
                 email : customerEmail,
                 phones : customerPhones,
