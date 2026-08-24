@@ -33,6 +33,15 @@
                 <field id="tds_active">1</field>
             </depends>
         </field>
+        <field id="tds_mode" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="40" translate="label comment" type="select">
+            <label>3DS Mode</label>
+            <comment><![CDATA[<strong>Optional:</strong> Segue sem 3DS se cartão não elegível (compatível, padrão)<br><strong>Mandatory:</strong> Rejeita se não elegível; cliente vê mensagem de erro]]></comment>
+            <source_model>Pagarme\Pagarme\Model\Source\TdsMode</source_model>
+            <config_path>payment/pagarme_creditcard/tds_mode</config_path>
+            <depends>
+                <field id="tds_active">1</field>
+            </depends>
+        </field>
         <depends>
             <field id="active">1</field>
         </depends>

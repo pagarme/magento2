@@ -13,6 +13,7 @@ namespace Pagarme\Pagarme\Gateway\Transaction\CreditCard\Config;
 
 use Pagarme\Pagarme\Gateway\Transaction\Base\Config\TdsConfigInterface;
 use Pagarme\Pagarme\Gateway\Transaction\Base\Config\AbstractConfig;
+use Pagarme\Pagarme\Model\Enum\TdsModeEnum;
 
 class Config extends AbstractConfig implements ConfigInterface, TdsConfigInterface
 {
@@ -68,6 +69,14 @@ class Config extends AbstractConfig implements ConfigInterface, TdsConfigInterfa
     public function getTdsMinAmount()
     {
         return $this->getConfig(static::PATH_TDS_MIN_AMOUNT);
+    }
+
+    /**
+     * @return string
+     */
+    public function getTdsMode()
+    {
+        return $this->getConfig(static::PATH_TDS_MODE) ?: TdsModeEnum::OPTIONAL;
     }
 
     /**

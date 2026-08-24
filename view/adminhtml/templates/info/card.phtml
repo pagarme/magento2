@@ -52,5 +52,12 @@
         <?= __($info['3dsStatus']); ?>
     </span>
 <?php endif; ?>
+<?php if (!empty($info['3dsReason'])) : ?>
+    <br />
+    <span>
+        <b><?= __('3DS Reason'); ?>: </b>
+        <?= __($info['3dsReason']); ?>
+    </span>
+<?php endif; ?>
 <br />
 <span><?= $info['acquirerMessage']; ?></span>
