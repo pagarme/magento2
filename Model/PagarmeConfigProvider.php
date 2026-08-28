@@ -297,6 +297,33 @@ class PagarmeConfigProvider implements ConfigProviderInterface
     }
 
     /**
+     * @return string
+     */
+    public function getPaymentProfileId($website = null)
+    {
+        return $this->scopeConfig->getValue(
+            self::PATH_PAYMENT_PROFILE_ID,
+            ScopeInterface::SCOPE_WEBSITES,
+            $this->getWebsiteId($website)
+        );
+    }
+
+    /**
+     * Returns payment profile ID if set, otherwise returns account ID.
+     * Used for TDS token generation and other operations that require an identifier.
+     *
+     * @return string
+     */
+    public function getIdentifier($website = null)
+    {
+        $paymentProfileId = $this->getPaymentProfileId($website);
+        if (!empty($paymentProfileId)) {
+            return $paymentProfileId;
+        }
+        return $this->getAccountId($website);
+    }
+
+    /**
      * @return bool
      */
     public function isPixEnabled($website = null)
