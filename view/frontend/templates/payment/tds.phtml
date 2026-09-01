@@ -6,13 +6,10 @@
         return;
     }
 ?>
-<div id="challengeIframeElement" class="challengeIframeElement">
-    <div class="modal-content">
-    <iframe
-        name="challengeIframe"
-        id="challengeIframe"
-        title="pagarameTdsIframe"
-    ></iframe>
-    </div>
-</div>
-<script src="<?= $this->getSdkUrl(); ?>"></script>
+<!-- NX/Auth Switch containers -->
+<div id="tdsMethodContainer" style="display: none;"></div>
+<div id="challengeContainer" class="stoneChallengeIframeElement"></div>
+
+<!-- Stone NX 3DS SDK -->
+<script src="<?= $this->getNxSdkUrl(); ?>"></script>
+<script src="<?= $this->getTifaSdkUrl(); ?>"></script>

@@ -13,6 +13,9 @@
                 <value id="pagarme-googlepay" type="host">*.google.com</value>
                 <value id="pagarme-googlepay-google" type="host">google.com</value>
                 <value id="pagarme-googlepay-sandbox" type="host">pay.sandbox.google.com</value>
+                <value id="pagarme-tifa-karavela" type="host">tifa.karavela-shared-pci-prd.aws.karavela.run</value>
+                <value id="pagarme-tifa-stone" type="host">tifa-app.stone.com.br</value>
+                <value id="pagarme-nx-stone" type="host">*.stone.com.br</value>
             </values>
         </policy>
         <policy id="img-src">
@@ -36,8 +39,8 @@
         </policy>
         <policy id="script-src">
             <values>
-                <value id="pagarme-api-3ds" type="host">3ds2.pagar.me</value>
-                <value id="pagarme-api-3ds-sdx" type="host">3ds2-sdx.pagar.me</value>
+                <value id="pagarme-api-3ds-nx" type="host">3ds-nx-js.stone.com.br</value>
+                <value id="pagarme-api-tifa" type="host">tifa-app.stone.com.br</value>
                 <value id="pagarme-googlepay" type="host">*.google.com</value>
             </values>
         </policy>
