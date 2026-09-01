@@ -44,6 +44,8 @@ class TdsTokenService
             // NX provider failed; try legacy fallback
         }
 
+
+        // Legacy
         try {
             $tdsTokenProxy = new TdsTokenProxy($this->coreAuth);
             $token = $tdsTokenProxy->getTdsToken($environment, $identifier)->tdsToken;

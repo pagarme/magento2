@@ -32,7 +32,8 @@ define([], () => {
             if (!tdsMethodContainer || !challengeContainer) {
                 throw new Error('NX TDS containers not found in DOM');
             }
-
+            challengeContainer.style.display = 'block';
+            jQuery('body').trigger('processStop');
             // AuthSwitch (tifa) flow — commented out while using NX direct
             // window.tifa.init({
             //     tds: {
@@ -48,26 +49,28 @@ define([], () => {
             //     callback({ error: error.message || 'NX TDS challenge failed' });
             // });
 
-            challengeContainer.style.display = 'block';
-            jQuery('body').trigger('processStop');
+            
 
-            window.TDS.init({
-                token: tdsToken,
-                tds_method_container_element: tdsMethodContainer,
-                challenge_container_element: challengeContainer,
-                use_default_challenge_iframe_style: true,
-                challenge_window_size: '03'
-            }, tdsData).then((result) => {
-                challengeContainer.style.display = 'none';
-                console.log('[NxTDS] raw result:', JSON.stringify(result));
-                const normalized = this.normalizeResponse(result);
-                console.log('[NxTDS] normalized:', JSON.stringify(normalized));
-                callback(normalized);
-            }).catch((error) => {
-                challengeContainer.style.display = 'none';
-                console.error('[NxTDS] error:', error);
-                callback({ error: error.message || 'NX TDS challenge failed' });
-            });
+            return Promise.resolve()
+                .then(() => window.TDS.init({
+                    token: tdsToken,
+                    tds_method_container_element: tdsMethodContainer,
+                    challenge_container_element: challengeContainer,
+                    use_default_challenge_iframe_style: true,
+                    challenge_window_size: '03'
+                }, tdsData))
+                .then((result) => {
+                    challengeContainer.style.display = 'none';
+                    console.log('[NxTDS] raw result:', JSON.stringify(result));
+                    const normalized = this.normalizeResponse(result);
+                    console.log('[NxTDS] normalized:', JSON.stringify(normalized));
+                    callback(normalized);
+                })
+                .catch((error) => {
+                    challengeContainer.style.display = 'none';
+                    console.error('[NxTDS] error:', error);
+                    callback({ error: error.message || 'NX TDS challenge failed' });
+                });
         }
 
         /**
@@ -79,33 +82,33 @@ define([], () => {
                 return { error: 'Empty response from NX TDS' };
             }
 
-            const normalized = {};
+            // The SDK returns an array of TDS step results directly.
+            const tdsItem = Array.isArray(response) ? response[0] : response;
 
-            if (response.risk_id) {
-                normalized.risk_id = response.risk_id;
+            if (!tdsItem) {
+                return { error: 'Empty response from NX TDS' };
             }
 
-            if (response.steps && response.steps.tds && Array.isArray(response.steps.tds)) {
-                const tdsList = response.steps.tds;
-                if (tdsList.length > 0) {
-                    const tdsData = tdsList[0];
+            const normalized = {};
 
-                    if (tdsData.trans_status !== undefined) {
-                        normalized.trans_status = tdsData.trans_status;
-                    }
+            if (tdsItem.risk_id) {
+                normalized.risk_id = tdsItem.risk_id;
+            }
 
-                    if (tdsData.tds_server_trans_id) {
-                        normalized.tds_server_trans_id = tdsData.tds_server_trans_id;
-                    }
+            if (tdsItem.trans_status !== undefined) {
+                normalized.trans_status = tdsItem.trans_status;
+            }
 
-                    if (tdsData.challenge_canceled !== undefined) {
-                        normalized.challenge_canceled = tdsData.challenge_canceled;
-                    }
+            if (tdsItem.tds_server_trans_id) {
+                normalized.tds_server_trans_id = tdsItem.tds_server_trans_id;
+            }
 
-                    if (tdsData.authenticated_card) {
-                        normalized.authenticated_card = tdsData.authenticated_card;
-                    }
-                }
+            if (tdsItem.challenge_canceled !== undefined) {
+                normalized.challenge_canceled = tdsItem.challenge_canceled;
+            }
+
+            if (tdsItem.authenticated_card) {
+                normalized.authenticated_card = tdsItem.authenticated_card;
             }
 
             return normalized;

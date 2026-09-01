@@ -72,9 +72,7 @@ define([
                 : tokenResponse.tds_token;
 
             try {
-                this.challenge.execute(tdsToken, tdsData, (result) => {
-                    callbackTds(result);
-                });
+                return this.challenge.execute(tdsToken, tdsData, callbackTds);
             } catch (e) {
                 callbackTds({ error: e.message || 'Failed to initialize TDS challenge' });
             }

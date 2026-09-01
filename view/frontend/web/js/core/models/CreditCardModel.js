@@ -134,7 +134,7 @@ define([
                 return;
             }
 
-            const challengeWasCancelled = data?.challenge_cancelled === true;
+            const challengeWasCancelled = data?.challenge_canceled === true;
             const isMissingTransStatus = data?.trans_status === '' || data?.trans_status === undefined;
 
             if (!cardIsNotEnrolled && (challengeWasCancelled || isMissingTransStatus)) {
