@@ -65,7 +65,6 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
                 if (empty($product)) {
                     return __(self::SUBSCRIPTION_NOT_FOUND_MESSAGE);
                 }
-
                 $productSubscription->setId($id);
             }
 
@@ -73,20 +72,43 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
                 $productSubscription->getProductId()
             );
 
-            $productSubscription = $this->productSubscriptionService
-                ->saveProductSubscription($productSubscription);
+            // Converte o Mapper (DTO do Magento) para o Aggregate do core
+            $aggregate = new \Pagarme\Core\Recurrence\Aggregates\ProductSubscription();
+            $aggregate->setProductId($productSubscription->getProductId());
+            $aggregate->setCreditCard($productSubscription->getCreditCard());
+            $aggregate->setBoleto($productSubscription->getBoleto());
+            $aggregate->setAllowInstallments($productSubscription->getAllowInstallments());
+            $aggregate->setSellAsNormalProduct($productSubscription->getSellAsNormalProduct());
 
-            $this->productSubscriptionHelper
-                ->setCustomOption($productSubscription);
+            if ($productSubscription->getId()) {
+                $aggregate->setId($productSubscription->getId());
+            }
 
+            if ($productSubscription->getRepetitions()) {
+                foreach ($productSubscription->getRepetitions() as $rep) {
+                    $repetition = new \Pagarme\Core\Recurrence\Aggregates\Repetition();
+                    $repetition->setInterval($rep->getInterval());
+                    $repetition->setIntervalCount($rep->getIntervalCount());
+                    $repetition->setRecurrencePrice($rep->getRecurrencePrice());
+                    $repetition->setCycles($rep->getCycles());
+                    $aggregate->addRepetition($repetition);
+                }
+            }
+
+            $saved = $this->productSubscriptionService->saveProductSubscription($aggregate);
+
+            if ($saved && $saved->getId()) {
+                $saved = $this->productSubscriptionService->findById($saved->getId());
+            }
+
+            $this->productSubscriptionHelper->setCustomOption($saved);
+            return $saved;
         } catch (Throwable $exception) {
             return [
                 'code' => 404,
                 'message' => $exception->getMessage()
             ];
         }
-
-        return $productSubscription;
     }
 
     /**
@@ -192,7 +214,6 @@ class ProductsSubscription implements ProductSubscriptionApiInterface
                 'code' => 200,
                 'message' => __('Subscription product saved')
             ]);
-
         } catch (Throwable $exception) {
             return json_encode([
                 'code' => 404,
