@@ -4,7 +4,6 @@ namespace Pagarme\Pagarme\Model\Api;
 
 use Exception;
 use InvalidArgumentException;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Webapi\Rest\Request;
 use Pagarme\Core\Kernel\Services\LogService;
 use Pagarme\Core\Marketplace\Interfaces\RecipientInterface as CoreRecipientInterface;
@@ -13,6 +12,7 @@ use Pagarme\Pagarme\Api\KycLinkResponseInterfaceFactory;
 use Pagarme\Pagarme\Api\RecipientInterface;
 use Pagarme\Pagarme\Model\RecipientFactory as ModelFactoryRecipient;
 use Pagarme\Pagarme\Model\ResourceModel\Recipients as ResourceModelRecipient;
+use Pagarme\Pagarme\Service\Marketplace\KycLinkService;
 use Pagarme\Pagarme\Service\Marketplace\RecipientService;
 use Throwable;
 
@@ -48,13 +48,19 @@ class Recipient implements RecipientInterface
      */
     protected $kycLinkResponseFactory;
 
+    /**
+     * @var KycLinkService
+     */
+    protected $kycLinkService;
+
     public function __construct(
         Request $request,
         ModelFactoryRecipient $modelFactoryRecipient,
         ResourceModelRecipient $resourceModelRecipient,
         CoreRecipient $coreRecipient,
         RecipientService $recipientService,
-        KycLinkResponseInterfaceFactory $kycLinkResponseFactory
+        KycLinkResponseInterfaceFactory $kycLinkResponseFactory,
+        KycLinkService $kycLinkService
     ) {
         $this->request = $request;
         $this->modelFactoryRecipient = $modelFactoryRecipient;
@@ -62,6 +68,7 @@ class Recipient implements RecipientInterface
         $this->coreRecipient = $coreRecipient;
         $this->recipientService = $recipientService;
         $this->kycLinkResponseFactory = $kycLinkResponseFactory;
+        $this->kycLinkService = $kycLinkService;
     }
 
     /**
@@ -168,15 +175,7 @@ class Recipient implements RecipientInterface
 
     public function createKycLink(string $id)
     {
-        $recipientModel = $this->modelFactoryRecipient->create();
-        $this->resourceModelRecipient->load($recipientModel, $id);
-        if (empty($recipientModel->getPagarmeId())) {
-            throw new NoSuchEntityException(__('Recipient not founded.'));
-        }
-        $kycLink = $this->recipientService->createKycLink($recipientModel->getPagarmeId());
-        if (empty($kycLink->url) || empty($kycLink->base64_qrcode)) {
-            throw new NoSuchEntityException(__('Failed to generate the security validation link.'));
-        }
+        $kycLink = $this->kycLinkService->createKycLink($id);
         $kycResponse = $this->kycLinkResponseFactory->create();
         $kycResponse->setUrl($kycLink->url)
             ->setQrCode('data:image/svg+xml;base64,' . $kycLink->base64_qrcode);

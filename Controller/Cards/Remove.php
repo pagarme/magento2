@@ -19,8 +19,11 @@ use Magento\Framework\Controller\Result\RedirectFactory;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Message\ManagerInterface;
+use Magento\Framework\Phrase;
 use Pagarme\Pagarme\Api\CardsManagementInterface;
+use Pagarme\Pagarme\Api\Data\SavedCardInterface;
 use Pagarme\Pagarme\Api\SavedCardRepositoryInterface;
+use Pagarme\Pagarme\Model\Customer\CardOwnership;
 use PagarmeCoreApiLib\APIException;
 use Psr\Log\LoggerInterface;
 
@@ -51,6 +54,9 @@ class Remove implements HttpGetActionInterface
     /** @var LoggerInterface */
     private $logger;
 
+    /** @var CardOwnership */
+    private $cardOwnership;
+
     /**
      * @param LoggerInterface $logger
      * @param CardsManagementInterface $cardsManagement
@@ -59,6 +65,7 @@ class Remove implements HttpGetActionInterface
      * @param SavedCardRepositoryInterface $savedCardRepository
      * @param RedirectFactory $resultRedirectFactory
      * @param Http $request
+     * @param CardOwnership $cardOwnership
      */
     public function __construct(
         LoggerInterface $logger,
@@ -67,7 +74,8 @@ class Remove implements HttpGetActionInterface
         Session $customerSession,
         SavedCardRepositoryInterface $savedCardRepository,
         RedirectFactory $resultRedirectFactory,
-        Http $request
+        Http $request,
+        CardOwnership $cardOwnership
     ) {
         $this->savedCardRepository = $savedCardRepository;
         $this->_customerSession = $customerSession;
@@ -76,46 +84,78 @@ class Remove implements HttpGetActionInterface
         $this->_resultRedirectFactory = $resultRedirectFactory;
         $this->cardsManagement = $cardsManagement;
         $this->logger = $logger;
+        $this->cardOwnership = $cardOwnership;
     }
 
     public function execute()
     {
-        /** @var Redirect $resultRedirect */
-        $resultRedirect = $this->_resultRedirectFactory->create([ResultFactory::TYPE_REDIRECT]);
         if (!$this->_customerSession->isLoggedIn()) {
             $this->_messageManager->addNoticeMessage(__('You must be logged in.'));
-            return $resultRedirect->setPath('customer/account/login');
+            return $this->redirectTo('customer/account/login');
         }
-        if (!$cardId = $this->_request->getParam('card_id')) {
-            $this->_messageManager->addErrorMessage(
-                __('Unable to find the card.')
-            );
-            return $resultRedirect->setPath('pagarme/customer/cards');
+
+        $cardId = $this->_request->getParam('card_id');
+        if (!$cardId) {
+            return $this->redirectWithError(__('Unable to find the card.'));
         }
+
+        $entity = $this->findOwnedCard($cardId);
+        if ($entity === null) {
+            return $this->redirectWithError(__('The card does not exist.'));
+        }
+
+        $this->removeFromGateway($entity);
+
         try {
-            $entity = $this->savedCardRepository->get($cardId);
+            $this->savedCardRepository->delete($entity);
         } catch (LocalizedException $e) {
-            $this->_messageManager->addExceptionMessage(
-                $e,
-                __('Unable to find the card.')
-            );
-            return $resultRedirect->setPath('pagarme/customer/cards');
+            $this->_messageManager->addExceptionMessage($e, __('Unable to delete the card.'));
+            return $this->redirectToCards();
         }
+
+        $this->_messageManager->addSuccessMessage(__('Card removed successfully.'));
+        return $this->redirectToCards();
+    }
+
+    /**
+     * Missing and foreign cards both return null, so the response does not reveal which ids exist.
+     */
+    private function findOwnedCard(string $cardId): ?SavedCardInterface
+    {
+        try {
+            $card = $this->savedCardRepository->get($cardId);
+        } catch (LocalizedException $e) {
+            return null;
+        }
+
+        return $this->cardOwnership->ownsPagarmeId($card->getOwnerId()) ? $card : null;
+    }
+
+    private function removeFromGateway(SavedCardInterface $entity): void
+    {
         try {
             $this->cardsManagement->remove($entity);
         } catch (APIException $e) {
             $this->logger->error($e->getMessage());
         }
-        try {
-            $this->savedCardRepository->delete($entity);
-        } catch (LocalizedException $e) {
-            $this->_messageManager->addExceptionMessage(
-                $e,
-                __('Unable to delete the card.')
-            );
-            return $resultRedirect->setPath('pagarme/customer/cards');
-        }
-        $this->_messageManager->addSuccessMessage(__('Card removed successfully.'));
-        return $resultRedirect->setPath('pagarme/customer/cards');
+    }
+
+    private function redirectWithError(Phrase $message): Redirect
+    {
+        $this->_messageManager->addErrorMessage($message);
+
+        return $this->redirectToCards();
+    }
+
+    private function redirectToCards(): Redirect
+    {
+        return $this->redirectTo('pagarme/customer/cards');
+    }
+
+    private function redirectTo(string $path): Redirect
+    {
+        return $this->_resultRedirectFactory
+            ->create([ResultFactory::TYPE_REDIRECT])
+            ->setPath($path);
     }
 }
