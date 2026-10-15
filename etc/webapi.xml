@@ -55,21 +55,13 @@
         </resources>
     </route>
 
-    <route url="/V1/pagarme/maintenance/:params" method="GET">
-        <service class="Pagarme\Pagarme\Api\MaintenanceInterface"
-                 method="index"/>
-        <resources>
-            <resource ref="anonymous"/>
-        </resources>
-    </route>
-
     <!-- Recurrence Apis -->
 
     <route url="/V1/pagarme/recurrence/product/formData" method="POST">
         <service class="Pagarme\Pagarme\Api\ProductSubscriptionApiInterface"
                  method="saveFormData"/>
         <resources>
-            <resource ref="anonymous"/>
+            <resource ref="Pagarme_Pagarme::recurrence_products_subscription_save"/>
         </resources>
     </route>
 
@@ -77,7 +69,7 @@
         <service class="Pagarme\Pagarme\Api\ProductPlanInterface"
                  method="saveFormData"/>
         <resources>
-            <resource ref="anonymous"/>
+            <resource ref="Pagarme_Pagarme::recurrence_products_subscription_save"/>
         </resources>
     </route>
 
@@ -85,7 +77,7 @@
         <service class="Pagarme\Pagarme\Api\RecipientInterface"
                  method="saveFormData"/>
         <resources>
-            <resource ref="anonymous"/>
+            <resource ref="Pagarme_Pagarme::recipients_save"/>
         </resources>
     </route>
 
@@ -93,7 +85,7 @@
         <service class="Pagarme\Pagarme\Api\RecipientInterface"
                  method="searchRecipient"/>
         <resources>
-            <resource ref="anonymous"/>
+            <resource ref="Pagarme_Pagarme::recipients_view"/>
         </resources>
     </route>
 
@@ -101,7 +93,7 @@
         <service class="Pagarme\Pagarme\Api\RecipientInterface"
                  method="createKycLink"/>
         <resources>
-            <resource ref="anonymous"/>
+            <resource ref="Pagarme_Pagarme::recipients_view"/>
         </resources>
     </route>
 
@@ -218,7 +210,7 @@
         <service class="Pagarme\Pagarme\Api\HubCommandInterface"
                  method="execute"/>
         <resources>
-            <resource ref="anonymous"/>
+            <resource ref="Magento_Payment::payment"/>
         </resources>
     </route>
 
@@ -234,7 +226,7 @@
         <service class="Pagarme\Pagarme\Api\BulkApiInterface"
                  method="execute"/>
         <resources>
-            <resource ref="anonymous"/>
+            <resource ref="Pagarme_Pagarme::bulk"/>
         </resources>
     </route>
 </routes>
