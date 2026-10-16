@@ -7,7 +7,7 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=7.1",
-        "pagarme/ecommerce-module-core": "dev-chore/HPIP-504-43"
+        "pagarme/ecommerce-module-core": "dev-chore-HPIP-504-43"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.6",
