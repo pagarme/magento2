@@ -1,4 +1,4 @@
-.stoneChallengeIframeElement {
+.challengeIframeElement {
     display: none;
     position: fixed;
     z-index: 99999;
@@ -12,7 +12,7 @@
     background-color: rgba(0, 0, 0, 0.4);
 }
 
-.stoneChallengeIframeElement iframe {
+.modal-content {
     background-color: #fefefe;
     margin: auto;
     padding: 20px;
@@ -20,7 +20,7 @@
     max-width: fit-content;
 }
 
-#challengeIframe .stoneChallengeIframeElement {
+#challengeIframe {
     display: none;
     width: 500px; 
     height: 600px;
