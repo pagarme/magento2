@@ -22,6 +22,7 @@ class InstallmentInterestCalculatorTest extends BaseTest
             new Installment(1, 10000, 0),
             new Installment(2, 10000, 0),
             new Installment(3, 10000, 0.0199),
+            new Installment(4, 6150, 1000.5 / 6150),
         ]);
 
         return $calculator;
@@ -35,6 +36,11 @@ class InstallmentInterestCalculatorTest extends BaseTest
     public function testInstallmentWithInterestReturnsInterestInCents()
     {
         $this->assertSame(199, $this->makeCalculator()->calculateInterestInCents('visa', 3, 10000));
+    }
+
+    public function testHalfCentInterestIsTruncatedToMatchChargedTotal()
+    {
+        $this->assertSame(1000, $this->makeCalculator()->calculateInterestInCents('visa', 4, 6150));
     }
 
     public function testInvalidInstallmentNumberIsRejected()

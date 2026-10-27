@@ -21,7 +21,10 @@ class InstallmentInterestCalculator
 
         foreach ($this->getInstallments($cardBrand, (int) $baseAmountInCents) as $installment) {
             if ($installment->getTimes() === (int) $installments) {
-                return (int) round($installment->getTotal() - $installment->getBaseTotal());
+                // Truncate, not round: the charged total drops the half-cent (7150.5 -> 7150),
+                // so the interest must match it or the order total gains a phantom cent
+                // to reflect the actual frontend calculation.
+                return (int) ($installment->getTotal() - $installment->getBaseTotal());
             }
         }
 
