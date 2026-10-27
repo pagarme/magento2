@@ -20,10 +20,10 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Pagarme\Pagarme\Service\Marketplace\KycLinkService;
 
 /**
- * Class KycLink
+ * Class Kyclink
  * @package Pagarme\Pagarme\Controller\Customer\Marketplace
  */
-class KycLink implements HttpGetActionInterface
+class Kyclink implements HttpGetActionInterface
 {
     /** @var Session */
     private $customerSession;

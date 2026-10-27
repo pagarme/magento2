@@ -79,10 +79,18 @@ class Recipient implements RecipientInterface
     {
         $bodyParams = current($this->request->getBodyParams());
         parse_str($bodyParams, $params);
-        $params = $params['form'];
 
+        return json_encode($this->registerRecipient($params['form']));
+    }
+
+    /**
+     * @param array $params
+     * @return array{code: int, message: string}
+     */
+    public function registerRecipient(array $params): array
+    {
         try {
-            $message = __(
+            $message = (string) __(
                 "<p>He can now sell, but remember to check his "
                 . "<b>status</b>. He can only withdraw his sales amounts once the status is "
                 . "<i>“active”</i></p>"
@@ -92,17 +100,17 @@ class Recipient implements RecipientInterface
                 $recipientOnPagarme = $this->createOnPagarme($params);
                 $params['pagarme_id'] = $recipientOnPagarme->id;
                 $params['status'] = CoreRecipientInterface::REGISTERED;
-                $message = __(
+                $message = (string) __(
                     "<p>Follow the status on <b>Pagar.me > Recipients</b> to activate"
                     . " this recipient's balance movement soon!</p>"
                 );
             }
             $this->saveOnPlatform($params);
 
-            return json_encode([
+            return [
                 'code' => 200,
                 'message' => $message
-            ]);
+            ];
         } catch (Throwable $th) {
             $logService = new LogService("Recipient Log", true, 1);
             $logService->info($th->getMessage(), [
@@ -111,11 +119,11 @@ class Recipient implements RecipientInterface
                 'external_id' => $params['register_information']['external_id']
 
             ]);
-            return json_encode([
+            return [
                 'code' => 400,
                 'message' => __('An error occurred while saving the recipient.')
                     . ' ' . __($th->getMessage())
-            ]);
+            ];
         }
     }
 
