@@ -1,6 +1,6 @@
 <?php
 /**
- * Class CreditCardDataAssignObserver
+ * Class CreditCardOrderPlaceBeforeObserver
  *
  * @author      Open Source Team
  * @copyright   2021 Pagar.me (https://pagar.me)
@@ -11,149 +11,141 @@
 
 namespace Pagarme\Pagarme\Observer;
 
-
-use Magento\Framework\DataObject;
 use Magento\Framework\Event\Observer;
-use Magento\Quote\Api\Data\PaymentInterface;
 use Magento\Framework\Event\ObserverInterface;
-use Pagarme\Core\Kernel\Services\InstallmentService;
-use Pagarme\Core\Kernel\ValueObjects\CardBrand;
-use Pagarme\Pagarme\Api\InstallmentsByBrandManagementInterface;
-use Pagarme\Pagarme\Api\InstallmentsByBrandAndAmountManagementInterface;
-
+use Magento\Framework\Exception\LocalizedException;
+use Pagarme\Pagarme\Service\Payment\ClientPaymentAmountValidator;
+use Pagarme\Pagarme\Service\Payment\InstallmentInterestCalculator;
 
 class CreditCardOrderPlaceBeforeObserver implements ObserverInterface
 {
-    protected $installmentsInterface;
-    protected $installmentsByBrandAndAmountInterface;
+    const CREDIT_CARD_METHODS = [
+        'pagarme_creditcard',
+        'pagarme_billet_creditcard',
+        'pagarme_two_creditcard',
+    ];
 
-    /**
-     * @param InstallmentsByBrandManagementInterface $installmentsInterface
-     */
+    /** @var InstallmentInterestCalculator */
+    private $interestCalculator;
+
+    /** @var ClientPaymentAmountValidator */
+    private $amountValidator;
+
     public function __construct(
-        InstallmentsByBrandManagementInterface $installmentsInterface,
-        InstallmentsByBrandAndAmountManagementInterface $installmentsByBrandAndAmountInterface
-    )
-    {
-        $this->setInstallmentsInterface($installmentsInterface);
-        $this->setInstallmentsByBrandAndAmountInterface($installmentsByBrandAndAmountInterface);
+        InstallmentInterestCalculator $interestCalculator,
+        ClientPaymentAmountValidator $amountValidator
+    ) {
+        $this->interestCalculator = $interestCalculator;
+        $this->amountValidator = $amountValidator;
     }
 
+    /**
+     * @throws LocalizedException
+     */
     public function execute(Observer $observer)
     {
         $order = $observer->getOrder();
         $payment = $order->getPayment();
 
-        if ('pagarme_creditcard' != $payment->getMethod() && 'pagarme_billet_creditcard' != $payment->getMethod() && 'pagarme_two_creditcard' != $payment->getMethod()) {
+        if (!in_array($payment->getMethod(), self::CREDIT_CARD_METHODS, true)) {
             return $this;
         }
 
-        if($payment->getMethod() == 'pagarme_creditcard'){
-            $tax = $this->getTaxOrder(
-                $payment->getAdditionalInformation('cc_installments'),
-                $order,
-                $payment->getAdditionalInformation('cc_type')
-            );
-        }
+        $grandTotalInCents = (int) round($order->getGrandTotal() * 100);
+        $interestInCents = $this->calculateInterestInCents($payment, $grandTotalInCents);
 
-        if($payment->getMethod() == 'pagarme_billet_creditcard'){
-            $tax = $this->getTaxOrderByAmount(
-                $payment->getAdditionalInformation('cc_installments'),
-                $payment->getAdditionalInformation('cc_cc_amount'),
-                $payment->getCcType()
-            );
-        }
-
-        if($payment->getMethod() == 'pagarme_two_creditcard'){
-            $tax = $payment->getAdditionalInformation('cc_second_card_tax_amount') + $payment->getAdditionalInformation('cc_first_card_tax_amount');
-        }
-
-
+        $tax = $interestInCents / 100;
         $total = $order->getGrandTotal() + $tax;
-        $order->setTaxAmount($tax)->setBaseTaxAmount($tax)->setBaseGrandTotal($total)->setGrandTotal($total);
+        $order->setTaxAmount($tax)
+            ->setBaseTaxAmount($tax)
+            ->setBaseGrandTotal($total)
+            ->setGrandTotal($total);
 
         return $this;
     }
 
-    protected function getTaxOrder($installments, $order, $type = null)
+    /**
+     * @throws LocalizedException
+     */
+    private function calculateInterestInCents($payment, $grandTotalInCents)
     {
-        $installmentService = new InstallmentService();
+        switch ($payment->getMethod()) {
+            case 'pagarme_creditcard':
+                return $this->singleCardInterestInCents($payment, $grandTotalInCents);
+            case 'pagarme_billet_creditcard':
+                return $this->billetCardInterestInCents($payment, $grandTotalInCents);
+            case 'pagarme_two_creditcard':
+                return $this->twoCardsInterestInCents($payment, $grandTotalInCents);
+            default:
+                throw new \LogicException(
+                    'No interest calculation defined for payment method ' . $payment->getMethod()
+                );
+        }
+    }
 
-        $brand = CardBrand::$type();
-
-        $grandTotal = number_format((float)$order->getGrandTotal(), 2, '.', '');
-        $returnInstallments = $installmentService->getInstallmentsFor(
-            null,
-            $brand,
-            $grandTotal * 100
+    private function singleCardInterestInCents($payment, $grandTotalInCents)
+    {
+        return $this->validatedInterestInCents(
+            $payment->getAdditionalInformation('cc_type'),
+            $payment->getAdditionalInformation('cc_installments'),
+            $grandTotalInCents,
+            $payment->getAdditionalInformation('cc_card_tax_amount')
         );
-
-        $result = 0;
-
-        foreach ($returnInstallments as $installment) {
-            if ($installment->getTimes() == $installments) {
-                $result =
-                    (int) ($installment->getTotal() - $installment->getBaseTotal());
-                $result = $result / 100;
-                break;
-            }
-        }
-
-        return $result;
     }
 
-    protected function getTaxOrderByAmount($installments, $amount, $type = null)
+    private function billetCardInterestInCents($payment, $grandTotalInCents)
     {
-        $returnInstallments = $this->getInstallmentsByBrandAndAmountInterface()->getInstallmentsByBrandAndAmount($type,$amount);
-        $result = 0;
+        $cardAmount = $this->amountValidator->parseMaskedAmountToCents(
+            $payment->getAdditionalInformation('cc_cc_amount')
+        );
+        $billetAmount = $this->amountValidator->parseMaskedAmountToCents(
+            $payment->getAdditionalInformation('cc_billet_amount')
+        );
+        $this->amountValidator->assertSplitMatchesTotal($grandTotalInCents, [$cardAmount, $billetAmount]);
 
-        foreach ($returnInstallments as $installment) {
-            if ($installment['id'] == $installments) {
-                $result = $installment['interest'];
-                break;
-            }
-        }
-
-        return $result;
+        return $this->validatedInterestInCents(
+            $payment->getAdditionalInformation('cc_type'),
+            $payment->getAdditionalInformation('cc_installments'),
+            $cardAmount,
+            $payment->getAdditionalInformation('cc_cc_tax_amount')
+        );
     }
 
-    /**
-     * @return mixed
-     */
-    public function getInstallmentsInterface()
+    private function twoCardsInterestInCents($payment, $grandTotalInCents)
     {
-        return $this->installmentsInterface;
-    }
+        $firstAmount = $this->amountValidator->parseMaskedAmountToCents(
+            $payment->getAdditionalInformation('cc_first_card_amount')
+        );
+        $secondAmount = $this->amountValidator->parseMaskedAmountToCents(
+            $payment->getAdditionalInformation('cc_second_card_amount')
+        );
+        $this->amountValidator->assertSplitMatchesTotal($grandTotalInCents, [$firstAmount, $secondAmount]);
 
-    /**
-     * @param mixed $installmentsInterface
-     *
-     * @return self
-     */
-    public function setInstallmentsInterface($installmentsInterface)
-    {
-        $this->installmentsInterface = $installmentsInterface;
-
-        return $this;
+        return $this->validatedInterestInCents(
+            $payment->getAdditionalInformation('cc_type_first'),
+            $payment->getAdditionalInformation('cc_installments_first'),
+            $firstAmount,
+            $payment->getAdditionalInformation('cc_first_card_tax_amount')
+        ) + $this->validatedInterestInCents(
+            $payment->getAdditionalInformation('cc_type_second'),
+            $payment->getAdditionalInformation('cc_installments_second'),
+            $secondAmount,
+            $payment->getAdditionalInformation('cc_second_card_tax_amount')
+        );
     }
 
     /**
-     * @return mixed
+     * @throws LocalizedException
      */
-    public function getInstallmentsByBrandAndAmountInterface()
+    private function validatedInterestInCents($brand, $installments, $baseAmountInCents, $clientInterest)
     {
-        return $this->installmentsByBrandAndAmountInterface;
-    }
+        $interestInCents = $this->interestCalculator->calculateInterestInCents(
+            $brand,
+            $installments,
+            $baseAmountInCents
+        );
+        $this->amountValidator->assertInterestMatches($interestInCents, $clientInterest);
 
-    /**
-     * @param mixed $installmentsByBrandAndAmountInterface
-     *
-     * @return self
-     */
-    public function setInstallmentsByBrandAndAmountInterface($installmentsByBrandAndAmountInterface)
-    {
-        $this->installmentsByBrandAndAmountInterface = $installmentsByBrandAndAmountInterface;
-
-        return $this;
+        return $interestInCents;
     }
 }

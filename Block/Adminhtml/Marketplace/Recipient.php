@@ -6,6 +6,7 @@ use Exception;
 use Magento\Customer\Model\ResourceModel\Customer\Collection;
 use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory as CustomerCollectionFactory;
 use Magento\Directory\Model\Country;
+use Magento\Framework\Data\Form\FormKey;
 use Magento\Framework\Registry;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
@@ -46,6 +47,11 @@ class Recipient extends Template
      */
     private $country;
 
+    /**
+     * @var FormKey
+     */
+    private $formKey;
+
 
     /**
      * Link constructor.
@@ -53,6 +59,8 @@ class Recipient extends Template
      * @param Registry $registry
      * @param CustomerCollectionFactory $customerCollectionFactory
      * @param Country $country
+     * @param RecipientRepository $recipientRepository
+     * @param FormKey $formKey
      * @throws Exception
      */
     public function __construct(
@@ -60,13 +68,15 @@ class Recipient extends Template
         Registry                  $registry,
         CustomerCollectionFactory $customerCollectionFactory,
         Country                   $country,
-        RecipientRepository       $recipientRepository
+        RecipientRepository       $recipientRepository,
+        FormKey                   $formKey
     )
     {
         $this->coreRegistry = $registry;
         $this->customerCollection = $customerCollectionFactory->create();
         $this->recipientRepository = $recipientRepository;
         $this->country = $country;
+        $this->formKey = $formKey;
 
         Magento2CoreSetup::bootstrap();
         $this->init();
@@ -133,6 +143,14 @@ class Recipient extends Template
         }
 
         return $this->recipient->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFormKey()
+    {
+        return $this->formKey->getFormKey();
     }
 
     public function getLocalId()

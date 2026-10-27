@@ -5,6 +5,7 @@ namespace Pagarme\Pagarme\Test\Unit\Block\Adminhtml\Marketplace;
 use Mockery;
 use stdClass;
 use ReflectionClass;
+use Magento\Framework\Data\Form\FormKey;
 use Magento\Framework\Registry;
 use Magento\Directory\Model\Country;
 use Pagarme\Pagarme\Test\Unit\BaseTest;
@@ -60,7 +61,8 @@ class RecipientTest extends BaseTest
             $registryMock,
             $collectionFactoryMock,
             $countryMock,
-            $recipientRepositoryMock
+            $recipientRepositoryMock,
+            Mockery::mock(FormKey::class)
         );
 
         $editedRecipient = $recipientBlock->getEditRecipient();
@@ -68,6 +70,32 @@ class RecipientTest extends BaseTest
         $this->assertStringContainsString("\"statusLabel\":\"$expectedStatusLabel\"", $editedRecipient);
     }
 
+
+    public function testGetFormKeyReturnsSessionFormKey()
+    {
+        $formKeyMock = Mockery::mock(FormKey::class);
+        $formKeyMock->shouldReceive('getFormKey')->once()->andReturn('abc123');
+
+        $moduleCoreSetupMock = Mockery::mock('alias:Pagarme\Core\Kernel\Abstractions\AbstractModuleCoreSetup');
+        $moduleCoreSetupMock->shouldReceive('bootstrap')->andReturnSelf();
+
+        $registryMock = Mockery::mock(Registry::class);
+        $registryMock->shouldReceive('registry')->andReturnNull();
+
+        $collectionFactoryMock = Mockery::mock(CollectionFactory::class);
+        $collectionFactoryMock->shouldReceive('create')->andReturn(Mockery::mock(Collection::class));
+
+        $recipientBlock = new Recipient(
+            Mockery::spy(Context::class),
+            $registryMock,
+            $collectionFactoryMock,
+            Mockery::mock(Country::class),
+            Mockery::mock(RecipientRepository::class),
+            $formKeyMock
+        );
+
+        $this->assertSame('abc123', $recipientBlock->getFormKey());
+    }
 
     public function testGetEditRecipientShouldReturnEmpty()
     {
@@ -93,7 +121,8 @@ class RecipientTest extends BaseTest
             $registrySpy,
             $collectionFactoryMock,
             $countryMock,
-            $recipientRepositoryMock
+            $recipientRepositoryMock,
+            Mockery::mock(FormKey::class)
         );
 
         $this->assertEmpty($recipientBlock->getEditRecipient());

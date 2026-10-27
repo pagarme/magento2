@@ -12,16 +12,14 @@ declare(strict_types=1);
 namespace Pagarme\Pagarme\Block\Customer;
 
 use Magento\Customer\Model\Session;
-use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Phrase;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
 use Magento\Theme\Block\Html\Pager;
-use Pagarme\Pagarme\Api\CustomerRepositoryInterface;
-use Pagarme\Pagarme\Api\Data\CustomerInterface;
 use Pagarme\Pagarme\Api\Data\SavedCardInterface;
 use Pagarme\Pagarme\Api\SavedCardRepositoryInterface;
+use Pagarme\Pagarme\Model\Customer\CardOwnership;
 use Pagarme\Pagarme\Model\ResourceModel\SavedCard\Collection;
 use Pagarme\Pagarme\Model\ResourceModel\SavedCard\CollectionFactoryInterface;
 
@@ -40,11 +38,8 @@ class Cards extends Template
     /** @var SavedCardRepositoryInterface */
     private $savedCardRepository;
 
-    /** @var CustomerRepositoryInterface */
-    private $customerRepository;
-
-    /** @var SearchCriteriaBuilder */
-    private $_searchCriteriaBuilder;
+    /** @var CardOwnership */
+    private $cardOwnership;
 
     /** @var CollectionFactoryInterface */
     private $collectionFactory;
@@ -56,8 +51,7 @@ class Cards extends Template
 
     /**
      * @param CollectionFactoryInterface $collectionFactory
-     * @param SearchCriteriaBuilder $searchCriteriaBuilder
-     * @param CustomerRepositoryInterface $customerRepository
+     * @param CardOwnership $cardOwnership
      * @param SavedCardRepositoryInterface $savedCardRepository
      * @param Session $customerSession
      * @param Context $context
@@ -65,8 +59,7 @@ class Cards extends Template
      */
     public function __construct(
         CollectionFactoryInterface $collectionFactory,
-        SearchCriteriaBuilder $searchCriteriaBuilder,
-        CustomerRepositoryInterface $customerRepository,
+        CardOwnership $cardOwnership,
         SavedCardRepositoryInterface $savedCardRepository,
         Session $customerSession,
         Template\Context $context,
@@ -78,8 +71,7 @@ class Cards extends Template
         );
         $this->_customerSession = $customerSession;
         $this->savedCardRepository = $savedCardRepository;
-        $this->customerRepository = $customerRepository;
-        $this->_searchCriteriaBuilder = $searchCriteriaBuilder;
+        $this->cardOwnership = $cardOwnership;
         $this->collectionFactory = $collectionFactory;
     }
 
@@ -149,19 +141,7 @@ class Cards extends Template
      */
     protected function getCustomerPagarmeId()
     {
-        if (!$pagarmeId = $this->_customerSession->getPagarmeId()) {
-            $pagarmeCustomer = current(
-                $this->customerRepository->getList(
-                    $this->_searchCriteriaBuilder->addFilter(
-                        CustomerInterface::CODE, $this->_customerSession->getCustomer()->getId()
-                    )->create()
-                )->getItems()
-            );
-            if ($pagarmeCustomer && $pagarmeCustomer instanceof CustomerInterface) {
-                $pagarmeId = $pagarmeCustomer->getPagarmeId();
-            }
-        }
-        return $pagarmeId ?? ' ';
+        return $this->cardOwnership->getPagarmeId() ?? ' ';
     }
 
     /**
