@@ -70,10 +70,10 @@ final class Magento2DatabaseDecorator extends AbstractDatabaseDecorator
         ];
     }
 
-    protected function doQuery($query)
+    protected function doQuery($query, array $bind)
     {
         $connection = $this->db->getConnection();
-        $connection->query($query);
+        $connection->query($query, $bind);
         $this->setLastInsertId($connection->lastInsertId());
     }
 
@@ -89,11 +89,11 @@ final class Magento2DatabaseDecorator extends AbstractDatabaseDecorator
         return $retn;
     }
 
-    protected function doFetch($query)
+    protected function doFetch($query, array $bind)
     {
         $connection = $this->db->getConnection();
 
-        return $connection->fetchAll($query);
+        return $connection->fetchAll($query, $bind);
     }
 
     public function getLastId()

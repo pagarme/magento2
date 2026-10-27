@@ -10,11 +10,11 @@ use Magento\Customer\Model\Session;
 use Magento\Framework\App\Request\Http;
 use Pagarme\Core\Kernel\Services\LocalizationService;
 use Pagarme\Core\Kernel\Services\LogService;
-use Pagarme\Core\Payment\Repositories\CustomerRepository;
 use Pagarme\Core\Payment\Repositories\SavedCardRepository;
 use Pagarme\Pagarme\Concrete\Magento2CoreSetup;
 use Pagarme\Pagarme\Concrete\Magento2SavedCardAdapter;
 use Pagarme\Pagarme\Model\CardsRepository;
+use Pagarme\Pagarme\Model\Customer\CardOwnership;
 use Pagarme\Pagarme\Gateway\Transaction\Base\Config\Config;
 
 class Remove extends Action
@@ -33,6 +33,9 @@ class Remove extends Action
 
     private $config;
 
+    /** @var CardOwnership */
+    private $cardOwnership;
+
     public function __construct(
         Context $context,
         JsonFactory $jsonFactory,
@@ -40,7 +43,8 @@ class Remove extends Action
         CardsRepository $cardsRepository,
         Session $customerSession,
         Http $request,
-        Config $config
+        Config $config,
+        CardOwnership $cardOwnership
     ){
         parent::__construct($context);
         $this->jsonFactory = $jsonFactory;
@@ -49,6 +53,7 @@ class Remove extends Action
         $this->request = $request;
         $this->cardsRepository = $cardsRepository;
         $this->config = $config;
+        $this->cardOwnership = $cardOwnership;
     }
 
     public function execute()
@@ -59,107 +64,130 @@ class Remove extends Action
             return;
         }
 
-        $idCard = $this->request->getParam('id');
+        $cardId = $this->request->getParam('id');
         Magento2CoreSetup::bootstrap();
         $i18n = new LocalizationService();
         $mask = '';
 
         try {
-            $card = $this->cardsRepository->getById($idCard);
-            $mask = '****.****.****.' . $card->getLastFourNumbers();
+            $card = $this->cardsRepository->getById($cardId);
+            // Ownership is checked before any gateway call.
+            $mask = $this->isCoreCardId($cardId)
+                ? $this->authorizeCoreCard($cardId)
+                : $this->authorizeLegacyCard($card);
 
-            $matchIds = [];
-            preg_match('/mp_core_\d*/', $idCard ?? '', $matchIds);
-            $deleteService = $this->cardsRepository;
-            $deleteMethod = 'deleteById';
-
-            if (isset($matchIds[0])) {
-                $mpCardId = filter_var($idCard, FILTER_SANITIZE_NUMBER_INT);
-                $savedCardRepository = new SavedCardRepository();
-                $savedCard = $savedCardRepository->find($mpCardId);
-
-                $cardAdapter = new Magento2SavedCardAdapter($savedCard);
-                $mask = $cardAdapter->getMaskedNumber();
-
-                $deleteService = $this;
-                $deleteMethod = 'deleteCoreCard';
-            }
-
-            $response =
-                $this
-                    ->getApi()
-                    ->getCustomers()
-                    ->deleteCard(
-                        $card->getCardId(),
-                        $card->getCardToken()
-                    );
-
-            $deleteService->$deleteMethod(
-                $idCard,
-                new NoSuchEntityException(
-                    __('Cards with id "%1" does not exist.', $idCard)
-                )
-            );
+            $this->deleteFromGateway($card);
+            $this->deleteLocally($cardId);
 
             $message = $i18n->getDashboard("The card '%s' was deleted.", $mask);
             $this->messageManager->addSuccess($message);
         } catch (\Exception $e) {
-            $logService = new LogService(
-                'Card',
-                true
-            );
-
-            $logService->exception($e);
-
-            $messagesCollection = $this->messageManager->getMessages();
-            if (empty($messagesCollection->getItemsByType('success'))) {
-                $error = $i18n->getDashboard("The informed card couldn't be deleted.");
-                if (!empty($mask)) {
-                    $error = $i18n->getDashboard("The card '%s' couldn't be deleted.", $mask);
-                }
-                $this->messageManager->addError($error);
-            }
+            $this->reportFailure($e, $i18n, $mask);
         }
 
         $this->_redirect('pagarme/customer/cards');
-
-        return;
     }
 
-    private function deleteCoreCard($coreCardId, $baseException)
+    private function isCoreCardId(?string $cardId): bool
     {
-        Magento2CoreSetup::bootstrap();
+        return (bool) preg_match('/mp_core_\d*/', $cardId ?? '');
+    }
 
-        $savedCardRepository = new SavedCardRepository();
-
-        $matchIds = [];
-        preg_match('/mp_core_\d*/', $coreCardId ?? '', $matchIds);
-
-
-        if (!isset($matchIds[0])) {
-            throw $baseException;
+    /**
+     * @return string masked number of the card
+     * @throws NoSuchEntityException when the card is not owned by the logged-in customer
+     */
+    private function authorizeCoreCard(string $cardId): string
+    {
+        $savedCard = $this->findCoreCard($cardId);
+        if ($savedCard === null
+            || !$this->cardOwnership->ownsPagarmeId($savedCard->getOwnerId()->getValue())
+        ) {
+            throw $this->cardNotFound();
         }
 
-        $savedCardId = preg_replace('/\D/', '', $matchIds[0] ?? '');
-        $savedCard = $savedCardRepository->find($savedCardId);
+        return (new Magento2SavedCardAdapter($savedCard))->getMaskedNumber();
+    }
+
+    /**
+     * @return string masked number of the card
+     * @throws NoSuchEntityException when the card is not owned by the logged-in customer
+     */
+    private function authorizeLegacyCard($card): string
+    {
+        if (!$this->cardOwnership->ownsCustomerId($card->getCustomerId())) {
+            throw $this->cardNotFound();
+        }
+
+        return '****.****.****.' . $card->getLastFourNumbers();
+    }
+
+    private function deleteFromGateway($card): void
+    {
+        $this->getApi()
+            ->getCustomers()
+            ->deleteCard($card->getCardId(), $card->getCardToken());
+    }
+
+    private function deleteLocally(string $cardId): void
+    {
+        if ($this->isCoreCardId($cardId)) {
+            $this->deleteCoreCard($cardId);
+            return;
+        }
+
+        $this->cardsRepository->deleteById($cardId);
+    }
+
+    private function deleteCoreCard(string $cardId): void
+    {
+        $savedCard = $this->findCoreCard($cardId);
         if ($savedCard === null) {
-            throw $baseException;
+            throw $this->cardNotFound();
         }
 
-        $customerId = $this->customerSession->getCustomer()->getId();
-        $customerRepository = new CustomerRepository();
-        $customer = $customerRepository->findByCode($customerId);
+        (new SavedCardRepository())->delete($savedCard);
+    }
 
-        if ($customer === null) {
-            throw $baseException;
+    /**
+     * Core cards are stored as "mp_core_<id>"; only the numeric part is the primary key.
+     */
+    private function findCoreCard(string $cardId)
+    {
+        preg_match('/mp_core_\d*/', $cardId, $matchIds);
+        $savedCardId = preg_replace('/\D/', '', $matchIds[0] ?? '');
+
+        return (new SavedCardRepository())->find($savedCardId);
+    }
+
+    private function reportFailure(\Exception $e, LocalizationService $i18n, string $mask): void
+    {
+        (new LogService('Card', true))->exception($e);
+
+        $messages = $this->messageManager->getMessages();
+        if (!empty($messages->getItemsByType('success'))) {
+            return;
         }
 
-        if (!$customer->getPagarmeId()->equals($savedCard->getOwnerId())) {
-            $baseException->setMessage("The logged user doesn't own the informed card.");
-            throw $baseException;
+        $this->messageManager->addError($this->failureMessage($e, $i18n, $mask));
+    }
+
+    private function failureMessage(\Exception $e, LocalizationService $i18n, string $mask)
+    {
+        if ($e instanceof NoSuchEntityException) {
+            return __('The card does not exist.');
         }
 
-        $savedCardRepository->delete($savedCard);
+        if ($mask !== '') {
+            return $i18n->getDashboard("The card '%s' couldn't be deleted.", $mask);
+        }
+
+        return $i18n->getDashboard("The informed card couldn't be deleted.");
+    }
+
+    private function cardNotFound(): NoSuchEntityException
+    {
+        return new NoSuchEntityException(__('The card does not exist.'));
     }
 
     /**

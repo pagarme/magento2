@@ -21,6 +21,11 @@
                     <resource id="Pagarme_Pagarme::recurrence_products_subscription_update" sortOrder="30" title="Update Recurrence Products Subscription" translate="title" />
                     <resource id="Pagarme_Pagarme::recurrence_products_subscription_view" sortOrder="40" title="View Recurrence Products Subscription" translate="title" />
                 </resource>
+				<resource id="Pagarme_Pagarme::recipients" sortOrder="40" title="Recipients" translate="title">
+					<resource id="Pagarme_Pagarme::recipients_save" sortOrder="10" title="Save Recipients" translate="title" />
+					<resource id="Pagarme_Pagarme::recipients_view" sortOrder="20" title="View Recipients" translate="title" />
+				</resource>
+				<resource id="Pagarme_Pagarme::bulk" sortOrder="50" title="Bulk API" translate="title" />
 			</resource>
 		</resources>
 	</acl>

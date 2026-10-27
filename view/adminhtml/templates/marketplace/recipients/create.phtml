@@ -24,7 +24,7 @@ $datePlaceholder = __('dd/mm/yyyy'); ?>
 
     <!-- Url Post-->
     <input type="hidden" id="url-post"
-           value="<?= $block->getBaseUrl() . 'rest/V1/pagarme/marketplace/recipient/formData' ?>" tabindex="-1"/>
+           value="<?= $block->getUrl('pagarme_pagarme/recipients/save') ?>" tabindex="-1"/>
     <input type="hidden" id="url-search-recipient-id"
            value="<?= $block->getBaseUrl() . 'rest/V1/pagarme/marketplace/recipient/searchRecipient' ?>"
            tabindex="-1"/>

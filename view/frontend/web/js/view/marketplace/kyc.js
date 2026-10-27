@@ -27,7 +27,7 @@ define([
             const body = $('body');
             try {
                 body.loader('show');
-                const url = mageUrl.build(`rest/V1/pagarme/marketplace/recipient/kyc/link/${config.id}`);
+                const url = mageUrl.build(`pagarme/customer_marketplace/kyclink/id/${config.id}`);
                 const response = await $.get(mageUrl.build(url));
                 body.loader('hide');
                 if (response) {

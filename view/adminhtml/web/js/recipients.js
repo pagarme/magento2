@@ -372,10 +372,8 @@ require([
         jQuery.ajax({
             method: "POST",
             url: $('#url-post').val(),
-            contentType: 'application/json',
-            data: JSON.stringify(jQuery(this).serialize()),
+            data: jQuery(this).serialize(),
             success: function (data) {
-                data = JSON.parse(data);
                 if (data.code === 200) {
                     mageAlert(data.message, $.mage.__('Recipient registered successfully!'), true);
                     return;

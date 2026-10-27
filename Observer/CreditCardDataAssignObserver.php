@@ -67,6 +67,7 @@ class CreditCardDataAssignObserver extends AbstractDataAssignObserver
         $multiBuyerDataAssign->setCcMultiBuyer($info, $additionalData);
 
         $info->setAdditionalInformation('cc_installments', 1);
+        $info->setAdditionalInformation('cc_card_tax_amount', $additionalData->getCcCardTaxAmount());
 
         if ($additionalData->getCcInstallments()) {
             $info->setAdditionalInformation(
