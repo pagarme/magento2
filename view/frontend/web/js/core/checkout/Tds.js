@@ -162,14 +162,6 @@ define([
                 code: item.sku
             }));
 
-            // Old tifa format — kept for reference
-            // return {
-            //     bill_addr: { street, number, complement, city, state, country: 'BRA', post_code },
-            //     ship_addr: { ... },
-            //     email, phones: [{ country_code, subscriber, phone_type }],
-            //     card_expiry_date, purchase: { amount, date, instal_data }, acct_type
-            // };
-
             return {
                 payments: [{
                     payment_method: 'credit_card',

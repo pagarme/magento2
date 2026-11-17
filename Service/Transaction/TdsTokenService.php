@@ -25,7 +25,7 @@ class TdsTokenService
     }
 
     /**
-     * Fetch a TDS token from the NX/Auth Switch provider.
+     * Fetch a TDS token from the NX provider.
      * NX is retrocompatible with legacy format, so frontend only loads NX SDK.
      *
      * @param string $identifier Payment profile ID (pp_*) or account ID (acc_*)
@@ -60,7 +60,7 @@ class TdsTokenService
     }
 
     /**
-     * Fetch TDS token from NX/Auth Switch provider.
+     * Fetch TDS token from NX provider.
      * Makes a direct HTTP call to /v2/management/tds-token endpoint.
      *
      * @param string $environment 'live' or 'test'

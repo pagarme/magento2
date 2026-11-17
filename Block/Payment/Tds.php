@@ -67,11 +67,6 @@ class Tds extends Template
         return "https://3ds-nx-js.stone.com.br/{$environment}/v2/3ds2.min.js";
     }
 
-    public function getTifaSdkUrl()
-    {
-        return 'https://tifa-app.stone.com.br/live/v1/tifa/tifa-app.min.js';
-    }
-
     public function canInitTds()
     {
         return $this->creditCardConfig->getTdsActive();

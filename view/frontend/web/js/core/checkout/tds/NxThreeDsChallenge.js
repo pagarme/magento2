@@ -34,23 +34,6 @@ define([], () => {
             }
             challengeContainer.style.display = 'block';
             jQuery('body').trigger('processStop');
-            // AuthSwitch (tifa) flow — commented out while using NX direct
-            // window.tifa.init({
-            //     tds: {
-            //         token: tdsToken,
-            //         orderData: tdsData,
-            //         tdsMethodContainerElement: tdsMethodContainer,
-            //         challengeContainerElement: challengeContainer
-            //     }
-            // }).then((result) => {
-            //     const normalized = this.normalizeResponse(result);
-            //     callback(normalized);
-            // }).catch((error) => {
-            //     callback({ error: error.message || 'NX TDS challenge failed' });
-            // });
-
-            
-
             return Promise.resolve()
                 .then(() => window.TDS.init({
                     token: tdsToken,
