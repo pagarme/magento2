@@ -939,6 +939,10 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
             $threeDSecure->mpi = 'pagarme';
             $threeDSecure->transactionId = $additionalInformation['authentication']['tds_server_trans_id'];
 
+            if (!empty($additionalInformation['authentication']['risk_id'])) {
+                $threeDSecure->riskId = $additionalInformation['authentication']['risk_id'];
+            }
+
             $authentication->threeDSecure = $threeDSecure;
             $newPaymentData->authentication = $authentication;
         }
