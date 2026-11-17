@@ -25,13 +25,21 @@ class TdsTokenService
         $this->config = $config;
     }
 
-    public function getTdsToken($accountId)
+    /**
+     * @param string $identifier Payment profile ID (pp_*) or account ID (acc_*)
+     * @return array{tds_token: string}|array Empty array when no token is returned
+     */
+    public function getTdsToken($identifier)
     {
         $tdsTokenProxy = new TdsTokenProxy($this->coreAuth);
         $environment = 'live';
         if ($this->config->isSandboxMode()) {
             $environment = 'test';
         }
-        return $tdsTokenProxy->getTdsToken($environment, $accountId)->tdsToken;
+        $token = $tdsTokenProxy->getTdsToken($environment, $identifier)->tdsToken;
+        if (empty($token)) {
+            return [];
+        }
+        return ['tds_token' => $token];
     }
 }

@@ -5,7 +5,7 @@ namespace Pagarme\Pagarme\Api;
 interface TdsTokenInterface
 {
     /**
-     * @return string
+     * @return array{tds_token: string}|array
      */
     public function getToken();
 }

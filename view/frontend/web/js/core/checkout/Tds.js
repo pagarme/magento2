@@ -23,8 +23,15 @@ define([
             });
         }
 
-        callTdsFunction(tdsToken, tdsData, callbackTds) {
+        /**
+         * Magento REST serializes ['tds_token' => ...] as an indexed array,
+         * so the token is read from index 0 (object shape is also accepted).
+         */
+        callTdsFunction(tokenResponse, tdsData, callbackTds) {
             const challengeWindowSize = '03';
+            const tdsToken = Array.isArray(tokenResponse)
+                ? tokenResponse[0]
+                : tokenResponse.tds_token;
             Script3ds.init3ds(tdsToken, tdsData, callbackTds, challengeWindowSize);
         }
 
