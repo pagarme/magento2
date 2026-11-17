@@ -38,8 +38,6 @@
         </policy>
         <policy id="script-src">
             <values>
-                <value id="pagarme-api-3ds" type="host">3ds2.pagar.me</value>
-                <value id="pagarme-api-3ds-sdx" type="host">3ds2-sdx.pagar.me</value>
                 <value id="pagarme-api-3ds-nx" type="host">3ds-nx-js.stone.com.br</value>
                 <value id="pagarme-googlepay" type="host">*.google.com</value>
             </values>
