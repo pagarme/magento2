@@ -4,7 +4,6 @@ namespace Pagarme\Pagarme\Test\Unit\Service\Payment;
 
 use Magento\Framework\Exception\LocalizedException;
 use Mockery;
-use Pagarme\Pagarme\Gateway\Transaction\Base\Config\Config;
 use Pagarme\Pagarme\Gateway\Transaction\CreditCard\Config\Config as CreditCardConfig;
 use Pagarme\Pagarme\Service\Hub\AuthenticationNotFoundException;
 use Pagarme\Pagarme\Service\Hub\AuthenticationStatusProviderInterface;
@@ -24,8 +23,6 @@ class ThreeDSAuthenticationStatusValidatorTest extends BaseTest
 
     private $provider;
 
-    private $config;
-
     private $creditCardConfig;
 
     private $validator;
@@ -33,14 +30,11 @@ class ThreeDSAuthenticationStatusValidatorTest extends BaseTest
     protected function setUp(): void
     {
         $this->provider = Mockery::mock(AuthenticationStatusProviderInterface::class);
-        $this->config = Mockery::mock(Config::class);
-        $this->config->shouldReceive('isSandboxMode')->andReturn(false)->byDefault();
         $this->creditCardConfig = Mockery::mock(CreditCardConfig::class);
         $this->creditCardConfig->shouldReceive('getTdsActive')->andReturn(true)->byDefault();
         $logger = Mockery::mock(LoggerInterface::class)->shouldIgnoreMissing();
         $this->validator = new ThreeDSAuthenticationStatusValidator(
             $this->provider,
-            $this->config,
             $this->creditCardConfig,
             $logger
         );
@@ -215,19 +209,6 @@ class ThreeDSAuthenticationStatusValidatorTest extends BaseTest
         return $pairs;
     }
 
-    /**
-     * @dataProvider payloadsThatWouldOtherwiseBeRejected
-     */
-    public function testSkipsTheVerificationInSandbox($authentication)
-    {
-        $this->config->shouldReceive('isSandboxMode')->andReturn(true);
-        $this->provider->shouldNotReceive('getStatus');
-
-        $this->validator->assertStatusMatchesHub($authentication);
-
-        $this->addToAssertionCount(1);
-    }
-
     public static function payloadsThatWouldOtherwiseBeRejected()
     {
         return [
@@ -236,6 +217,7 @@ class ThreeDSAuthenticationStatusValidatorTest extends BaseTest
             'malformed json' => ['{not json'],
         ];
     }
+
 
     /**
      * @dataProvider payloadsThatWouldOtherwiseBeRejected
