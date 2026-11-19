@@ -3,8 +3,8 @@
 namespace Pagarme\Pagarme\Block\Payment;
 
 use Magento\Framework\View\Element\Template;
-use Pagarme\Pagarme\Gateway\Transaction\Base\Config\Config as PagarmeConfig;
 use Pagarme\Pagarme\Gateway\Transaction\CreditCard\Config\Config as CreditCardConfig;
+use Pagarme\Pagarme\Service\Transaction\TdsSdkUrlProvider;
 use Magento\Framework\View\Element\Template\Context;
 use Magento\Framework\View\Page\Config;
 
@@ -24,9 +24,9 @@ class Tds extends Template
     protected $config;
 
     /**
-     * @var PagarmeConfig
+     * @var TdsSdkUrlProvider
      */
-    private $pagarmeConfig;
+    private $sdkUrlProvider;
 
     /**
      * Constructor
@@ -41,13 +41,13 @@ class Tds extends Template
         Context $context,
         Config $config,
         CreditCardConfig $creditCardConfig,
-        PagarmeConfig $pagarmeConfig,
+        TdsSdkUrlProvider $sdkUrlProvider,
         array $data = []
     ) {
 
         $this->config = $config;
         $this->creditCardConfig = $creditCardConfig;
-        $this->pagarmeConfig = $pagarmeConfig;
+        $this->sdkUrlProvider = $sdkUrlProvider;
         parent::__construct($context, $data);
     }
 
@@ -63,8 +63,7 @@ class Tds extends Template
 
     public function getNxSdkUrl()
     {
-        $environment = $this->pagarmeConfig->isSandboxMode() ? 'test' : 'live';
-        return "https://3ds-nx-js.stone.com.br/{$environment}/v2/3ds2.min.js";
+        return $this->sdkUrlProvider->getUrl();
     }
 
     public function canInitTds()

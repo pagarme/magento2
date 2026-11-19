@@ -14,7 +14,6 @@ define([
      * @property {string}  [request_id]
      */
 
-    const SDK_BASE_URL = 'https://3ds-nx-js.stone.com.br';
     const MOBILE_MAX_WIDTH_PX = 767;
     const CHALLENGE_WINDOW_SIZE_DESKTOP = '03';
     const CHALLENGE_WINDOW_SIZE_FULLSCREEN = '05';
@@ -26,8 +25,7 @@ define([
         }
 
         getSdkUrl() {
-            const environment = window.checkoutConfig.pagarme_is_sandbox_mode === false ? 'live' : 'test';
-            return `${SDK_BASE_URL}/${environment}/v2/3ds2.min.js`;
+            return window.checkoutConfig.pagarme_tds_sdk_url;
         }
 
         /**
@@ -43,6 +41,10 @@ define([
                 return sdkLoading;
             }
             sdkLoading = new Promise((resolve, reject) => {
+                if (!this.getSdkUrl()) {
+                    reject(new Error('NX 3DS SDK url is missing from the checkout config'));
+                    return;
+                }
                 const script = document.createElement('script');
                 script.src = this.getSdkUrl();
                 script.onload = () => window.TDS
