@@ -4,10 +4,8 @@ define([
     'Pagarme_Pagarme/js/core/validators/Tds3DSValidator',
     'Pagarme_Pagarme/js/core/checkout/CreditCardToken',
     'Pagarme_Pagarme/js/core/checkout/Tds',
-    'Pagarme_Pagarme/js/core/checkout/tds/TdsErrorPolicy',
     'Magento_Checkout/js/model/quote',
-    'Magento_Checkout/js/model/full-screen-loader',
-], (CreditCardValidator, MultibuyerValidator, Tds3DSValidator, CreditCardToken, Tds, TdsErrorPolicy, quote, fullScreenLoader) => {
+], (CreditCardValidator, MultibuyerValidator, Tds3DSValidator, CreditCardToken, Tds, quote) => {
     return class CreditCardModel {
         constructor(formObject, publicKey) {
             this.formObject = formObject;
@@ -35,13 +33,15 @@ define([
                     return;
                 }
 
-                fullScreenLoader.startLoader();
+                const tds = new Tds(this.formObject);
+                tds.addTdsAttributeData();
+                jQuery('body').trigger('processStart');
                 this.getCreditCardTdsToken(
                     function (tdsToken) {
                         _self.initTds(tdsToken);
                     },
                     function(error) {
-                        fullScreenLoader.stopLoader();
+                        jQuery('body').trigger('processStop');
                         _self.addErrors("Falha ao gerar Token para 3ds, tente novamente.");
                     }
                 )
@@ -109,67 +109,64 @@ define([
             const expYear = this.formObject.creditCardExpYear.val();
             const expMonth = this.formObject.creditCardExpMonth.val().padStart(2, '0');
             const cardExpiryDate = `${expYear}-${expMonth}`;
-            const tdsData = modelTds.getTdsData(cardExpiryDate);
+            const tdsData = modelTds.getTdsData('02', cardExpiryDate);
             modelTds.callTdsFunction(tdsToken, tdsData, this.callbackTds.bind(this));
         }
 
         callbackTds(data) {
-            if (data?.error !== undefined) {
-                this.handleTdsFailure(data);
-                return;
-            }
-
-            const challengeWasCancelled = data?.challenge_canceled === true;
-            const isMissingTransStatus = data?.trans_status === '' || data?.trans_status === undefined;
-            if (challengeWasCancelled || isMissingTransStatus) {
-                fullScreenLoader.stopLoader();
-                this.addErrors("A autenticação 3DS foi cancelada. Por favor, tente novamente.");
-                return;
-            }
-
-            this.formObject.authentication = JSON.stringify(data);
-            this.placeOrderWithCardToken();
-        }
-
-        handleTdsFailure(failure) {
-            const { action, message } = TdsErrorPolicy.resolve(failure);
-
-            if (action !== TdsErrorPolicy.Action.PROCEED_WITHOUT_3DS) {
-                fullScreenLoader.stopLoader();
-                this.addErrors(message);
-                return;
-            }
-
-            if (this.isTdsMandatory()) {
-                fullScreenLoader.stopLoader();
-                this.addErrors(
-                    "Seu banco não suporta autenticação 3DS obrigatória neste momento. " +
-                    "Utilize outro cartão ou método de pagamento (PIX, boleto)."
-                );
-                return;
-            }
-
-            this.formObject.tdsReason = 'not_eligible';
-            this.formObject.authentication = undefined;
-            this.placeOrderWithCardToken();
-        }
-
-        isTdsMandatory() {
-            return window.checkoutConfig.payment.pagarme_creditcard.tds_mode === 'mandatory';
-        }
-
-        placeOrderWithCardToken() {
             const _self = this;
+            const tds = new Tds(this.formObject);
+            jQuery('body').trigger('processStop');
+            const cardIsNotEnrolled = data?.error === '3DS not available' || data?.error === 'bad request occurred during 3DS provider call';
+            const hasTdsValidationError = !cardIsNotEnrolled && (
+                data?.email !== undefined ||
+                data?.bill_addr !== undefined ||
+                data?.card_expiry_date !== undefined ||
+                data?.purchase !== undefined
+            );
+            const hasError = (data?.error !== undefined && !cardIsNotEnrolled) || data?.message !== undefined || hasTdsValidationError;
+
+            if (hasError) {
+                tds.showErrors(data, _self);
+                if (_self.errors.length === 0) {
+                    _self.addErrors("Não foi possível concluir a autenticação 3DS. Por favor, tente novamente.");
+                }
+                return;
+            }
+
+            const challengeWasCancelled = data?.challenge_cancelled === true;
+            const isMissingTransStatus = data?.trans_status === '' || data?.trans_status === undefined;
+
+            if (!cardIsNotEnrolled && (challengeWasCancelled || isMissingTransStatus)) {
+                _self.addErrors("A autenticação 3DS foi cancelada. Por favor, tente novamente.");
+                return;
+            }
+
+            if (cardIsNotEnrolled) {
+                const tdsModeConfig = window.checkoutConfig.payment.pagarme_creditcard.tds_mode;
+                if (tdsModeConfig === 'mandatory') {
+                    _self.addErrors(
+                        "Seu banco não suporta autenticação 3DS obrigatória neste momento. " +
+                        "Utilize outro cartão ou método de pagamento (PIX, boleto)."
+                    );
+                    tds.removeTdsAttributeData();
+                    return;
+                }
+                this.formObject.tdsReason = 'not_eligible';
+            }
+
+            this.formObject.authentication = cardIsNotEnrolled ? undefined : JSON.stringify(data);
             this.getCreditCardToken(
                 function (data) {
                     _self.formObject.creditCardToken.val(data.id);
                     _self.placeOrderObject.placeOrder();
                 },
                 function (error) {
-                    fullScreenLoader.stopLoader();
+                    tds.removeTdsAttributeData()
                     _self.addErrors("Cartão inválido. Por favor, verifique os dados digitados e tente novamente");
                 }
             );
+            return true;
         }
 
         getData() {
