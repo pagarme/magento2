@@ -82,6 +82,7 @@
                 <value id="pagarme-tds-wise" type="host">*.wise.com</value>
                 <value id="pagarme-tds-revolut" type="host">*.revolut.com</value>
                 <value id="pagarme-tds-sandbox" type="host">*.sandbox.3dsecure.io</value>
+                <value id="pagarme-tds-nx-sandbox-callback" type="host">shared-alb-pci.stg.pagarme.net</value>
                 <value id="pagarme-googlepay" type="host">*.google.com</value>
             </values>
         </policy>
