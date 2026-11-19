@@ -15,6 +15,7 @@
                 <value id="pagarme-googlepay-sandbox" type="host">pay.sandbox.google.com</value>
                 <value id="pagarme-tifa-karavela" type="host">tifa.karavela-shared-pci-prd.aws.karavela.run</value>
                 <value id="pagarme-nx-stone" type="host">*.stone.com.br</value>
+                <value id="pagarme-nx-datadog" type="host">browser-intake-us3-datadoghq.com</value>
             </values>
         </policy>
         <policy id="img-src">
