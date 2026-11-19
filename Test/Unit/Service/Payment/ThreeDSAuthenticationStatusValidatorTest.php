@@ -1,0 +1,133 @@
+<?php
+
+namespace Pagarme\Pagarme\Test\Unit\Service\Payment;
+
+use Magento\Framework\Exception\LocalizedException;
+use Mockery;
+use Pagarme\Pagarme\Service\Hub\AuthenticationNotFoundException;
+use Pagarme\Pagarme\Service\Hub\AuthenticationStatusProviderInterface;
+use Pagarme\Pagarme\Service\Hub\HubUnavailableException;
+use Pagarme\Pagarme\Service\Payment\ThreeDSAuthenticationStatusValidator;
+use Pagarme\Pagarme\Test\Unit\BaseTest;
+use Psr\Log\LoggerInterface;
+
+/**
+ * @covers \Pagarme\Pagarme\Service\Payment\ThreeDSAuthenticationStatusValidator
+ */
+class ThreeDSAuthenticationStatusValidatorTest extends BaseTest
+{
+    const TRANSACTION_ID = '6e5b0ca7-3f38-4432-85b8-23a391fc6e91';
+
+    private $provider;
+
+    private $validator;
+
+    protected function setUp(): void
+    {
+        $this->provider = Mockery::mock(AuthenticationStatusProviderInterface::class);
+        $logger = Mockery::mock(LoggerInterface::class)->shouldIgnoreMissing();
+        $this->validator = new ThreeDSAuthenticationStatusValidator($this->provider, $logger);
+    }
+
+    private function authentication($transactionId, $status)
+    {
+        return json_encode(['tds_server_trans_id' => $transactionId, 'trans_status' => $status]);
+    }
+
+    /**
+     * @dataProvider payloadsWithoutAuthenticationClaim
+     */
+    public function testDoesNotCallTheHubWhenThereIsNothingToVerify($authentication)
+    {
+        $this->provider->shouldNotReceive('getStatus');
+
+        $this->validator->assertStatusMatchesHub($authentication);
+
+        $this->addToAssertionCount(1);
+    }
+
+    public static function payloadsWithoutAuthenticationClaim()
+    {
+        return [
+            'null' => [null],
+            'empty string' => [''],
+            'empty object' => ['{}'],
+            'transaction id without status' => [json_encode(['tds_server_trans_id' => self::TRANSACTION_ID])],
+        ];
+    }
+
+    public function testAcceptsWhenTheHubStatusEqualsTheClientStatus()
+    {
+        $this->provider->shouldReceive('getStatus')->once()->with(self::TRANSACTION_ID)->andReturn('Y');
+
+        $this->validator->assertStatusMatchesHub($this->authentication(self::TRANSACTION_ID, 'Y'));
+
+        $this->addToAssertionCount(1);
+    }
+
+    public function testRejectsWhenTheHubStatusDiffersFromTheClientStatus()
+    {
+        $this->provider->shouldReceive('getStatus')->once()->with(self::TRANSACTION_ID)->andReturn('N');
+
+        $this->expectException(LocalizedException::class);
+
+        $this->validator->assertStatusMatchesHub($this->authentication(self::TRANSACTION_ID, 'Y'));
+    }
+
+    public function testRejectsAStatusClaimedWithoutTransactionId()
+    {
+        $this->provider->shouldNotReceive('getStatus');
+
+        $this->expectException(LocalizedException::class);
+
+        $this->validator->assertStatusMatchesHub(json_encode(['trans_status' => 'Y']));
+    }
+
+    public function testRejectsMalformedJson()
+    {
+        $this->provider->shouldNotReceive('getStatus');
+
+        $this->expectException(LocalizedException::class);
+
+        $this->validator->assertStatusMatchesHub('{not json');
+    }
+
+    /**
+     * @dataProvider invalidTransactionIds
+     */
+    public function testRejectsTransactionIdsThatAreNotUuidsWithoutCallingTheHub($transactionId)
+    {
+        $this->provider->shouldNotReceive('getStatus');
+
+        $this->expectException(LocalizedException::class);
+
+        $this->validator->assertStatusMatchesHub($this->authentication($transactionId, 'Y'));
+    }
+
+    public static function invalidTransactionIds()
+    {
+        return [
+            'path traversal' => ['../../tds-token'],
+            'query string' => [self::TRANSACTION_ID . '?x=1'],
+            'plain text' => ['abc'],
+        ];
+    }
+
+    public function testRejectsWhenTheAuthenticationDoesNotExistAtTheHub()
+    {
+        $this->provider->shouldReceive('getStatus')->andThrow(new AuthenticationNotFoundException('not found'));
+
+        $this->expectException(LocalizedException::class);
+
+        $this->validator->assertStatusMatchesHub($this->authentication(self::TRANSACTION_ID, 'Y'));
+    }
+
+    public function testRejectsWhenTheHubCannotBeReached()
+    {
+        $this->provider->shouldReceive('getStatus')->andThrow(new HubUnavailableException('timeout'));
+
+        $this->expectException(LocalizedException::class);
+
+        $this->validator->assertStatusMatchesHub($this->authentication(self::TRANSACTION_ID, 'Y'));
+    }
+}
