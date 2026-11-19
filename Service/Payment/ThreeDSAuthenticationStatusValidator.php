@@ -3,6 +3,7 @@
 namespace Pagarme\Pagarme\Service\Payment;
 
 use Magento\Framework\Exception\LocalizedException;
+use Pagarme\Pagarme\Gateway\Transaction\Base\Config\Config;
 use Pagarme\Pagarme\Service\Hub\AuthenticationNotFoundException;
 use Pagarme\Pagarme\Service\Hub\AuthenticationStatusProviderInterface;
 use Pagarme\Pagarme\Service\Hub\HubUnavailableException;
@@ -11,6 +12,7 @@ use Psr\Log\LoggerInterface;
 /**
  * The 3DS result reaches the server through the browser, so the claimed
  * trans_status is confirmed against the Hub before the order is placed.
+ * Sandbox stores are not verified.
  */
 class ThreeDSAuthenticationStatusValidator
 {
@@ -19,12 +21,19 @@ class ThreeDSAuthenticationStatusValidator
     /** @var AuthenticationStatusProviderInterface */
     private $statusProvider;
 
+    /** @var Config */
+    private $config;
+
     /** @var LoggerInterface */
     private $logger;
 
-    public function __construct(AuthenticationStatusProviderInterface $statusProvider, LoggerInterface $logger)
-    {
+    public function __construct(
+        AuthenticationStatusProviderInterface $statusProvider,
+        Config $config,
+        LoggerInterface $logger
+    ) {
         $this->statusProvider = $statusProvider;
+        $this->config = $config;
         $this->logger = $logger;
     }
 
@@ -34,7 +43,7 @@ class ThreeDSAuthenticationStatusValidator
      */
     public function assertStatusMatchesHub($authentication)
     {
-        if (empty($authentication)) {
+        if ($this->config->isSandboxMode() || empty($authentication)) {
             return;
         }
 
