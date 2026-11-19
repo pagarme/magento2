@@ -4,6 +4,7 @@ namespace Pagarme\Pagarme\Test\Unit\Service\Payment;
 
 use Magento\Framework\Exception\LocalizedException;
 use Mockery;
+use Pagarme\Pagarme\Gateway\Transaction\Base\Config\Config;
 use Pagarme\Pagarme\Service\Hub\AuthenticationNotFoundException;
 use Pagarme\Pagarme\Service\Hub\AuthenticationStatusProviderInterface;
 use Pagarme\Pagarme\Service\Hub\HubUnavailableException;
@@ -22,13 +23,17 @@ class ThreeDSAuthenticationStatusValidatorTest extends BaseTest
 
     private $provider;
 
+    private $config;
+
     private $validator;
 
     protected function setUp(): void
     {
         $this->provider = Mockery::mock(AuthenticationStatusProviderInterface::class);
+        $this->config = Mockery::mock(Config::class);
+        $this->config->shouldReceive('isSandboxMode')->andReturn(false)->byDefault();
         $logger = Mockery::mock(LoggerInterface::class)->shouldIgnoreMissing();
-        $this->validator = new ThreeDSAuthenticationStatusValidator($this->provider, $logger);
+        $this->validator = new ThreeDSAuthenticationStatusValidator($this->provider, $this->config, $logger);
     }
 
     private function authentication($transactionId, $status)
@@ -176,5 +181,27 @@ class ThreeDSAuthenticationStatusValidatorTest extends BaseTest
         }
 
         return $pairs;
+    }
+
+    /**
+     * @dataProvider payloadsThatWouldOtherwiseBeRejected
+     */
+    public function testSkipsTheVerificationInSandbox($authentication)
+    {
+        $this->config->shouldReceive('isSandboxMode')->andReturn(true);
+        $this->provider->shouldNotReceive('getStatus');
+
+        $this->validator->assertStatusMatchesHub($authentication);
+
+        $this->addToAssertionCount(1);
+    }
+
+    public static function payloadsThatWouldOtherwiseBeRejected()
+    {
+        return [
+            'valid payload' => [json_encode(['tds_server_trans_id' => self::TRANSACTION_ID, 'trans_status' => 'Y'])],
+            'status without transaction id' => [json_encode(['trans_status' => 'Y'])],
+            'malformed json' => ['{not json'],
+        ];
     }
 }
