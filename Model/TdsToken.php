@@ -28,10 +28,10 @@ class TdsToken implements TdsTokenInterface
     }
     public function getToken()
     {
-        $accountId = $this->pagarmeConfig->getAccountId();
-        if (empty($accountId)) {
+        $identifier = $this->pagarmeConfig->getIdentifier();
+        if (empty($identifier)) {
             return [];
         }
-        return $this->tdsTokenService->getTdsToken($accountId);
+        return $this->tdsTokenService->getTdsToken($identifier);
     }
 }
