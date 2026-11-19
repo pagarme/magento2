@@ -110,9 +110,30 @@ class ThreeDSAuthenticationStatusValidatorTest extends BaseTest
     }
 
     /**
-     * @dataProvider invalidTransactionIds
+     * @dataProvider transactionIdsInAnyFormat
      */
-    public function testRejectsTransactionIdsThatAreNotUuidsWithoutCallingTheHub($transactionId)
+    public function testSendsTheTransactionIdToTheHubWithoutJudgingItsFormat($transactionId)
+    {
+        $this->provider->shouldReceive('getStatus')->once()->with($transactionId)->andReturn('Y');
+
+        $this->validator->assertStatusMatchesHub($this->authentication($transactionId, 'Y'));
+
+        $this->addToAssertionCount(1);
+    }
+
+    public static function transactionIdsInAnyFormat()
+    {
+        return [
+            'uuid' => [self::TRANSACTION_ID],
+            'not a uuid' => ['abc-123'],
+            'numeric string' => ['123456'],
+        ];
+    }
+
+    /**
+     * @dataProvider unusableTransactionIds
+     */
+    public function testRejectsAStatusWhoseTransactionIdIsMissingOrNotText($transactionId)
     {
         $this->provider->shouldNotReceive('getStatus');
 
@@ -121,12 +142,13 @@ class ThreeDSAuthenticationStatusValidatorTest extends BaseTest
         $this->validator->assertStatusMatchesHub($this->authentication($transactionId, 'Y'));
     }
 
-    public static function invalidTransactionIds()
+    public static function unusableTransactionIds()
     {
         return [
-            'path traversal' => ['../../tds-token'],
-            'query string' => [self::TRANSACTION_ID . '?x=1'],
-            'plain text' => ['abc'],
+            'null' => [null],
+            'empty' => [''],
+            'array' => [['x']],
+            'number' => [123],
         ];
     }
 

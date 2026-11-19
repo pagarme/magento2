@@ -68,6 +68,19 @@ class HubAuthenticationStatusClientTest extends BaseTest
         $this->client->getStatus(self::TRANSACTION_ID);
     }
 
+    public function testEncodesTheTransactionIdInTheUrl()
+    {
+        $transactionId = '../tds-token?x=1';
+        $this->hubAnswers(200, $this->approvedBody(['tds_server_trans_id' => $transactionId]));
+        $this->curl->shouldReceive('get')->once()->with(
+            'https://hubapi.pagar.me/v2/management/authentications/status/..%2Ftds-token%3Fx%3D1'
+        );
+
+        $this->client->getStatus($transactionId);
+
+        $this->addToAssertionCount(1);
+    }
+
     public function testNotFoundBecomesAuthenticationNotFound()
     {
         $this->hubAnswers(404, [

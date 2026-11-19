@@ -17,8 +17,6 @@ use Psr\Log\LoggerInterface;
  */
 class ThreeDSAuthenticationStatusValidator
 {
-    const TRANSACTION_ID_PATTERN = '/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i';
-
     /** @var AuthenticationStatusProviderInterface */
     private $statusProvider;
 
@@ -64,8 +62,8 @@ class ThreeDSAuthenticationStatusValidator
         }
 
         $transactionId = $result['tds_server_trans_id'] ?? null;
-        if (!is_string($transactionId) || !preg_match(self::TRANSACTION_ID_PATTERN, $transactionId)) {
-            throw $this->unverifiable('the authentication has no valid tds_server_trans_id');
+        if (!is_string($transactionId) || $transactionId === '') {
+            throw $this->unverifiable('the authentication has no tds_server_trans_id');
         }
 
         $hubStatus = $this->fetchHubStatus($transactionId);
