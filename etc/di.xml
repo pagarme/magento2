@@ -9,6 +9,7 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Pagarme\Pagarme\Service\Hub\AuthenticationStatusProviderInterface" type="Pagarme\Pagarme\Service\Hub\HubAuthenticationStatusClient" />
     <preference for="Pagarme\Pagarme\Api\InstallmentsManagementInterface" type="Pagarme\Pagarme\Model\InstallmentsManagement" />
     <preference for="Pagarme\Pagarme\Api\Data\InstallmentInterface" type="Pagarme\Pagarme\Model\Installment" />
     <preference for="Pagarme\Pagarme\Api\CreditCardRequestDataProviderInterface" type="Pagarme\Pagarme\Gateway\Transaction\CreditCard\ResourceGateway\Create\RequestDataProvider" />

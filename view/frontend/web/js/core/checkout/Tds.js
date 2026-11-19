@@ -1,87 +1,106 @@
 define([
     "Magento_Checkout/js/model/url-builder",
     "mage/url",
-    'Magento_Checkout/js/model/quote'
+    'Magento_Checkout/js/model/quote',
+    'Pagarme_Pagarme/js/core/checkout/tds/NxThreeDsChallenge'
 ], (
     urlBuilder,
     mageUrl,
-    quote
+    quote,
+    NxThreeDsChallenge
 ) => {
+    /**
+     * @typedef {Object} TdsTokenResponse
+     * @property {string} tds_token - JWT token returned by the TDS provider
+     */
+
+    /**
+     * @typedef {Object} TdsData
+     * @property {Object} bill_addr
+     * @property {Object} ship_addr
+     * @property {string} email
+     * @property {Array}  phones
+     * @property {string} card_expiry_date
+     * @property {Object} purchase
+     */
+
+    /**
+     * The 3DS token is only valid for a short time, so the SDK is fetched ahead of
+     * the place-order click instead of between token generation and TDS.init.
+     */
+    const preloadSdkWhenTdsIsActive = () => {
+        const creditCardConfig = window.checkoutConfig?.payment?.pagarme_creditcard;
+        if (!creditCardConfig || creditCardConfig.tds_active !== true) {
+            return;
+        }
+        new NxThreeDsChallenge().loadSdk().catch((error) => {
+            console.error('[Pagarme 3DS] SDK preload failed', error);
+        });
+    };
+    preloadSdkWhenTdsIsActive();
+
     return class Tds {
         constructor(formObject) {
             this.formObject = formObject;
+            this.challenge = new NxThreeDsChallenge();
         }
 
+        /**
+         * Fetches a TDS token from the Magento REST endpoint.
+         * The Magento REST layer serializes the PHP associative array as a
+         * JSON array, so the response shape is [provider, tds_token].
+         *
+         * @returns {jQuery.jqXHR<[string, string]>}
+         */
         getToken() {
             const url = urlBuilder.createUrl("/pagarme/tdstoken", {});
             return jQuery.ajax({
                 type: "GET",
                 dataType: "json",
                 url: mageUrl.build(url),
-                async: false,
                 cache: false,
             });
         }
 
         /**
-         * Magento REST serializes ['tds_token' => ...] as an indexed array,
-         * so the token is read from index 0 (object shape is also accepted).
+         * @param {[string, string]|TdsTokenResponse} tokenResponse
+         * @param {TdsData}   tdsData
+         * @param {function(NxTdsChallengeResult): void} callbackTds
          */
         callTdsFunction(tokenResponse, tdsData, callbackTds) {
-            const challengeWindowSize = '03';
+            // Magento REST serializes associative arrays as indexed arrays.
+            // Shape: [tds_token] — tds_token is at index 0.
             const tdsToken = Array.isArray(tokenResponse)
                 ? tokenResponse[0]
                 : tokenResponse.tds_token;
-            Script3ds.init3ds(tdsToken, tdsData, callbackTds, challengeWindowSize);
-        }
 
-        showErrors(errors, parentObject) {
-            if(errors.email) {
-                parentObject.addErrors("Ocorreu um problema ao encontrar o e-mail.");
-            }
-            if(errors.bill_addr) {
-                parentObject.addErrors("Ocorreu um problema ao encontrar os endereços.");
-            }
-            if(errors.card_expiry_date) {
-                parentObject.addErrors("Ocorreu um problema ao montar o dado de expiração do cartão.");
-            }
-            if(errors.purchase) {
-                parentObject.addErrors("Ocorreu um problema ao montar o dado de compra.");
-            }
-            if(errors.message) {
-                parentObject.addErrors(errors.message);
+            try {
+                return this.challenge.execute(tdsToken, tdsData, callbackTds);
+            } catch (e) {
+                callbackTds({ error: e.message || 'Failed to initialize TDS challenge' });
             }
         }
 
-        addTdsAttributeData() {
-            const cardForm = this.formObject;
-            jQuery(cardForm.containerSelector).attr("data-pagarmecheckout-form", "");
-            cardForm.creditCardHolderName.attr("data-pagarmecheckout-element", "holder_name");
-            cardForm.creditCardNumber.attr("data-pagarmecheckout-element", "number");
-            cardForm.creditCardBrand.attr("data-pagarmecheckout-element", "brand");
-            cardForm.creditCardExpMonth.attr("data-pagarmecheckout-element", "exp_month");
-            cardForm.creditCardExpYear.attr("data-pagarmecheckout-element", "exp_year");
-            cardForm.creditCardCvv.attr("data-pagarmecheckout-element", "cvv");
+        /**
+         * Same amount the backend sends on order creation (grand total minus tax),
+         * rounded to avoid floating point losses such as 19.99 * 100 = 1998.99...
+         *
+         * @returns {number}
+         */
+        getAmountInCents() {
+            const totals = quote.totals();
+            return Math.round((totals.grand_total - (totals.base_tax_amount || 0)) * 100);
         }
 
-        removeTdsAttributeData() {
-            const cardForm = this.formObject;
-            jQuery(cardForm.containerSelector).removeAttr("data-pagarmecheckout-form");
-            cardForm.creditCardHolderName.removeAttr("data-pagarmecheckout-element");
-            cardForm.creditCardNumber.removeAttr("data-pagarmecheckout-element");
-            cardForm.creditCardBrand.removeAttr("data-pagarmecheckout-element");
-            cardForm.creditCardExpMonth.removeAttr("data-pagarmecheckout-element");
-            cardForm.creditCardExpYear.removeAttr("data-pagarmecheckout-element");
-            cardForm.creditCardCvv.removeAttr("data-pagarmecheckout-element");
-        }
-
-        getTdsData(acctType, cardExpiryDate) {
+        getTdsData(cardExpiryDate) {
             const billingAddress = quote.billingAddress();
-            const amountInCents = quote.totals().base_grand_total * 100;
+            const amountInCents = this.getAmountInCents();
+
             const [
                 billingAddressStreet = '',
                 billingAddressNumber = '',
-                billingAddressComplement = ''
+                billingAddressComplement = '',
+                billingAddressNeighborhood = ''
             ] = billingAddress.street || [];
 
             const shippingAddressObj = quote.shippingAddress();
@@ -92,56 +111,78 @@ define([
             const [
                 shippingAddressStreet = '',
                 shippingAddressNumber = '',
-                shippingAddressComplement = ''
+                shippingAddressComplement = '',
+                shippingAddressNeighborhood = ''
             ] = (effectiveShippingAddress.street || []);
 
             let customerEmail = window.checkoutConfig.customerData?.email;
-            if(quote.guestEmail) {
+            if (quote.guestEmail) {
                 customerEmail = quote.guestEmail;
             }
 
-            const phoneNumber = effectiveShippingAddress.telephone
-                ? effectiveShippingAddress.telephone.replace(/\D/g, '')
-                : '';
+            const rawPhone = (effectiveShippingAddress.telephone || '').replace(/\D/g, '');
+            const areaCode = rawPhone.slice(0, 2);
+            const phoneNumber = rawPhone.slice(2);
 
-            const customerPhones =
-                [{
-                    country_code : '55',
-                    subscriber : phoneNumber,
-                    phone_type : 'mobile'
-                }];
+            const expParts = cardExpiryDate.split('-');
+            const expYear = parseInt(expParts[0], 10);
+            const expMonth = parseInt(expParts[1], 10);
+
+            const billingLine1 = [billingAddressNumber, billingAddressStreet, billingAddressNeighborhood].filter(Boolean).join(', ');
+            const shippingLine1 = [shippingAddressNumber, shippingAddressStreet, shippingAddressNeighborhood].filter(Boolean).join(', ');
+
+            const items = (quote.getItems() || []).map((item) => ({
+                description: item.name,
+                code: item.sku
+            }));
 
             return {
-                bill_addr : {
-                    street : billingAddressStreet,
-                    number : billingAddressNumber,
-                    complement : billingAddressComplement,
-                    city : billingAddress.city,
-                    state : billingAddress.regionCode,
-                    country : 'BRA',
-                    post_code : billingAddress.postcode
+                payments: [{
+                    payment_method: 'credit_card',
+                    credit_card: {
+                        card: {
+                            number: this.formObject.creditCardNumber.val().replace(/\D/g, ''),
+                            holder_name: this.formObject.creditCardHolderName.val(),
+                            exp_month: expMonth,
+                            exp_year: expYear,
+                            billing_address: {
+                                country: (billingAddress.countryId || 'BR').slice(0, 2),
+                                state: billingAddress.regionCode,
+                                city: billingAddress.city,
+                                zip_code: billingAddress.postcode,
+                                line_1: billingLine1,
+                                line_2: billingAddressComplement
+                            }
+                        }
+                    },
+                    amount: amountInCents
+                }],
+                customer: {
+                    name: `${billingAddress.firstname || ''} ${billingAddress.lastname || ''}`.trim(),
+                    email: customerEmail,
+                    document: (billingAddress.vatId || '').replace(/\D/g, ''),
+                    phones: {
+                        mobile_phone: {
+                            country_code: '55',
+                            area_code: areaCode,
+                            number: phoneNumber
+                        }
+                    }
                 },
-                ship_addr : {
-                    street : shippingAddressStreet,
-                    number : shippingAddressNumber,
-                    complement : shippingAddressComplement,
-                    city : effectiveShippingAddress.city,
-                    state : effectiveShippingAddress.regionCode,
-                    country : 'BRA',
-                    post_code : effectiveShippingAddress.postcode
+                items: items,
+                shipping: {
+                    recipient_name: `${effectiveShippingAddress.firstname || ''} ${effectiveShippingAddress.lastname || ''}`.trim(),
+                    address: {
+                        country: (effectiveShippingAddress.countryId || 'BR').slice(0, 2),
+                        state: effectiveShippingAddress.regionCode,
+                        city: effectiveShippingAddress.city,
+                        zip_code: effectiveShippingAddress.postcode,
+                        line_1: shippingLine1,
+                        line_2: shippingAddressComplement
+                    }
                 },
-                email : customerEmail,
-                phones : customerPhones,
-                card_expiry_date : cardExpiryDate,
-                purchase : {
-                    amount : Math.trunc(amountInCents),
-                    date :
-                        new Date().toISOString()
-                    ,
-                    instal_data : 2,
-                },
-                acct_type : acctType
-            }
+                requestor_url: window.location.origin
+            };
         }
 	};
 });

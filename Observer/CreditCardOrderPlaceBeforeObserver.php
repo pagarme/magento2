@@ -16,6 +16,7 @@ use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Pagarme\Pagarme\Service\Payment\ClientPaymentAmountValidator;
 use Pagarme\Pagarme\Service\Payment\InstallmentInterestCalculator;
+use Pagarme\Pagarme\Service\Payment\ThreeDSAuthenticationStatusValidator;
 
 class CreditCardOrderPlaceBeforeObserver implements ObserverInterface
 {
@@ -31,12 +32,17 @@ class CreditCardOrderPlaceBeforeObserver implements ObserverInterface
     /** @var ClientPaymentAmountValidator */
     private $amountValidator;
 
+    /** @var ThreeDSAuthenticationStatusValidator */
+    private $authenticationStatusValidator;
+
     public function __construct(
         InstallmentInterestCalculator $interestCalculator,
-        ClientPaymentAmountValidator $amountValidator
+        ClientPaymentAmountValidator $amountValidator,
+        ThreeDSAuthenticationStatusValidator $authenticationStatusValidator
     ) {
         $this->interestCalculator = $interestCalculator;
         $this->amountValidator = $amountValidator;
+        $this->authenticationStatusValidator = $authenticationStatusValidator;
     }
 
     /**
@@ -50,6 +56,10 @@ class CreditCardOrderPlaceBeforeObserver implements ObserverInterface
         if (!in_array($payment->getMethod(), self::CREDIT_CARD_METHODS, true)) {
             return $this;
         }
+
+        $this->authenticationStatusValidator->assertStatusMatchesHub(
+            $payment->getAdditionalInformation('authentication')
+        );
 
         $grandTotalInCents = (int) round($order->getGrandTotal() * 100);
         $interestInCents = $this->calculateInterestInCents($payment, $grandTotalInCents);
