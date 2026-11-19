@@ -22,18 +22,22 @@ define([
      * @property {Array}  phones
      * @property {string} card_expiry_date
      * @property {Object} purchase
-     * @property {string} acct_type
      */
 
     /**
-     * @typedef {Object} TdsChallengeResult
-     * @property {string}  [risk_id]
-     * @property {string}  [trans_status]
-     * @property {string}  [tds_server_trans_id]
-     * @property {boolean} [challenge_canceled]
-     * @property {string}  [authenticated_card]
-     * @property {string}  [error]
+     * The 3DS token is only valid for a short time, so the SDK is fetched ahead of
+     * the place-order click instead of between token generation and TDS.init.
      */
+    const preloadSdkWhenTdsIsActive = () => {
+        const creditCardConfig = window.checkoutConfig?.payment?.pagarme_creditcard;
+        if (!creditCardConfig || creditCardConfig.tds_active !== true) {
+            return;
+        }
+        new NxThreeDsChallenge().loadSdk().catch((error) => {
+            console.error('[Pagarme 3DS] SDK preload failed', error);
+        });
+    };
+    preloadSdkWhenTdsIsActive();
 
     return class Tds {
         constructor(formObject) {
@@ -54,7 +58,6 @@ define([
                 type: "GET",
                 dataType: "json",
                 url: mageUrl.build(url),
-                async: false,
                 cache: false,
             });
         }
@@ -62,7 +65,7 @@ define([
         /**
          * @param {[string, string]|TdsTokenResponse} tokenResponse
          * @param {TdsData}   tdsData
-         * @param {function(TdsChallengeResult): void} callbackTds
+         * @param {function(NxTdsChallengeResult): void} callbackTds
          */
         callTdsFunction(tokenResponse, tdsData, callbackTds) {
             // Magento REST serializes associative arrays as indexed arrays.
@@ -78,49 +81,20 @@ define([
             }
         }
 
-        showErrors(errors, parentObject) {
-            if(errors.email) {
-                parentObject.addErrors("Ocorreu um problema ao encontrar o e-mail.");
-            }
-            if(errors.bill_addr) {
-                parentObject.addErrors("Ocorreu um problema ao encontrar os endereços.");
-            }
-            if(errors.card_expiry_date) {
-                parentObject.addErrors("Ocorreu um problema ao montar o dado de expiração do cartão.");
-            }
-            if(errors.purchase) {
-                parentObject.addErrors("Ocorreu um problema ao montar o dado de compra.");
-            }
-            if(errors.message) {
-                parentObject.addErrors(errors.message);
-            }
+        /**
+         * Same amount the backend sends on order creation (grand total minus tax),
+         * rounded to avoid floating point losses such as 19.99 * 100 = 1998.99...
+         *
+         * @returns {number}
+         */
+        getAmountInCents() {
+            const totals = quote.totals();
+            return Math.round((totals.grand_total - (totals.base_tax_amount || 0)) * 100);
         }
 
-        addTdsAttributeData() {
-            const cardForm = this.formObject;
-            jQuery(cardForm.containerSelector).attr("data-pagarmecheckout-form", "");
-            cardForm.creditCardHolderName.attr("data-pagarmecheckout-element", "holder_name");
-            cardForm.creditCardNumber.attr("data-pagarmecheckout-element", "number");
-            cardForm.creditCardBrand.attr("data-pagarmecheckout-element", "brand");
-            cardForm.creditCardExpMonth.attr("data-pagarmecheckout-element", "exp_month");
-            cardForm.creditCardExpYear.attr("data-pagarmecheckout-element", "exp_year");
-            cardForm.creditCardCvv.attr("data-pagarmecheckout-element", "cvv");
-        }
-
-        removeTdsAttributeData() {
-            const cardForm = this.formObject;
-            jQuery(cardForm.containerSelector).removeAttr("data-pagarmecheckout-form");
-            cardForm.creditCardHolderName.removeAttr("data-pagarmecheckout-element");
-            cardForm.creditCardNumber.removeAttr("data-pagarmecheckout-element");
-            cardForm.creditCardBrand.removeAttr("data-pagarmecheckout-element");
-            cardForm.creditCardExpMonth.removeAttr("data-pagarmecheckout-element");
-            cardForm.creditCardExpYear.removeAttr("data-pagarmecheckout-element");
-            cardForm.creditCardCvv.removeAttr("data-pagarmecheckout-element");
-        }
-
-        getTdsData(acctType, cardExpiryDate) {
+        getTdsData(cardExpiryDate) {
             const billingAddress = quote.billingAddress();
-            const amountInCents = Math.trunc(quote.totals().base_grand_total * 100);
+            const amountInCents = this.getAmountInCents();
 
             const [
                 billingAddressStreet = '',
@@ -186,7 +160,7 @@ define([
                 customer: {
                     name: `${billingAddress.firstname || ''} ${billingAddress.lastname || ''}`.trim(),
                     email: customerEmail,
-                    document: billingAddress.vatId || '',
+                    document: (billingAddress.vatId || '').replace(/\D/g, ''),
                     phones: {
                         mobile_phone: {
                             country_code: '55',
