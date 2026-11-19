@@ -4,6 +4,7 @@ namespace Pagarme\Pagarme\Service\Payment;
 
 use Magento\Framework\Exception\LocalizedException;
 use Pagarme\Pagarme\Gateway\Transaction\Base\Config\Config;
+use Pagarme\Pagarme\Gateway\Transaction\CreditCard\Config\Config as CreditCardConfig;
 use Pagarme\Pagarme\Service\Hub\AuthenticationNotFoundException;
 use Pagarme\Pagarme\Service\Hub\AuthenticationStatusProviderInterface;
 use Pagarme\Pagarme\Service\Hub\HubUnavailableException;
@@ -12,7 +13,7 @@ use Psr\Log\LoggerInterface;
 /**
  * The 3DS result reaches the server through the browser, so the claimed
  * trans_status is confirmed against the Hub before the order is placed.
- * Sandbox stores are not verified.
+ * Sandbox stores and stores with 3DS turned off are not verified.
  */
 class ThreeDSAuthenticationStatusValidator
 {
@@ -24,16 +25,21 @@ class ThreeDSAuthenticationStatusValidator
     /** @var Config */
     private $config;
 
+    /** @var CreditCardConfig */
+    private $creditCardConfig;
+
     /** @var LoggerInterface */
     private $logger;
 
     public function __construct(
         AuthenticationStatusProviderInterface $statusProvider,
         Config $config,
+        CreditCardConfig $creditCardConfig,
         LoggerInterface $logger
     ) {
         $this->statusProvider = $statusProvider;
         $this->config = $config;
+        $this->creditCardConfig = $creditCardConfig;
         $this->logger = $logger;
     }
 
@@ -43,7 +49,7 @@ class ThreeDSAuthenticationStatusValidator
      */
     public function assertStatusMatchesHub($authentication)
     {
-        if ($this->config->isSandboxMode() || empty($authentication)) {
+        if ($this->isVerificationDisabled() || empty($authentication)) {
             return;
         }
 
@@ -71,6 +77,11 @@ class ThreeDSAuthenticationStatusValidator
                 $hubStatus
             ));
         }
+    }
+
+    private function isVerificationDisabled()
+    {
+        return $this->config->isSandboxMode() || !$this->creditCardConfig->getTdsActive();
     }
 
     /**

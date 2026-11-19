@@ -5,6 +5,7 @@ namespace Pagarme\Pagarme\Test\Unit\Service\Payment;
 use Magento\Framework\Exception\LocalizedException;
 use Mockery;
 use Pagarme\Pagarme\Gateway\Transaction\Base\Config\Config;
+use Pagarme\Pagarme\Gateway\Transaction\CreditCard\Config\Config as CreditCardConfig;
 use Pagarme\Pagarme\Service\Hub\AuthenticationNotFoundException;
 use Pagarme\Pagarme\Service\Hub\AuthenticationStatusProviderInterface;
 use Pagarme\Pagarme\Service\Hub\HubUnavailableException;
@@ -25,6 +26,8 @@ class ThreeDSAuthenticationStatusValidatorTest extends BaseTest
 
     private $config;
 
+    private $creditCardConfig;
+
     private $validator;
 
     protected function setUp(): void
@@ -32,8 +35,15 @@ class ThreeDSAuthenticationStatusValidatorTest extends BaseTest
         $this->provider = Mockery::mock(AuthenticationStatusProviderInterface::class);
         $this->config = Mockery::mock(Config::class);
         $this->config->shouldReceive('isSandboxMode')->andReturn(false)->byDefault();
+        $this->creditCardConfig = Mockery::mock(CreditCardConfig::class);
+        $this->creditCardConfig->shouldReceive('getTdsActive')->andReturn(true)->byDefault();
         $logger = Mockery::mock(LoggerInterface::class)->shouldIgnoreMissing();
-        $this->validator = new ThreeDSAuthenticationStatusValidator($this->provider, $this->config, $logger);
+        $this->validator = new ThreeDSAuthenticationStatusValidator(
+            $this->provider,
+            $this->config,
+            $this->creditCardConfig,
+            $logger
+        );
     }
 
     private function authentication($transactionId, $status)
@@ -203,5 +213,18 @@ class ThreeDSAuthenticationStatusValidatorTest extends BaseTest
             'status without transaction id' => [json_encode(['trans_status' => 'Y'])],
             'malformed json' => ['{not json'],
         ];
+    }
+
+    /**
+     * @dataProvider payloadsThatWouldOtherwiseBeRejected
+     */
+    public function testSkipsTheVerificationWhenThreeDSIsDisabled($authentication)
+    {
+        $this->creditCardConfig->shouldReceive('getTdsActive')->andReturn(false);
+        $this->provider->shouldNotReceive('getStatus');
+
+        $this->validator->assertStatusMatchesHub($authentication);
+
+        $this->addToAssertionCount(1);
     }
 }
