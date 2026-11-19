@@ -9,7 +9,7 @@ use Psr\Log\LoggerInterface;
 class HubAuthenticationStatusClient implements AuthenticationStatusProviderInterface
 {
     const STATUS_URL = 'https://hubapi.pagar.me/v2/management/authentications/status/';
-    const TIMEOUT_IN_SECONDS = 5;
+    const TIMEOUT_IN_SECONDS = 10;
     const HTTP_OK = 200;
     const HTTP_NOT_FOUND = 404;
 
