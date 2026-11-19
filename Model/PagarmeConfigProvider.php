@@ -11,6 +11,7 @@ use Magento\Store\Model\StoreManagerInterface;
 use Pagarme\Core\Kernel\Services\InstallmentService;
 use Pagarme\Core\Middle\Model\Account\PaymentEnum;
 use Pagarme\Pagarme\Gateway\Transaction\Base\Config\ConfigInterface as PagarmeConfigInterface;
+use Pagarme\Pagarme\Service\Transaction\TdsSdkUrlProvider;
 
 /**
  * Class PagarmeConfigProvider
@@ -103,6 +104,9 @@ class PagarmeConfigProvider implements ConfigProviderInterface
      */
     protected $storeManager;
 
+    /** @var TdsSdkUrlProvider */
+    protected $tdsSdkUrlProvider;
+
     /**
      * @param PagarmeConfigInterface $pagarmeConfig
      * @param ScopeConfigInterface $scopeConfig
@@ -112,12 +116,14 @@ class PagarmeConfigProvider implements ConfigProviderInterface
         PagarmeConfigInterface $pagarmeConfig,
         ScopeConfigInterface $scopeConfig,
         ConfigInterface $config,
-        StoreManagerInterface $storeManager
+        StoreManagerInterface $storeManager,
+        TdsSdkUrlProvider $tdsSdkUrlProvider
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->config = $config;
         $this->pagarmeConfig = $pagarmeConfig;
         $this->storeManager = $storeManager;
+        $this->tdsSdkUrlProvider = $tdsSdkUrlProvider;
     }
 
     /**
@@ -297,6 +303,33 @@ class PagarmeConfigProvider implements ConfigProviderInterface
     }
 
     /**
+     * @return string
+     */
+    public function getPaymentProfileId($website = null)
+    {
+        return $this->scopeConfig->getValue(
+            self::PATH_PAYMENT_PROFILE_ID,
+            ScopeInterface::SCOPE_WEBSITES,
+            $this->getWebsiteId($website)
+        );
+    }
+
+    /**
+     * Returns payment profile ID if set, otherwise returns account ID.
+     * Used for TDS token generation and other operations that require an identifier.
+     *
+     * @return string
+     */
+    public function getIdentifier($website = null)
+    {
+        $paymentProfileId = $this->getPaymentProfileId($website);
+        if (!empty($paymentProfileId)) {
+            return $paymentProfileId;
+        }
+        return $this->getAccountId($website);
+    }
+
+    /**
      * @return bool
      */
     public function isPixEnabled($website = null)
@@ -433,6 +466,7 @@ class PagarmeConfigProvider implements ConfigProviderInterface
     {
         return [
             'pagarme_is_sandbox_mode' => $this->pagarmeConfig->isSandboxMode(),
+            'pagarme_tds_sdk_url' => $this->tdsSdkUrlProvider->getUrl(),
             'pagarme_is_hub_enabled' => $this->pagarmeConfig->isHubEnabled(),
             'pagarme_account_id' => $this->getAccountId(),
             'pagarme_customer_configs' => $this->pagarmeConfig->getPagarmeCustomerConfigs(),

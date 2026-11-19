@@ -9,6 +9,7 @@ use Mockery;
 use Pagarme\Pagarme\Observer\CreditCardOrderPlaceBeforeObserver;
 use Pagarme\Pagarme\Service\Payment\ClientPaymentAmountValidator;
 use Pagarme\Pagarme\Service\Payment\InstallmentInterestCalculator;
+use Pagarme\Pagarme\Service\Payment\ThreeDSAuthenticationStatusValidator;
 use Pagarme\Pagarme\Test\Unit\BaseTest;
 
 /**
@@ -18,9 +19,12 @@ class CreditCardOrderPlaceBeforeObserverTest extends BaseTest
 {
     private $calculator;
 
+    private $statusValidator;
+
     protected function setUp(): void
     {
         $this->calculator = Mockery::mock(InstallmentInterestCalculator::class);
+        $this->statusValidator = Mockery::mock(ThreeDSAuthenticationStatusValidator::class)->shouldIgnoreMissing();
     }
 
     private function execute($method, array $information, $grandTotal = 100.0)
@@ -45,7 +49,11 @@ class CreditCardOrderPlaceBeforeObserverTest extends BaseTest
             }
         };
 
-        $observer = new CreditCardOrderPlaceBeforeObserver($this->calculator, new ClientPaymentAmountValidator());
+        $observer = new CreditCardOrderPlaceBeforeObserver(
+            $this->calculator,
+            new ClientPaymentAmountValidator(),
+            $this->statusValidator
+        );
         $observer->execute(new Observer(['order' => $order]));
 
         return $order;
@@ -169,5 +177,45 @@ class CreditCardOrderPlaceBeforeObserverTest extends BaseTest
             'cc_type' => 'visa',
             'cc_installments' => 1,
         ]);
+    }
+
+    public function testVerifiesTheThreeDSAuthenticationAgainstTheHub()
+    {
+        $authentication = '{"tds_server_trans_id":"6e5b0ca7-3f38-4432-85b8-23a391fc6e91","trans_status":"Y"}';
+        $this->calculator->shouldReceive('calculateInterestInCents')->andReturn(0);
+        $this->statusValidator->shouldReceive('assertStatusMatchesHub')->once()->with($authentication);
+
+        $this->execute('pagarme_creditcard', [
+            'cc_type' => 'visa',
+            'cc_installments' => 1,
+            'cc_card_tax_amount' => '0',
+            'authentication' => $authentication,
+        ]);
+
+        $this->addToAssertionCount(1);
+    }
+
+    public function testDoesNotPlaceTheOrderWhenTheAuthenticationIsRejected()
+    {
+        $this->calculator->shouldNotReceive('calculateInterestInCents');
+        $this->statusValidator->shouldReceive('assertStatusMatchesHub')->andThrow(new LocalizedException(__('rejected')));
+
+        $this->expectException(LocalizedException::class);
+
+        $this->execute('pagarme_creditcard', [
+            'cc_type' => 'visa',
+            'cc_installments' => 1,
+            'cc_card_tax_amount' => '0',
+            'authentication' => '{"trans_status":"Y"}',
+        ]);
+    }
+
+    public function testDoesNotVerifyThreeDSForOtherPaymentMethods()
+    {
+        $this->statusValidator->shouldNotReceive('assertStatusMatchesHub');
+
+        $this->execute('pagarme_pix', []);
+
+        $this->addToAssertionCount(1);
     }
 }
