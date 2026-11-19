@@ -3,7 +3,6 @@
 namespace Pagarme\Pagarme\Service\Payment;
 
 use Magento\Framework\Exception\LocalizedException;
-use Pagarme\Pagarme\Gateway\Transaction\Base\Config\Config;
 use Pagarme\Pagarme\Gateway\Transaction\CreditCard\Config\Config as CreditCardConfig;
 use Pagarme\Pagarme\Service\Hub\AuthenticationNotFoundException;
 use Pagarme\Pagarme\Service\Hub\AuthenticationStatusProviderInterface;
@@ -13,15 +12,12 @@ use Psr\Log\LoggerInterface;
 /**
  * The 3DS result reaches the server through the browser, so the claimed
  * trans_status is confirmed against the Hub before the order is placed.
- * Sandbox stores and stores with 3DS turned off are not verified.
+ * Stores with 3DS turned off are not verified.
  */
 class ThreeDSAuthenticationStatusValidator
 {
     /** @var AuthenticationStatusProviderInterface */
     private $statusProvider;
-
-    /** @var Config */
-    private $config;
 
     /** @var CreditCardConfig */
     private $creditCardConfig;
@@ -31,12 +27,10 @@ class ThreeDSAuthenticationStatusValidator
 
     public function __construct(
         AuthenticationStatusProviderInterface $statusProvider,
-        Config $config,
         CreditCardConfig $creditCardConfig,
         LoggerInterface $logger
     ) {
         $this->statusProvider = $statusProvider;
-        $this->config = $config;
         $this->creditCardConfig = $creditCardConfig;
         $this->logger = $logger;
     }
@@ -47,7 +41,7 @@ class ThreeDSAuthenticationStatusValidator
      */
     public function assertStatusMatchesHub($authentication)
     {
-        if ($this->isVerificationDisabled() || empty($authentication)) {
+        if (!$this->creditCardConfig->getTdsActive() || empty($authentication)) {
             return;
         }
 
@@ -75,11 +69,6 @@ class ThreeDSAuthenticationStatusValidator
                 $hubStatus
             ));
         }
-    }
-
-    private function isVerificationDisabled()
-    {
-        return $this->config->isSandboxMode() || !$this->creditCardConfig->getTdsActive();
     }
 
     /**
