@@ -87,7 +87,7 @@ class HubAuthenticationStatusClient implements AuthenticationStatusProviderInter
             throw new HubUnavailableException('Hub answered for a different 3DS transaction');
         }
 
-        $status = $body['tds_method_indicator'] ?? '';
+        $status = $body['trans_status'] ?? '';
         if (!is_string($status) || $status === '') {
             throw new HubUnavailableException('Hub answer has no 3DS status');
         }

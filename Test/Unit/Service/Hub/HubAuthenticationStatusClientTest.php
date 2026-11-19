@@ -45,11 +45,11 @@ class HubAuthenticationStatusClientTest extends BaseTest
         return array_merge([
             'tds_server_trans_id' => self::TRANSACTION_ID,
             'protocol_version' => '2.2.0',
-            'tds_method_indicator' => 'Y',
+            'trans_status' => 'Y',
         ], $overrides);
     }
 
-    public function testReturnsTheTdsMethodIndicatorAsTheFinalStatus()
+    public function testReturnsTheTransStatusOfTheAnswerAsTheFinalStatus()
     {
         $this->hubAnswers(200, $this->approvedBody());
 
@@ -143,8 +143,8 @@ class HubAuthenticationStatusClientTest extends BaseTest
     {
         return [
             'not json' => ['oops'],
-            'no indicator' => [['tds_server_trans_id' => self::TRANSACTION_ID]],
-            'empty indicator' => [['tds_server_trans_id' => self::TRANSACTION_ID, 'tds_method_indicator' => '']],
+            'no status' => [['tds_server_trans_id' => self::TRANSACTION_ID]],
+            'empty status' => [['tds_server_trans_id' => self::TRANSACTION_ID, 'trans_status' => '']],
         ];
     }
 
