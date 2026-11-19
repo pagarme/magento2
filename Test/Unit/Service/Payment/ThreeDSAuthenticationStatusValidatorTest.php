@@ -18,6 +18,8 @@ class ThreeDSAuthenticationStatusValidatorTest extends BaseTest
 {
     const TRANSACTION_ID = '6e5b0ca7-3f38-4432-85b8-23a391fc6e91';
 
+    const STATUSES = ['Y', 'A', 'N', 'C', 'U', 'R', 'I'];
+
     private $provider;
 
     private $validator;
@@ -129,5 +131,50 @@ class ThreeDSAuthenticationStatusValidatorTest extends BaseTest
         $this->expectException(LocalizedException::class);
 
         $this->validator->assertStatusMatchesHub($this->authentication(self::TRANSACTION_ID, 'Y'));
+    }
+
+    /**
+     * @dataProvider everyStatus
+     */
+    public function testAcceptsAnyStatusAsLongAsTheHubReturnsTheSameOne($status)
+    {
+        $this->provider->shouldReceive('getStatus')->once()->with(self::TRANSACTION_ID)->andReturn($status);
+
+        $this->validator->assertStatusMatchesHub($this->authentication(self::TRANSACTION_ID, $status));
+
+        $this->addToAssertionCount(1);
+    }
+
+    /**
+     * @dataProvider everyStatusPair
+     */
+    public function testRejectsAnyStatusThatDiffersFromTheHubOne($claimedStatus, $hubStatus)
+    {
+        $this->provider->shouldReceive('getStatus')->once()->with(self::TRANSACTION_ID)->andReturn($hubStatus);
+
+        $this->expectException(LocalizedException::class);
+
+        $this->validator->assertStatusMatchesHub($this->authentication(self::TRANSACTION_ID, $claimedStatus));
+    }
+
+    public static function everyStatus()
+    {
+        return array_combine(self::STATUSES, array_map(function ($status) {
+            return [$status];
+        }, self::STATUSES));
+    }
+
+    public static function everyStatusPair()
+    {
+        $pairs = [];
+        foreach (self::STATUSES as $claimed) {
+            foreach (self::STATUSES as $hub) {
+                if ($claimed !== $hub) {
+                    $pairs["claimed $claimed, hub $hub"] = [$claimed, $hub];
+                }
+            }
+        }
+
+        return $pairs;
     }
 }
