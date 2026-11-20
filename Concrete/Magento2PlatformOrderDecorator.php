@@ -1295,7 +1295,7 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
 
         $address->setCity($platformAddress->getCity());
         $address->setCountry($platformAddress->getCountryId());
-        $address->setZipCode($platformAddress->getPostcode());
+        $address->setZipCode($this->formatZipCode($platformAddress));
 
         $_regionFactory = ObjectManager::getInstance()->get('Magento\Directory\Model\RegionFactory');
         $regionId = $platformAddress->getRegionId();
@@ -1308,6 +1308,17 @@ class Magento2PlatformOrderDecorator extends AbstractPlatformOrderDecorator
         }
 
         return $address;
+    }
+
+    private function formatZipCode($platformAddress)
+    {
+        $zipCode = $platformAddress->getPostcode();
+
+        if (strtoupper($platformAddress->getCountryId() ?? '') === 'BR') {
+            return preg_replace('/\D/', '', $zipCode ?? '');
+        }
+
+        return $zipCode;
     }
 
     protected function validateAddress($allStreetLines)
